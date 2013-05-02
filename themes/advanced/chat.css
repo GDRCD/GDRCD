@@ -1,0 +1,167 @@
+/****************************************************************************/
+/* STILE DELLA CHAT E DEI PANNELLI */
+
+/* HELP: Da qui è possibile modificare:
+- I font ed i colori della chat
+- Le dimensioni e la posizione della chat
+- Lo sfondo della chat*/
+
+
+
+iframe.iframe_chat{
+   border: none;
+   width: 1px;
+   height: 1px;
+   margin: 0px;
+}
+div.chat_window{
+  text-align: center;
+}
+
+/**	* Fix per layout elastico
+	* @author Blancks
+*/
+div.chat_box{
+	position:absolute;
+	top:50px;
+	bottom:120px;
+	left:10px;
+	right:10px;
+	
+	overflow: auto;
+	font-size: 16px;
+	text-align:left;
+}
+
+div.pagina_frame_chat div.page_body div.panels_box{
+	position:absolute;
+	bottom:9px;
+	left:5px;
+	right:5px;
+}
+/**	* Fine fix */
+
+
+
+/** * Avatar di chat
+	* @author Blancks
+*/
+img.chat_avatar{
+	margin:8px;
+    display: block;
+    float: left;
+    position: relative;
+}
+
+
+
+
+/***** testo della chat *****/
+
+
+/* Tipi messaggio: (A azione, P parlato, N PNG, M Master, I Immagine, S sussurro, D dado, C skill check, O uso oggetto) */
+
+div.chat_row_A{margin-top: 3px;}
+
+div.chat_row_A	span.color2{margin-top: 3px; color:#000; font-weight:bolder;}   
+
+div.chat_row_P{margin-top: 3px;}
+
+div.chat_row_P	span.color2{margin-top: 3px; color:#000; font-weight:bolder;}
+
+div.chat_row_M{ 
+margin-top: 3px;
+
+   border-width: 2px;
+   border-color: green;
+   border-style: solid;
+   text-align: center;
+   color: green;
+}
+
+div.chat_row_N{margin-top: 3px;}
+
+div.chat_row_N	span.color2{color:#000; font-weight:bolder;}
+
+div.chat_row_I{
+	margin-top: 3px;
+   text-align: center;
+}
+
+div.chat_row_S{margin-top: 3px;}
+
+div.chat_row_D{
+margin-top: 3px;
+ border-width: 2px;
+   border-color: blue;
+   border-style: solid;
+   color: cyan;
+}
+
+div.chat_row_C{}
+
+div.chat_row_O{
+margin-top: 3px;
+ border-width: 2px;
+   border-color: blue;
+   border-style: solid;
+      color: cyan;
+
+}
+
+div.chat_row_C{
+margin-top: 3px;
+
+ border-width: 2px;
+   border-color: blue;
+   border-style: solid;
+      color: cyan;
+
+}
+
+span.chat_time{
+   font-size: 10px;
+   font-weight: bolder;
+   margin-right: 3px;
+}
+
+span.chat_name{
+   font-weight: bolder;   
+   font-size: 12px;
+   color: #000;
+}
+
+span.chat_msg{
+	color:#333;
+	font-size:12px;
+}
+
+span.chat_master{ }
+
+
+
+/***** form inserimento *****/
+
+div.form_row{
+  clear: both;
+  height: 20px;
+}
+div.casella_chat{
+  float: left;  
+  margin-bottom: 6px;
+
+}
+
+/*Casella Tag*/
+input#tag{
+   width: 90px;
+}
+/*Casella Messaggio*/
+input#message{
+   width: 280px;
+}
+
+
+
+
+/****************************************************************************/

@@ -1,0 +1,60 @@
+/****************************************************************************/
+/* STILE DEL FORUM */
+
+/* HELP:  */
+
+/*Frame dei presenti*/
+
+div.pagina_forum{}
+div.pagina_forum div.panels_box{
+  border: none;
+}
+div.pagina_forum div.panels_box table{
+   width: 95%;
+}
+div.pagina_forum div.panels_box tr{
+   margin: 2px;
+}
+div.forum_date_big{
+   font-size: 12px;
+}
+div.forum_date_small{
+   font-size: 10px;
+   clear: both; 
+}
+div.forum_main_post{
+	margin: 1px;
+}
+div.forum_other_posts{
+	margin: 1px;
+}
+div.forum_post_header{ }
+div.forum_post_body{ }
+td.forum_main_title{
+  text-align: center;
+}
+div.forum_post_title{
+  font-weight: bold;
+  font-style: italic;
+}
+td.forum_main_post_author, td.forum_other_post_author{
+   width: 100px;
+   vertical-align:top;
+}
+td.forum_main_post_message, td.forum_other_post_message{
+   background-color: #333333;
+}
+div.forum_post_author{}
+div.forum_post_message{
+  text-align: justify;
+}
+div.forum_post_modify{
+   font-size: 12px;
+   text-align: center;
+}
+img.img_forum_avatar{
+  height: 45px; 
+  width: 30px;
+}
+
+/****************************************************************************/

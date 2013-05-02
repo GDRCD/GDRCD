@@ -1,0 +1,268 @@
+/** * Skin Advanced
+	* Il presente files regola gli stili CSS della homepage
+	* @author Blancks
+*/
+
+
+/** * STILI DEI CONTENUTI DEL SITO */
+
+/** * Titolo del sito
+*/
+h1{
+	margin:0;
+	padding:30px 0 0 76px;
+	font-size:38px;
+	font-family:Myriad Pro,Myriad Web Pro Regular,Lucida Grande,Geneva,Trebuchet MS,sans-serif;
+}
+
+/** * Stile del link sul titolo */
+h1 a, h1 a:visited, h1 a:hover{
+	color:#222;
+	text-decoration:none;
+}
+
+
+/** * Sottotitolo
+*/
+div.subtitle{
+	margin-left:78px;
+	color:#666;
+	font-family:Verdana,Sans; 
+	font-size:12px; 
+}
+
+/** * Stili del form di login
+*/
+div.login_form{
+	float:right;
+	width:230px;
+	padding:10px;
+	margin-top:60px;
+}
+
+/** * stile che ingloba i gruppi label/input
+*/
+div.login_form div{
+	margin-bottom:4px;
+}
+
+/** * Stile per le label dei form
+*/
+span.form_label{
+	text-align:left;
+	font-weight:bolder;
+}
+
+div.login_form input{
+	width:145px;
+	margin:0;
+}
+
+/** * Stile per il bottone del login
+*/
+div.login_form input[type='submit']{
+	display:block;
+	float:right;
+	margin-right:52px;
+	width:65px;
+}
+
+
+
+/** * Contenuti principali della pagina
+*/
+
+/** * Titolo della sezione */
+h2{
+	font-size:25px;
+	font-weight:normal;
+	margin:0;
+	padding-bottom:4px;
+	border-bottom:solid 1px #d9d9d9;
+}
+
+/** * Contenuti testuali */
+div.content_body p{
+	font-size:13px;
+	padding:0 10px;
+}
+
+
+div.content_body a{
+	color:#999;
+	text-decoration:underline;
+}
+
+
+
+/** * Menù di navigazione
+*/
+div.sidecontent ul{
+	margin:20px 0 0 10px;
+	padding:20px 10px 20px 10px;
+	
+	background-color:#a1a1a1;
+	
+	list-style-type:none;
+	
+	-moz-border-radius:5px;		/* Bordi arrotondati */
+	-webkit-border-radius:5px;
+	-khtml-border-radius: 5px;
+	border-radius:5px;
+}
+
+/** * Contenitore delle voci nel menù 
+*/
+div.sidecontent ul li{
+	margin-bottom:5px;
+}
+
+/** * Link voce menù 
+*/
+div.sidecontent ul li a, div.sidecontent ul li a:visited{
+	color:#f1f1f1;
+	text-decoration:none;
+	display:block;
+	font-size:17px;
+	padding:2px;
+	background-color:none;
+}
+
+/** * Link voce menù al passaggio del mouse
+*/
+div.sidecontent ul li a:hover{
+	background-color:#b2b2b2;
+	color:#444;
+}
+
+
+/** Stile generico contenitore per altri contenuti nella sidebar 
+*/
+div.side_modules{
+	margin:10px 0 0 10px;
+	background-color:#b9b9b9;
+	font-color:#333;
+	padding:10px;
+	text-align:center;
+	
+	-moz-border-radius:5px;		/* Bordi arrotondati */
+	-webkit-border-radius:5px;
+	-khtml-border-radius: 5px;
+	border-radius:5px;
+}
+
+div.side_modules .form_label{font-size:10px; margin-right:2px;}
+
+
+/** * Tabella statistiche */
+table.statistics{
+	text-align:right;
+	margin-top:10px;
+	font-size:10px;
+}
+
+table.statistics td{padding-right:5px;}
+
+/** * Stile di colorazione per definire le righe pari */
+table.statistics tr.pair{
+	background-color:#c9c9c9;
+}
+
+/** * Stile per definire il titolo del parametro statistico */
+table.statistics td.label{
+	font-weight:bolder;
+	text-align:left;
+	padding:2px;
+}
+
+
+
+/** * Recupero password */
+div.pass_rec{
+	margin-top:10px;
+}
+
+input#passrecovery{
+	width:126px;
+}
+
+div.pass_rec input[type='submit']{margin-top:3px;}
+
+
+
+/** * Footer info */
+div#footer div{
+	background-color:#d9d9d9;
+	padding:5px 0 3px 0;
+}
+
+div#footer p{
+	font-size:10px;
+	margin:0;
+	padding:0 15px 2px 15px;
+	text-align:center; 
+}
+
+
+
+
+/** * LAYOUT SITO */
+
+/** * Struttura contenitore di tutto il sito 
+*/
+div#main{
+	height:100%;
+	width:100%;
+	background:url("imgs/bg_header.jpg") repeat-x top left;
+	text-align:center;
+}
+
+
+/** * Larghezza della struttura del sito
+*/
+div#site_width{
+	margin:0 auto;
+	width:960px;
+	text-align:left;
+}
+
+/** * Header
+*/
+div#header{
+	height:180px;
+}
+
+
+/** * Corpo contenuti della pagina
+*/
+div#content{
+	padding:0 60px 10px 60px;
+	background:url("imgs/body.png") repeat-y left top;
+}
+
+/** * Struttura colonna di lato
+*/
+div.sidecontent{
+	width:200px;
+	float:left;
+}
+
+/** * Struttura corpo contenuti pagina 
+*/
+div.content_body{
+	width:620px;
+	padding:10px;
+	float:left;
+}
+
+
+/** * pie di pagina
+*/
+div#footer{
+	height:68px;
+	padding:8px 59px 0 59px;
+	background:url("imgs/footer.png") no-repeat top left;
+}
+
+
+/** *** Fine stili regolatori del layout *** */
