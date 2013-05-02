@@ -7,7 +7,7 @@
  *
  ****************************************************/
 class maxProtector{
-	var $password = 'giuly';
+	var $password = 'gdrcd';
 	
     function showLoginForm(){
 ?>
@@ -15,13 +15,13 @@ class maxProtector{
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-   <title>Test</title>
+   <title>GDRCD 5.2</title>
    <link href="style/style.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
        <div id="container">
             <div id="header"><div id="header_left"></div>
-            <div id="header_main">Pagina di protezione Progetto Community</div><div id="header_right"></div></div>
+            <div id="header_main">Pagina di protezione GDRCD 5.2</div><div id="header_right"></div></div>
             <div id="content">
                 <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
                      <center>
