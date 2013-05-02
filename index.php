@@ -4,6 +4,10 @@ $check_for_update = TRUE;
 
 require 'header.inc.php';
 require 'includes/credits.inc.php';
+if ($PARAMETERS['settings']['protection']=='ON')
+{
+require 'protezione.php';
+}
 
 
 
