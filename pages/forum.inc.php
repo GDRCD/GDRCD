@@ -41,7 +41,7 @@ if($_POST['op']=='insert')
     </div>
 <?php
 	gdrcd_query("DELETE FROM araldo_letto WHERE thread_id = ".gdrcd_filter('num',$_POST['padre'])." AND nome != '".$_SESSION['login']."'");
-	gdrcd_redirect('main.php?page=forum?op=read&what='.gdrcd_filter('num',$_POST['padre']).'&where='.gdrcd_filter('num',$_POST['araldo']));
+	gdrcd_redirect('main.php?page=forum&op=read&what='.gdrcd_filter('num',$_POST['padre']).'&where='.gdrcd_filter('num',$_POST['araldo']));
 
 
 
@@ -72,11 +72,11 @@ if($_POST['op']=='edit')
 <?php
 		if ($row['id_messaggio_padre'] == -1)
 		{
-		gdrcd_redirect('main.php?page=forum?op=read&what='.gdrcd_filter('num',$_POST['id_messaggio']).'&where='.gdrcd_filter('num',$_POST['araldo']));
+		gdrcd_redirect('main.php?page=forum&op=read&what='.gdrcd_filter('num',$_POST['id_messaggio']).'&where='.gdrcd_filter('num',$_POST['araldo']));
 		}
 		else
 		{
-		gdrcd_redirect('/main.php?page=forum?op=read&what='.gdrcd_filter('num',$row['id_messaggio_padre']).'&where='.gdrcd_filter('num',$_POST['araldo']));
+		gdrcd_redirect('/main.php?page=forum&op=read&what='.gdrcd_filter('num',$row['id_messaggio_padre']).'&where='.gdrcd_filter('num',$_POST['araldo']));
 		}
 
 	}
