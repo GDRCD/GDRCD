@@ -1,0 +1,5 @@
+La libreria è stata riadattata affinchè risulti come integrata nel sorgente di GDRCD5.1.
+Questo significa che tale plug-in, distribuito di default con la distribuzione di GDRCD5.1, assume la medesima licenza e le medesime condizioni di rilascio e utilizzo al fine di uno sviluppo in parallelo rispetto al progetto originario, di modo che non causi incompatibilità di licenze fra i due progetti.
+
+
+BBDecoder è un software sviluppato da Salvatore "Blancks" Rotondo <s.rotondo90@gmail.com>

@@ -1,0 +1,208 @@
+/****************************************************************************/
+/* STILE DELLA HOMEPAGE */
+
+/*Contenitore*/
+div.page_homepage{
+   width: 1000px;
+   height: auto;
+   margin-left:auto;
+   margin-right:auto;
+   background-image: url('imgs/homepage.png');/*immagine dello sfondo homepage*/
+   border: 1px white dotted;
+}
+
+table.homepage_layout{
+   height: 100%;
+   width: 100%
+}
+td.home_left{
+height: 100px;
+vertical-align: top;
+width: 200px;
+}
+td.home_right{
+height: 100px;
+vertical-align: top;
+width: 240px;
+}
+td.home_center{
+height: 100px;
+vertical-align: top;
+}
+td.home_bottom{
+height: 100px;
+vertical-align: top;
+}
+
+/*Contenuto principale*/
+div.homepage_main_content{
+   height: 160px;
+   width: 440px;
+   border: 1px white dotted;
+   margin: 10px auto 10px auto;
+   /*Decommenta la seguente riga per eliminare il messaggio di benvenuto in homepage*/
+   /*display: none;*/
+}
+div.homepage_main_content_info{
+  text-align: justify;
+  margin: 0 auto 0 auto;
+}
+
+/*div.page_homepage div.page_title{   display: none; }*/
+
+/*Area login*/
+div.login_box{
+   width: 170px;
+   height: 225px;
+   border: 1px white dotted;
+   margin: 10px auto 5px auto;
+
+}
+
+/*Cambio pass*/
+div.password_change{
+   width: 170px;
+   height: 160px;
+   border: 1px white dotted;
+   margin: 10px auto 5px auto;
+}
+
+/*Link*/
+div.main_links{
+   width: 170px;
+   height: 100px;
+   border: 1px white dotted;
+   margin: 10px auto 30px auto;
+}
+
+/*Statistiche*/
+div.online_box{
+   width: 230px;
+   height: 35px;
+   border: 1px white dotted;
+   margin: 10px auto 5px auto;
+}
+
+/*Statistiche*/
+div.stats_box{
+   width: 230px;
+   height: 335px;
+   border: 1px white dotted;
+   margin: 10px auto 5px auto;
+}
+
+/*Contatti*/
+div.homepage_info_box{
+   width: 950px;
+   height: auto;
+   font-size: 12px;
+   border: 1px white dotted;
+   margin: 10px auto 5px auto;
+}
+
+/*Contenitore dei simboli PEGI*/
+div.pegi_box{
+   height: 60px;
+   width: 90%;
+   text-align: right;
+   margin: 0 auto 0 auto;
+}
+
+/*Aspetto dei simboli PEGI*/
+div.pegi_box img.pegi_img{
+	width: 40px;
+	margin: 2px;
+}
+
+
+/****************************************************************************/
+/* STILE DELLA FINESTRA DI LOGOUT */
+
+div.logout_box{ }
+div.logout_box span.logout_text{ }
+
+/****************************************************************************/
+
+/****************************************************************************/
+/* STILE DELLA FINESTRA DI LOGIN */
+
+div.logout_box{ }
+div.logout_box span.logout_text{ }
+
+/****************************************************************************/
+
+/****************************************************************************/
+/* STILE DELLA PAGINA DI ISCRIZIONE */
+
+div.pagina_iscrizione{ 
+   background-color:#000000;
+}
+div.pagina_iscrizione div.panels_box{ 
+   width: 50%;
+   margin-left: auto;
+   margin-right: auto;
+}
+div.disclaimer_iscrizione{ 
+   width: 90%;
+   background-color: white;
+   color: black;
+   text-align: justify;
+   font-size: 14px;
+   padding: 5px;
+   margin-left: auto;
+   margin-right: auto;
+   margin-top: 20px;
+}
+div.welcome_message{
+   margin-left: auto;
+   margin-right: auto;
+   margin-top: 6px;
+   text-align: center;
+}
+div.username{
+   margin-left: auto;
+   margin-right: auto;
+   margin-top: 8px;
+   margin-bottom: 8px;
+   text-align: center;
+}
+
+div.pagina_iscrizione div.link_back{ 
+   margin-left: auto;
+   margin-right: auto;
+   margin-top: 20px;
+   text-align: center;
+}
+
+
+/****************************************************************************/
+
+/****************************************************************************/
+/* STILE DELLA DESCRIZIONE DELLE RAZZE */
+
+div.pagina_ambientazione, div.user_razze{
+   background-color:#000000;
+}
+
+div.user_razze td.casella_titolo{
+  border: 1px;
+  border-bottom: solid;
+  border-color: gray;
+}
+
+img.razza_icon{
+    width: 20px;
+	height: 20px;
+}
+img.razza_immagine{
+    width: 120px;
+	height: 120px;
+}
+td.casella_razza_immagine{
+    width: 120px;
+	height: 120px;
+}
+
+
+
+/****************************************************************************/
