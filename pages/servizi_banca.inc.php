@@ -92,7 +92,7 @@ if((isset($_POST['op'])===TRUE)&&($_POST['op']=='bonifico')){
 
 <?php /*Stipendio*/
 /**	* Correzione dell'exploit che rendeva possibile accreditarsi un numero illimitato di soldi in banca
-	* Il controllo è eseguito anche nella query con la condizione 'AND ultimo_stipendio < NOW()'.
+	* Il controllo Ã¨ eseguito anche nella query con la condizione 'AND ultimo_stipendio < NOW()'.
 	* Un grazie a Dyrr per la segnalazione.
 	* @author Blancks
 */
