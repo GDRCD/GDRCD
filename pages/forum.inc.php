@@ -347,8 +347,11 @@ if ((($row['tipo']==SOLORAZZA)&&($_SESSION['id_razza']!=$row['proprietari'])&&($
 		      ?>
 		  </div>
 		  <div class="forum_post_modify">
-		  <a href="main.php?page=forum&op=composer&what=<?php echo gdrcd_filter('num',$_REQUEST['what']); ?>&where=<?php echo gdrcd_filter('num',$_REQUEST['where']); ?>&quote=<?php echo $row['id_messaggio'];?>">[<?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['link']['quote']); ?>]</a>
-		  <?php if(($_SESSION['login']==$row['autore'] && $chiuso == 0) || ($_SESSION['permessi']>=MODERATOR)){ ?>
+	<?php if ($chiuso == 0 || $_SESSION[´permessi´]>=MODERATOR)	{ ?>
+      
+		  <a href="main.php?page=forum&op=composer&what=<?php echo gdrcd_filter(´num´,$_REQUEST[´what´]); ?>&where=<?php echo gdrcd_filter(´num´,$_REQUEST[´where´]); ?>"e=<?php echo $row[´id_messaggio´];?>">[<?php echo gdrcd_filter(´out´,$MESSAGE[´interface´][´forums´][´link´][´quote´]); ?>]</a>
+	<?php } ?>
+      <?php if(($_SESSION['login']==$row['autore'] && $chiuso == 0) || ($_SESSION['permessi']>=MODERATOR)){ ?>
 		     <a href="main.php?page=forum&op=modifica&what=<?php echo $row['id_messaggio'];?>">[<?php echo $MESSAGE['interface']['forums']['link']['edit']; ?>]</a>
 			 <a href="main.php?page=forum&op=delete&id_record=<?php echo $row['id_messaggio'];?>&padre=<?php echo $row['id_messaggio_padre'];?>">[<?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['link']['delete']); ?>]</a>
 		  <?php } ?>
@@ -389,8 +392,10 @@ if ((($row['tipo']==SOLORAZZA)&&($_SESSION['id_razza']!=$row['proprietari'])&&($
 			?>
 		  </div>
 		  <div class="forum_post_modify">
-		  <a href="main.php?page=forum&op=composer&what=<?php echo gdrcd_filter('num',$_REQUEST['what']); ?>&where=<?php echo gdrcd_filter('num',$_REQUEST['where']); ?>&quote=<?php echo $row['id_messaggio'];?>">[<?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['link']['quote']); ?>]</a>
-		  <?php if(($_SESSION['login']==$row['autore'] && $row['chiuso'] == 0) || ($_SESSION['permessi']>=MODERATOR)){ ?>
+<?php if ($chiuso == 0 || $_SESSION[´permessi´]>=MODERATOR)	{ ?>
+      <a href="main.php?page=forum&op=composer&what=<?php echo gdrcd_filter(´num´,$_REQUEST[´what´]); ?>&where=<?php echo gdrcd_filter(´num´,$_REQUEST[´where´]); ?>"e=<?php echo $row[´id_messaggio´];?>">[<?php echo gdrcd_filter(´out´,$MESSAGE[´interface´][´forums´][´link´][´quote´]); ?>]</a>
+      <?php } ?>
+      <?php if(($_SESSION['login']==$row['autore'] && $row['chiuso'] == 0) || ($_SESSION['permessi']>=MODERATOR)){ ?>
 		     <a href="main.php?page=forum&op=modifica&what=<?php echo $row['id_messaggio'];?>">[<?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['link']['edit']); ?>]</a>
 			 <a href="main.php?page=forum&op=delete&id_record=<?php echo $row['id_messaggio'];?>&padre=<?php echo $row['id_messaggio_padre'];?>">[<?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['link']['delete']); ?>]</a>
 		  <?php } ?>
@@ -403,8 +408,11 @@ if ((($row['tipo']==SOLORAZZA)&&($_SESSION['id_razza']!=$row['proprietari'])&&($
 	</table>
 </div>
 <?php
-$padre=gdrcd_filter('num',$_REQUEST['what']);	
-$araldo=gdrcd_filter('num',$_REQUEST['where']);?>
+$padre=gdrcd_filter(´num´,$_REQUEST[´what´]);	
+$araldo=gdrcd_filter(´num´,$_REQUEST[´where´]);
+if ($chiuso == 0 || $_SESSION[´permessi´]>=MODERATOR)
+{ 
+?>
 <div class="panels_box">
 <div class="form_gioco">
 <form action="main.php?page=forum"
@@ -416,7 +424,7 @@ $araldo=gdrcd_filter('num',$_REQUEST['where']);?>
     <textarea name="messaggio" /></textarea>
   </div>
   <div class="form_info">
-     <?php echo gdrcd_filter('out',$MESSAGE['interface']['help']['bbcode']); ?>
+     <?php echo gdrcd_filter(´out´,$MESSAGE[´interface´][´help´][´bbcode´]); ?>
   </div></font>
   <div class="form_submit">
     <input type="hidden"
@@ -430,11 +438,13 @@ $araldo=gdrcd_filter('num',$_REQUEST['where']);?>
 		   value="<?php echo $padre; ?>" />
     <input type="submit"
 	       name="dummy" 
-		   value="<?php echo gdrcd_filter('out',$MESSAGE['interface']['forms']['submit']); ?>" />
+		   value="<?php echo gdrcd_filter(´out´,$MESSAGE[´interface´][´forms´][´submit´]); ?>" />
   </div>
 </form>
 </div>
 </div>
+
+<?php } }//else ?>
 
 <?php }//else ?> 
     <!-- link a fondo pagina -->
