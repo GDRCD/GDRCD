@@ -8,7 +8,7 @@
 	require 'includes/constant_values.inc.php';
 	require 'config.inc.php';
 	require 'vocabulary/'.$PARAMETERS['languages']['set'].'.vocabulary.php';
-    require 'includes/functions.inc.php';
+	require 'includes/functions.inc.php';
 
 	//Eseguo la connessione al database
 	$handleDBConnection = gdrcd_connect();
@@ -288,7 +288,7 @@ while ($row = gdrcd_query($query, 'fetch'))
 				}
 
 				$add_chat.=': </span> ';
-				$add_chat.= '<span class="chat_msg">'.gdrcd_chatcolor(gdrcd_filter('out',$row['testo'])).'</span>';
+				$add_chat.= '<span class="chat_msg">'.gdrcd_chatme(gdrcd_chatcolor(gdrcd_filter('out',$row['testo']))).'</span>';
 
 					/**	* Fix problema visualizzazione spazi vuoti con i sussurri
 						* @author eLDiabolo
@@ -330,7 +330,7 @@ while ($row = gdrcd_query($query, 'fetch'))
 					$add_chat.= '<span class="chat_tag"> ['.gdrcd_filter('out',$row['destinatario']).']</span>';
 				}
 				$add_chat.='</span> ';
-				$add_chat.= '<span class="chat_msg">'.gdrcd_chatcolor(gdrcd_filter('out',$row['testo'])).'</span>';
+				$add_chat.= '<span class="chat_msg">'.gdrcd_chatme(gdrcd_chatcolor(gdrcd_filter('out',$row['testo']))).'</span>';
 
 					/**	* Fix problema visualizzazione spazi vuoti con i sussurri
 						* @author eLDiabolo
@@ -416,7 +416,7 @@ while ($row = gdrcd_query($query, 'fetch'))
 				*/
 				$add_chat.= '<div class="chat_row_'.$row['tipo'].'">';
 
-				$add_chat.= '<span class="chat_master">'.gdrcd_filter('out',$row['testo']).'</span>';
+				$add_chat.= '<span class="chat_master">'.gdrcd_chatme_master(gdrcd_filter('out',$row['testo'])).'</span>';
 
 				/**	* Fix problema visualizzazione spazi vuoti con i sussurri
 					* @author eLDiabolo
