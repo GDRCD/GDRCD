@@ -149,14 +149,14 @@ if($_REQUEST['op']=='modifica')
 <?php /*Cancellatura messaggio o topic*/
 if($_REQUEST['op']=='delete'){
    if((gdrcd_filter('num',$_REQUEST['padre'])==-1)&&($_SESSION['permessi']>=MODERATOR)){/*Cancello un topic da admin*/
-   	gdrcd_query("DELETE FROM araldo_letto WHERE thread_id = ".gdrcd_filter('num',$_POST['id_record']));
+   	gdrcd_query("DELETE FROM araldo_letto WHERE thread_id = ".gdrcd_filter('num',$_REQUEST['id_record']));
 	  $query="DELETE FROM messaggioaraldo WHERE id_messaggio_padre= ".gdrcd_filter('num',$_REQUEST['id_record'])." OR id_messaggio= ".gdrcd_filter('num',$_REQUEST['id_record'])."";
 	  $back='forum';
    } elseif ($_SESSION['permessi']>=MODERATOR) {/*Cancello un post da admin*/
 	  $query="DELETE FROM messaggioaraldo WHERE id_messaggio_padre <> -1 AND id_messaggio = ".gdrcd_filter('num',$_REQUEST['id_record'])." LIMIT 1";
 	  $back='forum&op=read&what='.gdrcd_filter('num',$_REQUEST['padre']);
    } elseif (gdrcd_filter('num',$_REQUEST['padre'])==-1) {/*Cancello un topic che l'utente ha inserito*/
-      	gdrcd_query("DELETE FROM araldo_letto WHERE thread_id = ".gdrcd_filter('num',$_POST['id_record']));
+      	gdrcd_query("DELETE FROM araldo_letto WHERE thread_id = ".gdrcd_filter('num',$_REQUEST['id_record']));
 
       $query="DELETE FROM messaggioaraldo WHERE id_messaggio_padre= ".gdrcd_filter('num',$_REQUEST['id_record'])." OR (autore = '".$_SESSION['login']."' AND id_messaggio = ".gdrcd_filter('num',$_REQUEST['id_record']).")";
 	  $back='forum';
