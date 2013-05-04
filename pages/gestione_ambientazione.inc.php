@@ -147,11 +147,8 @@ if ($_SESSION['permessi']<MODERATOR){
     $pagebegin=(int)gdrcd_filter('get',$_REQUEST['offset'])*$PARAMETERS['settings']['records_per_page'];
 	$pageend=$PARAMETERS['settings']['records_per_page'];
 	//Conteggio record totali
-	/*
-	$query="SELECT COUNT(*) FROM regolamento";
-	$result_globale=mysql_query($query); 
-	*/
-	$record_globale=gdrcd_query("SELECT COUNT(*) FROM regolamento");
+	
+	$record_globale=gdrcd_query("SELECT COUNT(*) FROM ambientazione");
 	$totaleresults=$record_globale['COUNT(*)'];
 	//Lettura record
 	$result = gdrcd_query("SELECT capitolo, titolo, testo FROM ambientazione ORDER BY capitolo LIMIT ".$pagebegin.", ".$pageend."", 'result'); 
