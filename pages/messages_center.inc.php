@@ -80,7 +80,7 @@ if (gdrcd_filter('get',$_POST['op'])=="send_message")
 				<?php echo $PARAMETERS['names']['private_message']['sing'].$MESSAGE['interface']['messages']['sent']; ?>
 			</div>
 			<div class="link_back">
-				<a href="file:///C|/Users/Axl/Downloads/gdrcd5.1_beta/gdrcd5.2/pages/main.php?page=messages_center&offset=0"><?php echo $MESSAGE['interface']['messages']['go_back']; ?></a>
+				<a href="main.php?page=messages_center&offset=0"><?php echo $MESSAGE['interface']['messages']['go_back']; ?></a>
 			</div>
 <?php 
 }//if ?>
@@ -89,7 +89,7 @@ if (gdrcd_filter('get',$_POST['op'])=="send_message")
 if ((gdrcd_filter('get',$_POST['op'])=='send')||(gdrcd_filter('get',$_POST['op'])=='attach')||(gdrcd_filter('get',$_POST['op'])=='reply')||(gdrcd_filter('get',$_REQUEST['newmessage'])=='yes')){ ?>
 <div class="panels_box">
   <form class="form_messaggi" 
-        action="file:///C|/Users/Axl/Downloads/gdrcd5.1_beta/gdrcd5.2/pages/main.php?page=messages_center" 
+        action="main.php?page=messages_center" 
 		method="post">
 
    <!-- Destinatario -->
@@ -176,7 +176,7 @@ if ((gdrcd_filter('get',$_POST['op'])=='send')||(gdrcd_filter('get',$_POST['op']
   </form>
 </div>
 <div class="link_back">
-   <a href="file:///C|/Users/Axl/Downloads/gdrcd5.1_beta/gdrcd5.2/pages/main.php?page=messages_center&offset=0"><?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['go_back']); ?></a>
+   <a href="main.php?page=messages_center&offset=0"><?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['go_back']); ?></a>
 </div>
 <?php } //if ?>
 
@@ -247,7 +247,7 @@ if (gdrcd_filter('get',$_REQUEST['op'])=='read'){
 		     ((is_numeric($record['destinatario'])===FALSE)&&($record['destinatario']!='all'))){
 		  ?>
 		          <!-- erase -->
-				  <form action="file:///C|/Users/Axl/Downloads/gdrcd5.1_beta/gdrcd5.2/pages/main.php?page=messages_center" 
+				  <form action="main.php?page=messages_center" 
 	                    method="post">
 	              <input type="hidden" 
 	                     name="op" 
@@ -256,7 +256,7 @@ if (gdrcd_filter('get',$_REQUEST['op'])=='read'){
 	                     name="id_messaggio" 
 	                     value="<?php echo gdrcd_filter('num',$_REQUEST['id_messaggio']);?>" />
 				  <input type="image" 
-	                     src="file:///C|/Users/Axl/Downloads/gdrcd5.1_beta/gdrcd5.2/pages/imgs/icons/erase.png" 
+	                     src="imgs/icons/erase.png" 
 	                     value="submit" 
 	                     alt="<?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['erase']); ?>" 
 	                     title="<?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['erase']); ?>" />
@@ -266,7 +266,7 @@ if (gdrcd_filter('get',$_REQUEST['op'])=='read'){
 	
 	      <div class="read_message_box_form">
 		          <!-- attach -->
-				  <form action="file:///C|/Users/Axl/Downloads/gdrcd5.1_beta/gdrcd5.2/pages/main.php?page=messages_center" 
+				  <form action="main.php?page=messages_center" 
 	                    method="post">
 				  <input type="hidden" 
 	                     name="reply_dest" 
@@ -278,7 +278,7 @@ if (gdrcd_filter('get',$_REQUEST['op'])=='read'){
 	                     name="op" 
 	                     value="attach" />
 				  <input type="image" 
-	                     src="file:///C|/Users/Axl/Downloads/gdrcd5.1_beta/gdrcd5.2/pages/imgs/icons/attach.png" 
+	                     src="imgs/icons/attach.png" 
 	                     value="submit" 
 	                     alt="<?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['attach']); ?>" 
 	                     title="<?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['attach']); ?>"  />
@@ -287,7 +287,7 @@ if (gdrcd_filter('get',$_REQUEST['op'])=='read'){
 	
 	      <div class="read_message_box_form" >
 	              <!-- reply -->
-				  <form action="file:///C|/Users/Axl/Downloads/gdrcd5.1_beta/gdrcd5.2/pages/main.php?page=messages_center" method="post">
+				  <form action="main.php?page=messages_center" method="post">
 				  <input type="hidden" 
 	                     name="reply_dest" 
 	                     value="<?php echo $record['mittente'];?>" />
@@ -295,7 +295,7 @@ if (gdrcd_filter('get',$_REQUEST['op'])=='read'){
 	                     name="op" 
 	                     value="reply" />
 				  <input type="image" 
-	                     src="file:///C|/Users/Axl/Downloads/gdrcd5.1_beta/gdrcd5.2/pages/imgs/icons/reply.png" value="submit" 
+	                     src="imgs/icons/reply.png" value="submit" 
 	                     alt="<?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['reply']); ?>" 
 	                     title="<?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['reply']); ?>" />
 				  </form>
@@ -306,7 +306,7 @@ if (gdrcd_filter('get',$_REQUEST['op'])=='read'){
 	   </div>
 	
 	   <div class="link_back">
-	      <a href="file:///C|/Users/Axl/Downloads/gdrcd5.1_beta/gdrcd5.2/pages/main.php?page=messages_center&offset=0"><?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['go_back']); ?></a>
+	      <a href="main.php?page=messages_center&offset=0"><?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['go_back']); ?></a>
 	   </div>
 <?php 
 	} // Chiudo controllo paternità messaggio
@@ -332,7 +332,7 @@ if ($_POST['op']=='erase'){
 		   <?php echo gdrcd_filter('out',$PARAMETERS['names']['private_message']['sing'].$MESSAGE['interface']['messages']['erased']); ?>
 		</div>
 		<div class="link_back">
-		   <a href="file:///C|/Users/Axl/Downloads/gdrcd5.1_beta/gdrcd5.2/pages/main.php?page=messages_center&offset=0"><?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['go_back']); ?></a>
+		   <a href="main.php?page=messages_center&offset=0"><?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['go_back']); ?></a>
 		</div>
   	<?php } else { 
 	  		/** * Enhancement: in caso di nessuna riga cancellata si controlla l'esistenza del messaggio,
@@ -347,7 +347,7 @@ if ($_POST['op']=='erase'){
 						Il messaggio che stai tentando di cancellare non esiste
 					</div>
 					<div class="link_back">
-		   				<a href="file:///C|/Users/Axl/Downloads/gdrcd5.1_beta/gdrcd5.2/pages/main.php?page=messages_center&offset=0"><?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['go_back']); ?></a>
+		   				<a href="main.php?page=messages_center&offset=0"><?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['go_back']); ?></a>
 					</div>
 				<?php 		
 			} else {
@@ -363,7 +363,7 @@ if ($_POST['op']=='erase'){
 						   <?php echo gdrcd_filter('out',$PARAMETERS['names']['private_message']['sing'].$MESSAGE['interface']['messages']['erased']); ?>
 						</div>
 						<div class="link_back">
-						   <a href="file:///C|/Users/Axl/Downloads/gdrcd5.1_beta/gdrcd5.2/pages/main.php?page=messages_center&offset=0"><?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['go_back']); ?></a>
+						   <a href="main.php?page=messages_center&offset=0"><?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['go_back']); ?></a>
 						</div>
 				  		<?php 
 				   }
@@ -374,7 +374,7 @@ if ($_POST['op']=='erase'){
 						Non hai l'autorizzazione per cancellare il messaggio richiesto.
 					</div>
 					<div class="link_back">
-		   				<a href="file:///C|/Users/Axl/Downloads/gdrcd5.1_beta/gdrcd5.2/pages/main.php?page=messages_center&offset=0"><?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['go_back']); ?></a>
+		   				<a href="main.php?page=messages_center&offset=0"><?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['go_back']); ?></a>
 					</div>
 					<?php 
 		   		}
@@ -390,7 +390,7 @@ if ($_REQUEST['op']=='eraseall'){
    <?php echo gdrcd_filter('out',$PARAMETERS['names']['private_message']['sing'].$MESSAGE['interface']['messages']['erased']); ?>
 </div>
 <div class="link_back">
-   <a href="file:///C|/Users/Axl/Downloads/gdrcd5.1_beta/gdrcd5.2/pages/main.php?page=messages_center&offset=0"><?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['go_back']); ?></a>
+   <a href="main.php?page=messages_center&offset=0"><?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['go_back']); ?></a>
 </div>
 <?php } ?>
 
@@ -455,14 +455,14 @@ if ((isset($_REQUEST['op'])===FALSE)&&(isset($_REQUEST['newmessage'])===FALSE)){
     <td>
 	   <div class="elementi_elenco">
 	   <?php if (($row['mittente']=='all') || (is_numeric($row['mittente'])===TRUE)){?>
-                <img src="file:///C|/Users/Axl/Downloads/gdrcd5.1_beta/gdrcd5.2/pages/imgs/icons/mail_broad.png" class="colonna_elengo_messaggi_icon">	  
+                <img src="imgs/icons/mail_broad.png" class="colonna_elengo_messaggi_icon">	  
              <?php } elseif (is_numeric($row['mittente'])==TRUE) { ?>
-                <img src="file:///C|/Users/Axl/Downloads/gdrcd5.1_beta/gdrcd5.2/pages/imgs/icons/mail_guild.png" class="colonna_elengo_messaggi_icon">	
+                <img src="imgs/icons/mail_guild.png" class="colonna_elengo_messaggi_icon">	
 			 <?php } else { 
 	                   if($row['letto']==0){?>
-                            <img src="file:///C|/Users/Axl/Downloads/gdrcd5.1_beta/gdrcd5.2/pages/imgs/icons/mail_new.png" class="colonna_elengo_messaggi_icon">	
+                            <img src="imgs/icons/mail_new.png" class="colonna_elengo_messaggi_icon">	
 			 <?php } else {?>
-                            <img src="file:///C|/Users/Axl/Downloads/gdrcd5.1_beta/gdrcd5.2/pages/imgs/icons/mail_read.png" class="colonna_elengo_messaggi_icon">	
+                            <img src="imgs/icons/mail_read.png" class="colonna_elengo_messaggi_icon">	
                        <?php }
 				   }?>
 	    </div>
@@ -487,26 +487,26 @@ if ((isset($_REQUEST['op'])===FALSE)&&(isset($_REQUEST['newmessage'])===FALSE)){
 	</td>
 	<td>
 	   <div class="elementi_elenco">
-	     <a href="file:///C|/Users/Axl/Downloads/gdrcd5.1_beta/gdrcd5.2/pages/main.php?page=messages_center&op=read&id_messaggio=<?php echo $row['id']?>"><?php echo gdrcd_filter('out',substr($row['testo'],0,40)); ?>...</a>
+	     <a href="main.php?page=messages_center&op=read&id_messaggio=<?php echo $row['id']?>"><?php echo gdrcd_filter('out',substr($row['testo'],0,40)); ?>...</a>
 	   </div>
 	</td>
 	<td>
       <div class="controlli_elenco" >
 	  <div class="controllo_elenco" >
               <!-- reply -->
-			  <form action="file:///C|/Users/Axl/Downloads/gdrcd5.1_beta/gdrcd5.2/pages/main.php?page=messages_center" method="post">
+			  <form action="main.php?page=messages_center" method="post">
 			  <input type="hidden" name="reply_dest" value="<?php echo $row['mittente'];?>" />
 			  <input type="hidden" name="op" value="reply" />
-			  <input type="image" src="file:///C|/Users/Axl/Downloads/gdrcd5.1_beta/gdrcd5.2/pages/imgs/icons/reply.png" value="submit" alt="<?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['reply']); ?>" title="<?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['reply']); ?>" />
+			  <input type="image" src="imgs/icons/reply.png" value="submit" alt="<?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['reply']); ?>" title="<?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['reply']); ?>" />
 			  </form>
 	  </div>
 	  <div class="controllo_elenco" >
 	          <!-- attach -->
-			  <form action="file:///C|/Users/Axl/Downloads/gdrcd5.1_beta/gdrcd5.2/pages/main.php?page=messages_center" method="post">
+			  <form action="main.php?page=messages_center" method="post">
 			  <input type="hidden" name="reply_dest" value="<?php echo $row['mittente'];?>" />
 			  <input type="hidden" name="testo" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['attachment'].$row['testo']);?>" />
 			  <input type="hidden" name="op" value="attach" />
-			  <input type="image" src="file:///C|/Users/Axl/Downloads/gdrcd5.1_beta/gdrcd5.2/pages/imgs/icons/attach.png" value="submit" alt="<?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['attach']); ?>" title="<?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['attach']); ?>"  />
+			  <input type="image" src="imgs/icons/attach.png" value="submit" alt="<?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['attach']); ?>" title="<?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['attach']); ?>"  />
 			  </form>
 	  </div>
 	  <?php if((($row['destinatario']=='all')&&($_SESSION['permessi']>=MODERATOR))||
@@ -514,10 +514,10 @@ if ((isset($_REQUEST['op'])===FALSE)&&(isset($_REQUEST['newmessage'])===FALSE)){
 		       ((is_numeric($row['destinatario'])===FALSE)&&($row['destinatario']!='all'))){ ?>
 	  <div class="controllo_elenco" >
               <!-- erase -->
-			  <form action="file:///C|/Users/Axl/Downloads/gdrcd5.1_beta/gdrcd5.2/pages/main.php?page=messages_center" method="post">
+			  <form action="main.php?page=messages_center" method="post">
               <input type="hidden" name="op" value="erase" />
 			  <input type="hidden" name="id_messaggio" value="<?php echo $row['id'];?>" />
-			  <input type="image" src="file:///C|/Users/Axl/Downloads/gdrcd5.1_beta/gdrcd5.2/pages/imgs/icons/erase.png" value="submit" alt="<?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['erase']); ?>" title="<?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['erase']); ?>" />
+			  <input type="image" src="imgs/icons/erase.png" value="submit" alt="<?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['erase']); ?>" title="<?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['erase']); ?>" />
 			  </form>
 	  </div>
 	 
@@ -554,7 +554,7 @@ if ((isset($_REQUEST['op'])===FALSE)&&(isset($_REQUEST['newmessage'])===FALSE)){
 	    echo gdrcd_filter('out',$MESSAGE['interface']['pager']['pages_name']);
 		for($i=0;$i<=floor($totaleresults/$PARAMETERS['settings']['messages_per_page']);$i++){ 
         if ($i!=$_REQUEST['offset']){ ?>
-           <a href="file:///C|/Users/Axl/Downloads/gdrcd5.1_beta/gdrcd5.2/pages/main.php?page=messages_center&offset=<?php echo $i; ?>"><?php echo $i+1; ?></a>     
+           <a href="main.php?page=messages_center&offset=<?php echo $i; ?>"><?php echo $i+1; ?></a>     
 		   <?php } else { echo ' '.($i+1).' '; }
         }
       }	?>
@@ -565,14 +565,14 @@ if ((isset($_REQUEST['op'])===FALSE)&&(isset($_REQUEST['newmessage'])===FALSE)){
 
 <!-- link scrivi messaggio -->
 <div class="link_back">
-   <a href="file:///C|/Users/Axl/Downloads/gdrcd5.1_beta/gdrcd5.2/pages/main.php?page=messages_center&newmessage=yes">
+   <a href="main.php?page=messages_center&newmessage=yes">
       <?php echo $MESSAGE['interface']['messages']['new']; ?>
    </a>
 </div>
 
 <!-- link scrivi messaggio -->
 <div class="link_back">
-   <a href="file:///C|/Users/Axl/Downloads/gdrcd5.1_beta/gdrcd5.2/pages/main.php?page=messages_center&op=eraseall">
+   <a href="main.php?page=messages_center&op=eraseall">
       <?php echo $MESSAGE['interface']['messages']['erase_all']; ?>
    </a>
 </div>
