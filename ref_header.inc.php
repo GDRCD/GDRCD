@@ -157,7 +157,35 @@ if((gdrcd_filter_get($_REQUEST['chat'])=='yes')&&(empty($_SESSION['login'])===FA
 				{ 
 					$tag_n_beyond=$_SESSION['tag']; 
 				}
-   			} 
+   			}
+  			else if($first_char == "#")
+			{ //Dado
+	   			$m_type ='C';
+
+				if (eregi("^(d)+([0-9])", $chat_message))
+				{
+		   			$nstring = ereg_replace("[^0-9]", "", $chat_message);
+		   			mt_srand((double)microtime()*1000000); 
+		   			$die = mt_rand(1,(int)$nstring);
+		   			$chat_message = "A ".$_SESSION['login']." esce ".gdrcd_filter('num',$die)." su ".$nstring;
+				}
+				else if (eregi("^[0-9]+(d)+([0-9])", $chat_message))
+				{
+					$unit = explode('d', $chat_message);
+					
+					$numero = $unit[0];
+					$dado = $unit[1];
+					$x = 0;
+					$chat_message = "A ".$_SESSION['login']." esce ";
+					for($x = 0; $x < $unit; $x++)
+					{
+			   			mt_srand((double)microtime()*1000000); 
+			   			$die = mt_rand(1,(int)$dado);
+			   			$chat_message .= gdrcd_filter('num',$die)." su ".$dado.", ";
+					}
+					$chat_message = substr($chat_message, 0, -2);
+				}	   
+			}			
    			elseif (($type=="1")||($first_char=="+"))
    			{ /*Azione*/
     				if ($actual_healt['salute']>0)
