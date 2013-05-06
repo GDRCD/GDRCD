@@ -21,18 +21,18 @@
 			$tables = array();
 			
 			require 'upgrade_list.php';
-		
+			
 			foreach ($tables as $tablename => $newfields)
 			{
 				$fields = gdrcd_check_tables($tablename);
-			
+		
 				foreach ($newfields as $newfield_name => $newfield_info)
 				{
 					$match = false;
-					
+										
 					foreach ($fields as $field)
 					{
-						if ($field->name == $newfield_name)
+						if ($field->Field == $newfield_name)
 								$match = true;
 					}
 					

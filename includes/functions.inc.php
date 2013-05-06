@@ -13,16 +13,26 @@
 */
 function gdrcd_connect()
 {
-	$db_user 	= $GLOBALS['PARAMETERS']['database']['username'];
-	$db_pass 	= $GLOBALS['PARAMETERS']['database']['password'];
-	$db_name 	= $GLOBALS['PARAMETERS']['database']['database_name'];
-	$db_host 	= $GLOBALS['PARAMETERS']['database']['url'];
-	$db_error 	= $GLOBALS['MESSAGE']['error']['db_not_found'];
+	static $db_link	= false;
+	
+	if ($db_link === false)
+	{
+		$db_user 	= $GLOBALS['PARAMETERS']['database']['username'];
+		$db_pass 	= $GLOBALS['PARAMETERS']['database']['password'];
+		$db_name 	= $GLOBALS['PARAMETERS']['database']['database_name'];
+		$db_host 	= $GLOBALS['PARAMETERS']['database']['url'];
+		$db_error 	= $GLOBALS['MESSAGE']['error']['db_not_found'];
 
-    $db = mysql_connect($db_host, $db_user, $db_pass)or die(gdrcd_mysql_error());
-    mysql_select_db($db_name)or die(gdrcd_mysql_error($db_error));
-
-	return $db;
+		#$db = mysql_connect($db_host, $db_user, $db_pass)or die(gdrcd_mysql_error());
+		#mysql_select_db($db_name)or die(gdrcd_mysql_error($db_error));
+		
+		$db_link = mysqli_connect($db_host, $db_user, $db_pass, $db_name);
+		
+		if (mysqli_connect_errno())
+				gdrcd_mysql_error($db_error);
+	}
+	
+	return $db_link;
 }
 
 
@@ -30,7 +40,7 @@ function gdrcd_connect()
 */
 function gdrcd_close_connection($db)
 {
-    mysql_close($db);
+    mysqli_close($db);
 }
 
 
@@ -38,8 +48,7 @@ function gdrcd_close_connection($db)
 */
 function gdrcd_query($sql, $mode = 'query')
 {
-	global $handleDBConnection;
-
+	$db_link = gdrcd_connect();
 
 	switch (strtolower(trim($mode)))
 	{
@@ -49,9 +58,9 @@ function gdrcd_query($sql, $mode = 'query')
 			{
 				case 'SELECT':
 					
-					$result = mysql_query($sql, $handleDBConnection)or die(gdrcd_mysql_error($sql));
-					$row = mysql_fetch_assoc($result);
-					mysql_free_result($result);
+					$result = mysqli_query($db_link, $sql)or die(gdrcd_mysql_error($sql));
+					$row = mysqli_fetch_array($result, MYSQLI_BOTH);
+					mysqli_free_result($result);
 			
 					return $row;
 			
@@ -59,7 +68,7 @@ function gdrcd_query($sql, $mode = 'query')
 						
 				default:
 		
-					return mysql_query($sql, $handleDBConnection)or die(gdrcd_mysql_error($sql));
+					return mysqli_query($db_link, $sql)or die(gdrcd_mysql_error($sql));
 		
 				break;
 			}
@@ -67,7 +76,7 @@ function gdrcd_query($sql, $mode = 'query')
 			
 		case 'result':
 			
-			$result = mysql_query($sql, $handleDBConnection)or die(gdrcd_mysql_error($sql));
+			$result = mysqli_query($db_link, $sql)or die(gdrcd_mysql_error($sql));
 			return $result;
 		
 		break;
@@ -75,14 +84,22 @@ function gdrcd_query($sql, $mode = 'query')
 			
 		case 'num_rows':
 		
-			return (int)mysql_num_rows($sql);
+			return (int)mysqli_num_rows($sql);
 		
 		break;
 		
 				
 		case 'fetch':
 				
-			$row = mysql_fetch_assoc($sql);
+			$row = mysqli_fetch_array($sql, MYSQLI_BOTH);
+			return $row;
+				
+		break;
+		
+				
+		case 'object':
+				
+			$row = mysqli_fetch_object($sql);
 			return $row;
 				
 		break;
@@ -90,7 +107,7 @@ function gdrcd_query($sql, $mode = 'query')
 				
 		case 'free':
 					
-			return mysql_free_result($sql);
+			return mysqli_free_result($sql);
 					
 		break;
 	}
@@ -106,40 +123,52 @@ function gdrcd_check_tables($table)
 {
         $result 	= gdrcd_query("SELECT * FROM $table LIMIT 1", 'result');
         $describe 	= gdrcd_query("SHOW COLUMNS FROM $table", 'result');
-        $num 		= mysql_num_fields($result);
-        
-        $output = array();
-        
-        for ($i = 0; $i < $num; ++$i)
-        {
-			$field = mysql_fetch_field($result, $i);
-			$field->auto_increment = (strpos(mysql_result($describe, $i, 'Extra'), 'auto_increment') === FALSE ? 0 : 1);
-			$field->definition = mysql_result($describe, $i, 'Type');
+
+
+		$i = 0;
+		$output = array();
+
+		while ($field = gdrcd_query($describe, 'object'))
+		{
+			#echo $i, "<br>";
+			$defInfo = mysqli_fetch_field_direct($result, $i);
 			
-			if ($field->not_null && !$field->primary_key)
+			$field->auto_increment = (strpos($field->Extra, 'auto_increment') === FALSE ? 0 : 1);
+			$field->definition = $field->Type;
+			
+			if ($field->Null == 'NO' && $field->Key != 'PRI')
 					$field->definition .= ' NOT NULL';
 					
-			if ($field->def) 
-					$field->definition .= " DEFAULT '" . mysql_real_escape_string($field->def) . "'";
+			if ($field->Default) 
+					$field->definition .= " DEFAULT '" . mysqli_real_escape_string(gdrcd_connect(), $field->Default) . "'";
 					
 			if ($field->auto_increment)
 					$field->definition .= ' AUTO_INCREMENT';
 			
-			if ($key = mysql_result($describe, $i, 'Key'))
-			{
-					if ($field->primary_key) 
-							$field->definition .= ' PRIMARY KEY';
-					else 
-							$field->definition .= ' UNIQUE KEY';
-			}
 			
-			$field->len = mysql_field_len($result, $i);
-			$output[$field->name] = $field;
+			switch ($field->Key)
+			{
+				case 'PRI': $field->definition .= ' PRIMARY KEY'; break;
+				case 'UNI': $field->definition .= ' UNIQUE KEY'; break;
+				case 'MUL': $field->definition .= ' KEY'; break;
+			}
+
+			
+			$field->len = $defInfo->length;
+			$output[$field->Field] = $field;
+			++$i;
+			
+			unset($defInfo);
 		}
+		
+		gdrcd_query($describe, 'free');
+		
+
         
 		
 		return $output;
 }
+
 
 
 /** * Gestione degli errori tornati dalle query
@@ -148,12 +177,12 @@ function gdrcd_mysql_error($details = false)
 {
 	$backtrace = debug_backtrace();
 
-	$error_msg = 	'<strong>GDRCD MySQL Error</strong> [File: '. basename($backtrace[1]['file']) .'; Line: '. $backtrace[1]['line'] .']<br>'.
-					'<strong>ErrorCode</strong>: '. mysql_errno() .'<br>'.
-					'<strong>ErrorString</strong>: '. mysql_error();
+	$error_msg = 	'<strong>GDRCD MySQLi Error</strong> [File: '. basename($backtrace[1]['file']) .'; Line: '. $backtrace[1]['line'] .']<br>'.
+					'<strong>Error Code</strong>: '. mysqli_errno(gdrcd_connect()) .'<br>'.
+					'<strong>Error String</strong>: '. mysqli_error(gdrcd_connect());
 
 	if ($details !== false)
-			$error_msg .= '<br><br><strong>Dettaglio dell\'errore</strong>: ' . $details;
+			$error_msg .= '<br><br><strong>Error Detail</strong>: ' . $details;
 			
 
 	return $error_msg;
