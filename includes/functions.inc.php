@@ -545,30 +545,30 @@ function gdrcd_angs($str)
 function gdrcd_chatcolor($str)
 {
     $search = array(
-        '#\&lt;(.+?)\&gt;#is', 
-	    '#\[(.+?)\]#is', 
+	'#\&lt;(.+?)\&gt;#is', 
+	'#\[(.+?)\]#is', 
     );
     $replace = array(
-	    '<span class="color2">&lt;$1&gt;</span>',
-		'<span class="color2">&lt;$1&gt;</span>',
+	'<span class="color2">&lt;$1&gt;</span>',
+	'<span class="color2">&lt;$1&gt;</span>',
     );
     return preg_replace($search, $replace, $str); 
 }
 
 function gdrcd_chatme($user, $str)
 {
-		$search = $user;
-    	$replace = '<span style="text-decoration:underline;">'.$search.'</span>';
+	$search = $user;
+    $replace = '<span style="text-decoration:underline;">'.$search.'</span>';
 
-    	return str_ireplace($search, $replace, $str); 
+    return str_ireplace($search, $replace, $str); 
 }
 
 function gdrcd_chatme_master($user, $str)
 {
-		$search = $user;
-    	$replace = '<span style="text-decoration:underline;">'.$search.'</span>';
+	$search = $user;
+    $replace = '<span style="text-decoration:underline;">'.$search.'</span>';
 
-    	return str_ireplace($search, $replace, $str); 
+    return str_ireplace($search, $replace, $str); 
 }
 function gdrcd_list($str)
 {
