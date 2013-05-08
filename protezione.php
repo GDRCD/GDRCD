@@ -8,7 +8,7 @@
  ****************************************************/
 class maxProtector{
 	var $password = 'gdrcd';
-	
+
     function showLoginForm(){
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -40,6 +40,9 @@ class maxProtector{
 <?php
     }
 
+    /**
+     * Checks if the user is logged-in and performs login. If not a login form is shown, if the submit button was pressed it checks if the passowrd is correct and logs the user in.
+     */
     function login(){
 		$loggedin = isset($_SESSION['loggedin']) ? $_SESSION['loggedin'] : false;
         if ( (!isset($_POST['submitBtn'])) && (!($loggedin))){

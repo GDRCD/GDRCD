@@ -1,16 +1,19 @@
 <?php
-/** * Funzioni di core di gdrcd
-	* Il file contiene una revisione del core originario introdotto in GDRCD5
-	* @version 5.2
-	* @author Breaker
-*/
+/**
+ * Funzioni di core di gdrcd
+ * Il file contiene una revisione del core originario introdotto in GDRCD5
+ * @version 5.2
+ * @author Breaker
+ */
 
-/** * Funzionalità di dialogo col database 
-	* Set di funzioni da core che implementano il dialogo gestito col db
-*/
+/**
+ * Funzionalità di dialogo col database 
+ * Set di funzioni da core che implementano il dialogo gestito col db
+ */
 
-/** * Connettore al database MySql
-*/
+/**
+ * Connettore al database MySql
+ */
 function gdrcd_connect()
 {
 	static $db_link	= false;
@@ -36,16 +39,29 @@ function gdrcd_connect()
 }
 
 
-/** * Chiusura della connessione col db MySql
-*/
+/**
+ * Chiusura della connessione col db MySql
+ * @param resource $db: una connessione mysqli
+ */
 function gdrcd_close_connection($db)
 {
     mysqli_close($db);
 }
 
 
-/** * Gestore delle query
-*/
+/**
+ * Gestore delle query, offre una basilare astrazione del database per la maggior parte delle funzionalità del database più usate.
+ * @param string|mysqli_result $sql: il codice SQL da inviare al database o una risorsa risultato di MySqli
+ * @param string $mode: La modalità con cui eseguire la query. Default "query"
+ * Modalità accettate:
+ *  query: esegue la query e ritorna come risultato la prima riga del resultset
+ *  result: esegue la query e ritorna la risorsa MySql associata al risultato
+ *  num_rows: accetta come parametro una risorsa mysqli e ritorna il numero di righe nel resultset
+ *  fetch: accetta come parametro una risorsa mysqli e ritorna il successivo risultato dal resultset come array
+ *  object: uguale a fetch, eccetto che ritorna un oggetto al posto di un array
+ *  free: libera la memoria occupata dalla risorsa mysqli passata in $sql
+ * @return un booleano in caso di esecuzione di query non SELECT e modalità 'query'. Altrimenti ritorna come specificato nella descrizione di $mode
+ */
 function gdrcd_query($sql, $mode = 'query')
 {
 	$db_link = gdrcd_connect();
@@ -116,9 +132,12 @@ function gdrcd_query($sql, $mode = 'query')
 }
 
 
-/** * Funzione di recupero delle colonne e della loro dichiarazione della tabella specificata.
-	* Si usa per la verifica dell'aggiornamento db di gdrcd5.1
-*/
+/**
+ * Funzione di recupero delle colonne e della loro dichiarazione della tabella specificata.
+ * Si usa per la verifica dell'aggiornamento db da vecchie versioni di gdrcd5
+ * @param string $table: il nome della tabella da controllare
+ * @return un oggetto contenente la descrizione della tabella negli attributi
+ */
 function gdrcd_check_tables($table)
 {
         $result 	= gdrcd_query("SELECT * FROM $table LIMIT 1", 'result');
@@ -171,8 +190,11 @@ function gdrcd_check_tables($table)
 
 
 
-/** * Gestione degli errori tornati dalle query
-*/
+/**
+ * Gestione degli errori tornati dalle query
+ * @param string $details: una descrizione dell'errore avvenuto
+ * @return una stringa HTML che descrive l'errore riscontrato
+ */
 function gdrcd_mysql_error($details = false)
 {
 	$backtrace = debug_backtrace();
@@ -191,13 +213,17 @@ function gdrcd_mysql_error($details = false)
 
 
 
-/** * Funzionalità di escape
-	* Set di funzioni escape per filtrare i possibili contenuti introdotti da un utente ;-)
-*/
+/**
+ * Funzionalità di escape
+ * Set di funzioni escape per filtrare i possibili contenuti introdotti da un utente ;-)
+ */
 
 
-/** * Funzione di criptaggio delle password
-*/
+/**
+ * Funzione di hashing delle password. Decide la modalità in base alle spefiche in config.inc.php. Attualmente solo MD5 e SHA-1 sono supportate
+ * @param string $str: la password o stringa di cui calcolare l'hash
+ * @return l'hash calcolato a partire da $str con l'algoritmo specificato nella configurazione
+ */
 function gdrcd_encript($str)
 {
 	$encript_password = $GLOBALS['PARAMETERS']['mode']['encriptpassword'];
@@ -217,22 +243,29 @@ function gdrcd_encript($str)
 }
 
 
-/** * Controllo della validità della password
-	* Funzione work in progress, da implementare.
-	
-	* Deve essere disabilitabile da config
-	* Funzionalità da ON/OFF:
-	* - numero di caratteri minimo scelto dall'utente
-	* - non accettazione di password contenenti lettere accentate
-	* - non accettazione di password troppo semplici (ad esempio uguali al nickname del personaggio)
-*/
+/**
+ * TODO Controllo della validità della password
+ * Funzione work in progress, da implementare.
+
+ * Deve essere disabilitabile da config
+ * Funzionalità da ON/OFF:
+ * - numero di caratteri minimo scelto dall'utente
+ * - non accettazione di password contenenti lettere accentate
+ * - non accettazione di password troppo semplici (ad esempio uguali al nickname del personaggio)
+ * @param string $str: la password da controllare
+ * @return true se la password è valida, false altrimenti
+ */
 function gdrcd_check_pass($str){
     return true;
 }
 
 
-/** * Funzione di filtraggio di codici malevoli negli input utente
-*/
+/**
+ * Funzione di filtraggio di codici malevoli negli input utente
+ * @param string $what: modalità da utilizzare per controllare la stringa. Sono opzioni valide: in o get, num, out, addslashes, email, includes
+ * @param string $str: la stringa da controllare
+ * @return una versione filtrata di $str
+ */
 function gdrcd_filter($what, $str)
 {
 	switch (strtolower($what))
@@ -267,8 +300,9 @@ function gdrcd_filter($what, $str)
 }
 
 
-/** * Funzioni di alias per gdrcd_filter()
-*/
+/**
+ * Funzioni di alias per gdrcd_filter()
+ */
 function gdrcd_filter_in($str){ return gdrcd_filter('in', $str); }
 function gdrcd_filter_out($str){ return gdrcd_filter('out', $str); }
 function gdrcd_filter_get($str){ return gdrcd_filter('get', $str); }
@@ -278,9 +312,12 @@ function gdrcd_filter_email($str){ return gdrcd_filter('email', $str); }
 function gdrcd_filter_includes($str){ return gdrcd_filter('includes', $str); }
 
 
-/** * Funzione di filtraggio degli elementi pericolosi in html
-	* Serve a consentire l'uso di html e css in sicurezza nelle zone editabili della scheda
-*/
+/**
+ * Funzione basilare di filtraggio degli elementi pericolosi in html
+ * Serve a consentire l'uso di html e css in sicurezza nelle zone editabili della scheda
+ * @param string $str: la stringa da filtrare
+ * @return $str con gli elementi illegali sosituiti con una stringa di errore
+ */
 function gdrcd_html_filter($str)
 {
 	$notAllowed = array(
@@ -300,13 +337,15 @@ function gdrcd_html_filter($str)
 
 
 
-/** * Controlli di routine di gdrcd sui personaggi
-	* Set di funzione per semplificare controlli frequenti sui personaggi nell'engine
-*/
+/**
+ * Controlli di routine di gdrcd sui personaggi
+ * Set di funzione per semplificare controlli frequenti sui personaggi nell'engine
+ */
 
 
-/** * Check validità della sessione utente
-*/
+/**
+ * Check validità della sessione utente
+ */
 function gdrcd_controllo_sessione()
 {    
     if (empty($_SESSION['login']))
@@ -320,11 +359,14 @@ function gdrcd_controllo_sessione()
 }
 
 
-/** * Funzione di check per l'esilio del pg
-*/
+/**
+ * Controlla se l'utente è esiliato o meno
+ * @param string $pg: il nome del pg da ricercare
+ * @return true se il pg è esiliato, false altrimenti
+ */
 function gdrcd_controllo_esilio($pg)
 {
-   $exiled = gdrcd_query("SELECT autore_esilio, esilio, motivo_esilio FROM personaggio WHERE nome LIKE '$pg' LIMIT 1");
+   $exiled = gdrcd_query("SELECT autore_esilio, esilio, motivo_esilio FROM personaggio WHERE nome LIKE '$pg' LIMIT 1");//TODO picco di complessità inutile per l'uso di LIKE. Mancanza di escape per db!
 
    if(strtotime($exiled['esilio']) > time())
    {
@@ -339,9 +381,11 @@ function gdrcd_controllo_esilio($pg)
 }
 
 
-/** * Controlla se l'utente è loggato da pochi minuti
-	* si usa per l'icona entra/esce
-*/
+/**
+ * Controlla se l'utente è loggato da pochi minuti. Utile per l'icona entra/esce
+ * @param string $time: data in un formato leggibile da strtotime()
+ * @return il numero di minuti passati da $time
+ */
 function gdrcd_check_time($time)
 {
 	$time_hours 	= date('H', strtotime($time));
@@ -361,14 +405,16 @@ function gdrcd_check_time($time)
 
 
 
-/** * Utilità
-	* Set di funzioni di utilità generica per l'engine
-*/
+/**
+ * Utilità
+ * Set di funzioni di utilità generica per l'engine
+ */
 
-
-/** * Provvede al caricamento degli elementi nell'interfaccia
-	* E' approssimata ma funziona, se qualcuno vuol far di meglio si faccia avanti :p
-*/
+/**
+ * Provvede al caricamento degli elementi nell'interfaccia
+ * E' approssimata ma funziona, se qualcuno vuol far di meglio si faccia avanti
+ * @param string $path: il percorso filesystem del file da includere
+ */
 function gdrcd_load_modules($path)
 {
 	global $MESSAGE;
@@ -385,46 +431,63 @@ function gdrcd_load_modules($path)
 }
 
 
-/** * Funzione di formattazione per la data nel formato italiano
-*/ 
+/**
+ * Funzione di formattazione per la data nel formato italiano
+ * @param string $date_in: la data in un formato leggibile da strtotime()
+ * @return la data nel formato dd/mm/yyyy
+ */ 
 function gdrcd_format_date($date_in)
 {
 	return date('d/m/Y', strtotime($date_in));
 }
 
 
-/** * Funzione di formattazione del tempo nel formato italiano
-*/ 
+/**
+ * Funzione di formattazione del tempo nel formato italiano
+ * @param string $time_in: la data-ora in un formato leggibile da strtotime()
+ * @return l'ora nel formato hh:mm
+ */ 
 function gdrcd_format_time($time_in)
 {
 	return date('H:i', strtotime($time_in));
 }
 
 
-/** * Funzione di formattazione data completa nel formato ita
-*/ 
+/**
+ * Funzione di formattazione data completa nel formato italiano
+ * @param $datetime_in: la data e ora in formato leggibile da strtotime()
+ * @return la data/ora nel formato DD/MM/YYYY hh:mm
+ */ 
 function gdrcd_format_datetime($datetime_in)
 {
 	return date('d/m/Y H:i', strtotime($datetime_in));
 }
 
-/** * Funzione di formattazione data completa nel formato ita per nome file da catalogare
-*/
+/**
+ * Funzione di formattazione data completa nel formato ita per nome file da catalogare
+ * @param string $datetime_in: la data e ora in formato leggibile da strtotime()
+ * @return data ora formattata nel formato YYYYMMDD_hhmm
+ */
 function gdrcd_format_datetime_cat($datetime_in)
 {
 	return date('Ymd_Hi', strtotime($datetime_in));
 }
 
-/** * Trasforma la prima lettera della parola in maiuscolo
-*/
+/**
+ * Trasforma la prima lettera della parola in maiuscolo
+ * @param string $word: la parola da manipolare
+ * @return $word con solo la prima lettera maiuscola
+ */
 function gdrcd_capital_letter($word)
 {
 	return ucwords(strtolower($word));
 }
 
 
-/** * Crea una password casuale di 8 caratteri
-*/
+/**
+ * Genera una password casuale, esclusivamente alfabetica con lettere maiuscole
+ * @return una stringa casuale lunga 8 caratteri
+ */
 function gdrcd_genera_pass()
 {
 	$pass = '';
@@ -434,12 +497,14 @@ function gdrcd_genera_pass()
 }
 
 
-/** * BBcode nativo di GDRCD
-
-	* Secondo me, questo bbcode presenta non poche vulnerabilità.
-	* Andrebbe aggiornata per essere più sicura
-	* @author Blancks
-*/
+/**
+ * BBcode nativo di GDRCD
+ * Secondo me, questo bbcode presenta non poche vulnerabilità.
+ * TODO Andrebbe aggiornata per essere più sicura
+ * @param string $str: la stringa con i bbcode da tradurre, dovrebbe già essere stata filtrata per l'output su pagina web
+ * @return $str con i tag bbcode tradotti in html
+ * @author Blancks
+ */
 function gdrcd_bbcoder($str){
 global $MESSAGE;
 $str=gdrcd_close_tags('quote',$str);
@@ -477,16 +542,13 @@ $search = array(
     return preg_replace($search, $replace, $str); 
 }
 
-/*
-	Aggiunge la chisura dei tag BBCode per impedire agli utenti di rompere l'HTML del sito
-	Argomenti:
-		$tag: il tag da controllare, senza le parentesi quadre, può essere un array di tag
-		$body: il testo in cui controllare
-	Ritorna:
-		Il testo corretto
-	
-	@author leoblacksoul
-*/
+/**
+ * Aggiunge la chiusura dei tag BBCode per impedire agli utenti di rompere l'HTML del sito
+ * @param array|string $tag: il tag da controllare, senza le parentesi quadre, può essere un array di tag
+ * @param $body: il testo in cui controllare
+ * @return Il testo corretto
+ * @author leoblacksoul
+ */
 function gdrcd_close_tags($tag,$body){
   if(is_array($tag))
   	foreach($tag as $value)
@@ -502,6 +564,11 @@ function gdrcd_close_tags($tag,$body){
   return $body;
 }
 
+/**
+ * Fa il redirect della pagina, diretto ocon delay
+ * @param $url: l'URL verso cui fare redirect
+ * @param $tempo: il numero di secondi da attendere prima di fare redirect. Se non attendere impostare a 0 o false
+ */
 function gdrcd_redirect($url,$tempo = FALSE )
 {
 	if(!headers_sent() && $tempo == FALSE )
@@ -523,8 +590,11 @@ function gdrcd_redirect($url,$tempo = FALSE )
 }
 
 
-/** * La funzione sostituisce eventuali apachi in una stringa con parentesi quadre
-*/
+/**
+ * Sostituisce eventuali parentesi angolari in coppia in una stringa con parentesi quadre
+ * @param string $str: la stringa da controllare
+ * @return $str con la coppie di parentesi angolari sostituite con parentesi quadre
+ */
 function gdrcd_angs($str)
 {
     $search = array(
@@ -539,9 +609,12 @@ function gdrcd_angs($str)
 }
 
 
-/** * La funzione serve a definire degli stili differenti per parole contornate da parentesi
-	* Si usa in chat
-*/
+/**
+ * Colora in HTML le parti di testo comprese tra parentesi angolari o parentesi quadre
+ * Si usa in chat
+ * @param string $str: la stringa da controllare
+ * @return $str con la parti colorate
+ */
 function gdrcd_chatcolor($str)
 {
     $search = array(
@@ -555,6 +628,12 @@ function gdrcd_chatcolor($str)
     return preg_replace($search, $replace, $str); 
 }
 
+/**
+ * Sottolinea in HTML una stringa presente in un testo. Usata per sottolineare il proprio nome in chat
+ * @param string $user: la stringa da sottolineare, in genere un nome utente
+ * @param string $str: la stringa in cui cercare e sottolineare $user
+ * @return $str con tutte le occorrenze di $user sottolineate
+ */
 function gdrcd_chatme($user, $str)
 {
 	$search = $user;
@@ -563,6 +642,9 @@ function gdrcd_chatme($user, $str)
     return str_ireplace($search, $replace, $str); 
 }
 
+/**
+ * TODO non ho capito a cosa serve
+ */
 function gdrcd_chatme_master($user, $str)
 {
 	$search = $user;
@@ -570,6 +652,12 @@ function gdrcd_chatme_master($user, $str)
 
     return str_ireplace($search, $replace, $str); 
 }
+
+/**
+ * Crea un campo di autocompletamento HTML5 (<datalist>) per vari contenuti
+ * @param string $str: specifica il soggetto di cui creare la lista. Attualmente è supportato solo 'personaggi', che crea una lista di tutti gli utenti del gdr
+ * @return il tag html <datalist> già pronto per essere stampato sulla pagina
+ */
 function gdrcd_list($str)
 {
 	switch(strtolower($str))
@@ -581,7 +669,7 @@ function gdrcd_list($str)
 
 			while($option=gdrcd_query($characters, 'fetch'))
 			{
-				$list .= '<option value="'.$option['nome'].'" />';
+				$list .= '<option value="'.$option['nome'].'" />';//TODO escape HTMl del nome!
 			} 
 			gdrcd_query($characters, 'free');
 			$list .= '</datalist>';
@@ -590,5 +678,3 @@ function gdrcd_list($str)
 	
 	return $list;
 }
-
-?>
