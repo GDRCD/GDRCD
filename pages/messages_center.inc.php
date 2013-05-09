@@ -1,6 +1,6 @@
 <div class="pagina_messages_center">
-	<div class="page_title">
-		<h2><?php echo gdrcd_filter('out',$PARAMETERS['names']['private_message']['plur']); ?></h2>
+    <div class="page_title">
+        <h2><?php echo gdrcd_filter('out',$PARAMETERS['names']['private_message']['plur']); ?></h2>
 	</div>
 
 	<div class="page_body">
@@ -8,7 +8,7 @@
 /*Inserimento nuovo messaggio nel db*/
 if (gdrcd_filter('get',$_POST['op'])=="send_message")
 {
-	if (gdrcd_filter('get',$_POST['multipli'])=='singolo')
+    if (gdrcd_filter('get',$_POST['multipli'])=='singolo')
 	{
 		$check_dest=explode(',',gdrcd_filter('get',$_POST['destinatario']));
 		$destinat=trim($check_dest[0]);
@@ -86,79 +86,92 @@ if (gdrcd_filter('get',$_POST['op'])=="send_message")
 }//if ?>
 
 <?php /*Form di composizione di un messaggio*/
-if ((gdrcd_filter('get',$_POST['op'])=='send')||(gdrcd_filter('get',$_POST['op'])=='attach')||(gdrcd_filter('get',$_POST['op'])=='reply')||(gdrcd_filter('get',$_REQUEST['newmessage'])=='yes')){ ?>
-<div class="panels_box">
-  <form class="form_messaggi" 
-        action="main.php?page=messages_center" 
-		method="post">
+if ((gdrcd_filter('get',$_POST['op'])=='send')||
+    (gdrcd_filter('get',$_POST['op'])=='attach')||
+    (gdrcd_filter('get',$_POST['op'])=='reply')||
+    (gdrcd_filter('get',$_REQUEST['newmessage'])=='yes'))
+{ 
+?>
+    <div class="panels_box">
+        <form class="form_messaggi" 
+            action="main.php?page=messages_center" 
+		    method="post">
 
    <!-- Destinatario -->
-   <div class='form_label'>
-	  <?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['destination']); ?>
-   </div>
-   <div class='form_field'>
-	  <input type="text" 
-			 list="personaggi" 
-	         name="destinatario" 
-             placeholder="Nome del personaggio"
-			 value="<?php echo gdrcd_filter('get',$_REQUEST['reply_dest']); ?>" />
-   </div>
-   <?php if($_SESSION['permessi']>=GUILDMODERATOR){ ?>
-         
+        <div class='form_label'>
+            <?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['destination']); ?>
+        </div>
+        <div class='form_field'>
+            <input type="text" 
+                list="personaggi" 
+	            name="destinatario" 
+                placeholder="Nome del personaggio"
+			    value="<?php echo gdrcd_filter('get',$_REQUEST['reply_dest']); ?>" />
+        </div>
+<?php 
+    if($_SESSION['permessi']>=GUILDMODERATOR)
+    { 
+?>
+        <div class="form_field">
+            <select name="multipli">
+		        <option value="singolo" SELECTED> 
+		            <?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['multiple']['single']); ?> 
+		        </option>
+		        <option value="multiplo"> 
+		            <?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['multiple']['multiple']); ?> 
+		        </option>
+		        <option value="presenti"> 
+		            <?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['multiple']['online']); ?> 
+		        </option>
+<?php 
+        if (empty($_SESSION['gilda'])===FALSE)
+        {
+            $gilde=explode(',', $_SESSION['gilda']);
+			foreach ($gilde as $getname)
+            {
+                if ((is_numeric($getname)===TRUE) && ($getname>-1))
+                {
+                    $row_getname=gdrcd_query("SELECT nome FROM gilda WHERE id_gilda=".$getname."");
+?>
+                <option value="<?php echo $getname; ?>">
+		            <?php echo gdrcd_filter('out',$row_getname['nome']); ?> 
+		        </option>
+<?php           }
+			}
+        }
+?>
+<?php   if($_SESSION['permessi']>=MODERATOR)
+        { 
+?>
+                <option value="broadcast">
+		            <?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['multiple']['all']); ?> 
+		        </option>   
+<?php   } ?>
+            </select>
+        </div>   
+<?php
+    } //if 
+?>
+    <div class="form_info">
+        <?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['multiple']['info']); ?> 
+    </div>
    
-   <div class="form_field">
-      <select name="multipli">
-		 <option value="singolo" SELECTED> 
-		    <?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['multiple']['single']); ?> 
-		 </option>
-		 <option value="multiplo"> 
-		    <?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['multiple']['multiple']); ?> 
-		 </option>
-		 <option value="presenti"> 
-		    <?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['multiple']['online']); ?> 
-		</option>
-         <?php 
-    	     if (empty($_SESSION['gilda'])===FALSE){
-                   $gilde=explode(',', $_SESSION['gilda']);
-				   foreach ($gilde as $getname){
-                        if ((is_numeric($getname)===TRUE) && ($getname>-1) ){
-                        
-						   $row_getname=gdrcd_query("SELECT nome FROM gilda WHERE id_gilda=".$getname."");?>
-                               <option value="<?php echo $getname; ?>">
-		                          <?php echo gdrcd_filter('out',$row_getname['nome']); ?> 
-		                       </option>
-						<?php }
-				   }
-
-         }?>
-		 <?php if($_SESSION['permessi']>=MODERATOR){ ?>
-		 <option value="broadcast">
-		    <?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['multiple']['all']); ?> 
-		 </option>   
-		 <?php } ?>
-	  </select>
-   </div>   
-   <?php } //if ?>
-   <div class="form_info">
-      <?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['multiple']['info']); ?> 
-   </div>
-   
-   <!-- Testo -->
-   <div class='form_label'>
-	   <?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['body']); ?>
-   </div>
-   <div class='form_field'>
-	   <textarea type="textbox"
-	             name="testo"><?php 
+    <!-- Testo -->
+    <div class='form_label'>
+        <?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['body']); ?>
+    </div>
+    <div class='form_field'>
+	    <textarea type="textbox" name="testo">
+<?php          
+/**	* Fix per evitare le parentesi quadre vuote quando si compone un nuovo messaggio
+    * @author Blancks
+    */
+	if (isset($_POST['testo']))
+		echo "\n\n\n[".gdrcd_filter('out', trim($_POST['testo']))."]"; 
 	             
-					/**	* Fix per evitare le parentesi quadre vuote quando si compone un nuovo messaggio
-						* @author Blancks
-					*/
-					if (isset($_POST['testo']))
-							echo "\n\n\n[".gdrcd_filter('out', trim($_POST['testo']))."]"; 
-	             
-	             ?></textarea>
-   </div>
+ ?>
+        </textarea>
+    </div>
 
    <!-- Submit -->
    <input type="hidden" 
@@ -316,8 +329,9 @@ if (gdrcd_filter('get',$_REQUEST['op'])=='read'){
 
 
 <?php /*Eliminazione di un messaggio*/
-if ($_POST['op']=='erase'){ 
-   $id_messaggio=gdrcd_filter('num',$_POST['id_messaggio']);
+if ($_POST['op']=='erase')
+{ 
+    $id_messaggio=gdrcd_filter('num',$_POST['id_messaggio']);
    /** * Bugfix: correzione di un bug che permetteva la cancellazione di messaggi non inviati all'utente.
        * Viene quindi aggiunta nella clausola where il controllo sulla proprietà del messaggio.
        * Inoltre viene effettuato un controllo sul numero di righe cancellate. Se non è stato cancellato nulla
