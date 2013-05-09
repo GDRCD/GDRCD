@@ -13,7 +13,7 @@
 if($_POST['action']=='readall')
 {
 	$result = gdrcd_query("SELECT * FROM messaggioaraldo WHERE id_messaggio_padre = -1", 'result');
-	while($row=mysql_fetch_array($result))
+	while($row=gdrcd_query($result, 'fetch'))
 	{
 	$esiste = gdrcd_query("SELECT id FROM araldo_letto WHERE thread_id = ".$row['id_messaggio']." AND nome = '".$_SESSION['login']."'");
 		if($esiste['id'] > 0)
@@ -276,7 +276,7 @@ if($quote){
 <?php /*Visualizzazione topic*/
 if($_REQUEST['op']=='read')
 {
-    $result = gdrcd_query("SELECT messaggioaraldo.id_messaggio, messaggioaraldo.id_messaggio_padre, messaggioaraldo.titolo, messaggioaraldo.messaggio, messaggioaraldo.autore, messaggioaraldo.data_messaggio, messaggioaraldo.chiuso, araldo.tipo, araldo.nome, araldo.proprietari, personaggio.url_img FROM messaggioaraldo LEFT JOIN araldo ON messaggioaraldo.id_araldo = araldo.id_araldo LEFT JOIN personaggio ON messaggioaraldo.autore = personaggio.nome WHERE messaggioaraldo.id_messaggio_padre = ".gdrcd_filter('num',$_REQUEST['what'])." OR messaggioaraldo.id_messaggio = ".gdrcd_filter('num',$_REQUEST['what'])." ORDER BY id_messaggio_padre, data_messaggio", 'result');
+    $result = gdrcd_query("SELECT messaggioaraldo.id_messaggio, messaggioaraldo.id_messaggio_padre, messaggioaraldo.titolo, messaggioaraldo.messaggio, messaggioaraldo.autore, messaggioaraldo.data_messaggio, messaggioaraldo.chiuso, araldo.tipo, araldo.nome, araldo.proprietari, personaggio.url_img FROM messaggioaraldo LEFT JOIN araldo ON messaggioaraldo.id_araldo = araldo.id_araldo LEFT JOIN personaggio ON messaggioaraldo.autore = personaggio.nome WHERE (messaggioaraldo.id_messaggio_padre = ".gdrcd_filter('num',$_REQUEST['what'])." AND messaggioaraldo.id_messaggio_padre != -1) OR messaggioaraldo.id_messaggio = ".gdrcd_filter('num',$_REQUEST['what'])." ORDER BY id_messaggio_padre, data_messaggio", 'result');
     $row = gdrcd_query($result, 'fetch'); 
     
     $chiuso = $row['chiuso'];
@@ -663,7 +663,7 @@ if (gdrcd_query($result, 'num_rows') == 0){?>
     </div></td>
 	<?php } ?>
   </tr>
-  <?php while($row=mysql_fetch_array($result))
+  <?php while($row=gdrcd_query($result, 'fetch'))
   { 
 		$readinfo=gdrcd_query("SELECT MAX(data_messaggio) AS latest, COUNT(*) AS replies FROM messaggioaraldo WHERE id_messaggio_padre = ".gdrcd_filter('get',$row['id_messaggio'])."");
 		$lastupdate=$readinfo['latest'];
@@ -855,4 +855,3 @@ $label_cls = ($row['chiuso'])? 'close' : 'open';
 </div><!-- Box principale -->
 
 </div><!-- Pagina -->
-
