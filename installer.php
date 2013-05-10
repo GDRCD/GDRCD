@@ -85,6 +85,15 @@ gdrcd_query("INSERT INTO araldo VALUES (3, 2, 'Umani', 1000);");
 
 gdrcd_query("INSERT INTO araldo VALUES (4, 3, 'Ordini alla Guardia', 1);");
 
+gdrcd_query("CREATE TABLE araldo_letto (
+  id int(20) NOT NULL auto_increment,
+  nome char(50) default NULL,
+  araldo_id int(7) NOT NULL,
+  thread_id int(11) NOT NULL,
+  PRIMARY KEY  (id)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");
+
+
 gdrcd_query("CREATE TABLE backmessaggi (
   id bigint(20) NOT NULL auto_increment,
   mittente varchar(20) NOT NULL default '',
