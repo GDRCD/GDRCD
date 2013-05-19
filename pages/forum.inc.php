@@ -27,7 +27,11 @@ if($_POST['action']=='readall')
  /*Inserimento messaggio o topic*/
 if($_POST['op']=='insert')
 {
-    gdrcd_query("INSERT INTO messaggioaraldo (id_messaggio_padre, id_araldo, titolo, messaggio, autore, data_messaggio ) VALUES (".gdrcd_filter('num',$_POST['padre']).", ".gdrcd_filter('num',$_POST['araldo']).", '".gdrcd_filter('in',$_POST['titolo'])."', '".gdrcd_filter('in',$_POST['messaggio'])."', '".gdrcd_filter('in',$_SESSION['login'])."', NOW())");?>
+    gdrcd_query("INSERT INTO messaggioaraldo (id_messaggio_padre, id_araldo, titolo, messaggio, autore, data_messaggio ) VALUES (".gdrcd_filter('num',$_POST['padre']).", ".gdrcd_filter('num',$_POST['araldo']).", '".gdrcd_filter('in',$_POST['titolo'])."', '".gdrcd_filter('in',$_POST['messaggio'])."', '".gdrcd_filter('in',$_SESSION['login'])."', NOW())");
+  if($_POST['padre']==-1){
+    $_POST['padre']=gdrcd_query('','last_id');
+  }
+?>
 	<div class="warning">
 	   <?php echo gdrcd_filter('out',$MESSAGE['warning']['inserted']);?>
 	</div>
