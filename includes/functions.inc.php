@@ -60,6 +60,7 @@ function gdrcd_close_connection($db)
  *  fetch: accetta come parametro una risorsa mysqli e ritorna il successivo risultato dal resultset come array
  *  object: uguale a fetch, eccetto che ritorna un oggetto al posto di un array
  *  free: libera la memoria occupata dalla risorsa mysqli passata in $sql
+ *  last_id: ritorna l'id del record generato dall'ultima query, se non era una INSERT o UPDATE ritorna 0. In questo caso $sql non viene considerato
  * @return un booleano in caso di esecuzione di query non SELECT e modalità 'query'. Altrimenti ritorna come specificato nella descrizione di $mode
  */
 function gdrcd_query($sql, $mode = 'query')
@@ -126,6 +127,10 @@ function gdrcd_query($sql, $mode = 'query')
 			return mysqli_free_result($sql);
 					
 		break;
+    
+    case 'last_id':
+      return mysqli_insert_id($db_link);
+    break;
 	}
 
 
