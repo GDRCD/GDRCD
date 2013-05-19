@@ -16,10 +16,7 @@ if($_POST['action']=='readall')
 	while($row=gdrcd_query($result, 'fetch'))
 	{
 	$esiste = gdrcd_query("SELECT id FROM araldo_letto WHERE thread_id = ".$row['id_messaggio']." AND nome = '".$_SESSION['login']."'");
-		if($esiste['id'] > 0)
-		{
-		}
-		else
+		if($esiste['id'] <= 0)
 		{
 		gdrcd_query("INSERT INTO araldo_letto (nome, araldo_id, thread_id) VALUES ('".$_SESSION['login']."', ".$row['id_araldo'].", ".$row['id_messaggio'].")");
 		}
@@ -283,11 +280,7 @@ if($_REQUEST['op']=='read')
 
 	//Inserimento il record al pg come thread letto
 	$check_letto = gdrcd_query("SELECT * FROM araldo_letto WHERE nome = '".$_SESSION['login']."' AND thread_id = ".gdrcd_filter('num',$_REQUEST['what']));
-	if ($check_letto['id'] > 0)
-	{
-		
-	}
-	else
+	if ($check_letto['id'] <= 0)
 	{
 		gdrcd_query("INSERT INTO araldo_letto (nome, araldo_id, thread_id) VALUES ('".$_SESSION['login']."', ".gdrcd_filter('num',$_REQUEST['where']).", ".gdrcd_filter('num',$_REQUEST['what']).")");
 	}
@@ -519,30 +512,23 @@ $ultimotipo=-1;?>
       <?php echo gdrcd_filter('out',$PARAMETERS['names']['forum']['plur'].' '.strtolower($MESSAGE['interface']['forums']['type'][$ultimotipo])); ?>
     </div></td>
   </tr> 
-  <?php } //if 
+  <?php } //if
   
-	$new_msg = gdrcd_query("SELECT COUNT(id) AS num FROM araldo_letto WHERE araldo_id = ".$row['id_araldo']." AND nome = '".$_SESSION['login']."';");
-  
-//  print_r($result2);
-  $new_msg2 = gdrcd_query("SELECT COUNT(id_messaggio) AS num FROM messaggioaraldo WHERE id_araldo = ".$row['id_araldo']." AND id_messaggio_padre = -1");
+  $new_msg = gdrcd_query("SELECT COUNT(MA.id_messaggio) AS num FROM messaggioaraldo AS MA LEFT JOIN araldo_letto AS AL ON MA.id_araldo=AL.araldo_id AND AL.nome='".$_SESSION['login']."' WHERE MA.id_araldo = ".$row['id_araldo']." AND MA.id_messaggio_padre = -1 AND AL.id IS NULL");
   ?>
   <tr><!-- Forum della categoria -->
     <td class="forum_main_post_author">
 	   <div class="forum_date_big">
 	      <?php 
-					if($new_msg['num'] == $new_msg2['num'])
+					if($new_msg['num']>0)
 					{
-					}
-					else
-					{
-						if ($new_msg2['num']-$new_msg['num'] == 1)
+						if ($new_msg['num'] == 1)
 						{
 								echo '1 ' . $MESSAGE['interface']['forums']['topic']['new_posts']['sing'];
 						}
 						else
 						{
-							$numero = $new_msg2['num']-$new_msg['num'];
-								echo $numero. ' ' . $MESSAGE['interface']['forums']['topic']['new_posts']['plur'];
+								echo $new_msg['num']. ' ' . $MESSAGE['interface']['forums']['topic']['new_posts']['plur'];
 						}
 					}
 			?>
@@ -631,7 +617,7 @@ $totaleresults = $record_globale['COUNT(*)'];
 
 
 /*Carico l'elenco dei forum*/
-$result = gdrcd_query("SELECT id_messaggio, titolo, autore, data_messaggio, importante, chiuso FROM messaggioaraldo WHERE id_messaggio_padre = -1 AND id_araldo = ".gdrcd_filter('num',$_REQUEST['what'])." ORDER BY importante DESC, data_messaggio DESC LIMIT ".$pagebegin.", ".$pageend."", 'result'); 
+$result = gdrcd_query("SELECT MA.id_messaggio, MA.titolo, MA.autore, MA.data_messaggio, MA.importante, MA.chiuso, AL.id AS new_msg FROM messaggioaraldo AS MA LEFT JOIN araldo_letto AS AL ON MA.id_messaggio=AL.thread_id AND AL.nome='".$_SESSION['login']."' WHERE MA.id_messaggio_padre = -1 AND MA.id_araldo = ".gdrcd_filter('num',$_REQUEST['what'])." ORDER BY MA.importante DESC, MA.data_messaggio DESC LIMIT ".$pagebegin.", ".$PARAMETERS['settings']['posts_per_page']."", 'result'); 
 
 if (gdrcd_query($result, 'num_rows') == 0){?>
 <div class="warning"><?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['warning']['no_topic']); ?></div>
@@ -667,10 +653,7 @@ if (gdrcd_query($result, 'num_rows') == 0){?>
   { 
 		$readinfo=gdrcd_query("SELECT MAX(data_messaggio) AS latest, COUNT(*) AS replies FROM messaggioaraldo WHERE id_messaggio_padre = ".gdrcd_filter('get',$row['id_messaggio'])."");
 		$lastupdate=$readinfo['latest'];
-        $postsnumber=$readinfo['replies'];
-        
-		
-		$new_msg = gdrcd_query("SELECT COUNT(id) AS num FROM araldo_letto WHERE thread_id = ".$row['id_messaggio']." AND nome = '".$_SESSION['login']."'");
+    $postsnumber=$readinfo['replies'];
 		  
 ?>
   <tr><!-- Topic -->
@@ -691,14 +674,9 @@ if (gdrcd_query($result, 'num_rows') == 0){?>
 	   
 	   <?php
 	   
-			if($new_msg['num'] > 0)
+			if($row['new_msg'] == 0)
 			{
-			}
-	   		else
-			{
-				echo '(';
-				echo $MESSAGE['interface']['forums']['topic']['new_posts']['plur'];
-				echo ')';
+				echo '('.$MESSAGE['interface']['forums']['topic']['new_posts']['plur'].')';
 			}
 	   
 	   ?>
@@ -816,8 +794,6 @@ $label_cls = ($row['chiuso'])? 'close' : 'open';
   <?php }//while
   
 			gdrcd_query($result, 'free');
-
-  
    ?>
 </table>
 </div>
@@ -846,12 +822,6 @@ $label_cls = ($row['chiuso'])? 'close' : 'open';
      </div>
 <?php } //else ?>
 <?php } ?>
-
-
-
-
-
-
 </div><!-- Box principale -->
 
 </div><!-- Pagina -->
