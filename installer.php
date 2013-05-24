@@ -350,7 +350,7 @@ gdrcd_query("CREATE TABLE personaggio (
   url_img_chat varchar(255) NOT NULL DEFAULT ' ',
   url_media varchar(255) default NULL,
   blocca_media binary(1) NOT NULL DEFAULT '0',
-  esperienza int(11) default '0',
+  esperienza decimal(14,5) default '0',
   car0 int(4) NOT NULL default '5',
   car1 int(4) NOT NULL default '5',
   car2 int(4) NOT NULL default '5',
