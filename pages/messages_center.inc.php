@@ -340,7 +340,7 @@ if ($_POST['op']=='erase')
 	*/
    //gdrcd_query("DELETE FROM messaggi WHERE id = ".$id_messaggio." LIMIT 1");
    gdrcd_query("DELETE FROM messaggi WHERE id = ".$id_messaggio." and destinatario = '". $_SESSION['login'] ."'   LIMIT 1");
-   if (mysqli_affected_rows() > 0) {
+   if (gdrcd_query("",'affected') > 0) {
    	?>	
 		<div class="warning">
 		   <?php echo gdrcd_filter('out',$PARAMETERS['names']['private_message']['sing'].$MESSAGE['interface']['messages']['erased']); ?>
@@ -371,7 +371,7 @@ if ($_POST['op']=='erase')
 				   ((is_numeric($record['destinatario'])===TRUE)&&($_SESSION['permessi']>=GUILDMODERATOR))||
 				   ((is_numeric($record['destinatario'])===FALSE)&&($record['destinatario']!='all'))){
 				   gdrcd_query("DELETE FROM messaggi WHERE id = ".$id_messaggio." LIMIT 1");
-				   if (mysqli_affected_rows() > 0) {
+				   if (gdrcd_query("",'affected') > 0) {
 				   		?>	
 						<div class="warning">
 						   <?php echo gdrcd_filter('out',$PARAMETERS['names']['private_message']['sing'].$MESSAGE['interface']['messages']['erased']); ?>
