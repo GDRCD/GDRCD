@@ -196,7 +196,7 @@ if($vicinato!=INVIAGGIO){
 <div class="form_box">
           <?php if ($mobile==1){?>
 <form class="form_gioco" 
-      action="mappaclick_inner.inc.php?map_id=<?php echo $_SESSION['mappa'];?>"
+      action="main.php?page=mappaclick&map_id=<?php echo $_SESSION['mappa'];?>"
 	  method="post" > 
    <?php if ($vicinato!=INVIAGGIO) { ?>
         <div class="form_submit">
@@ -239,7 +239,7 @@ if($vicinato!=INVIAGGIO){
 <?php } 
       if($PARAMETERS['mode']['auto_meteo']=='OFF'){ ?>
 <form class="form_gioco" 
-      action="mappaclick_inner.inc.php?map_id=<?php echo $_SESSION['mappa'];?>"
+      action="main.php?page=mappaclick&map_id=<?php echo $_SESSION['mappa'];?>"
 	  method="post" >
       <div class="form_submit">
 	  <select name="temperature" class="game_form_selectbox">
