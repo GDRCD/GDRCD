@@ -77,7 +77,7 @@ if($_POST['op']=='edit')
 		}
 		else
 		{
-		gdrcd_redirect('/main.php?page=forum&op=read&what='.gdrcd_filter('num',$row['id_messaggio_padre']).'&where='.gdrcd_filter('num',$_POST['araldo']));
+		gdrcd_redirect('main.php?page=forum&op=read&what='.gdrcd_filter('num',$row['id_messaggio_padre']).'&where='.gdrcd_filter('num',$_POST['araldo']));
 		}
 
 	}
@@ -277,8 +277,9 @@ if($quote){
 <?php /*Visualizzazione topic*/
 if($_REQUEST['op']=='read')
 {
-    $result = gdrcd_query("SELECT messaggioaraldo.id_messaggio, messaggioaraldo.id_messaggio_padre, messaggioaraldo.titolo, messaggioaraldo.messaggio, messaggioaraldo.autore, messaggioaraldo.data_messaggio, messaggioaraldo.chiuso, araldo.tipo, araldo.nome, araldo.proprietari, personaggio.url_img FROM messaggioaraldo LEFT JOIN araldo ON messaggioaraldo.id_araldo = araldo.id_araldo LEFT JOIN personaggio ON messaggioaraldo.autore = personaggio.nome WHERE (messaggioaraldo.id_messaggio_padre = ".gdrcd_filter('num',$_REQUEST['what'])." AND messaggioaraldo.id_messaggio_padre != -1) OR messaggioaraldo.id_messaggio = ".gdrcd_filter('num',$_REQUEST['what'])." ORDER BY id_messaggio_padre, data_messaggio", 'result');
+    $result = gdrcd_query("SELECT messaggioaraldo.id_messaggio, messaggioaraldo.id_messaggio_padre, messaggioaraldo.titolo, messaggioaraldo.messaggio, messaggioaraldo.autore, messaggioaraldo.data_messaggio, messaggioaraldo.chiuso, araldo.tipo, araldo.nome, araldo.proprietari, personaggio.url_img, araldo.id_araldo FROM messaggioaraldo LEFT JOIN araldo ON messaggioaraldo.id_araldo = araldo.id_araldo LEFT JOIN personaggio ON messaggioaraldo.autore = personaggio.nome WHERE (messaggioaraldo.id_messaggio_padre = ".gdrcd_filter('num',$_REQUEST['what'])." AND messaggioaraldo.id_messaggio_padre != -1) OR messaggioaraldo.id_messaggio = ".gdrcd_filter('num',$_REQUEST['what'])." ORDER BY id_messaggio_padre, data_messaggio", 'result');
     $row = gdrcd_query($result, 'fetch'); 
+    $araldo=(int)$row['id_araldo'];
     
     $chiuso = $row['chiuso'];
 
@@ -487,7 +488,7 @@ if($_REQUEST['op']=='read')
 	}
 	
 ?>
-	    <a href="main.php?page=forum&op=visit&what=<?php echo gdrcd_filter('num',$_REQUEST['where']); ?>">
+	    <a href="main.php?page=forum&op=visit&what=<?php echo $araldo; ?>">
 		   <?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['link']['forum']); ?>
 		</a><br />
 	</div>
