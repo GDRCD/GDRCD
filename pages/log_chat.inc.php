@@ -110,7 +110,7 @@ if (($_SESSION['permessi']<MODERATOR)||($PARAMETERS['mode']['spymessages']!='ON'
 			  </select>
 		  </div>
 		            <div class='form_label'>
-              <?php echo gdrcd_filter('out',$MESSAGE['interface']['administration']['log']['chat']['begin']); ?>
+              <?php echo gdrcd_filter('out',$MESSAGE['interface']['administration']['log']['chat']['end']); ?>
           </div>
 		  <div class='form_field'>
 			  <!-- Giorno -->
