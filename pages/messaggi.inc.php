@@ -95,8 +95,8 @@ parent.blink_title("(<?php echo $MESSAGE['interface']['forums']['topic']['new_po
 
 		if ($PARAMETERS['mode']['allow_audio'] == 'ON' && $_SESSION['blocca_media'] != 1 && !empty($PARAMETERS['settings']['audio_new_messagges']))
 		{
-		
-			if (isset($PARAMETERS['settings']['audiotype']['.'.strtolower(end(explode('.', $PARAMETERS['settings']['audio_new_messagges'])))]))
+		  $ext=explode('.', $PARAMETERS['settings']['audio_new_messagges']);
+			if (isset($PARAMETERS['settings']['audiotype']['.'.strtolower(end($ext))]))
 			{
 ?>
 
