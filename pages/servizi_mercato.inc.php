@@ -150,10 +150,10 @@ if ((isset($_POST['op'])===FALSE)&&(isset($_REQUEST['op'])===FALSE)){
     $pagebegin=(int)$_REQUEST['offset']*$PARAMETERS['settings']['records_per_page'];
 	$pageend=$PARAMETERS['settings']['records_per_page'];
 	//Conteggio record totali 
-	$record_globale=gdrcd_query("SELECT COUNT(*) FROM mappa_click");
-	$totaleresults=$record_globale['COUNT(*)'];
+	$record_globale=gdrcd_query("SELECT count(*) AS N FROM oggetto JOIN mercato ON oggetto.id_oggetto=mercato.id_oggetto WHERE tipo = '".gdrcd_filter('get',$_REQUEST['what'])."'");
+	$totaleresults=(int)$record_globale['N'];
 	//Lettura record
-	$query= "SELECT mercato.numero, oggetto.id_oggetto, oggetto.nome, oggetto.descrizione, oggetto.costo, oggetto.difesa, oggetto.attacco, oggetto.cariche, oggetto.bonus_car0, oggetto.bonus_car1, oggetto.bonus_car2, oggetto.bonus_car3, oggetto.bonus_car4, oggetto.bonus_car5, oggetto.urlimg FROM oggetto JOIN mercato ON oggetto.id_oggetto=mercato.id_oggetto WHERE tipo = '".gdrcd_filter('get',$_REQUEST['what'])."' ORDER BY nome LIMIT ".$pagebegin.", ".$pageend."";
+	$query= "SELECT mercato.numero, oggetto.id_oggetto, oggetto.nome, oggetto.descrizione, oggetto.costo, oggetto.difesa, oggetto.attacco, oggetto.cariche, oggetto.bonus_car0, oggetto.bonus_car1, oggetto.bonus_car2, oggetto.bonus_car3, oggetto.bonus_car4, oggetto.bonus_car5, oggetto.urlimg FROM oggetto JOIN mercato ON oggetto.id_oggetto=mercato.id_oggetto WHERE tipo = '".gdrcd_filter('get',$_REQUEST['what'])."' ORDER BY nome LIMIT ".$pagebegin.", ".$pageend;
 	$result=gdrcd_query($query, 'result'); 
     $numresults=gdrcd_query($result, 'num_rows');
     
@@ -314,12 +314,12 @@ if ((isset($_POST['op'])===FALSE)&&(isset($_REQUEST['op'])===FALSE)){
 		
 	 <!-- Paginatore elenco -->
 	 <div class="pager">
-       <?php if($totaleresults>$PARAMETERS['settings']['records_per_page']){
-	            echo gdrcd_filter('out',$MESSAGE['interface']['pager']['pages_name']);
-		        for($i=0;$i<=floor($totaleresults/$PARAMETERS['settings']['records_per_page']);$i++){ ?>
-                   <a href="main.php?page=gestione_mappe&offset=<?php echo $i; ?>"><?php echo $i+1; ?></a>
-                <?php } //for
-             }//if ?>
+    <?php if($totaleresults>$PARAMETERS['settings']['records_per_page']){
+	          echo gdrcd_filter('out',$MESSAGE['interface']['pager']['pages_name']);
+		        for($i=0;$i<ceil($totaleresults/$PARAMETERS['settings']['records_per_page']);$i++){ ?>
+              <a href="main.php?page=servizi_mercato&op=visit&what=<?php echo gdrcd_filter('out',$_REQUEST['what']); ?>&offset=<?php echo $i; ?>"><?php echo $i+1; ?></a>
+      <?php } //for
+          }//if ?>
      </div>
 	  
      <!-- link back -->
