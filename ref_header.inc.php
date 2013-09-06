@@ -121,6 +121,13 @@ if((gdrcd_filter_get($_REQUEST['chat'])=='yes')&&(empty($_SESSION['login'])===FA
 		$first_char=substr($chat_message,0,1);
 
 
+    if($PARAMETERS['mode']['exp_by_chat']=='ON')
+    {
+      $msg_length = strlen($chat_message);
+      $char_needed = gdrcd_filter('num', $PARAMETERS['settings']['exp_by_chat']['number']);
+      $exp_bonus = $msg_length/$char_needed;
+    }
+
  		if($type < "5")
  		{ 
  		//E' un messaggio.
@@ -238,6 +245,14 @@ if((gdrcd_filter_get($_REQUEST['chat'])=='yes')&&(empty($_SESSION['login'])===FA
    			} //elseif
    			/*Inserisco il messaggio*/
 			gdrcd_query("INSERT INTO chat ( stanza, imgs, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", '".$_SESSION['sesso'].";".$_SESSION['img_razza']."', '".$_SESSION['login']."', '".gdrcd_capital_letter(gdrcd_filter('in', $tag_n_beyond))."', NOW(), '".$m_type."', '".$chat_message."')");
+      
+      if($PARAMETERS['mode']['exp_by_chat']=='ON')
+      {  
+        if ($m_type == 'A' || $m_type == 'P' || $m_type == 'M')
+        {
+          gdrcd_query("UPDATE personaggio SET esperienza = esperienza + ".$exp_bonus." WHERE nome = '".$_SESSION['login']."' LIMIT 1");
+        }
+      }
 		} 
 		else 
 		{ //Altrimenti e' un comando di stanza privata.
