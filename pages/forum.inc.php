@@ -519,7 +519,7 @@ $ultimotipo=-1;?>
   </tr> 
   <?php } //if
   
-  $new_msg = gdrcd_query("SELECT COUNT(MA.id_messaggio) AS num FROM messaggioaraldo AS MA LEFT JOIN araldo_letto AS AL ON MA.id_araldo=AL.araldo_id AND AL.nome='".$_SESSION['login']."' WHERE MA.id_araldo = ".$row['id_araldo']." AND MA.id_messaggio_padre = -1 AND AL.id IS NULL");
+  $new_msg = gdrcd_query("SELECT COUNT(MA.id_messaggio) AS num FROM messaggioaraldo AS MA LEFT JOIN araldo_letto AS AL ON MA.id_messaggio=AL.thread_id AND AL.nome='".$_SESSION['login']."' WHERE MA.id_araldo = ".$row['id_araldo']." AND MA.id_messaggio_padre = -1 AND AL.id IS NULL");
   ?>
   <tr><!-- Forum della categoria -->
     <td class="forum_main_post_author">
@@ -529,11 +529,11 @@ $ultimotipo=-1;?>
 					{
 						if ($new_msg['num'] == 1)
 						{
-								echo '1 ' . $MESSAGE['interface']['forums']['topic']['new_posts']['sing'];
+								echo '1 ' . $MESSAGE['interface']['forums']['topic']['new_posts_forum'];
 						}
 						else
 						{
-								echo $new_msg['num']. ' ' . $MESSAGE['interface']['forums']['topic']['new_posts']['plur'];
+								echo $new_msg['num']. ' ' . $MESSAGE['interface']['forums']['topic']['new_posts_forum'];
 						}
 					}
 			?>

@@ -234,6 +234,7 @@ $MESSAGE['interface']['messages']['go_back']='Torna all\'elenco dei '.strtolower
 $MESSAGE['interface']['forums']['topic']['new_posts']['sing'] = 'Nuovo Messaggio';
 $MESSAGE['interface']['forums']['topic']['new_posts']['plur'] = 'Nuovi Messaggi';
 $MESSAGE['interface']['forums']['topic']['title']='Topic';
+$MESSAGE['interface']['forums']['topic']['new_posts_forum']=$MESSAGE['interface']['forums']['topic']['title'].' con '.$MESSAGE['interface']['forums']['topic']['new_posts']['plur'];
 $MESSAGE['interface']['forums']['topic']['author']='Autore';
 $MESSAGE['interface']['forums']['topic']['last']='Ultima';
 $MESSAGE['interface']['forums']['topic']['posts']='Risposte';
