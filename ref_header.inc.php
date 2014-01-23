@@ -583,13 +583,13 @@ if(gdrcd_filter('get',$_REQUEST['chat'])=='yes')
 	*/
 	if ($PARAMETERS['mode']['chat_from_bottom']=='OFF')
 	{
-		echo 'parent.document.getElementById(\'pagina_chat\').innerHTML+= \''.addslashes($add_chat).'\';';
+		echo 'parent.document.getElementById(\'pagina_chat\').innerHTML+= '.json_encode((string)$add_chat).';';
 		echo 'scrolling = parent.document.getElementById(\'pagina_chat\').scrollHeight;';
 
 	}
 	elseif ($PARAMETERS['mode']['chat_from_bottom']=='ON')
 	{
-		echo 'parent.document.getElementById(\'pagina_chat\').innerHTML= \''.addslashes($add_chat).'\'+parent.document.getElementById(\'pagina_chat\').innerHTML;';
+		echo 'parent.document.getElementById(\'pagina_chat\').innerHTML= '.json_encode((string)$add_chat).'+parent.document.getElementById(\'pagina_chat\').innerHTML;';
 		echo 'scrolling = 0;';
 	}
 
