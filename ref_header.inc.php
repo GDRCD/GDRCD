@@ -43,7 +43,7 @@ if((gdrcd_filter_get($_REQUEST['chat'])=='yes')&&(empty($_SESSION['login'])===FA
 				{
 					mt_srand((double)microtime()*1000000);
 					$die = mt_rand(1,(int)$_POST['dice']);
-	
+
 					$chat_dice_msg =  gdrcd_filter('in', $MESSAGE['chat']['commands']['use_skills']['die']).' '.gdrcd_filter('num',$die).',';
 
 				}
@@ -60,12 +60,12 @@ if((gdrcd_filter_get($_REQUEST['chat'])=='yes')&&(empty($_SESSION['login'])===FA
 			{
 	      			gdrcd_query("INSERT INTO chat ( stanza, imgs, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", '".$_SESSION['sesso'].";".$_SESSION['img_razza']."', '".$_SESSION['login']."', '".gdrcd_capital_letter(gdrcd_filter('in', $_SESSION['login']))."', NOW(), 'S', '".
 		gdrcd_filter('in',$MESSAGE['status_pg']['exausted'])."')");
-		
+
 			}
 	/** * Tiro su caratteristica
 		* @author Blancks
 	*/
-		} 
+		}
 		else if (gdrcd_filter('get', $_POST['id_stats']) != 'no_stats' && gdrcd_filter('get',$_POST['dice']) != 'no_dice')
 		{
 			mt_srand((double)microtime()*1000000);
@@ -78,8 +78,8 @@ if((gdrcd_filter_get($_REQUEST['chat'])=='yes')&&(empty($_SESSION['login'])===FA
 			$racial_bonus = gdrcd_query("SELECT bonus_car".gdrcd_filter('num',$id_stats[1])." AS racial_bonus FROM razza WHERE id_razza IN (SELECT id_razza FROM personaggio WHERE nome='".$_SESSION['login']."')");
 
 			gdrcd_query("INSERT INTO chat ( stanza, imgs, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", '".$_SESSION['sesso'].";".$_SESSION['img_razza']."', '".$_SESSION['login']."', '', NOW(), 'C', '".$_SESSION['login'].' '.gdrcd_filter('in',$MESSAGE['chat']['commands']['use_skills']['uses']).' '.gdrcd_filter('in',$PARAMETERS['names']['stats']['car'.$id_stats[1]]).': '.gdrcd_filter('in',$PARAMETERS['names']['stats']['car'.$id_stats[1].'']).' '.gdrcd_filter('num',$car['car_now']+$racial_bonus['racial_bonus']).', '.gdrcd_filter('in', $MESSAGE['chat']['commands']['use_skills']['die']).' '.gdrcd_filter('num',$die).', '.gdrcd_filter('in',$MESSAGE['chat']['commands']['use_skills']['sum']).' '.(gdrcd_filter('num',$car['car_now']+$racial_bonus['racial_bonus'])+gdrcd_filter('num',$die)+gdrcd_filter('num',$rank['grado'])+gdrcd_filter('in',$bonus['bonus']))."')");
-			
-		} 
+
+		}
 		else if (gdrcd_filter('get',$_POST['dice'])!='no_dice')
 		{
 		       	mt_srand((double)microtime()*1000000);
@@ -87,14 +87,14 @@ if((gdrcd_filter_get($_REQUEST['chat'])=='yes')&&(empty($_SESSION['login'])===FA
 
 	   		gdrcd_query("INSERT INTO chat ( stanza, imgs, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", '".$_SESSION['sesso'].";".$_SESSION['img_razza']."', '".$_SESSION['login']."', '', NOW(), 'D', '".$_SESSION['login'].' '.gdrcd_filter('in',$MESSAGE['chat']['commands']['die']['cast']).gdrcd_filter('num',$_POST['dice']).': '.gdrcd_filter('in',$MESSAGE['chat']['commands']['die']['sum']).' '.gdrcd_filter('num',$die)."')");
 
-    		} 
+    		}
     		else if (gdrcd_filter('get',$_POST['id_item'])!='no_item')
     		{
 			$item=explode('-', gdrcd_filter('in',$_POST['id_item']));
 			if ($item[1]==1)
 			{
 				$query="DELETE FROM clgpersonaggiooggetto WHERE nome ='".$_SESSION['login']."' AND id_oggetto='".gdrcd_filter('num',$item[0])."' LIMIT 1";
-	    		} 
+	    		}
 	    		elseif ($item[1]>1)
 	    		{
             			$query="UPDATE clgpersonaggiooggetto SET cariche = cariche -1 WHERE nome ='".$_SESSION['login']."' AND id_oggetto='".gdrcd_filter('num',$item[0])."' LIMIT 1";
@@ -111,7 +111,7 @@ if((gdrcd_filter_get($_REQUEST['chat'])=='yes')&&(empty($_SESSION['login'])===FA
 	{
 
 		$actual_healt = gdrcd_query("SELECT salute FROM personaggio WHERE nome = '".$_SESSION['login']."'");
-	
+
 		$chat_message=gdrcd_filter('in', gdrcd_angs($_POST['message']));
 		$tag_n_beyond=gdrcd_filter('in',$_POST['tag']);
 		$type=gdrcd_filter('in',$_POST['type']);
@@ -140,8 +140,8 @@ if((gdrcd_filter_get($_REQUEST['chat'])=='yes')&&(empty($_SESSION['login'])===FA
         					{
   	     				/*Se il destinatario e' mal formattato lo prendo come parlato*/
            					$m_type='P';
-  	  				} 
-  	  				else 
+  	  				}
+  	  				else
   	  				{
            					$tag_n_beyond=gdrcd_capital_letter(substr($chat_message, 1, $dest_end));
   	    					 $chat_message=substr($chat_message, $dest_end+2);
@@ -149,33 +149,33 @@ if((gdrcd_filter_get($_REQUEST['chat'])=='yes')&&(empty($_SESSION['login'])===FA
   				}//if
   				if ($m_type=='S')
   				{/*Se il sussurro e' inviato correttamente*/
-  
+
   	     				$r_check_dest = gdrcd_query("SELECT nome FROM personaggio WHERE DATE_ADD(ultimo_refresh, INTERVAL 2 MINUTE) > NOW() AND ultimo_luogo = ".$_SESSION['luogo']." AND nome = '".$tag_n_beyond."' LIMIT 1", 'result');
-  
+
   	     				if (gdrcd_query($r_check_dest, 'num_rows') < 1)
   	     				{
               					$chat_message=$tag_n_beyond.' '.gdrcd_filter('in',$MESSAGE['chat']['whisper']['no']);
   		    				$tag_n_beyond=$_SESSION['login'];
   	    				}
-  				} 
-  				else 
-  				{ 
-  					$tag_n_beyond=$_SESSION['tag']; 
+  				}
+  				else
+  				{
+  					$tag_n_beyond=$_SESSION['tag'];
   				}
      			}
     			else if($first_char == "#")
   			{ //Dado
   	   			$m_type ='C';
-  
+
   				$chat_message = substr($chat_message, 1);
-  
-  				if (preg_match("/^[d]+([0-9])/si", $chat_message,$matches))
+
+  				if (preg_match("/^d+([0-9]+)$/si", $chat_message,$matches))
   				{
   		   			$nstring = $matches[1];
   		   			$die = mt_rand(1,(int)$nstring);
   		   			$chat_message = "A ".$_SESSION['login']." esce ".$die." su ".$nstring;
   				}
-  				else if (preg_match("/^([1-9]+)[d]+([2-9])/si", $chat_message,$matches))
+  				else if (preg_match("/^([0-9]+)d+([0-9]+)$/si", $chat_message,$matches))
   				{
   					$numero = (int)$matches[1];
   					$dado = (int)$matches[2];
@@ -187,8 +187,8 @@ if((gdrcd_filter_get($_REQUEST['chat'])=='yes')&&(empty($_SESSION['login'])===FA
   			   			$chat_message .= $die." su ".$dado.", ";
   					}
   					$chat_message = substr($chat_message, 0, -2);
-  				}	   
-  			}						
+  				}
+  			}
      			elseif (($type=="1")||($first_char=="+"))
      			{ /*Azione*/
       				if ($actual_healt['salute']>0)
@@ -199,15 +199,15 @@ if((gdrcd_filter_get($_REQUEST['chat'])=='yes')&&(empty($_SESSION['login'])===FA
   	   				}
   	  				$m_type='A';
   	   				$_SESSION['tag']=$tag_n_beyond;
-  				} 
-  				else 
+  				}
+  				else
   				{
   	       				$m_type='S';
   					$tag_n_beyond=$_SESSION['login'];
   					$chat_message=gdrcd_filter('in',$MESSAGE['status_pg']['exausted']);
   				}
-     			} 
-     			elseif ((($type=="2")||($first_char=="§")||($first_char=="-")||($first_char=="*"))&&($_SESSION['permessi']>=GAMEMASTER)) 
+     			}
+     			elseif ((($type=="2")||($first_char=="§")||($first_char=="-")||($first_char=="*"))&&($_SESSION['permessi']>=GAMEMASTER))
      			{ /*Master*/
   				$m_type='M';
   				if(($first_char=="§")||($first_char=="-"))
@@ -216,23 +216,23 @@ if((gdrcd_filter_get($_REQUEST['chat'])=='yes')&&(empty($_SESSION['login'])===FA
   				}
   				if($first_char=="*")
   				{
-  					$chat_message=substr($chat_message, 1); 
+  					$chat_message=substr($chat_message, 1);
   					$m_type='I';
   				}
-     			} 
-     			elseif (($type=="3")&&($_SESSION['permessi']>=GAMEMASTER)) 
+     			}
+     			elseif (($type=="3")&&($_SESSION['permessi']>=GAMEMASTER))
      			{ /*PNG*/
   				$m_type='N';
   				$_SESSION['tag']=$tag_n_beyond;
-     			} 
+     			}
      			else if (($type=="0") || (empty($type)===TRUE))
   	   		{ /*Parlato*/
   				if ($actual_healt['salute']>0)
   				{
   		  			$m_type='P';
   		   			$_SESSION['tag']=$tag_n_beyond;
-  				} 
-  				else 
+  				}
+  				else
   				{
   	       				$m_type='S';
   		   			$tag_n_beyond=$_SESSION['login'];
@@ -241,17 +241,17 @@ if((gdrcd_filter_get($_REQUEST['chat'])=='yes')&&(empty($_SESSION['login'])===FA
      			} //elseif
      			/*Inserisco il messaggio*/
   			gdrcd_query("INSERT INTO chat ( stanza, imgs, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", '".$_SESSION['sesso'].";".$_SESSION['img_razza']."', '".$_SESSION['login']."', '".gdrcd_capital_letter(gdrcd_filter('in', $tag_n_beyond))."', NOW(), '".$m_type."', '".$chat_message."')");
-        
+
         if($PARAMETERS['mode']['exp_by_chat']=='ON')
-        {  
+        {
           if ($m_type == 'A' || $m_type == 'P' || $m_type == 'M')
           {
             gdrcd_query("UPDATE personaggio SET esperienza = esperienza + ".$exp_bonus." WHERE nome = '".$_SESSION['login']."' LIMIT 1");
           }
         }
       }//Not empty message
-		} 
-		else 
+		}
+		else
 		{ //Altrimenti e' un comando di stanza privata.
 			$info = gdrcd_query("SELECT invitati, nome, proprietario FROM mappa WHERE id=".$_SESSION['luogo']."");
 
@@ -267,14 +267,14 @@ if((gdrcd_filter_get($_REQUEST['chat'])=='yes')&&(empty($_SESSION['login'])===FA
 	   		if (($type=="5")&&($ok_command===TRUE))
 	   		{ //invita
 				gdrcd_query("UPDATE mappa SET invitati = '".$info['invitati'].','.gdrcd_capital_letter(strtolower(gdrcd_filter('in', $tag_n_beyond)))."' WHERE id=".$_SESSION['luogo']." LIMIT 1");
-		
+
 				gdrcd_query("INSERT INTO chat ( stanza, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", 'System message', '".$_SESSION['login']."', NOW(), 'S', '".gdrcd_capital_letter(gdrcd_filter('in', $tag_n_beyond)).' '.$MESSAGE['chat']['warning']['invited']."')");
 
 				if(empty($_POST['tag'])===FALSE)
 			   	{
 					gdrcd_query("INSERT INTO messaggi ( mittente, destinatario, spedito, letto, testo ) VALUES ('System message', '".gdrcd_capital_letter(gdrcd_filter('in',$_POST['tag']))."', NOW(), 0,  '".$_SESSION['login'].' '.$MESSAGE['chat']['warning']['invited_message'].' '.$info['nome']."')");
 			   	}
-   			} 
+   			}
    			else if (($type=="6")&&($ok_command===TRUE))
    			{ //caccia
        				$scaccia=str_replace(','.gdrcd_capital_letter(gdrcd_filter('in', $tag_n_beyond)), '',$info['invitati']);
@@ -282,7 +282,7 @@ if((gdrcd_filter_get($_REQUEST['chat'])=='yes')&&(empty($_SESSION['login'])===FA
 
 	   			gdrcd_query("INSERT INTO chat ( stanza, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", 'System message', '".$_SESSION['login']."', NOW(), 'S', '".gdrcd_capital_letter(gdrcd_filter('in', $tag_n_beyond)).' '.$MESSAGE['chat']['warning']['expelled']."')");
 
-   			} 
+   			}
    			else if ($ok_command===TRUE)
    			{ //elenco
 			       	$ospiti=str_replace(',', '', $info['invitati']);
@@ -306,8 +306,8 @@ if((gdrcd_filter_get($_REQUEST['chat'])=='yes')&&(empty($_SESSION['login'])===FA
 	if ($PARAMETERS['mode']['chat_from_bottom']=='ON')
 	{
 		$typeOrder = 'DESC';
-	}	
-	
+	}
+
 /** * Controllo per impedire il print in chat delle azioni dei precedenti proprietari di una stanza privata
 	* Per stanze non private ora_prenotazione equivarrà ad un tempo sempre inferiore all'orario dell'azione inviata
 	* facendo risultare quindi sempre veritiero il controllo in questo caso.
@@ -612,7 +612,7 @@ if(gdrcd_filter('get',$_REQUEST['chat'])=='yes')
 	         parent.document.getElementById(\'chat_form_messages\').elements["tag"].value=\''.$_SESSION["tag"].'\';';
 	}//if
 	echo '}</script>';
-} 
+}
 ?>
    <!--meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"-->
    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
