@@ -475,6 +475,8 @@ $MESSAGE['interface']['administration']['forums']['type']['info']='Gli admin pos
 $MESSAGE['interface']['administration']['forums']['name']='Intestazione';
 $MESSAGE['interface']['administration']['forums']['owner']='Assegnato a:';
 $MESSAGE['interface']['administration']['forums']['no_owner']='Nessuno';
+$MESSAGE['interface']['administration']['forums']['not_exists']='Bacheca non trovata';
+
 /*Razze*/
 $MESSAGE['interface']['administration']['races']['page_name']='Gestione '.strtolower($PARAMETERS['names']['race']['plur']); 
 $MESSAGE['interface']['administration']['races']['name']='Nome plurale';

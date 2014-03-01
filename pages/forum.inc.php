@@ -27,10 +27,20 @@ if($_POST['action']=='readall')
  /*Inserimento messaggio o topic*/
 if($_POST['op']=='insert')
 {
-    gdrcd_query("INSERT INTO messaggioaraldo (id_messaggio_padre, id_araldo, titolo, messaggio, autore, data_messaggio ) VALUES (".gdrcd_filter('num',$_POST['padre']).", ".gdrcd_filter('num',$_POST['araldo']).", '".gdrcd_filter('in',$_POST['titolo'])."', '".gdrcd_filter('in',$_POST['messaggio'])."', '".gdrcd_filter('in',$_SESSION['login'])."', NOW())");
-  if($_POST['padre']==-1){
-    $_POST['padre']=gdrcd_query('','last_id');
-  }
+    /**
+        * Fix del bug che permetteva ad un qualsiasi id di poter essere selezionato come araldo in cui creare il messaggio
+        * @author blancks
+    */
+    $sqlAraldo = gdrcd_query("SELECT nome FROM araldo WHERE id_araldo = ". gdrcd_filter('in', gdrcd_filter('num',$_POST['araldo'])), 'result');
+
+    if (gdrcd_query($sqlAraldo, 'num_rows')) {
+        gdrcd_query($sqlAraldo, 'free');
+
+        gdrcd_query("INSERT INTO messaggioaraldo (id_messaggio_padre, id_araldo, titolo, messaggio, autore, data_messaggio ) VALUES (".gdrcd_filter('num',$_POST['padre']).", ".gdrcd_filter('num',$_POST['araldo']).", '".gdrcd_filter('in',$_POST['titolo'])."', '".gdrcd_filter('in',$_POST['messaggio'])."', '".gdrcd_filter('in',$_SESSION['login'])."', NOW())");
+        
+        if($_POST['padre']==-1){
+            $_POST['padre']=gdrcd_query('','last_id');
+        }
 ?>
 	<div class="warning">
 	   <?php echo gdrcd_filter('out',$MESSAGE['warning']['inserted']);?>
@@ -41,10 +51,12 @@ if($_POST['op']=='insert')
 	   </a>
     </div>
 <?php
-	gdrcd_query("DELETE FROM araldo_letto WHERE thread_id = ".gdrcd_filter('num',$_POST['padre'])." AND nome != '".$_SESSION['login']."'");
-	gdrcd_redirect('main.php?page=forum&op=read&what='.gdrcd_filter('num',$_POST['padre']).'&where='.gdrcd_filter('num',$_POST['araldo']));
+        gdrcd_query("DELETE FROM araldo_letto WHERE thread_id = ".gdrcd_filter('num',$_POST['padre'])." AND nome != '".$_SESSION['login']."'");
+        gdrcd_redirect('main.php?page=forum&op=read&what='.gdrcd_filter('num',$_POST['padre']).'&where='.gdrcd_filter('num',$_POST['araldo']));
 
-
+    }else{
+        echo '<div class="warning">', $MESSAGE['interface']['administration']['forums']['not_exists'], '</div>';
+    }
 
 } ?>
 
@@ -220,6 +232,16 @@ $padre=gdrcd_filter('num',$_REQUEST['what']);
 $araldo=gdrcd_filter('num',$_REQUEST['where']);
 
 $quote=gdrcd_filter('num',$_REQUEST['quote']);
+
+
+/**
+    * Fix del bug che permetteva ad un qualsiasi id di poter essere selezionato come araldo in cui creare il messaggio
+    * @author blancks
+*/
+$sqlAraldo = gdrcd_query("SELECT nome FROM araldo WHERE id_araldo = ". gdrcd_filter('in', $araldo), 'result');
+
+    if (gdrcd_query($sqlAraldo, 'num_rows')) {
+        gdrcd_query($sqlAraldo, 'free');
 ?>
 <div class="panels_box">
 <div class="form_gioco">
@@ -272,7 +294,15 @@ if($quote){
 	      <?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['link']['topic']); ?>
 	   </a>
     </div>
-<?php } ?>
+<?php 
+
+        }else
+        {
+            echo '<div class="warning">', $MESSAGE['interface']['administration']['forums']['not_exists'], '</div>';
+        }
+
+
+} ?>
 
 <?php /*Visualizzazione topic*/
 if($_REQUEST['op']=='read')
