@@ -142,6 +142,62 @@ function gdrcd_query($sql, $mode = 'query')
 }
 
 
+/*
+    * Prepared Statements
+    * @param string $sql: il codice SQL da inviare al database
+    * @param array $binds: array dei parametri associati alla query
+    *
+    * E' obbligatorio specificare nell'indice zero dell'array binds i tipi delle variabili che si stanno immettendo nella query
+    * Tali tipi sono i seguenti:
+    * i      corrispondente ai valori integer
+    * d     corrispondente ai valori float/double
+    * s     corrispondente alle stringhe
+    * b     corrispondende a valori di tipo blob
+    *
+    * @return mysqli_result
+*/
+function gdrcd_stmt($sql, $binds = array())
+{
+    $db_link = gdrcd_connect();
+
+    if ($stmt = mysqli_prepare($db_link, $sql)) {
+
+        if (!empty($binds)) {
+            
+            #> E' necessario referenziare ogni parametro da passare alla query
+            #> MySqli è suscettibile in proposito.
+            $ref = array();
+            
+            foreach ($binds as $k => $v) {
+                if ($k > 0) {
+                    $ref[$k] = &$binds[$k];
+                }else{
+                    $ref[$k] = $v;
+                }
+            }
+            
+            array_unshift($ref, $stmt);
+            call_user_func_array('mysqli_stmt_bind_param', $ref);
+        }
+        
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        $stmtError = mysqli_stmt_error($stmt);
+        
+        if (!empty($stmtError))
+            die(gdrcd_mysql_error($stmtError));
+        
+        mysqli_stmt_close($stmt);
+        
+        return $result;
+        
+    }else
+    {
+        die(gdrcd_mysql_error('Failed when creating the statement.'));
+    }
+}
+
+
 /**
  * Funzione di recupero delle colonne e della loro dichiarazione della tabella specificata.
  * Si usa per la verifica dell'aggiornamento db da vecchie versioni di gdrcd5
