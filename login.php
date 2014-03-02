@@ -7,15 +7,16 @@
  	require 'includes/functions.inc.php';
  	
 	/*Connessione al database*/
-	$handleDBConnection=gdrcd_connect();
+	$handleDBConnection = gdrcd_connect();
 	
 
 /*Leggo i dati del form di login*/
-$login1 = gdrcd_filter('get',$_POST['login1']);
+$login1 = $_POST['login1'];
+
 if($PARAMETERS['mode']['encriptpassword']=='OFF'){
-  $pass1 = gdrcd_filter('get',$_POST['pass1']);
+  $pass1 = $_POST['pass1'];
 } else {
-  $pass1 = gdrcd_filter('get',gdrcd_encript($_POST['pass1']));
+  $pass1 = gdrcd_encript($_POST['pass1']);
 }
 
 
@@ -36,7 +37,7 @@ switch ($_SERVER['REMOTE_ADDR'])
 
 
 /*Controllo se la postazione non sia stata esclusa dal sito*/
-$result = gdrcd_query("SELECT * FROM blacklist WHERE ip = '".$_SERVER['REMOTE_ADDR']."' AND granted = 0", 'result');
+$result = gdrcd_stmt("SELECT * FROM blacklist WHERE ip LIKE ? AND granted = ?", array('si', $_SERVER['REMOTE_ADDR'], 0));
 
 if (gdrcd_query($result, 'num_rows') > 0)
 {
@@ -45,30 +46,55 @@ if (gdrcd_query($result, 'num_rows') > 0)
 	/*Se la postazione è stata esclusa*/  
     echo '<div class="error_box"><h2 class="error_major">'.$MESSAGE['warning']['blacklisted'].'</h2></div>';
 	/*Registro l'evento (Tentativo di connessione da postazione esclusa)*/
-    gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES ('".$login1."', 'Login_procedure', NOW(), ".BLOCKED.", '".$_SERVER['REMOTE_ADDR']."')");
-    exit();
+    gdrcd_stmt(
+        "INSERT INTO log (
+            nome_interessato, 
+            autore, 
+            data_evento, 
+            codice_evento,
+            descrizione_evento
+        ) VALUES (?, ?, NOW(), ?, ?)",
+        array('ssis', $login1, 'Login_procedure', BLOCKED, $_SERVER['REMOTE_ADDR'])
+    );
+        
+    die();
 } 
 
 
 
 
-
-
-/*Rede maiuscola la prima leggera del nome:)*/
-/*$login1=strtolower($login1);
-$Maiusc=substr($login1,0,1);
-$Maiusc=strtoupper($Maiusc);
-$login1=$Maiusc.substr($login1,1);
-*/
-/**	* Magari però facciamolo meglio ;-)
-	* @author Blancks
-*/
 $login1 = ucwords(strtolower($login1));
 
 
 /*Carico dal database il profilo dell'account (personaggio)*/
-$record = gdrcd_query("SELECT personaggio.nome, personaggio.cognome, personaggio.permessi, personaggio.sesso, personaggio.ultima_mappa, personaggio.ultimo_luogo, personaggio.id_razza, personaggio.ultimo_messaggio, personaggio.blocca_media, personaggio.ora_entrata, personaggio.ora_uscita, personaggio.ultimo_refresh, razza.sing_m, razza.sing_f, razza.icon AS url_img_razza FROM personaggio LEFT JOIN razza ON personaggio.id_razza = razza.id_razza WHERE nome = '".gdrcd_filter('in',$login1)."' AND pass = '".gdrcd_filter('in',$pass1)."' LIMIT 1");
+$result = gdrcd_stmt(
+    "SELECT personaggio.nome, 
+                 personaggio.cognome, 
+                 personaggio.permessi, 
+                 personaggio.sesso, 
+                 personaggio.ultima_mappa, 
+                 personaggio.ultimo_luogo, 
+                 personaggio.id_razza, 
+                 personaggio.ultimo_messaggio, 
+                 personaggio.blocca_media, 
+                 personaggio.ora_entrata, 
+                 personaggio.ora_uscita, 
+                 personaggio.ultimo_refresh, 
+                 personaggio.posizione,
+                 razza.sing_m, 
+                 razza.sing_f, 
+                 razza.icon AS url_img_razza 
+    FROM personaggio 
+        LEFT JOIN razza ON personaggio.id_razza = razza.id_razza 
+    WHERE nome LIKE ? AND pass LIKE ? 
+    LIMIT 1",
+    array('ss', $login1, $pass1)
+);
 
+$record = null;
+
+if (gdrcd_query($result, 'num_rows'))
+    $record = gdrcd_query($result, 'fetch');
 
 /*Se esiste un personaggio corrispondente al nome ed alla password specificati*/
 /** * Aggiunti i controlli sugli orari di connessione e disconnessione per impedire i doppi login con gli stessi account
@@ -76,9 +102,8 @@ $record = gdrcd_query("SELECT personaggio.nome, personaggio.cognome, personaggio
 	
 	*@author Blancks
 */
-if ((empty($record)===FALSE) && ($record['permessi']>-1) && (strtotime($record['ora_entrata']) < strtotime($record['ora_uscita'])||(strtotime($record['ultimo_refresh'])+300) < time()))
+if (!empty($record) && $record['permessi'] > -1 && (strtotime($record['ora_entrata']) < strtotime($record['ora_uscita']) || (strtotime($record['ultimo_refresh'])+300) < time()))
 {
-
 	$_SESSION['login'] = $record['nome'];
 	$_SESSION['cognome'] = $record['cognome'];
 	$_SESSION['permessi'] = $record['permessi'];
@@ -96,120 +121,233 @@ if ((empty($record)===FALSE) && ($record['permessi']>-1) && (strtotime($record['
 	$_SESSION['ultima_uscita'] = $record['ora_uscita'];
 	
 	
-	if ($record['sesso']=='f'){ $_SESSION['razza'] = $record['sing_f']; }
-	else {	$_SESSION['razza'] = $record['sing_m']; }
+	if ($record['sesso']=='f')
+        $_SESSION['razza'] = $record['sing_f'];
+	else
+        $_SESSION['razza'] = $record['sing_m'];
+        
 	$_SESSION['img_razza'] = $record['url_img_razza'];
 	$_SESSION['id_razza'] = $record['id_razza'];
 	$_SESSION['posizione'] = $record['posizione'];
-    if (empty($record['ultima_mappa'])===TRUE){$_SESSION['mappa']=1;}
-	else {$_SESSION['mappa'] = $record['ultima_mappa'];}
-	if (empty($record['ultimo_luogo'])===TRUE){$_SESSION['luogo']=-1;}
-	else {$_SESSION['luogo'] = $record['ultimo_luogo'];}
+    
+    if (empty($record['ultima_mappa']))
+        $_SESSION['mappa'] = 1;
+	else
+        $_SESSION['mappa'] = $record['ultima_mappa'];
+        
+	if (empty($record['ultimo_luogo']))
+        $_SESSION['luogo'] = -1;
+	else
+        $_SESSION['luogo'] = $record['ultimo_luogo'];
+    
     $_SESSION['Tag'] = "";
 	$_SESSION['last_message'] = 0;
 	$_SESSION['last_istant_message'] = $record['ultimo_messaggio'];
 
 
-	$res = gdrcd_query("SELECT ruolo.gilda, ruolo.immagine FROM ruolo JOIN clgpersonaggioruolo ON clgpersonaggioruolo.id_ruolo = ruolo.id_ruolo WHERE clgpersonaggioruolo.personaggio = '".$record['nome']."'", 'result');
+	$res = gdrcd_stmt(
+        "SELECT ruolo.gilda, 
+                     ruolo.immagine 
+        FROM ruolo 
+            INNER JOIN clgpersonaggioruolo ON clgpersonaggioruolo.id_ruolo = ruolo.id_ruolo 
+        WHERE clgpersonaggioruolo.personaggio LIKE ?", 
+        array('s', $record['nome'])
+    );
 	
-    while($row = gdrcd_query($res, 'fetch'))
-    {
-	   $_SESSION['gilda'] .= ',*'.$row['gilda'].'*';
-	   $_SESSION['img_gilda'] .= $row['immagine'].',';
+    while($row = gdrcd_query($res, 'fetch')) {
+        $_SESSION['gilda'] .= ',*'.$row['gilda'].'*';
+        $_SESSION['img_gilda'] .= $row['immagine'].',';
 	}
 	
 	gdrcd_query($res, 'free');
 	
 	
 	/* Carico l'ultimo ip con cui si è collegato il personaggio */
-    $lastlogindata = gdrcd_query("SELECT nome_interessato, autore FROM log WHERE nome_interessato = '".$_SESSION['login']."' AND codice_evento=".LOGGEDIN." ORDER BY data_evento DESC LIMIT 1");
-  
+    $lastloginres = gdrcd_stmt(
+        "SELECT nome_interessato, 
+                     autore 
+        FROM log 
+        WHERE nome_interessato LIKE ? AND codice_evento = ? 
+        ORDER BY data_evento DESC 
+        LIMIT 1", 
+        array('si', $_SESSION['login'], LOGGEDIN)
+    );
+    
+    $lastlogindata = null;
+    
+    if (gdrcd_query($lastloginres, 'num_rows'))
+        $lastlogindata = gdrcd_query($lastloginres, 'fetch');
 
     /*Se la postazione ha già un cookie attivo per un personaggio differente registro l'evento (Possibile account multiplo)*/
-	if ((isset($_COOKIE['lastlogin'])===TRUE) && ($_COOKIE['lastlogin'] != $_SESSION['login']))
+	if (isset($_COOKIE['lastlogin']) && $_COOKIE['lastlogin'] != $_SESSION['login'])
 	{
-	    gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".$_SESSION['login']."','doppio (cookie)', NOW(), ".ACCOUNTMULTIPLO.", '".$_COOKIE['lastlogin'] ."')");
+	    gdrcd_stmt(
+            "INSERT INTO log (
+                nome_interessato, 
+                autore, 
+                data_evento, 
+                codice_evento, 
+                descrizione_evento
+            ) VALUES (?, ?, NOW(), ?, ?)",
+            array('ssis', $_SESSION['login'], 'doppio (cookie)', ACCOUNTMULTIPLO, $_COOKIE['lastlogin'])
+        );
 	
 	}elseif ($lastlogindata['autore'] == $_SERVER['REMOTE_ADDR'])
 	{
-		gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".$_SESSION['login']."','doppio (ip)', NOW(), ".ACCOUNTMULTIPLO.", '".$lastlogindata['nome_interessato'] ."')");
+        gdrcd_stmt(
+            "INSERT INTO log (
+                nome_interessato, 
+                autore, 
+                data_evento, 
+                codice_evento, 
+                descrizione_evento
+            ) VALUES (?, ?, NOW(), ?, ?)",
+            array('ssis', $_SESSION['login'], 'doppio (ip)', ACCOUNTMULTIPLO, $lastlogindata['nome_interessato'])
+        );
 	}
 	
-	
-		
+
 	/*Registro l'evento (Avvenuto login)*/
-	gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".$_SESSION['login']."','".$_SERVER['REMOTE_ADDR']."', NOW(), ".LOGGEDIN." ,'".$_SERVER['REMOTE_ADDR']."')");
-	
+    gdrcd_stmt(
+        "INSERT INTO log (
+            nome_interessato, 
+            autore, 
+            data_evento, 
+            codice_evento, 
+            descrizione_evento
+        ) VALUES (?, ?, NOW(), ?, ?)",
+        array('ssis', $_SESSION['login'], $_SERVER['REMOTE_ADDR'], LOGGEDIN, $_SERVER['REMOTE_ADDR'])
+    );	
 
 	
-} elseif (strtotime($record['ora_entrata']) > strtotime($record['ora_uscita'])||(strtotime($record['ultimo_refresh'])+300) > time())
+} elseif (strtotime($record['ora_entrata']) > strtotime($record['ora_uscita']) || (strtotime($record['ultimo_refresh'])+300) > time())
 {
 
 	/*Se la postazione è stata esclusa*/  
     echo '<div class="error_box"><h2 class="error_major">'.$MESSAGE['warning']['double_connection'].'</h2></div>';
 	/*Registro l'evento (Tentativo di connessione da postazione esclusa)*/
-    gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES ('".$login1."', 'Login_procedure', NOW(), ".BLOCKED.", '".$_SERVER['REMOTE_ADDR']."')");
-    exit();
+    gdrcd_stmt(
+        "INSERT INTO log (
+            nome_interessato, 
+            autore, 
+            data_evento, 
+            codice_evento ,
+            descrizione_evento
+        ) VALUES (?, ?, NOW(), ?, ?)",
+        array('ssis', $login1, 'Login_procedure', BLOCKED, $_SERVER['REMOTE_ADDR'])
+    );
+    
+    die();
 
 }else {
 
 	/*Sono stati inseriti username e password errati*/
 	$_SESSION['login'] = '';
 	
-	if (($login1 != '') && ($pass1 != ''))
+	if (!empty($login1) && !empty($pass1))
 	{
 		/*Registro l'evento (Login errato)*/
-		gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".$_SESSION['login']."','".$host."', NOW(), ".ERRORELOGIN." ,'".$_SERVER['REMOTE_ADDR']."')");
+		gdrcd_stmt(
+            "INSERT INTO log (
+                nome_interessato, 
+                autore, 
+                data_evento, 
+                codice_evento, 
+                descrizione_evento
+            ) VALUES (?, ?, NOW(), ?, ?)",
+            array('ssis', $_SESSION['login'], $host, ERRORELOGIN, $_SERVER['REMOTE_ADDR'])
+        );   
    
-   
-		$record = gdrcd_query("SELECT count(*) FROM log WHERE descrizione_evento = '".$_SERVER['REMOTE_ADDR']."' AND codice_evento = ".ERRORELOGIN." AND DATE_ADD(data_evento, INTERVAL 60 MINUTE) > NOW()");
-        /*Se ho tentato 10 login fallendo nel giro di un ora*/
-		$iErrorsNumber = $record['count(*)'];
-		
-		if ($iErrorsNumber>=10)
+		$result = gdrcd_stmt(
+            "SELECT count(*) 
+            FROM log 
+            WHERE descrizione_evento LIKE ? 
+                AND codice_evento = ? 
+                AND DATE_ADD(data_evento, INTERVAL 60 MINUTE) > NOW()",
+            array('si', $_SERVER['REMOTE_ADDR'], ERRORELOGIN)
+        );
+        
+        $iErrorsNumber = 0;
+        
+        if (gdrcd_query($result, 'num_rows'))
+        {
+            $record = gdrcd_query($result, 'fetch');
+            gdrcd_query($result, 'free');
+            
+            $iErrorsNumber = $record['count(*)'];
+        }
+        
+		if ($iErrorsNumber >= 10)
 		{
-			gdrcd_query("INSERT INTO blacklist (ip, nota, ora, host) VALUES ('".$_SERVER['REMOTE_ADDR']."', '".$login1." (tenta password)', NOW(), '".$Host."')");
+            gdrcd_stmt(
+                "INSERT INTO blacklist (
+                    ip, 
+                    nota, 
+                    ora, 
+                    host
+                ) VALUES (?, ?, NOW(), ?)",
+                array('sss', $_SERVER['REMOTE_ADDR'], $login1.' (tenta password)', $Host)
+            );            
 		}
 	}
 }
 
 /*Eseguo l'accesso*/
-if ($_SESSION['login'] != '') {
+if (!empty($_SESSION['login'])) {
 
+    if (gdrcd_controllo_esilio($_SESSION['login']) === TRUE) {
+        session_destroy();
+        echo '<a href="index.php">'.$PARAMETERS['info']['homepage_name'].'</a>';
+        die();
+    } else { 
     
-  if (gdrcd_controllo_esilio($_SESSION['login'])===TRUE){
-    session_destroy();
-	echo '<a href="index.php">'.$PARAMETERS['info']['homepage_name'].'</a>';
-	exit();
-  } else { 
-	/*Creo un cookie*/
-    setcookie('lastlogin',$_SESSION['login'],0,'','',0);
+        /*Creo un cookie*/
+        setcookie('lastlogin',$_SESSION['login'],0,'','',0);
 
-    if ($PARAMETERS['mode']['log_back_location']=='OFF')
-    {
-	   $_SESSION['luogo']='-1';
+        if ($PARAMETERS['mode']['log_back_location'] == 'OFF')
+        {
+            $_SESSION['luogo'] = '-1';
 	   
-	   /*Inserisco nei presenti*/
-	   gdrcd_query("UPDATE personaggio SET ora_entrata = NOW(), ultimo_luogo='-1', ultimo_refresh = NOW(), last_ip = '".$_SERVER['REMOTE_ADDR']."',  is_invisible = 0 WHERE nome =  '".$_SESSION['login']."'");
-    
-       /*Redirigo alla pagina del gioco*/
-	   header('Location: main.php?page=mappaclick&map_id='.$_SESSION['mappa'], true);
+            /*Inserisco nei presenti*/
+            gdrcd_stmt(
+                "UPDATE personaggio SET 
+                    ora_entrata = NOW(), 
+                    ultimo_luogo = ?, 
+                    ultimo_refresh = NOW(), 
+                    last_ip = ?,  
+                    is_invisible = ? 
+                WHERE nome LIKE ?",
+                array('isis', -1, $_SERVER['REMOTE_ADDR'], 0, $_SESSION['login'])
+            );
+            
+            /*Redirigo alla pagina del gioco*/
+            header('Location: main.php?page=mappaclick&map_id='.$_SESSION['mappa'], true);
+            die();
 	   
-    }else
-    {
-	   /*Inserisco nei presenti*/
-	   gdrcd_query("UPDATE personaggio SET ora_entrata = NOW(), ultimo_refresh = NOW(), last_ip = '".$_SERVER['REMOTE_ADDR']."',  is_invisible = 0 WHERE nome =  '".$_SESSION['login']."'");
+        }else
+        {
+            /*Inserisco nei presenti*/
+            gdrcd_stmt(
+                "UPDATE personaggio SET 
+                    ora_entrata = NOW(), 
+                    ultimo_refresh = NOW(), 
+                    last_ip = ?,  
+                    is_invisible = ? 
+                WHERE nome LIKE ?",
+                array('sis', $_SERVER['REMOTE_ADDR'], 0, $_SESSION['login'])
+            );
+            
+            /*Redirigo alla pagina del gioco*/
+            header('Location: main.php?dir='.$_SESSION['luogo'], true);
+            die();
+        }
     
-        /*Redirigo alla pagina del gioco*/
-	    header('Location: main.php?dir='.$_SESSION['luogo'], true);
-	}
+    }
 
-  }//else
 } else { /*Dichiaro il fallimento dell'operazione di login*/ 
 
 
-?>
-<html>
+?><html>
 <head>
    <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
    <link rel='stylesheet' href='themes/<?php echo $PARAMETERS['themes']['current_theme'];?>/main.css' TYPE='text/css'>
