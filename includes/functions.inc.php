@@ -336,8 +336,8 @@ function gdrcd_html_filter($str)
 				"#(<iframe.*?\/?>.*?(<\/iframe>)?)#is" 	=> "Frame non consentiti",
 				"#(<object.*?>.*?(<\/object>)?)#is"		=> "Contenuti multimediali non consentiti",
 				"#(<embed.*?\/?>.*?(<\/embed>)?)#is"	=> "Contenuti multimediali non consentiti",
-				"#( on[a-zA-Z]+=\"?'?[^\s\"']+'?\"?)#is"=> "NonConsentiti",
-				"#(javascript:[^\s\"']+)#is"			=> "NonConsentiti"
+				"#( on[a-zA-Z]+=\"?'?[^\s\"']+'?\"?)#is"=> "",
+				"#(javascript:[^\s\"']+)#is"			=> ""
 						);
 
   if($GLOBALS['PARAMETERS']['settings']['html']==HTML_FILTER_HIGH){
