@@ -50,6 +50,11 @@ define('COLLO', 9);
 /*Stati della mappa*/
 define('INVIAGGIO', -1);
 
+/**
+ * Livelli di filtro html
+ */
+define('HTML_FILTER_BASE',0);
+define('HTML_FILTER_HIGH',1);
 
 /*Vettori globali dei parametri*/
 $PARAMETER = array();

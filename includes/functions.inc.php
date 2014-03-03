@@ -7,7 +7,7 @@
  */
 
 /**
- * Funzionalità di dialogo col database 
+ * Funzionalità di dialogo col database
  * Set di funzioni da core che implementano il dialogo gestito col db
  */
 
@@ -17,7 +17,7 @@
 function gdrcd_connect()
 {
 	static $db_link	= false;
-	
+
 	if ($db_link === false)
 	{
 		$db_user 	= $GLOBALS['PARAMETERS']['database']['username'];
@@ -28,13 +28,13 @@ function gdrcd_connect()
 
 		#$db = mysql_connect($db_host, $db_user, $db_pass)or die(gdrcd_mysql_error());
 		#mysql_select_db($db_name)or die(gdrcd_mysql_error($db_error));
-		
+
 		$db_link = mysqli_connect($db_host, $db_user, $db_pass, $db_name);
-		
+
 		if (mysqli_connect_errno())
 				gdrcd_mysql_error($db_error);
 	}
-	
+
 	return $db_link;
 }
 
@@ -71,68 +71,68 @@ function gdrcd_query($sql, $mode = 'query')
 	switch (strtolower(trim($mode)))
 	{
 		case 'query':
-		
+
 			switch (strtoupper(substr(trim($sql), 0, 6)))
 			{
 				case 'SELECT':
-					
+
 					$result = mysqli_query($db_link, $sql)or die(gdrcd_mysql_error($sql));
 					$row = mysqli_fetch_array($result, MYSQLI_BOTH);
 					mysqli_free_result($result);
-			
+
 					return $row;
-			
+
 				break;
-						
+
 				default:
-		
+
 					return mysqli_query($db_link, $sql)or die(gdrcd_mysql_error($sql));
-		
+
 				break;
 			}
-			
-			
+
+
 		case 'result':
-			
+
 			$result = mysqli_query($db_link, $sql)or die(gdrcd_mysql_error($sql));
 			return $result;
-		
+
 		break;
-			
-			
+
+
 		case 'num_rows':
-		
+
 			return (int)mysqli_num_rows($sql);
-		
+
 		break;
-		
-				
+
+
 		case 'fetch':
-				
+
 			$row = mysqli_fetch_array($sql, MYSQLI_BOTH);
 			return $row;
-				
+
 		break;
-		
-				
+
+
 		case 'object':
-				
+
 			$row = mysqli_fetch_object($sql);
 			return $row;
-				
+
 		break;
-		
-				
+
+
 		case 'free':
-					
+
 			return mysqli_free_result($sql);
-					
+
 		break;
-    
+
     case 'last_id':
       return mysqli_insert_id($db_link);
     break;
-    
+
     case 'affected':
       return (int)mysqli_affected_rows($db_link);
     break;
@@ -161,20 +161,20 @@ function gdrcd_check_tables($table)
 		{
 			#echo $i, "<br>";
 			$defInfo = mysqli_fetch_field_direct($result, $i);
-			
+
 			$field->auto_increment = (strpos($field->Extra, 'auto_increment') === FALSE ? 0 : 1);
 			$field->definition = $field->Type;
-			
+
 			if ($field->Null == 'NO' && $field->Key != 'PRI')
 					$field->definition .= ' NOT NULL';
-					
-			if ($field->Default) 
+
+			if ($field->Default)
 					$field->definition .= " DEFAULT '" . mysqli_real_escape_string(gdrcd_connect(), $field->Default) . "'";
-					
+
 			if ($field->auto_increment)
 					$field->definition .= ' AUTO_INCREMENT';
-			
-			
+
+
 			switch ($field->Key)
 			{
 				case 'PRI': $field->definition .= ' PRIMARY KEY'; break;
@@ -182,19 +182,19 @@ function gdrcd_check_tables($table)
 				case 'MUL': $field->definition .= ' KEY'; break;
 			}
 
-			
+
 			$field->len = $defInfo->length;
 			$output[$field->Field] = $field;
 			++$i;
-			
+
 			unset($defInfo);
 		}
-		
-		gdrcd_query($describe, 'free');
-		
 
-        
-		
+		gdrcd_query($describe, 'free');
+
+
+
+
 		return $output;
 }
 
@@ -215,7 +215,7 @@ function gdrcd_mysql_error($details = false)
 
 	if ($details !== false)
 			$error_msg .= '<br><br><strong>Error Detail</strong>: ' . $details;
-			
+
 
 	return $error_msg;
 }
@@ -247,8 +247,8 @@ function gdrcd_encript($str)
 			case 'SHA-1':	$str = sha1($str);		break;
 		}
 	}
-	
-	
+
+
 	return $str;
 }
 
@@ -284,28 +284,28 @@ function gdrcd_filter($what, $str)
 		case 'get':
 				$str = addslashes(str_replace('\\','',$str));
 		break;
-		
+
 		case 'num':
 				$str = (int)$str;
 		break;
-		
+
 		case 'out':
 				$str = htmlentities($str, ENT_QUOTES, 'utf-8');
 		break;
-		
+
 		case 'addslashes':
 				$str = addslashes($str);
 		break;
-		
+
 		case 'email':
 				$str = (preg_match("#^[a-z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,4}$#is", $str))? $str : false;
 		break;
-		
+
 		case 'includes':
 				$str = (preg_match("#[^:]#is"))? htmlentities($str, ENT_QUOTES) : false;
 		break;
 	}
-	
+
 	return $str;
 }
 
@@ -325,6 +325,7 @@ function gdrcd_filter_includes($str){ return gdrcd_filter('includes', $str); }
 /**
  * Funzione basilare di filtraggio degli elementi pericolosi in html
  * Serve a consentire l'uso di html e css in sicurezza nelle zone editabili della scheda
+ * Il livello di filtraggio viene controllato da config: $PARAMETERS['settings']['html']
  * @param string $str: la stringa da filtrare
  * @return $str con gli elementi illegali sosituiti con una stringa di errore
  */
@@ -332,14 +333,19 @@ function gdrcd_html_filter($str)
 {
 	$notAllowed = array(
 				"#(<script.*?>.*?(<\/script>)?)#is" 	=> "Script non consentiti",
-				"#(<img.*?\/?>)#is"						=> "Immagini non consentite",
 				"#(<iframe.*?\/?>.*?(<\/iframe>)?)#is" 	=> "Frame non consentiti",
 				"#(<object.*?>.*?(<\/object>)?)#is"		=> "Contenuti multimediali non consentiti",
 				"#(<embed.*?\/?>.*?(<\/embed>)?)#is"	=> "Contenuti multimediali non consentiti",
-				"#(url\(.*?\))#is"						=> "none",
 				"#( on[a-zA-Z]+=\"?'?[^\s\"']+'?\"?)#is"=> "NonConsentiti",
 				"#(javascript:[^\s\"']+)#is"			=> "NonConsentiti"
 						);
+
+  if($GLOBALS['PARAMETERS']['settings']['html']==HTML_FILTER_HIGH){
+    $notAllowed=array_merge($notAllowed,array(
+      "#(<img.*?\/?>)#is"           => "Immagini non consentite",
+      "#(url\(.*?\))#is"            => "none",
+    ));
+  }
 
 
 	return preg_replace(array_keys($notAllowed), array_values($notAllowed), $str);
@@ -357,13 +363,13 @@ function gdrcd_html_filter($str)
  * Check validità della sessione utente
  */
 function gdrcd_controllo_sessione()
-{    
+{
     if (empty($_SESSION['login']))
     {
 	 	echo 	'<div class="error">', $GLOBALS['MESSAGE']['error']['session_expired'],
 				'<br />', $GLOBALS['MESSAGE']['warning']['please_login_again'],
 				'<a href="', $GLOBALS['PARAMETERS']['info']['site_url'], '">Homepage</a></div>';
-	    
+
 	    die();
     }
 }
@@ -380,13 +386,13 @@ function gdrcd_controllo_esilio($pg)
 
    if(strtotime($exiled['esilio']) > time())
    {
-		echo 	'<div class="error">', gdrcd_filter_out($pg), ' ', 
-				gdrcd_filter_out($GLOBALS['MESSAGE']['warning']['character_exiled']), ' ', 
+		echo 	'<div class="error">', gdrcd_filter_out($pg), ' ',
+				gdrcd_filter_out($GLOBALS['MESSAGE']['warning']['character_exiled']), ' ',
 				gdrcd_format_date($exiled['esilio']), ' (', $exiled['motivo_esilio'], ' - ', $exiled['autore_esilio'], ')</div>';
-		
+
 		return true;
    }
-   
+
    return false;
 }
 
@@ -400,17 +406,17 @@ function gdrcd_check_time($time)
 {
 	$time_hours 	= date('H', strtotime($time));
 	$time_minutes 	= date('i', strtotime($time));
-	
+
 	if ($time_hours == date('H'))
 	{
 		return date('i')-$time_minutes;
-	
+
 	}elseif ($time_hours == (date('H')-1) || $time_hours == (strftime('H')+11))
 	{
 	    return date('i')-$time_minutes+60;
 	}
-	
-	return 61; 
+
+	return 61;
 }
 
 
@@ -434,8 +440,8 @@ function gdrcd_load_modules($path)
 			include($path);
 	else
 			echo $MESSAGE['interface']['layout_not_found'];
-			
-	
+
+
 	unset($MESSAGE);
 	unset($PARAMETERS);
 }
@@ -445,7 +451,7 @@ function gdrcd_load_modules($path)
  * Funzione di formattazione per la data nel formato italiano
  * @param string $date_in: la data in un formato leggibile da strtotime()
  * @return la data nel formato dd/mm/yyyy
- */ 
+ */
 function gdrcd_format_date($date_in)
 {
 	return date('d/m/Y', strtotime($date_in));
@@ -456,7 +462,7 @@ function gdrcd_format_date($date_in)
  * Funzione di formattazione del tempo nel formato italiano
  * @param string $time_in: la data-ora in un formato leggibile da strtotime()
  * @return l'ora nel formato hh:mm
- */ 
+ */
 function gdrcd_format_time($time_in)
 {
 	return date('H:i', strtotime($time_in));
@@ -467,7 +473,7 @@ function gdrcd_format_time($time_in)
  * Funzione di formattazione data completa nel formato italiano
  * @param $datetime_in: la data e ora in formato leggibile da strtotime()
  * @return la data/ora nel formato DD/MM/YYYY hh:mm
- */ 
+ */
 function gdrcd_format_datetime($datetime_in)
 {
 	return date('d/m/Y H:i', strtotime($datetime_in));
@@ -501,8 +507,8 @@ function gdrcd_capital_letter($word)
 function gdrcd_genera_pass()
 {
 	$pass = '';
-	for ($i=0; $i<8; ++$i){ $pass.= chr(mt_rand(0, 24) + ord("A")); }	
-	
+	for ($i=0; $i<8; ++$i){ $pass.= chr(mt_rand(0, 24) + ord("A")); }
+
 	return $pass;
 }
 
@@ -522,13 +528,13 @@ $str=gdrcd_close_tags('quote',$str);
 $search = array(
 	    '#\n#',
 	    '#\[BR\]#is',
-        '#\[B\](.+?)\[\/B\]#is', 
+        '#\[B\](.+?)\[\/B\]#is',
 	    '#\[i\](.+?)\[\/i\]#is',
         '#\[U\](.+?)\[\/U\]#is',
 	    '#\[center\](.+?)\[\/center\]#is',
         '#\[img\](.+?)\[\/img\]#is',
         '#\[redirect\](.+?)\[\/redirect\]#is',
-        '#\[url=(.+?)\](.+?)\[\/url\]#is', 
+        '#\[url=(.+?)\](.+?)\[\/url\]#is',
         '#\[color=(.+?)\](.+?)\[\/color\]#is',
 		  '#\[quote(?::\w+)?\]#i',
 		  '#\[quote=(?:&quot;|"|\')?(.*?)["\']?(?:&quot;|"|\')?\]#i',
@@ -537,7 +543,7 @@ $search = array(
     $replace = array(
 		'<br />',
 		'<br />',
-        '<span style="font-weight: bold;">$1</span>', 
+        '<span style="font-weight: bold;">$1</span>',
         '<span style="font-style: italic;">$1</span>',
         '<span style="border-bottom: 1px solid;">$1</span>',
         '<div style="width:100%; text-align: center;">$1</div>',
@@ -549,7 +555,7 @@ $search = array(
 		  '<div class="bb-quote"><div class="bb-quote-name">$1 ha scritto:</div><blockquote class="bb-quote-body">',
 		  '</blockquote></div>'
     );
-    return preg_replace($search, $replace, $str); 
+    return preg_replace($search, $replace, $str);
 }
 
 /**
@@ -608,14 +614,14 @@ function gdrcd_redirect($url,$tempo = FALSE )
 function gdrcd_angs($str)
 {
     $search = array(
-        '#\&lt;(.+?)\&gt;#is', 
-		'#\<(.+?)>#is', 
+        '#\&lt;(.+?)\&gt;#is',
+		'#\<(.+?)>#is',
 	);
     $replace = array(
 		'[$1]',
 		'[$1]',
     );
-    return preg_replace($search, $replace, $str); 
+    return preg_replace($search, $replace, $str);
 }
 
 
@@ -628,14 +634,14 @@ function gdrcd_angs($str)
 function gdrcd_chatcolor($str)
 {
     $search = array(
-	'#\&lt;(.+?)\&gt;#is', 
-	'#\[(.+?)\]#is', 
+	'#\&lt;(.+?)\&gt;#is',
+	'#\[(.+?)\]#is',
     );
     $replace = array(
 	'<span class="color2">&lt;$1&gt;</span>',
 	'<span class="color2">&lt;$1&gt;</span>',
     );
-    return preg_replace($search, $replace, $str); 
+    return preg_replace($search, $replace, $str);
 }
 
 /**
@@ -649,7 +655,7 @@ function gdrcd_chatme($user, $str)
 	$search = $user;
     $replace = '<span style="text-decoration:underline;">'.$search.'</span>';
 
-    return str_ireplace($search, $replace, $str); 
+    return str_ireplace($search, $replace, $str);
 }
 
 /**
@@ -660,7 +666,7 @@ function gdrcd_chatme_master($user, $str)
 	$search = $user;
     $replace = '<span style="text-decoration:underline;">'.$search.'</span>';
 
-    return str_ireplace($search, $replace, $str); 
+    return str_ireplace($search, $replace, $str);
 }
 
 /**
@@ -671,7 +677,7 @@ function gdrcd_chatme_master($user, $str)
 function gdrcd_list($str)
 {
 	switch(strtolower($str))
-	{	
+	{
 		case 'personaggi':
 			$list = '<datalist id="personaggi">';
 	 		$query = "SELECT nome FROM personaggio ORDER BY nome";
@@ -680,11 +686,11 @@ function gdrcd_list($str)
 			while($option=gdrcd_query($characters, 'fetch'))
 			{
 				$list .= '<option value="'.$option['nome'].'" />';//TODO escape HTMl del nome!
-			} 
+			}
 			gdrcd_query($characters, 'free');
 			$list .= '</datalist>';
 			break;
 	}
-	
+
 	return $list;
 }
