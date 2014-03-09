@@ -167,15 +167,15 @@ if((gdrcd_filter_get($_REQUEST['chat'])=='yes')&&(empty($_SESSION['login'])===FA
   			{ //Dado
   	   			$m_type ='C';
 
-  				$chat_message = substr($chat_message, 1);
+  				//$chat_message = substr($chat_message, 1);
 
-  				if (preg_match("/^d+([0-9]+)$/si", $chat_message,$matches))
+  				if (preg_match("/^#d+([1-9][0-9]*)$/si", $chat_message,$matches))
   				{
   		   			$nstring = $matches[1];
   		   			$die = mt_rand(1,(int)$nstring);
   		   			$chat_message = "A ".$_SESSION['login']." esce ".$die." su ".$nstring;
   				}
-  				else if (preg_match("/^([0-9]+)d+([0-9]+)$/si", $chat_message,$matches))
+  				else if (preg_match("/^#([1-9][0-9]*)d+([1-9][0-9]*)$/si", $chat_message,$matches))
   				{
   					$numero = (int)$matches[1];
   					$dado = (int)$matches[2];
