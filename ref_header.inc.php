@@ -167,8 +167,6 @@ if((gdrcd_filter_get($_REQUEST['chat'])=='yes')&&(empty($_SESSION['login'])===FA
   			{ //Dado
   	   			$m_type ='C';
 
-  				//$chat_message = substr($chat_message, 1);
-
   				if (preg_match("/^#d+([1-9][0-9]*)$/si", $chat_message,$matches))
   				{
   		   			$nstring = $matches[1];
