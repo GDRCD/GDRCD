@@ -1,4 +1,4 @@
-<script type="text/javascript" src="includes/corefunctions.js"></script>
+<script type="text/javascript" src="/includes/corefunctions.js"></script>
 <?php
 
 /** * Abilitazione tooltip
@@ -12,7 +12,7 @@ if ($PARAMETERS['mode']['map_tooltip'] == 'ON' || $PARAMETERS['mode']['user_onli
 var tooltip_offsetX = <?php echo $PARAMETERS['settings']['map_tooltip']['offset_x']; ?>;
 var tooltip_offsetY = <?php echo $PARAMETERS['settings']['map_tooltip']['offset_y']; ?>;
 </script>
-<script type="text/javascript" src="includes/tooltip.js"></script>
+<script type="text/javascript" src="/includes/tooltip.js"></script>
 
 <?php
 }
@@ -24,7 +24,7 @@ if ($PARAMETERS['mode']['alert_pm_via_pagetitle']=='ON')
 {
 ?>
 
-<script type="text/javascript" src="includes/changetitle.js"></script>
+<script type="text/javascript" src="/includes/changetitle.js"></script>
 
 <?php
 }
@@ -37,20 +37,20 @@ if ($PARAMETERS['mode']['popup_choise']=='ON')
 {
 ?>
 
-<script type="text/javascript" src="includes/popupchoise.js"></script>
+<script type="text/javascript" src="/includes/popupchoise.js"></script>
 
 <?php
 }
 ?>
 
 </body>
-</html><?php 
+</html><?php
 
 /*Chiudo la connessione al database*/
 gdrcd_close_connection($handleDBConnection);
 
 
-/**	* Per ottimizzare le risorse impiegate le liberiamo dopo che non ne abbiamo più bisogno 
+/**	* Per ottimizzare le risorse impiegate le liberiamo dopo che non ne abbiamo piï¿½ bisogno
 	* @author Blancks
 */
 unset($MESSAGE);
