@@ -131,7 +131,7 @@ if ($_SESSION['permessi']<MODERATOR){
 	   gdrcd_query("DELETE FROM clgpersonaggiomostrine WHERE nome IN (SELECT nome FROM personaggio WHERE permessi = -1)");
 	   gdrcd_query("OPTIMIZE TABLE clgpersonaggiomostrine");
 	   
-	   gdrcd_query("DELETE FROM clgpersonaggioruolo WHERE personaggio IN (SELECT nome AS personaggio FROM permessi = -1)");
+	   gdrcd_query("DELETE FROM clgpersonaggioruolo WHERE personaggio IN (SELECT nome AS personaggio FROM personaggio WHERE permessi = -1)");
 	   gdrcd_query("OPTIMIZE TABLE clgpersonaggioruolo");
 	   
 	   gdrcd_query("DELETE FROM personaggio WHERE permessi = -1");
