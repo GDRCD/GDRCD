@@ -1,7 +1,7 @@
 <div class="pagina_scheda_oggetti">
 <?php /*HELP: */ ?>
 
-<?php 
+<?php
 //Se non e' stato specificato il nome del pg
 if (isset($_REQUEST['pg'])===FALSE){
     echo '<div class="error">'.gdrcd_filter('out',$MESSAGE['error']['unknonw_character_sheet']).'</div>';
@@ -11,28 +11,28 @@ if (isset($_REQUEST['pg'])===FALSE){
 /*Verifico l'esistenza del PG*/
 $query = "SELECT nome FROM personaggio WHERE personaggio.nome = '".gdrcd_filter('get',$_REQUEST['pg'])."'";
 $result = gdrcd_query($query, 'result');
-//Se non esiste il pg	
+//Se non esiste il pg
 if (gdrcd_query($result, 'num_rows')==0){echo '<div class="error">'.gdrcd_filter('out',$MESSAGE['error']['unknown_character_sheet']).'</div>';}
 else {
-   
+
    gdrcd_query($result, 'free');
-   
+
    /* Spostamento di un oggetto dallo zaino nell'inventario*/
    if (($_POST['op']=="togli") && ($_SESSION['login']==$_REQUEST['pg'])){
       gdrcd_query("UPDATE clgpersonaggiooggetto SET posizione = 0 WHERE id_oggetto = ".gdrcd_filter('num',$_POST['id_oggetto'])." AND nome = '".gdrcd_filter('in',$_REQUEST['pg'])."' LIMIT 1 ");
-      
+
 	  echo '<div class="warning">'.gdrcd_filter('out',$MESSAGE['warning']['done']).'</div>';
    }
-   
-   
+
+
    /* Aggiungi/modifica un commento*/
    if ((gdrcd_filter('get',$_POST['op'])=="commenta") && ($_SESSION['login']==$_REQUEST['pg'])){
       gdrcd_query("UPDATE clgpersonaggiooggetto SET commento = '".gdrcd_filter('in',$_POST['commento'])."' WHERE id_oggetto = ".gdrcd_filter('num',$_POST['id_oggetto'])." AND nome = '".$_SESSION['login']."' LIMIT 1 ");
 
 	  echo '<div class="warning">'.gdrcd_filter('out',$MESSAGE['warning']['done']).'</div>';
    }
-   
-   
+
+
    /*Rimuovo un oggetto dall'inventario o dallo zaino*/
    if ((gdrcd_filter('get',$_POST['op'])=="abbandona") && ($_SESSION['login']==$_REQUEST['pg'])){ /*Rimuovo un oggetto*/
       /*Se ne possiedo più di uno ne rimuovo uno solo*/
@@ -42,13 +42,13 @@ else {
           $query="UPDATE clgpersonaggiooggetto SET numero = numero - 1 WHERE id_oggetto = ".gdrcd_filter('num',$_POST['id_oggetto'])." AND nome = '".gdrcd_filter('get',$_REQUEST['pg'])."' LIMIT 1 ";
 	  }
 	  gdrcd_query($query);
-	  
+
 	  echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['items']['warning']['done']);
 
    } ?>
-   
-   
-   
+
+
+
 <!-- Elenco oggetti nello zaino -->
 <div class="page_title">
    <h2><?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['menu']['inventory']); ?></h2>
@@ -66,7 +66,7 @@ $result=gdrcd_query($query, 'result');?>
   <td class="casella_titolo">
      <div class="titoli_elenco">
 	    <?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['items']['list']['item']); ?>
-      
+
   </div>
   </td>
   <td class="casella_titolo">
@@ -88,17 +88,17 @@ $result=gdrcd_query($query, 'result');?>
 
 
 <?php while ($record=gdrcd_query($result, 'fetch')){ ?>
- 
+
 <tr>
   <!-- Oggetto, immagine, quantità -->
   <td class="casella_elemento">
-    <div class="inventario_nome"><?php echo gdrcd_filter('out',$record['nome_oggetto']); ?></div>      
+    <div class="inventario_nome"><?php echo gdrcd_filter('out',$record['nome_oggetto']); ?></div>
     <div class="inventario_img">
        <img src="themes/<?php echo $PARAMETERS['themes']['current_theme']?>/imgs/items/<?php echo gdrcd_filter('out',$record['urlimg']); ?>" />
-    </div> 
+    </div>
 	<div class="inventario_quantita">
        <?php if ($record['cariche']>0){
-			   echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['items']['list']['charges'].": ".$record['cariche']); 
+			   echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['items']['list']['charges'].": ".$record['cariche']);
 			 } else { echo '&nbsp;'; } ?>
     </div>
     <div class="inventario_quantita"><?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['items']['list']['pts'].": ".$record['numero']); ?></div>
@@ -131,7 +131,7 @@ $result=gdrcd_query($query, 'result');?>
    </div>
    <div class="inventario_riga_proprieta">
      <div style="float: left; clear: left;">
-	 <?php echo gdrcd_filter('out',$PARAMETERS['names']['stats']['car1'].": "); ?> 
+	 <?php echo gdrcd_filter('out',$PARAMETERS['names']['stats']['car1'].": "); ?>
 	 </div>
      <div style="float: right; clear: right;">
      <?php echo $record['bonus_car1']; ?>
@@ -169,8 +169,8 @@ $result=gdrcd_query($query, 'result');?>
      <?php echo $record['bonus_car5']; ?>
      </div>
    </div>
-  <!-- Descrizione e note-->   
-  </td> 
+  <!-- Descrizione e note-->
+  </td>
   <td class="casella_elemento">
    <div class="inventario_riga_descrizione">
      <?php echo gdrcd_filter('out',$record['descrizione']); ?>
@@ -182,16 +182,16 @@ $result=gdrcd_query($query, 'result');?>
    <!-- Commento -->
 	 <form action="main.php?page=scheda_oggetti"
 		   method="post">
-		<input type="hidden" 
-		       value="commenta" 
-			   name="op" /> 
-		<input type="hidden" 
-		       value="<?php echo $record['id_oggetto']; ?>" 
+		<input type="hidden"
+		       value="commenta"
+			   name="op" />
+		<input type="hidden"
+		       value="<?php echo $record['id_oggetto']; ?>"
 			   name="id_oggetto" />
         <textarea type="textbox" name="commento" class="form_textarea"><?php echo $record['commento']; ?></textarea>
-	    <input type="submit" 
+	    <input type="submit"
 		       value="<?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['items']['list']['add_note']);?>" />
-        <input type="hidden" 
+        <input type="hidden"
 		       value="<?php echo $_REQUEST['pg']; ?>"
 			   name="pg" />
 	 </form>
@@ -199,23 +199,23 @@ $result=gdrcd_query($query, 'result');?>
   </td>
   <!-- Comandi elenco -->
   <td class="casella_controlli">
-  <?php if($_SESSION['login']==$_REQUEST['pg']){ ?> 
+  <?php if($_SESSION['login']==$_REQUEST['pg']){ ?>
    <div class="form_gioco">
      <!-- Abbandona -->
 	 <form action="main.php?page=scheda_oggetti"
 		   method="post">
-		<input type="hidden" 
-		       value="abbandona" 
-			   name="op" /> 
-	    <input type="hidden" 
-		       value="<?php echo $record['numero']; ?>" 
+		<input type="hidden"
+		       value="abbandona"
+			   name="op" />
+	    <input type="hidden"
+		       value="<?php echo $record['numero']; ?>"
 			   name="numero" />
-		<input type="hidden" 
-		       value="<?php echo $record['id_oggetto']; ?>" 
+		<input type="hidden"
+		       value="<?php echo $record['id_oggetto']; ?>"
 			   name="id_oggetto" />
-		<input type="submit" 
+		<input type="submit"
 		       value="<?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['items']['list']['drop']);?>" />
-        <input type="hidden" 
+        <input type="hidden"
 		       value="<?php echo $_REQUEST['pg']; ?>"
 			   name="pg" />
 	 </form>
@@ -223,15 +223,15 @@ $result=gdrcd_query($query, 'result');?>
 	 <!-- Zaino -->
 	 <form action="main.php?page=scheda_equip"
 		   method="post">
-		<input type="hidden" 
-		       value="in_zaino" 
-			   name="op" /> 
-		<input type="hidden" 
-		       value="<?php echo $record['id_oggetto']; ?>" 
+		<input type="hidden"
+		       value="in_zaino"
+			   name="op" />
+		<input type="hidden"
+		       value="<?php echo $record['id_oggetto']; ?>"
 			   name="id_oggetto" />
-		<input type="submit" 
+		<input type="submit"
 			   value="<?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['items']['list']['put_in']);?>" />
-        <input type="hidden" 
+        <input type="hidden"
 		       value="<?php echo $_REQUEST['pg']; ?>"
 			   name="pg" />
 	 </form>
@@ -240,9 +240,9 @@ $result=gdrcd_query($query, 'result');?>
    <?php } else { echo "&nbsp;"; } ?>
   </td>
 </tr>
-  
 
-<?php }//while 
+
+<?php }//while
 
 		gdrcd_query($result, 'free');
 
@@ -253,15 +253,15 @@ $result=gdrcd_query($query, 'result');?>
 </div>
 <!-- Link a piè di pagina -->
 <div class="link_back">
-   <a href="main.php?page=scheda_equip&pg=<?php echo gdrcd_filter('get',$_REQUEST['pg']); ?>"><?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['items']['list']['put_in']).'.'; ?></a><br />
-   <a href="main.php?page=scheda&pg=<?php echo gdrcd_filter('get',$_REQUEST['pg']); ?>"><?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['link']['back']); ?></a>
+   <a href="main.php?page=scheda_equip&pg=<?php echo gdrcd_filter('url',$_REQUEST['pg']); ?>"><?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['items']['list']['put_in']).'.'; ?></a><br />
+   <a href="main.php?page=scheda&pg=<?php echo gdrcd_filter('url',$_REQUEST['pg']); ?>"><?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['link']['back']); ?></a>
 </div>
 
 
-<?php 
+<?php
 /********* CHIUSURA SCHEDA **********/
 	}//else
-	
+
 }//else
 ?>
 </div>

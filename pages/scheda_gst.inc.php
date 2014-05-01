@@ -1,5 +1,5 @@
 <div class="pagina_schedam_odifica">
-<?php /*HELP: */ 
+<?php /*HELP: */
 
 if (isset($_REQUEST['pg'])===FALSE){
     echo gdrcd_filter('out',$MESSAGE['error']['unknown_character_sheet']);
@@ -11,7 +11,7 @@ if (isset($_REQUEST['pg'])===FALSE){
 		   echo '<div class="warning">'.gdrcd_filter('out',$MESSAGE['warning']['modified']).'</div>';
    } else {
 	   /*Carico le informazioni del PG*/
-	   
+
 	   $record = gdrcd_query("SELECT email, sesso, id_razza, descrizione, affetti, url_img, url_media, car0, car1, car2, car3, car4, car5, salute_max, banca  FROM personaggio WHERE nome='".gdrcd_filter('in',$_REQUEST['pg'])."'");
    }
 ?>
@@ -25,8 +25,8 @@ if (isset($_REQUEST['pg'])===FALSE){
 <div class="panels_box">
 <?php
    if ($_SESSION['permessi']>=MODERATOR){
-?> 
-  <div class="form_gioco">   
+?>
+  <div class="form_gioco">
   <!-- Form utente modifica -->
   <form action="main.php?page=scheda_gst" method="post">
 
@@ -48,7 +48,7 @@ if (isset($_REQUEST['pg'])===FALSE){
 	   </select>
 	</div>
 
-    
+
 	<?php $query="SELECT id_razza, nome_razza FROM razza ORDER BY nome_razza"; $razza_r=gdrcd_query($query, 'result'); ?>
 	<div class='form_label'>
 	   <?php echo gdrcd_filter('out',$PARAMETERS['names']['race']['sing']); ?>
@@ -57,9 +57,9 @@ if (isset($_REQUEST['pg'])===FALSE){
 	   <select name="modifica_razza">
 	   <?php while($razza_row=gdrcd_query($razza_r, 'fetch')){ ?>
 	   <option value="<?php echo $razza_row['id_razza']; ?>" <?php if($razza_row['id_razza']==$record['id_razza']){echo 'selected';} ?> /><?php echo $razza_row['nome_razza']; ?></option>
-       <?php } 
+       <?php }
 			gdrcd_query($razza_r, 'free');
-       
+
        ?>
 	   </select>
 	</div>
@@ -91,7 +91,7 @@ if (isset($_REQUEST['pg'])===FALSE){
 	<div class="form_info">
        <?php echo gdrcd_filter('out',$MESSAGE['interface']['help']['bbcode']); ?>
 	</div>
-  
+
 	<div class='form_label'>
 	   <?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['modify_form']['admin']['url_media']); ?>
 	</div>
@@ -126,7 +126,7 @@ if (isset($_REQUEST['pg'])===FALSE){
 		   <option value="<?php echo $i; ?>" <?php if($record['car0']==$i){ echo 'SELECTED'; } ?> >
 		      <?php echo $i; ?>
 		   </option>
-		<?php } ?> 
+		<?php } ?>
 	  </select>
 	  </td>
 	  <td>
@@ -136,7 +136,7 @@ if (isset($_REQUEST['pg'])===FALSE){
 		   <option value="<?php echo $i; ?>" <?php if($record['car1']==$i){ echo 'SELECTED'; } ?> >
 		      <?php echo $i; ?>
 		   </option>
-		<?php } ?> 
+		<?php } ?>
 	  </select>
 	  </td>
 	  <td>
@@ -146,7 +146,7 @@ if (isset($_REQUEST['pg'])===FALSE){
 		   <option value="<?php echo $i; ?>" <?php if($record['car2']==$i){ echo 'SELECTED'; } ?> >
 		      <?php echo $i; ?>
 		   </option>
-		<?php } ?> 
+		<?php } ?>
 	  </select>
 	  </td>
 	  <td>
@@ -156,7 +156,7 @@ if (isset($_REQUEST['pg'])===FALSE){
 		   <option value="<?php echo $i; ?>" <?php if($record['car3']==$i){ echo 'SELECTED'; } ?> >
 		      <?php echo $i; ?>
 		   </option>
-		<?php } ?> 
+		<?php } ?>
 	  </select>
 	  </td>
 	  <td>
@@ -166,7 +166,7 @@ if (isset($_REQUEST['pg'])===FALSE){
 		   <option value="<?php echo $i; ?>" <?php if($record['car4']==$i){ echo 'SELECTED'; } ?> >
 		      <?php echo $i; ?>
 		   </option>
-		<?php } ?> 
+		<?php } ?>
 	  </select>
 	  </td>
 	  <td>
@@ -176,7 +176,7 @@ if (isset($_REQUEST['pg'])===FALSE){
 		   <option value="<?php echo $i; ?>" <?php if($record['car5']==$i){ echo 'SELECTED'; } ?> >
 		      <?php echo $i; ?>
 		   </option>
-		<?php } ?> 
+		<?php } ?>
 	  </select>
 	  </td>
 	  <tr>
@@ -186,7 +186,7 @@ if (isset($_REQUEST['pg'])===FALSE){
 
 
 	<input type="hidden" name="op" value="modify" />
-    <input type="hidden" 
+    <input type="hidden"
 	       value="<?php echo gdrcd_filter('get',$_REQUEST['pg']); ?>"
 		   name="pg" />
 
@@ -199,7 +199,7 @@ if (isset($_REQUEST['pg'])===FALSE){
 
 </div>
 
-<?php 
+<?php
 }//if
 }//if
 }//else?>
@@ -208,7 +208,7 @@ if (isset($_REQUEST['pg'])===FALSE){
 </div>
 <!-- Link a piè di pagina -->
 <div class="link_back">
-   <a href="main.php?page=scheda&pg=<?php echo gdrcd_filter('get',$_REQUEST['pg']); ?>"><?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['link']['back']); ?></a>
+   <a href="main.php?page=scheda&pg=<?php echo gdrcd_filter('url',$_REQUEST['pg']); ?>"><?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['link']['back']); ?></a>
 </div>
 
 </div><!-- pagina -->

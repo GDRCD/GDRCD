@@ -1,53 +1,53 @@
 <div class="pagina_schedam_odifica">
-<?php /*HELP: */ 
+<?php /*HELP: */
 
 if (isset($_REQUEST['pg'])===FALSE){
     echo gdrcd_filter('out',$MESSAGE['error']['unknown_character_sheet']);
 } else {
    /*Se ho ricevuto informazioni per modificare*/
-   
-   
+
+
 	$confirm_updating = true;
-	
-   
+
+
 	/** * Controllo sul file audio
 		* @author Blancks
 	*/
 	if ($PARAMETERS['mode']['allow_audio'] == 'ON')
 	{
-	
+
 		if (!empty($_POST['modifica_url_media']) && !isset($PARAMETERS['settings']['audiotype']['.'.strtolower(end(explode('.', $_POST['modifica_url_media'])))]))
 		{
-			echo '<div class="warning">'.gdrcd_filter('out',$MESSAGE['warning']['media_not_allowed']).'</div>'; 
+			echo '<div class="warning">'.gdrcd_filter('out',$MESSAGE['warning']['media_not_allowed']).'</div>';
 			$confirm_updating = false;
 		}
-		
-	
+
+
 	}elseif ($_POST['op']=='modify')
 	{
 		$_POST['modifica_url_media'] = '';
 	}
-   
-			
-   
+
+
+
 	/** * Se non sono occorsi errori durante i controlli precedenti
 		* @author Blancks
 	*/
 	if ($confirm_updating)
 	{
-   
+
 		if (isset($_POST['op'])===TRUE)
 		{
-		
+
 			/** * Controllo sul bloccaggio dei suoni per l'utente
 				* @author Blancks
-			*/			
+			*/
 			$blocca_media = (strtolower($_POST['blocca_media'])=='on')? 1 : 0;
-  
+
 			if ($_SESSION['login'] == $_REQUEST['pg'])
 					$_SESSION['blocca_media'] = $blocca_media;
-				
-			
+
+
 			/*Se l'utente ha richiesto di modificare la propria scheda*/
 			if((gdrcd_filter('get',$_REQUEST['pg'])==$_SESSION['login'])&&(gdrcd_filter('get',$_POST['op'])=='modify'))
 			{
@@ -56,14 +56,14 @@ if (isset($_REQUEST['pg'])===FALSE){
 				*/
 				$modifica_affetti = gdrcd_filter('in',$_POST['modifica_affetti']);
 				$modifica_background = gdrcd_filter('in',$_POST['modifica_background']);
-				
+
 				if ($PARAMETERS['mode']['user_bbcode'] == 'OFF' || ($PARAMETERS['mode']['user_bbcode'] == 'ON' && $PARAMETERS['settings']['forum_bbcode']['type'] == 'bbd' &&$PARAMETERS['settings']['bbd']['free_html'] == 'ON'))
 				{
 					$modifica_affetti 		= gdrcd_filter('addslashes', $_POST['modifica_affetti']);
 					$modifica_background 	= gdrcd_filter('addslashes', $_POST['modifica_background']);
 				}
-				
-				
+
+
 				/** * Online status allowed ?
 					* @author Blancks
 				*/
@@ -72,25 +72,25 @@ if (isset($_REQUEST['pg'])===FALSE){
 				if ($PARAMETERS['mode']['user_online_state']=='ON')
 						$online_state = gdrcd_filter('in', $_POST['online_state']);
 
-			
-			
+
+
 				gdrcd_query("UPDATE personaggio SET cognome = '".gdrcd_filter('in',$_POST['modifica_cognome'])."', affetti = '".$modifica_affetti."', descrizione = '".$modifica_background."', url_media = '".gdrcd_filter('in',$_POST['modifica_url_media'])."', blocca_media = ".(int)$blocca_media.", url_img = '".gdrcd_filter('in',$_POST['modifica_url_img'])."', url_img_chat = '".gdrcd_filter('in',$_POST['modifica_url_img_chat'])."', online_status = '".$online_state."' WHERE nome = '".gdrcd_filter('in',$_REQUEST['pg'])."'");
 
 				echo '<div class="warning">'.gdrcd_filter('out',$MESSAGE['warning']['modified']).'</div>';
-			
-	   
+
+
 			/*Se un master o superiore ha richiesto di modificare lo status del pg*/
 			}elseif (($_SESSION['permessi']>=GUILDMODERATOR)&&(gdrcd_filter('get',$_POST['op'])=='modify_status'))
 			{
 				gdrcd_query("UPDATE personaggio SET stato = '".gdrcd_filter('in',$_POST['modifica_status'])."', salute = ".gdrcd_filter('num',$_POST['modifica_salute'])." WHERE nome = '".gdrcd_filter('in',$_REQUEST['pg'])."'");
 
 				echo '<div class="warning">'.gdrcd_filter('out',$MESSAGE['warning']['modified']).'</div>';
-			
+
 			/*Se un master o superiore ha richiesto l'arresto del pg*/
 			}elseif (($_SESSION['permessi']>=GAMEMASTER)&&(gdrcd_filter('get',$_POST['op'])=='arrest'))
 			{
 				/** * Da implementare */
-			
+
 
 			/*Se un admin o superiore ha richiesto l'esilio dell'utente*/
 			}elseif (($_SESSION['permessi']>=GAMEMASTER)&&(gdrcd_filter('get',$_POST['op'])=='exile'))
@@ -98,19 +98,19 @@ if (isset($_REQUEST['pg'])===FALSE){
 				gdrcd_query("UPDATE personaggio SET esilio = '".gdrcd_filter('num',$_POST['year']).'-'.gdrcd_filter('num',$_POST['month']).'-'.gdrcd_filter('num',$_POST['day'])."', data_esilio=NOW(), autore_esilio = '".$_SESSION['login']."', motivo_esilio = '".gdrcd_filter('in',$_POST['causale'])."' WHERE nome = '".gdrcd_filter('in',$_REQUEST['pg'])."' AND permessi <=".$_SESSION['permessi']."");
 
 				echo '<div class="warning">'.gdrcd_filter('out',$MESSAGE['warning']['done']).'</div>';
-			
+
 			}else
-			{ 
+			{
 				echo '<div class="error">'.gdrcd_filter('out',$MESSAGE['error']['unknown_operation']).'</div>';
-				
+
 			}
-   
+
 		} else
 		{
 			/*Carico le informazioni del PG*/
 			$record = gdrcd_query("SELECT descrizione, affetti, cognome, online_status, url_img, url_img_chat, url_media, blocca_media, stato, salute FROM personaggio WHERE nome='".gdrcd_filter('get',$_REQUEST['pg'])."'");
 		}
-   
+
    }
 ?>
 
@@ -123,8 +123,8 @@ if (isset($_REQUEST['pg'])===FALSE){
 <div class="panels_box">
 <?php
    if ($_SESSION['login']==$_REQUEST['pg']){
-?> 
-  <div class="form_gioco">   
+?>
+  <div class="form_gioco">
   <!-- Form utente modifica -->
   <form action="main.php?page=scheda_modifica" method="post">
 
@@ -192,14 +192,14 @@ if (isset($_REQUEST['pg'])===FALSE){
 	<div class="form_info">
        <?php echo gdrcd_filter('out',$MESSAGE['interface']['help']['bbcode']); ?>
 	</div>
-	
+
 	<div class='form_label'>
 	   <?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['modify_form']['block_media']); ?>
 	</div>
 	<div class='form_field'>
 	   <input type="checkbox" name="blocca_media" <?php echo ($record['blocca_media'])? 'checked="checked"' : ''; ?> class="form_input" />
 	</div>
-  
+
 <?php
 		if ($PARAMETERS['mode']['allow_audio'] == 'ON')
 		{
@@ -217,7 +217,7 @@ if (isset($_REQUEST['pg'])===FALSE){
 
 	<div class='form_submit'>
 	   <input type="submit" value="<?php echo $MESSAGE['interface']['forms']['submit']; ?>" class="form_submit" />
-       <input type="hidden" 
+       <input type="hidden"
               value="<?php echo gdrcd_filter('get',$_REQUEST['pg']); ?>"
 			  name="pg" />
 	</div>
@@ -225,16 +225,16 @@ if (isset($_REQUEST['pg'])===FALSE){
   </form>
 </div>
 
-<?php 
-   }//if 
+<?php
+   }//if
    if($_SESSION['permessi']>=GUILDMODERATOR){
 ?>
 
  <div class='form_gioco'>
- 
+
 <!-- Form master status -->
 <form action="main.php?page=scheda_modifica" method="post">
-     
+
 	 <input type="hidden" name="op" value="modify_status" />
 
 	 <div class='form_label'>
@@ -253,7 +253,7 @@ if (isset($_REQUEST['pg'])===FALSE){
 
      <div class='form_submit'>
 	     <input type="submit" value="<?php echo $MESSAGE['interface']['forms']['submit']; ?>" />
-         <input type="hidden" 
+         <input type="hidden"
 		        value="<?php echo gdrcd_filter('get',$_REQUEST['pg']); ?>"
 			    name="pg" />
 	 </div>
@@ -272,19 +272,19 @@ if (isset($_REQUEST['pg'])===FALSE){
 			  <select name="day" class="day">
 				 <?php for($i=1; $i<=31; $i++){?>
 			     <option value="<?php echo $i;?>" <?php if(strftime('%d')==$i){echo 'selected';}?>><?php echo $i;?></option>
-				 <?php }//for ?> 
+				 <?php }//for ?>
 			  </select>
 			  <!-- Mese -->
 		      <select name="month" class="month">
 			     <?php for($i=1; $i<=12; $i++){?>
 			     <option value="<?php echo $i;?>" <?php if(strftime('%m')==$i){echo 'selected';}?>><?php echo $i;?></option>
-			     <?php }//for ?> 
+			     <?php }//for ?>
 			  </select>
 			  <!-- Anno -->
 			  <select name="year" class="year">
 			     <?php for($i=strftime('%Y'); $i<=strftime('%Y')+20; $i++){?>
 			     <option value="<?php echo $i;?>"><?php echo $i;?></option>
-			     <?php }//for ?> 
+			     <?php }//for ?>
 			  </select>
 	 </div>
 	 <div class='form_label'>
@@ -296,7 +296,7 @@ if (isset($_REQUEST['pg'])===FALSE){
 
 	 <div class='form_submit'>
 	     <input type="submit" value="<?php echo $MESSAGE['interface']['forms']['submit']; ?>" />
-         <input type="hidden" 
+         <input type="hidden"
                 value="<?php echo gdrcd_filter('get',$_REQUEST['pg']); ?>"
 		        name="pg" />
 	 </div>
@@ -306,12 +306,12 @@ if (isset($_REQUEST['pg'])===FALSE){
 
 
  </div>
-<?php 
+<?php
   }//if
 ?>
 </div>
 
-<?php 
+<?php
 }//else
 
 }//if?>
@@ -320,7 +320,7 @@ if (isset($_REQUEST['pg'])===FALSE){
 </div>
 <!-- Link a piè di pagina -->
 <div class="link_back">
-   <a href="main.php?page=scheda&pg=<?php echo gdrcd_filter('get',$_REQUEST['pg']); ?>"><?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['link']['back']); ?></a>
+   <a href="main.php?page=scheda&pg=<?php echo gdrcd_filter('url',$_REQUEST['pg']); ?>"><?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['link']['back']); ?></a>
 </div>
 
 </div><!-- pagina -->
