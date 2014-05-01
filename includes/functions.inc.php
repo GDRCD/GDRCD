@@ -304,6 +304,9 @@ function gdrcd_filter($what, $str)
 		case 'includes':
 				$str = (preg_match("#[^:]#is"))? htmlentities($str, ENT_QUOTES) : false;
 		break;
+
+    case 'url':
+        $str = urlencode($str);
 	}
 
 	return $str;
@@ -320,6 +323,7 @@ function gdrcd_filter_num($str){ return gdrcd_filter('num', $str); }
 function gdrcd_filter_addslashes($str){ return gdrcd_filter('addslashes', $str); }
 function gdrcd_filter_email($str){ return gdrcd_filter('email', $str); }
 function gdrcd_filter_includes($str){ return gdrcd_filter('includes', $str); }
+function gdrcd_filter_url($str){ return gdrcd_filter('url', $str); }
 
 
 /**
