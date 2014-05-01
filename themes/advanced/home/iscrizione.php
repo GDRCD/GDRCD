@@ -59,7 +59,7 @@ if (gdrcd_filter('get',$_POST['fase'])==1){ ?>
       <?php echo gdrcd_filter('out',$MESSAGE['register']['fields']['name']); ?>
    </div>
    <div class="form_field" >
-      <input name="nome" value="<?php echo gdrcd_filter('get',$_POST['nome']);?>" />
+      <input name="nome" value="<?php echo gdrcd_filter('out',$_POST['nome']);?>" />
    </div>
    <div class="form_info" >
       <?php echo gdrcd_filter('out',$MESSAGE['register']['fields']['name_info']); ?>
@@ -69,7 +69,7 @@ if (gdrcd_filter('get',$_POST['fase'])==1){ ?>
       <?php echo gdrcd_filter('out',$MESSAGE['register']['fields']['lastname']); ?>
    </div>
    <div class="form_field" >
-      <input name="cognome" value="<?php echo gdrcd_filter('get',$_POST['cognome']);?>" />
+      <input name="cognome" value="<?php echo gdrcd_filter('out',$_POST['cognome']);?>" />
    </div>
    <div class="form_info" >
       <?php echo gdrcd_filter('out',$MESSAGE['register']['fields']['name_info']); ?>
@@ -122,7 +122,7 @@ if (gdrcd_filter('get',$_POST['fase'])==1){ ?>
 		   <option value="<?php echo $i; ?>" <?php if(gdrcd_filter('num',$_POST['car0'])==$i){ echo 'SELECTED'; } ?> >
 		      <?php echo $i; ?>
 		   </option>
-		<?php } ?> 
+		<?php } ?>
 	  </select>
 	  </td>
 	  <td>
@@ -132,7 +132,7 @@ if (gdrcd_filter('get',$_POST['fase'])==1){ ?>
 		   <option value="<?php echo $i; ?>" <?php if(gdrcd_filter('num',$_POST['car1'])==$i){ echo 'SELECTED'; } ?> >
 		      <?php echo $i; ?>
 		   </option>
-		<?php } ?> 
+		<?php } ?>
 	  </select>
 	  </td>
 	  <td>
@@ -142,7 +142,7 @@ if (gdrcd_filter('get',$_POST['fase'])==1){ ?>
 		   <option value="<?php echo $i; ?>" <?php if(gdrcd_filter('num',$_POST['car2'])==$i){ echo 'SELECTED'; } ?> >
 		      <?php echo $i; ?>
 		   </option>
-		<?php } ?> 
+		<?php } ?>
 	  </select>
 	  </td>
 	  <td>
@@ -152,7 +152,7 @@ if (gdrcd_filter('get',$_POST['fase'])==1){ ?>
 		   <option value="<?php echo $i; ?>" <?php if(gdrcd_filter('num',$_POST['car3'])==$i){ echo 'SELECTED'; } ?> >
 		      <?php echo $i; ?>
 		   </option>
-		<?php } ?> 
+		<?php } ?>
 	  </select>
 	  </td>
 	  <td>
@@ -162,7 +162,7 @@ if (gdrcd_filter('get',$_POST['fase'])==1){ ?>
 		   <option value="<?php echo $i; ?>" <?php if(gdrcd_filter('num',$_POST['car4'])==$i){ echo 'SELECTED'; } ?> >
 		      <?php echo $i; ?>
 		   </option>
-		<?php } ?> 
+		<?php } ?>
 	  </select>
 	  </td>
 	  <td>
@@ -172,7 +172,7 @@ if (gdrcd_filter('get',$_POST['fase'])==1){ ?>
 		   <option value="<?php echo $i; ?>" <?php if(gdrcd_filter('num',$_POST['car5'])==$i){ echo 'SELECTED'; } ?> >
 		      <?php echo $i; ?>
 		   </option>
-		<?php } ?> 
+		<?php } ?>
 	  </select>
 	  </td>
 	  <tr>
@@ -204,8 +204,8 @@ if (gdrcd_filter('get',$_POST['fase'])==1){ ?>
 
 
 <?php /***** Fase 2 *****/
-if (gdrcd_filter('get',$_POST['fase'])==2){ 
-	
+if (gdrcd_filter('get',$_POST['fase'])==2){
+
 $ok=TRUE;
 
 ?>
@@ -266,12 +266,12 @@ if($ok==FALSE){ ?>
    </div>
 </form>
 </div>
-<?php } else { 
+<?php } else {
 
 if($_POST['genere']=='m'){ $r_gen='m'; } else { $r_gen='f'; }
 
 
-	$razza = gdrcd_query("SELECT sing_".gdrcd_filter('in',$r_gen)." AS nome_razza FROM razza WHERE id_razza = ".(0+gdrcd_filter('num',$_POST['razza']))." LIMIT 1");	
+	$razza = gdrcd_query("SELECT sing_".gdrcd_filter('in',$r_gen)." AS nome_razza FROM razza WHERE id_razza = ".(0+gdrcd_filter('num',$_POST['razza']))." LIMIT 1");
 ?>
 <div class="elenco_gioco">
 <table>
@@ -355,7 +355,7 @@ if($_POST['genere']=='m'){ $r_gen='m'; } else { $r_gen='f'; }
 
 
 <?php /***** Fase 3 *****/
-if ($_POST['fase']==3){ 
+if ($_POST['fase']==3){
 
 if ((gdrcd_filter('num',$_POST['car0'])+gdrcd_filter('num',$_POST['car1'])+gdrcd_filter('num',$_POST['car2'])+gdrcd_filter('num',$_POST['car3'])+gdrcd_filter('num',$_POST['car4'])+gdrcd_filter('num',$_POST['car5']))!=$PARAMETERS['settings']['cars_sum']){
    echo '<div class="error">'.gdrcd_filter('out',$MESSAGE['register']['fields']['stats_info'].' '.$PARAMETERS['settings']['cars_sum']).'</div>';
@@ -372,7 +372,7 @@ $lastpasschange_value = "";
 
 /** * Se NON deve scattare l'avviso di cambio password fin dall'iscrizione aggiorno la data di ultimo cambio ad ora
 	* @author Blancks
-*/	
+*/
 if ($PARAMETERS['mode']['alert_password_change']=='ON' && $PARAMETERS['settings']['alert_password_change']['alert_from_signup']=='OFF')
 {
 	$lastpasschange_field = ", ultimo_cambiopass";
@@ -391,15 +391,15 @@ $text= $MESSAGE['register']['welcome']['message'][0].' '.$PARAMETERS['info']['si
 
 $subject = $PARAMETERS['info']['site_name'].' - Registrazione di '.gdrcd_filter('get',$_POST['nome']).' '.gdrcd_filter('get',$_POST['cognome']);
 
-mail(gdrcd_filter('get',$_POST['email']), $subject, $text, 'From: '.gdrcd_filter('out',$PARAMETERS['info']['webmaster_email'])); 
+mail(gdrcd_filter('get',$_POST['email']), $subject, $text, 'From: '.gdrcd_filter('out',$PARAMETERS['info']['webmaster_email']));
 
 
-} else { 
+} else {
 
 echo '<div class="page_title"><h2>'.gdrcd_filter('out',$MESSAGE['register']['welcome']['message']['ok']).'</h2></div>';
 echo '<div class="panels_box"><div class="welcome_message">'.gdrcd_filter('out',$MESSAGE['register']['welcome']['message'][0]).' <b>'.gdrcd_filter('out',$PARAMETERS['info']['site_name']).'</b> '.gdrcd_filter('out',$MESSAGE['register']['welcome']['message'][1]).'</div><div class="welcome_message">'.gdrcd_filter('out',$MESSAGE['register']['welcome']['message'][2]).'</div><div class="username">'.gdrcd_filter('out',$MESSAGE['register']['welcome']['message']['user']).' <b>'.gdrcd_filter('get',$_POST['nome']).'</b></div><div class="username">'.gdrcd_filter('out',$MESSAGE['register']['welcome']['message']['pass']).' <b>'.$pass.'</b></div></div>';
 
-} 
+}
 
 gdrcd_query("INSERT INTO messaggi (mittente, destinatario, spedito, testo) VALUES ('".gdrcd_filter('out',$PARAMETERS['info']['webmaster_name'])."', '".gdrcd_filter('get',$_POST['nome'])."', NOW(), '".gdrcd_filter('out',$MESSAGE['register']['welcome']['message'][4])."')");
 
