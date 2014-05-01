@@ -1,5 +1,5 @@
-<?php /*HELP: */ 
-# include('../ref_header.inc.php'); /*Header comune*/ 
+<?php /*HELP: */
+# include('../ref_header.inc.php'); /*Header comune*/
 
 /*Aggiorno la mappa corrente del PG*/
 if (isset($_GET['map_id'])===TRUE)
@@ -20,7 +20,7 @@ if ( (isset($_POST['op'])===TRUE) && ( ($_POST['op']==gdrcd_filter('out',$MESSAG
    gdrcd_query("UPDATE mappa_click SET posizione = ".gdrcd_filter('num',$_POST['destination'])." WHERE id_click = ".gdrcd_filter('num',$_REQUEST['map_id'])." LIMIT 1");
 }
 
-if ( (isset($_POST['op'])===TRUE) && 
+if ( (isset($_POST['op'])===TRUE) &&
 	 ($_POST['op']==gdrcd_filter('out',$MESSAGE['interface']['maps']['set_meteo'])) ){
    /*Aggiorno la sua posizione*/
    gdrcd_query("UPDATE mappa_click SET meteo = '".gdrcd_filter('num',$_POST['temperature'])."°C - ".gdrcd_filter('in',$_POST['climate'])."' WHERE id_click = ".gdrcd_filter('num',$_REQUEST['map_id'])." LIMIT 1");
@@ -58,75 +58,75 @@ echo '<div class="pagina_mappaclick">';
 
 	  /*Se il personaggio si trovava in una mappa inesistente o cancellata aggiorno la sua posizione*/
 	  if ($redirect_pc==1){
-		  gdrcd_query("UPDATE personaggio SET ultima_mappa=".gdrcd_filter('get',$row['id_click'])." WHERE nome = '".$_SESSION['login']."'");
+		  gdrcd_query("UPDATE personaggio SET ultima_mappa=".gdrcd_filter('get',$row['id_click'])." WHERE nome = '".gdrcd_filter('in',$_SESSION['login'])."'");
 	  }
       /*Stampo il titolo, se non l'ho gia' fatto*/
 	  if($echoed_title===FALSE){
-	     echo '<div class="page_title">'; 
+	     echo '<div class="page_title">';
          echo '<h2>'.$row['nome_mappa'].'</h2>';
          echo '</div>';
-         
-         
+
+
 			/** * Abilitazione tooltip
 				* @author Blancks
 			*/
 			if ($PARAMETERS['mode']['map_tooltip'] == 'ON')
 					echo '<div id="descriptionLoc"></div>';
-					
-         
+
+
 		 echo '<div class="mappaclick_map" style="background:url(\'themes/', $PARAMETERS['themes']['current_theme'], '/imgs/maps/', $row['immagine'], '\') top left no-repeat; width:', $row['larghezza'], 'px; height:', $row['altezza'], 'px;">';
-		 $echoed_title=TRUE;  
+		 $echoed_title=TRUE;
 		 $echo_bottom=TRUE;
 		 $vicinato=$row['posizione'];
 		 $self=$row['id_click'];
 		 $mobile=$row['mobile'];
  	  }//if
-      
-	 
-	  
+
+
+
 		/*Stampo i link della mappa corrente*/
 		/** * Bug Fix: i link sono ora posizionati in relazione alla mappa
 			* Features: link a sottomappe e link immagine
 			* @author Blancks
 		*/
 		echo '<div style="position:absolute; margin:', $row['y_cord'], 'px 0 0 ', $row['x_cord'], 'px;">';
-		
+
 		$qstring_link = '';
 		$label_link = '';
-		
+
 		if ($row['chat'] == 1)
 		{
 			$qstring_link = 'dir='. $row['id'];
-		
+
 		}elseif ($row['id_mappa_collegata'] != 0)
 		{
 			$qstring_link = 'page=mappaclick&map_id='. $row['id_mappa_collegata'];
-		
+
 		}else
 		{
 			$qstring_link = 'page='. $row['pagina'];
 		}
-		
-		
+
+
 		if (empty($row['link_immagine']))
 		{
 			$label_link = $row['nome'];
-		
+
 		}else
 		{
 			$baseimg_link = 'themes/'. $PARAMETERS['themes']['current_theme'] .'/imgs/maps/';
-		
+
 			if (!empty($row['link_immagine_hover']))
 					$switchimg_link = 'onmouseover="this.src=\''. $baseimg_link . $row['link_immagine_hover'] .'\';" onmouseout="this.src=\''. $baseimg_link . $row['link_immagine'] .'\'"';
 			else
 					$switchimg_link = '';
-		
+
 			$label_link = '<img src="'. $baseimg_link . $row['link_immagine'] .'" alt="'. $row['nome'] .'" '. $switchimg_link .' />';
 		}
-		
-		
+
+
 		$fadedesc_link = '';
-		
+
 		/** * Abilitazione tooltip
 			* @author Blancks
 		*/
@@ -136,26 +136,26 @@ echo '<div class="pagina_mappaclick">';
 			{
 				$descrizione = trim(nl2br(gdrcd_filter('in',$row['descrizione'])));
 				$descrizione = strtr($descrizione, array("\n\r" => '', "\n" => '', "\r" => '', '"' => '&quot;'));
-		
+
 				$fadedesc_link = 'onmouseover="show_desc(event, \''.$descrizione.'\');" onmouseout="hide_desc();"';
 			}
 		}
-	
+
 		echo '<a href="main.php?', $qstring_link, '" target="_top"', $fadedesc_link,'>', $label_link, '</a>';
 
-		
+
 		echo '</div>';
-		
-           
-   }//while 
+
+
+   }//while
    if($echo_bottom===TRUE){
 	   echo '</div>';
-	   $echo_bottom=FALSE;		      
+	   $echo_bottom=FALSE;
    }//if
 
 
 /* Se la mappa non è in viaggio */
-if($vicinato!=INVIAGGIO){ 
+if($vicinato!=INVIAGGIO){
 ?>
 
 <div class="page_title">
@@ -164,7 +164,7 @@ if($vicinato!=INVIAGGIO){
 <div class="mappaclick_more">
 <?php /* Carico le mappe dell'eventuale vicinato */
 	$result = gdrcd_query("SELECT id_click, nome FROM mappa_click WHERE posizione = ".$vicinato." AND id_click <> ".$self." ORDER BY nome", 'result');
-	
+
 	if (gdrcd_query($result, 'num_rows')>0)
 	{
 	   while ($record=gdrcd_query($result, 'fetch')){ ?>
@@ -172,7 +172,7 @@ if($vicinato!=INVIAGGIO){
 		    <?php echo gdrcd_filter('out',$record['nome']); ?>
 		 </a>
 	   <?php }//while
-	   
+
 		gdrcd_query($result, 'free');
 
     } else {
@@ -181,34 +181,34 @@ if($vicinato!=INVIAGGIO){
 ?>
 </div>
 
-<?php /* se la mappa è in viaggio */ 
+<?php /* se la mappa è in viaggio */
 } else { ?>
-    
+
 <div class="page_title">
    <h2><?php echo gdrcd_filter('out',$MESSAGE['interface']['maps']['traveling']); ?></h2>
 </div>
 
 <?php }//else ?>
-  
-<?php /*Controlli partenza mappe mobili/meteo*/ 
+
+<?php /*Controlli partenza mappe mobili/meteo*/
       if ($_SESSION['permessi']>=GAMEMASTER){ ?>
-          
+
 <div class="form_box">
           <?php if ($mobile==1){?>
-<form class="form_gioco" 
+<form class="form_gioco"
       action="main.php?page=mappaclick&map_id=<?php echo $_SESSION['mappa'];?>"
-	  method="post" > 
+	  method="post" >
    <?php if ($vicinato!=INVIAGGIO) { ?>
         <div class="form_submit">
         <input type="hidden"
 	           name="destination"
-		       value="<?php echo INVIAGGIO; ?>" 
+		       value="<?php echo INVIAGGIO; ?>"
 			   class="game_form_input"/>
 	    <input type="submit"
 	           value="<?php echo gdrcd_filter('out',$MESSAGE['interface']['maps']['leave']); ?>""
 			   name="op" />
 		</div>
-   <?php } else { 
+   <?php } else {
 		    /*Genero la lista delle possibili destinazioni*/
 			$result=gdrcd_query("SELECT posizione, nome FROM mappa_click WHERE posizione <> -1 AND id_click <> ".$_SESSION['mappa']." ORDER BY nome", 'result');
 			/*Se esistono altre mappe*/
@@ -220,14 +220,14 @@ if($vicinato!=INVIAGGIO){
                 <?php echo gdrcd_filter('out',$record['nome']); ?>
 			</option>
 			   <?php }
-			   
+
 					gdrcd_query($result, 'free');
 			   ?>
         </select>
 			<?php } else { ?>
 		<input type="hidden"
 	         name="destination"
-			 value="0" 
+			 value="0"
 			 class="game_form_input"/>
 			<?php }//else ?>
         <input type="submit"
@@ -236,9 +236,9 @@ if($vicinato!=INVIAGGIO){
         </div>
    <?php } //else  ?>
 </form>
-<?php } 
+<?php }
       if($PARAMETERS['mode']['auto_meteo']=='OFF'){ ?>
-<form class="form_gioco" 
+<form class="form_gioco"
       action="main.php?page=mappaclick&map_id=<?php echo $_SESSION['mappa'];?>"
 	  method="post" >
       <div class="form_submit">
@@ -258,7 +258,7 @@ if($vicinato!=INVIAGGIO){
       </select>
       <input type="hidden"
 	         name="meteo"
-	         value="meteo_change" 
+	         value="meteo_change"
 	         class="game_form_input"/>
 	  <input type="submit"
 	         value="<?php echo gdrcd_filter('out',$MESSAGE['interface']['maps']['set_meteo']); ?>"
@@ -267,12 +267,12 @@ if($vicinato!=INVIAGGIO){
 </form>
 <?php } ?>
 </div>
-<?php }//else ?> 
-			 
+<?php }//else ?>
+
 
 <?php echo '</div>';//Pagina
 
- }//else 
+ }//else
 
  #include('../footer.inc.php');  /*Footer comune*/
 ?>

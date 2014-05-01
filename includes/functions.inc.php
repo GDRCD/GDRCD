@@ -386,7 +386,7 @@ function gdrcd_controllo_sessione()
  */
 function gdrcd_controllo_esilio($pg)
 {
-   $exiled = gdrcd_query("SELECT autore_esilio, esilio, motivo_esilio FROM personaggio WHERE nome LIKE '$pg' LIMIT 1");//TODO picco di complessità inutile per l'uso di LIKE. Mancanza di escape per db!
+   $exiled = gdrcd_query("SELECT autore_esilio, esilio, motivo_esilio FROM personaggio WHERE nome='".gdrcd_filter('in', $pg)."' LIMIT 1");//TODO picco di complessità inutile per l'uso di LIKE. Mancanza di escape per db!
 
    if(strtotime($exiled['esilio']) > time())
    {
