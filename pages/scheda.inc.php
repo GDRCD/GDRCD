@@ -361,7 +361,7 @@ if ($PARAMETERS['mode']['alert_password_change']=='ON')
 	    <?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['profile']['status']); ?>:
 	 </div>
 	 <div class="profilo_status_valore">
-	    <?php echo gdrcd_filter('out',$record['stato']); ?>
+	    <?php echo nl2br(gdrcd_filter('out',$record['stato'])); ?>
 	 </div>
   </div>
 
