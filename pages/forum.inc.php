@@ -178,7 +178,7 @@ if($_REQUEST['op']=='modifica')
 /*Cancellazione messaggio o topic*/
 if($_REQUEST['op']=='delete'){
   $postID=(int)$_POST['id_record'];
-  $postData=gdrcd_query("SELECT padre, autore FROM messaggioaraldo WHERE id_messaggio=".$postID);
+  $postData=gdrcd_query("SELECT id_messaggio_padre AS padre, autore FROM messaggioaraldo WHERE id_messaggio=".$postID);
 
   if((int)$postData['padre']==-1 && ($_SESSION['permessi']>=MODERATOR || $postData['autore']==$_SESSION['login'])){/*Cancello un topic da admin*/
   	gdrcd_query("DELETE FROM araldo_letto WHERE thread_id = ".$postID);
