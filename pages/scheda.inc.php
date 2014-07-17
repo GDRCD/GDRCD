@@ -137,7 +137,7 @@ if ($PARAMETERS['mode']['alert_password_change']=='ON')
 
 	   <?php /*Visualizza il link modifica se l'utente visualizza la propria scheda o se è almeno un capogilda*/
 		     if($_REQUEST['pg']==$_SESSION['login'] || $_SESSION['permessi']>=GUILDMODERATOR){ ?>
-	            <a href="main.php?page=scheda_modifica&pg=<?php echo gdrcd_filter('url',$_SESSION['login']); ?>">
+	            <a href="main.php?page=scheda_modifica&pg=<?php echo gdrcd_filter('url',$_REQUEST['pg']); ?>">
 	               <?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['menu']['update']);?>
 	            </a>
 	   <?php } ?>
@@ -361,7 +361,7 @@ if ($PARAMETERS['mode']['alert_password_change']=='ON')
 	    <?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['profile']['status']); ?>:
 	 </div>
 	 <div class="profilo_status_valore">
-	    <?php echo gdrcd_filter('out',$record['stato']); ?>
+	    <?php echo nl2br(gdrcd_filter('out',$record['stato'])); ?>
 	 </div>
   </div>
 
