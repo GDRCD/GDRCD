@@ -175,6 +175,18 @@ if($_REQUEST['op']=='modifica')
     </div>
 <?php }
 
+if($_REQUEST['op']=='delete_conf'){
+  echo '
+<h3>'.gdrcd_filter('out',$MESSAGE['interface']['forums']['delete']['title']).'</h3>
+<form action="main.php?page=forum" method="post">
+  <input type="hidden" name="op" value="delete" />
+  <input type="hidden" name="id_record" value="'.(int)$_REQUEST['id_record'].'" />
+  <p>'.gdrcd_filter('out',$MESSAGE['interface']['forums']['delete']['ask']).'</p>
+  <input type="submit" value="'.gdrcd_filter('out',$MESSAGE['interface']['forums']['link']['delete']).'" />
+</form>
+';
+}
+
 /*Cancellazione messaggio o topic*/
 if($_REQUEST['op']=='delete'){
   $postID=(int)$_POST['id_record'];
@@ -396,7 +408,7 @@ if($_REQUEST['op']=='read')
 		{
 ?>
 		     <a href="main.php?page=forum&op=modifica&what=<?php echo $row['id_messaggio'];?>">[<?php echo $MESSAGE['interface']['forums']['link']['edit']; ?>]</a>
-			 <a href="main.php?page=forum&op=delete&id_record=<?php echo $row['id_messaggio'];?>&padre=<?php echo $row['id_messaggio_padre'];?>">[<?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['link']['delete']); ?>]</a>
+			 <a href="main.php?page=forum&op=delete_conf&id_record=<?php echo $row['id_messaggio'];?>&padre=<?php echo $row['id_messaggio_padre'];?>">[<?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['link']['delete']); ?>]</a>
 <?php
 		}
 ?>
@@ -452,7 +464,7 @@ if($_REQUEST['op']=='read')
 			{
 ?>
 		     <a href="main.php?page=forum&op=modifica&what=<?php echo $row['id_messaggio'];?>">[<?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['link']['edit']); ?>]</a>
-			 <a href="main.php?page=forum&op=delete&id_record=<?php echo $row['id_messaggio'];?>&padre=<?php echo $row['id_messaggio_padre'];?>">[<?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['link']['delete']); ?>]</a>
+			 <a href="main.php?page=forum&op=delete_conf&id_record=<?php echo $row['id_messaggio'];?>&padre=<?php echo $row['id_messaggio_padre'];?>">[<?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['link']['delete']); ?>]</a>
 <?php
 			}
 ?>

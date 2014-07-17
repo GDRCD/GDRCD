@@ -1,6 +1,6 @@
 <?php
 
-/* HELP:  Modificando i messaggi contenuti in questa pagina è possibile modificare i messaggi visualizzati in tutto il sito. Sono suddivisi in base alla pagina dove compaiono. Se non è specificata la pagina appaiono su più pagine. 
+/* HELP:  Modificando i messaggi contenuti in questa pagina è possibile modificare i messaggi visualizzati in tutto il sito. Sono suddivisi in base alla pagina dove compaiono. Se non è specificata la pagina appaiono su più pagine.
 IMPORTANTE! non cancellate alcuna delle righe, ne modificate quanto scritto tra le parentesi quadre, altrimenti il funzionamento del sito potrebbe essere pregiudicato. Limitarsi a modificare o azzerare (='') i messaggi. */
 
 /********** Homepage **********/
@@ -250,6 +250,8 @@ $MESSAGE['interface']['forums']['link']['delete']='Elimina';
 $MESSAGE['interface']['forums']['link']['quote'] = 'Quota';
 $MESSAGE['interface']['forums']['insert']['message']='Messaggio';
 $MESSAGE['interface']['forums']['insert']['title']='Titolo';
+$MESSAGE['interface']['forums']['delete']['title']='Cancellazione Post';
+$MESSAGE['interface']['forums']['delete']['ask']='Sei sicuro di voler cancellare questo post?';
 /* Tipi forum*/
 $MESSAGE['interface']['forums']['type'][0]='In gioco';
 $MESSAGE['interface']['forums']['type'][1]='Fuori gioco';
@@ -478,12 +480,12 @@ $MESSAGE['interface']['administration']['forums']['no_owner']='Nessuno';
 $MESSAGE['interface']['administration']['forums']['not_exists']='Bacheca non trovata';
 
 /*Razze*/
-$MESSAGE['interface']['administration']['races']['page_name']='Gestione '.strtolower($PARAMETERS['names']['race']['plur']); 
+$MESSAGE['interface']['administration']['races']['page_name']='Gestione '.strtolower($PARAMETERS['names']['race']['plur']);
 $MESSAGE['interface']['administration']['races']['name']='Nome plurale';
 $MESSAGE['interface']['administration']['races']['name_sm']='Singolare maschile';
 $MESSAGE['interface']['administration']['races']['name_sf']='Singolare femminile';
 $MESSAGE['interface']['administration']['races']['is_visible']='Visibile all\'iscrizione';
-$MESSAGE['interface']['administration']['races']['is_visible_info']='La '.strtolower($PARAMETERS['names']['race']['sing']).' sarà visibile al momento dell\'iscrizione anche qualora non sia selezionabile.'; 
+$MESSAGE['interface']['administration']['races']['is_visible_info']='La '.strtolower($PARAMETERS['names']['race']['sing']).' sarà visibile al momento dell\'iscrizione anche qualora non sia selezionabile.';
 $MESSAGE['interface']['administration']['races']['is_avalaible']='Disponibile all\'iscrizione';
 $MESSAGE['interface']['administration']['races']['is_avalaible_info']='Se selezionata, la razza è liberamente disponibile per la creazione del personaggio.';
 $MESSAGE['interface']['administration']['races']['bonus']='Bonus raziale';
