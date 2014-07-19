@@ -830,7 +830,7 @@ $label_cls = ($row['chiuso'])? 'close' : 'open';
 				   <form action="main.php?page=forum" method="post">
 			          <input type="hidden" name="id_record" value="<?php echo $row['id_messaggio']?>" />
                       <input type="hidden" name="padre" value="-1" />
-                      <input type="hidden" name="op" value="delete" />
+                      <input type="hidden" name="op" value="delete_conf" />
                       <input type="image"
 				             src="imgs/icons/erase.png"
 						     alt="<?php echo gdrcd_filter('out',$MESSAGE['interface']['administration']['ops']['erase']); ?>"
