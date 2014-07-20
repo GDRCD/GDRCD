@@ -325,29 +325,25 @@ if($quote){
 /*Visualizzazione topic*/
 if($_REQUEST['op']=='read')
 {
-    $result = gdrcd_query("SELECT messaggioaraldo.id_messaggio, messaggioaraldo.id_messaggio_padre, messaggioaraldo.titolo, messaggioaraldo.messaggio, messaggioaraldo.autore, messaggioaraldo.data_messaggio, messaggioaraldo.chiuso, araldo.tipo, araldo.nome, araldo.proprietari, personaggio.url_img, araldo.id_araldo FROM messaggioaraldo LEFT JOIN araldo ON messaggioaraldo.id_araldo = araldo.id_araldo LEFT JOIN personaggio ON messaggioaraldo.autore = personaggio.nome WHERE (messaggioaraldo.id_messaggio_padre = ".gdrcd_filter('num',$_REQUEST['what'])." AND messaggioaraldo.id_messaggio_padre != -1) OR messaggioaraldo.id_messaggio = ".gdrcd_filter('num',$_REQUEST['what'])." ORDER BY id_messaggio_padre, data_messaggio", 'result');
-    $row = gdrcd_query($result, 'fetch');
+  $result = gdrcd_query("SELECT messaggioaraldo.id_messaggio, messaggioaraldo.id_messaggio_padre, messaggioaraldo.titolo, messaggioaraldo.messaggio, messaggioaraldo.autore, messaggioaraldo.data_messaggio, messaggioaraldo.chiuso, araldo.tipo, araldo.nome, araldo.proprietari, personaggio.url_img, araldo.id_araldo FROM messaggioaraldo LEFT JOIN araldo ON messaggioaraldo.id_araldo = araldo.id_araldo LEFT JOIN personaggio ON messaggioaraldo.autore = personaggio.nome WHERE (messaggioaraldo.id_messaggio_padre = ".gdrcd_filter('num',$_REQUEST['what'])." AND messaggioaraldo.id_messaggio_padre != -1) OR messaggioaraldo.id_messaggio = ".gdrcd_filter('num',$_REQUEST['what'])." ORDER BY id_messaggio_padre, data_messaggio", 'result');
+  $row = gdrcd_query($result, 'fetch');
+  if(!empty($row)){
     $araldo=(int)$row['id_araldo'];
-
     $chiuso = $row['chiuso'];
 
-
 /*Restrizione di accesso i forum admin e master*/
-	if ((($row['tipo']==SOLORAZZA)&&($_SESSION['id_razza']!=$row['proprietari'])&&($_SESSION['permessi']<MODERATOR))||
+	  if ((($row['tipo']==SOLORAZZA)&&($_SESSION['id_razza']!=$row['proprietari'])&&($_SESSION['permessi']<MODERATOR))||
     	(($row['tipo']==SOLOGILDA)&&(strpos($_SESSION['gilda'],'*'.$row['proprietari'].'*')===FALSE)&&($_SESSION['permessi']<MODERATOR))||
 		(($row['tipo']>=SOLOMASTERS)&&($_SESSION['permessi']<GAMEMASTER))||
-		(($row['tipo']>=SOLOMODERATORS)&&($_SESSION['permessi']<MODERATOR)))
-	{
-   		echo '<div class="error">'.gdrcd_filter('out',$MESSAGE['error']['not_allowed']).'</div>';
-	}
-	else
-	{
-	  //Inserimento il record al pg come thread letto
-  $check_letto = gdrcd_query("SELECT * FROM araldo_letto WHERE nome = '".$_SESSION['login']."' AND thread_id = ".gdrcd_filter('num',$_REQUEST['what']));
-  if ($check_letto['id'] <= 0)
-  {
-    gdrcd_query("INSERT INTO araldo_letto (nome, araldo_id, thread_id) VALUES ('".$_SESSION['login']."', ".gdrcd_filter('num',$_REQUEST['where']).", ".gdrcd_filter('num',$_REQUEST['what']).")");
-  }
+		(($row['tipo']>=SOLOMODERATORS)&&($_SESSION['permessi']<MODERATOR))){
+   	  echo '<div class="error">'.gdrcd_filter('out',$MESSAGE['error']['not_allowed']).'</div>';
+	  }
+	  else{
+      //Inserimento il record al pg come thread letto
+      $check_letto = gdrcd_query("SELECT * FROM araldo_letto WHERE nome = '".$_SESSION['login']."' AND thread_id = ".gdrcd_filter('num',$_REQUEST['what']));
+      if ($check_letto['id'] <= 0){
+        gdrcd_query("INSERT INTO araldo_letto (nome, araldo_id, thread_id) VALUES ('".$_SESSION['login']."', ".gdrcd_filter('num',$_REQUEST['where']).", ".gdrcd_filter('num',$_REQUEST['what']).")");
+      }
 ?>
 <div class="panels_box">
     <table>
@@ -515,7 +511,7 @@ if($_REQUEST['op']=='read')
 </div>
 
 <?php
-		} //Fine risposta rapida
+		  } //Fine risposta rapida
 	}//else
 ?>
     <!-- link a fondo pagina -->
@@ -534,6 +530,10 @@ if($_REQUEST['op']=='read')
 
 	}
 
+}//!empty
+else{
+  echo '<div class="error">'.gdrcd_filter('out',$MESSAGE['interface']['forums']['warning']['topic_not_exists']).'</div>';
+}
 ?>
 	    <a href="main.php?page=forum&op=visit&what=<?php echo $araldo; ?>">
 		   <?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['link']['forum']); ?>
