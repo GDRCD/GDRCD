@@ -225,6 +225,7 @@ $MESSAGE['interface']['messages']['attach']='Rispondi e allega il testo original
 $MESSAGE['interface']['messages']['attachment']='Testo originale: ';
 $MESSAGE['interface']['messages']['erase']='Elimina';
 $MESSAGE['interface']['messages']['erase_all']='Elimina tutti i messaggi letti';
+$MESSAGE['interface']['messages']['erase_selected']='Elimina i messaggi selezionati';
 $MESSAGE['interface']['messages']['erased']=' eliminato';
 $MESSAGE['interface']['messages']['all_erased']=' eliminati';
 $MESSAGE['interface']['messages']['no_message']='Nessun '.strtolower($PARAMETERS['names']['private_message']['sing']);
