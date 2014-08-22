@@ -526,35 +526,35 @@ function gdrcd_genera_pass()
  * @author Blancks
  */
 function gdrcd_bbcoder($str){
-global $MESSAGE;
-$str=gdrcd_close_tags('quote',$str);
+    global $MESSAGE;
+    $str=gdrcd_close_tags('quote',$str);
 
-$search = array(
+    $search = array(
 	    '#\n#',
 	    '#\[BR\]#is',
-        '#\[B\](.+?)\[\/B\]#is',
+      '#\[B\](.+?)\[\/B\]#is',
 	    '#\[i\](.+?)\[\/i\]#is',
-        '#\[U\](.+?)\[\/U\]#is',
+      '#\[U\](.+?)\[\/U\]#is',
 	    '#\[center\](.+?)\[\/center\]#is',
-        '#\[img\](.+?)\[\/img\]#is',
-        '#\[redirect\](.+?)\[\/redirect\]#is',
-        '#\[url=(.+?)\](.+?)\[\/url\]#is',
-        '#\[color=(.+?)\](.+?)\[\/color\]#is',
+      '#\[img\](.+?)\[\/img\]#is',
+      '#\[redirect\](.+?)\[\/redirect\]#is',
+      '#\[url=(.+?)\](.+?)\[\/url\]#is',
+      '#\[color=(.+?)\](.+?)\[\/color\]#is',
 		  '#\[quote(?::\w+)?\]#i',
 		  '#\[quote=(?:&quot;|"|\')?(.*?)["\']?(?:&quot;|"|\')?\]#i',
 		  '#\[/quote(?::\w+)?\]#si'
      );
     $replace = array(
-		'<br />',
-		'<br />',
-        '<span style="font-weight: bold;">$1</span>',
-        '<span style="font-style: italic;">$1</span>',
-        '<span style="border-bottom: 1px solid;">$1</span>',
-        '<div style="width:100%; text-align: center;">$1</div>',
-        '<img src="$1">',
-        '<meta http-equiv="Refresh" content="5;url=$1">',
-        '<a href="$1">$2</a>',
-        '<span style="color: $1;">$2</span>',
+		  '<br />',
+		  '<br />',
+      '<span style="font-weight: bold;">$1</span>',
+      '<span style="font-style: italic;">$1</span>',
+      '<span style="border-bottom: 1px solid;">$1</span>',
+      '<div style="width:100%; text-align: center;">$1</div>',
+      '<img src="$1">',
+      '<meta http-equiv="Refresh" content="5;url=$1">',
+      '<a href="$1">$2</a>',
+      '<span style="color: $1;">$2</span>',
 		  '<div class="bb-quote">'.$MESSAGE['interface']['forums']['link']['quote'].':<blockquote class="bb-quote-body">',
 		  '<div class="bb-quote"><div class="bb-quote-name">$1 ha scritto:</div><blockquote class="bb-quote-body">',
 		  '</blockquote></div>'
@@ -567,19 +567,21 @@ $search = array(
  * @param array|string $tag: il tag da controllare, senza le parentesi quadre, può essere un array di tag
  * @param $body: il testo in cui controllare
  * @return Il testo corretto
- * @author leoblacksoul
+ * TODO aggiunge correttamente i tag non chiusi, ma non fa nulla se ci sono troppi tag di chiusura
  */
 function gdrcd_close_tags($tag,$body){
-  if(is_array($tag))
-  	foreach($tag as $value)
-		$body=close_tags($value,$body);
+  if(is_array($tag)){
+  	foreach($tag as $value){
+  	  $body=gdrcd_close_tags($value,$body);
+	  }
+  }
   else{
-	  preg_match_all('/\['.$tag.'/i', $body, $matches);
-	  $opentags = count($matches['0']);
-	  preg_match_all('/\[\/'.$tag.'\]/i', $body, $matches);
-	  $unclosed = $opentags - count($matches['0']);
-	  for ($i = 0; $i < $unclosed; $i++)
+	  $opentags=preg_match_all('/\['.$tag.'/i', $body);
+	  $closed = preg_match_all('/\[\/'.$tag.'\]/i', $body);
+	  $unclosed = $opentags - $closed;
+	  for ($i = 0; $i < $unclosed; $i++){
 		 $body .= '[/'.$tag.']';
+    }
   }
   return $body;
 }
