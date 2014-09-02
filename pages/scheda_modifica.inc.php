@@ -63,7 +63,6 @@ if (isset($_REQUEST['pg'])===FALSE){
 					$modifica_background 	= gdrcd_filter('addslashes', $_POST['modifica_background']);
 				}
 
-
 				/** * Online status allowed ?
 					* @author Blancks
 				*/
@@ -74,7 +73,7 @@ if (isset($_REQUEST['pg'])===FALSE){
 
 
 
-				gdrcd_query("UPDATE personaggio SET cognome = '".gdrcd_filter('in',$_POST['modifica_cognome'])."', affetti = '".$modifica_affetti."', descrizione = '".$modifica_background."', url_media = '".gdrcd_filter('in',$_POST['modifica_url_media'])."', blocca_media = ".(int)$blocca_media.", url_img = '".gdrcd_filter('in',$_POST['modifica_url_img'])."', url_img_chat = '".gdrcd_filter('in',$_POST['modifica_url_img_chat'])."', online_status = '".$online_state."' WHERE nome = '".gdrcd_filter('in',$_REQUEST['pg'])."'");
+				gdrcd_query("UPDATE personaggio SET cognome = '".gdrcd_filter('in',$_POST['modifica_cognome'])."', affetti = '".$modifica_affetti."', descrizione = '".$modifica_background."', url_media = '".gdrcd_filter('in',gdrcd_filter('fullurl',$_POST['modifica_url_media']))."', blocca_media = ".(int)$blocca_media.", url_img = '".gdrcd_filter('in',gdrcd_filter('fullurl',$_POST['modifica_url_img']))."', url_img_chat = '".gdrcd_filter('in',gdrcd_filter('fullurl',$_POST['modifica_url_img_chat']))."', online_status = '".$online_state."' WHERE nome = '".gdrcd_filter('in',$_REQUEST['pg'])."'");
 
 				echo '<div class="warning">'.gdrcd_filter('out',$MESSAGE['warning']['modified']).'</div>';
 

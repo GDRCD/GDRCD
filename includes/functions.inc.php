@@ -307,6 +307,11 @@ function gdrcd_filter($what, $str)
 
     case 'url':
         $str = urlencode($str);
+    break;
+
+    case 'fullurl':
+        $str = filter_var(str_replace(' ', '%20', $str),FILTER_VALIDATE_URL,FILTER_FLAG_PATH_REQUIRED);
+    break;
 	}
 
 	return $str;

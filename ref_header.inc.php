@@ -320,6 +320,9 @@ if((gdrcd_filter_get($_REQUEST['chat'])=='yes')&&(empty($_SESSION['login'])===FA
 
 	while ($row = gdrcd_query($query, 'fetch'))
 	{
+	  //Impedisci XSS nelle immagini
+	  $row['url_img_chat']=gdrcd_filter('fullurl', $row['url_img_chat']);
+
 		if ($PARAMETERS['mode']['chaticons']=='ON')
 		{
 			$icone_chat=explode(";",gdrcd_filter('out', $row['imgs']));
@@ -502,7 +505,7 @@ if((gdrcd_filter_get($_REQUEST['chat'])=='yes')&&(empty($_SESSION['login'])===FA
 				*/
 				$add_chat.= '<div class="chat_row_'.$row['tipo'].'">';
 
-				$add_chat.= '<img class="chat_img" src="'.gdrcd_filter('out',$row['testo']).'" />';
+				$add_chat.= '<img class="chat_img" src="'.gdrcd_filter('fullurl',$row['testo']).'" />';
 
 				/**	* Fix problema visualizzazione spazi vuoti con i sussurri
 					* @author eLDiabolo

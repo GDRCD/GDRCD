@@ -186,7 +186,7 @@ if ($PARAMETERS['mode']['alert_password_change']=='ON')
   </div>
 
   <div class="ritratto_avatar">
-     <img src="<?php echo $record['url_img']; ?>" class="ritratto_avatar_immagine" />
+     <img src="<?php echo gdrcd_filter('fullurl',$record['url_img']); ?>" class="ritratto_avatar_immagine" />
   </div>
 
   <div class="iscritto_da">
@@ -529,7 +529,8 @@ if ($PARAMETERS['mode']['alert_password_change']=='ON')
 <!-- embed src="<?php //echo gdrcd_bbcoder(gdrcd_filter('out',$record['url_media'])); ?>" height="0" width="0"-->
 
 <?php
-
+  //Impedisci XSS nella musica
+  $record['url_media']=gdrcd_filter('fullurl',$record['url_media']);
 	if ($PARAMETERS['mode']['allow_audio'] == 'ON' && !$_SESSION['blocca_media'] && !empty($record['url_media']))
 	{
 ?>
