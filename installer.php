@@ -93,6 +93,7 @@ gdrcd_query("CREATE TABLE araldo_letto (
   PRIMARY KEY  (id)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");
 
+gdrcd_query("ALTER TABLE  `araldo_letto` ADD INDEX (  `nome` ,  `thread_id` ) ;");
 
 gdrcd_query("CREATE TABLE backmessaggi (
   id bigint(20) NOT NULL auto_increment,

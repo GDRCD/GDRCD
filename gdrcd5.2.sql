@@ -111,6 +111,10 @@ CREATE TABLE IF NOT EXISTS `araldo_letto` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+
+ALTER TABLE  `araldo_letto` ADD INDEX (  `nome` ,  `thread_id` ) ;
+
+
 -- --------------------------------------------------------
 
 --
