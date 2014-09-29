@@ -162,16 +162,14 @@ if ((gdrcd_filter('get',$_POST['op'])=='send')||
         <?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['body']); ?>
     </div>
     <div class='form_field'>
-	    <textarea type="textbox" name="testo">
-<?php
+	    <textarea type="textbox" name="testo"><?php
 /**	* Fix per evitare le parentesi quadre vuote quando si compone un nuovo messaggio
     * @author Blancks
     */
 	if (isset($_POST['testo']))
 		echo "\n\n\n[".gdrcd_filter('out', trim($_POST['testo']))."]";
 
- ?>
-        </textarea>
+ ?></textarea>
     </div>
 
    <!-- Submit -->
