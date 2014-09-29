@@ -129,6 +129,7 @@ if ((gdrcd_filter('get',$_POST['op'])=='send')||
             $gilde=explode(',', $_SESSION['gilda']);
 			foreach ($gilde as $getname)
             {
+                $getname=str_replace("*", "", $getname);
                 if ((is_numeric($getname)===TRUE) && ($getname>-1))
                 {
                     $row_getname=gdrcd_query("SELECT nome FROM gilda WHERE id_gilda=".$getname."");
@@ -457,6 +458,7 @@ if ((isset($_REQUEST['op'])===FALSE)&&(isset($_REQUEST['newmessage'])===FALSE)){
 	if (empty($_SESSION['gilda'])===FALSE){
        $gilde=explode(',', $_SESSION['gilda']);
 	   foreach ($gilde as $guild){
+	       $guild=str_replace("*", "", $guild);
          if ((is_numeric($guild)===TRUE) && ($guild>-1)){
                  $extracond.=" OR destinatario = '".$guild."'";
 	     }//if
