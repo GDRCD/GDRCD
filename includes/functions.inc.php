@@ -243,7 +243,11 @@ function gdrcd_encript($str)
 	{
 		switch ($encript_algorithm)
 		{
-			case 'MD5':		$str = md5($str);		break;
+			case 'MD5':		
+				$str = md5($str);
+				$salt = sha1(md5($str));
+				$str = md5($$str.$salt);
+				break;
 			case 'SHA-1':	$str = sha1($str);		break;
 		}
 	}
