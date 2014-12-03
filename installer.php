@@ -277,6 +277,8 @@ gdrcd_query("CREATE TABLE messaggi (
   destinatario varchar(20) NOT NULL default 'Nessuno',
   spedito datetime NOT NULL default '0000-00-00 00:00:00',
   letto tinyint(1) default '0',
+  mittente_del tinyint(1) default '0',
+  destinatario_del tinyint(1) default '0',
   testo text,
   PRIMARY KEY  (id),
   KEY destinatario (destinatario),
