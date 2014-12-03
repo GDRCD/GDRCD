@@ -331,7 +331,7 @@ gdrcd_query("INSERT INTO oggetto VALUES (1, 6, 'Scopa', 'Super', '2009-12-20 14:
 gdrcd_query("CREATE TABLE personaggio (
   nome varchar(20) NOT NULL default '',
   cognome varchar(50) NOT NULL default '-',
-  pass varchar(40) NOT NULL default '',
+  pass varchar(100) NOT NULL default '',
   ultimo_cambiopass datetime DEFAULT NULL,
   data_iscrizione datetime default NULL,
   email varchar(50) default NULL,

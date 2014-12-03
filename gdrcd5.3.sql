@@ -543,7 +543,7 @@ INSERT INTO `oggetto` (`id_oggetto`, `tipo`, `nome`, `creatore`, `data_inserimen
 CREATE TABLE IF NOT EXISTS `personaggio` (
   `nome` varchar(20) NOT NULL DEFAULT '',
   `cognome` varchar(50) NOT NULL DEFAULT '-',
-  `pass` varchar(40) NOT NULL DEFAULT '',
+  `pass` varchar(100) NOT NULL DEFAULT '',
   `ultimo_cambiopass` datetime DEFAULT NULL,
   `data_iscrizione` datetime DEFAULT NULL,
   `email` varchar(50) DEFAULT NULL,

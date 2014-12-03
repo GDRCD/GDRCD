@@ -245,15 +245,45 @@ function gdrcd_encript($str)
 		{
 			case 'MD5':		
 				$str = md5($str);
-				$salt = sha1(md5($str));
-				$str = md5($$str.$salt);
 				break;
-			case 'SHA-1':	$str = sha1($str);		break;
+      case 'BCRYPT':
+        require_once(__DIR__.'/PasswordHash.php');
+        $hasher=new PasswordHash(8,true);
+        $str=$hasher->HashPassword($str);
+        break;
+			case 'SHA-1':
+        $str = sha1($str);
+        break;
 		}
 	}
 
 
 	return $str;
+}
+
+function gdrcd_password_check($pass,$stored){
+  $encript_password = $GLOBALS['PARAMETERS']['mode']['encriptpassword'];
+  $encript_algorithm = $GLOBALS['PARAMETERS']['mode']['encriptalgorithm'];
+
+  if ($encript_password == 'ON'){
+    switch ($encript_algorithm)
+    {
+      case 'MD5':
+        return $stored == md5($pass);
+        break;
+      case 'BCRYPT':
+        require_once(__DIR__.'/PasswordHash.php');
+        $hasher=new PasswordHash(8,true);
+        return $hasher->CheckPassword($pass,$stored);
+        break;
+      case 'SHA-1':
+        return $stored == sha1($pass);
+        break;
+    }
+  }
+  else {
+    return $pass == $stored;
+  }
 }
 
 

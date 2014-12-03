@@ -12,11 +12,7 @@
 
 /*Leggo i dati del form di login*/
 $login1 = gdrcd_filter('get',$_POST['login1']);
-if($PARAMETERS['mode']['encriptpassword']=='OFF'){
-  $pass1 = gdrcd_filter('get',$_POST['pass1']);
-} else {
-  $pass1 = gdrcd_filter('get',gdrcd_encript($_POST['pass1']));
-}
+$pass1 = $_POST['pass1'];
 
 
 /** * Fix per il funzionamento in locale dell'engine
@@ -67,8 +63,7 @@ $login1 = ucwords(strtolower($login1));
 
 
 /*Carico dal database il profilo dell'account (personaggio)*/
-$record = gdrcd_query("SELECT personaggio.nome, personaggio.cognome, personaggio.permessi, personaggio.sesso, personaggio.ultima_mappa, personaggio.ultimo_luogo, personaggio.id_razza, personaggio.ultimo_messaggio, personaggio.blocca_media, personaggio.ora_entrata, personaggio.ora_uscita, personaggio.ultimo_refresh, razza.sing_m, razza.sing_f, razza.icon AS url_img_razza FROM personaggio LEFT JOIN razza ON personaggio.id_razza = razza.id_razza WHERE nome = '".gdrcd_filter('in',$login1)."' AND pass = '".gdrcd_filter('in',$pass1)."' LIMIT 1");
-
+$record = gdrcd_query("SELECT personaggio.pass, personaggio.nome, personaggio.cognome, personaggio.permessi, personaggio.sesso, personaggio.ultima_mappa, personaggio.ultimo_luogo, personaggio.id_razza, personaggio.ultimo_messaggio, personaggio.blocca_media, personaggio.ora_entrata, personaggio.ora_uscita, personaggio.ultimo_refresh, razza.sing_m, razza.sing_f, razza.icon AS url_img_razza FROM personaggio LEFT JOIN razza ON personaggio.id_razza = razza.id_razza WHERE nome = '".gdrcd_filter('in',$login1)."' LIMIT 1");
 
 /*Se esiste un personaggio corrispondente al nome ed alla password specificati*/
 /** * Aggiunti i controlli sugli orari di connessione e disconnessione per impedire i doppi login con gli stessi account
@@ -76,10 +71,9 @@ $record = gdrcd_query("SELECT personaggio.nome, personaggio.cognome, personaggio
 
 	*@author Blancks
 */
-if ((empty($record)===FALSE) && ($record['permessi']>-1) && (strtotime($record['ora_entrata']) < strtotime($record['ora_uscita'])||(strtotime($record['ultimo_refresh'])+300) < time()))
+if (!empty($record) and gdrcd_password_check($pass1,$record['pass']) && ($record['permessi']>-1) && (strtotime($record['ora_entrata']) < strtotime($record['ora_uscita'])||(strtotime($record['ultimo_refresh'])+300) < time()))
 {
-
-	$_SESSION['login'] = $record['nome'];
+  $_SESSION['login'] = $record['nome'];
 	$_SESSION['cognome'] = $record['cognome'];
 	$_SESSION['permessi'] = $record['permessi'];
 	$_SESSION['sesso'] = $record['sesso'];
