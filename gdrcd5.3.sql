@@ -457,6 +457,8 @@ CREATE TABLE IF NOT EXISTS `messaggi` (
   `destinatario` varchar(20) NOT NULL DEFAULT 'Nessuno',
   `spedito` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `letto` tinyint(1) DEFAULT '0',
+  `mittente_del` tinyint(1) DEFAULT '0',
+  `destinatario_del` tinyint(1) DEFAULT '0',
   `testo` text,
   PRIMARY KEY (`id`),
   KEY `destinatario` (`destinatario`),
