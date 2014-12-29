@@ -207,7 +207,7 @@ function gdrcd_check_tables($table)
  */
 function gdrcd_mysql_error($details = false)
 {
-	$backtrace = debug_backtrace();
+	$backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 50);
 
 	$error_msg = 	'<strong>GDRCD MySQLi Error</strong> [File: '. basename($backtrace[1]['file']) .'; Line: '. $backtrace[1]['line'] .']<br>'.
 					'<strong>Error Code</strong>: '. mysqli_errno(gdrcd_connect()) .'<br>'.
