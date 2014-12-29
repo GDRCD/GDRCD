@@ -483,7 +483,7 @@ if($_REQUEST['op']=='read')
 <div class="form_gioco">
 <form action="main.php?page=forum"
       method="post">
-  <font color="cccccc"><div class="form_label">
+  <font color="000000"><div class="form_label">
     Risposta rapida
   </div>
   <div class="form_field">
