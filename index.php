@@ -1,6 +1,6 @@
 <?php 
-$dont_check = FALSE;
-$check_for_update = TRUE;
+$dont_check = TRUE;
+$check_for_update = FALSE;
 
 require 'header.inc.php';
 require 'includes/credits.inc.php';
