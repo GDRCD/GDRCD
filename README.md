@@ -56,7 +56,7 @@ altrimenti il sito non funzionera'.
 La struttira delle cartelle e' la seguente:
 
 ROOT
-
+```
 |- docs
 |- imgs
 |   |--- avatars
