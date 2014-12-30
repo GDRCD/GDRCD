@@ -56,8 +56,7 @@ altrimenti il sito non funzionera'.
 La struttira delle cartelle e' la seguente:
 
 ROOT
-
-````
+```
 |- docs
 |- imgs
 |   |--- avatars
@@ -89,7 +88,7 @@ ROOT
 |   |	         |--- menus
 |   |	   	 	 |--- races
 |- vocabulary
-``
+
 imgs: La cartella contiene alcune immagini utilizzate dal sistema, in
 particolare icone di sistrma. Se si desidera modificarle è possibile 
 agire sul contenuto di questa cartella anche se non è parte dei temi.
