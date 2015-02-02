@@ -10,10 +10,10 @@ function show_desc(e, txt)
 	curY = (document.all)? event.clientY + document.body.scrollTop : e.pageY;
 	
 	set_fade('descriptionLoc', 0);
-	$('descriptionLoc').style.display='block';
-	$('descriptionLoc').style.left=(parseInt(curX)-parseInt($('maincontent').offsetLeft)+tooltip_offsetX)+'px';
-	$('descriptionLoc').style.top=(parseInt(curY)-parseInt($('maincontent').offsetTop)+tooltip_offsetY)+'px';
-	$('descriptionLoc').innerHTML=txt;
+	gdrcd_selector('descriptionLoc').style.display='block';
+	gdrcd_selector('descriptionLoc').style.left=(parseInt(curX)-parseInt($('maincontent').offsetLeft)+tooltip_offsetX)+'px';
+	gdrcd_selector('descriptionLoc').style.top=(parseInt(curY)-parseInt($('maincontent').offsetTop)+tooltip_offsetY)+'px';
+	gdrcd_selector('descriptionLoc').innerHTML=txt;
 	
 	start_fade('descriptionLoc', '+');
 }
@@ -21,5 +21,5 @@ function show_desc(e, txt)
 
 function hide_desc()
 {
-	$('descriptionLoc').style.display='none';
+	gdrcd_selector('descriptionLoc').style.display='none';
 }
