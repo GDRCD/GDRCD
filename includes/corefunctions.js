@@ -5,7 +5,7 @@
 /** * Funzione selettore rapido per JS
 	* @author Blancks
 */
-function $(id){
+function gdrcd_selector(id){
 	return document.getElementById(id);
 }
 
