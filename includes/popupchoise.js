@@ -3,7 +3,7 @@
 */
 function check_login()
 {
-	if (!$('allow_popup').checked)
+	if (!gdrcd_selector('allow_popup').checked)
 	{
 		$('popup').value = '0';
 		$('do_login').target = '_top';
