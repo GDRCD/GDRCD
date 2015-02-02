@@ -136,7 +136,6 @@
 	$PARAMETERS['left_column']['activate']	='ON';
 	$PARAMETERS['right_column']['activate']	='ON';
 
-
 	/*COLONNA SINISTRA */
 	$PARAMETERS['left_column']['box']['info_location']['class']='info';
 	$PARAMETERS['left_column']['box']['info_location']['page']='info_location'; //Meteo e informazioni sul luogo.
@@ -153,52 +152,52 @@
 
 
 	/* NOMI CHIAVE DEL GIOCO */
-    $PARAMETERS['names']['users_name']['sing'] = 'Utente'; //nome singolare degli utenti
-    $PARAMETERS['names']['users_name']['plur'] = 'Utenti'; //nome plurale degli utenti
+	$PARAMETERS['names']['users_name']['sing'] = 'Utente'; //nome singolare degli utenti
+    	$PARAMETERS['names']['users_name']['plur'] = 'Utenti'; //nome plurale degli utenti
  	$PARAMETERS['names']['currency']['sing'] = 'Moneta'; //nome singolare della valuta nel gioco
-    $PARAMETERS['names']['currency']['plur'] = 'Monete'; //nome plurale della valuta nel gioco
+    	$PARAMETERS['names']['currency']['plur'] = 'Monete'; //nome plurale della valuta nel gioco
 	$PARAMETERS['names']['currency']['short'] = 'MO'; //nome breve della valuta nel gioco
-    $PARAMETERS['names']['private_message']['sing'] = 'Messaggio'; //nome dei messaggi privati tra utenti (singolare)
-    $PARAMETERS['names']['private_message']['plur'] = 'Messaggi'; //nome dei messaggi privati tra utenti (plurale)
+	$PARAMETERS['names']['private_message']['sing'] = 'Messaggio'; //nome dei messaggi privati tra utenti (singolare)
+	$PARAMETERS['names']['private_message']['plur'] = 'Messaggi'; //nome dei messaggi privati tra utenti (plurale)
 	$PARAMETERS['names']['private_message']['image_file'] = ''; //immagine del link ai messaggi
 	$PARAMETERS['names']['private_message']['image_file_onclick'] = ''; //immagine al passaggio del mouse dei messaggi
 	$PARAMETERS['names']['private_message']['image_file_new'] = ''; //immagine nuovi messaggi
-    $PARAMETERS['names']['forum']['sing'] = 'Bacheca'; //nome dei forum (singolare)
-    $PARAMETERS['names']['forum']['plur'] = 'Bacheche'; //nome dei forum (plurale)
+    	$PARAMETERS['names']['forum']['sing'] = 'Bacheca'; //nome dei forum (singolare)
+    	$PARAMETERS['names']['forum']['plur'] = 'Bacheche'; //nome dei forum (plurale)
 	$PARAMETERS['names']['forum']['image_file'] = ''; //immagine del forum
 	$PARAMETERS['names']['forum']['image_file_onclick'] = ''; //immagine al passaggio del mouse del forum
  	$PARAMETERS['names']['guild_name']['sing'] = 'Gilda'; //nome delle gilde nel gioco (singolare)
-    $PARAMETERS['names']['guild_name']['plur'] = 'Gilde'; //nome delle gilde nel gioco (plurale)
-    $PARAMETERS['names']['guild_name']['lead'] = 'Capogilda'; //nome del capo gilda nel gioco (plurale)
+    	$PARAMETERS['names']['guild_name']['plur'] = 'Gilde'; //nome delle gilde nel gioco (plurale)
+    	$PARAMETERS['names']['guild_name']['lead'] = 'Capogilda'; //nome del capo gilda nel gioco (plurale)
 	$PARAMETERS['names']['guild_name']['members'] = 'Affiliati'; //componenti della gilda (plurale)
 	$PARAMETERS['names']['guild_name']['type'] = 'Allineamento'; //nome del tipo gilda nel gioco (singolare)
 	$PARAMETERS['names']['race']['sing'] = 'Razza'; //nome delle razze nel gioco (singolare)
-    $PARAMETERS['names']['race']['plur'] = 'Razze'; //nome delle razze nel gioco (plurale)
-    $PARAMETERS['names']['race']['lead'] = 'Caporazza'; //nome del capo razza nel gioco (plurale)
+    	$PARAMETERS['names']['race']['plur'] = 'Razze'; //nome delle razze nel gioco (plurale)
+    	$PARAMETERS['names']['race']['lead'] = 'Caporazza'; //nome del capo razza nel gioco (plurale)
 	$PARAMETERS['names']['master']['sing'] = 'Master'; //titolo degli arbitri (singolare)
-    $PARAMETERS['names']['master']['plur'] = 'Master'; //titolo degli arbitri (plurale)
-    $PARAMETERS['names']['moderators']['sing'] = 'Admin'; //titolo dei moderatori (singolare)
-    $PARAMETERS['names']['moderators']['plur'] = 'Admin'; //titolo dei moderatori (plurale)
-    $PARAMETERS['names']['administrator']['sing'] = 'Gestore'; //titolo del super user (singolare)
-    $PARAMETERS['names']['administrator']['plur'] = 'Gestori'; //titolo del super user (plurale)
-    $PARAMETERS['names']['gamemenu'] = 'Menu'; //Nome in calce al menu del gioco
-    $PARAMETERS['names']['market_name'] = 'Mercato'; //Nome del mercato
+    	$PARAMETERS['names']['master']['plur'] = 'Master'; //titolo degli arbitri (plurale)
+    	$PARAMETERS['names']['moderators']['sing'] = 'Admin'; //titolo dei moderatori (singolare)
+    	$PARAMETERS['names']['moderators']['plur'] = 'Admin'; //titolo dei moderatori (plurale)
+    	$PARAMETERS['names']['administrator']['sing'] = 'Gestore'; //titolo del super user (singolare)
+    	$PARAMETERS['names']['administrator']['plur'] = 'Gestori'; //titolo del super user (plurale)
+    	$PARAMETERS['names']['gamemenu'] = 'Menu'; //Nome in calce al menu del gioco
+    	$PARAMETERS['names']['market_name'] = 'Mercato'; //Nome del mercato
 	$PARAMETERS['names']['maps_location'] = 'Alle mappe'; //Appare se il PG si trova su una mappa
 	$PARAMETERS['names']['base_location'] = 'In giro'; //Appare nei presenti se non è possibile localizzare il pg
-    $PARAMETERS['names']['stats']['car0'] = 'Forza'; //Caratteristiche del personaggio nella scheda
-    $PARAMETERS['names']['stats']['car1'] = 'Robustezza';
-    $PARAMETERS['names']['stats']['car2'] = 'Destrezza';
-    $PARAMETERS['names']['stats']['car3'] = 'Intelligenza';
-    $PARAMETERS['names']['stats']['car4'] = 'Saggezza';
-    $PARAMETERS['names']['stats']['car5'] = 'Percezioni';
-    $PARAMETERS['names']['stats']['hitpoints'] = 'Punti ferita';
+    	$PARAMETERS['names']['stats']['car0'] = 'Forza'; //Caratteristiche del personaggio nella scheda
+    	$PARAMETERS['names']['stats']['car1'] = 'Robustezza';
+    	$PARAMETERS['names']['stats']['car2'] = 'Destrezza';
+    	$PARAMETERS['names']['stats']['car3'] = 'Intelligenza';
+    	$PARAMETERS['names']['stats']['car4'] = 'Saggezza';
+    	$PARAMETERS['names']['stats']['car5'] = 'Percezioni';
+    	$PARAMETERS['names']['stats']['hitpoints'] = 'Punti ferita';
 
     /* HELP: I nomi chiave sono i termini con i quali ci si riferisce, all'interno del gioco, ad alcune figure ricorrenti, come il forum interno o lo staff del sito.*/
 
 
 
 	/* DATA DELL'AMBIENTAZIONE */
-    $PARAMETERS['date']['offset'] = 0;
+    	$PARAMETERS['date']['offset'] = 0;
 	$PARAMETERS['date']['base_temperature'] = -4;//temperatura minima assoluta in gradi.
 
 	/* HELP: L'offset della data viene sommato all'anno corrente per ottenere l'anno desiderato per il gioco. Es: Se il gioco si svolge nel 1290 e l'anno corrente e' il 2010 allora l'offset necessario è 1290-2010= -720, nel caso del 2120 l'offset e' +110. Il sistema potrebbe risultare incoerente per gli anni bisestili, e' consiglibile che lo sfasamento tenga conto della posizione dell'anno corrente nel corrente quadriennio.*/
@@ -212,12 +211,12 @@
 	$PARAMETERS['settings']['posts_per_page']= 15;//Numero di post per pagina visualizzati nei forum
 	$PARAMETERS['settings']['records_per_page']= 15;//Numero di record per pagina visualizzati nei pannelli gestione
 	$PARAMETERS['settings']['messages_per_page']= 40;//Numero di messaggi visualizzati per pagina nel sistema di messaggistica privata
-    $PARAMETERS['settings']['messages_limit'] = 50;//Numero di messaggi privati oltre il quale appare il suggerimento di cancellarli
+    	$PARAMETERS['settings']['messages_limit'] = 50;//Numero di messaggi privati oltre il quale appare il suggerimento di cancellarli
 	$PARAMETERS['settings']['minimum_employment'] = 10;//Numero di giorni entro i quali non è possibile scegliere un'altro lavoro o essere esclusi da una gilda.
 	$PARAMETERS['settings']['guilds_limit'] = 2;//Numero massimo di gilde a cui si può essere affiliati. Il numero tiene conto delle gilde di cui un personaggio è membro e dell'eventuale lavoro indipendente che svolte. In ogni caso il sistema permette di svolgere un unico lavoro indipendente. La paga giornaliera del personaggio e' la somma degli introiti di tutti i ruoli di gilda e dell'eventuale lavoro che riveste.
-    $PARAMETERS['settings']['resell_price'] = 30; //Percentuale di svalutazione degli oggetti rivenduti al mercato.
-    $PARAMETERS['settings']['first_px']= 100;//Esperienza iniziale. Se il gioco non prevede abilità dovrebbe essere 0.
-    $PARAMETERS['settings']['max_hp']=100;//Punti ferita.
+    	$PARAMETERS['settings']['resell_price'] = 30; //Percentuale di svalutazione degli oggetti rivenduti al mercato.
+    	$PARAMETERS['settings']['first_px']= 100;//Esperienza iniziale. Se il gioco non prevede abilità dovrebbe essere 0.
+    	$PARAMETERS['settings']['max_hp']=100;//Punti ferita.
 	$PARAMETERS['settings']['px_x_rank'] = 10; //Costo in px per rango di abilità. Il valore di questo campo viene moltiplicato al rango successivo dell'abità per determinarne il costo. Es: Se il valore è 10 e il rango da aquisite è 5 il suo costo è 5x10=50px.
 	$PARAMETERS['settings']['skills_cap'] = 10;//Punteggio massimo per un'abilità.
 	$PARAMETERS['settings']['initial_cars_cap'] = 10;//Punteggio massimo iniziale per una caratteristica.
@@ -260,7 +259,7 @@
 		* @author Blancks
 	*/
 	$PARAMETERS['mode']['dices']='ON';
-    //ON: E' attivato il tiro di dado.
+    	//ON: E' attivato il tiro di dado.
 	//OFF: Non è attivato il tiro di dado
 
 	/* HELP: é possibile aggiungere la possibilità di usare altri tipi di dado implementando questa sezione. E' possibile anche ridurre la scelta dei possibili tipi di dado semplicemente rimuovendo una riga qui.*/
@@ -361,13 +360,13 @@
 	$PARAMETERS['settings']['bbd']['images_ext'][] = 'gif';
 
 
-  /**
-   * Parametri per tutti i casi in cui viene usato HTML filtrato
-   * Controlla quanto pesantemente filtrare il codice HTML per ragioni di sicurezza. Ci sono 2 livelli:
-   * HTML_FILTER_BASE: filtra solo le cose più pericolose, come gli iframe, gli object e javascript
-   * HTML_FILTER_HIGH: filtra anche tutte le immagini
-   */
-  $PARAMETERS['settings']['html'] = HTML_FILTER_HIGH;
+  	/**
+   	* Parametri per tutti i casi in cui viene usato HTML filtrato
+   	* Controlla quanto pesantemente filtrare il codice HTML per ragioni di sicurezza. Ci sono 2 livelli:
+   	* HTML_FILTER_BASE: filtra solo le cose più pericolose, come gli iframe, gli object e javascript
+   	* HTML_FILTER_HIGH: filtra anche tutte le immagini
+   	*/
+  	$PARAMETERS['settings']['html'] = HTML_FILTER_HIGH;
 
 	/** * Avviso periodico di cambio pass, funzione pel ready (H)
 		* @author Blancks
@@ -411,19 +410,19 @@
 	$PARAMETERS['mode']['auto_meteo']='ON';
 	//ON: Il meteo è generato automaticamente.
 	//OFF: Il meteo è inserito manualmente, mappa per mappa. Se le mappe sono significativamente distanti, geograficamente, questa opzione dovrebbe essere impostata ad OFF.
-    $PARAMETERS['mode']['skillsystem']='ON';
-    //ON: E' attivato il sistema di gioco con punteggi, abilità e tiri di dado.
+	$PARAMETERS['mode']['skillsystem']='ON';
+    	//ON: E' attivato il sistema di gioco con punteggi, abilità e tiri di dado.
 	//OFF: E' attivato il sistema di gioco solo interpretativo
-    $PARAMETERS['mode']['filterdocuments']='OFF';
-    //ON: Non e' permesso l'uso di codici html nella documentazione del gioco.
+    	$PARAMETERS['mode']['filterdocuments']='OFF';
+    	//ON: Non e' permesso l'uso di codici html nella documentazione del gioco.
 	//OFF: E' permesso l'uso di codici html nella documentazione del gioco (questa opzione potrebbe compromettere la sicurezza del sito).
-    $PARAMETERS['mode']['emailconfirmation']='ON';
-    //ON: In fase di registrazione la password viene inviata per email.
+    	$PARAMETERS['mode']['emailconfirmation']='ON';
+    	//ON: In fase di registrazione la password viene inviata per email.
 	//OFF:  In fase di registrazione la password viene visualizzata nella pagina di conferma.
-    $PARAMETERS['mode']['racialinfo']='ON';
+    	$PARAMETERS['mode']['racialinfo']='ON';
 	//ON: In fase di iscrizione e' presente un link alla descrizione della razza.
 	//OFF: In fase di iscrizione non è presente un link alla descrizione della razza (Se il gioco non prevede razze e la funzione razza è utilizzata in altro modo, come professione, nazionalità o altro scegliere OFF).
-    $PARAMETERS['mode']['chaticons']='ON';
+    	$PARAMETERS['mode']['chaticons']='ON';
 	//ON: In chat sono visualizzate le icone relative a sesso e razza del pg.
 	//OFF: In chat non sono visualizzate le icone relative a sesso, razza e gilda del pg.
 	$PARAMETERS['mode']['spymessages']='ON';
@@ -432,7 +431,7 @@
 	$PARAMETERS['mode']['privaterooms']='ON';
 	//ON: Il gioco prevede stanze private temporanee prenotabili dai giocatori.
 	//ON: Il gioco non prevede stanze private prenotabili dai giocatori.
-    $PARAMETERS['mode']['spyprivaterooms']='OFF';
+    	$PARAMETERS['mode']['spyprivaterooms']='OFF';
 	//ON: Gli amministratori possono leggere e scrivere nelle stanze private altrui.
 	//OFF:  Gli amministratori non possono leggere e scrivere nelle stanze private altrui.
 	$PARAMETERS['mode']['chatsave']='ON';
@@ -493,18 +492,21 @@
     /*HELP [-- IMPORTANTE!!! --]: Le seguenti voci configurano i menu' opzioni interni al gioco. Specificare un diverso testo vitualizzato (text) o un immagine (image_file) modifica l'aspetto del menu, ma alterare l'indirizzo di riferimento (url) o cancellare voci potrebbe pregiudicare il funzionamento di parte del gioco. Le immagini specificate in image_file e image_file_onclick devono essere nella cartema imgs/menu del tema e sono, rispettivamente, l'immagine di base del tasto e l'immagine al passaggio del mouse, nel caso la seconda mancasse viene visualizzata la prima in entrambi i casi*/
 
 	/* VOCI DEL MENU */
-    $PARAMETERS['menu']['refresh']['text']='Aggiorna';
-    $PARAMETERS['menu']['refresh']['url']='main.php?dir='.$_SESSION['luogo'];
+    	$PARAMETERS['menu']['refresh']['text']='Aggiorna';
+    	$PARAMETERS['menu']['refresh']['url']='main.php?dir='.$_SESSION['luogo'];
 	$PARAMETERS['menu']['refresh']['image_file']='';
 	$PARAMETERS['menu']['refresh']['image_file_onclick']='';
 
 	$PARAMETERS['menu']['map']['text']='Mappa';
-    $PARAMETERS['menu']['map']['url']='main.php?page=mappaclick&map_id='.$_SESSION['mappa'];
+    	$PARAMETERS['menu']['map']['url']='main.php?page=mappaclick&map_id='.$_SESSION['mappa'];
 	$PARAMETERS['menu']['map']['image_file']='';
-    $PARAMETERS['menu']['map']['image_file_onclick']='';
+    	$PARAMETERS['menu']['map']['image_file_onclick']='';
 
 	$PARAMETERS['menu']['profile']['text']='Scheda';
-    $PARAMETERS['menu']['profile']['url']='main.php?page=scheda&pg='.$_SESSION['login'];
+    	$PARAMETERS['menu']['profile']['url']='main.php?page=scheda&pg='.$_SESSION['login'];
+    	/*Esempio di link nel caso si volesse aprire come scheda modale
+    	$PARAMETERS['menu']['profile']['url']="javascript:modalWindow('scheda', 'Scheda di ". $_SESSION['login'] ."', 'popup.php?page=scheda&pg=". $_SESSION['login'] ."');";
+	*/
 	$PARAMETERS['menu']['profile']['image_file']='';
 	$PARAMETERS['menu']['profile']['image_file_onclick']='';
 
