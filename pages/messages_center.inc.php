@@ -134,23 +134,6 @@ session_start();
 		        <option value="presenti">
 		            <?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['multiple']['online']); ?>
  		        </option>
-<?php
-         if (empty($_SESSION['gilda'])===FALSE)
-         {
-             $gilde=explode(',', $_SESSION['gilda']);
- 			foreach ($gilde as $getname)
-             {
-                 if ((is_numeric($getname)===TRUE) && ($getname>-1))
-                 {
-                     $row_getname=gdrcd_query("SELECT nome FROM gilda WHERE id_gilda=".$getname."");
- ?>
-                 <option value="<?php echo $getname; ?>">
-		            <?php echo gdrcd_filter('out',$row_getname['nome']); ?>
- 		        </option>
- <?php           }
- 			}
-         }
- ?>
  <?php   if($_SESSION['permessi']>=MODERATOR)
         {
  ?>
@@ -255,35 +238,6 @@ session_start();
  	      <div class="read_message_box_forms">
 
  	      <div class="read_message_box_form">
- 	      <?php
- 	      /** * Bugfix: correzione di un bug che causava la visualizzazione del pulsante di cancellazione a tutti
-	          * gli utenti, anche a quelli che non dispongono dell'autorizzazione, come nel caso del messaggio inviato
-	          * ad "all".
- 		      * @author Rhllor
- 			*/
- 		  /*if((($row['mittente']=='all')&&($_SESSION['permessi']>=MODERATOR))||
- 			 ((is_numeric($record['mittente'])===TRUE)&&($_SESSION['affiliato_gilda']==$record['mittente'])&&($_SESSION['permessi']>=GUILDMODERATOR))||
- 			 ((is_numeric($record['mittente'])===FALSE)&&($record['mittente']!='all'))){*/
- 		  if((($record['destinatario']=='all')&&($_SESSION['permessi']>=MODERATOR))||
- 		     ((is_numeric($record['destinatario'])===TRUE)&&($_SESSION['permessi']>=GUILDMODERATOR))||
- 		     ((is_numeric($record['destinatario'])===FALSE)&&($record['destinatario']!='all'))){
- 		  ?>
- 		          <!-- erase -->
-				  <form action="main.php?page=messages_center"
- 	                    method="post">
-	              <input type="hidden"
-	                     name="op"
- 	                     value="erase" />
-				  <input type="hidden"
-	                     name="id_messaggio"
- 	                     value="<?php echo gdrcd_filter('num',$_REQUEST['id_messaggio']);?>" />
-				  <input type="image"
-	                     src="imgs/icons/erase.png"
-	                     value="submit"
-	                     alt="<?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['erase']); ?>"
- 	                     title="<?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['erase']); ?>" />
-				  </form>
- 	      <?php } else { echo '&nbsp;'; } ?>
  	      </div>
 
  	      <div class="read_message_box_form">
@@ -359,11 +313,9 @@ session_start();
  		</div>
   	<?php } else {
  	  		/** * Enhancement: in caso di nessuna riga cancellata si controlla l'esistenza del messaggio,
-	  		    * se esiste ed il destinatario è "all" allora può essere cancellato dagli utenti che ne hanno
-	  		    * il permesso
  			    * @author Rhllor
  			*/
-   			$result=gdrcd_query("SELECT destinatario FROM messaggi WHERE id = ".gdrcd_filter('num',$_REQUEST['id_messaggio'])." and ( destinatario = '". $_SESSION['login'] ."' or destinatario = 'all') LIMIT 1", 'result');
+   			$result=gdrcd_query("SELECT destinatario FROM messaggi WHERE id = ".gdrcd_filter('num',$_REQUEST['id_messaggio'])." and ( destinatario = '". $_SESSION['login'] ."') LIMIT 1", 'result');
  			if (gdrcd_query($result, 'num_rows') == 0){
  				?>
  					<div class="warning">
@@ -376,31 +328,6 @@ session_start();
  			} else {
          		$record=gdrcd_query($result, 'fetch');
          		gdrcd_query($result, 'free');
- 	  			if((($record['destinatario']=='all')&&($_SESSION['permessi']>=MODERATOR))||
- 				   ((is_numeric($record['destinatario'])===TRUE)&&($_SESSION['permessi']>=GUILDMODERATOR))||
- 				   ((is_numeric($record['destinatario'])===FALSE)&&($record['destinatario']!='all'))){
- 				   gdrcd_query("DELETE FROM messaggi WHERE id = ".$id_messaggio." LIMIT 1");
- 				   if (gdrcd_query("",'affected') > 0) {
-				   		?>
- 						<div class="warning">
- 						   <?php echo gdrcd_filter('out',$PARAMETERS['names']['private_message']['sing'].$MESSAGE['interface']['messages']['erased']); ?>
- 						</div>
- 						<div class="link_back">
- 						   <a href="main.php?page=messages_center&offset=0"><?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['go_back']); ?></a>
- 						</div>
-				  		<?php
- 				   }
- 		   		}
- 		   		else {
- 		   			?>
- 		   			<div class="warning">
- 						Non hai l'autorizzazione per cancellare il messaggio richiesto.
- 					</div>
- 					<div class="link_back">
- 		   				<a href="main.php?page=messages_center&offset=0"><?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['go_back']); ?></a>
- 					</div>
-					<?php
- 		   		}
    			}
 	}
 }
@@ -461,18 +388,9 @@ if ((($_REQUEST['op']=='')||($_REQUEST['op']=='inviati'))&&(isset($_REQUEST['new
  	if (isset($_REQUEST['offset'])===FALSE){$pagebegin=0;}
  	else {$pagebegin=(int)$_REQUEST['offset']*$PARAMETERS['settings']['messages_per_page'];}
  	$pageend=$PARAMETERS['settings']['messages_per_page'];
- 	//Gilde
- 	$extracond='';
- 	if (empty($_SESSION['gilda'])===FALSE){
-        $gilde=explode(',', $_SESSION['gilda']);
- 	   foreach ($gilde as $guild){
-          if ((is_numeric($guild)===TRUE) && ($guild>-1)){
-                  $extracond.=" OR destinatario = '".$guild."'";
- 	     }//if
- 	   }//foreach
- 	}//if
+
  	//Conteggio messaggi totali
- 	$record=gdrcd_query("SELECT COUNT(*) FROM messaggi WHERE destinatario = '".$_SESSION['login']."' OR destinatario = 'all'".$extracond."");
+ 	$record=gdrcd_query("SELECT COUNT(*) FROM messaggi WHERE destinatario = '".$_SESSION['login']."'");
  	$totaleresults=$record['COUNT(*)'];
  
  	//Elenco messaggi paginato
@@ -561,17 +479,13 @@ if ((($_REQUEST['op']=='')||($_REQUEST['op']=='inviati'))&&(isset($_REQUEST['new
     <td><input type="checkbox" class="message_check" value="<?php echo (int)$row['id'] ?>" /></td>
      <td>
  	   <div class="elementi_elenco">
- 	   <?php if (($row['mittente']=='all') || (is_numeric($row['mittente'])===TRUE)){?>
-                <img src="imgs/icons/mail_broad.png" class="colonna_elengo_messaggi_icon">
-              <?php } elseif (is_numeric($row['mittente'])==TRUE) { ?>
-                <img src="imgs/icons/mail_guild.png" class="colonna_elengo_messaggi_icon">
-			 <?php } else {
+<?php
  	                   if($row['letto']==0){?>
                             <img src="imgs/icons/mail_new.png" class="colonna_elengo_messaggi_icon">
  			 <?php } else {?>
                             <img src="imgs/icons/mail_read.png" class="colonna_elengo_messaggi_icon">
                         <?php }
- 				   }?>
+ 				   ?>
  	    </div>
  	</td>
  	<td>
@@ -625,32 +539,6 @@ if ((($_REQUEST['op']=='')||($_REQUEST['op']=='inviati'))&&(isset($_REQUEST['new
 
 	  </div>
 
-	  <?php if((($row['destinatario']=='all')&&($_SESSION['permessi']>=MODERATOR))||
-
-		       ((is_numeric($row['destinatario'])===TRUE)&&($_SESSION['permessi']>=GUILDMODERATOR))||
-
-		       ((is_numeric($row['destinatario'])===FALSE)&&($row['destinatario']!='all'))){ ?>
-
-	  <div class="controllo_elenco" >
-
-              <!-- erase -->
-
-			  <form action="main.php?page=messages_center" method="post">
-
-              <input type="hidden" name="op" value="erase" />
-
-			  <input type="hidden" name="id_messaggio" value="<?php echo $row['id'];?>" />
-
-			  <input type="submit" value="<?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['erase']); ?>" />
-
-			  </form>
-
-	  </div>
-
-	 
-
-	  <?php } ?>
-
       </div>
 
   <? } else { ?>
@@ -674,32 +562,6 @@ if ((($_REQUEST['op']=='')||($_REQUEST['op']=='inviati'))&&(isset($_REQUEST['new
 			  </form>
 
 	  </div>
-
-	  <?php if((($row['destinatario']=='all')&&($_SESSION['permessi']>=MODERATOR))||
-
-		       ((is_numeric($row['destinatario'])===TRUE)&&($_SESSION['permessi']>=GUILDMODERATOR))||
-
-		       ((is_numeric($row['destinatario'])===FALSE)&&($row['destinatario']!='all'))){ ?>
-
-	  <div class="controllo_elenco" >
-
-              <!-- erase -->
-
-			  <form action="main.php?page=messages_center" method="post">
-
-              <input type="hidden" name="op" value="erasemit" />
-
-			  <input type="hidden" name="id_messaggio" value="<?php echo $row['id'];?>" />
-
-			  <input type="submit" value="<?php echo gdrcd_filter('out',$MESSAGE['interface']['messages']['erase']); ?>" />
-
-			  </form>
-
-	  </div>
-	  
-
-<?php	  } ?>
-
 
  	  <?php } ?>
        </div>
