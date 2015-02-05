@@ -142,6 +142,9 @@ while ($record = gdrcd_query($result, 'fetch'))
 	  echo '<img class="presenti_ico" src="imgs/icons/testamini'.$record['sesso'].'.png" alt="'.gdrcd_filter('out',$MESSAGE['status_pg']['gender'][$record['sesso']]).'" title="'.gdrcd_filter('out',$MESSAGE['status_pg']['gender'][$record['sesso']]).'" />';
 	 
 	  //Nome pg e link alla sua scheda
+	  echo '<a href="main.php?page=messages_center&newmessage=yes&reply_dest='.$record['nome'].'" class="link_sheet">MP</a> ';
+      
+	//Nome pg e link alla sua scheda
 	  echo ' <a href="main.php?page=scheda&pg='.$record['nome'].'" class="link_sheet">'.gdrcd_filter('out',$record['nome']);
 	  if (empty($record['cognome'])===FALSE){echo ' '.gdrcd_filter('out',$record['cognome']);}
       echo '</a> ';
