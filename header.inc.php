@@ -28,18 +28,13 @@ header('Content-Type:text/html; charset=UTF-8');
 
 	}
 	
-	
-    //Includo i parametri, la configurazione, la lingua e le funzioni 
-	require 'includes/constant_values.inc.php';
-	require 'config.inc.php';
-	require 'vocabulary/'.$PARAMETERS['languages']['set'].'.vocabulary.php';
-   	require 'includes/functions.inc.php';
+	//Includo i parametri, la configurazione, la lingua e le funzioni 
+	require 'includes/required.php';
    	
 	//Eseguo la connessione al database
 	$handleDBConnection = gdrcd_connect();
 
-
-    /** * CONTROLLO PER AGGIORNAMENTO DB
+	/** * CONTROLLO PER AGGIORNAMENTO DB
 		* Il controllo viene lanciato solo in index e nelle pagine di installer/upgrade.
 		* Dopo l'aggiornamento non dovrebbe dare noie.
 		* Nel qual caso vogliate risparmiare risorse quando si visita la homepage però è possibile modificare la variabile $check_for_update in index.php e settarla a FALSE.
