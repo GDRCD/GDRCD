@@ -26,7 +26,7 @@
     //ON: La password e' memorizzata criptata sul database.
 	//OFF: LA password e' memorizzata in chiaro sul database.
 	$PARAMETERS['mode']['encriptalgorithm']='BCRYPT';
-  //$PARAMETERS['mode']['encriptalgorithm']='MD5';
+	//$PARAMETERS['mode']['encriptalgorithm']='MD5';
 	//$PARAMETERS['mode']['encriptalgorithm']='SHA-1';
 	/* HELP: decidere se criptare la password prima di aprire le iscrizioni, altrimenti, se l'impostazione sarà cambiata in seguito, sarà necessario procedere a reinserire manualmente tutte le password.*/
 
@@ -656,4 +656,3 @@
     MODERATOR: Admin.
     GAMEMASTER: Master.
     GUILDMODERATOR: Master di gilda.*/
-?>
