@@ -6,7 +6,7 @@ if (empty($_SESSION['last_istant_message'])===TRUE){$_SESSION['last_istant_messa
 
 $non_letti=gdrcd_query("SELECT id FROM messaggi WHERE destinatario = '".gdrcd_filter('in',$_SESSION['login'])."' AND letto=0 AND id > ".$_SESSION['last_istant_message']."", 'result');
 
-$max_id=gdrcd_query("SELECT max(id) as max FROM messaggi WHERE (destinatario = '".gdrcd_filter('in',$_SESSION['login'])."' OR destinatario='all' OR destinatario='".$_SESSION['gilda_affiliazione']."') AND letto=0");?>
+$max_id=gdrcd_query("SELECT max(id) as max FROM messaggi WHERE destinatario = '".gdrcd_filter('in',$_SESSION['login'])."' AND letto=0");?>
 
 <div class="pagina_messaggi">
 

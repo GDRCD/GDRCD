@@ -82,6 +82,9 @@ header('Content-Type:text/html; charset=UTF-8');
 <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme'];?>/scheda.css" type="text/css" />
 <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme'];?>/messaggi.css" type="text/css" />
 <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme'];?>/forum.css" type="text/css" />
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
 <?php
 	/** * Il controllo individua se l'header non è impiegato per il main */
 	if (!isset($check_for_update))

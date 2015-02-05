@@ -1,4 +1,4 @@
-# GDRCD 5.2 "Stable" - Users Manual
+# GDRCD 5.3 "Stable" - Users Manual
 
 
 
@@ -17,7 +17,7 @@ ampliate le correnti su suggerimento dell'utenza.
 
 ## COMMUNITY DI SVILUPPO
 
-GDRCD 5.2 e' un progetto Open Source e come tale e' aperto ai contributi.
+GDRCD 5.3 e' un progetto Open Source e come tale e' aperto ai contributi.
 Mi riservo di vagliare personalmente eventuali modifiche da
 inserire direttamente nel core ufficiale del programma, ma nulla
 vieta di rilasciarle come MODs o di produrre release alternative.

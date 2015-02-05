@@ -483,7 +483,7 @@ if($_REQUEST['op']=='read')
 <div class="form_gioco">
 <form action="main.php?page=forum"
       method="post">
-  <font color="cccccc"><div class="form_label">
+  <font color="000000"><div class="form_label">
     Risposta rapida
   </div>
   <div class="form_field">
@@ -559,6 +559,15 @@ $ultimotipo=-1;?>
 {
   if($row['tipo']!=$ultimotipo){/*Sono ordinati per tipo, se cambia stampo il nuovo tipo come capoverso*/
 	$ultimotipo=$row['tipo']; ?>
+	
+	if ((($row['tipo']==SOLORAZZA)&&($_SESSION['id_razza']!=$row['proprietari'])&&($_SESSION['permessi']<MODERATOR))||
+    (($row['tipo']==SOLOGILDA)&&(strpos($_SESSION['gilda'],'*'.$row['proprietari'].'*')===FALSE)&&($_SESSION['permessi']<MODERATOR))||
+	(($row['tipo']>=SOLOMASTERS)&&($_SESSION['permessi']<GAMEMASTER))||
+	(($row['tipo']>=SOLOMODERATORS)&&($_SESSION['permessi']<MODERATOR)))
+	{ /*Restrizione di visualizzazione solo master e admin*/
+	}
+	else
+	{
   <tr><!-- Intestazione tabella -->
     <td colspan="2"><div class="capitolo_elenco">
       <?php echo gdrcd_filter('out',$PARAMETERS['names']['forum']['plur'].' '.strtolower($MESSAGE['interface']['forums']['type'][$ultimotipo])); ?>
@@ -614,8 +623,9 @@ $ultimotipo=-1;?>
   </tr>
 
 
-
-<?php }//while
+	}
+<?php
+}//while
 
 		gdrcd_query($result, 'free');
 
