@@ -165,7 +165,26 @@ else
 	   
 	   	gdrcd_query("DELETE FROM clgpersonaggioruolo WHERE personaggio IN (SELECT nome AS personaggio FROM personaggio WHERE permessi = -1)");
 	   	gdrcd_query("OPTIMIZE TABLE clgpersonaggioruolo");
-	   
+	   	
+	   	gdrcd_query("DELETE FROM messaggi WHERE mittente IN (SELECT nome AS personaggio FROM personaggio WHERE permessi = -1)");
+	   	gdrcd_query("DELETE FROM messaggi WHERE destinatario IN (SELECT nome AS personaggio FROM personaggio WHERE permessi = -1)");
+	   	gdrcd_query("DELETE FROM backmessaggi WHERE mittente IN (SELECT nome AS personaggio FROM personaggio WHERE permessi = -1)");
+	   	gdrcd_query("DELETE FROM backmessaggi WHERE destinatario IN (SELECT nome AS personaggio FROM personaggio WHERE permessi = -1)");
+	   	gdrcd_query("OPTIMIZE TABLE messaggi");
+
+	   	gdrcd_query("DELETE FROM araldo_letto WHERE nome IN (SELECT nome AS personaggio FROM personaggio WHERE permessi = -1)");
+	   	gdrcd_query("OPTIMIZE TABLE araldo_letto");
+	   	
+	   	gdrcd_query("UPDATE chat SET mittente = 'Cancellato' WHERE nome IN (SELECT nome AS personaggio FROM personaggio WHERE permessi = -1)");
+	   	gdrcd_query("UPDATE chat SET destinatario = 'Cancellato' WHERE nome IN (SELECT nome AS personaggio FROM personaggio WHERE permessi = -1)");
+	   	gdrcd_query("OPTIMIZE TABLE chat");
+	   	
+	   	gdrcd_query("UPDATE log SET nome_interessato = 'Cancellato' WHERE nome IN (SELECT nome AS personaggio FROM personaggio WHERE permessi = -1)");
+	   	gdrcd_query("OPTIMIZE TABLE log");
+
+	   	gdrcd_query("UPDATE messaggiaraldo SET autore = 'Cancellato' WHERE nome IN (SELECT nome AS personaggio FROM personaggio WHERE permessi = -1)");
+	   	gdrcd_query("OPTIMIZE TABLE messaggiaraldo");
+
 	   	gdrcd_query("DELETE FROM personaggio WHERE permessi = -1");
 	   	gdrcd_query("OPTIMIZE TABLE personaggio");
 ?>
