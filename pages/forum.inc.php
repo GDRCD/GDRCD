@@ -558,22 +558,23 @@ $ultimotipo=-1;?>
 <?php while($row = gdrcd_query($result, 'fetch'))
 {
   if($row['tipo']!=$ultimotipo){/*Sono ordinati per tipo, se cambia stampo il nuovo tipo come capoverso*/
-	$ultimotipo=$row['tipo']; ?>
+	$ultimotipo=$row['tipo'];
 	
-	if ((($row['tipo']==SOLORAZZA)&&($_SESSION['id_razza']!=$row['proprietari'])&&($_SESSION['permessi']<MODERATOR))||
-    (($row['tipo']==SOLOGILDA)&&(strpos($_SESSION['gilda'],'*'.$row['proprietari'].'*')===FALSE)&&($_SESSION['permessi']<MODERATOR))||
-	(($row['tipo']>=SOLOMASTERS)&&($_SESSION['permessi']<GAMEMASTER))||
-	(($row['tipo']>=SOLOMODERATORS)&&($_SESSION['permessi']<MODERATOR)))
-	{ /*Restrizione di visualizzazione solo master e admin*/
-	}
-	else
-	{
-  <tr><!-- Intestazione tabella -->
-    <td colspan="2"><div class="capitolo_elenco">
-      <?php echo gdrcd_filter('out',$PARAMETERS['names']['forum']['plur'].' '.strtolower($MESSAGE['interface']['forums']['type'][$ultimotipo])); ?>
-    </div></td>
-  </tr>
-  <?php } //if
+	if (($row['tipo']!=SOLORAZZA || $_SESSION['id_razza']==$row['proprietari'] || $_SESSION['permessi']>=MODERATOR) &&
+    ($row['tipo']!=SOLOGILDA || strpos($_SESSION['gilda'],'*'.$row['proprietari'].'*')!==FALSE || $_SESSION['permessi']>=MODERATOR) &&
+	($row['tipo']<SOLOMASTERS || $_SESSION['permessi']>=GAMEMASTER) &&
+	($row['tipo']<SOLOMODERATORS || $_SESSION['permessi']>=MODERATOR)) {
+		?>
+		<tr><!-- Intestazione tabella -->
+			<td colspan="2">
+				<div class="capitolo_elenco">
+					<?php echo gdrcd_filter('out', $PARAMETERS['names']['forum']['plur'] . ' ' . strtolower($MESSAGE['interface']['forums']['type'][$ultimotipo])); ?>
+				</div>
+			</td>
+		</tr>
+	<?php
+	} //if permessi
+  } //if
 
   $new_msg = gdrcd_query("SELECT COUNT(MA.id_messaggio) AS num FROM messaggioaraldo AS MA LEFT JOIN araldo_letto AS AL ON MA.id_messaggio=AL.thread_id AND AL.nome='".$_SESSION['login']."' WHERE MA.id_araldo = ".$row['id_araldo']." AND MA.id_messaggio_padre = -1 AND AL.id IS NULL");
   ?>
