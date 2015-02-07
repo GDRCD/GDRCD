@@ -20,7 +20,7 @@ switch ($_SERVER['REMOTE_ADDR'])
 	case '::1':
 	case '127.0.0.1':	$host = 'localhost';
 		break;
-	default			$host = gethostbyaddr($_SERVER['REMOTE_ADDR']);
+	default:		$host = gethostbyaddr($_SERVER['REMOTE_ADDR']);
 		break;
 }
 /** * Fine Fix
@@ -78,7 +78,8 @@ if (!empty($record) and gdrcd_password_check($pass1,$record['pass']) && ($record
 	*/
 	$_SESSION['ultima_uscita'] = $record['ora_uscita'];
 
-	if ($record['sesso']=='f'){ 
+	if ($record['sesso']=='f')
+	{ 
 		$_SESSION['razza'] = $record['sing_f']; 
 	}
 	else 
