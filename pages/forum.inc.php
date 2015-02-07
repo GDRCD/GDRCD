@@ -623,9 +623,9 @@ $ultimotipo=-1;?>
 	</div></td>
   </tr>
 
-
-	}
 <?php
+	}
+
 }//while
 
 		gdrcd_query($result, 'free');
