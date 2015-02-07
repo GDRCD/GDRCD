@@ -30,10 +30,12 @@ if($_POST['op']=='insert')
     $cond='';
     $join='';
     $fields='';
-    if($_POST['padre']==-1){
+    if($_POST['padre']==-1)
+    {
       $cond=' araldo.id_araldo='.gdrcd_filter('num', $_POST['araldo']);
     }
-    else{
+    else
+    {
       $fields=', MA.chiuso';
       $join=' INNER JOIN messaggioaraldo AS MA ON MA.id_araldo=araldo.id_araldo ';
       $cond=" MA.id_messaggio=".gdrcd_filter('num',$_POST['padre'])." AND id_messaggio_padre=-1";
@@ -41,55 +43,57 @@ if($_POST['op']=='insert')
 
     $thread=gdrcd_query("SELECT araldo.id_araldo, araldo.tipo, araldo.proprietari".$fields." FROM araldo ".$join.(!empty($cond)?' WHERE '.$cond:''),'result');
 
-    if (gdrcd_query($thread, 'num_rows')) {
-      $araldoData=gdrcd_query($thread,'fetch');
+    if (gdrcd_query($thread, 'num_rows')) 
+    {
+    	$araldoData=gdrcd_query($thread,'fetch');
         if(($araldoData['tipo']==SOLORAZZA and ($_SESSION['id_razza']==$araldoData['proprietari'] || $_SESSION['permessi']>=MODERATOR)) ||
-      ($araldoData['tipo']==SOLOGILDA and (strpos($_SESSION['gilda'],'*'.$araldoData['proprietari'].'*')!==FALSE || $_SESSION['permessi']>=MODERATOR)) ||
-    ($araldoData['tipo']>=SOLOMASTERS and $_SESSION['permessi']>=GAMEMASTER) ||
-    ($araldoData['tipo']>=SOLOMODERATORS and $_SESSION['permessi']>=MODERATOR) ||
-    ($araldoData['tipo']==PERTUTTI) || ($araldoData['tipo']==INGIOCO) || //Controllo Accesso al thread
-    $_POST['padre']==-1 or ($araldoData['chiuso']!=1 || $_SESSION['permessi']>=MODERATOR)){//Solo se il thread non è chiuso
-          gdrcd_query("INSERT INTO messaggioaraldo (id_messaggio_padre, id_araldo, titolo, messaggio, autore, data_messaggio ) VALUES (".gdrcd_filter('num',$_POST['padre']).", ".gdrcd_filter('num',$araldoData['id_araldo']).", '".gdrcd_filter('in',$_POST['titolo'])."', '".gdrcd_filter('in',$_POST['messaggio'])."', '".gdrcd_filter('in',$_SESSION['login'])."', NOW())");
+      	($araldoData['tipo']==SOLOGILDA and (strpos($_SESSION['gilda'],'*'.$araldoData['proprietari'].'*')!==FALSE || $_SESSION['permessi']>=MODERATOR)) ||
+    	($araldoData['tipo']>=SOLOMASTERS and $_SESSION['permessi']>=GAMEMASTER) ||
+    	($araldoData['tipo']>=SOLOMODERATORS and $_SESSION['permessi']>=MODERATOR) ||
+    	($araldoData['tipo']==PERTUTTI) || ($araldoData['tipo']==INGIOCO) || //Controllo Accesso al thread
+    	$_POST['padre']==-1 or ($araldoData['chiuso']!=1 || $_SESSION['permessi']>=MODERATOR))
+    	{//Solo se il thread non è chiuso
+        	gdrcd_query("INSERT INTO messaggioaraldo (id_messaggio_padre, id_araldo, titolo, messaggio, autore, data_messaggio ) VALUES (".gdrcd_filter('num',$_POST['padre']).", ".gdrcd_filter('num',$araldoData['id_araldo']).", '".gdrcd_filter('in',$_POST['titolo'])."', '".gdrcd_filter('in',$_POST['messaggio'])."', '".gdrcd_filter('in',$_SESSION['login'])."', NOW())");
 
-          if($_POST['padre']==-1){
-              $_POST['padre']=gdrcd_query('','last_id');
-          }
+          	if($_POST['padre']==-1)
+          	{
+            	$_POST['padre']=gdrcd_query('','last_id');
+          	}
 ?>
-	<div class="warning">
-	   <?php echo gdrcd_filter('out',$MESSAGE['warning']['inserted']);?>
-	</div>
-	<div class="link_back">
-       <a href="main.php?page=forum">
-	      <?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['link']['back']); ?>
-	   </a>
-    </div>
+			<div class="warning">
+	   			<?php echo gdrcd_filter('out',$MESSAGE['warning']['inserted']);?>
+			</div>
+			<div class="link_back">
+       			<a href="main.php?page=forum">
+	      			<?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['link']['back']); ?>
+		 		</a>
+    		</div>
 <?php
-        gdrcd_query("DELETE FROM araldo_letto WHERE thread_id = ".gdrcd_filter('num',$_POST['padre'])." AND nome != '".$_SESSION['login']."'");
-        gdrcd_redirect('main.php?page=forum&op=read&what='.gdrcd_filter('num',$_POST['padre']).'&where='.$araldoData['id_araldo']);
-      }
-      else{
-        echo '<div class="warning">'.gdrcd_filter('out',$MESSAGE['error']['not_allowed']).'</div>';
-      }
-    }else{
-        echo '<div class="warning">'.gdrcd_filter('out',$MESSAGE['interface']['administration']['forums']['not_exists']).'</div>';
+        	gdrcd_query("DELETE FROM araldo_letto WHERE thread_id = ".gdrcd_filter('num',$_POST['padre'])." AND nome != '".$_SESSION['login']."'");
+        	gdrcd_redirect('main.php?page=forum&op=read&what='.gdrcd_filter('num',$_POST['padre']).'&where='.$araldoData['id_araldo']);
+      	}
+      	else
+      	{
+        	echo '<div class="warning">'.gdrcd_filter('out',$MESSAGE['error']['not_allowed']).'</div>';
+      	}
     }
+    else
+    {
+    	echo '<div class="warning">'.gdrcd_filter('out',$MESSAGE['interface']['administration']['forums']['not_exists']).'</div>';
+    }
+} //Fine Insert
 
-} ?>
-
-<?php /*Modifica messaggio o topic*/
+/*Modifica messaggio o topic*/
 if($_POST['op']=='edit')
 {
 	$row = gdrcd_query("SELECT autore, titolo, messaggio, id_messaggio_padre FROM messaggioaraldo WHERE id_messaggio=".gdrcd_filter('num',$_POST['id_messaggio'])."");
 
-
 	if ($row['autore'] == $_SESSION['login'] || ($row['autore'] != $_SESSION['login'] && $_SESSION['permessi'] >= MODERATOR))
 	{
-
 		$time=strftime('%d/%m/%Y %H:%M');
 
 		gdrcd_query("UPDATE messaggioaraldo SET messaggio = '".gdrcd_filter('in',$_POST['messaggio']).'\n\n\n\nEdit ('.$_SESSION['login'].'): '.$time."', titolo = '".gdrcd_filter('in',$_POST['titolo'])."' WHERE id_messaggio = ".gdrcd_filter('num',$_POST['id_messaggio'])." LIMIT 1");
-
-	?>
+?>
 		<div class="warning">
 		   <?php echo gdrcd_filter('out',$MESSAGE['warning']['modified']);?>
 		</div>
@@ -101,27 +105,24 @@ if($_POST['op']=='edit')
 <?php
 		if ($row['id_messaggio_padre'] == -1)
 		{
-		gdrcd_redirect('main.php?page=forum&op=read&what='.gdrcd_filter('num',$_POST['id_messaggio']).'&where='.gdrcd_filter('num',$_POST['araldo']));
+			gdrcd_redirect('main.php?page=forum&op=read&what='.gdrcd_filter('num',$_POST['id_messaggio']).'&where='.gdrcd_filter('num',$_POST['araldo']));
 		}
 		else
 		{
-		gdrcd_redirect('main.php?page=forum&op=read&what='.gdrcd_filter('num',$row['id_messaggio_padre']).'&where='.gdrcd_filter('num',$_POST['araldo']));
+			gdrcd_redirect('main.php?page=forum&op=read&what='.gdrcd_filter('num',$row['id_messaggio_padre']).'&where='.gdrcd_filter('num',$_POST['araldo']));
 		}
-
 	}
 	else
 	{
 ?>
-	<div class="warning">
-	   Furbacchione ;-)
-	</div>
-
+		<div class="warning">
+	   		Furbacchione ;-)
+		</div>
 <?php
 	}
+} //Fine Edit 
 
-} ?>
-
-<?php /*Form modifica*/
+/*Form modifica*/
 if($_REQUEST['op']=='modifica')
 {
 	$row = gdrcd_query("SELECT titolo, messaggio, id_messaggio_padre FROM messaggioaraldo WHERE id_messaggio=".gdrcd_filter('num',$_REQUEST['what'])."");
@@ -130,7 +131,11 @@ if($_REQUEST['op']=='modifica')
     <div class="form_gioco">
     <form action="main.php?page=forum"
           method="post">
-       <?php if ($row['id_messaggio_padre']==-1){/*Se è il primo di un topic serve un titolo*/ ?>
+<?php 
+       if ($row['id_messaggio_padre']==-1)
+       {
+       	/*Se è il primo di un topic serve un titolo*/ 
+?>
        <div class="form_label">
           <?php echo $MESSAGE['interface']['forums']['insert']['title']; ?>
        </div>
@@ -138,7 +143,9 @@ if($_REQUEST['op']=='modifica')
           <input name="titolo"
 		         value="<?php echo gdrcd_filter('out',$row['titolo']); ?>"/>
        </div>
-       <?php }//if  ?>
+<?php 
+       }//if  
+?>
        <div class="form_label">
           <?php echo $MESSAGE['interface']['forums']['insert']['message']; ?>
        </div>
@@ -173,9 +180,11 @@ if($_REQUEST['op']=='modifica')
 	      <?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['link']['topic']); ?>
 	   </a>
     </div>
-<?php }
+<?php 
+} //Fine Modifica
 
-if($_REQUEST['op']=='delete_conf'){
+if($_REQUEST['op']=='delete_conf')
+{
   echo '
 <h3>'.gdrcd_filter('out',$MESSAGE['interface']['forums']['delete']['title']).'</h3>
 <form action="main.php?page=forum" method="post">
@@ -188,21 +197,28 @@ if($_REQUEST['op']=='delete_conf'){
 }
 
 /*Cancellazione messaggio o topic*/
-if($_REQUEST['op']=='delete'){
-  $postID=(int)$_POST['id_record'];
-  $postData=gdrcd_query("SELECT id_messaggio_padre AS padre, autore FROM messaggioaraldo WHERE id_messaggio=".$postID);
+if($_REQUEST['op']=='delete')
+{
+	$postID=(int)$_POST['id_record'];
+	$postData=gdrcd_query("SELECT id_messaggio_padre AS padre, autore FROM messaggioaraldo WHERE id_messaggio=".$postID);
 
-  if((int)$postData['padre']==-1 && ($_SESSION['permessi']>=MODERATOR || $postData['autore']==$_SESSION['login'])){/*Cancello un topic da admin*/
-  	gdrcd_query("DELETE FROM araldo_letto WHERE thread_id = ".$postID);
-	  $query="DELETE FROM messaggioaraldo WHERE id_messaggio_padre= ".$postID." OR id_messaggio= ".$postID;
-	  $back='forum';
-  } elseif((int)$postData['padre']!=-1 && ($_SESSION['permessi']>=MODERATOR || $postData['autore']==$_SESSION['login'])){/*Cancello un post da admin*/
-	  $query="DELETE FROM messaggioaraldo WHERE id_messaggio = ".$postID;
-	  $back='forum&op=read&what='.(int)$postData['padre'];
-  }
+	if((int)$postData['padre']==-1 && ($_SESSION['permessi']>=MODERATOR || $postData['autore']==$_SESSION['login']))
+	{
+		/*Cancello un topic da admin*/
+  		gdrcd_query("DELETE FROM araldo_letto WHERE thread_id = ".$postID);
+	  	$query="DELETE FROM messaggioaraldo WHERE id_messaggio_padre= ".$postID." OR id_messaggio= ".$postID;
+	  	$back='forum';
+  	} 
+  	elseif((int)$postData['padre']!=-1 && ($_SESSION['permessi']>=MODERATOR || $postData['autore']==$_SESSION['login']))
+  	{
+  		/*Cancello un post da admin*/
+	  	$query="DELETE FROM messaggioaraldo WHERE id_messaggio = ".$postID;
+	  	$back='forum&op=read&what='.(int)$postData['padre'];
+  	}
 
-  if(!empty($query)){
-    gdrcd_query($query);
+  	if(!empty($query))
+  	{
+    	gdrcd_query($query);
 ?>
  	<div class="warning">
 	   <?php echo gdrcd_filter('out',$MESSAGE['warning']['deleted']);?>
@@ -212,10 +228,13 @@ if($_REQUEST['op']=='delete'){
 	      <?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['link']['topic']); ?>
 	   </a>
     </div>
-<?php } else{
-  echo '<div class="warning">'.gdrcd_filter('out',$MESSAGE['error']['not_allowed']).'</div>';
-  }
-}
+<?php 
+  	} 
+  	else
+  	{
+  	echo '<div class="warning">'.gdrcd_filter('out',$MESSAGE['error']['not_allowed']).'</div>';
+  	}
+} //Fine delete_conf
 
 /**	* Procedure messaggi importanti e chiusi
 	* @author Blancks <s.rotondo90@gmail.com>
@@ -249,46 +268,59 @@ if ($_SESSION['permessi'] >= MODERATOR)
 */
 
  /*Creazione nuovi messaggi e topic*/
-if(gdrcd_filter('get',$_REQUEST['op'])=='composer'){
-  $padre=gdrcd_filter('num',$_REQUEST['what']);
-  $araldo=gdrcd_filter('num',$_REQUEST['where']);
+if(gdrcd_filter('get',$_REQUEST['op'])=='composer')
+{
+	$padre=gdrcd_filter('num',$_REQUEST['what']);
+  	$araldo=gdrcd_filter('num',$_REQUEST['where']);
 
-  $quote=gdrcd_filter('num',$_REQUEST['quote']);
+  	$quote=gdrcd_filter('num',$_REQUEST['quote']);
 
-  $join='';
-  $cond='';
-  if($padre!=-1){//Se sto inserendo in un thread, verifico che esista
-    $join=' INNER JOIN messaggioaraldo AS MA ON araldo.id_araldo=MA.id_araldo ';
-    $cond=' AND id_messaggio='.$padre." AND id_messaggio_padre=-1";
-  }
+  	$join='';
+  	$cond='';
+  	if($padre!=-1)
+  	{
+  		//Se sto inserendo in un thread, verifico che esista
+    	$join=' INNER JOIN messaggioaraldo AS MA ON araldo.id_araldo=MA.id_araldo ';
+    	$cond=' AND id_messaggio='.$padre." AND id_messaggio_padre=-1";
+  	}
 
-  $araldoData = gdrcd_query("SELECT count(*) AS N FROM araldo".$join." WHERE araldo.id_araldo = ".$araldo.$cond);
+  	$araldoData = gdrcd_query("SELECT count(*) AS N FROM araldo".$join." WHERE araldo.id_araldo = ".$araldo.$cond);
 
-  if($araldoData['N']>0){
-    gdrcd_query($sqlAraldo, 'free');
+  	if($araldoData['N']>0)
+  	{
+    	gdrcd_query($sqlAraldo, 'free');
 ?>
 <div class="panels_box">
 <div class="form_gioco">
 <form action="main.php?page=forum" method="post">
-<?php if ($padre==-1){ /*Se e' il primo post di un topic serve il titolo*/?>
+<?php 
+		if ($padre==-1)
+		{ 
+		/*Se e' il primo post di un topic serve il titolo*/
+?>
   <div class="form_label">
     <?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['insert']['title']); ?>
   </div>
   <div class="form_field">
     <input name="titolo" />
   </div>
-<?php }  ?>
+<?php
+		}  
+?>
   <div class="form_label">
     <?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['insert']['message']); ?>
   </div>
   <div class="form_field">
-    <textarea name="messaggio"><?php
-if($quote){
-	$query="SELECT messaggio, autore FROM messaggioaraldo WHERE id_messaggio=".$quote;
-	$result=gdrcd_query($query);
-	echo gdrcd_filter('out',"[quote=".$result['autore']."]".$result['messaggio']."[/quote]");
-}
-?></textarea>
+    <textarea name="messaggio">
+<?php
+		if($quote)
+		{
+			$query="SELECT messaggio, autore FROM messaggioaraldo WHERE id_messaggio=".$quote;
+			$result=gdrcd_query($query);
+			echo gdrcd_filter('out',"[quote=".$result['autore']."]".$result['messaggio']."[/quote]");
+		}
+?>
+	</textarea>
   </div>
   <div class="form_info">
      <?php echo gdrcd_filter('out',$MESSAGE['interface']['help']['bbcode']); ?>
@@ -316,34 +348,39 @@ if($quote){
 	   </a>
     </div>
 <?php
-  }
-  else{
-      echo '<div class="warning">', $MESSAGE['interface']['administration']['forums']['not_exists'], '</div>';
-  }
+	}
+  	else
+  	{
+      	echo '<div class="warning">', $MESSAGE['interface']['administration']['forums']['not_exists'], '</div>';
+  	}
 }
 
 /*Visualizzazione topic*/
 if($_REQUEST['op']=='read')
 {
-  $result = gdrcd_query("SELECT messaggioaraldo.id_messaggio, messaggioaraldo.id_messaggio_padre, messaggioaraldo.titolo, messaggioaraldo.messaggio, messaggioaraldo.autore, messaggioaraldo.data_messaggio, messaggioaraldo.chiuso, araldo.tipo, araldo.nome, araldo.proprietari, personaggio.url_img, araldo.id_araldo FROM messaggioaraldo LEFT JOIN araldo ON messaggioaraldo.id_araldo = araldo.id_araldo LEFT JOIN personaggio ON messaggioaraldo.autore = personaggio.nome WHERE (messaggioaraldo.id_messaggio_padre = ".gdrcd_filter('num',$_REQUEST['what'])." AND messaggioaraldo.id_messaggio_padre != -1) OR messaggioaraldo.id_messaggio = ".gdrcd_filter('num',$_REQUEST['what'])." ORDER BY id_messaggio_padre, data_messaggio", 'result');
-  $row = gdrcd_query($result, 'fetch');
-  if(!empty($row)){
-    $araldo=(int)$row['id_araldo'];
-    $chiuso = $row['chiuso'];
+	$result = gdrcd_query("SELECT messaggioaraldo.id_messaggio, messaggioaraldo.id_messaggio_padre, messaggioaraldo.titolo, messaggioaraldo.messaggio, messaggioaraldo.autore, messaggioaraldo.data_messaggio, messaggioaraldo.chiuso, araldo.tipo, araldo.nome, araldo.proprietari, personaggio.url_img, araldo.id_araldo FROM messaggioaraldo LEFT JOIN araldo ON messaggioaraldo.id_araldo = araldo.id_araldo LEFT JOIN personaggio ON messaggioaraldo.autore = personaggio.nome WHERE (messaggioaraldo.id_messaggio_padre = ".gdrcd_filter('num',$_REQUEST['what'])." AND messaggioaraldo.id_messaggio_padre != -1) OR messaggioaraldo.id_messaggio = ".gdrcd_filter('num',$_REQUEST['what'])." ORDER BY id_messaggio_padre, data_messaggio", 'result');
+  	$row = gdrcd_query($result, 'fetch');
+  	if(!empty($row))
+  	{
+    	$araldo=(int)$row['id_araldo'];
+    	$chiuso = $row['chiuso'];
 
 /*Restrizione di accesso i forum admin e master*/
-	  if ((($row['tipo']==SOLORAZZA)&&($_SESSION['id_razza']!=$row['proprietari'])&&($_SESSION['permessi']<MODERATOR))||
+	  	if ((($row['tipo']==SOLORAZZA)&&($_SESSION['id_razza']!=$row['proprietari'])&&($_SESSION['permessi']<MODERATOR))||
     	(($row['tipo']==SOLOGILDA)&&(strpos($_SESSION['gilda'],'*'.$row['proprietari'].'*')===FALSE)&&($_SESSION['permessi']<MODERATOR))||
 		(($row['tipo']>=SOLOMASTERS)&&($_SESSION['permessi']<GAMEMASTER))||
-		(($row['tipo']>=SOLOMODERATORS)&&($_SESSION['permessi']<MODERATOR))){
-   	  echo '<div class="error">'.gdrcd_filter('out',$MESSAGE['error']['not_allowed']).'</div>';
-	  }
-	  else{
-      //Inserimento il record al pg come thread letto
-      $check_letto = gdrcd_query("SELECT * FROM araldo_letto WHERE nome = '".$_SESSION['login']."' AND thread_id = ".gdrcd_filter('num',$_REQUEST['what']));
-      if ($check_letto['id'] <= 0){
-        gdrcd_query("INSERT INTO araldo_letto (nome, araldo_id, thread_id) VALUES ('".$_SESSION['login']."', ".gdrcd_filter('num',$_REQUEST['where']).", ".gdrcd_filter('num',$_REQUEST['what']).")");
-      }
+		(($row['tipo']>=SOLOMODERATORS)&&($_SESSION['permessi']<MODERATOR)))
+		{
+   	  		echo '<div class="error">'.gdrcd_filter('out',$MESSAGE['error']['not_allowed']).'</div>';
+	  	}
+	  	else
+	  	{
+	      	//Inserimento il record al pg come thread letto
+	      	$check_letto = gdrcd_query("SELECT * FROM araldo_letto WHERE nome = '".$_SESSION['login']."' AND thread_id = ".gdrcd_filter('num',$_REQUEST['what']));
+	      	if ($check_letto['id'] <= 0)
+	      	{
+        		gdrcd_query("INSERT INTO araldo_letto (nome, araldo_id, thread_id) VALUES ('".$_SESSION['login']."', ".gdrcd_filter('num',$_REQUEST['where']).", ".gdrcd_filter('num',$_REQUEST['what']).")");
+      		}
 ?>
 <div class="panels_box">
     <table>
@@ -380,40 +417,40 @@ if($_REQUEST['op']=='read')
 				/** * Se è disponibile il plugin bbd per il trattamento del bbcode usiamo quella
 					* @author Blancks
 				*/
-		if ($PARAMETERS['settings']['forum_bbcode']['type'] == 'bbd')
-		{
-			echo bbdecoder(gdrcd_filter('out',$row['messaggio']), true);
-		}
-		else
-		{
-			echo gdrcd_bbcoder(gdrcd_filter('out',$row['messaggio']));
-		}
+			if ($PARAMETERS['settings']['forum_bbcode']['type'] == 'bbd')
+			{
+				echo bbdecoder(gdrcd_filter('out',$row['messaggio']), true);
+			}
+			else
+			{
+				echo gdrcd_bbcoder(gdrcd_filter('out',$row['messaggio']));
+			}
 ?>
 		  </div>
 		  <div class="forum_post_modify">
 <?php
-		if ($chiuso == 0 || $_SESSION['permessi']>=MODERATOR)
-		{
+			if ($chiuso == 0 || $_SESSION['permessi']>=MODERATOR)
+			{
 ?>
 
 		  <a href="main.php?page=forum&op=composer&what=<?php echo gdrcd_filter('num',$_REQUEST['what']); ?>&where=<?php echo gdrcd_filter('num',$_REQUEST['where']); ?>&quote=<?php echo $row['id_messaggio'];?>">[<?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['link']['quote']); ?>]</a>
 <?php
-		}
+			}
 
-		if(($_SESSION['login']==$row['autore'] && $chiuso == 0) || ($_SESSION['permessi']>=MODERATOR))
-		{
+			if(($_SESSION['login']==$row['autore'] && $chiuso == 0) || ($_SESSION['permessi']>=MODERATOR))
+			{
 ?>
 		     <a href="main.php?page=forum&op=modifica&what=<?php echo $row['id_messaggio'];?>">[<?php echo $MESSAGE['interface']['forums']['link']['edit']; ?>]</a>
 			 <a href="main.php?page=forum&op=delete_conf&id_record=<?php echo $row['id_messaggio'];?>&padre=<?php echo $row['id_messaggio_padre'];?>">[<?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['link']['delete']); ?>]</a>
 <?php
-		}
+			}
 ?>
 		  </div>
 	</td>
 	</tr>
 <?php
-		while($row = gdrcd_query($result, 'fetch'))
-		{
+			while($row = gdrcd_query($result, 'fetch'))
+			{
 ?>
 	<tr>
 	<td class="forum_other_post_author">
@@ -436,48 +473,48 @@ if($_REQUEST['op']=='read')
 				/** * Se è disponibile il plugin bbd per il trattamento del bbcode usiamo quella
 					* @author Blancks
 				*/
-			if ($PARAMETERS['settings']['forum_bbcode']['type'] == 'bbd')
-			{
-				echo bbdecoder(gdrcd_filter('out',$row['messaggio']), true);
-
-			}
-			else
-			{
-				echo gdrcd_bbcoder(gdrcd_filter('out',$row['messaggio']));
-			}
+				if ($PARAMETERS['settings']['forum_bbcode']['type'] == 'bbd')
+				{
+					echo bbdecoder(gdrcd_filter('out',$row['messaggio']), true);
+	
+				}
+				else
+				{
+					echo gdrcd_bbcoder(gdrcd_filter('out',$row['messaggio']));
+				}
 
 			?>
 		  </div>
 		  <div class="forum_post_modify">
 <?php
-			if ($chiuso == 0 || $_SESSION['permessi']>=MODERATOR)
-			{
+				if ($chiuso == 0 || $_SESSION['permessi']>=MODERATOR)
+				{
 ?>
       <a href="main.php?page=forum&op=composer&what=<?php echo gdrcd_filter('num',$_REQUEST['what']); ?>&where=<?php echo gdrcd_filter('num',$_REQUEST['where']); ?>&quote=<?php echo $row['id_messaggio'];?>">[<?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['link']['quote']); ?>]</a>
 <?php
-			}
-	  		if(($_SESSION['login']==$row['autore'] && $row['chiuso'] == 0) || ($_SESSION['permessi']>=MODERATOR))
-			{
+				}
+		  		if(($_SESSION['login']==$row['autore'] && $row['chiuso'] == 0) || ($_SESSION['permessi']>=MODERATOR))
+				{
 ?>
 		     <a href="main.php?page=forum&op=modifica&what=<?php echo $row['id_messaggio'];?>">[<?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['link']['edit']); ?>]</a>
 			 <a href="main.php?page=forum&op=delete_conf&id_record=<?php echo $row['id_messaggio'];?>&padre=<?php echo $row['id_messaggio_padre'];?>">[<?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['link']['delete']); ?>]</a>
 <?php
-			}
+				}
 ?>
 		  </div>
     </td>
 	</tr>
-	<?php
-		}//while
-		gdrcd_query($result, 'free');
-	?>
+<?php
+			}//while
+			gdrcd_query($result, 'free');
+?>
 	</table>
 </div>
 <?php
-		if ($chiuso == 0 || $_SESSION['permessi']>=MODERATOR)
-		{
-			$padre=gdrcd_filter('num',$_REQUEST['what']);
-			$araldo=gdrcd_filter('num',$_REQUEST['where']);
+			if ($chiuso == 0 || $_SESSION['permessi']>=MODERATOR)
+			{
+				$padre=gdrcd_filter('num',$_REQUEST['what']);
+				$araldo=gdrcd_filter('num',$_REQUEST['where']);
 ?>
 <div class="panels_box">
 <div class="form_gioco">
@@ -511,60 +548,64 @@ if($_REQUEST['op']=='read')
 </div>
 
 <?php
-		  } //Fine risposta rapida
-	}//else
+		  	} //Fine risposta rapida
+		}//else
 ?>
     <!-- link a fondo pagina -->
 	<div class="link_back">
 
 <?php
-
-	if ($chiuso == 0 || $_SESSION['permessi']>=MODERATOR)
-	{
-
+		if ($chiuso == 0 || $_SESSION['permessi']>=MODERATOR)
+		{
 ?>
        <a href="main.php?page=forum&op=composer&what=<?php echo gdrcd_filter('num',$_REQUEST['what']); ?>&where=<?php echo gdrcd_filter('num',$_REQUEST['where']); ?>">
 		   <?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['link']['new_post']); ?>
 		</a><br />
 <?php
 
-	}
+		}
 
-}//!empty
-else{
-  echo '<div class="error">'.gdrcd_filter('out',$MESSAGE['interface']['forums']['warning']['topic_not_exists']).'</div>';
-}
+	}//!empty
+	else
+	{
+  		echo '<div class="error">'.gdrcd_filter('out',$MESSAGE['interface']['forums']['warning']['topic_not_exists']).'</div>';
+	}
 ?>
 	    <a href="main.php?page=forum&op=visit&what=<?php echo $araldo; ?>">
 		   <?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['link']['forum']); ?>
 		</a><br />
 	</div>
-
 <?php
 }
 ?>
 
-<?php /*Visualizzazione di base (Elenco forum)*/
-if(isset($_REQUEST['op'])===FALSE){
-
+<?php 
+/*Visualizzazione di base (Elenco forum)*/
+if(isset($_REQUEST['op'])===FALSE)
+{
 /*Carico l'elenco dei forum*/
-$result = gdrcd_query("SELECT id_araldo, nome, tipo, proprietari FROM araldo ORDER BY tipo, nome", 'result');
+	$result = gdrcd_query("SELECT id_araldo, nome, tipo, proprietari FROM araldo ORDER BY tipo, nome", 'result');
 
-$ultimotipo=-1;?>
+	$ultimotipo=-1;
+?>
 <!-- Elenco forum -->
 <div class="elenco_esteso">
 <div class="elenco_record_gioco">
 <table>
-<?php while($row = gdrcd_query($result, 'fetch'))
-{
-  if($row['tipo']!=$ultimotipo){/*Sono ordinati per tipo, se cambia stampo il nuovo tipo come capoverso*/
-	$ultimotipo=$row['tipo'];
+<?php 
+	while($row = gdrcd_query($result, 'fetch'))
+	{
+  		if($row['tipo']!=$ultimotipo)
+  		{
+  			/*Sono ordinati per tipo, se cambia stampo il nuovo tipo come capoverso*/
+			$ultimotipo=$row['tipo'];
 	
-	if (($row['tipo']!=SOLORAZZA || $_SESSION['id_razza']==$row['proprietari'] || $_SESSION['permessi']>=MODERATOR) &&
-    ($row['tipo']!=SOLOGILDA || strpos($_SESSION['gilda'],'*'.$row['proprietari'].'*')!==FALSE || $_SESSION['permessi']>=MODERATOR) &&
-	($row['tipo']<SOLOMASTERS || $_SESSION['permessi']>=GAMEMASTER) &&
-	($row['tipo']<SOLOMODERATORS || $_SESSION['permessi']>=MODERATOR)) {
-		?>
+			if (($row['tipo']!=SOLORAZZA || $_SESSION['id_razza']==$row['proprietari'] || $_SESSION['permessi']>=MODERATOR) &&
+		    ($row['tipo']!=SOLOGILDA || strpos($_SESSION['gilda'],'*'.$row['proprietari'].'*')!==FALSE || $_SESSION['permessi']>=MODERATOR) &&
+			($row['tipo']<SOLOMASTERS || $_SESSION['permessi']>=GAMEMASTER) &&
+			($row['tipo']<SOLOMODERATORS || $_SESSION['permessi']>=MODERATOR)) 
+			{
+?>
 		<tr><!-- Intestazione tabella -->
 			<td colspan="2">
 				<div class="capitolo_elenco">
@@ -572,64 +613,69 @@ $ultimotipo=-1;?>
 				</div>
 			</td>
 		</tr>
-	<?php
-	} //if permessi
-  } //if
+<?php
+			} //if permessi
+  		} //if
 
-  $new_msg = gdrcd_query("SELECT COUNT(MA.id_messaggio) AS num FROM messaggioaraldo AS MA LEFT JOIN araldo_letto AS AL ON MA.id_messaggio=AL.thread_id AND AL.nome='".$_SESSION['login']."' WHERE MA.id_araldo = ".$row['id_araldo']." AND MA.id_messaggio_padre = -1 AND AL.id IS NULL");
-  ?>
+  		$new_msg = gdrcd_query("SELECT COUNT(MA.id_messaggio) AS num FROM messaggioaraldo AS MA LEFT JOIN araldo_letto AS AL ON MA.id_messaggio=AL.thread_id AND AL.nome='".$_SESSION['login']."' WHERE MA.id_araldo = ".$row['id_araldo']." AND MA.id_messaggio_padre = -1 AND AL.id IS NULL");
+?>
   <tr><!-- Forum della categoria -->
     <td class="forum_main_post_author">
 	   <div class="forum_date_big">
-	      <?php
-					if($new_msg['num']>0)
-					{
-						if ($new_msg['num'] == 1)
-						{
-								echo '1 ' . $MESSAGE['interface']['forums']['topic']['new_posts_forum'];
-						}
-						else
-						{
-								echo $new_msg['num']. ' ' . $MESSAGE['interface']['forums']['topic']['new_posts_forum'];
-						}
-					}
-			?>
+<?php
+		if($new_msg['num']>0)
+		{
+			if ($new_msg['num'] == 1)
+			{
+				echo '1 ' . $MESSAGE['interface']['forums']['topic']['new_posts_forum'];
+			}
+			else
+			{
+				echo $new_msg['num']. ' ' . $MESSAGE['interface']['forums']['topic']['new_posts_forum'];
+			}
+		}
+?>
 	   </div>
 	</td>
 
 	<td  class="casella_elemento"><div class="elementi_elenco">
 
-	 <?php if (($row['tipo']<=PERTUTTI)||
-	 (($row['tipo']==SOLORAZZA)&&($_SESSION['id_razza']==$row['proprietari']))||
-     (($row['tipo']==SOLOGILDA)&&(strpos($_SESSION['gilda'],'*'.$row['proprietari'].'*')!=FALSE))||
-	 (($row['tipo']==SOLOMASTERS)&&($_SESSION['permessi']>=GAMEMASTER))||
-	 ($_SESSION['permessi']>=MODERATOR)){ /*Restrizione di visualizzazione solo master e admin*/ ?>
+<?php 
+		if (($row['tipo']<=PERTUTTI)||
+		 (($row['tipo']==SOLORAZZA)&&($_SESSION['id_razza']==$row['proprietari']))||
+	     (($row['tipo']==SOLOGILDA)&&(strpos($_SESSION['gilda'],'*'.$row['proprietari'].'*')!=FALSE))||
+		 (($row['tipo']==SOLOMASTERS)&&($_SESSION['permessi']>=GAMEMASTER))||
+		 ($_SESSION['permessi']>=MODERATOR))
+		{ 
+			/*Restrizione di visualizzazione solo master e admin*/ 
+?>
 
 	 <a href="main.php?page=forum&op=visit&what=<?php echo gdrcd_filter('out',$row['id_araldo']); ?>&name=<?php echo gdrcd_filter('out',$row['nome']); ?>">
 
-	 <?php } ?>
+<?php 
+		}
+?>
 
 	 <?php echo gdrcd_filter('out',$row['nome']); ?>
 
-     <?php if (($row['tipo']<=PERTUTTI)||
-	 (($row['tipo']==SOLORAZZA)&&($_SESSION['id_razza']==$row['proprietari']))||
-     (($row['tipo']==SOLOGILDA)&&(strpos($_SESSION['gilda'],'*'.$row['proprietari'].'*')!=FALSE))||
-	 (($row['tipo']==SOLOMASTERS)&&($_SESSION['permessi']>=GAMEMASTER))||
-	 ($_SESSION['permessi']>=MODERATOR)){ /*Restrizione di visualizzazione solo master e admin*/ ?>
+<?php 
+		if (($row['tipo']<=PERTUTTI)||
+		(($row['tipo']==SOLORAZZA)&&($_SESSION['id_razza']==$row['proprietari']))||
+	    (($row['tipo']==SOLOGILDA)&&(strpos($_SESSION['gilda'],'*'.$row['proprietari'].'*')!=FALSE))||
+		(($row['tipo']==SOLOMASTERS)&&($_SESSION['permessi']>=GAMEMASTER))||
+	 	($_SESSION['permessi']>=MODERATOR))
+	 	{ /*Restrizione di visualizzazione solo master e admin*/ 
+?>
 	 </a>
-	 <?php }//if ?>
-
-
+<?php 
+	 	}//if 
+?>
 	</div></td>
   </tr>
-
 <?php
-	}
+	}//while
 
-}//while
-
-		gdrcd_query($result, 'free');
-
+	gdrcd_query($result, 'free');
 ?>
 </table>
 <?php //Pulsante segna tutto come letto ?>
@@ -651,47 +697,72 @@ $ultimotipo=-1;?>
 
 </div>
 </div>
-<?php } ?>
+<?php 
+} //Fine false
+?>
 
 <?php /*Visualizzazione dei topic */
 if(gdrcd_filter('get',$_REQUEST['op'])=='visit')
 {
-//Permessi
-$row=gdrcd_query("SELECT tipo, proprietari FROM araldo WHERE id_araldo = ".gdrcd_filter('num',$_REQUEST['what'])."");
+	//Permessi
+	$row=gdrcd_query("SELECT tipo, proprietari FROM araldo WHERE id_araldo = ".gdrcd_filter('num',$_REQUEST['what'])."");
 
-if ((($row['tipo']==SOLORAZZA)&&($_SESSION['id_razza']!=$row['proprietari'])&&($_SESSION['permessi']<MODERATOR))||
+	if ((($row['tipo']==SOLORAZZA)&&($_SESSION['id_razza']!=$row['proprietari'])&&($_SESSION['permessi']<MODERATOR))||
     (($row['tipo']==SOLOGILDA)&&(strpos($_SESSION['gilda'],'*'.$row['proprietari'].'*')===FALSE)&&($_SESSION['permessi']<MODERATOR))||
 	(($row['tipo']>=SOLOMASTERS)&&($_SESSION['permessi']<GAMEMASTER))||
-	(($row['tipo']>=SOLOMODERATORS)&&($_SESSION['permessi']<MODERATOR))){ /*Restrizione di visualizzazione solo master e admin*/
-    echo '<div class="error">'.gdrcd_filter('out',$MESSAGE['error']['not_allowed']).'</div>'; ?>
+	(($row['tipo']>=SOLOMODERATORS)&&($_SESSION['permessi']<MODERATOR)))
+	{ 
+		/*Restrizione di visualizzazione solo master e admin*/
+    	echo '<div class="error">'.gdrcd_filter('out',$MESSAGE['error']['not_allowed']).'</div>'; 
+  ?>
 <div class="link_back">
         <a href="main.php?page=forum">
 		   <?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['link']['back']); ?>
 		</a>
 </div>
-<?php } else {
-//Determinazione pagina (paginazione)
-$pagebegin=(int)$_REQUEST['offset']*$PARAMETERS['settings']['posts_per_page'];
-$pageend=$pagebegin+$PARAMETERS['settings']['posts_per_page'];
-
-//Conteggio record totali
-$record_globale = gdrcd_query("SELECT COUNT(*) FROM messaggioaraldo WHERE id_messaggio_padre = -1 AND id_araldo = ".gdrcd_filter('num',$_REQUEST['what'])."");
-$totaleresults = $record_globale['COUNT(*)'];
-
-
-/*Carico l'elenco dei forum*/
-$result = gdrcd_query("SELECT MA.id_messaggio, MA.titolo, MA.autore, MA.data_messaggio, MA.importante, MA.chiuso, AL.id AS new_msg FROM messaggioaraldo AS MA LEFT JOIN araldo_letto AS AL ON MA.id_messaggio=AL.thread_id AND AL.nome='".$_SESSION['login']."' WHERE MA.id_messaggio_padre = -1 AND MA.id_araldo = ".gdrcd_filter('num',$_REQUEST['what'])." ORDER BY MA.importante DESC, MA.data_messaggio DESC LIMIT ".$pagebegin.", ".$PARAMETERS['settings']['posts_per_page']."", 'result');
-
-if (gdrcd_query($result, 'num_rows') == 0){?>
+<?php 
+	} 
+	else 
+	{
+		//Determinazione pagina (paginazione)
+		$pagebegin=(int)$_REQUEST['offset']*$PARAMETERS['settings']['posts_per_page'];
+		$pageend=$pagebegin+$PARAMETERS['settings']['posts_per_page'];
+		
+		//Conteggio record totali
+		$record_globale = gdrcd_query("SELECT COUNT(*) FROM messaggioaraldo WHERE id_messaggio_padre = -1 AND id_araldo = ".gdrcd_filter('num',$_REQUEST['what'])."");
+		$totaleresults = $record_globale['COUNT(*)'];
+		
+		
+		/*Carico l'elenco dei forum*/
+		$result = gdrcd_query("SELECT MA.id_messaggio, MA.titolo, MA.autore, MA.data_messaggio, MA.importante, MA.chiuso, AL.id AS new_msg FROM messaggioaraldo AS MA LEFT JOIN araldo_letto AS AL ON MA.id_messaggio=AL.thread_id AND AL.nome='".$_SESSION['login']."' WHERE MA.id_messaggio_padre = -1 AND MA.id_araldo = ".gdrcd_filter('num',$_REQUEST['what'])." ORDER BY MA.importante DESC, MA.data_messaggio DESC LIMIT ".$pagebegin.", ".$PARAMETERS['settings']['posts_per_page']."", 'result');
+		
+		if (gdrcd_query($result, 'num_rows') == 0)
+		{
+?>
 <div class="warning"><?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['warning']['no_topic']); ?></div>
-<?php } else { ?>
+<?php 
+		} 
+		else 
+		{ 
+?>
 <!-- Elenco forum -->
 <div class="elenco_esteso">
 <div class="elenco_record_gioco">
 <table>
   <tr><!-- Intestazione tabella -->
-    <?php if ($_SESSION['permessi']>=MODERATOR){ ?><td colspan="4"><?php } else {?>
-	<td colspan="3"><?php } ?>
+<?php 		if ($_SESSION['permessi']>=MODERATOR)
+			{ 
+?>
+	<td colspan="4">
+<?php 
+			} 
+			else 
+			{
+?>
+	<td colspan="3">
+<?php 	
+			} 
+?>
 	<div class="capitolo_elenco">
       <?php echo gdrcd_filter('get',$_REQUEST['nome']); ?>
     </div></td>
@@ -706,18 +777,23 @@ if (gdrcd_query($result, 'num_rows') == 0){?>
 	<td class="casella_titolo"><div class="capitolo_elenco">
       <?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['topic']['posts']); ?>
     </div></td>
-	<?php if ($_SESSION['permessi']>=MODERATOR){ ?>
+ <?php 
+			if ($_SESSION['permessi']>=MODERATOR)
+			{
+?>
 	<td class="casella_titolo"><div class="capitolo_elenco">
       <?php echo '&nbsp;'; ?>
     </div></td>
-	<?php } ?>
+<?php 
+			} 
+?>
   </tr>
-  <?php while($row=gdrcd_query($result, 'fetch'))
-  {
-		$readinfo=gdrcd_query("SELECT MAX(data_messaggio) AS latest, COUNT(*) AS replies FROM messaggioaraldo WHERE id_messaggio_padre = ".gdrcd_filter('get',$row['id_messaggio'])."");
-		$lastupdate=$readinfo['latest'];
-    $postsnumber=$readinfo['replies'];
-
+<?php 
+			while($row=gdrcd_query($result, 'fetch'))
+  			{
+				$readinfo=gdrcd_query("SELECT MAX(data_messaggio) AS latest, COUNT(*) AS replies FROM messaggioaraldo WHERE id_messaggio_padre = ".gdrcd_filter('get',$row['id_messaggio'])."");
+				$lastupdate=$readinfo['latest'];
+    			$postsnumber=$readinfo['replies'];
 ?>
   <tr><!-- Topic -->
     <td  class="casella_elemento"><div class="elementi_elenco"><!-- Titolo -->
@@ -728,30 +804,28 @@ if (gdrcd_query($result, 'num_rows') == 0){?>
 /**	* Topic importante
 	* @author Blancks <s.rotondo90@gmail.com>
 */
-	   echo ($row['importante'])? $MESSAGE['interface']['administration']['ops']['important'].': ': '';
+	   			echo ($row['importante'])? $MESSAGE['interface']['administration']['ops']['important'].': ': '';
 
 /**	* Fine
 */
 ?>
 	   <?php echo gdrcd_filter('out',$row['titolo']); ?>
 
-	   <?php
+<?php
 
-			if($row['new_msg'] == 0)
-			{
-				echo '('.$MESSAGE['interface']['forums']['topic']['new_posts']['plur'].')';
-			}
+				if($row['new_msg'] == 0)
+				{
+					echo '('.$MESSAGE['interface']['forums']['topic']['new_posts']['plur'].')';
+				}
 
-	   ?>
-
+?>
 	   </div></a>
-
 <?php
 
 /**	* Topic Chiuso
 	* @author Blancks <s.rotondo90@gmail.com>
 */
-	   echo ($row['chiuso'])? '<div class="forum_column">'.$MESSAGE['interface']['forums']['topic']['title'].' '.$MESSAGE['interface']['administration']['ops']['close'].'</div>': '';
+	   			echo ($row['chiuso'])? '<div class="forum_column">'.$MESSAGE['interface']['forums']['topic']['title'].' '.$MESSAGE['interface']['administration']['ops']['close'].'</div>': '';
 
 /**	* Fine
 */
@@ -771,24 +845,22 @@ if (gdrcd_query($result, 'num_rows') == 0){?>
 	   </div>
 	</td>
 <?php
-if ($_SESSION['permessi']>=MODERATOR){
-
-/**	* Topic importanti/chiusi
-	* @author Blancks <s.rotondo90@gmail.com>
-*/
-
-$set_imp = ($row['importante'])? '0' : '1';
-$set_cls = ($row['chiuso'])? '0' : '1';
-
-$img_imp = ($row['importante'])? 'importante.png' : 'non_importante.png';
-$img_cls = ($row['chiuso'])? 'topic_chiuso.png' : 'topic_aperto.png' ;
-
-$label_imp = ($row['importante'])? 'important' : 'not_important';
-$label_cls = ($row['chiuso'])? 'close' : 'open';
-
-/**	* Fine
-*/
-
+				if ($_SESSION['permessi']>=MODERATOR)
+				{
+					/**	* Topic importanti/chiusi
+						* @author Blancks <s.rotondo90@gmail.com>
+					*/
+					$set_imp = ($row['importante'])? '0' : '1';
+					$set_cls = ($row['chiuso'])? '0' : '1';
+					
+					$img_imp = ($row['importante'])? 'importante.png' : 'non_importante.png';
+					$img_cls = ($row['chiuso'])? 'topic_chiuso.png' : 'topic_aperto.png' ;
+					
+					$label_imp = ($row['importante'])? 'important' : 'not_important';
+					$label_cls = ($row['chiuso'])? 'close' : 'open';
+					
+					/**	* Fine
+					*/
 ?>
     <td  class="casella_titolo">
 	<div class="controlli_elenco"><!-- controlli -->
@@ -828,14 +900,6 @@ $label_cls = ($row['chiuso'])? 'close' : 'open';
 			       </form>
 			    </div>
 
-<!--
-
-
-/**	* Fine
-*/
-
--->
-
 				<!-- Elimina -->
 			    <div class="controllo_elenco" >
 				   <form action="main.php?page=forum" method="post">
@@ -850,26 +914,42 @@ $label_cls = ($row['chiuso'])? 'close' : 'open';
 			    </div>
     </div>
 	</td>
-	<?php } ?>
+<?php 
+				} 
+?>
   </tr>
-  <?php }//while
+ <?php 
+  			}//while
 
 			gdrcd_query($result, 'free');
-   ?>
+?>
 </table>
 </div>
 </div>
-<?php }//else ?>
+<?php 
+		}//else 
+?>
 <!-- Paginatore elenco -->
      <div class="pager">
-       <?php if($totaleresults>$PARAMETERS['settings']['posts_per_page']){
-	            echo gdrcd_filter('out',$MESSAGE['interface']['pager']['pages_name']);
-		        for($i=0;$i<=floor($totaleresults/$PARAMETERS['settings']['posts_per_page']);$i++){
-				   if ($i!=$_REQUEST['offset']){?>
+<?php 
+		if($totaleresults>$PARAMETERS['settings']['posts_per_page'])
+		{
+	    	echo gdrcd_filter('out',$MESSAGE['interface']['pager']['pages_name']);
+		    for($i=0;$i<=floor($totaleresults/$PARAMETERS['settings']['posts_per_page']);$i++)
+		    {
+				if ($i!=$_REQUEST['offset'])
+				{
+?>
                    <a href="main.php?page=forum&op=visit&what=<?php echo gdrcd_filter('num',$_REQUEST['what']) ?>&offset=<?php echo $i; ?>"><?php echo $i+1; ?></a>
-				   <?php } else { echo ' '.($i+1).' '; }
-                } //for
-             }//if ?>
+<?php 
+				} 
+				else 
+				{ 
+					echo ' '.($i+1).' '; 
+				}
+            } //for
+        }//if 
+?>
      </div>
 
      <!-- link crea nuovo -->
@@ -881,8 +961,10 @@ $label_cls = ($row['chiuso'])? 'close' : 'open';
 		   <?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['link']['back']); ?>
 		</a>
      </div>
-<?php } //else ?>
-<?php } ?>
+<?php 
+	} //else 
+} 
+?>
 </div><!-- Box principale -->
 
 </div><!-- Pagina -->
