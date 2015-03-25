@@ -1,6 +1,6 @@
 <?php
         /**
-         * CONFIGURAZIONE DI GDRCD 5.2 "Stable"
+         * CONFIGURAZIONE DI GDRCD 5.4 "Optimus"
          * @author MrFaber
          * @author Blancks
          * @author Breaker
