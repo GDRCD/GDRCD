@@ -38,7 +38,7 @@ function toggle_fade(id, opacity, op)
 
 function set_fade(id,opacity)
 {	
-	var obj = $(id);
+	var obj = gdrcd_selector(id);
 	
 	obj.style.filter		= "alpha(opacity:"+opacity+")";
 	obj.style.KHTMLOpacity	= opacity/100;
