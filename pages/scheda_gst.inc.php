@@ -34,7 +34,7 @@ if (isset($_REQUEST['pg'])===FALSE){
 	   <?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['modify_form']['admin']['email']); ?>
 	</div>
 	<div class='form_field'>
-	   <input type="text" name="modifica_email" value="<?php echo $record['email']; ?>" />
+	   <input type="text" name="modifica_email" value="<?php echo gdrcd_filter('out',$record['email']); ?>" />
 	</div>
 
 
@@ -69,14 +69,14 @@ if (isset($_REQUEST['pg'])===FALSE){
 	   <?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['modify_form']['admin']['url_img']); ?>
 	</div>
 	<div class='form_field'>
-	   <input type="text" name="modifica_url_img" value="<?php echo $record['url_img']; ?>" class="form_input" />
+	   <input type="text" name="modifica_url_img" value="<?php echo gdrcd_filter('out',$record['url_img']); ?>" class="form_input" />
 	</div>
 
 	<div class='form_label'>
 	   <?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['modify_form']['admin']['background']); ?>
 	</div>
 	<div class='form_field'>
-	   <textarea type="textbox" name="modifica_background" class="form_textarea"><?php echo $record['descrizione']; ?></textarea>
+	   <textarea type="textbox" name="modifica_background" class="form_textarea"><?php echo gdrcd_filter('out',$record['descrizione']); ?></textarea>
 	</div>
 	<div class="form_info">
        <?php echo gdrcd_filter('out',$MESSAGE['interface']['help']['bbcode']); ?>
@@ -86,7 +86,7 @@ if (isset($_REQUEST['pg'])===FALSE){
 	   <?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['modify_form']['admin']['relationships']); ?>
 	</div>
 	<div class='form_field'>
-	   <textarea type="textbox" name="modifica_affetti" class="form_textarea"><?php echo $record['affetti']; ?></textarea>
+	   <textarea type="textbox" name="modifica_affetti" class="form_textarea"><?php echo gdrcd_filter('out',$record['affetti']); ?></textarea>
 	</div>
 	<div class="form_info">
        <?php echo gdrcd_filter('out',$MESSAGE['interface']['help']['bbcode']); ?>
@@ -96,7 +96,7 @@ if (isset($_REQUEST['pg'])===FALSE){
 	   <?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['modify_form']['admin']['url_media']); ?>
 	</div>
 	<div class='form_field'>
-	   <input type="text" name="modifica_url_media" value="<?php echo $record['url_media']; ?>" class="form_input" />
+	   <input type="text" name="modifica_url_media" value="<?php echo gdrcd_filter('out',$record['url_media']); ?>" class="form_input" />
 	</div>
 
 	<div class='form_label'>
