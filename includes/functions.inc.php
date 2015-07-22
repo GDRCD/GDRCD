@@ -473,20 +473,19 @@ function gdrcd_check_time($time)
  * Provvede al caricamento degli elementi nell'interfaccia
  * E' approssimata ma funziona, se qualcuno vuol far di meglio si faccia avanti
  * @param string $path: il percorso filesystem del file da includere
+ * @param array $params: un array di dati aggiuntivi passabili al modulo
  */
-function gdrcd_load_modules($path)
+function gdrcd_load_modules($path, $params=[])
 {
 	global $MESSAGE;
 	global $PARAMETERS;
 
-	if (file_exists($path))
-			include($path);
-	else
-			echo $MESSAGE['interface']['layout_not_found'];
+	if (file_exists($path)) {
+		include($path);
+	} else {
+		echo $MESSAGE['interface']['layout_not_found'];
+	}
 
-
-	unset($MESSAGE);
-	unset($PARAMETERS);
 }
 
 

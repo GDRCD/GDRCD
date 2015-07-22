@@ -87,7 +87,7 @@ width: 100%;
 				{
 					echo '<div class="'.$box['class'].'">';
 				
-					gdrcd_load_modules('pages/'.$box['page'].'.inc.php');
+					gdrcd_load_modules('pages/'.$box['page'].'.inc.php', $box);
 				
 					echo '</div>';
 				}
@@ -118,7 +118,7 @@ width: 100%;
 				{
 					echo '<div class="'.$box['class'].'">';
 					
-					gdrcd_load_modules('pages/'.$box['page'].'.inc.php');
+					gdrcd_load_modules('pages/'.$box['page'].'.inc.php', $box);
 				
 					echo '</div>';
 				
