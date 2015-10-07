@@ -439,7 +439,7 @@ if ((($_REQUEST['op']=='')||($_REQUEST['op']=='inviati'))&&(isset($_REQUEST['new
  	    <!-- Icona -->
 	  </td>
  	<td>
- 	   <div class="titoli_elenco">
+ 	   <span class="titoli_elenco">
  	       <?php if($_GET['op'] == 'inviati') {
 
 		echo "Destinatario"; } else { echo gdrcd_filter('out',$MESSAGE['interface']['messages']['sender']); } ?></span></td>
