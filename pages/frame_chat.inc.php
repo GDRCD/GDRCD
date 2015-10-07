@@ -33,7 +33,7 @@ if ($allowance === FALSE) {
 ?>
 
 <?php $_SESSION['last_message']=0; ?>
-<div style="height: 1; width: 1;">
+<div style="height: 1px; width: 1px;">
 <iframe src ="pages/chat.inc.php?ref=30&chat=yes" class="iframe_chat" id="chat_frame" name="chat_frame" frameborder="0" allowtransparency="true">
 </iframe>
 </div>
