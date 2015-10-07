@@ -29,7 +29,7 @@ header('Content-Type:text/html; charset=UTF-8');
 	}
 	
 	//Includo i parametri, la configurazione, la lingua e le funzioni 
-	require 'includes/required.php';
+	require ('includes/required.php');
    	
 	//Eseguo la connessione al database
 	$handleDBConnection = gdrcd_connect();
@@ -43,12 +43,10 @@ header('Content-Type:text/html; charset=UTF-8');
 	*/
 	if (isset($check_for_update) && $check_for_update)
 	{
-		include 'upgrade_details.php';
+		include ('upgrade_details.php');
 	}
     /** * Fine controllo di update */
-    
-    
-    
+
     /**	* Caricamento plugins.
 		* I plugins non sono vitali all'esecuzione dell'engine, per cui si includono col comando include.
 		* @author Blancks
@@ -57,40 +55,38 @@ header('Content-Type:text/html; charset=UTF-8');
 	/* Caricamento bbdecoder */
 	if (($PARAMETERS['mode']['user_bbcode']=='ON' && $PARAMETERS['settings']['user_bbcode']['type']=='bbd') || $PARAMETERS['settings']['forum_bbcode']['type'] == 'bbd')
 	{
-		include 'plugins/bbdecoder/bbdecoder.php';
+		include ('plugins/bbdecoder/bbdecoder.php');
 	}
     
 ?>
 <!--Force IE6 into quirks mode with this comment tag-->
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="it" lang="it">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<!-- IE9: mi stai ampiamente rompendo i maroni. -->
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<link rel="shortcut icon" href="favicon.png" type="image/png" />
-<link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme'];?>/homepage.css" type="text/css" />
-<link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme'];?>/main.css" type="text/css" />
-<link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme'];?>/chat.css" type="text/css" />
-<link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme'];?>/presenti.css" type="text/css" />
-<link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme'];?>/scheda.css" type="text/css" />
-<link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme'];?>/messaggi.css" type="text/css" />
-<link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme'];?>/forum.css" type="text/css" />
-<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!-- IE9: mi stai ampiamente rompendo i maroni. -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="shortcut icon" href="favicon.png" type="image/png" />
+    <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme'];?>/homepage.css" type="text/css" />
+    <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme'];?>/main.css" type="text/css" />
+    <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme'];?>/chat.css" type="text/css" />
+    <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme'];?>/presenti.css" type="text/css" />
+    <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme'];?>/scheda.css" type="text/css" />
+    <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme'];?>/messaggi.css" type="text/css" />
+    <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme'];?>/forum.css" type="text/css" />
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" />
 <?php
 	/** * Il controllo individua se l'header non è impiegato per il main */
 	if (!isset($check_for_update))
 	{
 ?>
-<link rel="stylesheet" href="layouts/<?php echo $PARAMETERS['themes']['kind_of_layout'], '_frames.php?css=true';?>" type="text/css" />
+    <link rel="stylesheet" href="layouts/<?php echo $PARAMETERS['themes']['kind_of_layout'], '_frames.php?css=true';?>" type="text/css" />
 <?php
-
 	}
 ?>
-<title><?php echo $PARAMETERS['info']['site_name']; ?></title>
+    <title>
+        <?php echo $PARAMETERS['info']['site_name']; ?>
+    </title>
 <?php 
 		/** * Refresh fix, crossbrowser
 			* @author Blancks
@@ -98,7 +94,7 @@ header('Content-Type:text/html; charset=UTF-8');
 		if (!empty($_GET['ref']))
 		{
 ?>
-<script type="text/javascript">setTimeout("self.location.href.reload();", <?php echo (int)$_GET['ref'] * 1000; ?>);</script>
+
 <?php 	} 	?>
 </head>
 <body class="main_body">
@@ -120,7 +116,8 @@ header('Content-Type:text/html; charset=UTF-8');
 				
 		exit();	
 	
-	}elseif ((isset($updating_queryes[0]) && !empty($updating_queryes[0]) && !$dont_check) && isset($check_for_update) && $check_for_update)
+	}
+    elseif ((isset($updating_queryes[0]) && !empty($updating_queryes[0]) && !$dont_check) && isset($check_for_update) && $check_for_update)
 	{
 		echo '<div class="error">', $MESSAGE['error']['db_not_updated'], '</div>';
 		
@@ -132,6 +129,4 @@ header('Content-Type:text/html; charset=UTF-8');
 		
 		exit();
 	}
-
-
 ?>
