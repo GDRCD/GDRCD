@@ -145,7 +145,7 @@ while ($record = gdrcd_query($result, 'fetch'))
 	  echo '<a href="main.php?page=messages_center&newmessage=yes&reply_dest='.$record['nome'].'" class="link_sheet">MP</a> ';
       
 	//Nome pg e link alla sua scheda
-	  echo ' <a href="main.php?page=scheda&pg='.$record['nome'].'" class="link_sheet">'.gdrcd_filter('out',$record['nome']);
+	  echo ' <a href="main.php?page=scheda&pg='.$record['nome'].'" class="link_sheet gender_'.$record['sesso'].'">'.gdrcd_filter('out',$record['nome']);
 	  if (empty($record['cognome'])===FALSE){echo ' '.gdrcd_filter('out',$record['cognome']);}
       echo '</a> ';
 
