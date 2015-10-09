@@ -131,14 +131,14 @@ if (isset($_REQUEST['pg'])===FALSE){
 	   <?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['modify_form']['last_name']); ?>
 	</div>
 	<div class='form_field'>
-	   <input type="text" name="modifica_cognome" value="<?php echo $record['cognome']; ?>" class="form_input" />
+	   <input type="text" name="modifica_cognome" value="<?php echo gdrcd_filter('out',$record['cognome']); ?>" class="form_input" />
 	</div>
 
 	<div class='form_label'>
 	   <?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['modify_form']['url_img']); ?>
 	</div>
 	<div class='form_field'>
-	   <input type="text" name="modifica_url_img" value="<?php echo $record['url_img']; ?>" class="form_input" />
+	   <input type="text" name="modifica_url_img" value="<?php echo gdrcd_filter('out',$record['url_img']); ?>" class="form_input" />
 	</div>
 <?php
 		/** * Avatar di chat
@@ -151,7 +151,7 @@ if (isset($_REQUEST['pg'])===FALSE){
 	   <?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['modify_form']['url_img_chat']); ?>
 	</div>
 	<div class='form_field'>
-	   <input type="text" name="modifica_url_img_chat" value="<?php echo $record['url_img_chat']; ?>" class="form_input" />
+	   <input type="text" name="modifica_url_img_chat" value="<?php echo gdrcd_filter('out',$record['url_img_chat']); ?>" class="form_input" />
 	</div>
 <?php
 		}
@@ -166,7 +166,7 @@ if (isset($_REQUEST['pg'])===FALSE){
 	   <?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['modify_form']['online_state']); ?>
 	</div>
 	<div class='form_field'>
-	   <input type="text" name="online_state" class="form_input" value="<?php echo $record['online_status']; ?>" maxlength="100" />
+	   <input type="text" name="online_state" class="form_input" value="<?php echo gdrcd_filter('out',$record['online_status']); ?>" maxlength="100" />
 	</div>
 <?php
 		}
@@ -176,7 +176,7 @@ if (isset($_REQUEST['pg'])===FALSE){
 	   <?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['modify_form']['background']); ?>
 	</div>
 	<div class='form_field'>
-	   <textarea type="textbox" name="modifica_background" class="form_textarea"><?php echo $record['descrizione']; ?></textarea>
+	   <textarea type="textbox" name="modifica_background" class="form_textarea"><?php echo gdrcd_filter('out',$record['descrizione']); ?></textarea>
 	</div>
 	<div class="form_info">
        <?php echo gdrcd_filter('out',$MESSAGE['interface']['help']['bbcode']); ?>
@@ -186,7 +186,7 @@ if (isset($_REQUEST['pg'])===FALSE){
 	   <?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['modify_form']['relationships']); ?>
 	</div>
 	<div class='form_field'>
-	   <textarea type="textbox" name="modifica_affetti" class="form_textarea"><?php echo $record['affetti']; ?></textarea>
+	   <textarea type="textbox" name="modifica_affetti" class="form_textarea"><?php echo gdrcd_filter('out',$record['affetti']); ?></textarea>
 	</div>
 	<div class="form_info">
        <?php echo gdrcd_filter('out',$MESSAGE['interface']['help']['bbcode']); ?>
@@ -207,7 +207,7 @@ if (isset($_REQUEST['pg'])===FALSE){
 	   <?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['modify_form']['url_media']); ?>
 	</div>
 	<div class='form_field'>
-	   <input type="text" name="modifica_url_media" value="<?php echo $record['url_media']; ?>" class="form_input" />
+	   <input type="text" name="modifica_url_media" value="<?php echo gdrcd_filter('out',$record['url_media']); ?>" class="form_input" />
 	</div>
 <?php
 		}
@@ -240,7 +240,7 @@ if (isset($_REQUEST['pg'])===FALSE){
 	   <?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['modify_form']['status']); ?>
 	 </div>
 	 <div class='form_field'>
-	     <textarea type="textbox" name="modifica_status" class="form_textarea"><?php echo $record['stato']; ?></textarea>
+	     <textarea type="textbox" name="modifica_status" class="form_textarea"><?php echo gdrcd_filter('out',$record['stato']); ?></textarea>
 	 </div>
 
 	 <div class='form_label'>

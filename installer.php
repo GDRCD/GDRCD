@@ -1,10 +1,9 @@
-<?php 
+<?php
 $dont_check = TRUE;
-require ('header.inc.php'); /*Header comune*/
+require 'header.inc.php'; /*Header comune*/
 ?>
 <div class="pagina_ambientazione">
 <?php
-
 $query = "SHOW TABLES";
 $result = gdrcd_query($query,'result');
 $table = gdrcd_query($result,'num_rows');
@@ -15,8 +14,8 @@ if ($table > 0)
 }
 else
 {
-
 gdrcd_query('SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO"');
+
 
 
 gdrcd_query("CREATE TABLE abilita (
