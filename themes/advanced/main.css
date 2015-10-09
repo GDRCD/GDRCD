@@ -176,7 +176,7 @@ div.messaggio_forum_nuovo a, div.messaggio_forum_nuovo a:visited{
 }
 
 
-/** * Menù di gioco
+/** * Menï¿½ di gioco
 */
 select#gotomap{
 	display:block;
@@ -204,6 +204,16 @@ div.link_menu a:hover{
 	border-radius:5px;
 }
 
+div.link_menu a.sprite {
+	display: block;
+	width: 50px;
+	height: 50px;
+	background: no-repeat top left;
+}
+
+div.link_menu a.sprite:hover {
+	background-position: 0 100%;
+}
 
 
 /** * Mappa cliccabile */
