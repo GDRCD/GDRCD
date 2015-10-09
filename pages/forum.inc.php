@@ -1,178 +1,189 @@
 <?php /*HELP: */ ?>
-
 <div class="pagina_forum">
-<!-- Titolo della pagina -->
-<div class="page_title">
-   <h2><?php echo gdrcd_filter('out',$PARAMETERS['names']['forum']['plur']); ?></h2>
-</div>
-<!-- Box principale -->
-<div class="page_body">
+    <!-- Titolo della pagina -->
+    <div class="page_title">
+        <h2>
+            <?php echo gdrcd_filter('out',$PARAMETERS['names']['forum']['plur']); ?>
+        </h2>
+    </div>
 
+    <!-- Box principale -->
+    <div class="page_body">
 <?php
-/* Funzione segna tutto come letto */
-if($_POST['action']=='readall')
-{
-	$result = gdrcd_query("SELECT * FROM messaggioaraldo WHERE id_messaggio_padre = -1", 'result');
-	while($row=gdrcd_query($result, 'fetch'))
-	{
-	$esiste = gdrcd_query("SELECT id FROM araldo_letto WHERE thread_id = ".$row['id_messaggio']." AND nome = '".$_SESSION['login']."'");
-		if($esiste['id'] <= 0)
-		{
-		gdrcd_query("INSERT INTO araldo_letto (nome, araldo_id, thread_id) VALUES ('".$_SESSION['login']."', ".$row['id_araldo'].", ".$row['id_messaggio'].")");
-		}
-	}
-}
-
-
- /*Inserimento messaggio o topic*/
-if($_POST['op']=='insert')
-{
-    $cond='';
-    $join='';
-    $fields='';
-    if($_POST['padre']==-1)
+    /**
+     * Funzione segna tutto come letto
+     */
+    if($_POST['action']=='readall')
     {
-      $cond=' araldo.id_araldo='.gdrcd_filter('num', $_POST['araldo']);
-    }
-    else
-    {
-      $fields=', MA.chiuso';
-      $join=' INNER JOIN messaggioaraldo AS MA ON MA.id_araldo=araldo.id_araldo ';
-      $cond=" MA.id_messaggio=".gdrcd_filter('num',$_POST['padre'])." AND id_messaggio_padre=-1";
+	    $result = gdrcd_query("SELECT * FROM messaggioaraldo WHERE id_messaggio_padre = -1", 'result');
+
+        while($row=gdrcd_query($result, 'fetch'))
+        {
+            $esiste = gdrcd_query("SELECT id FROM araldo_letto WHERE thread_id = ".$row['id_messaggio']." AND nome = '".$_SESSION['login']."'");
+
+            if($esiste['id'] <= 0)
+            {
+                gdrcd_query("INSERT INTO araldo_letto (nome, araldo_id, thread_id) VALUES ('".$_SESSION['login']."', ".$row['id_araldo'].", ".$row['id_messaggio'].")");
+            }
+        }
     }
 
-    $thread=gdrcd_query("SELECT araldo.id_araldo, araldo.tipo, araldo.proprietari".$fields." FROM araldo ".$join.(!empty($cond)?' WHERE '.$cond:''),'result');
-
-    if (gdrcd_query($thread, 'num_rows')) 
+    /**
+     * Inserimento messaggio o topic
+     */
+    if($_POST['op']=='insert')
     {
-    	$araldoData=gdrcd_query($thread,'fetch');
-        if(($araldoData['tipo']==SOLORAZZA and ($_SESSION['id_razza']==$araldoData['proprietari'] || $_SESSION['permessi']>=MODERATOR)) ||
-      	($araldoData['tipo']==SOLOGILDA and (strpos($_SESSION['gilda'],'*'.$araldoData['proprietari'].'*')!==FALSE || $_SESSION['permessi']>=MODERATOR)) ||
-    	($araldoData['tipo']>=SOLOMASTERS and $_SESSION['permessi']>=GAMEMASTER) ||
-    	($araldoData['tipo']>=SOLOMODERATORS and $_SESSION['permessi']>=MODERATOR) ||
-    	($araldoData['tipo']==PERTUTTI) || ($araldoData['tipo']==INGIOCO) || //Controllo Accesso al thread
-    	$_POST['padre']==-1 or ($araldoData['chiuso']!=1 || $_SESSION['permessi']>=MODERATOR))
-    	{//Solo se il thread non è chiuso
-        	gdrcd_query("INSERT INTO messaggioaraldo (id_messaggio_padre, id_araldo, titolo, messaggio, autore, data_messaggio ) VALUES (".gdrcd_filter('num',$_POST['padre']).", ".gdrcd_filter('num',$araldoData['id_araldo']).", '".gdrcd_filter('in',$_POST['titolo'])."', '".gdrcd_filter('in',$_POST['messaggio'])."', '".gdrcd_filter('in',$_SESSION['login'])."', NOW())");
+        $cond='';
+        $join='';
+        $fields='';
+        if($_POST['padre']==-1)
+        {
+          $cond = ' araldo.id_araldo='.gdrcd_filter('num', $_POST['araldo']);
+        }
+        else
+        {
+          $fields=', MA.chiuso';
+          $join=' INNER JOIN messaggioaraldo AS MA ON MA.id_araldo=araldo.id_araldo ';
+          $cond=" MA.id_messaggio=".gdrcd_filter('num',$_POST['padre'])." AND id_messaggio_padre=-1";
+        }
 
-          	if($_POST['padre']==-1)
-          	{
-            	$_POST['padre']=gdrcd_query('','last_id');
-          	}
+        $thread=gdrcd_query("SELECT araldo.id_araldo, araldo.tipo, araldo.proprietari".$fields." FROM araldo ".$join.(!empty($cond)?' WHERE '.$cond:''),'result');
+
+        if (gdrcd_query($thread, 'num_rows'))
+        {
+            $araldoData=gdrcd_query($thread,'fetch');
+            if(($araldoData['tipo']==SOLORAZZA and ($_SESSION['id_razza']==$araldoData['proprietari'] || $_SESSION['permessi']>=MODERATOR)) ||
+            ($araldoData['tipo']==SOLOGILDA and (strpos($_SESSION['gilda'],'*'.$araldoData['proprietari'].'*')!==FALSE || $_SESSION['permessi']>=MODERATOR)) ||
+            ($araldoData['tipo']>=SOLOMASTERS and $_SESSION['permessi']>=GAMEMASTER) ||
+            ($araldoData['tipo']>=SOLOMODERATORS and $_SESSION['permessi']>=MODERATOR) ||
+            ($araldoData['tipo']==PERTUTTI) || ($araldoData['tipo']==INGIOCO) || //Controllo Accesso al thread
+            $_POST['padre']==-1 or ($araldoData['chiuso']!=1 || $_SESSION['permessi']>=MODERATOR))
+            {
+            //Solo se il thread non è chiuso
+                gdrcd_query("INSERT INTO messaggioaraldo (id_messaggio_padre, id_araldo, titolo, messaggio, autore, data_messaggio ) VALUES (".gdrcd_filter('num',$_POST['padre']).", ".gdrcd_filter('num',$araldoData['id_araldo']).", '".gdrcd_filter('in',$_POST['titolo'])."', '".gdrcd_filter('in',$_POST['messaggio'])."', '".gdrcd_filter('in',$_SESSION['login'])."', NOW())");
+
+                if($_POST['padre']==-1)
+                {
+                    $_POST['padre']=gdrcd_query('','last_id');
+                }
 ?>
-			<div class="warning">
-	   			<?php echo gdrcd_filter('out',$MESSAGE['warning']['inserted']);?>
-			</div>
-			<div class="link_back">
-       			<a href="main.php?page=forum">
-	      			<?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['link']['back']); ?>
-		 		</a>
-    		</div>
+                <div class="warning">
+                    <?php echo gdrcd_filter('out',$MESSAGE['warning']['inserted']);?>
+                </div>
+                <div class="link_back">
+                    <a href="main.php?page=forum">
+                        <?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['link']['back']); ?>
+                    </a>
+                </div>
 <?php
-        	gdrcd_query("DELETE FROM araldo_letto WHERE thread_id = ".gdrcd_filter('num',$_POST['padre'])." AND nome != '".$_SESSION['login']."'");
-        	gdrcd_redirect('main.php?page=forum&op=read&what='.gdrcd_filter('num',$_POST['padre']).'&where='.$araldoData['id_araldo']);
-      	}
-      	else
-      	{
-        	echo '<div class="warning">'.gdrcd_filter('out',$MESSAGE['error']['not_allowed']).'</div>';
-      	}
-    }
-    else
+                gdrcd_query("DELETE FROM araldo_letto WHERE thread_id = ".gdrcd_filter('num',$_POST['padre'])." AND nome != '".$_SESSION['login']."'");
+
+                gdrcd_redirect('main.php?page=forum&op=read&what='.gdrcd_filter('num',$_POST['padre']).'&where='.$araldoData['id_araldo']);
+            }
+            else
+            {
+                echo '<div class="warning">'.gdrcd_filter('out',$MESSAGE['error']['not_allowed']).'</div>';
+            }
+        }
+        else
+        {
+            echo '<div class="warning">'.gdrcd_filter('out',$MESSAGE['interface']['administration']['forums']['not_exists']).'</div>';
+        }
+    } //Fine Insert
+
+    /**
+     * Modifica messaggio o topic
+     */
+    if($_POST['op']=='edit')
     {
-    	echo '<div class="warning">'.gdrcd_filter('out',$MESSAGE['interface']['administration']['forums']['not_exists']).'</div>';
-    }
-} //Fine Insert
+	    $row = gdrcd_query("SELECT autore, titolo, messaggio, id_messaggio_padre FROM messaggioaraldo WHERE id_messaggio=".gdrcd_filter('num',$_POST['id_messaggio'])."");
 
-/*Modifica messaggio o topic*/
-if($_POST['op']=='edit')
-{
-	$row = gdrcd_query("SELECT autore, titolo, messaggio, id_messaggio_padre FROM messaggioaraldo WHERE id_messaggio=".gdrcd_filter('num',$_POST['id_messaggio'])."");
+        if ($row['autore'] == $_SESSION['login'] || ($row['autore'] != $_SESSION['login'] && $_SESSION['permessi'] >= MODERATOR))
+        {
+		    $time=strftime('%d/%m/%Y %H:%M');
 
-	if ($row['autore'] == $_SESSION['login'] || ($row['autore'] != $_SESSION['login'] && $_SESSION['permessi'] >= MODERATOR))
-	{
-		$time=strftime('%d/%m/%Y %H:%M');
-
-		gdrcd_query("UPDATE messaggioaraldo SET messaggio = '".gdrcd_filter('in',$_POST['messaggio']).'\n\n\n\nEdit ('.$_SESSION['login'].'): '.$time."', titolo = '".gdrcd_filter('in',$_POST['titolo'])."' WHERE id_messaggio = ".gdrcd_filter('num',$_POST['id_messaggio'])." LIMIT 1");
+		    gdrcd_query("UPDATE messaggioaraldo SET messaggio = '".gdrcd_filter('in',$_POST['messaggio']).'\n\n\n\nEdit ('.$_SESSION['login'].'): '.$time."', titolo = '".gdrcd_filter('in',$_POST['titolo'])."' WHERE id_messaggio = ".gdrcd_filter('num',$_POST['id_messaggio'])." LIMIT 1");
 ?>
-		<div class="warning">
-		   <?php echo gdrcd_filter('out',$MESSAGE['warning']['modified']);?>
-		</div>
-		<div class="link_back">
-		   <a href="main.php?page=forum">
-			  <?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['link']['back']); ?>
-		   </a>
-		</div>
+            <div class="warning">
+               <?php echo gdrcd_filter('out',$MESSAGE['warning']['modified']);?>
+            </div>
+            <div class="link_back">
+               <a href="main.php?page=forum">
+                  <?php echo gdrcd_filter('out',$MESSAGE['interface']['forums']['link']['back']); ?>
+               </a>
+            </div>
 <?php
-		if ($row['id_messaggio_padre'] == -1)
-		{
-			gdrcd_redirect('main.php?page=forum&op=read&what='.gdrcd_filter('num',$_POST['id_messaggio']).'&where='.gdrcd_filter('num',$_POST['araldo']));
-		}
-		else
-		{
-			gdrcd_redirect('main.php?page=forum&op=read&what='.gdrcd_filter('num',$row['id_messaggio_padre']).'&where='.gdrcd_filter('num',$_POST['araldo']));
-		}
-	}
-	else
-	{
+            if ($row['id_messaggio_padre'] == -1)
+            {
+                gdrcd_redirect('main.php?page=forum&op=read&what='.gdrcd_filter('num',$_POST['id_messaggio']).'&where='.gdrcd_filter('num',$_POST['araldo']));
+            }
+            else
+            {
+                gdrcd_redirect('main.php?page=forum&op=read&what='.gdrcd_filter('num',$row['id_messaggio_padre']).'&where='.gdrcd_filter('num',$_POST['araldo']));
+            }
+        }
+        else
+        {
 ?>
-		<div class="warning">
-	   		Furbacchione ;-)
-		</div>
+            <div class="warning">
+                Furbacchione ;-)
+            </div>
 <?php
-	}
-} //Fine Edit 
+	    }
+    } //Fine Edit
 
-/*Form modifica*/
-if($_REQUEST['op']=='modifica')
-{
-	$row = gdrcd_query("SELECT titolo, messaggio, id_messaggio_padre FROM messaggioaraldo WHERE id_messaggio=".gdrcd_filter('num',$_REQUEST['what'])."");
+    /**
+     * Form modifica
+     */
+    if($_REQUEST['op']=='modifica')
+    {
+	    $row = gdrcd_query("SELECT titolo, messaggio, id_messaggio_padre FROM messaggioaraldo WHERE id_messaggio=".gdrcd_filter('num',$_REQUEST['what'])."");
 ?>
-    <div class="panels_box">
-    <div class="form_gioco">
-    <form action="main.php?page=forum"
-          method="post">
+        <div class="panels_box">
+        <div class="form_gioco">
+        <form action="main.php?page=forum" method="post">
 <?php 
-       if ($row['id_messaggio_padre']==-1)
-       {
-       	/*Se è il primo di un topic serve un titolo*/ 
+        if ($row['id_messaggio_padre']==-1)
+        {
+        /*Se è il primo di un topic serve un titolo*/
 ?>
-       <div class="form_label">
-          <?php echo $MESSAGE['interface']['forums']['insert']['title']; ?>
-       </div>
-       <div class="form_field">
-          <input name="titolo"
-		         value="<?php echo gdrcd_filter('out',$row['titolo']); ?>"/>
-       </div>
+           <div class="form_label">
+              <?php echo $MESSAGE['interface']['forums']['insert']['title']; ?>
+           </div>
+           <div class="form_field">
+              <input name="titolo"
+                     value="<?php echo gdrcd_filter('out',$row['titolo']); ?>"/>
+           </div>
 <?php 
-       }//if  
+        }//if
 ?>
-       <div class="form_label">
-          <?php echo $MESSAGE['interface']['forums']['insert']['message']; ?>
-       </div>
-       <div class="form_field">
-         <textarea name="messaggio" /><?php echo $row['messaggio']; ?></textarea>
-       </div>
-	   <div class="form_info">
-          <?php echo gdrcd_filter('out',$MESSAGE['interface']['help']['bbcode']); ?>
-	   </div>
-       <div class="form_submit">
-       <input type="hidden"
-	          name="op"
-		      value="edit" />
-   	   <input type="hidden"
-	          name="araldo"
-		      value="<?php echo gdrcd_filter('num',$_REQUEST['where']); ?>" />
-   	   <input type="hidden"
-	          name="messaggio_padre"
-		      value="<?php echo gdrcd_filter('num',$row['id_messaggio_padre']); ?>" />
-   	   <input type="hidden"
-	          name="id_messaggio"
-		      value="<?php echo gdrcd_filter('num',$_REQUEST['what']); ?>" />
-       <input type="submit"
-	          name="dummy"
-		      value="<?php echo gdrcd_filter('out',$MESSAGE['interface']['forms']['submit']); ?>" />
-       </div>
-   </form>
+        <div class="form_label">
+            <?php echo $MESSAGE['interface']['forums']['insert']['message']; ?>
+        </div>
+        <div class="form_field">
+            <textarea name="messaggio" /><?php echo $row['messaggio']; ?></textarea>
+        </div>
+	    <div class="form_info">
+            <?php echo gdrcd_filter('out',$MESSAGE['interface']['help']['bbcode']); ?>
+	    </div>
+        <div class="form_submit">
+            <input type="hidden"
+                  name="op"
+                  value="edit" />
+            <input type="hidden"
+                  name="araldo"
+                  value="<?php echo gdrcd_filter('num',$_REQUEST['where']); ?>" />
+            <input type="hidden"
+                  name="messaggio_padre"
+                  value="<?php echo gdrcd_filter('num',$row['id_messaggio_padre']); ?>" />
+            <input type="hidden"
+                  name="id_messaggio"
+                  value="<?php echo gdrcd_filter('num',$_REQUEST['what']); ?>" />
+            <input type="submit"
+                  name="dummy"
+                  value="<?php echo gdrcd_filter('out',$MESSAGE['interface']['forms']['submit']); ?>" />
+        </div>
+    </form>
    </div>
    </div>
    <div class="link_back">
