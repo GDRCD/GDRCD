@@ -1,6 +1,6 @@
 <?php
         /**
-         * CONFIGURAZIONE DI GDRCD 5.2 "Stable"
+         * CONFIGURAZIONE DI GDRCD 5.4 "Optimus"
          * @author MrFaber
          * @author Blancks
          * @author Breaker
@@ -33,7 +33,7 @@
 
 
         /* INFORMAZIONI SUL SITO */
-        $PARAMETERS['info']['site_name'] = 'GDRCD 5.2'; //nome del gioco
+        $PARAMETERS['info']['site_name'] = 'GDRCD 5.4'; //nome del gioco
         $PARAMETERS['info']['site_url'] = 'http://www.domain.ext/'; //indirizzo URL del gioco
         $PARAMETERS['info']['webmaster_name'] = 'Webmaster'; //nome e cognome del responsabile del sito
         $PARAMETERS['info']['webmaster_email'] = 'mail@domain.ext'; //email ufficiale del webmaster (è visibile in homepage)

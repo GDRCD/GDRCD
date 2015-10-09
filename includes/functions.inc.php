@@ -2,7 +2,7 @@
 /**
  * Funzioni di core di gdrcd
  * Il file contiene una revisione del core originario introdotto in GDRCD5
- * @version 5.2
+ * @version 5.4
  * @author Breaker
  */
 
@@ -30,9 +30,12 @@ function gdrcd_connect()
 		#mysql_select_db($db_name)or die(gdrcd_mysql_error($db_error));
 
 		$db_link = mysqli_connect($db_host, $db_user, $db_pass, $db_name);
-
+		
+		mysqli_set_charset($db_link, "utf8");
+		
 		if (mysqli_connect_errno())
 				gdrcd_mysql_error($db_error);
+				    
 	}
 
 	return $db_link;

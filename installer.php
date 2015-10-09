@@ -1,22 +1,21 @@
-<?php 
+<?php
 $dont_check = TRUE;
 require 'header.inc.php'; /*Header comune*/
 ?>
 <div class="pagina_ambientazione">
-<?php	
-	$query = "SHOW TABLES";
-	$result = gdrcd_query($query,'result');
-	$table = gdrcd_query($result,'num_rows');
+<?php
+$query = "SHOW TABLES";
+$result = gdrcd_query($query,'result');
+$table = gdrcd_query($result,'num_rows');
 
 if ($table > 0)
-{ 
-	
-	echo '<div class="error">'.$MESSAGE['homepage']['installer']['not_empty'].'</div>';
-
-}else
 {
-
+    echo '<div class="error">'.$MESSAGE['homepage']['installer']['not_empty'].'</div>';
+}
+else
+{
 gdrcd_query('SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO"');
+
 
 
 gdrcd_query("CREATE TABLE abilita (
@@ -437,4 +436,4 @@ echo '<div class="warning">'.gdrcd_filter('out',$MESSAGE['homepage']['installer'
 		   </a>
        </div>
 </div>
-<?php require 'footer.inc.php';  /*Footer comune*/?>
+<?php require ('footer.inc.php');  /*Footer comune*/?>

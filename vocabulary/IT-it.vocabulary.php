@@ -5,10 +5,10 @@ IMPORTANTE! non cancellate alcuna delle righe, ne modificate quanto scritto tra 
 
 /********** Homepage **********/
 /*Testo centrale homepage*/
-$MESSAGE['homepage']['main_content']['site_title'] = 'GDRCD 5.2 "Stable"';
+$MESSAGE['homepage']['main_content']['site_title'] = 'GDRCD 5.4 "Optimus"';
 $MESSAGE['homepage']['main_content']['site_subtitle'] = 'Enhanced by Breaker';
-$MESSAGE['homepage']['main_content']['welcome']='Benvenuto in GDRCD 5.2 "Stable"!';
-$MESSAGE['homepage']['main_content']['infos']='Prima di iniziare a realizzare il tuo sito, hai letto la LICENZA D\'USO che accompagna il prodotto? Se non l\'hai ancora fatto premurati gentilmente di leggerla. Troverai le istruzioni su come utilizzare  GDRCD 5.2 nel manuale allegato. Buon diverimento!';
+$MESSAGE['homepage']['main_content']['welcome']='Benvenuto in GDRCD 5.4 "Optimus"!';
+$MESSAGE['homepage']['main_content']['infos']='Prima di iniziare a realizzare il tuo sito, hai letto la LICENZA D\'USO che accompagna il prodotto? Se non l\'hai ancora fatto premurati gentilmente di leggerla. Troverai le istruzioni su come utilizzare  GDRCD 5.4 nel manuale allegato. Buon diverimento!';
 /*Box informativi*/
 $MESSAGE['homepage']['forms']['access_to']='Accedi';
 $MESSAGE['homepage']['forms']['username']='User';
@@ -29,7 +29,7 @@ $MESSAGE['homepage']['info']['email']='Contatti';
 $MESSAGE['homepage']['installer']['not_empty']='Database già esistente.';
 $MESSAGE['homepage']['installer']['done']='Database creato.';
 $MESSAGE['installer']['instal']="Installa il database.";
-$MESSAGE['homepage']['updater']['done']='Il Database è stato reso compatibile con GDRCD5.2';
+$MESSAGE['homepage']['updater']['done']='Il Database è stato reso compatibile con GDRCD5.4';
 $MESSAGE['homepage']['updater']['update']='Aggiorna adesso il database.';
 $MESSAGE['homepage']['updater']['no_fields']='Non sono state rilevate mancanze nel database attualmente in uso.';
 
@@ -709,7 +709,7 @@ $MESSAGE['warning']['sold']='Oggetto ceduto';
 $MESSAGE['warning']['cant_do']='Impossibile eseguire';
 $MESSAGE['warning']['unactive']='La funzione richiesta non è attiva. Per attivare, modificare il file config.inc.php.';
 $MESSAGE['warning']['character_exiled']='è stato esiliato fino al';
-$MESSAGE['warning']['pass_not_encripted'] = '** ATTENZIONE ** sul database sono state rivelate password non criptate mentre nel foglio di configurazione di GDRCD5.2 è attualmente settato su ON l\'encript delle password, mediante l\'algoritmo ' . $PARAMETERS['mode']['encriptalgorithm'] . '. Proseguendo tutte le password verranno criptate, il processo è IRREVERSIBILE. Se non vuoi che le password vengano criptate disabilita l\'encript delle password da config.inc.php';
+$MESSAGE['warning']['pass_not_encripted'] = '** ATTENZIONE ** sul database sono state rivelate password non criptate mentre nel foglio di configurazione di GDRCD5.4 è attualmente settato su ON l\'encript delle password, mediante l\'algoritmo ' . $PARAMETERS['mode']['encriptalgorithm'] . '. Proseguendo tutte le password verranno criptate, il processo è IRREVERSIBILE. Se non vuoi che le password vengano criptate disabilita l\'encript delle password da config.inc.php';
 
 /** * messaggio di errore per media non consentito
 	* @author Blancks

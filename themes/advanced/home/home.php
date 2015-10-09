@@ -1,5 +1,11 @@
 				<h2><?php echo $MESSAGE['homepage']['main_content']['welcome']; ?></h2>
-			
+
+                <p>
+                    GDRCD5.4, nome in codice "Optimus", è un upgrade della versione 5.3, sviluppato da Breaker.
+                </p>
+                <p>
+                    GDRCD5.3, nome in codice "Stable", è un upgrade della versione 5.2, sviluppato da Breaker.
+                </p>
 				<p>GDRCD5.2, nome in codice "Stable", è un upgrade di versione di Blancks's GDRCD5.1, sviluppato da Breaker.</p>
 				<p>GDRCD5.1, nome in codice "Advanced", è un upgrade di versione di <a href="http://www.gdr-online.com/download_dettaglio.asp?id=197">MrFaber's GDRCD5</a>, sviluppato da Salvatore "Blancks" Rotondo.</p>
 				<p>Include un innumerevole quantitativo di bug fix e una migliore ottimizzazione del prodotto per una maggiore velocità, stabilità ma soprattutto una maggiore <strong>sicurezza</strong>, senza contare l'ampio numero di features facilmente selezionabili e customizzabili senza bisogno di essere esperti programmatori!</p> 
