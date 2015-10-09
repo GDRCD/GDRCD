@@ -203,6 +203,17 @@ div.link_menu{
 div.link_menu a{
    font-size: 14px;
 }
+div.link_menu a.sprite {
+  display: block;
+  width: 50px;
+  height: 50px;
+  background: no-repeat top left;
+}
+
+div.link_menu a.sprite:hover {
+  background-position: 0 100%;
+}
+
 /*Immagine "punto voce di elenco" dei menu.*/
 img.link_menu_point{ }
 

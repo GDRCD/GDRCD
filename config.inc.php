@@ -121,6 +121,7 @@
          *
          * * AVVERTENZA: ricordare di ordinare il css dei moduli di modo che sostino bene, su di una riga, altrimenti è normale
          * * avere problemi di visualizzazione
+         *
          */
         $PARAMETERS['themes']['kind_of_layout'] = 'left-right';
 
@@ -176,7 +177,7 @@
         $PARAMETERS['names']['moderators']['plur'] = 'Admin'; //titolo dei moderatori (plurale)
         $PARAMETERS['names']['administrator']['sing'] = 'Gestore'; //titolo del super user (singolare)
         $PARAMETERS['names']['administrator']['plur'] = 'Gestori'; //titolo del super user (plurale)
-        $PARAMETERS['names']['gamemenu'] = 'Menu'; //Nome in calce al menu del gioco
+        $PARAMETERS['names']['gamemenu']['menu'] = 'Menu'; //Nome in calce al menu del gioco
         $PARAMETERS['names']['market_name'] = 'Mercato'; //Nome del mercato
         $PARAMETERS['names']['maps_location'] = 'Alle mappe'; //Appare se il PG si trova su una mappa
         $PARAMETERS['names']['base_location'] = 'In giro'; //Appare nei presenti se non è possibile localizzare il pg
@@ -475,7 +476,59 @@
         /* HELP: Decommentare (rimuovere //) una coppia immagine-testo, fra quelle elencate sopra, fa apparire il corrispondente simbolo PEGI in homepage. E' necessario decommentare sia la riga corrispondente all'immagine che quella corrispondente al testo */
 
 
-        /*HELP [-- IMPORTANTE!!! --]: Le seguenti voci configurano i menu' opzioni interni al gioco. Specificare un diverso testo vitualizzato (text) o un immagine (image_file) modifica l'aspetto del menu, ma alterare l'indirizzo di riferimento (url) o cancellare voci potrebbe pregiudicare il funzionamento di parte del gioco. Le immagini specificate in image_file e image_file_onclick devono essere nella cartema imgs/menu del tema e sono, rispettivamente, l'immagine di base del tasto e l'immagine al passaggio del mouse, nel caso la seconda mancasse viene visualizzata la prima in entrambi i casi*/
+        /**
+         * HELP [-- IMPORTANTE!!! --]:
+         * Le seguenti voci configurano i menu' opzioni interni al gioco. Specificare un diverso testo visualizzato (text)
+         * o un immagine (image_file) modifica l'aspetto del menu, ma alterare l'indirizzo di riferimento (url)
+         * o cancellare voci potrebbe pregiudicare il funzionamento di parte del gioco.
+         * Le immagini specificate in image_file e image_file_onclick devono essere nella cartella imgs/menu del tema
+         * e sono, rispettivamente, l'immagine di base del tasto e l'immagine al passaggio del mouse, nel caso
+         * la seconda mancasse viene visualizzata la prima in entrambi i casi.
+         *
+         * Alternativamente per gli utenti esperti: al posto delle immagini image_file e image_file_onclick (che
+         * vengono modificare con javascript) è possibile utilizzare un'immagine sola come sprite
+         * ( https://css-tricks.com/css-sprites/ ). Per impostare la sprite inserire la chiave 'sprite' nella
+         * configurazione della voce di menù e dargli un valore true. Per impostare l'immagine usare solo la chiave
+         * 'image_file'. Ricordarsi però di personalizzare correttamente le dimensioni delle immagini nel css (main
+         * .css): di default sono impostate a 50x50px
+         */
+
+        /**
+         * MENU MULTIPLI: è possibile configurare più menù nella pagina principale del gioco. Per farlo è sufficiente
+         * richiamare più volte la pagina link_menu nella configurazione del layout, specificando però una classe
+         * differente e aggiungendo il parametro menu_key per indicare al sistema dove recuperare le informazioni sul
+         * secondo menù. Per impedire la comparsa della lista di mappe su ogni menù è necessario aggiungere il
+         * parametro 'no_gotomap_list' e impostarlo a true per ogni menù che NON deve visualizzare le mappe
+         * Per esempio:
+         *
+         * $PARAMETERS['bottom_column']['box']['link_menu']['class'] = 'menu_bottom';
+         * $PARAMETERS['bottom_column']['box']['link_menu']['page'] = 'link_menu';
+         * $PARAMETERS['bottom_column']['box']['link_menu']['menu_key'] = 'secondo_menu';
+         * $PARAMETERS['bottom_column']['box']['link_menu']['no_gotomap_list'] = true;
+         *
+         * Per modificare il titolo visualizzato in cima al nuovo menù è necessario aggiungere una nuova voce alla
+         * lista dei nomi impostata più indietro in questo file:
+         * $PARAMETERS['names']['gamemenu']['secondo_menu'] = 'Menu 2';
+         *
+         * Dopo di che basta aggiungere la configurazione del nuovo menù, con una struttura simile a
+         * quella usata per il menù principale, ma cambiando la chiave:
+         *
+         * $PARAMETERS['secondo_menu']['refresh']['text'] = 'Aggiorna';
+         * $PARAMETERS['secondo_menu']['refresh']['url'] = 'main.php?dir=' . $_SESSION['luogo'];
+         * $PARAMETERS['secondo_menu']['refresh']['image_file'] = '';
+         * $PARAMETERS['secondo_menu']['refresh']['image_file_onclick'] = '';
+         *
+         * $PARAMETERS['secondo_menu']['map']['text'] = 'Mappa';
+         * $PARAMETERS['secondo_menu']['map']['url'] = 'main.php?page=mappaclick&map_id=' . $_SESSION['mappa'];
+         * $PARAMETERS['secondo_menu']['map']['image_file'] = '';
+         * $PARAMETERS['secondo_menu']['map']['image_file_onclick'] = '';
+         *
+         * Ogni voce di menù riceve un attributo id personalizzato in automatico, utilizzabile in css e javascript.
+         *
+         * Volendo, a ogni voce di menù è possibile aggiungere qualunque attributo html, aggiungendolo alla
+         * configurazione nel menù, nel seguende modo:
+         * $PARAMETERS['secondo_menu']['map']['class'] = 'custom_class'; //Aggiunge una classe
+         */
 
         /* VOCI DEL MENU */
         $PARAMETERS['menu']['refresh']['text'] = 'Aggiorna';
