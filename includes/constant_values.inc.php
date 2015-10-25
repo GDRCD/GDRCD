@@ -1,7 +1,7 @@
 <?php
 
 /*Livelli di accesso utente*/
-define('DELETED',-1);
+define('DELETED', -1);
 define('USER', 0);
 define('SUPERUSER', 4);
 define('MODERATOR', 3);
@@ -28,17 +28,17 @@ define('DISPONIBILE', 1);
 define('SOLOSUINVITO', 2);
 
 /*Tipi di forum*/
-define('INGIOCO',0);
-define('PERTUTTI',1);
-define('SOLORAZZA',2);
-define('SOLOGILDA',3);
-define('SOLOMASTERS',4);
+define('INGIOCO', 0);
+define('PERTUTTI', 1);
+define('SOLORAZZA', 2);
+define('SOLOGILDA', 3);
+define('SOLOMASTERS', 4);
 define('SOLOMODERATORS', 5);
 
 /*Posizione degli oggetti*/
-define('INVENTARIO',0);
-define('ZAINO',1);
-define('MANODX',2);
+define('INVENTARIO', 0);
+define('ZAINO', 1);
+define('MANODX', 2);
 define('MANOSX', 3);
 define('TORSO', 4);
 define('GAMBE', 5);
@@ -53,10 +53,10 @@ define('INVIAGGIO', -1);
 /**
  * Livelli di filtro html
  */
-define('HTML_FILTER_BASE',0);
-define('HTML_FILTER_HIGH',1);
+define('HTML_FILTER_BASE', 0);
+define('HTML_FILTER_HIGH', 1);
 
 /*Vettori globali dei parametri*/
-$PARAMETER = array();
-$MESSAGES = array();
+$PARAMETER = [];
+$MESSAGES = [];
 ?>
