@@ -125,7 +125,7 @@
                     }
                     $content = ' onMouseOver="n' . $mkey . $raw_counter . '_over_button()" onMouseOut="n' . $mkey . $raw_counter . '_up_button()"><img src= "themes/' . $PARAMETERS['themes']['current_theme'] . '/imgs/' . $mkey . '/' . $link_menu['image_file'] . '" alt="' . gdrcd_filter('out',
                             $link_menu['text']) . '" title="' . gdrcd_filter('out',
-                            $link_menu['text']) . '" name="n' . $raw_counter . '_buttonOne" />';
+                            $link_menu['text']) . '" name="n' . $mkey . $raw_counter . '_buttonOne" />';
                     echo '<SCRIPT LANGUAGE="JavaScript"> if (document.images) { var n' . $mkey . $raw_counter . '_button1_up = new Image(); n' . $mkey . $raw_counter . '_button1_up.src = "themes/' . $PARAMETERS['themes']['current_theme'] . '/imgs/' . $mkey . '/' . $img_up . '"; var n' . $mkey . $raw_counter . '_button1_over = new Image(); n' . $mkey . $raw_counter . '_button1_over.src = "themes/' . $PARAMETERS['themes']['current_theme'] . '/imgs/' . $mkey . '/' . $img_down . '";} function n' . $mkey . $raw_counter . '_over_button() { if (document.images) { document["n' . $mkey . $raw_counter . '_buttonOne"].src = n' . $mkey . $raw_counter . '_button1_over.src;}} function n' . $mkey . $raw_counter . '_up_button() { if (document.images) { document["n' . $mkey . $raw_counter . '_buttonOne"].src = n' . $mkey . $raw_counter . '_button1_up.src}}</SCRIPT>';
                 }
 
