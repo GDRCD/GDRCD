@@ -560,8 +560,8 @@ if ((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login'])
                  */
                 $add_chat .= '<div class="chat_row_' . $row['tipo'] . '">';
 
-                $add_chat .= '<span class="chat_master">' . gdrcd_chatme_master($_SESSION['login'],
-                        gdrcd_filter('out', $row['testo'])) . '</span>';
+                $add_chat .= '<span class="chat_master">' . gdrcd_chatme($_SESSION['login'],
+                        gdrcd_filter('out', $row['testo']), true) . '</span>';
 
                 /**    * Fix problema visualizzazione spazi vuoti con i sussurri
                  * @author eLDiabolo
