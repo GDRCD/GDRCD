@@ -167,7 +167,9 @@ if ((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login'])
           if ($m_type == 'S') {/*Se il sussurro e' inviato correttamente*/
             if($PARAMETERS['mode']['chat_whisper_all']=='ON' and $tag_n_beyond == gdrcd_capital_letter
               ($PARAMETERS['settings']['chat_whisper_all'])){
-              $r_check_dest = gdrcd_query("SELECT nome FROM personaggio WHERE DATE_ADD(ultimo_refresh, INTERVAL 2 MINUTE) > NOW() AND ultimo_luogo = " . $_SESSION['luogo'], 'result');
+              $r_check_dest = gdrcd_query("SELECT nome FROM personaggio WHERE DATE_ADD(ultimo_refresh, INTERVAL 2
+              MINUTE) > NOW() AND ultimo_luogo = " . $_SESSION['luogo']." AND nome!='".gdrcd_filter('in',
+                  $_SESSION['login']) . "'", 'result');
             }
             else {
               $r_check_dest = gdrcd_query("SELECT nome FROM personaggio WHERE DATE_ADD(ultimo_refresh, INTERVAL 2 MINUTE) > NOW() AND ultimo_luogo = " . $_SESSION['luogo'] . " AND nome = '" . $tag_n_beyond . "' LIMIT 1", 'result');
