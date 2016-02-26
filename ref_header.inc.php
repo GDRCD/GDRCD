@@ -235,8 +235,19 @@ if ((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login'])
           }
         } //elseif
         /*Inserisco il messaggio*/
-        gdrcd_query("INSERT INTO chat ( stanza, imgs, mittente, destinatario, ora, tipo, testo ) VALUES (" . $_SESSION['luogo'] . ", '" . $_SESSION['sesso'] . ";" . $_SESSION['img_razza'] . "', '" . $_SESSION['login'] . "', '" . gdrcd_capital_letter(gdrcd_filter('in',
-            $tag_n_beyond)) . "', NOW(), '" . $m_type . "', '" . $chat_message . "')");
+        if(!is_array($tag_n_beyond)) {
+          $tag_n_beyond = array($tag_n_beyond);
+        }
+        if(!is_array($chat_message)){
+          $chat_message = array($chat_message);
+        }
+
+        foreach($chat_message as $msg_text) {
+          foreach ($tag_n_beyond as $destinatario) {
+            gdrcd_query("INSERT INTO chat (stanza, imgs, mittente, destinatario, ora, tipo, testo ) VALUES (" . $_SESSION['luogo'] . ", '" . $_SESSION['sesso'] . ";" . $_SESSION['img_razza'] . "', '" . $_SESSION['login'] . "', '" . gdrcd_capital_letter(gdrcd_filter('in',
+                $destinatario)) . "', NOW(), '" . $m_type . "', '" . $msg_text . "')");
+          }
+        }
 
         if ($PARAMETERS['mode']['exp_by_chat'] == 'ON') {
           if ($m_type == 'A' || $m_type == 'P' || $m_type == 'M') {
