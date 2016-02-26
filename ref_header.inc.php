@@ -160,13 +160,12 @@ if ((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login'])
               /*Se il destinatario e' mal formattato lo prendo come parlato*/
               $m_type = 'P';
             } else {
-              $tag_n_beyond = gdrcd_capital_letter(substr($chat_message, 1, $dest_end));
+              $tag_n_beyond = substr($chat_message, 1, $dest_end);
               $chat_message = substr($chat_message, $dest_end + 2);
             }
           }//if
           if ($m_type == 'S') {/*Se il sussurro e' inviato correttamente*/
-            if($PARAMETERS['mode']['chat_whisper_all']=='ON' and $tag_n_beyond == gdrcd_capital_letter
-              ($PARAMETERS['settings']['chat_whisper_all'])){
+            if($PARAMETERS['mode']['chat_whisper_all'] == 'ON' and $tag_n_beyond == $PARAMETERS['settings']['chat_whisper_all']){
               $r_check_dest = gdrcd_query("SELECT nome FROM personaggio WHERE DATE_ADD(ultimo_refresh, INTERVAL 2
               MINUTE) > NOW() AND ultimo_luogo = " . $_SESSION['luogo']." AND nome!='".gdrcd_filter('in',
                   $_SESSION['login']) . "'", 'result');
@@ -180,7 +179,7 @@ if ((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login'])
               $chat_message = $tag_n_beyond . ' ' . gdrcd_filter('in', $MESSAGE['chat']['whisper']['no']);
               $tag_n_beyond = $_SESSION['login'];
             }
-            elseif($records > 1){
+            elseif($PARAMETERS['mode']['chat_whisper_all'] == 'ON' and $tag_n_beyond == $PARAMETERS['settings']['chat_whisper_all']){
               $tag_n_beyond = array();
               while($row = gdrcd_query($r_check_dest,'fetch')){
                 $tag_n_beyond[] = $row['nome'];
