@@ -436,6 +436,9 @@
         //ON: Crea un file html e lo fa scaricare dall'utente.
         //OFF: Non crea nessun file html che viene scaricato.
 
+        $PARAMETERS['mode']['chat_whisper_all'] = 'OFF';
+        $PARAMETERS['settings']['chat_whisper_all'] = 'tutti';
+
         /* HELP: Le voci di questa categoria abilitano o disabilitano funzioni presenti nel gioco. Ad esempio, se non si desidera che il personaggio si riconnetta nello stesso luogo di gioco in cui si è disconnesso, bensi' nella mappa, occorre impostare in OFF la relativa voce */
 
 
