@@ -11,7 +11,7 @@
          */
 
         error_reporting(E_ERROR | E_PARSE);
-
+        //error_reporting(E_ALL);
         /* PARAMETRI DI CONNESSIONE */
         $PARAMETERS['database']['username'] = 'userdb';            //nome utente del database
         $PARAMETERS['database']['password'] = 'passdb';            //password del database
