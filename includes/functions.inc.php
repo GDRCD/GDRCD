@@ -741,3 +741,6 @@ function gdrcd_list($str)
 
 	return $list;
 }
+
+
+require('plugins/dyrr/template_basic/lib/template_basic.inc.php');
