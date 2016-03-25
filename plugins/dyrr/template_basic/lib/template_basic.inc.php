@@ -51,7 +51,7 @@
 		//$PARAMETERS = $GLOBALS['PARAMETERS'];		
 	
 		//parte del path del templat ein comune tra template di default e specifico del tema
-		$base_path = __DIR__ .'/../themes/';
+		$base_path = __DIR__ .'/../../../../themes/';
 		
 		//path del template per il tema specifico in uso
 		$theme_path = $base_path.$GLOBALS['PARAMETERS']['themes']['current_theme'].'/template/'.$path.'.template.php';
