@@ -4,11 +4,8 @@
 	$last_message = $_SESSION['last_message'];
 
 
-	//Includio i parametri, la configurazione, la lingua e le funzioni
-	require 'includes/constant_values.inc.php';
-	require 'config.inc.php';
-	require 'vocabulary/'.$PARAMETERS['languages']['set'].'.vocabulary.php';
-	require 'includes/functions.inc.php';
+	//Includo i parametri, la configurazione, la lingua e le funzioni 
+	require (__DIR__ .'/includes/required.php');
 
 	//Eseguo la connessione al database
 	$handleDBConnection = gdrcd_connect();

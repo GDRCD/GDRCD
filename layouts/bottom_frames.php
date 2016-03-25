@@ -77,7 +77,7 @@ width: 100%;
 				{
 					echo '<div class="'.$box['class'].'">';
 				
-					gdrcd_load_modules('pages/'.$box['page'].'.inc.php', $box);
+					gdrcd_load_modules($box['page'], $box);
 				
 					echo '</div>';
 				}
@@ -95,7 +95,7 @@ width: 100%;
 
 <div id="maincontent">
 	<div class="output">
-			<?php gdrcd_load_modules('pages/'.$strInnerPage); ?>
+			<?php gdrcd_load_modules($strInnerPage); ?>
 	</div>
 </div>
 

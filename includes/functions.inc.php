@@ -477,16 +477,49 @@ function gdrcd_check_time($time)
  * E' approssimata ma funziona, se qualcuno vuol far di meglio si faccia avanti
  * @param string $path: il percorso filesystem del file da includere
  * @param array $params: un array di dati aggiuntivi passabili al modulo
+ *
+ * @todo registrare in un log errori eventuali errori nel richiamare il controller;
  */
 function gdrcd_load_modules($path, $params=[])
 {
-	global $MESSAGE;
-	global $PARAMETERS;
-
-	if (file_exists($path)) {
-		include($path);
+	
+	//controllo che il nome utilizzi solo caratteri validi
+	$regex = '#[^a-z0-9_-]#i';
+	
+	//nel caso in cui il nome del modulo non sia valido
+	if(preg_match($regex,$path)) {
+	
+		//visualizza il messaggio di errore
+		echo 'Nome modulo '.gdrcd_filter_out($path).'non valido';	
+		
+	//nel caso in cui invece il nome sia calido
 	} else {
-		echo $MESSAGE['interface']['layout_not_found'];
+	
+		//formatta il separatore di directory
+		$path = str_replace('__','/',$path);
+		
+		//imposta il path
+		$path = __DIR__ .'/../pages/'.$path.'.inc.php';
+
+		//Se il file esiste
+		if (file_exists($path)) {
+			
+			//Crea l'accesso agli array contenenti i parametri e il vocabolario della land
+			$MESSAGE = $GLOBALS['MESSAGE'];
+			$PARAMETERS = $GLOBALS['PARAMETERS'];			
+			
+			//include il controller
+			require($path);
+		
+		//Se il file non esiste
+		} else {
+			
+			
+			//visualizza il messaggio di errore
+			echo $MESSAGE['interface']['layout_not_found']. '('.$path.')';
+		
+		}
+		
 	}
 
 }
@@ -741,3 +774,6 @@ function gdrcd_list($str)
 
 	return $list;
 }
+
+
+require(__DIR__ .'/../plugins/dyrr/template_basic/lib/template_basic.inc.php');
