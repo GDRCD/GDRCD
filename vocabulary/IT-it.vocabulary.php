@@ -19,6 +19,7 @@ $MESSAGE['homepage']['forms']['email']='E-Mail';
 $MESSAGE['homepage']['forms']['new_pass']='Invia password';
 $MESSAGE['homepage']['forms']['online_now']='Utenti connessi';
 $MESSAGE['homepage']['forms']['open_in_popup']='Apri in popup?';
+$MESSAGE['homepage']['forms']['theme_choice']='Scegli il tema da usare';
 $MESSAGE['homepage']['registration']='Iscrizione';
 $MESSAGE['homepage']['storyline']='Ambientazione';
 $MESSAGE['homepage']['rules']='Regolamento';

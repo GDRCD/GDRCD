@@ -5,4 +5,6 @@
 	require_once(__DIR__.'/../vocabulary/'.$PARAMETERS['languages']['set'].'.vocabulary.php');
  	require_once(__DIR__.'/functions.inc.php');
 
-?>
+	if(!empty($_SESSION['theme']) and array_key_exists($_SESSION['theme'], $PARAMETERS['themes']['available'])){
+			$PARAMETERS['themes']['current_theme'] = $_SESSION['theme'];
+	}

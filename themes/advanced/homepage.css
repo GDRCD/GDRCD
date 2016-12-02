@@ -37,7 +37,7 @@ div.login_form{
 	float:right;
 	width:230px;
 	padding:10px;
-	margin-top:60px;
+	margin-top: 20px;
 }
 
 /** * stile che ingloba i gruppi label/input
@@ -56,6 +56,10 @@ span.form_label{
 div.login_form input{
 	width:145px;
 	margin:0;
+}
+div.login_form input[type=checkbox]{
+	width: auto;
+	vertical-align: middle;
 }
 
 /** * Stile per il bottone del login
@@ -95,7 +99,7 @@ div.content_body a{
 
 
 
-/** * Menù di navigazione
+/** * Menï¿½ di navigazione
 */
 div.sidecontent ul{
 	margin:20px 0 0 10px;
@@ -111,13 +115,13 @@ div.sidecontent ul{
 	border-radius:5px;
 }
 
-/** * Contenitore delle voci nel menù 
+/** * Contenitore delle voci nel menï¿½ 
 */
 div.sidecontent ul li{
 	margin-bottom:5px;
 }
 
-/** * Link voce menù 
+/** * Link voce menï¿½ 
 */
 div.sidecontent ul li a, div.sidecontent ul li a:visited{
 	color:#f1f1f1;
@@ -128,7 +132,7 @@ div.sidecontent ul li a, div.sidecontent ul li a:visited{
 	background-color:none;
 }
 
-/** * Link voce menù al passaggio del mouse
+/** * Link voce menï¿½ al passaggio del mouse
 */
 div.sidecontent ul li a:hover{
 	background-color:#b2b2b2;

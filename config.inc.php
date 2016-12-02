@@ -50,9 +50,31 @@
         /* HELP: Per definire un diverso vocabolario creare una copia del file /vocabulary/IT-it.vocabulary.php nella cartella vocabulary. Il nome del file deve essere [nome].vocabulary.php, dove la stringa [nome] può essere scelta e deve essere il valore specificato in $PARAMETER['languages']['set']. */
 
 
-        /* SCELTA DEL TEMA */
-        $PARAMETERS['themes']['current_theme'] = 'advanced'; //tema in uso
-        //$PARAMETERS['themes']['current_theme'] = 'medieval';
+        /**
+         * SCELTA DEL TEMA
+         * Il tema rappresenta il set di stili, strutture HTML e immagini utilizzati nel sito
+         *
+         */
+        $PARAMETERS['themes']['current_theme'] = 'advanced'; //Tema abilitato di default
+
+        /**
+         * Inserendo i nomi dei temi in questo elenco è possibile rendere disponibili agli utenti temi alternativi
+         * rispetto a quello di default
+         * Il primo elemento di ogni riga deve corrispondere al nome della cartella in cui è contenuto il tema
+         * in themes/<nome tema>
+         * Il secondo elemento è il nome che verrà presentato agli utenti durante la scelta
+         *
+         * Se non si vuole dare gli utenti la possibilità di scegliere temi alternativi, è sufficiente non impostare
+         * alcun tema in questa variabile
+         *
+         * NOTA: le pagine esterne del sito, cioè quelle visualizzate prima del login saranno sempre visualizzate con
+         * il tema di default
+         */
+        $PARAMETERS['themes']['available'] = array(
+          'advanced' => 'Tema Advanced GDRCD',
+          'basic' => 'Tema Base GDRCD',
+          //'il_mio_tema_preferito' => 'Il mio tema troppo figo'
+        );
 
 
         /**

@@ -10,6 +10,10 @@
 	require 'vocabulary/'.$PARAMETERS['languages']['set'].'.vocabulary.php';
 	require 'includes/functions.inc.php';
 
+  if(!empty($_SESSION['theme']) and array_key_exists($_SESSION['theme'], $PARAMETERS['themes']['available'])){
+      $PARAMETERS['themes']['current_theme'] = $_SESSION['theme'];
+  }
+
 	//Eseguo la connessione al database
 	$handleDBConnection = gdrcd_connect();
 	//Ricevo il tempo di reload

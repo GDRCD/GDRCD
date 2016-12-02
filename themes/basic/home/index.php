@@ -17,6 +17,20 @@
     <div class="form_field"><input name="login1" /></div>
    	<div class="form_label"><?php echo $MESSAGE['homepage']['forms']['password'];?></div>
 	<div class="form_field"><input type="password" name="pass1" /></div>
+<?php if(!empty($PARAMETERS['themes']['available']) and count($PARAMETERS['themes']['available'])>1):?>
+  <div class="form_label"><?= gdrcd_filter('out', $MESSAGE['homepage']['forms']['theme_choice']) ?></div>
+  <div class="form_field"><select name="theme" id="theme">
+              <?php
+              foreach($PARAMETERS['themes']['available'] as $k => $name){
+                  echo '<option value="'.gdrcd_filter('out', $k).'"';
+                  if($k==$PARAMETERS['themes']['current_theme']){
+                      echo ' selected="selected"';
+                  }
+                  echo '>'.gdrcd_filter('out', $name).'</option>';
+              }
+              ?>
+          </select></div>
+      <?php endif; ?>
 <?php 	if ($PARAMETERS['mode']['popup_choise']=='ON'){ ?>
 	<div class="form_label"><?php echo $MESSAGE['homepage']['forms']['open_in_popup'];?></div>
 	<div class="form_field"><input type="checkbox" id="allow_popup" /></div>

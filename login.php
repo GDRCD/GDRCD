@@ -111,6 +111,11 @@ if (!empty($record) and gdrcd_password_check($pass1,$record['pass']) && ($record
 	$_SESSION['last_message'] = 0;
 	$_SESSION['last_istant_message'] = $record['ultimo_messaggio'];
 
+	//Scelta del tema
+    if(!empty($_POST['theme']) and array_key_exists($_POST['theme'], $PARAMETERS['themes']['available'])){
+        $_SESSION['theme'] = $_POST['theme'];
+    }
+
 	$res = gdrcd_query("SELECT ruolo.gilda, ruolo.immagine FROM ruolo JOIN clgpersonaggioruolo ON clgpersonaggioruolo.id_ruolo = ruolo.id_ruolo WHERE clgpersonaggioruolo.personaggio = '".gdrcd_filter('in', $record['nome'])."'", 'result');
 
     while($row = gdrcd_query($res, 'fetch'))
