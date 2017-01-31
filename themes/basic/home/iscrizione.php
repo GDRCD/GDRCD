@@ -19,7 +19,7 @@
                 </div>
                 <!-- Accetto le condizioni -->
                 <div class="form_gioco">
-                    <form action="iscrizione.php" method="post">
+                    <form action="" method="post">
                         <div class="form_submit">
                             <input type="hidden" name="fase" value="1"/>
                             <input type="submit"
@@ -48,7 +48,7 @@
 
             <div class="panels_box">
                 <div class="form_gioco">
-                    <form action="iscrizione.php" method="post">
+                    <form action="index.php?page=iscrizione" method="post">
                         <!-- EMail -->
                         <div class="form_label">
                             <?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['email']); ?>
@@ -324,7 +324,7 @@
                 { ?>
 
                     <div class="form_gioco">
-                        <form action="iscrizione.php" method="post">
+                        <form action="index.php?page=iscrizione" method="post">
                             <div class="form_submit">
                                 <input type="hidden" name="fase" value="1"/>
                                 <input type="hidden" name="email"
@@ -464,7 +464,7 @@
                         </table>
                     </div>
                     <div class="form_gioco">
-                        <form action="iscrizione.php" method="post">
+                        <form action="index.php?page=iscrizione" method="post">
                             <div class="form_submit">
                                 <input type="hidden" name="fase" value="3"/>
                                 <input type="hidden" name="email"
@@ -493,7 +493,7 @@
                                        value="<?php echo gdrcd_filter('out', $MESSAGE['register']['forms']['ok']); ?>"/>
                             </div>
                         </form>
-                        <form action="iscrizione.php" method="post">
+                        <form action="index.php?page=iscrizione" method="post">
                             <div class="form_submit">
                                 <input type="hidden" name="fase" value="1"/>
                                 <input type="hidden" name="email"

@@ -89,17 +89,17 @@
                 </div>
 
                 <div class="main_links">
-                    <a href="iscrizione.php">
+                    <a href="index.php?page=iscrizione">
                         <div class="page_title"><h2>
                                 <?php echo $MESSAGE['homepage']['registration']; ?>
                             </h2></div>
                     </a>
-                    <a href="ambientazione.php?page=user_ambientazione">
+                    <a href="index.php?page=ambientazione&content=user_ambientazione">
                         <div class="page_title"><h2>
                                 <?php echo $MESSAGE['homepage']['storyline']; ?>
                             </h2></div>
                     </a>
-                    <a href="ambientazione.php?page=user_regolamento">
+                    <a href="index.php?page=ambientazione&content=user_regolamento">
                         <div class="page_title"><h2>
                                 <?php echo $MESSAGE['homepage']['rules']; ?>
                             </h2></div>
