@@ -57,6 +57,5 @@ define('HTML_FILTER_BASE', 0);
 define('HTML_FILTER_HIGH', 1);
 
 /*Vettori globali dei parametri*/
-$PARAMETER = [];
-$MESSAGES = [];
-?>
+$PARAMETER = array();
+$MESSAGES = array();

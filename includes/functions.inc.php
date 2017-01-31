@@ -163,7 +163,7 @@ function gdrcd_check_tables($table)
 
 
     $i = 0;
-    $output = [];
+    $output = array();
 
     while ($field = gdrcd_query($describe, 'object'))
     {
@@ -264,7 +264,7 @@ function gdrcd_encript($str)
                 $str = md5($str);
                 break;
             case 'BCRYPT':
-                require_once(__DIR__ . '/PasswordHash.php');
+                require_once(dirname(__FILE__) . '/PasswordHash.php');
                 $hasher = new PasswordHash(8, true);
                 $str = $hasher->HashPassword($str);
                 break;
@@ -291,7 +291,7 @@ function gdrcd_password_check($pass, $stored)
                 return $stored == md5($pass);
                 break;
             case 'BCRYPT':
-                require_once(__DIR__ . '/PasswordHash.php');
+                require_once(dirname(__FILE__) . '/PasswordHash.php');
                 $hasher = new PasswordHash(8, true);
 
                 return $hasher->CheckPassword($pass, $stored);
@@ -526,7 +526,7 @@ function gdrcd_check_time($time)
  * @param string $path : il percorso filesystem del file da includere
  * @param array $params : un array di dati aggiuntivi passabili al modulo
  */
-function gdrcd_load_modules($path, $params = [])
+function gdrcd_load_modules($path, $params = array())
 {
     global $MESSAGE;
     global $PARAMETERS;

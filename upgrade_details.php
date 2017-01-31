@@ -10,20 +10,20 @@ $table = gdrcd_query($tablelist, 'num_rows');
 
 if ($table > 0)
 {
-    $tables_list = [];
+    $tables_list = array();
     while ($row = gdrcd_query($tablelist, 'fetch'))
     {
         $tables_list[] = $row[0];
     }
     gdrcd_query($tablelist, 'free');
 
-    $updating_queryes = [];
+    $updating_queryes = array();
     $updating_password = false;
 
     /** * Elenco dei campi da aggiornare
      * @author Blancks
      */
-    $tables = [];
+    $tables = array();
 
     require 'upgrade_list.php';
 

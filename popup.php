@@ -9,7 +9,7 @@ if ( ! empty($_GET['page']))
     gdrcd_load_modules(
         gdrcd_filter(
             'include',
-            __DIR__
+            dirname(__FILE__)
             . DIRECTORY_SEPARATOR
             . 'pages'
             . DIRECTORY_SEPARATOR

@@ -223,7 +223,7 @@ function img($str)
     }
 
 
-    $sobstitution = [];
+    $sobstitution = array();
     preg_match_all("#\[img\]($regexpUrl)+\[/img\]#is", $str, $img);
 
     foreach ($img[0] as $key => $source)

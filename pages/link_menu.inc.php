@@ -2,7 +2,7 @@
     <?php
     if ($PARAMETERS['mode']['gotomap_list'] == 'ON' && empty($params['no_gotomap_list']))
     {
-        $gotomap_list = [];
+        $gotomap_list = array();
         $result = gdrcd_query("	SELECT 	mappa_click.id_click, mappa_click.nome,
 									mappa.id, mappa.nome AS nome_chat, mappa.chat, mappa.pagina, mappa.id_mappa_collegata
 							FROM mappa_click
