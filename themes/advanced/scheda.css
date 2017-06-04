@@ -351,5 +351,16 @@ div.pagina_scheda_oggetti form{
  margin: 0 0 4px 0;
 }
 
+.skill_incr.active,
+.skill_decr.active {
+    visibility:visible;
+}
+.skill_incr.inactive,
+.skill_decr.inactive {
+    visibility:hidden;
+}
+
+
+
 /****************************************************************************/
 
