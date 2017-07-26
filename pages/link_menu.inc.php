@@ -93,8 +93,7 @@
     <div class="page_body">
 
         <?php
-        $raw_counter = 0;
-
+	$hovers = [];
         foreach ($PARAMETERS[$mkey] as $key => $link_menu)
         {
 
@@ -105,43 +104,57 @@
                 {
                     if ( ! empty($link_menu['text']))
                     {
-                        $content .= '>' . gdrcd_filter('out', $link_menu['text']);
+                        $content .= gdrcd_filter('out', $link_menu['text']);
                     }
                 } elseif ( ! empty($link_menu['sprite']))
                 {
                     $link_menu['class'] = (empty($link_menu['class']) ? 'sprite' : $link_menu['class'] . ' sprite');
-                    $content = 'style="background-image: url(themes/' . $PARAMETERS['themes']['current_theme'] . '/imgs/' . $mkey . '/' . $link_menu['image_file'] . ')" alt="' . gdrcd_filter('out',
-                            $link_menu['text']) . '" title="' . gdrcd_filter('out', $link_menu['text']) . '">';
-                } else
-                {
-                    if (empty($link_menu['image_file_onclick']))
-                    {
-                        $img_up = $link_menu['image_file'];
-                        $img_down = $link_menu['image_file'];
-                    } else
-                    {
-                        $img_up = $link_menu['image_file'];
-                        $img_down = $link_menu['image_file_onclick'];
+                    $link_menu['style'] = 'background-image: url(themes/' . $PARAMETERS['themes']['current_theme'] . '/imgs/' . $mkey . '/' . $link_menu['image_file'] . ')';
+                    $link_menu['alt'] = gdrcd_filter('out', $link_menu['text']);
+                    $link_menu['title'] = gdrcd_filter('out', $link_menu['text']);
+                }
+		else {
+                    if (!empty($link_menu['image_file_onclick'])) {
+                      $hovers['link_'.$mkey.'_'.$key] = [
+                        'normal' => '/themes/' . $PARAMETERS['themes']['current_theme'] . '/imgs/' . $mkey . '/'.$link_menu['image_file'],
+                        'hover' => '/themes/' . $PARAMETERS['themes']['current_theme'] . '/imgs/' . $mkey . '/'.$link_menu['image_file_onclick']
+                      ];
                     }
-                    $content = ' onMouseOver="n' . $mkey . $raw_counter . '_over_button()" onMouseOut="n' . $mkey . $raw_counter . '_up_button()"><img src= "themes/' . $PARAMETERS['themes']['current_theme'] . '/imgs/' . $mkey . '/' . $link_menu['image_file'] . '" alt="' . gdrcd_filter('out',
-                            $link_menu['text']) . '" title="' . gdrcd_filter('out',
-                            $link_menu['text']) . '" name="n' . $mkey . $raw_counter . '_buttonOne" />';
-                    echo '<SCRIPT LANGUAGE="JavaScript"> if (document.images) { var n' . $mkey . $raw_counter . '_button1_up = new Image(); n' . $mkey . $raw_counter . '_button1_up.src = "themes/' . $PARAMETERS['themes']['current_theme'] . '/imgs/' . $mkey . '/' . $img_up . '"; var n' . $mkey . $raw_counter . '_button1_over = new Image(); n' . $mkey . $raw_counter . '_button1_over.src = "themes/' . $PARAMETERS['themes']['current_theme'] . '/imgs/' . $mkey . '/' . $img_down . '";} function n' . $mkey . $raw_counter . '_over_button() { if (document.images) { document["n' . $mkey . $raw_counter . '_buttonOne"].src = n' . $mkey . $raw_counter . '_button1_over.src;}} function n' . $mkey . $raw_counter . '_up_button() { if (document.images) { document["n' . $mkey . $raw_counter . '_buttonOne"].src = n' . $mkey . $raw_counter . '_button1_up.src}}</SCRIPT>';
+                    $content = '<img src="/themes/' . $PARAMETERS['themes']['current_theme'] . '/imgs/' . $mkey . '/' . $link_menu['image_file'] . '" alt="' . gdrcd_filter('out', $link_menu['text']) . '" title="' . gdrcd_filter('out', $link_menu['text']) . '"  />';
                 }
 
                 echo '<div class="link_menu"><a href="' . $link_menu['url'] . '" id="link_' . $mkey . '_' . $key . '"';
-                foreach ($link_menu as $k => $v)
-                {
-                    if ( ! in_array($k, ['text', 'image_file', 'url', 'image_file_onclick', 'sprite']))
-                    {
+                foreach ($link_menu as $k => $v) {
+                    if ( ! in_array($k, ['text', 'image_file', 'url', 'image_file_onclick', 'sprite'])) {
                         echo $k . '="' . $v . '"';
                     }
                 }
                 echo $content . '</a></div>';
             }
-            $raw_counter++;
         }
+	?>
+<script type="application/javascript">
+  var <?= $mkey ?>_hovers = <?= json_encode($hovers); ?>;
 
+  $(function(){
+    $('.<?= $params['class'] ?> .link_menu a').mouseover(function(ev){
+      var $t = $(this);
+      var id = $t.attr('id');
+      if(id in <?= $mkey ?>_hovers) {
+        ev.preventDefault();
+        $t.find('img').attr('src', <?= $mkey ?>_hovers[id]['hover']);
+      }
+    })
+      .mouseout(function(ev){
+        var $t = $(this);
+        var id = $t.attr('id');
+        if(id in <?= $mkey ?>_hovers) {
+          ev.preventDefault();
+          $t.find('img').attr('src', <?= $mkey ?>_hovers[id]['normal']);
+        }
+      });
+  });
+</script>
         /*HELP: Il menu viene generato automaticamente attingendo dalle informazioni contenute in config.inc.php. Tutte
           le istruzioni su come usare e configurare i menù sono riportate nel file config.inc.php */ ?>
     </div>
