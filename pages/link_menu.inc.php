@@ -137,7 +137,7 @@
   var <?= $mkey ?>_hovers = <?= json_encode($hovers); ?>;
 
   $(function(){
-    $('.<?= $params['class'] ?> .link_menu a').mouseover(function(ev){
+    $('.<?= $params['class'] ?> .link_menu a').mouseenter(function(ev){
       var $t = $(this);
       var id = $t.attr('id');
       if(id in <?= $mkey ?>_hovers) {
@@ -145,7 +145,7 @@
         $t.find('img').attr('src', <?= $mkey ?>_hovers[id]['hover']);
       }
     })
-      .mouseout(function(ev){
+      .mouseleave(function(ev){
         var $t = $(this);
         var id = $t.attr('id');
         if(id in <?= $mkey ?>_hovers) {
