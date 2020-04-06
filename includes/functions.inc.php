@@ -344,7 +344,7 @@ function gdrcd_filter($what, $str)
             break;
 
         case 'out':
-            $str = htmlentities($str, ENT_QUOTES, 'utf-8');
+            $str =  html_entity_decode($str, ENT_HTML5, 'utf-8');
             break;
 
         case 'addslashes':
