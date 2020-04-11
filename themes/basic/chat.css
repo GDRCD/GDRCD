@@ -150,6 +150,10 @@ span.chat_msg {
 span.chat_master {
 }
 
+span.chat_me,span.chat_me_master{
+    text-decoration: underline;
+}
+
 /***** form inserimento *****/
 
 div.form_row {

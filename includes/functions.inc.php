@@ -757,23 +757,17 @@ function gdrcd_chatcolor($str)
  * @param string $str : la stringa in cui cercare e sottolineare $user
  * @return $str con tutte le occorrenze di $user sottolineate
  */
-function gdrcd_chatme($user, $str)
+function gdrcd_chatme($user, $str, $master=false)
 {
-    $search = $user;
-    $replace = '<span style="text-decoration:underline;">' . $search . '</span>';
+    $search = "|\\b".preg_quote($user,"|")."\\b|si";
+    if(!$master) {
+        $replace = '<span class="chat_me">' . gdrcd_filter('out',$user) . '</span>';
+    }
+    else{
+        $replace = '<span class="chat_me_master">' . gdrcd_filter('out',$user) . '</span>';
+    }
 
-    return str_ireplace($search, $replace, $str);
-}
-
-/**
- * TODO non ho capito a cosa serve
- */
-function gdrcd_chatme_master($user, $str)
-{
-    $search = $user;
-    $replace = '<span style="text-decoration:underline;">' . $search . '</span>';
-
-    return str_ireplace($search, $replace, $str);
+    return preg_replace($search, $replace, $str);
 }
 
 /**
