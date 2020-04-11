@@ -57,7 +57,122 @@ if (isset($_REQUEST['pg'])===FALSE){
          }
 
 		 gdrcd_query($result, 'free');
-
+		 
+        /* Nuovo Salvataggio Skill */
+        if (isset($_POST['op']) && !empty($_POST['skills']) && $_POST['op'] === 'saveskills' && ($_SESSION['login']==$_REQUEST['pg'] || $_SESSION['permessi'] >= MODERATOR)) {
+            // Raccogliamo i dati dal form
+            $skills = json_decode($_POST['skills'], true);
+            
+            if (!empty($skills)) {
+                // ci prepariamo a conteggiare i px necessari per eseguire le modifiche
+                $px_necessari = 0;
+                
+                // Recuperiamo tutti gli id delle skills da modificare
+                $skillsIdList = array_keys($skills);
+                
+                // E assicuriamoci di filtrarli tutti a dovere
+                foreach ($skillsIdList as &$skillId) {
+                    $skillId = gdrcd_filter('num', $skillId);
+                    
+                    // Già che ci siamo comunque controlliamo quanti punti bisogna spendere per salvare tutto
+                    if ((!isset($ranks[$skillId]) && $skills[$skillId] > 0) || $skills[$skillId] != $ranks[$skillId]) {
+                    
+                        // intanto cerchiamo di capire se stiamo effettuando un incremento o un decremento
+                        $diff = $skills[$skillId] - (!isset($ranks[$skillId])? 0 : $ranks[$skillId]);
+                        
+                        // incremento
+                        if ($diff > 0) {
+                            
+                            // conteggiamo quindi tutti i px da sottrarre per ogni step di incremento
+                            while ($diff-- > 0) {
+                                $px_necessari += $PARAMETERS['settings']['px_x_rank']*($skills[$skillId]-$diff);
+                            }
+                            
+                        // decremento, ma solo se si è autorizzati
+                        } elseif ($_SESSION['permessi'] >= MODERATOR) {
+                            // per il decremento la logica è la stessa, semplicemente recuperiamo il valore assoluto di diff
+                            $diff = abs($diff);
+                            
+                            // e recuperiamo i px per ogni step di decremento dal valore precedente
+                            while ($diff-- > 0) {
+                                $px_necessari -= $PARAMETERS['settings']['px_x_rank']*($ranks[$skillId]-$diff);
+                            }
+                        }
+                    } else {
+                        // se questa skill non ha ricevuto modifiche la rimuoviamo dall'elenco
+                        unset($skills[$skillId]);
+                    }
+                }
+                
+                // Controlliamo se il personaggio ha il necessario numero di punti esperienza per convalidare le modifiche
+                if ($px_totali_pg-$px_spesi-$px_necessari >= 0) {
+                    /* 
+                      A questo punto ci prepariamo per un  controllo:
+                        - verifichiamo che gli id delle abilità proposteci dal form esistano davvero nella tabella abilità
+                    */
+                    $skillsResult = gdrcd_query(
+                        "SELECT id_abilita
+                        FROM abilita
+                        WHERE id_abilita IN(". implode(',', $skillsIdList) .")",
+                        'result'
+                    );
+                    
+                    // Se la query ritorna un qualche risultato
+                    if (gdrcd_query($skillsResult, 'num_rows') > 0) {
+                        
+                        // Li scorriamo tutti
+                        while ($row = gdrcd_query($skillsResult, 'fetch')) {
+                            $skillId = $row['id_abilita'];
+                            
+                            // Il personaggio non ha nulla nel database registrato per questa skill, andiamo a creare il record
+                            if (!isset($ranks[$skillId]) && isset($skills[$skillId])) {
+                            
+                                gdrcd_query(
+                                    "INSERT INTO clgpersonaggioabilita (id_abilita, nome, grado) 
+                                    VALUES (
+                                        ". $skillId .", 
+                                        '". gdrcd_filter('in',$_REQUEST['pg']) ."', 
+                                        ". gdrcd_filter('num', $skills[$skillId]) ."
+                                    )"
+                                );
+                            
+                            // Il personaggio ha già questa skill ad un qualche valore, quindi dobbiamo effettuare un aggiornamento
+                            } elseif (
+                                isset($ranks[$skillId]) && 
+                                isset($skills[$skillId]) && 
+                                (
+                                    ($_SESSION['permessi'] >= MODERATOR) ||
+                                    ($_SESSION['login'] == $_REQUEST['pg'] && $ranks[$skillId] < $skills[$skillId])
+                                )
+                            ) {
+                            
+                                gdrcd_query(
+                                    "UPDATE clgpersonaggioabilita 
+                                        SET grado = ". gdrcd_filter('num', $skills[$skillId]) ."
+                                    WHERE id_abilita = ". $skillId ." 
+                                        AND nome LIKE '". gdrcd_filter('in',$_REQUEST['pg']) ."'
+                                    LIMIT 1"
+                                );
+                                
+                            }
+                            
+                        }
+                        
+                        // puliamo le risorse impiegate dalla query
+                        gdrcd_query($skillsResult, 'free');
+                    }
+                
+                    echo '<div class="warning">'.gdrcd_filter('out',$MESSAGE['warning']['modified']).'</div>';
+                    
+                } else {
+                    echo '<div class="warning">'.gdrcd_filter('out',$MESSAGE['warning']['cant_do']).'</div>';
+                }
+                
+            } else {
+                echo '<div class="warning">'.gdrcd_filter('out',$MESSAGE['warning']['cant_do']).'</div>';
+            }
+        }
+         
 		 /*Incremento skill*/
          if((gdrcd_filter('get',$_REQUEST['op'])=='addskill') && (($_SESSION['login']==gdrcd_filter('out',$_REQUEST['pg']))||($_SESSION['permessi']>=MODERATOR))){
             $px_necessari=$PARAMETERS['settings']['px_x_rank']*($ranks[$_REQUEST['what']]+1);
@@ -385,7 +500,7 @@ if ($PARAMETERS['mode']['alert_password_change']=='ON')
   $count=0;
   $total=0;?>
 
-  <div class="form_info"><?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['avalaible_xp']).': '.($px_totali_pg-$px_spesi);?></div>
+  <div class="form_info"><?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['avalaible_xp']).': <span id="skillpoints">'. ($px_totali_pg-$px_spesi) .'</span>'; ?></span></div>
   <div class="div_colonne_abilita_scheda">
   <table class="colonne_abilita_scheda"><tr>
   <?php while($row=gdrcd_query($result, 'fetch')){
@@ -397,20 +512,17 @@ if ($PARAMETERS['mode']['alert_password_change']=='ON')
 	    <?php echo '('.gdrcd_filter('out',$PARAMETERS['names']['stats']['car'.$row['car']]).')'; ?>
 	 </div>
   </td>
-  <td><div class="abilita_scheda_tank"><?php echo 0+gdrcd_filter('out',$ranks[$row['id_abilita']]); ?></div></td>
+  <td><div class="abilita_scheda_tank"><span class="skill" data-skillcurvalue="<?php echo 0+gdrcd_filter('out',$ranks[$row['id_abilita']]); ?>" data-skillid="<?php echo $row['id_abilita'] ?>"><?php echo 0+gdrcd_filter('out',$ranks[$row['id_abilita']]); ?></span></div></td>
   <td>
      <div class="abilita_scheda_sub">
         <?php /*Stampo il form di incremento se il pg ha abbastanza px*/
               if((((($ranks[$row['id_abilita']]+1)*$PARAMETERS['settings']['px_x_rank'])<=($px_totali_pg-$px_spesi))&&
-				  (gdrcd_filter('get',$_REQUEST['pg'])==$_SESSION['login'])&&
-				  ($ranks[$row['id_abilita']]<$PARAMETERS['settings']['skills_cap']))||
-				 ($_SESSION['permessi']>=MODERATOR)){ ?>
-                 [<a href="main.php?page=scheda&pg=<?php echo gdrcd_filter('url',$_REQUEST['pg']) ?>&op=addskill&what=<?php echo $row['id_abilita'] ?>">+</a>]
-                 <?php if(($_SESSION['permessi']>=MODERATOR)&&
-				          ($ranks[$row['id_abilita']]>0)){ ?>
-                 [<a href="main.php?page=scheda&pg=<?php echo gdrcd_filter('url',$_REQUEST['pg']) ?>&op=subskill&what=<?php echo $row['id_abilita'] ?>">-</a>]
-				 <?php } ?>
-		<?php } else { echo '&nbsp;';} ?>
+                 (gdrcd_filter('get',$_REQUEST['pg'])==$_SESSION['login'])&&
+                 ($ranks[$row['id_abilita']]<$PARAMETERS['settings']['skills_cap']))||
+                 ($_SESSION['permessi']>=MODERATOR)){ ?>
+                 <a href="javascript:void(0);" class="skill_incr" data-skillid="<?php echo $row['id_abilita'] ?>">[+]</a>
+                 <a href="javascript:void(0);" class="skill_decr" data-skillid="<?php echo $row['id_abilita'] ?>">[-]</a>
+        <?php } else { echo '&nbsp;';} ?>
      </div>
   </td>
   </tr>
@@ -423,9 +535,50 @@ if ($PARAMETERS['mode']['alert_password_change']=='ON')
   </tr>
   </table>
   </div>
+  
+  <form action="main.php?page=scheda&pg=<?php echo gdrcd_filter('url',$_REQUEST['pg']) ?>" method="post">
+    <input type="hidden" name="op" value="saveskills">
+    <input type="hidden" id="skillsinput" name="skills" value="">
+    <button id="saveskills" disabled>Salva Modifiche!</button>
+  </form>
+  
   <div class="form_info"><?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['info_skill_cost']);?></div>
 
 </div><!-- Elenco abilità -->
+<script type="text/javascript">
+
+    var gdrcdSkills = new gdrcdSkills(
+        '#skillpoints', 
+        '.skill', 
+        '.skill_incr', 
+        '.skill_decr',
+        function(rank) {
+            return <?php echo gdrcd_filter('num', $PARAMETERS['settings']['px_x_rank']); ?> * rank;
+        }
+    );
+    
+    <?php if ($_SESSION['permessi']>=MODERATOR) { ?>
+
+        gdrcdSkills.allowMasterDecrement(true);
+
+    <?php } ?>
+    
+    var skillsInput = document.getElementById('skillsinput'),
+        skillsSaveButton = document.getElementById('saveskills'),
+        defaultSkillsValue = gdrcdSkills.exportSkillsValue();
+    
+    gdrcdSkills.onSkillChange(function() {
+        var newSkillsValue = gdrcdSkills.exportSkillsValue();
+        skillsInput.value = newSkillsValue;
+                
+        if (newSkillsValue !== defaultSkillsValue) {
+            skillsSaveButton.removeAttribute('disabled');
+        } else {
+            skillsSaveButton.setAttribute('disabled', '');
+        }
+    });
+    
+</script>
 <?php } ?>
 
 <div class="background"><!-- Background, affetti, robe varie -->
