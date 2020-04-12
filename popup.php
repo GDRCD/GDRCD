@@ -1,25 +1,22 @@
 <?php
-require 'header.inc.php'; 
+require 'header.inc.php';
 gdrcd_controllo_sessione();
 
 echo '<div class="popup">';
 
-if (!empty($_GET['page']))
-{
+if ( ! empty($_GET['page'])) {
     gdrcd_load_modules(
         gdrcd_filter(
-            'include', 
-            __DIR__ 
-            . DIRECTORY_SEPARATOR 
-            . 'pages' 
+            'include',
+            dirname(__FILE__)
             . DIRECTORY_SEPARATOR
-            . $_GET['page'] 
+            . 'pages'
+            . DIRECTORY_SEPARATOR
+            . $_GET['page']
             . '.inc.php'
         )
     );
-} 
-else
-{
+} else {
     echo $MESSAGE['interface']['layout_not_found'];
 }
 
