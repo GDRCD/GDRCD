@@ -14,12 +14,10 @@
 /**
  * Connettore al database MySql
  */
-function gdrcd_connect()
-{
+function gdrcd_connect() {
     static $db_link = false;
 
-    if ($db_link === false)
-    {
+    if ($db_link === false) {
         $db_user = $GLOBALS['PARAMETERS']['database']['username'];
         $db_pass = $GLOBALS['PARAMETERS']['database']['password'];
         $db_name = $GLOBALS['PARAMETERS']['database']['database_name'];
@@ -33,26 +31,20 @@ function gdrcd_connect()
 
         mysqli_set_charset($db_link, "utf8");
 
-        if (mysqli_connect_errno())
-        {
+        if (mysqli_connect_errno()) {
             gdrcd_mysql_error($db_error);
         }
-
     }
-
     return $db_link;
 }
-
 
 /**
  * Chiusura della connessione col db MySql
  * @param resource $db : una connessione mysqli
  */
-function gdrcd_close_connection($db)
-{
+function gdrcd_close_connection($db) {
     mysqli_close($db);
 }
-
 
 /**
  * Gestore delle query, offre una basilare astrazione del database per la maggior parte delle funzionalità del database più usate.
@@ -69,72 +61,45 @@ function gdrcd_close_connection($db)
  *  affected: ritorna il numero di record toccati dall'ultima query (INSERT, UPDATE, DELETE o SELECT). In questo caso $sql non viene considerato
  * @return un booleano in caso di esecuzione di query non SELECT e modalità 'query'. Altrimenti ritorna come specificato nella descrizione di $mode
  */
-function gdrcd_query($sql, $mode = 'query')
-{
+function gdrcd_query($sql, $mode = 'query') {
     $db_link = gdrcd_connect();
 
-    switch (strtolower(trim($mode)))
-    {
+    switch (strtolower(trim($mode))) {
         case 'query':
-
-            switch (strtoupper(substr(trim($sql), 0, 6)))
-            {
+            switch (strtoupper(substr(trim($sql), 0, 6))) {
                 case 'SELECT':
-
                     $result = mysqli_query($db_link, $sql) or die(gdrcd_mysql_error($sql));
                     $row = mysqli_fetch_array($result, MYSQLI_BOTH);
                     mysqli_free_result($result);
 
                     return $row;
-
                     break;
-
                 default:
-
                     return mysqli_query($db_link, $sql) or die(gdrcd_mysql_error($sql));
-
                     break;
             }
 
-
         case 'result':
-
             $result = mysqli_query($db_link, $sql) or die(gdrcd_mysql_error($sql));
-
             return $result;
-
             break;
-
 
         case 'num_rows':
-
             return (int) mysqli_num_rows($sql);
-
             break;
-
 
         case 'fetch':
-
             $row = mysqli_fetch_array($sql, MYSQLI_BOTH);
-
             return $row;
-
             break;
-
 
         case 'object':
-
             $row = mysqli_fetch_object($sql);
-
             return $row;
-
             break;
 
-
         case 'free':
-
             return mysqli_free_result($sql);
-
             break;
 
         case 'last_id':
@@ -145,52 +110,40 @@ function gdrcd_query($sql, $mode = 'query')
             return (int) mysqli_affected_rows($db_link);
             break;
     }
-
-
 }
-
-
 /**
  * Funzione di recupero delle colonne e della loro dichiarazione della tabella specificata.
  * Si usa per la verifica dell'aggiornamento db da vecchie versioni di gdrcd5
  * @param string $table : il nome della tabella da controllare
  * @return un oggetto contenente la descrizione della tabella negli attributi
  */
-function gdrcd_check_tables($table)
-{
+function gdrcd_check_tables($table) {
     $result = gdrcd_query("SELECT * FROM $table LIMIT 1", 'result');
     $describe = gdrcd_query("SHOW COLUMNS FROM $table", 'result');
-
 
     $i = 0;
     $output = array();
 
-    while ($field = gdrcd_query($describe, 'object'))
-    {
+    while ($field = gdrcd_query($describe, 'object')) {
         #echo $i, "<br>";
         $defInfo = mysqli_fetch_field_direct($result, $i);
 
         $field->auto_increment = (strpos($field->Extra, 'auto_increment') === false ? 0 : 1);
         $field->definition = $field->Type;
 
-        if ($field->Null == 'NO' && $field->Key != 'PRI')
-        {
+        if ($field->Null == 'NO' && $field->Key != 'PRI') {
             $field->definition .= ' NOT NULL';
         }
 
-        if ($field->Default)
-        {
+        if ($field->Default) {
             $field->definition .= " DEFAULT '" . mysqli_real_escape_string(gdrcd_connect(), $field->Default) . "'";
         }
 
-        if ($field->auto_increment)
-        {
+        if ($field->auto_increment) {
             $field->definition .= ' AUTO_INCREMENT';
         }
 
-
-        switch ($field->Key)
-        {
+        switch ($field->Key) {
             case 'PRI':
                 $field->definition .= ' PRIMARY KEY';
                 break;
@@ -202,7 +155,6 @@ function gdrcd_check_tables($table)
                 break;
         }
 
-
         $field->len = $defInfo->length;
         $output[$field->Field] = $field;
         ++$i;
@@ -212,30 +164,24 @@ function gdrcd_check_tables($table)
 
     gdrcd_query($describe, 'free');
 
-
     return $output;
 }
-
 
 /**
  * Gestione degli errori tornati dalle query
  * @param string $details : una descrizione dell'errore avvenuto
  * @return una stringa HTML che descrive l'errore riscontrato
  */
-function gdrcd_mysql_error($details = false)
-{
+function gdrcd_mysql_error($details = false) {
     $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 50);
 
     $error_msg = '<strong>GDRCD MySQLi Error</strong> [File: ' . basename($backtrace[1]['file']) . '; Line: ' . $backtrace[1]['line'] . ']<br>' .
         '<strong>Error Code</strong>: ' . mysqli_errno(gdrcd_connect()) . '<br>' .
         '<strong>Error String</strong>: ' . mysqli_error(gdrcd_connect());
 
-    if ($details !== false)
-    {
+    if ($details !== false) {
         $error_msg .= '<br><br><strong>Error Detail</strong>: ' . $details;
     }
-
-
     return $error_msg;
 }
 
@@ -251,15 +197,12 @@ function gdrcd_mysql_error($details = false)
  * @param string $str : la password o stringa di cui calcolare l'hash
  * @return l'hash calcolato a partire da $str con l'algoritmo specificato nella configurazione
  */
-function gdrcd_encript($str)
-{
+function gdrcd_encript($str) {
     $encript_password = $GLOBALS['PARAMETERS']['mode']['encriptpassword'];
     $encript_algorithm = $GLOBALS['PARAMETERS']['mode']['encriptalgorithm'];
 
-    if ($encript_password == 'ON')
-    {
-        switch ($encript_algorithm)
-        {
+    if ($encript_password == 'ON') {
+        switch ($encript_algorithm) {
             case 'MD5':
                 $str = md5($str);
                 break;
@@ -273,18 +216,14 @@ function gdrcd_encript($str)
                 break;
         }
     }
-
-
     return $str;
 }
 
-function gdrcd_password_check($pass, $stored)
-{
+function gdrcd_password_check($pass, $stored) {
     $encript_password = $GLOBALS['PARAMETERS']['mode']['encriptpassword'];
     $encript_algorithm = $GLOBALS['PARAMETERS']['mode']['encriptalgorithm'];
 
-    if ($encript_password == 'ON')
-    {
+    if ($encript_password == 'ON') {
         switch ($encript_algorithm)
         {
             case 'MD5':
@@ -300,8 +239,7 @@ function gdrcd_password_check($pass, $stored)
                 return $stored == sha1($pass);
                 break;
         }
-    } else
-    {
+    } else {
         return $pass == $stored;
     }
 }
@@ -318,8 +256,7 @@ function gdrcd_password_check($pass, $stored)
  * @param string $str : la password da controllare
  * @return true se la password è valida, false altrimenti
  */
-function gdrcd_check_pass($str)
-{
+function gdrcd_check_pass($str) {
     return true;
 }
 

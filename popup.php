@@ -4,8 +4,7 @@ gdrcd_controllo_sessione();
 
 echo '<div class="popup">';
 
-if ( ! empty($_GET['page']))
-{
+if ( ! empty($_GET['page'])) {
     gdrcd_load_modules(
         gdrcd_filter(
             'include',
@@ -17,8 +16,7 @@ if ( ! empty($_GET['page']))
             . '.inc.php'
         )
     );
-} else
-{
+} else {
     echo $MESSAGE['interface']['layout_not_found'];
 }
 

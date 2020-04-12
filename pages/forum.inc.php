@@ -1,4 +1,3 @@
-<?php /*HELP: */ ?>
 <div class="pagina_forum">
     <!-- Titolo della pagina -->
     <div class="page_title">
@@ -310,7 +309,6 @@
 
             if ($araldoData['N'] > 0)
             {
-                gdrcd_query($sqlAraldo, 'free');
                 ?>
                 <div class="panels_box">
                     <div class="form_gioco">

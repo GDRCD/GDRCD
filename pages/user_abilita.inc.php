@@ -1,11 +1,10 @@
 <div class="user_abilita">
-    <div class="page_title"><h2><?php echo gdrcd_filter('out', $MESSAGE['interface']['skills']['page_name']); ?></h2>
+    <div class="page_title">
+        <h2><?php echo gdrcd_filter('out', $MESSAGE['interface']['skills']['page_name']); ?></h2>
     </div>
 
     <div class="page_body">
-        <?php /*HELP: */
-
-
+        <?php
         $query = "SELECT nome, car, descrizione FROM abilita ORDER BY nome";
         $result = gdrcd_query($query, 'result'); ?>
         <div class="panels_box">
@@ -40,7 +39,8 @@
                                         $row['descrizione'])); ?></div>
                             </td>
                         </tr>
-                    <?php }//while
+                        <?php
+                    }//while
 
                     gdrcd_query($result, 'free');
                     ?>

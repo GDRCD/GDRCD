@@ -31,7 +31,6 @@ $PARAMETERS['mode']['encriptalgorithm'] = 'BCRYPT';
 //$PARAMETERS['mode']['encriptalgorithm']='SHA-1';
 /* HELP: decidere se criptare la password prima di aprire le iscrizioni, altrimenti, se l'impostazione sarà cambiata in seguito, sarà necessario procedere a reinserire manualmente tutte le password.*/
 
-
 /* INFORMAZIONI SUL SITO */
 $PARAMETERS['info']['site_name'] = 'GDRCD 5.4'; //nome del gioco
 $PARAMETERS['info']['site_url'] = 'http://gdrcd.gdrhost.it/'; //indirizzo URL del gioco
@@ -201,6 +200,7 @@ $PARAMETERS['date']['base_temperature'] = -4;//temperatura minima assoluta in gr
 
 /* OPZIONI DEL GIOCO */
 $PARAMETERS['settings']['protection'] = 'OFF'; //ON per attivare il sistema di protezione con password d'accesso
+//$PARAMETERS['settings']['protection_password'] = 'gdrcd'; //password per accedere al gioco in caso di sistema di protezione attivo
 $PARAMETERS['settings']['first_map'] = -1;//ID della mappa corrispondente al primo login
 $PARAMETERS['settings']['first_money'] = 50;//Quantita' di denaro iniziale per i PG
 $PARAMETERS['settings']['posts_per_page'] = 15;//Numero di post per pagina visualizzati nei forum
