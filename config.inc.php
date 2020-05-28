@@ -1,6 +1,6 @@
 <?php
 /**
- * CONFIGURAZIONE DI GDRCD 5.4 "Optimus"
+ * CONFIGURAZIONE DI GDRCD 5.5
  * @author MrFaber
  * @author Blancks
  * @author Breaker
@@ -22,22 +22,19 @@ $PARAMETERS['database']['url'] = 'localhost';        //indirizzo ip del database
 /* HELP: Sostituire le diciture inserite tra le virgolette con i parametri di connessione al Database del proprio dominio. Essi sono forniti al momento della registrazione. Se non si e' in possesso di tali parametri consultare le FAQ della homepage dell'host che fornisce il dominio. Se non le si trovano li contattare lo staff dell'host. */
 
 
-/* POLITICA DI CRIPTAZIONE */
-$PARAMETERS['mode']['encriptpassword'] = 'ON';
-//ON: La password e' memorizzata criptata sul database.
-//OFF: LA password e' memorizzata in chiaro sul database.
-$PARAMETERS['mode']['encriptalgorithm'] = 'BCRYPT';
-//$PARAMETERS['mode']['encriptalgorithm']='MD5';
-//$PARAMETERS['mode']['encriptalgorithm']='SHA-1';
-/* HELP: decidere se criptare la password prima di aprire le iscrizioni, altrimenti, se l'impostazione sarà cambiata in seguito, sarà necessario procedere a reinserire manualmente tutte le password.*/
+/* POLITICA DI CRIPTAZIONE
+ * E' stata rimossa la possibilita' di scegliere se salvare le password in chiaro.
+ * Sono stati rimossi i metodi SHA-1 e MD5 non essendo piu' sicuri. Rimane solo la funzione BCRYPT
+ */
 
 /* INFORMAZIONI SUL SITO */
-$PARAMETERS['info']['site_name'] = 'GDRCD 5.4'; //nome del gioco
-$PARAMETERS['info']['site_url'] = 'http://gdrcd.gdrhost.it/'; //indirizzo URL del gioco
+$PARAMETERS['info']['site_name'] = 'GDRCD 5.5'; //nome del gioco
+$PARAMETERS['info']['site_url'] = 'http://gdrcd.test/'; //indirizzo URL del gioco
 $PARAMETERS['info']['webmaster_name'] = 'Webmaster'; //nome e cognome del responsabile del sito
 $PARAMETERS['info']['webmaster_email'] = 'webmaster@gdrhost.it'; //email ufficiale del webmaster (è visibile in homepage)
 $PARAMETERS['info']['homepage_name'] = 'Homepage'; //nome con il quale si indica la prima pagina visualizzata
 $PARAMETERS['info']['dbadmin_name'] = 'Admin DB';
+$PARAMETERS['info']['GDRCD'] = '5.5'; //nome del gioco
 $PARAMETERS['mode']['welcome_message_homepage'] = 'ON';//Attiva il messaggio di bevenuto in homepage
 
 /* HELP: I parametri di questa voce compaiono come informazioni sulla homepage. */
@@ -53,6 +50,10 @@ $PARAMETERS['languages']['set'] = 'IT-it'; //lingua italiana
 $PARAMETERS['themes']['current_theme'] = 'advanced'; //tema in uso
 //$PARAMETERS['themes']['current_theme'] = 'medieval';
 
+/* Attiva nel frame l'avviso in caso di nuovi messaggi privati e/o bacheche */
+$PARAMETERS['mode']['check_forum'] = 'ON';
+$PARAMETERS['text']['check_forum']['new'] = '(Nuovo)';
+$PARAMETERS['mode']['check_messages'] = 'ON';
 
 /**
  * SCELTA DEL TIPO DI LAYOUT
@@ -200,7 +201,7 @@ $PARAMETERS['date']['base_temperature'] = -4;//temperatura minima assoluta in gr
 
 /* OPZIONI DEL GIOCO */
 $PARAMETERS['settings']['protection'] = 'OFF'; //ON per attivare il sistema di protezione con password d'accesso
-//$PARAMETERS['settings']['protection_password'] = 'gdrcd'; //password per accedere al gioco in caso di sistema di protezione attivo
+$PARAMETERS['settings']['protection_password'] = 'gdrcd'; //password per accedere al gioco in caso di sistema di protezione attivo
 $PARAMETERS['settings']['first_map'] = -1;//ID della mappa corrispondente al primo login
 $PARAMETERS['settings']['first_money'] = 50;//Quantita' di denaro iniziale per i PG
 $PARAMETERS['settings']['posts_per_page'] = 15;//Numero di post per pagina visualizzati nei forum
