@@ -2,12 +2,14 @@
 $dont_check = true;
 $check_for_update = false;
 
-require 'header.inc.php';
-require 'includes/credits.inc.php';
+require_once 'config.inc.php';
 
 if ($PARAMETERS['settings']['protection'] == 'ON'){
     require 'protezione.php';
 }
+
+require 'header.inc.php';
+require 'includes/credits.inc.php';
 
 /*
  * Definizione pagina da visualizzare
