@@ -93,11 +93,8 @@ div.content_body a {
 div.sidecontent ul {
     margin: 20px 0 0 10px;
     padding: 20px 10px 20px 10px;
-
     background-color: #a1a1a1;
-
     list-style-type: none;
-
     -moz-border-radius: 5px; /* Bordi arrotondati */
     -webkit-border-radius: 5px;
     -khtml-border-radius: 5px;
@@ -136,7 +133,6 @@ div.side_modules {
     font-color: #333;
     padding: 10px;
     text-align: center;
-
     -moz-border-radius: 5px; /* Bordi arrotondati */
     -webkit-border-radius: 5px;
     -khtml-border-radius: 5px;

@@ -112,25 +112,11 @@ div.chat_row_D {
 }
 
 div.chat_row_C {
-}
-
-div.chat_row_O {
     margin-top: 3px;
     border-width: 2px;
     border-color: blue;
     border-style: solid;
     color: cyan;
-
-}
-
-div.chat_row_C {
-    margin-top: 3px;
-
-    border-width: 2px;
-    border-color: blue;
-    border-style: solid;
-    color: cyan;
-
 }
 
 span.chat_time {
@@ -153,7 +139,7 @@ span.chat_msg {
 span.chat_master {
 }
 
-span.chat_me,span.chat_me_master{
+span.chat_me, span.chat_me_master {
     text-decoration: underline;
 }
 
@@ -167,7 +153,6 @@ div.form_row {
 div.casella_chat {
     float: left;
     margin-bottom: 6px;
-
 }
 
 /*Casella Tag*/

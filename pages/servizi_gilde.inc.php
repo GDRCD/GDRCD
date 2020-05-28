@@ -1,21 +1,12 @@
-<?php /*HELP: */ ?>
-
 <div class="pagina_servizi_gilde">
-
-
     <!-- Titolo della pagina -->
     <div class="page_title">
         <h2><?php echo gdrcd_filter('out', $PARAMETERS['names']['guild_name']['plur']); ?></h2>
     </div>
-
     <!-- Box principale -->
     <div class="page_body">
-
         <?php /*Visualizzaione elenco gilde*/
-        if (isset($_REQUEST['id_gilda']) === false)
-        {
-
-
+        if(isset($_REQUEST['id_gilda']) === false) {
             $query = "SELECT gilda.nome, gilda.id_gilda, gilda.tipo, gilda.immagine, codtipogilda.descrizione FROM gilda JOIN codtipogilda ON gilda.tipo = codtipogilda.cod_tipo WHERE gilda.visibile = 1 ORDER BY gilda.tipo, gilda.nome";
             $result = gdrcd_query($query, 'result');
 
@@ -23,14 +14,12 @@
             <div class="elenco_breve">
                 <div class="elenco_record_gioco">
                     <table>
-                        <?php while ($row = gdrcd_query($result, 'fetch'))
-                        {
+                        <?php
+                        while($row = gdrcd_query($result, 'fetch')) {
                             /*Conteggio i membri di gilda*/
-                            $numb = gdrcd_query("SELECT COUNT(*) FROM clgpersonaggioruolo JOIN ruolo ON clgpersonaggioruolo.id_ruolo = ruolo.id_ruolo WHERE ruolo.gilda = " . $row['id_gilda'] . "");
+                            $numb = gdrcd_query("SELECT COUNT(*) FROM clgpersonaggioruolo JOIN ruolo ON clgpersonaggioruolo.id_ruolo = ruolo.id_ruolo WHERE ruolo.gilda = ".$row['id_gilda']."");
                             /*Stampo la riga dell'allineamento gilde*/
-                            if ($row['tipo'] != $last_type)
-                            {
-                                ?>
+                            if($row['tipo'] != $last_type) { ?>
                                 <tr>
                                     <td colspan="3">
                                         <div class="capitolo_elenco">
@@ -46,19 +35,16 @@
                                 <tr>
                                     <td>
                                         <div class="titoli_elenco">
-                                            &nbsp;
                                         </div>
                                     </td>
                                     <td>
                                         <div class="titoli_elenco">
-                                            <?php echo gdrcd_filter('out',
-                                                $PARAMETERS['names']['guild_name']['sing']); ?>
+                                            <?php echo gdrcd_filter('out', $PARAMETERS['names']['guild_name']['sing']); ?>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="titoli_elenco">
-                                            <?php echo gdrcd_filter('out',
-                                                $PARAMETERS['names']['guild_name']['members']); ?>
+                                            <?php echo gdrcd_filter('out', $PARAMETERS['names']['guild_name']['members']); ?>
                                         </div>
                                     </td>
                                 </tr>
@@ -68,10 +54,7 @@
                             <tr>
                                 <td>
                                     <div class="icone_elenco">
-                                        <img
-                                            src="themes/<?php echo gdrcd_filter('out',
-                                                $PARAMETERS['themes']['current_theme']); ?>/imgs/guilds/<?php echo gdrcd_filter('out',
-                                                $row['immagine']); ?>"/>
+                                        <img src="themes/<?php echo gdrcd_filter('out', $PARAMETERS['themes']['current_theme']); ?>/imgs/guilds/<?php echo gdrcd_filter('out', $row['immagine']); ?>" />
                                     </div>
                                 </td>
                                 <td>
@@ -87,20 +70,17 @@
                                     </div>
                                 </td>
                             </tr>
-                        <?php }//while
-
+                        <?php
+                        }//while
                         gdrcd_query($result, 'free');
                         ?>
                     </table>
                 </div>
             </div><!--elenco_breve-->
             <?php /*Visualizzazione estesa gilda*/
-        } else
-        {
-
+        } else {
             /*elenco ruoli*/
-            $query = "SELECT nome_ruolo, immagine, stipendio, capo FROM ruolo WHERE gilda = " . gdrcd_filter('num',
-                    $_REQUEST['id_gilda']) . " ORDER BY capo DESC, stipendio DESC";
+            $query = "SELECT nome_ruolo, immagine, stipendio, capo FROM ruolo WHERE gilda = ".gdrcd_filter('num', $_REQUEST['id_gilda'])." ORDER BY capo DESC, stipendio DESC";
             $result = gdrcd_query($query, 'result'); ?>
 
             <div class="elenco_esteso">
@@ -109,8 +89,7 @@
                         <tr>
                             <td colspan="4">
                                 <!-- Titoletto -->
-                                <div class="capitolo_elenco"><?php echo gdrcd_filter('out',
-                                        $MESSAGE['interface']['guilds']['roles_title']['plur']); ?></div>
+                                <div class="capitolo_elenco"><?php echo gdrcd_filter('out', $MESSAGE['interface']['guilds']['roles_title']['plur']); ?></div>
                             </td>
                         <tr>
                         <tr>
@@ -126,8 +105,7 @@
                             </td>
                             <td>
                                 <div class="titoli_elenco">
-                                    <?php echo gdrcd_filter('out',
-                                        $MESSAGE['interface']['guilds']['roles_title']['sing']); ?>
+                                    <?php echo gdrcd_filter('out', $MESSAGE['interface']['guilds']['roles_title']['sing']); ?>
                                 </div>
                             </td>
                             <td>
@@ -136,22 +114,20 @@
                                 </div>
                             </td>
                             <!-- Elenco -->
-                            <?php while ($row = gdrcd_query($result, 'fetch'))
+                            <?php while($row = gdrcd_query($result, 'fetch'))
                             { ?>
                         <tr>
                             <td>
                                 <div class="icone_elenco">
-                                    <?php if ($row['capo'] == 1)
-                                    { ?><img
-                                        src="imgs/icons/crown1.gif"/><?php } else
-                                    { ?>&nbsp;<?php } ?>
+                                    <?php if($row['capo'] == 1) { ?><img
+                                            src="imgs/icons/crown1.gif" /><?php } else { ?>&nbsp;<?php } ?>
                                 </div>
                             </td>
                             <td>
                                 <div class="icone_elenco">
-                                    <img src="themes/<?php echo gdrcd_filter('out',
-                                        $PARAMETERS['themes']['current_theme']); ?>/imgs/guilds/<?php echo gdrcd_filter('out',
-                                        $row['immagine']); ?>"/>
+                                    <img src="themes/<?php echo gdrcd_filter('out', $PARAMETERS['themes']['current_theme']); ?>/imgs/guilds/<?php echo gdrcd_filter('out',
+                                                                                                                                                                    $row['immagine']
+                                    ); ?>" />
                                 </div>
                             </td>
                             <td>
@@ -161,28 +137,22 @@
                             </td>
                             <td>
                                 <div class="elementi_elenco">
-                                    <?php echo gdrcd_filter('out',
-                                        $row['stipendio'] . " " . $PARAMETERS['names']['currency']['plur']); ?>
+                                    <?php echo gdrcd_filter('out', $row['stipendio']." ".$PARAMETERS['names']['currency']['plur']); ?>
                                 </div>
                             </td>
                         </tr>
                         <?php }
-
                         gdrcd_query($result, 'free');
                         ?>
                     </table>
-
                     <?php /*Elenco affiliati*/
-                    $query = "SELECT clgpersonaggioruolo.personaggio, personaggio.cognome, ruolo.immagine, ruolo.capo, ruolo.nome_ruolo FROM ruolo JOIN clgpersonaggioruolo ON clgpersonaggioruolo.id_ruolo = ruolo.id_ruolo JOIN personaggio ON personaggio.nome = clgpersonaggioruolo.personaggio WHERE ruolo.gilda = " . gdrcd_filter('num',
-                            $_REQUEST['id_gilda']) . " ORDER BY ruolo.capo DESC, ruolo.stipendio DESC";
+                    $query = "SELECT clgpersonaggioruolo.personaggio, personaggio.cognome, ruolo.immagine, ruolo.capo, ruolo.nome_ruolo FROM ruolo JOIN clgpersonaggioruolo ON clgpersonaggioruolo.id_ruolo = ruolo.id_ruolo JOIN personaggio ON personaggio.nome = clgpersonaggioruolo.personaggio WHERE ruolo.gilda = ".gdrcd_filter('num', $_REQUEST['id_gilda'])." ORDER BY ruolo.capo DESC, ruolo.stipendio DESC";
                     $result = gdrcd_query($query, 'result'); ?>
-
                     <table>
                         <tr>
                             <td colspan="4">
                                 <!-- Titoletto -->
-                                <div class="capitolo_elenco"><?php echo gdrcd_filter('out',
-                                        $MESSAGE['interface']['guilds']['members']); ?></div>
+                                <div class="capitolo_elenco"><?php echo gdrcd_filter('out', $MESSAGE['interface']['guilds']['members']); ?></div>
                             </td>
                         <tr>
                         <tr>
@@ -203,34 +173,28 @@
                             </td>
                             <td>
                                 <div class="titoli_elenco">
-                                    <?php echo gdrcd_filter('out',
-                                        $MESSAGE['interface']['guilds']['roles_title']['sing']); ?>
+                                    <?php echo gdrcd_filter('out', $MESSAGE['interface']['guilds']['roles_title']['sing']); ?>
                                 </div>
                             </td>
                             <!-- Elenco -->
-                            <?php while ($row = gdrcd_query($result, 'fetch'))
+                            <?php while($row = gdrcd_query($result, 'fetch'))
                             { ?>
                         <tr>
                             <td>
                                 <div class="icone_elenco">
-                                    <?php if ($row['capo'] == 1)
-                                    { ?><img
-                                        src="imgs/icons/crown1.gif"/><?php } else
-                                    { ?>&nbsp;<?php } ?>
+                                    <?php if($row['capo'] == 1) { ?><img
+                                            src="imgs/icons/crown1.gif" /><?php } else { ?>&nbsp;<?php } ?>
                                 </div>
                             </td>
                             <td>
                                 <div class="icone_elenco">
-                                    <img src="themes/<?php echo gdrcd_filter('out',
-                                        $PARAMETERS['themes']['current_theme']); ?>/imgs/guilds/<?php echo gdrcd_filter('out',
-                                        $row['immagine']); ?>"/>
+                                    <img src="themes/<?php echo gdrcd_filter('out', $PARAMETERS['themes']['current_theme']); ?>/imgs/guilds/<?php echo gdrcd_filter('out', $row['immagine']); ?>" />
                                 </div>
                             </td>
                             <td>
                                 <div class="elementi_elenco">
-                                    <a href="main.php?page=scheda&pg=<?php echo gdrcd_filter('out',
-                                        $row['personaggio']); ?>">
-                                        <?php echo gdrcd_filter('out', $row['personaggio'] . ' ' . $row['cognome']); ?>
+                                    <a href="main.php?page=scheda&pg=<?php echo gdrcd_filter('out', $row['personaggio']); ?>">
+                                        <?php echo gdrcd_filter('out', $row['personaggio'].' '.$row['cognome']); ?>
                                     </a>
                                 </div>
                             </td>
@@ -241,7 +205,6 @@
                             </td>
                         </tr>
                         <?php }
-
                         gdrcd_query($result, 'free');
                         ?>
                     </table>
@@ -249,13 +212,9 @@
             </div><!--elenco_breve-->
 
             <?php /*statuto*/
-            $statuto = gdrcd_query("SELECT statuto FROM gilda WHERE id_gilda = " . gdrcd_filter('num',
-                    $_REQUEST['id_gilda']) . "");
+            $statuto = gdrcd_query("SELECT statuto FROM gilda WHERE id_gilda = ".gdrcd_filter('num', $_REQUEST['id_gilda'])."");
 
-            if (empty($statuto['statuto']) === false)
-            {
-                ?>
-
+            if(empty($statuto['statuto']) === false) { ?>
                 <table>
                     <tr>
                         <td colspan="4">
@@ -271,19 +230,11 @@
                         </td>
                     </tr>
                 </table>
-
             <?php } ?>
-
             <div class="link_back">
-                <a href="main.php?page=servizi_gilde"><?php echo gdrcd_filter('out',
-                        $MESSAGE['interface']['guilds']['back']); ?></a>
+                <a href="main.php?page=servizi_gilde"><?php echo gdrcd_filter('out', $MESSAGE['interface']['guilds']['back']); ?></a>
             </div>
-
         <?php } ?>
-
-
     </div>
     <!-- Box principale -->
-
-
 </div>

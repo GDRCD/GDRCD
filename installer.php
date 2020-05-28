@@ -8,13 +8,10 @@ require 'header.inc.php'; /*Header comune*/
     $result = gdrcd_query($query, 'result');
     $table = gdrcd_query($result, 'num_rows');
 
-    if ($table > 0)
-    {
+    if ($table > 0) {
         echo '<div class="error">' . $MESSAGE['homepage']['installer']['not_empty'] . '</div>';
-    } else
-    {
+    } else {
         gdrcd_query('SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO"');
-
 
         gdrcd_query("CREATE TABLE abilita (
             id_abilita int(4) NOT NULL auto_increment,
@@ -237,7 +234,6 @@ require 'header.inc.php'; /*Header comune*/
             PRIMARY KEY (id),
             FULLTEXT KEY Invitati (invitati)
         ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;");
-
 
         gdrcd_query("INSERT INTO mappa VALUES (1, 'Strada', 'Via che congiunge la periferia al centro.', 'Nella norma', '', 1, 'standard_luogo.png', '', 1, '', '', 0, 180, 150, '', 0, 'Nessuno', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0);");
 

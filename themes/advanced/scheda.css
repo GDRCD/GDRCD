@@ -65,7 +65,6 @@ div.ritratto_avatar img {
 /*Link invia messaggio*/
 div.ritratto div.ritratto_invia_messaggio {
     margin: 5px 0 0 0;
-
 }
 
 /*Box punteggi, razza, gilda, ruolo off*/
@@ -109,7 +108,6 @@ div.profilo_status {
     clear: both;
     height: 100px;
     text-align: justify;
-
 }
 
 /*Casella PF nei controlli master*/
@@ -123,12 +121,10 @@ div.background {
     clear: both;
     overflow: hidden;
     width: 510px;
-
 }
 
 div.background img {
     max-width: 500px;
-
 }
 
 /*Menu' interno scheda*/
@@ -139,19 +135,16 @@ div.menu_scheda {
     font-size: 12px;
     width: 500px;
     height: 30px;
-
 }
 
 /*Box abilità*/
 div.elenco_abilita {
     margin: 10px auto 5px auto;
     clear: both;
-
 }
 
 div.elenco_abilita table {
     margin: 2px auto 5px auto;
-
 }
 
 div.elenco_abilita td {
@@ -161,25 +154,21 @@ div.elenco_abilita td {
 div.abilita_scheda_nome {
     width: 110px;
     font-size: 12px;
-
 }
 
 div.abilita_scheda_car {
     width: 70px;
     font-size: 12px;
-
 }
 
 div.abilita_scheda_tank {
     width: 20px;
     font-size: 12px;
-
 }
 
 div.abilita_scheda_sub {
     width: 35px;
     font-size: 12px;
-
 }
 
 /****************************************************************************/

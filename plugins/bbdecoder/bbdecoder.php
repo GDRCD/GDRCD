@@ -11,7 +11,6 @@
  * @package GDRCD 5.1
  */
 
-
 ##################################### File Functions ########################################
 
 /**    Funzione di formattazione di tutte le bbtags.
@@ -41,16 +40,13 @@
  *
  * @return string
  */
-function bbdecoder($str, $escaped = false)
-{
+function bbdecoder($str, $escaped = false) {
     global $PARAMETERS;
-
 
     $regexpMail = "([a-z0-9._-]+)@[a-z0-9._-]+\.[a-z]{2,4}";
     $regexpUrl = "https?://([-\w\.]+)+(:\d+)?(/([-\w/_\.]*(\?\S+)?)?)?";
     $regexpYT = "https?://www\.youtube\.com/watch\?v=([a-zA-Z0-9_-]{11})(&.*)?";
     $regexpColor = "(\#[0-9a-fA-F]{3,6})|([a-zA-Z]{3,6})";
-
 
     $bbcode = [
 
@@ -63,15 +59,12 @@ function bbdecoder($str, $escaped = false)
 
     ];
 
-    if ($PARAMETERS['settings']['bbd']['youtube'] == 'ON')
-    {
+    if($PARAMETERS['settings']['bbd']['youtube'] == 'ON') {
         $bbcode["#\[youtube\]($regexpYT)+\[/youtube\]#is"] = "<object data=\"http://www.youtube.com/v/\\2&hl=it&fs=1\" type=\"application/x-shockwave-flash\" width=\"425\" height=\"344\"><embed src=\"http://www.youtube.com/v/\\2&hl=it&fs=1\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" width=\"425\" height=\"344\" /></object>";
 
     }
 
-
-    if ( ! $escaped)
-    {
+    if( ! $escaped) {
         $str = htmlentities($str, ENT_QUOTES, 'UTF-8');
     }
     $str = preg_replace(array_keys($bbcode), array_values($bbcode), $str);
@@ -81,7 +74,6 @@ function bbdecoder($str, $escaped = false)
 
     return $str;
 }
-
 
 /**    Funzione di formattazione basilare del testo.
  *    Se la si vuol applicare singolarmente bisogna passare la stringa prima ad un htmlentities.
@@ -106,8 +98,7 @@ function bbdecoder($str, $escaped = false)
  *
  * @return string
  */
-function baseformat($str)
-{
+function baseformat($str) {
     $bbtag = [
         [
             "\n",
@@ -135,37 +126,29 @@ function baseformat($str)
         ]
     ];
 
-
-    $str = " " . $str;
+    $str = " ".$str;
     $par = ['[' => '&#91;', ']' => '&#93;'];
 
-    foreach ($bbtag[0] as $key => $bbt)
-    {
+    foreach($bbtag[0] as $key => $bbt) {
         $bbt = explode('~', $bbt);
         $html = explode('~', $bbtag[1][$key]);
         $tagcount = count($bbt);
 
-        while ($posStart = strpos($str, $bbt[0]))
-        {
-            if ($tagcount == 2)
-            {
-                if ($posEnd = strpos(substr($str, $posStart), $bbt[1]))
-                {
+        while($posStart = strpos($str, $bbt[0])) {
+            if($tagcount == 2) {
+                if($posEnd = strpos(substr($str, $posStart), $bbt[1])) {
                     $taglen = strlen($bbt[0]);
                     $source = substr($str, $posStart + $taglen, $posEnd - $taglen);
 
-                    $repl = ( ! empty($source)) ? $html[0] . $source . $html[1] : strtr($bbt[0] . $source . $bbt[1],
-                        $par);
-                    $source = $bbt[0] . $source . $bbt[1];
+                    $repl = ( ! empty($source)) ? $html[0].$source.$html[1] : strtr($bbt[0].$source.$bbt[1], $par);
+                    $source = $bbt[0].$source.$bbt[1];
 
-                } else
-                {
+                } else {
                     $source = substr($str, $posStart, 10);
                     $repl = strtr($source, $par);
                 }
 
-            } else
-            {
+            } else {
                 $source = $bbt[0];
                 $repl = $html[0];
             }
@@ -182,7 +165,6 @@ function baseformat($str)
 
     return $str;
 }
-
 
 /**    Funzione per includere immagini da link.
  *    Può essere richiamata anche separatamente, ma prima bisogna filtrare la stringa con htmlentities().
@@ -204,55 +186,41 @@ function baseformat($str)
  *
  * @return string
  */
-function img($str)
-{
+function img($str) {
     global $PARAMETERS;
 
     $maxWidth = $PARAMETERS['settings']['bbd']['image_max_width'];
     $maxHeight = $PARAMETERS['settings']['bbd']['image_max_height'];
 
-
-    if ($PARAMETERS['settings']['bbd']['imageshack'] == 'OFF')
-    {
-        $regexpUrl = "https?://([-\w\.]+)+(:\d+)?(/([-\w/_\.]*(\?\S+)?)?\.(" . implode('|',
-                $PARAMETERS['settings']['bbd']['images_ext']) . "))?";
-    } else
-    {
-        $regexpUrl = "https?://img[0-9]{2,3}\.imageshack\.us/img[0-9]{2,3}/[0-9]{3,4}/[-\w_\.]+\.(" . implode('|',
-                $PARAMETERS['settings']['bbd']['images_ext']) . ")";
+    if($PARAMETERS['settings']['bbd']['imageshack'] == 'OFF') {
+        $regexpUrl = "https?://([-\w\.]+)+(:\d+)?(/([-\w/_\.]*(\?\S+)?)?\.(".implode('|', $PARAMETERS['settings']['bbd']['images_ext'])."))?";
+    } else {
+        $regexpUrl = "https?://img[0-9]{2,3}\.imageshack\.us/img[0-9]{2,3}/[0-9]{3,4}/[-\w_\.]+\.(".implode('|', $PARAMETERS['settings']['bbd']['images_ext']).")";
     }
 
-
-    $sobstitution = array();
+    $sobstitution = [];
     preg_match_all("#\[img\]($regexpUrl)+\[/img\]#is", $str, $img);
 
-    foreach ($img[0] as $key => $source)
-    {
-        list($width, $height) = @getimagesize($img[1][$key]);
+    foreach($img[0] as $key => $source) {
+        [$width, $height] = @getimagesize($img[1][$key]);
 
-        if ($width && $height)
-        {
-            if ($width >= $maxWidth)
-            {
+        if($width && $height) {
+            if($width >= $maxWidth) {
                 $height = ($maxWidth * $height) / $width;
                 $width = $maxWidth;
 
-            } elseif ($height >= $maxHeight)
-            {
+            } elseif($height >= $maxHeight) {
                 $width = ($maxHeight * $width) / $height;
                 $height = $maxHeight;
             }
 
-            $sobstitution[$source] = "<img src=\"" . $img[1][$key] . "\" style=\"width:" . $width . "px; height:" . $height . "px;\" alt=\"\" />";
+            $sobstitution[$source] = "<img src=\"".$img[1][$key]."\" style=\"width:".$width."px; height:".$height."px;\" alt=\"\" />";
 
-        } else
-        {
-            $sobstitution[$source] = "<img src=\"" . $img[1][$key] . "\" alt=\"\" />";
+        } else {
+            $sobstitution[$source] = "<img src=\"".$img[1][$key]."\" alt=\"\" />";
         }
 
     }
 
     return strtr($str, $sobstitution);
 }
-
-?>
