@@ -44,24 +44,16 @@ if($quote) {
     echo gdrcd_filter('out', "[quote=".$result['autore']."]".$result['messaggio']."[/quote]");
 }
 ?>
-	</textarea>
+</textarea>
                 </div>
                 <div class="form_info">
                     <?php echo gdrcd_filter('out', $MESSAGE['interface']['help']['bbcode']); ?>
                 </div>
                 <div class="form_submit">
-                    <input type="hidden"
-                           name="op"
-                           value="insert" />
-                    <input type="hidden"
-                           name="araldo"
-                           value="<?php echo $araldo; ?>" />
-                    <input type="hidden"
-                           name="padre"
-                           value="<?php echo $padre; ?>" />
-                    <input type="submit"
-                           name="dummy"
-                           value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>" />
+                    <input type="hidden" name="op" value="insert" />
+                    <input type="hidden" name="araldo" value="<?php echo $araldo; ?>" />
+                    <input type="hidden" name="padre" value="<?php echo $padre; ?>" />
+                    <input type="submit" name="dummy" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>" />
                 </div>
             </form>
         </div>

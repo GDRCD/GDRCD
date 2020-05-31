@@ -8,6 +8,7 @@
             <input type="text" list="personaggi" name="destinatario" placeholder="Nome del personaggio" value="<?php echo gdrcd_filter('get', $_REQUEST['reply_dest']); ?>" />
         </div>
         <?php
+        echo gdrcd_list('personaggi');
         if($_SESSION['permessi'] >= GUILDMODERATOR) { ?>
             <div class="form_field">
                 <select name="multipli">

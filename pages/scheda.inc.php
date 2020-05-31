@@ -314,10 +314,9 @@
     //Impedisci XSS nella musica
     $record['url_media'] = gdrcd_filter('fullurl', $record['url_media']);
     if($PARAMETERS['mode']['allow_audio'] == 'ON' && ! $_SESSION['blocca_media'] && ! empty($record['url_media'])) { ?>
-        <object data="<?php echo $record['url_media']; ?>"
-                type="<?php echo $PARAMETERS['settings']['audiotype']['.'.strtolower(end(explode('.', $personaggio['url_media'])))]; ?>" autostart="true">
-            <embed src="<?php echo $record['url_media']; ?>" autostart="true" hidden="true" />
-        </object>
+        <audio autoplay>
+            <source src="<?php echo $record['url_media']; ?>" type="audio/mpeg">
+        </audio>
         <!--[if IE9]>
         <embed src="<?php echo $record['url_media']; ?>" autostart="true" hidden="true"/>
         <![endif]-->

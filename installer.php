@@ -283,6 +283,7 @@ require 'header.inc.php'; /*Header comune*/
             messaggio text,
             autore varchar(20) default NULL,
             data_messaggio datetime default NULL,
+            data_ultimo_messaggio datetime default NULL,
             importante binary(1) NOT NULL DEFAULT '0',
             chiuso binary(1) NOT NULL DEFAULT '0',
             PRIMARY KEY  (id_messaggio),

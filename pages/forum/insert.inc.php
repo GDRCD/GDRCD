@@ -16,19 +16,16 @@ if(gdrcd_query($thread, 'num_rows')) {
     $araldoData = gdrcd_query($thread, 'fetch');
     if(($araldoData['tipo'] == SOLORAZZA and ($_SESSION['id_razza'] == $araldoData['proprietari'] || $_SESSION['permessi'] >= MODERATOR)) || ($araldoData['tipo'] == SOLOGILDA and (strpos($_SESSION['gilda'],'*'.$araldoData['proprietari'].'*') !== false || $_SESSION['permessi'] >= MODERATOR)) || ($araldoData['tipo'] >= SOLOMASTERS and $_SESSION['permessi'] >= GAMEMASTER) || ($araldoData['tipo'] >= SOLOMODERATORS and $_SESSION['permessi'] >= MODERATOR) || ($araldoData['tipo'] == PERTUTTI) || ($araldoData['tipo'] == INGIOCO) || $_POST['padre'] == -1 or ($araldoData['chiuso'] != 1 || $_SESSION['permessi'] >= MODERATOR)) {
         //Solo se il thread non è chiuso
-        gdrcd_query("INSERT INTO messaggioaraldo (id_messaggio_padre, id_araldo, titolo, messaggio, autore, data_messaggio ) VALUES (".gdrcd_filter('num', $_POST['padre']).", ".gdrcd_filter('num', $araldoData['id_araldo']).", '".gdrcd_filter('in', $_POST['titolo'])."', '".gdrcd_filter('in', $_POST['messaggio'])."', '".gdrcd_filter('in', $_SESSION['login'])."', NOW())");
+        gdrcd_query("INSERT INTO messaggioaraldo (id_messaggio_padre, id_araldo, titolo, messaggio, autore, data_messaggio, data_ultimo_messaggio ) VALUES (".gdrcd_filter('num', $_POST['padre']).", ".gdrcd_filter('num', $araldoData['id_araldo']).", '".gdrcd_filter('in', $_POST['titolo'])."', '".gdrcd_filter('in', $_POST['messaggio'])."', '".gdrcd_filter('in', $_SESSION['login'])."', NOW(), NOW())");
 
         if($_POST['padre'] == -1) {
             $_POST['padre'] = gdrcd_query('', 'last_id');
+        } else {
+            gdrcd_query("UPDATE messaggioaraldo SET data_ultimo_messaggio = NOW() WHERE id_messaggio = ".gdrcd_filter_num($_POST['padre']));
         }
         ?>
         <div class="warning">
             <?php echo gdrcd_filter('out', $MESSAGE['warning']['inserted']); ?>
-        </div>
-        <div class="link_back">
-            <a href="main.php?page=forum">
-                <?php echo gdrcd_filter('out', $MESSAGE['interface']['forums']['link']['back']); ?>
-            </a>
         </div>
         <?php
         gdrcd_query("DELETE FROM araldo_letto WHERE thread_id = ".gdrcd_filter('num', $_POST['padre'])." AND nome != '".$_SESSION['login']."'");

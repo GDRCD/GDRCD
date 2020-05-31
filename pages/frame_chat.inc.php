@@ -4,19 +4,15 @@
 /*Seleziono le info sulla chat corrente*/
 $info = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprietario, scadenza FROM mappa WHERE id=".$_SESSION['luogo']." LIMIT 1");
 ?>
-
 <div class="pagina_frame_chat">
-    <div class="page_title"><h2><?php echo $info['nome']; ?></h2></div
+    <div class="page_title"><h2><?php echo $info['nome']; ?></h2></div>
     <div class="page_body">
         <?php
         //e' una stanza privata?
         if($info['privata'] == 1) {
             $allowance = false;
 
-            if((($info['proprietario'] == gdrcd_capital_letter($_SESSION['login'])) || (strpos($_SESSION['gilda'], $info['proprietario']
-                        ) != false) || (strpos($info['invitati'], gdrcd_capital_letter($_SESSION['login'])
-                        ) != false) || (($PARAMETERS['mode']['spyprivaterooms'] == 'ON') && ($_SESSION['permessi'] > MODERATOR))) && ($info['scadenza'] > strftime('%Y-%m-%d %H:%M:%S'
-                    ))) {
+            if((($info['proprietario'] == gdrcd_capital_letter($_SESSION['login'])) || (strpos($_SESSION['gilda'], $info['proprietario']) != false) || (strpos($info['invitati'], gdrcd_capital_letter($_SESSION['login'])) != false) || (($PARAMETERS['mode']['spyprivaterooms'] == 'ON') && ($_SESSION['permessi'] > MODERATOR))) && ($info['scadenza'] > strftime('%Y-%m-%d %H:%M:%S'))) {
                 $allowance = true;
             }
         } else {
@@ -31,8 +27,7 @@ $info = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprieta
             ?>
             <?php $_SESSION['last_message'] = 0; ?>
             <div style="height: 1px; width: 1px;">
-                <iframe src="pages/chat.inc.php?ref=30&chat=yes" class="iframe_chat" id="chat_frame" name="chat_frame"
-                        frameborder="0" allowtransparency="true">
+                <iframe src="pages/chat.inc.php?ref=30&chat=yes" class="iframe_chat" id="chat_frame" name="chat_frame" frameborder="0" allowtransparency="true">
                 </iframe>
             </div>
             <div id='pagina_chat' class="chat_box">
@@ -44,26 +39,17 @@ $info = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprieta
                         <form action="pages/chat.inc.php?ref=10&chat=yes" method="post" target="chat_frame" id="chat_form_messages">
                             <div class="casella_chat">
                                 <select name="type" id="type">
-                                    <option value="0"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][0]);//parlato
-                                        ?></option>
-                                    <option value="1"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][1]);//azione
-                                        ?></option>
-                                    <option value="4"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][4]);//sussurro
-                                        ?></option>
+                                    <option value="0"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][0]);//parlato?></option>
+                                    <option value="1"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][1]);//azione?></option>
+                                    <option value="4"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][4]);//sussurro?></option>
                                     <?php if($_SESSION['permessi'] >= GAMEMASTER) { ?>
-                                        <option value="2"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][2]);//master
-                                            ?></option>
-                                        <option value="3"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][3]);//png
-                                            ?></option>
+                                        <option value="2"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][2]);//master?></option>
+                                        <option value="3"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][3]);//png?></option>
                                     <?php } ?>
-                                    <?php if(($info['privata'] == 1) && (($info['proprietario'] == $_SESSION['login']) || ((is_numeric($info['proprietario']
-                                                    ) === true) && (strpos($_SESSION['gilda'], ''.$info['proprietario']))))) { ?>
-                                        <option value="5"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][5]);//invita
-                                            ?></option>
-                                        <option value="6"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][6]);//caccia
-                                            ?></option>
-                                        <option value="7"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][7]);//elenco
-                                            ?></option>
+                                    <?php if(($info['privata'] == 1) && (($info['proprietario'] == $_SESSION['login']) || ((is_numeric($info['proprietario']) === true) && (strpos($_SESSION['gilda'], ''.$info['proprietario']))))) { ?>
+                                        <option value="5"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][5]);//invita?></option>
+                                        <option value="6"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][6]);//caccia?></option>
+                                        <option value="7"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][7]);//elenco?></option>
                                     <?php }//if
                                     ?>
                                 </select>
@@ -167,8 +153,7 @@ $info = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprieta
                                         <select name="id_item" id="id_item">
                                             <option value="no_item"></option>
                                             <?php while($row = gdrcd_query($result, 'fetch')) { ?>
-                                                <option
-                                                        value="<?php echo $row['id_oggetto'].'-'.$row['cariche'].'-'.gdrcd_filter('out', $row['nome']); ?>">
+                                                <option value="<?php echo $row['id_oggetto'].'-'.$row['cariche'].'-'.gdrcd_filter('out', $row['nome']); ?>">
                                                     <?php echo $row['nome']; ?>
                                                 </option>
                                             <?php

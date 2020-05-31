@@ -20,7 +20,7 @@ include_once('../header.inc.php');
             case 'erase_checked': //Controllo eliminazione di un messaggio
                 include('messages/erase_checked.inc.php');
                 break;
-                case 'eraseall': //Eliminazione di tutti i messaggi
+            case 'eraseall': //Eliminazione di tutti i messaggi
                 include ('messages/eraseall.inc.php');
                 break;
             case 'send_message': //Inserimento nuovo messaggio nel db

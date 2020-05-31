@@ -13,24 +13,20 @@ $totaleresults = $record['COUNT(*)'];
 
 //Elenco messaggi paginato
 if($_GET['op'] == 'inviati') {
-
     $result = gdrcd_query("SELECT * FROM messaggi WHERE mittente = '".$_SESSION['login']."' AND mittente_del = 0 ORDER BY spedito DESC LIMIT ".$pagebegin.", ".$pageend."", 'result');
     $record = gdrcd_query("SELECT COUNT(*) FROM messaggi WHERE mittente = '".$_SESSION['login']."' AND mittente_del = 0");
-
+    $delType = 'mittente_del';
     $totaleresults = $record['COUNT(*)'];
 
 } else {
-
     $result = gdrcd_query("SELECT * FROM messaggi WHERE destinatario = '".$_SESSION['login']."' AND destinatario_del = 0 ".$extracond." ORDER BY spedito DESC LIMIT ".$pagebegin.", ".$pageend."", 'result');
-
     $record = gdrcd_query("SELECT COUNT(*) FROM messaggi WHERE destinatario = '".$_SESSION['login']."' AND destinatario_del = 0 ".$extracond."");
-
+    $delType = 'destinatario_del';
     $totaleresults = $record['COUNT(*)'];
 }
 
 $numresults = gdrcd_query($result, 'num_rows');
 ?>
-
 <div class="elenco_record_gioco">
     <div class="link_back">
         <a href="main.php?page=messages_center">
@@ -95,8 +91,7 @@ $numresults = gdrcd_query($result, 'num_rows');
                 ?>
                 <tr>
                     <td>
-                        <input type="checkbox" class="message_check"
-                               value="<?php echo (int) $row['id'] ?>" />
+                        <input type="checkbox" class="message_check" value="<?php echo (int) $row['id'] ?>" />
                     </td>
                     <td>
                         <div class="elementi_elenco">
@@ -181,6 +176,7 @@ $numresults = gdrcd_query($result, 'num_rows');
         echo '<div>
           <form id="multiple_delete" method="post" action="main.php?page=messages_center" onSubmit="return checked_copy();">
             <input type="hidden" name="op" value="erase_checked" />
+            <input type="hidden" name="type" value="'.$delType.'" />
             <input type="submit" value="Cancella Messaggi Selezionati">
           </form>
         </div>';
