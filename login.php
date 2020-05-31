@@ -139,6 +139,24 @@ if($_SESSION['login'] != '') {
         /*Creo un cookie*/
         setcookie('lastlogin', $_SESSION['login'], 0, '', '', 0);
 
+        if($PARAMETERS['settings']['auto_salary'] = 'ON') {
+            /*Stipendio*/
+            $row = gdrcd_query("SELECT soldi, banca, ultimo_stipendio FROM personaggio WHERE nome = '".$_SESSION['login']."' LIMIT 1");
+
+            if($row['ultimo_stipendio'] != strftime("%Y-%m-%d")) {
+                $soldi=0+$row['soldi'];
+                $banca=0+$row['banca'];
+                $ultimo=$row['ultimo_stipendio'];
+                $query="SELECT ruolo.stipendio FROM clgpersonaggioruolo LEFT JOIN ruolo on clgpersonaggioruolo.id_ruolo = ruolo.id_ruolo WHERE clgpersonaggioruolo.personaggio = '".$_SESSION['login']."'";
+                $result=gdrcd_query($query, 'result');
+                $stipendio=0;
+                while($row=gdrcd_query($result, 'fetch')) {
+                    $stipendio+=$row['stipendio'];
+                }
+                gdrcd_query("UPDATE personaggio SET banca = banca + ".$stipendio.", ultimo_stipendio = NOW() WHERE nome = '".$_SESSION['login']."'");
+            }
+        }
+
         if($PARAMETERS['mode']['log_back_location'] == 'OFF') {
             $_SESSION['luogo'] = '-1';
             /*Inserisco nei presenti*/

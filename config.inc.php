@@ -219,7 +219,7 @@ $PARAMETERS['settings']['initial_cars_cap'] = 10;//Punteggio massimo iniziale pe
 $PARAMETERS['settings']['cars_cap'] = 10;//Punteggio massimo per una caratteristica.
 $PARAMETERS['settings']['cars_sum'] = 40;//Punteggio totale da distribuire tra le caratteristiche in fase di iscrizione.
 $PARAMETERS['settings']['view_logs'] = 10; //Numero di log visualizzato.
-
+$PARAMETERS['settings']['auto_salary'] = 'OFF'; //ON per attivare l'accredito automatico dello stipendio al primo login
 
 /** * Abilitazione dell'audio in land
  * @author Blancks
@@ -294,8 +294,14 @@ $PARAMETERS['mode']['exp_by_chat'] = 'OFF';
 //OFF: disabilita l'incremento dei punti esperienza tramite i caratteri scritti in chat.
 
 $PARAMETERS['settings']['exp_by_chat']['number'] = '1000';
-// Numero di caratteri necessari al fine di aggiungere 1 punto esperienza.
+// Numero di caratteri necessari al fine di aggiungere punti esperienza.
+$PARAMETERS['settings']['exp_by_chat']['value'] = '0';
+//Numero di punti da assegnare quando si superano i caratteri necessari.
+//Impostare 0 nel caso si vuole dare 1 punto ogni volta che si raggiungono i caratteri dichiarati prima.
 
+$PARAMETERS['mode']['exp_in_private'] == 'ON';
+//ON: abilita l'incremento dei punti esperienza tramite i caratteri scritti in chat privata.
+//OFF: disabilita l'incremento dei punti esperienza tramite i caratteri scritti in chat privata.
 
 /** * Parametri per il BBCode
  */
