@@ -250,6 +250,8 @@ while($row = gdrcd_query($query, 'fetch')) {
      */
     $add_chat .= '<div class="chat_row_'.$row['tipo'].'">';
 
+    $alert_new_msg = ($PARAMETERS['mode']['allow_new_chat_audio'] === 'ON' && $row['mittente'] != $_SESSION['login']) ? 1 : null;
+
     switch($row['tipo']) {
         case 'A':
         case 'P':

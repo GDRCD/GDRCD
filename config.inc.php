@@ -228,6 +228,13 @@ $PARAMETERS['mode']['allow_audio'] = 'ON';
 //ON:abilita l'audio per le missive e nella scheda dei personaggi
 //OFF: disabilita l'uso dell'audio
 
+/** * Abilitazione dell'audio in land
+ * @author jan90
+ */
+$PARAMETERS['mode']['allow_new_chat_audio'] = 'ON';
+//ON: abilita l'audio per i nuovi messaggi in chat
+//OFF: disabilita l'uso dell'audio
+
 /** * Tipi di file audio concessi in land, la lista è semplice: [estensione_file] = mimetype
  * Per disabilitare i suoni sugli utenti mettere su OFF la voce relativa nei gruppi di abilitazione poco più sotto
  * @author Blancks

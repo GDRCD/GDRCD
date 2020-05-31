@@ -3,6 +3,12 @@
 <script type="text/javascript" src="/includes/corefunctions.js"></script>
 <script type="text/javascript" src="includes/gdrcdskills.js"></script>
 <?php
+if ($PARAMETERS['mode']['allow_new_chat_audio'] === 'ON' && $add_chat != '' && isset($alert_new_msg) && $alert_new_msg == 1) {
+    echo '<script type="text/javascript">
+        var mediaElementChat = parent.document.getElementById("sound_player_chat");
+        mediaElementChat.play();
+    </script>';
+}
 /** * Abilitazione tooltip
  * @author Blancks
  */
