@@ -155,7 +155,7 @@ function baseformat($str)
                     $source = substr($str, $posStart + $taglen, $posEnd - $taglen);
 
                     $repl = ( ! empty($source)) ? $html[0] . $source . $html[1] : strtr($bbt[0] . $source . $bbt[1],
-                        $par);
+                                                                                        $par);
                     $source = $bbt[0] . $source . $bbt[1];
 
                 } else
@@ -215,11 +215,11 @@ function img($str)
     if ($PARAMETERS['settings']['bbd']['imageshack'] == 'OFF')
     {
         $regexpUrl = "https?://([-\w\.]+)+(:\d+)?(/([-\w/_\.]*(\?\S+)?)?\.(" . implode('|',
-                $PARAMETERS['settings']['bbd']['images_ext']) . "))?";
+                                                                                       $PARAMETERS['settings']['bbd']['images_ext']) . "))?";
     } else
     {
         $regexpUrl = "https?://img[0-9]{2,3}\.imageshack\.us/img[0-9]{2,3}/[0-9]{3,4}/[-\w_\.]+\.(" . implode('|',
-                $PARAMETERS['settings']['bbd']['images_ext']) . ")";
+                                                                                                              $PARAMETERS['settings']['bbd']['images_ext']) . ")";
     }
 
 

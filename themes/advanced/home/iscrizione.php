@@ -566,22 +566,17 @@
                 $lastpasschange_value = ", NOW()";
             }
 
+//            $nome = $_POST['nome'];
+//            $regex = '#[^\p{L}\s]#u';
+//
+//            if (preg_match($regex,$nome)) {
+//                //ERRORE
+//                echo 'errore';
+//            } else {
+                gdrcd_query("INSERT INTO personaggio (nome, cognome, pass, data_iscrizione, email, sesso, id_razza, car0, car1, car2, car3, car4, car5, salute, salute_max, soldi, esperienza $lastpasschange_field) VALUES ('" . trim(gdrcd_capital_letter(gdrcd_filter('in', $_POST['nome']))) . "', '" . trim(gdrcd_filter('in', $_POST['cognome'])) . "', '" . gdrcd_encript($pass) . "', NOW(), '" . gdrcd_filter('in', $_POST['email']) . "', '" . gdrcd_filter('in', $_POST['genere']) . "', " . gdrcd_filter('num', $_POST['razza']) . ", " . gdrcd_filter('num', $_POST['car0']) . ", " . gdrcd_filter('num', $_POST['car1']) . ", " . gdrcd_filter('num', $_POST['car2']) . ", " . gdrcd_filter('num', $_POST['car3']) . ", " . gdrcd_filter('num', $_POST['car4']) . ", " . gdrcd_filter('num', $_POST['car5']) . ", " . gdrcd_filter('num', $PARAMETERS['settings']['max_hp']) . ", " . gdrcd_filter('num', $PARAMETERS['settings']['max_hp']) . ", " . gdrcd_filter('num',  $PARAMETERS['settings']['first_money']) . ", " . gdrcd_filter('num',  $PARAMETERS['settings']['first_px']) . " $lastpasschange_value)");
+//            }
 
-            gdrcd_query("INSERT INTO personaggio (nome, cognome, pass, data_iscrizione, email, sesso, id_razza, car0, car1, car2, car3, car4, car5, salute, salute_max, soldi, esperienza $lastpasschange_field) VALUES ('" . trim(gdrcd_capital_letter(gdrcd_filter('in',
-                    $_POST['nome']))) . "', '" . trim(gdrcd_filter('in',
-                    $_POST['cognome'])) . "', '" . gdrcd_encript($pass) . "', NOW(), '" . gdrcd_filter('in',
-                    $_POST['email']) . "', '" . gdrcd_filter('in', $_POST['genere']) . "', " . gdrcd_filter('num',
-                    $_POST['razza']) . ", " . gdrcd_filter('num', $_POST['car0']) . ", " . gdrcd_filter('num',
-                    $_POST['car1']) . ", " . gdrcd_filter('num', $_POST['car2']) . ", " . gdrcd_filter('num',
-                    $_POST['car3']) . ", " . gdrcd_filter('num', $_POST['car4']) . ", " . gdrcd_filter('num',
-                    $_POST['car5']) . ", " . gdrcd_filter('num',
-                    $PARAMETERS['settings']['max_hp']) . ", " . gdrcd_filter('num',
-                    $PARAMETERS['settings']['max_hp']) . ", " . gdrcd_filter('num',
-                    $PARAMETERS['settings']['first_money']) . ", " . gdrcd_filter('num',
-                    $PARAMETERS['settings']['first_px']) . " $lastpasschange_value)");
-
-            if ($PARAMETERS['mode']['emailconfirmation'] == 'ON')
-            {
+            if ($PARAMETERS['mode']['emailconfirmation'] == 'ON') {
                 echo '<div class="page_title"><h2>' . gdrcd_filter('out',
                         $MESSAGE['register']['welcome']['message']['ok']) . '</h2></div>';
                 echo '<div class="panels_box"><div class="welcome_message">' . gdrcd_filter('out',
@@ -601,8 +596,7 @@
                     'From: ' . gdrcd_filter('out', $PARAMETERS['info']['webmaster_email']));
 
 
-            } else
-            {
+            } else {
 
                 echo '<div class="page_title"><h2>' . gdrcd_filter('out',
                         $MESSAGE['register']['welcome']['message']['ok']) . '</h2></div>';

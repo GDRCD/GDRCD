@@ -8,13 +8,10 @@ require 'header.inc.php'; /*Header comune*/
     $result = gdrcd_query($query, 'result');
     $table = gdrcd_query($result, 'num_rows');
 
-    if ($table > 0)
-    {
+    if ($table > 0) {
         echo '<div class="error">' . $MESSAGE['homepage']['installer']['not_empty'] . '</div>';
-    } else
-    {
+    } else {
         gdrcd_query('SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO"');
-
 
         gdrcd_query("CREATE TABLE abilita (
             id_abilita int(4) NOT NULL auto_increment,
@@ -205,8 +202,8 @@ require 'header.inc.php'; /*Header comune*/
 
         gdrcd_query("CREATE TABLE log (
             id int(11) NOT NULL auto_increment,
-            nome_interessato char(20) NOT NULL default '',
-            autore char(20) NOT NULL default '',
+            nome_interessato varchar(20) NOT NULL default '',
+            autore varchar(60) NOT NULL default '',
             data_evento datetime NOT NULL default '0000-00-00 00:00:00',
             codice_evento char(20) NOT NULL default '',
             descrizione_evento char(100) NOT NULL default '',
@@ -237,7 +234,6 @@ require 'header.inc.php'; /*Header comune*/
             PRIMARY KEY (id),
             FULLTEXT KEY Invitati (invitati)
         ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;");
-
 
         gdrcd_query("INSERT INTO mappa VALUES (1, 'Strada', 'Via che congiunge la periferia al centro.', 'Nella norma', '', 1, 'standard_luogo.png', '', 1, '', '', 0, 180, 150, '', 0, 'Nessuno', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0);");
 
@@ -287,6 +283,7 @@ require 'header.inc.php'; /*Header comune*/
             messaggio text,
             autore varchar(20) default NULL,
             data_messaggio datetime default NULL,
+            data_ultimo_messaggio datetime default NULL,
             importante binary(1) NOT NULL DEFAULT '0',
             chiuso binary(1) NOT NULL DEFAULT '0',
             PRIMARY KEY  (id_messaggio),
@@ -325,14 +322,14 @@ require 'header.inc.php'; /*Header comune*/
         gdrcd_query("CREATE TABLE personaggio (
             nome varchar(20) NOT NULL default '',
             cognome varchar(50) NOT NULL default '-',
-            pass varchar(100) NOT NULL default '',
+            pass varchar(60) NOT NULL default '',
             ultimo_cambiopass datetime DEFAULT NULL,
             data_iscrizione datetime default NULL,
-            email varchar(50) default NULL,
+            email varchar(60) default NULL,
             permessi tinyint(1) default '0',
             ultima_mappa int(4) NOT NULL default '1',
             ultimo_luogo int(4) NOT NULL default '-1',
-            esilio date NOT NULL default '2009-07-01',
+            esilio date default NULL,
             data_esilio date NOT NULL default '2009-07-01',
             motivo_esilio varchar(255) default NULL,
             autore_esilio varchar(20) default NULL,
@@ -360,7 +357,7 @@ require 'header.inc.php'; /*Header comune*/
             soldi int(11) default '50',
             banca int(11) default '0',
             ultimo_stipendio date NOT NULL default '2009-07-01',
-            last_ip varchar(16) default NULL,
+            last_ip varchar(60) default NULL,
             is_invisible tinyint(1) NOT NULL default '0',
             ultimo_refresh datetime NOT NULL,
             ora_entrata datetime NOT NULL,
@@ -372,9 +369,9 @@ require 'header.inc.php'; /*Header comune*/
             KEY Esilio (esilio)
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
-        gdrcd_query("INSERT INTO personaggio VALUES ('Super', 'User', '" . gdrcd_encript('super') . "', NULL, now(), 'email@domain.ext', 4, 1, -1, '0000-00-00', '0000-00-00', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', 0, 1000, 7, 8, 6, 5, 6, 5, 100, 100, '0000-00-00 00:00:00', 300, 50000, '0000-00-00', '127.0.0.1', 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 0);");
+        gdrcd_query("INSERT INTO personaggio VALUES ('Super', 'User', '" . gdrcd_encript('super') . "', NULL, now(), '".gdrcd_encript('super@gdrcd.test')."', 4, 1, -1, '0000-00-00', '0000-00-00', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', 0, 1000, 7, 8, 6, 5, 6, 5, 100, 100, '0000-00-00 00:00:00', 300, 50000, '0000-00-00', '127.0.0.1', 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 0);");
 
-        gdrcd_query("INSERT INTO personaggio VALUES ('Test', 'Di Funzionalià', '" . gdrcd_encript('test') . "', NULL, now(), 'test@domain.ext', 0, 1, -1, '0000-00-00', '0000-00-00', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', 0, 1000, 7, 8, 6, 5, 6, 5, 100, 100, '0000-00-00 00:00:00', 50, 50, '0000-00-00', '127.0.0.1', 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 0);");
+        gdrcd_query("INSERT INTO personaggio VALUES ('Test', 'Di Funzionalià', '" . gdrcd_encript('test') . "', NULL, now(), '".gdrcd_encript('test@gdrcd.test')."', 0, 1, -1, '0000-00-00', '0000-00-00', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', 0, 1000, 7, 8, 6, 5, 6, 5, 100, 100, '0000-00-00 00:00:00', 50, 50, '0000-00-00', '127.0.0.1', 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 0);");
 
 
         gdrcd_query("CREATE TABLE razza (

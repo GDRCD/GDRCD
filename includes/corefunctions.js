@@ -16,10 +16,8 @@ function start_fade(id, op) {
     if (op == '+') {
         set_fade(id, 0);
         toggle_fade(id, 0, op);
-
     } else
         toggle_fade(id, 100, op);
-
 }
 
 function toggle_fade(id, opacity, op) {
@@ -29,7 +27,6 @@ function toggle_fade(id, opacity, op) {
 
         setTimeout("toggle_fade('" + id + "'," + opacity + ", '" + op + "')", 20);
     }
-
 }
 
 function set_fade(id, opacity) {

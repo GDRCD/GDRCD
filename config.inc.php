@@ -1,6 +1,6 @@
 <?php
 /**
- * CONFIGURAZIONE DI GDRCD 5.4 "Optimus"
+ * CONFIGURAZIONE DI GDRCD 5.5
  * @author MrFaber
  * @author Blancks
  * @author Breaker
@@ -22,22 +22,19 @@ $PARAMETERS['database']['url'] = 'localhost';        //indirizzo ip del database
 /* HELP: Sostituire le diciture inserite tra le virgolette con i parametri di connessione al Database del proprio dominio. Essi sono forniti al momento della registrazione. Se non si e' in possesso di tali parametri consultare le FAQ della homepage dell'host che fornisce il dominio. Se non le si trovano li contattare lo staff dell'host. */
 
 
-/* POLITICA DI CRIPTAZIONE */
-$PARAMETERS['mode']['encriptpassword'] = 'ON';
-//ON: La password e' memorizzata criptata sul database.
-//OFF: LA password e' memorizzata in chiaro sul database.
-$PARAMETERS['mode']['encriptalgorithm'] = 'BCRYPT';
-//$PARAMETERS['mode']['encriptalgorithm']='MD5';
-//$PARAMETERS['mode']['encriptalgorithm']='SHA-1';
-/* HELP: decidere se criptare la password prima di aprire le iscrizioni, altrimenti, se l'impostazione sarà cambiata in seguito, sarà necessario procedere a reinserire manualmente tutte le password.*/
+/* POLITICA DI CRIPTAZIONE
+ * E' stata rimossa la possibilita' di scegliere se salvare le password in chiaro.
+ * Sono stati rimossi i metodi SHA-1 e MD5 non essendo piu' sicuri. Rimane solo la funzione BCRYPT
+ */
 
 /* INFORMAZIONI SUL SITO */
-$PARAMETERS['info']['site_name'] = 'GDRCD 5.4'; //nome del gioco
-$PARAMETERS['info']['site_url'] = 'http://gdrcd.gdrhost.it/'; //indirizzo URL del gioco
+$PARAMETERS['info']['site_name'] = 'GDRCD 5.5'; //nome del gioco
+$PARAMETERS['info']['site_url'] = 'http://gdrcd.test/'; //indirizzo URL del gioco
 $PARAMETERS['info']['webmaster_name'] = 'Webmaster'; //nome e cognome del responsabile del sito
 $PARAMETERS['info']['webmaster_email'] = 'webmaster@gdrhost.it'; //email ufficiale del webmaster (è visibile in homepage)
 $PARAMETERS['info']['homepage_name'] = 'Homepage'; //nome con il quale si indica la prima pagina visualizzata
 $PARAMETERS['info']['dbadmin_name'] = 'Admin DB';
+$PARAMETERS['info']['GDRCD'] = '5.5'; //nome del gioco
 $PARAMETERS['mode']['welcome_message_homepage'] = 'ON';//Attiva il messaggio di bevenuto in homepage
 
 /* HELP: I parametri di questa voce compaiono come informazioni sulla homepage. */
@@ -53,6 +50,10 @@ $PARAMETERS['languages']['set'] = 'IT-it'; //lingua italiana
 $PARAMETERS['themes']['current_theme'] = 'advanced'; //tema in uso
 //$PARAMETERS['themes']['current_theme'] = 'medieval';
 
+/* Attiva nel frame l'avviso in caso di nuovi messaggi privati e/o bacheche */
+$PARAMETERS['mode']['check_forum'] = 'ON';
+$PARAMETERS['text']['check_forum']['new'] = '(Nuovo)';
+$PARAMETERS['mode']['check_messages'] = 'ON';
 
 /**
  * SCELTA DEL TIPO DI LAYOUT
@@ -200,7 +201,7 @@ $PARAMETERS['date']['base_temperature'] = -4;//temperatura minima assoluta in gr
 
 /* OPZIONI DEL GIOCO */
 $PARAMETERS['settings']['protection'] = 'OFF'; //ON per attivare il sistema di protezione con password d'accesso
-//$PARAMETERS['settings']['protection_password'] = 'gdrcd'; //password per accedere al gioco in caso di sistema di protezione attivo
+$PARAMETERS['settings']['protection_password'] = 'gdrcd'; //password per accedere al gioco in caso di sistema di protezione attivo
 $PARAMETERS['settings']['first_map'] = -1;//ID della mappa corrispondente al primo login
 $PARAMETERS['settings']['first_money'] = 50;//Quantita' di denaro iniziale per i PG
 $PARAMETERS['settings']['posts_per_page'] = 15;//Numero di post per pagina visualizzati nei forum
@@ -218,13 +219,20 @@ $PARAMETERS['settings']['initial_cars_cap'] = 10;//Punteggio massimo iniziale pe
 $PARAMETERS['settings']['cars_cap'] = 10;//Punteggio massimo per una caratteristica.
 $PARAMETERS['settings']['cars_sum'] = 40;//Punteggio totale da distribuire tra le caratteristiche in fase di iscrizione.
 $PARAMETERS['settings']['view_logs'] = 10; //Numero di log visualizzato.
-
+$PARAMETERS['settings']['auto_salary'] = 'OFF'; //ON per attivare l'accredito automatico dello stipendio al primo login
 
 /** * Abilitazione dell'audio in land
  * @author Blancks
  */
 $PARAMETERS['mode']['allow_audio'] = 'ON';
 //ON:abilita l'audio per le missive e nella scheda dei personaggi
+//OFF: disabilita l'uso dell'audio
+
+/** * Abilitazione dell'audio in land
+ * @author jan90
+ */
+$PARAMETERS['mode']['allow_new_chat_audio'] = 'ON';
+//ON: abilita l'audio per i nuovi messaggi in chat
 //OFF: disabilita l'uso dell'audio
 
 /** * Tipi di file audio concessi in land, la lista è semplice: [estensione_file] = mimetype
@@ -293,8 +301,14 @@ $PARAMETERS['mode']['exp_by_chat'] = 'OFF';
 //OFF: disabilita l'incremento dei punti esperienza tramite i caratteri scritti in chat.
 
 $PARAMETERS['settings']['exp_by_chat']['number'] = '1000';
-// Numero di caratteri necessari al fine di aggiungere 1 punto esperienza.
+// Numero di caratteri necessari al fine di aggiungere punti esperienza.
+$PARAMETERS['settings']['exp_by_chat']['value'] = '0';
+//Numero di punti da assegnare quando si superano i caratteri necessari.
+//Impostare 0 nel caso si vuole dare 1 punto ogni volta che si raggiungono i caratteri dichiarati prima.
 
+$PARAMETERS['mode']['exp_in_private'] == 'ON';
+//ON: abilita l'incremento dei punti esperienza tramite i caratteri scritti in chat privata.
+//OFF: disabilita l'incremento dei punti esperienza tramite i caratteri scritti in chat privata.
 
 /** * Parametri per il BBCode
  */

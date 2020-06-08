@@ -1,16 +1,12 @@
 <div class="pagina_ambientazione">
     <?php
     $strInnerPage == "";
-    if ($_REQUEST['page'] == 'user_ambientazione')
-    {
+    if($_REQUEST['page'] == 'user_ambientazione') {
         include('pages/user_ambientazione.inc.php');
-    } else
-    {
-        if ($_REQUEST['page'] == 'user_razze')
-        {
+    } else {
+        if($_REQUEST['page'] == 'user_razze') {
             include('pages/user_razze.inc.php');
-        } else
-        {
+        } else {
             include('pages/user_regolamento.inc.php');
         }
     } ?>
