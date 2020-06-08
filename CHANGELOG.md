@@ -17,7 +17,8 @@ Elenco delle modifiche al codice
 - __$PARAMETERS['settings']['auto_salary'] = 'OFF'__ serve per abilitare l'accredito automatico dello stipendio al primo login.
 - __gdrcd_list('personaggi')__ come datalist per aiutare a trovare il nome dei personaggi durante la creazione di un messaggio.
 - __$PARAMETERS['settings']['exp_by_chat']['value'] = '0';__ serve per impostare quanti punti experienza assegnare nelle azioni.
-
+- __$PARAMETERS['mode']['allow_new_chat_audio'] = 'ON';__ serve per abilitare l'avviso sonoro quando ci sono nuovi messaggi in chat.
+- __COME-FARE-LA-LAND---LEGGIMI!.txt__ aggiunto in home page al fine di ripristinare il link.
 ### Modificato
   
 -  Impostato come unico sistema di criptaggio password BCRYPT
@@ -30,6 +31,9 @@ Elenco delle modifiche al codice
 - __PasswordHash.php__ aggiornato dalla versione 0.3 alla versione 0.5.
 - __< audio >__ aggiornato allo standard HTML5 in scheda.inc.php
 - __visit.inc.php__ i thread vengono visualizzati in base all'ultima risposta e non piu' in base alla creazione.
+- __jQuery__ aggiornato alla versione 3.5.1.
+- __jQueryUI__ aggiornato alla versione 1.12.1.
+- __HTML5__ modificato il doctype in accordo con lo standard HTML5.
 
 ### Rimosso
 
