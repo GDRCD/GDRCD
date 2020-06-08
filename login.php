@@ -175,6 +175,7 @@ if($_SESSION['login'] != '') {
 } else {
     /*Dichiaro il fallimento dell'operazione di login*/
     ?>
+    <!DOCTYPE html>
     <html>
     <head>
         <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>

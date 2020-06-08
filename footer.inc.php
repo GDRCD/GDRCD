@@ -1,19 +1,12 @@
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 <script type="text/javascript" src="/includes/corefunctions.js"></script>
-<script type="text/javascript" src="includes/gdrcdskills.js"></script>
+<!--<script type="text/javascript" src="includes/gdrcdskills.js"></script>-->
 <?php
-if ($PARAMETERS['mode']['allow_new_chat_audio'] === 'ON' && $add_chat != '' && isset($alert_new_msg) && $alert_new_msg == 1) {
-    echo '<script type="text/javascript">
-        var mediaElementChat = parent.document.getElementById("sound_player_chat");
-        mediaElementChat.play();
-    </script>';
-}
 /** * Abilitazione tooltip
  * @author Blancks
  */
-if($PARAMETERS['mode']['map_tooltip'] == 'ON' || $PARAMETERS['mode']['user_online_state'] == 'ON') {
-    ?>
+if($PARAMETERS['mode']['map_tooltip'] == 'ON' || $PARAMETERS['mode']['user_online_state'] == 'ON') { ?>
     <script type="text/javascript">
         var tooltip_offsetX = <?php echo $PARAMETERS['settings']['map_tooltip']['offset_x']; ?>;
         var tooltip_offsetY = <?php echo $PARAMETERS['settings']['map_tooltip']['offset_y']; ?>;
@@ -25,17 +18,14 @@ if($PARAMETERS['mode']['map_tooltip'] == 'ON' || $PARAMETERS['mode']['user_onlin
  * @author Blancks
  */
 if($PARAMETERS['mode']['alert_pm_via_pagetitle'] == 'ON') {
-    ?>
-    <script type="text/javascript" src="/includes/changetitle.js"></script>
-    <?php
+    echo '<script type="text/javascript" src="/includes/changetitle.js"></script>';
+
 }
 /** * Caricamento script per la scelta popup nel login
  * @author Blancks
  */
 if($PARAMETERS['mode']['popup_choise'] == 'ON') {
-    ?>
-    <script type="text/javascript" src="/includes/popupchoise.js"></script>
-    <?php
+    echo '<script type="text/javascript" src="/includes/popupchoise.js"></script>';
 }
 ?>
 <script type="text/javascript">
@@ -61,9 +51,9 @@ if($PARAMETERS['mode']['popup_choise'] == 'ON') {
         $('#dialog-' + name).dialog({width: width, height: height});
     }
 </script>
-<script type="text/javascript">
-    setTimeout("self.location.href.reload();", <?php echo (int) $_GET['ref'] * 1000; ?>);
-</script>
+<!--<script type="text/javascript">
+    setTimeout("self.location.href.reload();",<?php //echo (int) $_GET['ref'] * 1000; ?>);
+</script-->
 </body>
 </html>
 <?php

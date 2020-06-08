@@ -250,7 +250,7 @@ while($row = gdrcd_query($query, 'fetch')) {
      */
     $add_chat .= '<div class="chat_row_'.$row['tipo'].'">';
 
-    $alert_new_msg = ($PARAMETERS['mode']['allow_new_chat_audio'] === 'ON' && $row['mittente'] != $_SESSION['login']) ? 1 : null;
+    $alert_new_msg = ($PARAMETERS['mode']['allow_new_chat_audio'] == 'ON' && $row['mittente'] != $_SESSION['login']) ? 1 : null;
 
     switch($row['tipo']) {
         case 'A':
@@ -321,46 +321,53 @@ gdrcd_query($query, 'free');
 $_SESSION['last_message'] = $last_message;
 /******************************************************************************************/
 ?>
-<html>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="it" lang="it">
 <head>
-    <?php
-    if(gdrcd_filter('get', $_REQUEST['chat']) == 'yes') {
-        echo '<script type="text/javascript"> function echoChat(){';
-        /** * Gestione dell'ordinamento
-         * @author Blancks
-         */
-        if($PARAMETERS['mode']['chat_from_bottom'] == 'OFF') {
-            echo 'parent.document.getElementById(\'pagina_chat\').innerHTML+= '.json_encode((string) $add_chat).';';
-            echo 'scrolling = parent.document.getElementById(\'pagina_chat\').scrollHeight;';
-        } elseif($PARAMETERS['mode']['chat_from_bottom'] == 'ON') {
-            echo 'parent.document.getElementById(\'pagina_chat\').innerHTML= '.json_encode((string) $add_chat).'+parent.document.getElementById(\'pagina_chat\').innerHTML;';
-            echo 'scrolling = 0;';
-        }
-        /** * Gestione intelligente della scrollbar
-         * Forza lo scroll solo quando ci sono nuovi messaggi
-         * @author Blancks
-         */
-        if( ! empty($add_chat)) {
-            echo 'parent.document.getElementById(\'pagina_chat\').scrollTop = scrolling;';
-        }
-
-        if((gdrcd_filter('get', $_POST['op']) == 'take_action') || (gdrcd_filter('get', $_POST['op']) == 'new_chat_message')) {
-            if($PARAMETERS['mode']['skillsystem'] == 'ON') {
-                echo 'parent.document.getElementById(\'chat_form_actions\').reset();';
-            }
-            echo 'parent.document.getElementById(\'chat_form_messages\').reset();
-                parent.document.getElementById(\'chat_form_messages\').elements["tag"].value=\''.$_SESSION["tag"].'\';';
-        }//if
-        echo '}</script>';
-    }
-    ?>
     <!--meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"-->
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="refresh" content="<?php echo $i_ref_time; ?>">
     <link rel="stylesheet" href="../themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/presenti.css" TYPE="text/css">
     <link rel="stylesheet" href="../themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/main.css" TYPE="text/css">
     <link rel="stylesheet" href="../themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/chat.css" TYPE="text/css">
+    <title>Chat</title>
 </head>
 <body class="transparent_body" <?php if(gdrcd_filter('get', $_REQUEST['chat']) == 'yes') {
     echo 'onLoad="echoChat();"';
 } ?> >
+<?php
+if(gdrcd_filter('get', $_REQUEST['chat']) == 'yes') {
+    echo '<script type="text/javascript"> function echoChat(){';
+    /** * Gestione dell'ordinamento
+     * @author Blancks
+     */
+    if($PARAMETERS['mode']['chat_from_bottom'] == 'OFF') {
+        echo 'parent.document.getElementById(\'pagina_chat\').innerHTML+= '.json_encode((string) $add_chat).';';
+        echo 'scrolling = parent.document.getElementById(\'pagina_chat\').scrollHeight;';
+    } elseif($PARAMETERS['mode']['chat_from_bottom'] == 'ON') {
+        echo 'parent.document.getElementById(\'pagina_chat\').innerHTML= '.json_encode((string) $add_chat).'+parent.document.getElementById(\'pagina_chat\').innerHTML;';
+        echo 'scrolling = 0;';
+    }
+    /** * Gestione intelligente della scrollbar
+     * Forza lo scroll solo quando ci sono nuovi messaggi
+     * @author Blancks
+     */
+    if( ! empty($add_chat)) {
+        echo 'parent.document.getElementById(\'pagina_chat\').scrollTop = scrolling;';
+    }
+
+    if((gdrcd_filter('get', $_POST['op']) == 'take_action') || (gdrcd_filter('get', $_POST['op']) == 'new_chat_message')) {
+        if($PARAMETERS['mode']['skillsystem'] == 'ON') {
+            echo 'parent.document.getElementById(\'chat_form_actions\').reset();';
+        }
+        echo 'parent.document.getElementById(\'chat_form_messages\').reset();
+                parent.document.getElementById(\'chat_form_messages\').elements["tag"].value=\''.$_SESSION["tag"].'\';';
+    }//if
+    echo '}</script>';
+}
+if ($PARAMETERS['mode']['allow_audio'] == 'ON' && $_SESSION['blocca_media'] != 1 && $add_chat != '' && isset($alert_new_msg) && $alert_new_msg == 1) { ?>
+<script type="text/javascript">
+    var mediaElementChat = parent.document.getElementById("sound_player_chat");
+    mediaElementChat.play();
+</script>
+<?php } ?>

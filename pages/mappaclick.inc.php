@@ -1,10 +1,7 @@
 <?php /*HELP: */
 /*Aggiorno la mappa corrente del PG*/
-if(isset($_GET['map_id']) === true) {
-    $current_map = gdrcd_filter('num', $_GET['map_id']);
-} else {
-    $current_map = $_SESSION['mappa'];
-}
+$current_map = (isset($_GET['map_id']) === true) ? gdrcd_filter('num', $_GET['map_id']) : $_SESSION['mappa'];
+
 $redirect_pc = 0;
 /*Se ho richiesto di far partire o arrivare una mappa mobile*/
 if((isset($_POST['op']) === true) && (($_POST['op'] == gdrcd_filter('out', $MESSAGE['interface']['maps']['leave'])) ||
@@ -21,9 +18,7 @@ $result = gdrcd_query("SELECT mappa.id, mappa.nome, mappa.chat, mappa.x_cord, ma
 
 if(gdrcd_query($result, 'num_rows') == 0) {
     $result = gdrcd_query("SELECT id_click FROM mappa_click LIMIT 1", 'result');
-}
 
-if(gdrcd_query($result, 'num_rows') == 0) {
     echo '<div class="error">'.gdrcd_filter('out', $MESSAGE['error']['can_t_find_any_map']).'</div>';
 } else {
     $just_one_click = gdrcd_query($result, 'fetch');
@@ -144,22 +139,16 @@ if(gdrcd_query($result, 'num_rows') == 0) {
             <h2><?php echo gdrcd_filter('out', $MESSAGE['interface']['maps']['traveling']); ?></h2>
         </div>
     <?php
-    } ?>
-
-    <?php /*Controlli partenza mappe mobili/meteo*/
+    }
+    /*Controlli partenza mappe mobili/meteo*/
     if($_SESSION['permessi'] >= GAMEMASTER) { ?>
         <div class="form_box">
             <?php if($mobile == 1) { ?>
                 <form class="form_gioco" action="main.php?page=mappaclick&map_id=<?php echo $_SESSION['mappa']; ?>" method="post">
                     <?php if($vicinato != INVIAGGIO) { ?>
                         <div class="form_submit">
-                            <input type="hidden"
-                                   name="destination"
-                                   value="<?php echo INVIAGGIO; ?>"
-                                   class="game_form_input" />
-                            <input type="submit"
-                                   value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['maps']['leave']); ?>""
-                                                                                                                     name="op" />
+                            <input type="hidden" name="destination" value="<?php echo INVIAGGIO; ?>" class="game_form_input" />
+                            <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['maps']['leave']); ?>" name="op" />
                         </div>
                     <?php
                     } else {
@@ -180,18 +169,12 @@ if(gdrcd_query($result, 'num_rows') == 0) {
                             </select>
                         <?php
                         } else { ?>
-                            <input type="hidden"
-                                   name="destination"
-                                   value="0"
-                                   class="game_form_input" />
+                            <input type="hidden" name="destination" value="0" class="game_form_input" />
                         <?php
                         } ?>
-                        <input type="submit"
-                               value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['maps']['arrive']); ?>"
-                               name="op" />
+                        <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['maps']['arrive']); ?>" name="op" />
                         </div>
-                    <?php
-                    } ?>
+                    <?php } ?>
                 </form>
             <?php
             }
@@ -211,15 +194,13 @@ if(gdrcd_query($result, 'num_rows') == 0) {
                                 <option value="<?php echo $climate; ?>">
                                     <?php echo $climate; ?>
                                 </option>
-                            <?php
-                            } ?>
+                            <?php } ?>
                         </select>
                         <input type="hidden" name="meteo" value="meteo_change" class="game_form_input" />
                         <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['maps']['set_meteo']); ?>" name="op" />
                     </div>
                 </form>
-            <?php
-            } ?>
+            <?php } ?>
         </div>
     <?php
     }//else
