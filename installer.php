@@ -359,7 +359,7 @@ require 'header.inc.php'; /*Header comune*/
             ultimo_stipendio date NOT NULL default '2009-07-01',
             last_ip varchar(60) default NULL,
             is_invisible tinyint(1) NOT NULL default '0',
-            ultimo_refresh datetime NOT NULL,
+            ultimo_refresh datetime default NULL,
             ora_entrata datetime NOT NULL,
             ora_uscita datetime NOT NULL,
             posizione int(4) NOT NULL default '1',
