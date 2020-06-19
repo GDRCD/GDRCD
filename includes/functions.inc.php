@@ -80,7 +80,9 @@ function gdrcd_query($sql, $mode = 'query') {
             }
 
         case 'result':
-            return mysqli_query($db_link, $sql) or die(gdrcd_mysql_error($sql));
+            $result = mysqli_query($db_link, $sql) or die(gdrcd_mysql_error($sql));
+
+            return $result;
             break;
 
         case 'num_rows':
