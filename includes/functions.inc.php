@@ -80,9 +80,7 @@ function gdrcd_query($sql, $mode = 'query') {
             }
 
         case 'result':
-            $result = mysqli_query($db_link, $sql) or die(gdrcd_mysql_error($sql));
-
-            return $result;
+            return mysqli_query($db_link, $sql) or die(gdrcd_mysql_error($sql));
             break;
 
         case 'num_rows':
@@ -90,15 +88,11 @@ function gdrcd_query($sql, $mode = 'query') {
             break;
 
         case 'fetch':
-            $row = mysqli_fetch_array($sql, MYSQLI_BOTH);
-
-            return $row;
+            return mysqli_fetch_array($sql, MYSQLI_BOTH);
             break;
 
         case 'object':
-            $row = mysqli_fetch_object($sql);
-
-            return $row;
+            return mysqli_fetch_object($sql);
             break;
 
         case 'free':
@@ -446,6 +440,10 @@ function gdrcd_format_datetime_cat($datetime_in) {
  */
 function gdrcd_capital_letter($word) {
     return ucwords(strtolower($word));
+}
+
+function gdrcd_safe_name($word) {
+    return trim(gdrcd_capital_letter(gdrcd_filter_in($word)));
 }
 
 /**

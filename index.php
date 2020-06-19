@@ -12,6 +12,14 @@ require 'header.inc.php';
 require 'includes/credits.inc.php';
 
 /*
+ * Fix per installare il database la prima volta.
+ */
+$record = gdrcd_query("SELECT COUNT(*) AS number FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '".$PARAMETERS['database']['database_name']."'");
+if($record['number'] == 0 ) {
+    gdrcd_redirect("installer.php");
+}
+
+/*
  * Definizione pagina da visualizzare
  */
 $page = ( ! empty($_GET['page'])) ? gdrcd_filter('include', $_GET['page']) : 'index';
