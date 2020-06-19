@@ -105,7 +105,7 @@
                             </div>
                             <?php if($PARAMETERS['mode']['racialinfo'] == 'ON') { ?>
                                 <div class="form_info">
-                                    <a href="ambientazione.php?page=user_razze" target="_new">
+                                    <a href="index.php?page=user_razze" target="_new">
                                         <?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['race_info']); ?>
                                     </a>
                                 </div>
