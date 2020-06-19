@@ -29,12 +29,12 @@ $numresults = gdrcd_query($result, 'num_rows');
 ?>
 <div class="elenco_record_gioco">
     <div class="link_back">
-        <a href="main.php?page=messages_center">
+        [<a href="main.php?page=messages_center">
             Ricevuti
-        </a>
-        <a href="main.php?page=messages_center&op=inviati">
+        </a>] -
+        [<a href="main.php?page=messages_center&op=inviati">
             Inviati
-        </a>
+        </a>]
     </div>
     <?php
     if($numresults > 0) { ?>
