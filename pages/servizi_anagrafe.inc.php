@@ -23,9 +23,6 @@ $result = gdrcd_query($query, 'result'); ?>
                             <?php while($row = gdrcd_query($result, 'fetch')) { ?>
                                 <option value="<?php echo gdrcd_filter('out', $row['nome']) ?>">
                                     <?php echo gdrcd_filter('out', $row['nome']).' '.gdrcd_filter('out', $row['cognome']); ?>
-                                    <?php if($_SESSION['permessi'] >= SUPERUSER) {
-                                        echo ' - '.gdrcd_filter('out', $row['email']);
-                                    } ?>
                                 </option>
                             <?php }
                             gdrcd_query($result, 'free');

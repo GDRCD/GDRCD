@@ -127,7 +127,7 @@
             $pagebegin = (int) $_REQUEST['offset'] * $PARAMETERS['settings']['records_per_page'];
             $pageend = $PARAMETERS['settings']['records_per_page'];
             //Conteggio record totali
-            $record_globale = gdrcd_query("SELECT count(*) AS N FROM oggetto JOIN mercato ON oggetto.id_oggetto=mercato.id_oggetto WHERE tipo = '".gdrcd_filter('get', $_REQUEST['what']));
+            $record_globale = gdrcd_query("SELECT count(*) AS N FROM oggetto JOIN mercato ON oggetto.id_oggetto=mercato.id_oggetto WHERE tipo = ".gdrcd_filter('get', $_REQUEST['what']));
             $totaleresults = (int) $record_globale['N'];
             //Lettura record
             $query = "SELECT mercato.numero, oggetto.id_oggetto, oggetto.nome, oggetto.descrizione, oggetto.costo, oggetto.difesa, oggetto.attacco, oggetto.cariche, oggetto.bonus_car0, oggetto.bonus_car1, oggetto.bonus_car2, oggetto.bonus_car3, oggetto.bonus_car4, oggetto.bonus_car5, oggetto.urlimg FROM oggetto JOIN mercato ON oggetto.id_oggetto=mercato.id_oggetto WHERE tipo = '".gdrcd_filter('get', $_REQUEST['what'])."' ORDER BY nome LIMIT ".$pagebegin.", ".$pageend;

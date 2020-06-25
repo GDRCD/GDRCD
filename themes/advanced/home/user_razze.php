@@ -13,7 +13,7 @@
                             <td colspan="2" class="casella_titolo">
                                 <div class="elementi_elenco">
                                     <img class="razza_icon"
-                                         src="themes/<?php echo $PARAMETERS['themes']['current_theme'] ?>/imgs/races/<?php echo $row['immagine']; ?>" />
+                                         src="themes/<?php echo $PARAMETERS['themes']['current_theme'] ?>/imgs/races/<?php echo $row['icon']; ?>" />
                                     <?php if(empty($row['url_site']) === true) {
                                         echo $row['nome_razza'].' ('.$row['sing_m'].', '.$row['sing_f'].')';
                                     } else {

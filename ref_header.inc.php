@@ -173,12 +173,18 @@ if((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) 
                     }
                 }
                 /*Inserisco il messaggio*/
-                gdrcd_query("INSERT INTO chat ( stanza, imgs, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", '".$_SESSION['sesso'].";".$_SESSION['img_razza']."', '".$_SESSION['login']."', '".gdrcd_capital_letter(gdrcd_filter('in', $tag_n_beyond))."', NOW(), '".$m_type."', '".$chat_message."')");
+                /*E controllo se la chat non era una privata scaduta @author GoddessDanielle*/
+                $mappa = gdrcd_query("SELECT * FROM mappa where id = '".$_SESSION['luogo']."'");
+
+                if ($mappa['privata']==1 && strtotime($mappa['scadenza']) < time()) {
+                    gdrcd_query("INSERT INTO chat ( stanza, imgs, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", '".$_SESSION['sesso'].";".$_SESSION['img_razza']."', '".$_SESSION['login']."', '".gdrcd_capital_letter(gdrcd_filter('in', $tag_n_beyond))."', NOW(), 'M', 'Chat scaduta')");
+                } else {
+                    gdrcd_query("INSERT INTO chat ( stanza, imgs, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", '".$_SESSION['sesso'].";".$_SESSION['img_razza']."', '".$_SESSION['login']."', '".gdrcd_capital_letter(gdrcd_filter('in', $tag_n_beyond))."', NOW(), '".$m_type."', '".$chat_message."')");
+                }
 
                 if($PARAMETERS['mode']['exp_by_chat'] == 'ON') {
                     if($PARAMETERS['mode']['exp_in_private'] == 'ON') {
-                        $chat_id = gdrcd_query("SELECT * FROM mappa where id = '".$_SESSION['luogo']."'");
-                        if($chat_id['privata']==0 && ($m_type == 'A' || $m_type == 'P' || $m_type == 'M')) {
+                        if($mappa['privata']==0 && ($m_type == 'A' || $m_type == 'P' || $m_type == 'M')) {
                             gdrcd_query("UPDATE personaggio SET esperienza = esperienza + ".$exp_bonus." WHERE nome = '".$_SESSION['login']."' LIMIT 1");
                         }
                     } else {
@@ -236,7 +242,6 @@ $query = gdrcd_query("	SELECT chat.id, chat.imgs, chat.mittente, chat.destinatar
         INNER JOIN mappa ON mappa.id = chat.stanza
         LEFT JOIN personaggio ON personaggio.nome = chat.mittente
         WHERE chat.id > ".$last_message." AND stanza = ".$_SESSION['luogo']." AND chat.ora > IFNULL(mappa.ora_prenotazione, '0000-00-00 00:00:00') AND DATE_SUB(NOW(), INTERVAL 30 MINUTE) < ora ORDER BY id ".$typeOrder, 'result');
-
 while($row = gdrcd_query($query, 'fetch')) {
     //Impedisci XSS nelle immagini
     $row['url_img_chat'] = gdrcd_filter('fullurl', $row['url_img_chat']);

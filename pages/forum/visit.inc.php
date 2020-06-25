@@ -201,14 +201,9 @@ if((($row['tipo'] == SOLORAZZA) && ($_SESSION['id_razza'] != $row['proprietari']
                                         </div>
                                                                   <!-- Elimina -->
                                         <div class="controllo_elenco">
-                                            <form action="main.php?page=forum" method="post">
-                                                <input type="hidden" name="id_record" value="<?php echo $row['id_messaggio'] ?>" />
-                                                <input type="hidden" name="padre" value="-1" />
-                                                <input type="hidden" name="op" value="delete_conf" />
-                                                <input type="image" src="imgs/icons/erase.png"
-                                                       alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['erase']); ?>"
-                                                       title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['erase']); ?>" />
-                                            </form>
+                                            <a href="main.php?page=forum&op=delete_conf&id_record=<?php echo $row['id_messaggio']; ?>&padre=-1">
+                                                <img src="imgs/icons/erase.png" alt="Elimina" width="15" />
+                                            </a>
                                         </div>
                                     </div>
                                 </td>
