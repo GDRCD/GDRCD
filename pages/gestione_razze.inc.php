@@ -221,7 +221,7 @@
                         <?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['races']['link']['back']); ?>
                     </a>
                 </div>
-            <?php}//if
+            <?php }//if
             if((isset($_POST['op']) === false) && (isset($_REQUEST['op']) === false)) { /*Elenco record (Visualizzaione di base della pagina)*/
                 //Determinazione pagina (paginazione)
                 $pagebegin = (int) gdrcd_filter('get', $_REQUEST['offset']) * $PARAMETERS['settings']['records_per_page'];
