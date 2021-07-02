@@ -37,7 +37,7 @@ $email = $row['email'];
                 </a>
             </div>
         <?php }
-        /*Cancella altri*/
+        /*Cancella altri - MODERATORE (Disabilita account)*/
         if((gdrcd_filter('get', $_POST['op']) == 'force') && ($_SESSION['permessi'] == MODERATOR)) {
             gdrcd_query("UPDATE personaggio SET permessi = -1 WHERE nome = '".gdrcd_filter('in', $_POST['account'])."' AND permessi < ".SUPERUSER."");
             gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".gdrcd_filter('in', $_POST['account'])."','".$_SESSION['login']."', NOW(), ".DELETEPG." ,'".gdrcd_filter('in', $MESSAGE['interface']['user']['delete']['deleted'])."')");
@@ -51,7 +51,7 @@ $email = $row['email'];
                 </a>
             </div>
         <?php }
-        /*Cambio pass utenti*/
+        /*Cancella altri - SUPERUSER (Disabilita account) */
         if((gdrcd_filter('get', $_POST['op']) == 'force') && ($_SESSION['permessi'] == SUPERUSER)) {
             gdrcd_query("UPDATE personaggio SET permessi = -1 WHERE nome = '".gdrcd_filter('in', $_POST['account'])."'");
             gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".gdrcd_filter('in', $_POST['account'])."','".$_SESSION['login']."', NOW(), ".DELETEPG." ,'->')");
@@ -65,7 +65,7 @@ $email = $row['email'];
                 </a>
             </div>
         <?php }
-        /*Cambio pass utenti*/
+        /*Ripristina account*/
         if((gdrcd_filter('get', $_POST['op']) == 'get_back') && ($_SESSION['permessi'] >= MODERATOR)) {
             gdrcd_query("UPDATE personaggio SET permessi = 0 WHERE nome = '".gdrcd_filter('in', $_POST['account'])."'");
             gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".gdrcd_filter('in', $_POST['account'])."','".$_SESSION['login']."', NOW(), ".DELETEPG." ,'<-')");
@@ -157,7 +157,7 @@ $email = $row['email'];
                         </form>
                     </div>
                 </div>
-            <?php
+                <?php
             }//if
         }//if ?>
     </div>

@@ -11,7 +11,7 @@ $email = $row['email'];
     <div class="page_body">
         <?php /*Cambio pass utenti*/
         if($_POST['op'] == 'new') {
-            if(($email == gdrcd_filter_email($_POST['email'])) && (gdrcd_check_pass($_POST['new_pass']) === true)) {
+            if((gdrcd_password_check(gdrcd_filter_email($_POST['email']),$email)) && (gdrcd_check_pass($_POST['new_pass']) === true)) {
                 gdrcd_query("UPDATE personaggio SET pass = '".gdrcd_encript($_POST['new_pass'])."', ultimo_cambiopass = NOW() WHERE nome = '".$_SESSION['login']."'");
                 gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".$_SESSION['login']."','".$_SESSION['login']."', NOW(), ".CHANGEDPASS." ,'".$_SERVER['REMOTE_ADDR']."')");
                 ?>
@@ -54,7 +54,7 @@ $email = $row['email'];
                     <?php echo gdrcd_filter('out', $MESSAGE['interface']['user']['link']['back']); ?>
                 </a>
             </div>
-        <?php
+            <?php
         }
         /*Visualizzazione di base*/
         if(isset($_POST['op']) === false) { ?>
@@ -110,7 +110,7 @@ $email = $row['email'];
                         </form>
                     </div>
                 </div>
-            <?php
+                <?php
             }//if
         }//if ?>
     </div>
