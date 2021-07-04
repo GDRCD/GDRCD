@@ -52,7 +52,7 @@ $PARAMETERS['themes']['current_theme'] = 'advanced'; //tema in uso
 
 /* Attiva nel frame l'avviso in caso di nuovi messaggi privati e/o bacheche */
 $PARAMETERS['mode']['check_forum'] = 'ON';
-$PARAMETERS['text']['check_forum']['new'] = '(Nuovo)';
+$PARAMETERS['text']['check_forum']['new'] = '(Nuovo)'; // Mettendo FALSE o lasciandolo vuoto, non si vedrà il messaggio
 $PARAMETERS['mode']['check_messages'] = 'ON';
 
 /**
@@ -163,6 +163,7 @@ $PARAMETERS['names']['forum']['sing'] = 'Bacheca'; //nome dei forum (singolare)
 $PARAMETERS['names']['forum']['plur'] = 'Bacheche'; //nome dei forum (plurale)
 $PARAMETERS['names']['forum']['image_file'] = ''; //immagine del forum
 $PARAMETERS['names']['forum']['image_file_onclick'] = ''; //immagine al passaggio del mouse del forum
+$PARAMETERS['names']['forum']['image_file_new'] = ''; //immagine nuove attività forum
 $PARAMETERS['names']['guild_name']['sing'] = 'Gilda'; //nome delle gilde nel gioco (singolare)
 $PARAMETERS['names']['guild_name']['plur'] = 'Gilde'; //nome delle gilde nel gioco (plurale)
 $PARAMETERS['names']['guild_name']['lead'] = 'Capogilda'; //nome del capo gilda nel gioco (plurale)

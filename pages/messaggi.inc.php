@@ -5,54 +5,85 @@ if(empty($_SESSION['last_istant_message']) === true) {
     $_SESSION['last_istant_message'] = 0;
 }
 
-$non_letti = gdrcd_query("SELECT id FROM messaggi WHERE destinatario = '".gdrcd_filter('in', $_SESSION['login'])."' AND letto=0 AND id > ".$_SESSION['last_istant_message']."", 'result');
+/**
+ * Controllo se rispetto all'ultimo messaggio visualizzato dall'utente ne sono stati inviati altri
+ */
+$messaggi_non_letti = gdrcd_query("SELECT id FROM messaggi WHERE destinatario = '".gdrcd_filter('in', $_SESSION['login'])."' AND letto=0 AND id > ".$_SESSION['last_istant_message'], 'result');
+$messaggi_max_id = gdrcd_query("SELECT max(id) as max FROM messaggi WHERE destinatario = '".gdrcd_filter('in', $_SESSION['login'])."' AND letto=0");
+$hasNewMessage = (gdrcd_query($messaggi_non_letti, 'num_rows') == 0) || ($messaggi_max_id['max'] < $_SESSION['last_istant_message']);
 
-$max_id = gdrcd_query("SELECT max(id) as max FROM messaggi WHERE destinatario = '".gdrcd_filter('in', $_SESSION['login'])."' AND letto=0"); ?>
+gdrcd_query($messaggi_non_letti, 'free');
+
+/**
+ * Controllo se rispetto all'ultimo messaggio visualizzato dall'utente ne sono stati inviati altri
+ */
+$hasNewForumMessage = false;
+$result = gdrcd_query("SELECT id_araldo, nome, tipo, proprietari FROM araldo ORDER BY tipo, nome", 'result');
+while($row = gdrcd_query($result, 'fetch')) {
+    if(($row['tipo'] <= PERTUTTI) || (($row['tipo'] == SOLORAZZA) && ($_SESSION['id_razza'] == $row['proprietari'])) || (($row['tipo'] == SOLOGILDA) && (strpos($_SESSION['gilda'], '*'.$row['proprietari'].'*') != false)) || (($row['tipo'] == SOLOMASTERS) && ($_SESSION['permessi'] >= GAMEMASTER)) || ($_SESSION['permessi'] >= MODERATOR)) {
+        $new_msg = gdrcd_query("SELECT COUNT(id) AS num FROM araldo_letto WHERE araldo_id = ".$row['id_araldo']." AND nome = '".$_SESSION['login']."';");
+
+        $new_msg2 = gdrcd_query("SELECT COUNT(id_messaggio) AS num FROM messaggioaraldo WHERE id_araldo = ".$row['id_araldo']." AND id_messaggio_padre = -1");
+
+        if($new_msg2['num'] > $new_msg['num']) {
+            $hasNewForumMessage = true;
+        }
+    }
+}
+
+?>
 
 <div class="pagina_messaggi">
 <?php
+/**
+ * FORUM
+ */
 if($PARAMETERS['mode']['check_forum'] === 'ON') {
-    echo '    <div class="messaggio_forum"><a href="../main.php?page=forum" target="_top">';
-    $new = false;
-    $result = gdrcd_query("SELECT id_araldo, nome, tipo, proprietari FROM araldo ORDER BY tipo, nome", 'result');
-    while($row = gdrcd_query($result, 'fetch')) {
-        if(($row['tipo'] <= PERTUTTI) || (($row['tipo'] == SOLORAZZA) && ($_SESSION['id_razza'] == $row['proprietari'])) || (($row['tipo'] == SOLOGILDA) && (strpos($_SESSION['gilda'], '*'.$row['proprietari'].'*') != false)) || (($row['tipo'] == SOLOMASTERS) && ($_SESSION['permessi'] >= GAMEMASTER)) || ($_SESSION['permessi'] >= MODERATOR)) {
-            $new_msg = gdrcd_query("SELECT COUNT(id) AS num FROM araldo_letto WHERE araldo_id = ".$row['id_araldo']." AND nome = '".$_SESSION['login']."';");
+    if(!$hasNewForumMessage) {
+        echo '<div class="messaggio_forum"><a href="../main.php?page=forum" target="_top">';
 
-            $new_msg2 = gdrcd_query("SELECT COUNT(id_messaggio) AS num FROM messaggioaraldo WHERE id_araldo = ".$row['id_araldo']." AND id_messaggio_padre = -1");
+        if(empty ($PARAMETERS['names']['forum']['image_file']) === false) {
+            //echo '<img src="../themes/'.$PARAMETERS['themes']['current_theme'].'/imgs/menu/'.$PARAMETERS['names']['forum']['image_file'].'" alt="'.gdrcd_filter('out',$PARAMETERS['names']['forum']['sing']).'" title=="'.gdrcd_filter('out',$PARAMETERS['names']['forum']['sing']).'" />';
 
-            if($new_msg2['num'] > $new_msg['num']) {
-                $new = true;
+            if(($PARAMETERS['names']['forum']['image_file_onclick']) === true) {
+                $img_up = $PARAMETERS['names']['forum']['image_file'];
+                $img_down = $PARAMETERS['names']['forum']['image_file'];
+            } else {
+                $img_up = $PARAMETERS['names']['forum']['image_file'];
+                $img_down = $PARAMETERS['names']['forum']['image_file_onclick'];
             }
-        }
-    }
-    echo ($new) ? $PARAMETERS['text']['check_forum']['new'].' ' : '';
 
-    if(empty ($PARAMETERS['names']['forum']['image_file']) === false) {
-        //echo '<img src="../themes/'.$PARAMETERS['themes']['current_theme'].'/imgs/menu/'.$PARAMETERS['names']['forum']['image_file'].'" alt="'.gdrcd_filter('out',$PARAMETERS['names']['forum']['sing']).'" title=="'.gdrcd_filter('out',$PARAMETERS['names']['forum']['sing']).'" />';
+            echo '<script type="text/javascript"> if (document.images) { var forum_button1_up = new Image(); forum_button1_up.src = "../themes/'.$PARAMETERS['themes']['current_theme'].'/imgs/menu/'.$img_up.'"; var forum_button1_over = new Image(); forum_button1_over.src = "../themes/'.$PARAMETERS['themes']['current_theme'].'/imgs/menu/'.$img_down.'";} function forum_over_button() { if (document.images) { document["forum_buttonOne"].src = forum_button1_over.src;}} function forum_up_button() { if (document.images) { document["forum_buttonOne"].src = forum_button1_up.src}}</script>';
 
-        if(($PARAMETERS['names']['forum']['image_file_onclick']) === true) {
-            $img_up = $PARAMETERS['names']['forum']['image_file'];
-            $img_down = $PARAMETERS['names']['forum']['image_file'];
+            echo '<a onMouseOver="forum_over_button()" onMouseOut="forum_up_button()" href="../main.php?page=forum"  target="_top"><img src="../themes/'.$PARAMETERS['themes']['current_theme'].'/imgs/menu/'.$PARAMETERS['names']['forum']['image_file'].'" alt="'.gdrcd_filter('out',$PARAMETERS['names']['forum']['plur']).'" title="'.gdrcd_filter('out', $PARAMETERS['names']['forum']['plur']).'" name="forum_buttonOne" /></a>';
+
         } else {
-            $img_up = $PARAMETERS['names']['forum']['image_file'];
-            $img_down = $PARAMETERS['names']['forum']['image_file_onclick'];
+            echo gdrcd_filter('out', $PARAMETERS['names']['forum']['sing']);
         }
-
-        echo '<script type="text/javascript"> if (document.images) { var forum_button1_up = new Image(); forum_button1_up.src = "../themes/'.$PARAMETERS['themes']['current_theme'].'/imgs/menu/'.$img_up.'"; var forum_button1_over = new Image(); forum_button1_over.src = "../themes/'.$PARAMETERS['themes']['current_theme'].'/imgs/menu/'.$img_down.'";} function forum_over_button() { if (document.images) { document["forum_buttonOne"].src = forum_button1_over.src;}} function forum_up_button() { if (document.images) { document["forum_buttonOne"].src = forum_button1_up.src}}</script>';
-
-        echo '<a onMouseOver="forum_over_button()" onMouseOut="forum_up_button()" href="../main.php?page=forum"  target="_top"><img src="../themes/'.$PARAMETERS['themes']['current_theme'].'/imgs/menu/'.$PARAMETERS['names']['forum']['image_file'].'" alt="'.gdrcd_filter('out',$PARAMETERS['names']['forum']['plur']).'" title="'.gdrcd_filter('out', $PARAMETERS['names']['forum']['plur']).'" name="forum_buttonOne" /></a>';
-
-    } else {
-        echo gdrcd_filter('out', $PARAMETERS['names']['forum']['sing']);
+        echo '</a></div>';
     }
-    echo '</a></div>';
+    else {
+    ?>
+    <div class="messaggio_forum_nuovo">
+        <a href="../main.php?page=forum" target="_top">
+            <?php
+            if(empty ($PARAMETERS['names']['forum']['image_file_new']) === false) {
+                echo '<img src="../themes/'.$PARAMETERS['themes']['current_theme'].'/imgs/menu/'.$PARAMETERS['names']['forum']['image_file_new'].'" alt="'.gdrcd_filter('out', $PARAMETERS['names']['forum']['plur']).'" title="'.gdrcd_filter('out', $PARAMETERS['names']['forum']['plur']).'" />';
+            } else {
+                echo ( empty($PARAMETERS['text']['check_forum']['new']) === true ? NULL : $PARAMETERS['text']['check_forum']['new'].' ').
+                        gdrcd_filter('out', $PARAMETERS['names']['forum']['plur']);
+            } ?>
+        </a>
+    </div>
+    <?php
+    }
 }
+/**
+ * MESSAGGI
+ */
 if($PARAMETERS['mode']['check_messages'] === 'ON') {
-    if((gdrcd_query($non_letti, 'num_rows') == 0) || ($max_id['max'] < $_SESSION['last_istant_message'])) {
+    if(!$hasNewMessage) {
         echo '<div class="messaggio_forum">';
-
-        gdrcd_query($non_letti, 'free');
 
         if(empty ($PARAMETERS['names']['private_message']['image_file']) === false) {
             if(($PARAMETERS['names']['private_message']['image_file_onclick']) === true) {
@@ -79,7 +110,8 @@ if($PARAMETERS['mode']['check_messages'] === 'ON') {
         </script>
         <?php
         }
-    } else { //$_SESSION['last_istant_message']=$max_id['max']; ?>
+    } else {
+        ?>
         <div class="messaggio_forum_nuovo">
             <a href="../main.php?page=messages_center&offset=0" target="_top">
                 <?php
@@ -102,7 +134,7 @@ if($PARAMETERS['mode']['check_messages'] === 'ON') {
             $ext = explode('.', $PARAMETERS['settings']['audio_new_messagges']);
             if(isset($PARAMETERS['settings']['audiotype']['.'.strtolower(end($ext))])) { ?>
                 <object data="../sounds/<?php echo $PARAMETERS['settings']['audio_new_messagges']; ?>"
-                        type="<?php echo $PARAMETERS['settings']['audiotype']['.'.strtolower(end(explode('.', $PARAMETERS['settings']['audio_new_messagges'])))]; ?>"
+                        type="<?php echo $PARAMETERS['settings']['audiotype']['.'.strtolower(end($ext))]; ?>"
                         autostart="true"
                         style="width:1px; height:0px;">
                     <embed src="../sounds/<?php echo $PARAMETERS['settings']['audio_new_messagges']; ?>" autostart="true"
