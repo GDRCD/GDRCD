@@ -625,3 +625,42 @@ function gdrcd_list($str) {
 
     return $list;
 }
+
+/**
+ * Mostro in modo leggibile le informazioni di una variabile, tra cui il suo contenuto
+ * @param   string  $object Variabile da consultare
+ * @return  void    Mostra a schermo il contenuto della variabile, formattato
+ */
+function gdrcd_dump($object) {
+    echo '<xmp style="text-align: left;font-size:13px;">';
+    print_r($object);
+    echo '</xmp><br />';
+}
+
+/**
+ * Raccolgo le informazioni di una variabile e le mostro in modo leggibile
+ * @param   mixed   $args Variabile da consultare
+ * @return  void    Mostra a schermo il contenuto della variabile, formattato
+ * @usage   gdrcd_debug($var); gdrcd_debug($var1, $var2, ...);
+ */
+function gdrcd_debug($args) {
+    $args = func_get_args();
+    foreach($args AS $arg) {
+        gdrcd_dump($arg);
+    }
+}
+
+/**
+ * Raccolgo le informazioni di una variabile e le mostro in modo leggibile, poi interrompo il caricamento della pagina
+ * @param   mixed   $args Variabile da consultare
+ * @return  void    Mostra a schermo il contenuto della variabile, formattato
+ * @usage   gdrcd_brute_debug($var); gdrcd_brute_debug($var1, $var2, ...);
+ */
+function gdrcd_brute_debug($args) {
+    $args = func_get_args();
+    foreach($args AS $arg) {
+        gdrcd_dump($arg);
+    }
+    die('FINE');
+}
+
