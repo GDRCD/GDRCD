@@ -10,7 +10,7 @@ if(empty($_SESSION['last_istant_message']) === true) {
  */
 $messaggi_non_letti = gdrcd_query("SELECT id FROM messaggi WHERE destinatario = '".gdrcd_filter('in', $_SESSION['login'])."' AND letto=0 AND id > ".$_SESSION['last_istant_message'], 'result');
 $messaggi_max_id = gdrcd_query("SELECT max(id) as max FROM messaggi WHERE destinatario = '".gdrcd_filter('in', $_SESSION['login'])."' AND letto=0");
-$hasNewMessage = (gdrcd_query($messaggi_non_letti, 'num_rows') == 0) || ($messaggi_max_id['max'] < $_SESSION['last_istant_message']);
+$hasNewMessage = (gdrcd_query($messaggi_non_letti, 'num_rows') > 0) && ($messaggi_max_id['max'] > $_SESSION['last_istant_message']);
 
 gdrcd_query($messaggi_non_letti, 'free');
 
@@ -78,6 +78,7 @@ if($PARAMETERS['mode']['check_forum'] === 'ON') {
     <?php
     }
 }
+
 /**
  * MESSAGGI
  */
