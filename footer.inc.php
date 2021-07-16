@@ -36,19 +36,23 @@ if($PARAMETERS['mode']['popup_choise'] == 'ON') {
 
         // verifichiamo se nel body non esiste il sorgente per la dialog
         if (top.$('#dialog-'+name).length == 0) {
-
             // in questo caso lo creiamo:
             top.$('body').append('<div id="dialog-'+name+'" title="'+title+'" style="padding:0;"><iframe src="'+ url +'" frameborder="no" style="position:absolute;width:100%;height:100%;" scrolling="yes"></div>');
-
         } else {
-
             // se il sorgente invece esiste già assegnamo la nuova url all´iframe:
             top.$('#dialog-'+name).attr('title', title);
             top.$('#dialog-'+name+' iframe').attr('src', url);
         }
 
         // Ok, adesso siamo pronti per lanciare la modale!
-        top.$('#dialog-'+name).dialog({width: width, height: height});
+        top.$('#dialog-'+name).dialog({
+            width: width,
+            height: height,
+            close: function () {
+                // Quando la modale viene chiusa, cancello il precedente contenuto
+                top.$('#dialog-'+name+' iframe').attr('src', '');
+            }
+        });
     }
 </script>
 <!--<script type="text/javascript">
