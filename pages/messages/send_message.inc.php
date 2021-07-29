@@ -37,7 +37,7 @@ if (gdrcd_filter('get', $_POST['multipli']) == 'singolo') {
          * @author Rhllor
          */
     } elseif ($_POST['multipli'] == "broadcast") {
-        $personaggio = gdrcd_query("SELECT * FROM personaggio where nome = '" . $_SESSION['login'] . "'", 'result');
+        $personaggio = gdrcd_query("SELECT * FROM personaggio where nome = '" . $_SESSION['login'] . "'");
 
         if($personaggio['permessi'] >= MODERATOR) {
             $query = gdrcd_query("SELECT nome FROM personaggio", 'result');
