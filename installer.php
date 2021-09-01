@@ -361,7 +361,7 @@ require 'header.inc.php'; /*Header comune*/
             is_invisible tinyint(1) NOT NULL default '0',
             ultimo_refresh datetime default NULL,
             ora_entrata datetime default NULL,
-            ora_uscita datetime default NULL,
+            ora_uscita datetime NOT NULL default '2009-07-01 00:00:00',
             posizione int(4) NOT NULL default '1',
             ultimo_messaggio bigint(20) NOT NULL default '0',
             PRIMARY KEY  (nome),
