@@ -1,3 +1,8 @@
+<?php
+    // Inclusioni aggiuntive
+    require_once ('forum/functions.inc.php');
+?>
+
 <div class="pagina_forum">
     <!-- Titolo della pagina -->
     <div class="page_title">

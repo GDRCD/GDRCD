@@ -33,7 +33,7 @@ $result = gdrcd_query(
 $forums = [];
 while($row = gdrcd_query($result, 'fetch')) {
     // Controllo i permessi sulla bacheca
-    if(($row['tipo'] <= PERTUTTI) || (($row['tipo'] == SOLORAZZA) && ($_SESSION['id_razza'] == $row['proprietari'])) || (($row['tipo'] == SOLOGILDA) && (strpos($_SESSION['gilda'],'*'.$row['proprietari'].'*') != false)) || (($row['tipo'] == SOLOMASTERS) && ($_SESSION['permessi'] >= GAMEMASTER)) || ($_SESSION['permessi'] >= MODERATOR)){
+    if(gdrcd_forum_controllo_permessi($row['tipo'], $row['proprietari'])){
         // Convalido il Forum per la visualizzazione
         $forums[$row['tipo']][$row['id_araldo']] = $row;
     }
@@ -74,8 +74,8 @@ if(!empty($forums)) {
             // Costruisco la cella dedicata al nome del Forum
             $td[] = '<td class="casella_elemento">
                         <div class="elementi_elenco">
-                            <a href="main.php?page=forum&op=visit&what='.gdrcd_filter('out', $forumRow['id_araldo']).'" >
-                                '.gdrcd_filter('out', $forumRow['nome']).'    
+                            <a href="main.php?page=forum&op=visit&what='.gdrcd_filter('out', $forumRow['id_araldo']).'" >'.
+                                gdrcd_filter('out', $forumRow['nome']).'    
                             </a>
                         </div>
                     </td>';
