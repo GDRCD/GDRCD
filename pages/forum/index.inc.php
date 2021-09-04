@@ -74,7 +74,7 @@ if(!empty($forums)) {
             // Costruisco la cella dedicata al nome del Forum
             $td[] = '<td class="casella_elemento">
                         <div class="elementi_elenco">
-                            <a href="main.php?page=forum&op=visit&what='.gdrcd_filter('out', $forumRow['id_araldo']).'&name='.gdrcd_filter('out', $forumRow['nome']).'" >
+                            <a href="main.php?page=forum&op=visit&what='.gdrcd_filter('out', $forumRow['id_araldo']).'" >
                                 '.gdrcd_filter('out', $forumRow['nome']).'    
                             </a>
                         </div>
@@ -105,7 +105,7 @@ if(!empty($forums)) {
                 <form action="main.php?page=forum" method="post">
                     <div class="form_submit">
                         <input type="hidden" name="op" value="readall" />
-                        <input type="submit" name="dummy" value="Segna tutto come letto" />
+                        <input type="submit" name="submitReadAll" value="Segna tutto come letto" />
                     </div>
                 </form>
             </div>
