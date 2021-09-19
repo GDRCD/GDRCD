@@ -13,9 +13,9 @@
 error_reporting(E_ERROR | E_PARSE);
 
 /* PARAMETRI DI CONNESSIONE */
-$PARAMETERS['database']['username'] = 'gdrcd';            //nome utente del database
-$PARAMETERS['database']['password'] = 'gdrcd';            //password del database
-$PARAMETERS['database']['database_name'] = 'gdrcd';    //nome del database
+$PARAMETERS['database']['username'] = 'giovannipaneselling3';            //nome utente del database
+$PARAMETERS['database']['password'] = 'Mortor123';            //password del database
+$PARAMETERS['database']['database_name'] = 'my_giovannipaneselling3';    //nome del database
 $PARAMETERS['database']['url'] = 'localhost';        //indirizzo ip del database
 
 

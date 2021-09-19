@@ -19,7 +19,8 @@ if((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) 
     if((gdrcd_filter('get', $_POST['op']) == 'take_action') && (($PARAMETERS['mode']['skillsystem'] == 'ON') || ($PARAMETERS['mode']['dices'] == 'ON'))) {
         $actual_healt = gdrcd_query("SELECT salute FROM personaggio WHERE nome = '".$_SESSION['login']."'");
 
-        if(gdrcd_filter('get', $_POST['id_ab']) != 'no_skill') {
+
+        if( (gdrcd_filter('get', $_POST['id_ab']) != 'no_skill') && !empty($_POST['id_ab']) ) {
             if($actual_healt['salute'] > 0) {
                 $skill = gdrcd_query("SELECT nome, car FROM abilita WHERE id_abilita = ".gdrcd_filter('num', $_POST['id_ab'])." LIMIT 1");
 
@@ -48,7 +49,9 @@ if((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) 
             /** * Tiro su caratteristica
              * @author Blancks
              */
-        } elseif(gdrcd_filter('get', $_POST['id_stats']) != 'no_stats' && gdrcd_filter('get', $_POST['dice']) != 'no_dice') {
+        } elseif( (gdrcd_filter('get', $_POST['id_stats']) != 'no_stats') && (gdrcd_filter('get', $_POST['dice']) != 'no_dice') && !empty($_POST['id_stats']) ) {
+
+
             mt_srand((double) microtime() * 1000000);
             $die = mt_rand(1, gdrcd_filter('num', (int) $_POST['dice']));
 
@@ -60,12 +63,12 @@ if((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) 
 
             gdrcd_query("INSERT INTO chat ( stanza, imgs, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", '".$_SESSION['sesso'].";".$_SESSION['img_razza']."', '".$_SESSION['login']."', '', NOW(), 'C', '".$_SESSION['login'].' '.gdrcd_filter('in', $MESSAGE['chat']['commands']['use_skills']['uses']).' '.gdrcd_filter('in', $PARAMETERS['names']['stats']['car'.$id_stats[1]]).': '.gdrcd_filter('in', $PARAMETERS['names']['stats']['car'.$id_stats[1].'']).' '.gdrcd_filter('num', $car['car_now'] + $racial_bonus['racial_bonus']).', '.gdrcd_filter('in', $MESSAGE['chat']['commands']['use_skills']['die']).' '.gdrcd_filter('num', $die).', '.gdrcd_filter('in', $MESSAGE['chat']['commands']['use_skills']['sum']).' '.(gdrcd_filter('num', $car['car_now'] + $racial_bonus['racial_bonus']) + gdrcd_filter('num', $die) + gdrcd_filter('num', $rank['grado']) + gdrcd_filter('in', $bonus['bonus']))."')");
 
-        } elseif(gdrcd_filter('get', $_POST['dice']) != 'no_dice') {
+        } elseif( (gdrcd_filter('get', $_POST['dice']) != 'no_dice') && !empty($_POST['dice']) ){
             mt_srand((double) microtime() * 1000000);
             $die = mt_rand(1, gdrcd_filter('num', $_POST['dice']));
 
             gdrcd_query("INSERT INTO chat ( stanza, imgs, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", '".$_SESSION['sesso'].";".$_SESSION['img_razza']."', '".$_SESSION['login']."', '', NOW(), 'D', '".$_SESSION['login'].' '.gdrcd_filter('in', $MESSAGE['chat']['commands']['die']['cast']).gdrcd_filter('num', $_POST['dice']).': '.gdrcd_filter('in', $MESSAGE['chat']['commands']['die']['sum']).' '.gdrcd_filter('num', $die)."')");
-        } elseif(gdrcd_filter('get', $_POST['id_item']) != 'no_item') {
+        } elseif( (gdrcd_filter('get', $_POST['id_item']) != 'no_item') && !empty($_POST['id_item']) ) {
             $item = explode('-', gdrcd_filter('in', $_POST['id_item']));
             if($item[1] == 1) {
                 $query = "DELETE FROM clgpersonaggiooggetto WHERE nome ='".$_SESSION['login']."' AND id_oggetto='".gdrcd_filter('num', $item[0])."' LIMIT 1";
