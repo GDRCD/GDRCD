@@ -19,7 +19,6 @@ if((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) 
     if((gdrcd_filter('get', $_POST['op']) == 'take_action') && (($PARAMETERS['mode']['skillsystem'] == 'ON') || ($PARAMETERS['mode']['dices'] == 'ON'))) {
         $actual_healt = gdrcd_query("SELECT salute FROM personaggio WHERE nome = '".$_SESSION['login']."'");
 
-
         if( (gdrcd_filter('get', $_POST['id_ab']) != 'no_skill') && !empty($_POST['id_ab']) ) {
             if($actual_healt['salute'] > 0) {
                 $skill = gdrcd_query("SELECT nome, car FROM abilita WHERE id_abilita = ".gdrcd_filter('num', $_POST['id_ab'])." LIMIT 1");
@@ -69,13 +68,45 @@ if((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) 
 
             gdrcd_query("INSERT INTO chat ( stanza, imgs, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", '".$_SESSION['sesso'].";".$_SESSION['img_razza']."', '".$_SESSION['login']."', '', NOW(), 'D', '".$_SESSION['login'].' '.gdrcd_filter('in', $MESSAGE['chat']['commands']['die']['cast']).gdrcd_filter('num', $_POST['dice']).': '.gdrcd_filter('in', $MESSAGE['chat']['commands']['die']['sum']).' '.gdrcd_filter('num', $die)."')");
         } elseif( (gdrcd_filter('get', $_POST['id_item']) != 'no_item') && !empty($_POST['id_item']) ) {
-            $item = explode('-', gdrcd_filter('in', $_POST['id_item']));
-            if($item[1] == 1) {
-                $query = "DELETE FROM clgpersonaggiooggetto WHERE nome ='".$_SESSION['login']."' AND id_oggetto='".gdrcd_filter('num', $item[0])."' LIMIT 1";
-            } elseif($item[1] > 1) {
-                $query = "UPDATE clgpersonaggiooggetto SET cariche = cariche -1 WHERE nome ='".$_SESSION['login']."' AND id_oggetto='".gdrcd_filter('num', $item[0]
-                    )."' LIMIT 1";
+
+            $item = gdrcd_filter('num', $_POST['id_item']);
+            $me = gdrcd_filter('in',$_SESSION['login']);
+
+            $data = gdrcd_query("
+                        SELECT oggetto.nome,oggetto.cariche AS new_cariche, clgpersonaggiooggetto.cariche,clgpersonaggiooggetto.numero
+                        FROM  oggetto 
+                            LEFT JOIN clgpersonaggiooggetto 
+                        ON clgpersonaggiooggetto.id_oggetto = oggetto.id_oggetto
+                        WHERE oggetto.id_oggetto='{$item}' 
+                          AND clgpersonaggiooggetto.nome='{$me}' LIMIT 1");
+
+            $cariche = gdrcd_filter('num',$data['cariche']);
+            $numero = gdrcd_filter('num',$data['numero']);
+            $new_cariche = gdrcd_filter('num',$data['new_cariche']);
+
+            # Se ho meno di una carica
+            if($cariche <= 1){
+
+                # Se ho un solo oggetto
+                if($numero == 1){
+
+                    # Cancello la riga
+                    $query = "DELETE FROM clgpersonaggiooggetto WHERE nome ='{$me}' AND id_oggetto='{$item}' LIMIT 1";
+                }
+                # Se ho piu' oggetti
+                else{
+
+                    # Ricarico le cariche e scalo il numro di oggetti
+                    $query = "UPDATE clgpersonaggiooggetto 
+                                    SET cariche = '{$new_cariche}', numero = numero - 1 
+                                WHERE nome ='{$me}' AND id_oggetto='{$item}' LIMIT 1";
+                }
             }
+            # SE ho piu' di una sola carica
+            else{
+                $query = "UPDATE clgpersonaggiooggetto SET cariche = cariche -1 WHERE nome ='{$me}' AND id_oggetto='{$item}' LIMIT 1";
+            }
+
             gdrcd_query($query);
 
             gdrcd_query("INSERT INTO chat ( stanza, imgs, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", '".$_SESSION['sesso'].";".$_SESSION['img_razza']."', '".$_SESSION['login']."', '', NOW(), 'O', '".$_SESSION['login'].' '.gdrcd_filter('in', $MESSAGE['chat']['commands']['die']['item']).': '.gdrcd_filter('in', $item[2])."')");

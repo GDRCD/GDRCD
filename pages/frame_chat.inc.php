@@ -160,7 +160,7 @@ $info = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprieta
                                         <select name="id_item" id="id_item">
                                             <option value="no_item"></option>
                                             <?php while($row = gdrcd_query($result, 'fetch')) { ?>
-                                                <option value="<?php echo $row['id_oggetto'].'-'.$row['cariche'].'-'.gdrcd_filter('out', $row['nome']); ?>">
+                                                <option value="<?php echo $row['id_oggetto'];?>">
                                                     <?php echo $row['nome']; ?>
                                                 </option>
                                             <?php
