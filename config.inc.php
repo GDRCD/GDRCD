@@ -50,6 +50,25 @@ $PARAMETERS['languages']['set'] = 'IT-it'; //lingua italiana
 $PARAMETERS['themes']['current_theme'] = 'advanced'; //tema in uso
 //$PARAMETERS['themes']['current_theme'] = 'medieval';
 
+/**
+ * Inserendo i nomi dei temi in questo elenco è possibile rendere disponibili agli utenti temi alternativi
+ * rispetto a quello di default
+ * Il primo elemento di ogni riga deve corrispondere al nome della cartella in cui è contenuto il tema
+ * in themes/<nome tema>
+ * Il secondo elemento è il nome che verrà presentato agli utenti durante la scelta
+ *
+ * Se non si vuole dare gli utenti la possibilità di scegliere temi alternativi, è sufficiente non impostare
+ * alcun tema in questa variabile
+ *
+ * NOTA: le pagine esterne del sito, cioè quelle visualizzate prima del login saranno sempre visualizzate con
+ * il tema di default
+ */
+$PARAMETERS['themes']['available'] = array(
+    'advanced' => 'Tema Advanced GDRCD',
+    'basic' => 'Tema Base GDRCD',
+    //'il_mio_tema_preferito' => 'Il mio tema troppo figo'
+);
+
 /* Attiva nel frame l'avviso in caso di nuovi messaggi privati e/o bacheche */
 $PARAMETERS['mode']['check_forum'] = 'ON';
 $PARAMETERS['text']['check_forum']['new'] = '(Nuovo)'; // Mettendo FALSE o lasciandolo vuoto, non si vedrà il messaggio
@@ -221,6 +240,8 @@ $PARAMETERS['settings']['cars_cap'] = 10;//Punteggio massimo per una caratterist
 $PARAMETERS['settings']['cars_sum'] = 40;//Punteggio totale da distribuire tra le caratteristiche in fase di iscrizione.
 $PARAMETERS['settings']['view_logs'] = 10; //Numero di log visualizzato.
 $PARAMETERS['settings']['auto_salary'] = 'OFF'; //ON per attivare l'accredito automatico dello stipendio al primo login
+
+
 
 /** * Abilitazione dell'audio in land
  * @author Blancks

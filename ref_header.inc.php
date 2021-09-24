@@ -8,16 +8,21 @@ $last_message = isset($_SESSION['last_message']) ? $_SESSION['last_message'] : 0
 //Includio i parametri, la configurazione, la lingua e le funzioni
 require ('includes/required.php');
 
+if(!empty($_SESSION['theme']) and array_key_exists($_SESSION['theme'], $PARAMETERS['themes']['available'])){
+    $PARAMETERS['themes']['current_theme'] = $_SESSION['theme'];
+}
+
 //Eseguo la connessione al database
 $handleDBConnection = gdrcd_connect();
 //Ricevo il tempo di reload
 $i_ref_time = gdrcd_filter_get($_GET['ref']);
-/**********************************************************************************/
+
 if((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) === false)) {
     /*Aggiornamento chat*/
     /*Se ho inviato un azione*/
     if((gdrcd_filter('get', $_POST['op']) == 'take_action') && (($PARAMETERS['mode']['skillsystem'] == 'ON') || ($PARAMETERS['mode']['dices'] == 'ON'))) {
         $actual_healt = gdrcd_query("SELECT salute FROM personaggio WHERE nome = '".$_SESSION['login']."'");
+
 
         if( (gdrcd_filter('get', $_POST['id_ab']) != 'no_skill') && !empty($_POST['id_ab']) ) {
             if($actual_healt['salute'] > 0) {

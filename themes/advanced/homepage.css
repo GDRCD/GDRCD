@@ -31,11 +31,11 @@ div.subtitle {
 
 /** * Stili del form di login
 */
-div.login_form {
-    float: right;
-    width: 230px;
-    padding: 10px;
-    margin-top: 60px;
+div.login_form{
+	float:right;
+	width:230px;
+	padding:10px;
+	margin-top: 20px;
 }
 
 /** * stile che ingloba i gruppi label/input
@@ -54,6 +54,10 @@ span.form_label {
 div.login_form input {
     width: 145px;
     margin: 0;
+}
+div.login_form input[type=checkbox]{
+	width: auto;
+	vertical-align: middle;
 }
 
 /** * Stile per il bottone del login
@@ -101,21 +105,19 @@ div.sidecontent ul {
     border-radius: 5px;
 }
 
-/** * Contenitore delle voci nel men� 
-*/
+/** * Contenitore delle voci nel men� **/
 div.sidecontent ul li {
     margin-bottom: 5px;
 }
 
-/** * Link voce men� 
-*/
+/** * Link voce men� al passaggio del mouse **/
 div.sidecontent ul li a, div.sidecontent ul li a:visited {
     color: #f1f1f1;
     text-decoration: none;
     display: block;
     font-size: 17px;
     padding: 2px;
-    background-color: none;
+    background-color: transparent;
 }
 
 /** * Link voce men� al passaggio del mouse
@@ -247,5 +249,6 @@ div#footer {
     padding: 8px 59px 0 59px;
     background: url("imgs/footer.png") no-repeat top left;
 }
+
 
 /** *** Fine stili regolatori del layout *** */

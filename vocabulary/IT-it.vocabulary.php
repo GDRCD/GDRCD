@@ -32,6 +32,7 @@ $MESSAGE['installer']['instal'] = "Installa il database.";
 $MESSAGE['homepage']['updater']['done'] = 'Il Database è stato reso compatibile con GDRCD5.4';
 $MESSAGE['homepage']['updater']['update'] = 'Aggiorna adesso il database.';
 $MESSAGE['homepage']['updater']['no_fields'] = 'Non sono state rilevate mancanze nel database attualmente in uso.';
+$MESSAGE['homepage']['forms']['theme_choice']='Scegli il tema da usare';
 
 
 /********** Iscrizione **********/
