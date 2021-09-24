@@ -26,12 +26,12 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 --
 
 CREATE TABLE IF NOT EXISTS `abilita` (
-  `id_abilita` int(4) NOT NULL AUTO_INCREMENT,
-  `nome` varchar(20) NOT NULL,
-  `car` tinyint(1) NOT NULL DEFAULT '0',
-  `descrizione` text NOT NULL,
-  `id_razza` int(2) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_abilita`)
+    `id_abilita` int(4) NOT NULL AUTO_INCREMENT,
+    `nome` varchar(20) NOT NULL,
+    `car` tinyint(1) NOT NULL DEFAULT '0',
+    `descrizione` text NOT NULL,
+    `id_razza` int(2) NOT NULL DEFAULT '0',
+    PRIMARY KEY (`id_abilita`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;
 
 --
@@ -63,9 +63,9 @@ INSERT INTO `abilita` (`id_abilita`, `nome`, `car`, `descrizione`, `id_razza`) V
 --
 
 CREATE TABLE IF NOT EXISTS `ambientazione` (
-  `capitolo` int(2) NOT NULL,
-  `testo` text NOT NULL,
-  `titolo` varchar(30) NOT NULL
+    `capitolo` int(2) NOT NULL,
+    `testo` text NOT NULL,
+    `titolo` varchar(30) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
@@ -80,11 +80,11 @@ CREATE TABLE IF NOT EXISTS `ambientazione` (
 --
 
 CREATE TABLE IF NOT EXISTS `araldo` (
-  `id_araldo` int(4) NOT NULL AUTO_INCREMENT,
-  `tipo` int(2) NOT NULL DEFAULT '0',
-  `nome` varchar(50) DEFAULT NULL,
-  `proprietari` int(2) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_araldo`)
+    `id_araldo` int(4) NOT NULL AUTO_INCREMENT,
+    `tipo` int(2) NOT NULL DEFAULT '0',
+    `nome` varchar(50) DEFAULT NULL,
+    `proprietari` int(2) NOT NULL DEFAULT '0',
+    PRIMARY KEY (`id_araldo`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
@@ -104,12 +104,16 @@ INSERT INTO `araldo` (`id_araldo`, `tipo`, `nome`, `proprietari`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `araldo_letto` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `nome` varchar(50) DEFAULT NULL,
-  `araldo_id` int(11) NOT NULL,
-  `thread_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+    `id` bigint(20) NOT NULL AUTO_INCREMENT,
+    `nome` varchar(50) DEFAULT NULL,
+    `araldo_id` int(11) NOT NULL,
+    `thread_id` int(11) NOT NULL,
+    PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+
+ALTER TABLE  `araldo_letto` ADD INDEX (  `nome` ,  `thread_id` ) ;
+
 
 -- --------------------------------------------------------
 
@@ -118,13 +122,13 @@ CREATE TABLE IF NOT EXISTS `araldo_letto` (
 --
 
 CREATE TABLE IF NOT EXISTS `backmessaggi` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `mittente` varchar(20) NOT NULL DEFAULT '',
-  `destinatario` varchar(20) NOT NULL DEFAULT '',
-  `spedito` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `letto` tinyint(1) DEFAULT '0',
-  `testo` text,
-  PRIMARY KEY (`id`)
+    `id` bigint(20) NOT NULL AUTO_INCREMENT,
+    `mittente` varchar(20) NOT NULL DEFAULT '',
+    `destinatario` varchar(20) NOT NULL DEFAULT '',
+    `spedito` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `letto` tinyint(1) DEFAULT '0',
+    `testo` text,
+    PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 --
@@ -139,13 +143,13 @@ CREATE TABLE IF NOT EXISTS `backmessaggi` (
 --
 
 CREATE TABLE IF NOT EXISTS `blacklist` (
-  `ip` char(15) NOT NULL DEFAULT '',
-  `nota` char(255) DEFAULT NULL,
-  `granted` tinyint(1) NOT NULL DEFAULT '0',
-  `ora` datetime DEFAULT NULL,
-  `host` char(255) NOT NULL DEFAULT '-',
-  PRIMARY KEY (`ip`),
-  KEY `Ora` (`ora`)
+    `ip` char(15) NOT NULL DEFAULT '',
+    `nota` char(255) DEFAULT NULL,
+    `granted` tinyint(1) NOT NULL DEFAULT '0',
+    `ora` datetime DEFAULT NULL,
+    `host` char(255) NOT NULL DEFAULT '-',
+    PRIMARY KEY (`ip`),
+    KEY `Ora` (`ora`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
@@ -160,16 +164,16 @@ CREATE TABLE IF NOT EXISTS `blacklist` (
 --
 
 CREATE TABLE IF NOT EXISTS `chat` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `stanza` int(4) NOT NULL DEFAULT '0',
-  `imgs` varchar(100) NOT NULL DEFAULT '',
-  `mittente` varchar(20) NOT NULL DEFAULT '',
-  `destinatario` varchar(20) DEFAULT NULL,
-  `ora` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `tipo` char(1) DEFAULT NULL,
-  `testo` text,
-  PRIMARY KEY (`id`),
-  KEY `Stanza` (`stanza`)
+    `id` bigint(20) NOT NULL AUTO_INCREMENT,
+    `stanza` int(4) NOT NULL DEFAULT '0',
+    `imgs` varchar(100) NOT NULL DEFAULT '',
+    `mittente` varchar(20) NOT NULL DEFAULT '',
+    `destinatario` varchar(20) DEFAULT NULL,
+    `ora` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `tipo` char(1) DEFAULT NULL,
+    `testo` text,
+    PRIMARY KEY (`id`),
+    KEY `Stanza` (`stanza`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 --
@@ -184,9 +188,9 @@ CREATE TABLE IF NOT EXISTS `chat` (
 --
 
 CREATE TABLE IF NOT EXISTS `clgpersonaggioabilita` (
-  `nome` varchar(20) NOT NULL,
-  `id_abilita` int(4) NOT NULL,
-  `grado` int(4) NOT NULL
+    `nome` varchar(20) NOT NULL,
+    `id_abilita` int(4) NOT NULL,
+    `grado` int(4) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
@@ -201,9 +205,9 @@ CREATE TABLE IF NOT EXISTS `clgpersonaggioabilita` (
 --
 
 CREATE TABLE IF NOT EXISTS `clgpersonaggiomostrine` (
-  `nome` char(20) NOT NULL DEFAULT '',
-  `id_mostrina` char(20) NOT NULL DEFAULT '',
-  PRIMARY KEY (`nome`,`id_mostrina`)
+    `nome` char(20) NOT NULL DEFAULT '',
+    `id_mostrina` char(20) NOT NULL DEFAULT '',
+    PRIMARY KEY (`nome`,`id_mostrina`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
@@ -218,13 +222,13 @@ CREATE TABLE IF NOT EXISTS `clgpersonaggiomostrine` (
 --
 
 CREATE TABLE IF NOT EXISTS `clgpersonaggiooggetto` (
-  `nome` varchar(20) NOT NULL DEFAULT '',
-  `id_oggetto` int(4) NOT NULL DEFAULT '0',
-  `numero` int(8) DEFAULT '1',
-  `cariche` int(4) NOT NULL DEFAULT '-1',
-  `commento` varchar(255) DEFAULT NULL,
-  `posizione` int(2) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`nome`,`id_oggetto`)
+    `nome` varchar(20) NOT NULL DEFAULT '',
+    `id_oggetto` int(4) NOT NULL DEFAULT '0',
+    `numero` int(8) DEFAULT '1',
+    `cariche` int(4) NOT NULL DEFAULT '-1',
+    `commento` varchar(255) DEFAULT NULL,
+    `posizione` int(2) NOT NULL DEFAULT '0',
+    PRIMARY KEY (`nome`,`id_oggetto`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
@@ -239,9 +243,9 @@ CREATE TABLE IF NOT EXISTS `clgpersonaggiooggetto` (
 --
 
 CREATE TABLE IF NOT EXISTS `clgpersonaggioruolo` (
-  `personaggio` varchar(20) NOT NULL,
-  `id_ruolo` int(4) NOT NULL DEFAULT '0',
-  `scadenza` date NOT NULL DEFAULT '2010-01-01'
+    `personaggio` varchar(20) NOT NULL,
+    `id_ruolo` int(4) NOT NULL DEFAULT '0',
+    `scadenza` date NOT NULL DEFAULT '2010-01-01'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
@@ -256,11 +260,11 @@ CREATE TABLE IF NOT EXISTS `clgpersonaggioruolo` (
 --
 
 CREATE TABLE IF NOT EXISTS `codmostrina` (
-  `id_mostrina` int(4) NOT NULL AUTO_INCREMENT,
-  `nome` varchar(20) NOT NULL,
-  `img_url` char(50) NOT NULL DEFAULT 'grigia.gif',
-  `descrizione` char(255) NOT NULL DEFAULT 'nessuna',
-  PRIMARY KEY (`id_mostrina`)
+    `id_mostrina` int(4) NOT NULL AUTO_INCREMENT,
+    `nome` varchar(20) NOT NULL,
+    `img_url` char(50) NOT NULL DEFAULT 'grigia.gif',
+    `descrizione` char(255) NOT NULL DEFAULT 'nessuna',
+    PRIMARY KEY (`id_mostrina`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 --
@@ -275,9 +279,9 @@ CREATE TABLE IF NOT EXISTS `codmostrina` (
 --
 
 CREATE TABLE IF NOT EXISTS `codtipogilda` (
-  `descrizione` varchar(50) NOT NULL,
-  `cod_tipo` int(2) NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`cod_tipo`)
+    `descrizione` varchar(50) NOT NULL,
+    `cod_tipo` int(2) NOT NULL AUTO_INCREMENT,
+    PRIMARY KEY (`cod_tipo`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
@@ -296,9 +300,9 @@ INSERT INTO `codtipogilda` (`descrizione`, `cod_tipo`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `codtipooggetto` (
-  `cod_tipo` int(2) NOT NULL AUTO_INCREMENT,
-  `descrizione` char(20) NOT NULL,
-  PRIMARY KEY (`cod_tipo`)
+    `cod_tipo` int(2) NOT NULL AUTO_INCREMENT,
+    `descrizione` char(20) NOT NULL,
+    PRIMARY KEY (`cod_tipo`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
 --
@@ -321,14 +325,14 @@ INSERT INTO `codtipooggetto` (`cod_tipo`, `descrizione`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `gilda` (
-  `id_gilda` int(4) NOT NULL AUTO_INCREMENT,
-  `nome` char(50) NOT NULL DEFAULT '',
-  `tipo` varchar(1) NOT NULL DEFAULT '0',
-  `immagine` char(255) DEFAULT NULL,
-  `url_sito` char(255) DEFAULT NULL,
-  `statuto` text,
-  `visibile` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_gilda`)
+    `id_gilda` int(4) NOT NULL AUTO_INCREMENT,
+    `nome` char(50) NOT NULL DEFAULT '',
+    `tipo` varchar(1) NOT NULL DEFAULT '0',
+    `immagine` char(255) DEFAULT NULL,
+    `url_sito` char(255) DEFAULT NULL,
+    `statuto` text,
+    `visibile` tinyint(1) NOT NULL DEFAULT '0',
+    PRIMARY KEY (`id_gilda`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
@@ -345,13 +349,13 @@ INSERT INTO `gilda` (`id_gilda`, `nome`, `tipo`, `immagine`, `url_sito`, `statut
 --
 
 CREATE TABLE IF NOT EXISTS `log` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nome_interessato` char(20) NOT NULL DEFAULT '',
-  `autore` char(20) NOT NULL DEFAULT '',
-  `data_evento` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `codice_evento` char(20) NOT NULL DEFAULT '',
-  `descrizione_evento` char(100) NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`)
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `nome_interessato` char(20) NOT NULL DEFAULT '',
+    `autore` char(20) NOT NULL DEFAULT '',
+    `data_evento` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `codice_evento` char(20) NOT NULL DEFAULT '',
+    `descrizione_evento` char(100) NOT NULL DEFAULT '',
+    PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 --
@@ -366,28 +370,28 @@ CREATE TABLE IF NOT EXISTS `log` (
 --
 
 CREATE TABLE IF NOT EXISTS `mappa` (
-  `id` int(4) NOT NULL AUTO_INCREMENT,
-  `nome` varchar(50) DEFAULT NULL,
-  `descrizione` text,
-  `stato` varchar(50) NOT NULL DEFAULT '',
-  `pagina` varchar(255) DEFAULT 'nulla.php',
-  `chat` tinyint(1) NOT NULL DEFAULT '1',
-  `immagine` varchar(50) DEFAULT 'standard_luogo.png',
-  `stanza_apparente` varchar(50) DEFAULT NULL,
-  `id_mappa` int(4) DEFAULT '0',
-  `link_immagine` varchar(256) NOT NULL,
-  `link_immagine_hover` varchar(256) NOT NULL,
-  `id_mappa_collegata` int(11) NOT NULL DEFAULT '0',
-  `x_cord` int(4) DEFAULT '0',
-  `y_cord` int(4) DEFAULT '0',
-  `invitati` text NOT NULL,
-  `privata` tinyint(1) NOT NULL DEFAULT '0',
-  `proprietario` char(20) DEFAULT NULL,
-  `ora_prenotazione` datetime DEFAULT NULL,
-  `scadenza` datetime DEFAULT NULL,
-  `costo` int(4) DEFAULT '0',
-  PRIMARY KEY (`id`),
-  FULLTEXT KEY `Invitati` (`invitati`)
+    `id` int(4) NOT NULL AUTO_INCREMENT,
+    `nome` varchar(50) DEFAULT NULL,
+    `descrizione` text,
+    `stato` varchar(50) NOT NULL DEFAULT '',
+    `pagina` varchar(255) DEFAULT 'nulla.php',
+    `chat` tinyint(1) NOT NULL DEFAULT '1',
+    `immagine` varchar(50) DEFAULT 'standard_luogo.png',
+    `stanza_apparente` varchar(50) DEFAULT NULL,
+    `id_mappa` int(4) DEFAULT '0',
+    `link_immagine` varchar(256) NOT NULL,
+    `link_immagine_hover` varchar(256) NOT NULL,
+    `id_mappa_collegata` int(11) NOT NULL DEFAULT '0',
+    `x_cord` int(4) DEFAULT '0',
+    `y_cord` int(4) DEFAULT '0',
+    `invitati` text NOT NULL,
+    `privata` tinyint(1) NOT NULL DEFAULT '0',
+    `proprietario` char(20) DEFAULT NULL,
+    `ora_prenotazione` datetime DEFAULT NULL,
+    `scadenza` datetime DEFAULT NULL,
+    `costo` int(4) DEFAULT '0',
+    PRIMARY KEY (`id`),
+    FULLTEXT KEY `Invitati` (`invitati`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
@@ -405,15 +409,15 @@ INSERT INTO `mappa` (`id`, `nome`, `descrizione`, `stato`, `pagina`, `chat`, `im
 --
 
 CREATE TABLE IF NOT EXISTS `mappa_click` (
-  `id_click` int(1) NOT NULL AUTO_INCREMENT,
-  `nome` varchar(50) DEFAULT NULL,
-  `immagine` varchar(50) NOT NULL DEFAULT 'standard_mappa.png',
-  `posizione` int(2) NOT NULL DEFAULT '0',
-  `mobile` tinyint(1) NOT NULL DEFAULT '0',
-  `meteo` varchar(40) NOT NULL DEFAULT '20Â°c - sereno',
-  `larghezza` smallint(4) NOT NULL DEFAULT '500',
-  `altezza` smallint(4) NOT NULL DEFAULT '330',
-  PRIMARY KEY (`id_click`)
+    `id_click` int(1) NOT NULL AUTO_INCREMENT,
+    `nome` varchar(50) DEFAULT NULL,
+    `immagine` varchar(50) NOT NULL DEFAULT 'standard_mappa.png',
+    `posizione` int(2) NOT NULL DEFAULT '0',
+    `mobile` tinyint(1) NOT NULL DEFAULT '0',
+    `meteo` varchar(40) NOT NULL DEFAULT '20Â°c - sereno',
+    `larghezza` smallint(4) NOT NULL DEFAULT '500',
+    `altezza` smallint(4) NOT NULL DEFAULT '330',
+    PRIMARY KEY (`id_click`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
@@ -431,9 +435,9 @@ INSERT INTO `mappa_click` (`id_click`, `nome`, `immagine`, `posizione`, `mobile`
 --
 
 CREATE TABLE IF NOT EXISTS `mercato` (
-  `id_oggetto` int(4) NOT NULL,
-  `numero` int(4) DEFAULT '0',
-  PRIMARY KEY (`id_oggetto`)
+    `id_oggetto` int(4) NOT NULL,
+    `numero` int(4) DEFAULT '0',
+    PRIMARY KEY (`id_oggetto`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
@@ -448,15 +452,17 @@ CREATE TABLE IF NOT EXISTS `mercato` (
 --
 
 CREATE TABLE IF NOT EXISTS `messaggi` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `mittente` varchar(40) NOT NULL,
-  `destinatario` varchar(20) NOT NULL DEFAULT 'Nessuno',
-  `spedito` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `letto` tinyint(1) DEFAULT '0',
-  `testo` text,
-  PRIMARY KEY (`id`),
-  KEY `destinatario` (`destinatario`),
-  KEY `letto` (`letto`)
+    `id` bigint(20) NOT NULL AUTO_INCREMENT,
+    `mittente` varchar(40) NOT NULL,
+    `destinatario` varchar(20) NOT NULL DEFAULT 'Nessuno',
+    `spedito` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `letto` tinyint(1) DEFAULT '0',
+    `mittente_del` tinyint(1) DEFAULT '0',
+    `destinatario_del` tinyint(1) DEFAULT '0',
+    `testo` text,
+    PRIMARY KEY (`id`),
+    KEY `destinatario` (`destinatario`),
+    KEY `letto` (`letto`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 --
@@ -471,20 +477,20 @@ CREATE TABLE IF NOT EXISTS `messaggi` (
 --
 
 CREATE TABLE IF NOT EXISTS `messaggioaraldo` (
-  `id_messaggio` bigint(20) NOT NULL AUTO_INCREMENT,
-  `id_messaggio_padre` bigint(20) NOT NULL DEFAULT '0',
-  `id_araldo` int(4) DEFAULT NULL,
-  `titolo` varchar(255) DEFAULT NULL,
-  `messaggio` text,
-  `autore` varchar(20) DEFAULT NULL,
-  `data_messaggio` datetime DEFAULT NULL,
-  `importante` binary(1) NOT NULL DEFAULT '0',
-  `chiuso` binary(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_messaggio`),
-  KEY `id_araldo` (`id_araldo`),
-  KEY `id_messaggio_padre` (`id_messaggio_padre`),
-  KEY `data_messaggio` (`data_messaggio`),
-  KEY `importante` (`importante`,`chiuso`)
+    `id_messaggio` bigint(20) NOT NULL AUTO_INCREMENT,
+    `id_messaggio_padre` bigint(20) NOT NULL DEFAULT '0',
+    `id_araldo` int(4) DEFAULT NULL,
+    `titolo` varchar(255) DEFAULT NULL,
+    `messaggio` text,
+    `autore` varchar(20) DEFAULT NULL,
+    `data_messaggio` datetime DEFAULT NULL,
+    `importante` binary(1) NOT NULL DEFAULT '0',
+    `chiuso` binary(1) NOT NULL DEFAULT '0',
+    PRIMARY KEY (`id_messaggio`),
+    KEY `id_araldo` (`id_araldo`),
+    KEY `id_messaggio_padre` (`id_messaggio_padre`),
+    KEY `data_messaggio` (`data_messaggio`),
+    KEY `importante` (`importante`,`chiuso`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;
 
 --
@@ -499,26 +505,26 @@ CREATE TABLE IF NOT EXISTS `messaggioaraldo` (
 --
 
 CREATE TABLE IF NOT EXISTS `oggetto` (
-  `id_oggetto` int(4) NOT NULL AUTO_INCREMENT,
-  `tipo` int(2) NOT NULL DEFAULT '0',
-  `nome` varchar(50) NOT NULL DEFAULT 'Sconosciuto',
-  `creatore` varchar(20) NOT NULL DEFAULT 'System Op',
-  `data_inserimento` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `descrizione` varchar(255) NOT NULL DEFAULT 'Nessuna',
-  `ubicabile` int(2) NOT NULL DEFAULT '0',
-  `costo` int(11) NOT NULL DEFAULT '0',
-  `difesa` int(4) NOT NULL DEFAULT '0',
-  `attacco` int(4) NOT NULL DEFAULT '0',
-  `cariche` varchar(10) NOT NULL DEFAULT '0',
-  `bonus_car0` int(4) NOT NULL DEFAULT '0',
-  `bonus_car1` int(4) NOT NULL DEFAULT '0',
-  `bonus_car2` int(4) NOT NULL DEFAULT '0',
-  `bonus_car3` int(4) NOT NULL DEFAULT '0',
-  `bonus_car4` int(4) NOT NULL DEFAULT '0',
-  `bonus_car5` int(4) NOT NULL DEFAULT '0',
-  `urlimg` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`id_oggetto`),
-  KEY `Tipo` (`tipo`)
+    `id_oggetto` int(4) NOT NULL AUTO_INCREMENT,
+    `tipo` int(2) NOT NULL DEFAULT '0',
+    `nome` varchar(50) NOT NULL DEFAULT 'Sconosciuto',
+    `creatore` varchar(20) NOT NULL DEFAULT 'System Op',
+    `data_inserimento` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `descrizione` varchar(255) NOT NULL DEFAULT 'Nessuna',
+    `ubicabile` int(2) NOT NULL DEFAULT '0',
+    `costo` int(11) NOT NULL DEFAULT '0',
+    `difesa` int(4) NOT NULL DEFAULT '0',
+    `attacco` int(4) NOT NULL DEFAULT '0',
+    `cariche` varchar(10) NOT NULL DEFAULT '0',
+    `bonus_car0` int(4) NOT NULL DEFAULT '0',
+    `bonus_car1` int(4) NOT NULL DEFAULT '0',
+    `bonus_car2` int(4) NOT NULL DEFAULT '0',
+    `bonus_car3` int(4) NOT NULL DEFAULT '0',
+    `bonus_car4` int(4) NOT NULL DEFAULT '0',
+    `bonus_car5` int(4) NOT NULL DEFAULT '0',
+    `urlimg` varchar(50) DEFAULT NULL,
+    PRIMARY KEY (`id_oggetto`),
+    KEY `Tipo` (`tipo`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
@@ -535,53 +541,53 @@ INSERT INTO `oggetto` (`id_oggetto`, `tipo`, `nome`, `creatore`, `data_inserimen
 --
 
 CREATE TABLE IF NOT EXISTS `personaggio` (
-  `nome` varchar(20) NOT NULL DEFAULT '',
-  `cognome` varchar(50) NOT NULL DEFAULT '-',
-  `pass` varchar(40) NOT NULL DEFAULT '',
-  `ultimo_cambiopass` datetime DEFAULT NULL,
-  `data_iscrizione` datetime DEFAULT NULL,
-  `email` varchar(50) DEFAULT NULL,
-  `permessi` tinyint(1) DEFAULT '0',
-  `ultima_mappa` int(4) NOT NULL DEFAULT '1',
-  `ultimo_luogo` int(4) NOT NULL DEFAULT '-1',
-  `esilio` date NOT NULL DEFAULT '2009-07-01',
-  `data_esilio` date NOT NULL DEFAULT '2009-07-01',
-  `motivo_esilio` varchar(255) DEFAULT NULL,
-  `autore_esilio` varchar(20) DEFAULT NULL,
-  `sesso` char(1) DEFAULT 'm',
-  `id_razza` int(4) DEFAULT '1000',
-  `descrizione` text,
-  `affetti` text,
-  `stato` varchar(255) DEFAULT 'nessuna',
-  `online_status` varchar(100) DEFAULT NULL,
-  `disponibile` tinyint(1) NOT NULL DEFAULT '1',
-  `url_img` varchar(255) DEFAULT 'imgs/avatars/empty.png',
-  `url_img_chat` varchar(255) NOT NULL DEFAULT ' ',
-  `url_media` varchar(255) DEFAULT NULL,
-  `blocca_media` binary(1) NOT NULL DEFAULT '0',
-  `esperienza` decimal(12,4) DEFAULT '0',
-  `car0` int(4) NOT NULL DEFAULT '5',
-  `car1` int(4) NOT NULL DEFAULT '5',
-  `car2` int(4) NOT NULL DEFAULT '5',
-  `car3` int(4) NOT NULL DEFAULT '5',
-  `car4` int(4) NOT NULL DEFAULT '5',
-  `car5` int(4) NOT NULL DEFAULT '5',
-  `salute` int(4) NOT NULL DEFAULT '100',
-  `salute_max` int(4) NOT NULL DEFAULT '100',
-  `data_ultima_gilda` datetime NOT NULL DEFAULT '2009-07-01 00:00:00',
-  `soldi` int(11) DEFAULT '50',
-  `banca` int(11) DEFAULT '0',
-  `ultimo_stipendio` date NOT NULL DEFAULT '2009-07-01',
-  `last_ip` varchar(16) DEFAULT NULL,
-  `is_invisible` tinyint(1) NOT NULL DEFAULT '0',
-  `ultimo_refresh` datetime NOT NULL,
-  `ora_entrata` datetime NOT NULL,
-  `ora_uscita` datetime NOT NULL,
-  `posizione` int(4) NOT NULL DEFAULT '1',
-  `ultimo_messaggio` bigint(20) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`nome`),
-  KEY `IDRazza` (`id_razza`),
-  KEY `Esilio` (`esilio`)
+    `nome` varchar(20) NOT NULL DEFAULT '',
+    `cognome` varchar(50) NOT NULL DEFAULT '-',
+    `pass` varchar(100) NOT NULL DEFAULT '',
+    `ultimo_cambiopass` datetime DEFAULT NULL,
+    `data_iscrizione` datetime DEFAULT NULL,
+    `email` varchar(50) DEFAULT NULL,
+    `permessi` tinyint(1) DEFAULT '0',
+    `ultima_mappa` int(4) NOT NULL DEFAULT '1',
+    `ultimo_luogo` int(4) NOT NULL DEFAULT '-1',
+    `esilio` date NOT NULL DEFAULT '2009-07-01',
+    `data_esilio` date NOT NULL DEFAULT '2009-07-01',
+    `motivo_esilio` varchar(255) DEFAULT NULL,
+    `autore_esilio` varchar(20) DEFAULT NULL,
+    `sesso` char(1) DEFAULT 'm',
+    `id_razza` int(4) DEFAULT '1000',
+    `descrizione` text,
+    `affetti` text,
+    `stato` varchar(255) DEFAULT 'nessuna',
+    `online_status` varchar(100) DEFAULT NULL,
+    `disponibile` tinyint(1) NOT NULL DEFAULT '1',
+    `url_img` varchar(255) DEFAULT 'imgs/avatars/empty.png',
+    `url_img_chat` varchar(255) NOT NULL DEFAULT ' ',
+    `url_media` varchar(255) DEFAULT NULL,
+    `blocca_media` binary(1) NOT NULL DEFAULT '0',
+    `esperienza` decimal(12,4) DEFAULT '0',
+    `car0` int(4) NOT NULL DEFAULT '5',
+    `car1` int(4) NOT NULL DEFAULT '5',
+    `car2` int(4) NOT NULL DEFAULT '5',
+    `car3` int(4) NOT NULL DEFAULT '5',
+    `car4` int(4) NOT NULL DEFAULT '5',
+    `car5` int(4) NOT NULL DEFAULT '5',
+    `salute` int(4) NOT NULL DEFAULT '100',
+    `salute_max` int(4) NOT NULL DEFAULT '100',
+    `data_ultima_gilda` datetime NOT NULL DEFAULT '2009-07-01 00:00:00',
+    `soldi` int(11) DEFAULT '50',
+    `banca` int(11) DEFAULT '0',
+    `ultimo_stipendio` date NOT NULL DEFAULT '2009-07-01',
+    `last_ip` varchar(16) DEFAULT NULL,
+    `is_invisible` tinyint(1) NOT NULL DEFAULT '0',
+    `ultimo_refresh` datetime NOT NULL,
+    `ora_entrata` datetime NOT NULL,
+    `ora_uscita` datetime NOT NULL,
+    `posizione` int(4) NOT NULL DEFAULT '1',
+    `ultimo_messaggio` bigint(20) NOT NULL DEFAULT '0',
+    PRIMARY KEY (`nome`),
+    KEY `IDRazza` (`id_razza`),
+    KEY `Esilio` (`esilio`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
@@ -589,8 +595,8 @@ CREATE TABLE IF NOT EXISTS `personaggio` (
 --
 
 INSERT INTO `personaggio` (`nome`, `cognome`, `pass`, `ultimo_cambiopass`, `data_iscrizione`, `email`, `permessi`, `ultima_mappa`, `ultimo_luogo`, `esilio`, `data_esilio`, `motivo_esilio`, `autore_esilio`, `sesso`, `id_razza`, `descrizione`, `affetti`, `stato`, `online_status`, `disponibile`, `url_img`, `url_img_chat`, `url_media`, `blocca_media`, `esperienza`, `car0`, `car1`, `car2`, `car3`, `car4`, `car5`, `salute`, `salute_max`, `data_ultima_gilda`, `soldi`, `banca`, `ultimo_stipendio`, `last_ip`, `is_invisible`, `ultimo_refresh`, `ora_entrata`, `ora_uscita`, `posizione`, `ultimo_messaggio`) VALUES
-('Super', 'User', '8451ba8a14d79753d34cb33b51ba46b4b025eb81', NULL, '2011-06-04 00:47:48', 'email@domain.ext', 4, 1, -1, '0000-00-00', '0000-00-00', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', 1000, 7, 8, 6, 5, 6, 5, 100, 100, '0000-00-00 00:00:00', 300, 50000, '0000-00-00', '127.0.0.1', 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 0),
-('Test', 'Di FunzionaliÃ ', 'a94a8fe5ccb19ba61c4c0873d391e987982fbbd3', NULL, '2011-06-04 00:47:48', 'test@domain.ext', 0, 1, -1, '0000-00-00', '0000-00-00', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', 1000, 7, 8, 6, 5, 6, 5, 100, 100, '0000-00-00 00:00:00', 50, 50, '0000-00-00', '127.0.0.1', 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 0);
+('Super', 'User', '$P$BcH1cP941XHOf0X61wVWWjzXqcCi2a/', NULL, '2011-06-04 00:47:48', 'email@domain.ext', 4, 1, -1, '0000-00-00', '0000-00-00', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', 1000, 7, 8, 6, 5, 6, 5, 100, 100, '0000-00-00 00:00:00', 300, 50000, '0000-00-00', '127.0.0.1', 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 0),
+('Test', 'Di FunzionaliÃ ', '$P$BUoa19QUuXsgIDlhGC3chR/3Q7hoRy0', NULL, '2011-06-04 00:47:48', 'test@domain.ext', 0, 1, -1, '0000-00-00', '0000-00-00', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', 1000, 7, 8, 6, 5, 6, 5, 100, 100, '0000-00-00 00:00:00', 50, 50, '0000-00-00', '127.0.0.1', 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -599,23 +605,23 @@ INSERT INTO `personaggio` (`nome`, `cognome`, `pass`, `ultimo_cambiopass`, `data
 --
 
 CREATE TABLE IF NOT EXISTS `razza` (
-  `id_razza` int(4) NOT NULL AUTO_INCREMENT,
-  `nome_razza` char(50) NOT NULL DEFAULT '',
-  `sing_m` char(50) NOT NULL DEFAULT '',
-  `sing_f` char(50) NOT NULL DEFAULT '',
-  `descrizione` text NOT NULL,
-  `bonus_car0` int(4) NOT NULL DEFAULT '0',
-  `bonus_car1` int(4) NOT NULL DEFAULT '0',
-  `bonus_car2` int(4) NOT NULL DEFAULT '0',
-  `bonus_car3` int(4) NOT NULL DEFAULT '0',
-  `bonus_car4` int(4) NOT NULL DEFAULT '0',
-  `bonus_car5` int(4) NOT NULL DEFAULT '0',
-  `immagine` char(50) NOT NULL DEFAULT 'standard_razza.png',
-  `icon` varchar(50) NOT NULL DEFAULT 'standard_razza.png',
-  `url_site` char(255) DEFAULT NULL,
-  `iscrizione` tinyint(1) NOT NULL DEFAULT '1',
-  `visibile` tinyint(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id_razza`)
+    `id_razza` int(4) NOT NULL AUTO_INCREMENT,
+    `nome_razza` char(50) NOT NULL DEFAULT '',
+    `sing_m` char(50) NOT NULL DEFAULT '',
+    `sing_f` char(50) NOT NULL DEFAULT '',
+    `descrizione` text NOT NULL,
+    `bonus_car0` int(4) NOT NULL DEFAULT '0',
+    `bonus_car1` int(4) NOT NULL DEFAULT '0',
+    `bonus_car2` int(4) NOT NULL DEFAULT '0',
+    `bonus_car3` int(4) NOT NULL DEFAULT '0',
+    `bonus_car4` int(4) NOT NULL DEFAULT '0',
+    `bonus_car5` int(4) NOT NULL DEFAULT '0',
+    `immagine` char(50) NOT NULL DEFAULT 'standard_razza.png',
+    `icon` varchar(50) NOT NULL DEFAULT 'standard_razza.png',
+    `url_site` char(255) DEFAULT NULL,
+    `iscrizione` tinyint(1) NOT NULL DEFAULT '1',
+    `visibile` tinyint(1) NOT NULL DEFAULT '1',
+    PRIMARY KEY (`id_razza`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1001 ;
 
 --
@@ -632,9 +638,9 @@ INSERT INTO `razza` (`id_razza`, `nome_razza`, `sing_m`, `sing_f`, `descrizione`
 --
 
 CREATE TABLE IF NOT EXISTS `regolamento` (
-  `articolo` int(2) NOT NULL,
-  `titolo` varchar(30) NOT NULL,
-  `testo` text NOT NULL
+    `articolo` int(2) NOT NULL,
+    `titolo` varchar(30) NOT NULL,
+    `testo` text NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
@@ -649,13 +655,13 @@ CREATE TABLE IF NOT EXISTS `regolamento` (
 --
 
 CREATE TABLE IF NOT EXISTS `ruolo` (
-  `id_ruolo` int(4) NOT NULL AUTO_INCREMENT,
-  `gilda` int(4) NOT NULL DEFAULT '-1',
-  `nome_ruolo` char(50) NOT NULL,
-  `immagine` varchar(256) NOT NULL,
-  `stipendio` int(4) NOT NULL DEFAULT '0',
-  `capo` int(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_ruolo`)
+    `id_ruolo` int(4) NOT NULL AUTO_INCREMENT,
+    `gilda` int(4) NOT NULL DEFAULT '-1',
+    `nome_ruolo` char(50) NOT NULL,
+    `immagine` varchar(256) NOT NULL,
+    `stipendio` int(4) NOT NULL DEFAULT '0',
+    `capo` int(1) NOT NULL DEFAULT '0',
+    PRIMARY KEY (`id_ruolo`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
 
 --

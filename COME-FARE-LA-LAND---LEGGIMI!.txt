@@ -1,8 +1,12 @@
-# GDRCD 5.2 "Stable" - Users Manual
+################## Blancks Presents #####################
+#                                                       #
+#           GDRCD 5.x - Users Manual                    #
+#                                                       #
+#########################################################
 
-
-
-## VERSIONE STABILE
+------------------------------------------------------
+VERSIONE STABILE
+------------------------------------------------------
 
 Le corrente versione e' stabile, ma ancora soggetta ed ampliamenti,
 tuttavia dalla fase di testing della release beta è stata
@@ -14,10 +18,11 @@ semplicemente sostituendo i file con i corrispettivi aggiornati.
 Saranno auspicabilmente anche introdotte nuove funzioni ed
 ampliate le correnti su suggerimento dell'utenza.
 
+-------------------------------------------------------
+COMMUNITY DI SVILUPPO
+-------------------------------------------------------
 
-## COMMUNITY DI SVILUPPO
-
-GDRCD 5.2 e' un progetto Open Source e come tale e' aperto ai contributi.
+GDRCD 5.x e' un progetto Open Source e come tale e' aperto ai contributi.
 Mi riservo di vagliare personalmente eventuali modifiche da
 inserire direttamente nel core ufficiale del programma, ma nulla
 vieta di rilasciarle come MODs o di produrre release alternative.
@@ -38,16 +43,21 @@ in uno dei div preposti di main.php come le pagine contenute nella
 cartella pages/. Le modifiche proposte al core che non rispettino
 questi standard non verranno prese in considerazione.
 
+-------------------------------------------------------
+VENIAMO AL DUNQUE, COME LA FACCIO STA LAND?
+-------------------------------------------------------
 
-## VENIAMO AL DUNQUE, COME LA FACCIO STA LAND?
-
-1. Scaricare il file gdrcd.zip e decomprimerlo (ma questo l'hai gia' 
+1) Scaricare il file gdrcd.zip e decomprimerlo (ma questo l'hai gia' 
 fatto).
 
-2. Prendere tutti i file e tutte le cartelle contenute nell'archivio 
+-------------------------------------------------------
+
+2) Prendere tutti i file e tutte le cartelle contenute nell'archivio 
 (gdrcd.zip)
 
-3. Fare l'upload di tutti i file e tutte le cartelle sul tuo spazio 
+-------------------------------------------------------
+
+3) Fare l'upload di tutti i file e tutte le cartelle sul tuo spazio 
 web. Potresti aver bisogno di un programma come Filezilla.
 ATTENZIONE: Ogni file deve essere all'interno della stessa cartella 
 dove l'hai trovato in gdrcd5.zip, una volta terminato l'upload, 
@@ -124,7 +134,9 @@ volta che visualizziamo nel sito l'icona di tale razza, l'immagine
 verrà automaticamente cercata in 
 http://www.sito.it/themes/sfumature_blu/imgs/races.
 
-4. Modificare il file config.inc.php. Questo passo è cruciale. A 
+-------------------------------------------------------
+
+4) Modificare il file config.inc.php. Questo passo è cruciale. A 
 prima vista il file e' lungo e complicato, ma in realta' e' molto 
 semplice. E' soltanto un elenco di parametri che puoi impostare a tuo 
 piacimento per modificare le impostazioni del tuo gioco e per attivare 
@@ -155,7 +167,9 @@ Subito sotto ci sono le informazioni sul sito e sullo webmaster. Ti invito
 a compilarli interamente riportando il tuo nome e cognome reali per 
 correttezza.
 
-5. A questo punto prova a visitare il tuo sito. Dovrebbe apparirti un 
+-------------------------------------------------------
+
+5) A questo punto prova a visitare il tuo sito. Dovrebbe apparirti un 
 messaggio di errore. Se ti dice che il database e' vuoto e che dovresti fare
 l'installazione tutto ok, clicca sul link o visita la pagina 
 http:// [miosito.ext] /installer.php. Questo dovrebbe installare il database.
@@ -164,7 +178,9 @@ allora qualcosa e' andato storto. Probabilmente non hai scritto correttamente
 i parametri di connessione. Sono corretti? Sicuro di avere un database
 attivato nel tuo spazio web?
 
-6. Adesso dovresti avere il database installato. Prova ad accedere di nuovo
+-------------------------------------------------------
+
+6) Adesso dovresti avere il database installato. Prova ad accedere di nuovo
 alla homepage. Se si visualizza la homepage con il form di login e tutto 
 allora l'installazione e' completa. Prova ad effettuare il login come
 amministratore del sito:
@@ -178,13 +194,17 @@ phpmyadmin offerto dal tuo spazio web, scegliendo l'opzione "importa" e caricand
 il file gdrcd5.sql. Se nel database sono gia' presenti alcune, ma non tutte, 
 tabelle di gdrcd5 allora eliminale prima di importare il file.
 
-7. Finalmente dovresti essere loggato nel tuo sito. Sei l'amministratore ed
+-------------------------------------------------------
+
+7) Finalmente dovresti essere loggato nel tuo sito. Sei l'amministratore ed
 hai accesso al pannello di gestione. Adesso dovresti creare il tuo mondo,
 compilando un regolamento, un ambientazione, creando razze, luoghi, mappe, 
 oggetti, ecc. Tutto questo e' possibile farlo dal menu' "Gestione". Dovrebbe
 essere abbastanza intuitivo ed in questa breve quida non trattero' le sue voci.
 
-8. Adesso manca soltanto la grafica e qui ti è richiesta almeno un poco di 
+-------------------------------------------------------
+
+8) Adesso manca soltanto la grafica e qui ti è richiesta almeno un poco di 
 competenza con il CSS. Non ce l'hai? Non allarmarti, c'e' una scorciatoia.
 Seleziona prima di tutto la skin basic dal relativo parametro in config.inc.php.
 A questo punto, avrai visto che tutta la grafica dell'homepage e quella interna 
@@ -199,7 +219,9 @@ Se invece hai più esperienza col CSS ti invito a provare a dare un occhio alla 
 e magari può tornarti utile per darti idea di come fare un lavoro ancora più personalizzato.
 
 
-## BUON LAVORO E BUON DIVERTIMENTO
+----------------------------------------------------------
+BUON LAVORO E BUON DIVERTIMENTO
+----------------------------------------------------------
 
 Stavolta dovrebbe essere davvero facile fare la tua land, confido che
 ne verrai a capo. Buon Divertimento!

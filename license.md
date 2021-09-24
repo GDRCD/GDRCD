@@ -19,15 +19,15 @@ Il prodotto e' da considerarsi Open Source ed e' distribuito gratuitamente.
 DISCLAIMER
 ========================================================================================
 
-* L'autore del prodotto non può vigilare sul suo utilizzo e non partecipa alla realizzazione dei siti che ne fanno uso. Eventuali finalità illecite di detti siti non dipendono dalla volontà o dal contributo dell'autore.
-* Il prodotto e' in versione beta e potrebbe contenere errori. L'utente e' considerato informato e l'autore declina ogni responsabilità per la perdita di informazioni sensibili dovuta ad errori del codice.
+* L'autore del prodotto non puÃ² vigilare sul suo utilizzo e non partecipa alla realizzazione dei siti che ne fanno uso. Eventuali finalitÃ  illecite di detti siti non dipendono dalla volontÃ  o dal contributo dell'autore.
+* Il prodotto e' in versione beta e potrebbe contenere errori. L'utente e' considerato informato e l'autore declina ogni responsabilitÃ  per la perdita di informazioni sensibili dovuta ad errori del codice.
 
 
 ========================================================================================
 TERMINI DELLA LICENZA
 ========================================================================================
 
-La licenza sotto la quale viene rilasciato e distribuito il presente codice è riportato presso la seguente pagina: http://creativecommons.org/licenses/by-sa/3.0/deed.it
+La licenza sotto la quale viene rilasciato e distribuito il presente codice Ã¨ riportato presso la seguente pagina: http://creativecommons.org/licenses/by-sa/3.0/deed.it
 ovvero:
 
 Tu sei libero:
@@ -35,19 +35,19 @@ Tu sei libero:
 * di modificare quest'opera
 
 Alle seguenti condizioni:
-* Attribuzione — Devi attribuire la paternità dell'opera nei modi indicati dall'autore o da chi ti ha dato l'opera in licenza e in modo tale da non suggerire che essi avallino te o il modo in cui tu usi l'opera. 
-* Condividi allo stesso modo — Se alteri, trasformi o ampli quest’opera  puoi ridistribuirla SOLO con una licenza simile o compatibile. 
+* Attribuzione â€” Devi attribuire la paternitÃ  dell'opera nei modi indicati dall'autore o da chi ti ha dato l'opera in licenza e in modo tale da non suggerire che essi avallino te o il modo in cui tu usi l'opera. 
+* Condividi allo stesso modo â€” Se alteri, trasformi o ampli questâ€™opera  puoi ridistribuirla SOLO con una licenza simile o compatibile. 
 
 Prendendo atto che:
-* Rinuncia — Le condizioni sopracitate possono decadere ottenendo il permesso dell’autore. 
-* Pubblico Dominio — Where the work or any of its elements is in the public domain under applicable law, that status is in no way affected by the license. 
+* Rinuncia â€” Le condizioni sopracitate possono decadere ottenendo il permesso dellâ€™autore. 
+* Pubblico Dominio â€” Where the work or any of its elements is in the public domain under applicable law, that status is in no way affected by the license. 
 
- Other Rights — In no way are any of the following rights affected by the license: 
+ Other Rights â€” In no way are any of the following rights affected by the license: 
 *Your fair dealing or fair use rights, or other applicable copyright exceptions and limitations; 
 *I diritti morali dell'autore;
 *Rights other persons may have either in the work itself or in how the work is used, such as publicity or privacy rights. 
 
-Notice — Ogni volta che usi o distribuisci quest'opera, devi farlo secondo i termini di questa licenza, che va comunicata con chiarezza. 
+Notice â€” Ogni volta che usi o distribuisci quest'opera, devi farlo secondo i termini di questa licenza, che va comunicata con chiarezza. 
 
 
 ========================================================================================
@@ -60,7 +60,7 @@ L'autore invita a:
 * Realizzare solo siti che rispettano scrupolosamente le vigenti norme legali del paese in cui ha sede.
 * Rispettare il diritto d'autore per i contenuti del sito.
 * Non realizzare siti esplicitamente pornografici.
-* Non rimuovere il disclaimer a fondo pagina dalla homepage, che riporta la paternità del codice ed il link alla licenza.
+* Non rimuovere il disclaimer a fondo pagina dalla homepage, che riporta la paternitÃ  del codice ed il link alla licenza.
 * Riportare, chiaramente visibile, il nome ed il contatto del responsabile legale del sito.
 
 
@@ -68,17 +68,17 @@ L'autore invita a:
 ASSISTENZA TECNICA
 ========================================================================================
 
-Il prodotto può essere correlato di manuale o di guida all'uso, ma l'autore non fornisce assistenza tecnica.
+Il prodotto puÃ² essere correlato di manuale o di guida all'uso, ma l'autore non fornisce assistenza tecnica.
 
 ========================================================================================
 FUORI L'AUTORE!
 ========================================================================================
 
-GDRCD 5.2 "Stable" è stato sviluppato da Breaker sulla base di GDRCD 5.1 di Salvatore (Blancks) Rotondo - email: breakeryouko@gmail.com
+GDRCD 5.2 "Stable" Ã¨ stato sviluppato da Breaker sulla base di GDRCD 5.1 di Salvatore (Blancks) Rotondo - email: breakeryouko@gmail.com
 
-GDRCD 5.1 "Advanced" è stato sviluppato da Salvatore (Blancks) Rotondo sulla base di MrFaber's GDRCD5 - email: s.rotondo90@gmail.com
+GDRCD 5.1 "Advanced" Ã¨ stato sviluppato da Salvatore (Blancks) Rotondo sulla base di MrFaber's GDRCD5 - email: s.rotondo90@gmail.com
 
-MrFaber's GDRCD è stato interamente realizzato da Fabrizio (MrFaber) Pedani - email: fabrizio.pedani@email.it
+MrFaber's GDRCD Ã¨ stato interamente realizzato da Fabrizio (MrFaber) Pedani - email: fabrizio.pedani@email.it
 
 La corrente opera e' ispirata a GDRCD 3.0.0, realizzato da Romeo Gentile info@2citta.it http://www.2citta.it
 

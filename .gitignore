@@ -15,6 +15,7 @@ local.properties
 .classpath
 .settings/
 .loadpath
+.idea/
 
 # External tool builders
 .externalToolBuilders/
@@ -161,3 +162,11 @@ pip-log.txt
 
 # Mac crap
 .DS_Store
+
+
+#############
+## GDRCD
+#############
+
+# chat_save
+giocate/

@@ -7,15 +7,15 @@
 - Il colore base dei link
 - Lo schema di colore delle barre
 */
-body{
-	background-color: #000;		/*colore base dello sfondo*/
-	background-repeat: none;
+body {
+    background-color: #000; /*colore base dello sfondo*/
+    background-repeat: none;
 }
 
-body.main_body{
-   font-weight: bold;
-   font-family: "Times New Roman", Georgia;
-   font-size: 12px;
+body.main_body {
+    font-weight: bold;
+    font-family: "Times New Roman", Georgia;
+    font-size: 12px;
 }
 
 /****************************************************************************/
@@ -31,11 +31,10 @@ e top viene modificato il posizionamento.*/
 /** * Questo stile è un aggiustamento del css per il layout base in uso
 	* @author Blancks
 */
-div#maincontent
-{
-	top:10px;
-	bottom:10px;
-	border: 1px white dotted;
+div#maincontent {
+    top: 10px;
+    bottom: 10px;
+    border: 1px white dotted;
 }
 
 /** * Qualsiasi cosa accada, non modificare gli stili già presenti, limitarsi ad aggiungere quelli che servono,
@@ -43,52 +42,51 @@ div#maincontent
 	
 	* @author Blancks
 */
-div.output{
-	width:100%;			/* Fix IE6/9: è vergognoso che un fix per IE versione SEI(6) funzioni anche per il 9 ... */
-	height:100%;		/* Fix IE6/9: certi problemi dovrebbero appartenere alla storia dei pessimi browser, non all'epoca moderna */
-	overflow:auto;
-	position:absolute;
-	top:0;
-	left:0;
-	right:0;
-	bottom:0;
-	text-align:center;
+div.output {
+    width: 100%; /* Fix IE6/9: è vergognoso che un fix per IE versione SEI(6) funzioni anche per il 9 ... */
+    height: 100%; /* Fix IE6/9: certi problemi dovrebbero appartenere alla storia dei pessimi browser, non all'epoca moderna */
+    overflow: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    text-align: center;
 }
 
-
 /*Area informazioni*/
-div.info{
-   margin:10px 0;
-   width: 185px;
-   height: 240px;
-   border: 1px white dotted;
+div.info {
+    margin: 10px 0;
+    width: 185px;
+    height: 240px;
+    border: 1px white dotted;
 }
 
 /*Area avviso messaggi*/
-div.msgs{
-   margin:10px 0;
-   width: 185px;
-   height: 50px;
-   text-align: center;
-   border: 1px white dotted;
-   overflow: none;
+div.msgs {
+    margin: 10px 0;
+    width: 185px;
+    height: 50px;
+    text-align: center;
+    border: 1px white dotted;
+    overflow: none;
 }
 
 /* Area presenti */
-div.presenti{
-   margin:10px 0;
-   width: 185px;
-   height: 556px;
-   border: 1px white dotted;
-   overflow: hidden;
+div.presenti {
+    margin: 10px 0;
+    width: 185px;
+    height: 556px;
+    border: 1px white dotted;
+    overflow: hidden;
 }
 
 /*Finestra del menu*/
-div.menu{
-   margin:10px 0;
-   width: 185px;
-   height: 260px;
-   border: 1px white dotted;
+div.menu {
+    margin: 10px 0;
+    width: 185px;
+    height: 260px;
+    border: 1px white dotted;
 }
 
 /** * Stile per il menù a tendina per lo skip rapido delle mappe
@@ -98,19 +96,18 @@ select#gotomap {
     display: block;
     margin: 10px auto;
     width: 160px;
-    font-size:11px;
+    font-size: 11px;
 }
 
 /** * Stile per l'evidenziazione delle mappe nel menù a tendina
 	* @author Blancks
 */
-select#gotomap .map{
-	font-weight:bolder;
-	font-style:italic;
+select#gotomap .map {
+    font-weight: bolder;
+    font-style: italic;
 }
 
 /****************************************************************************/
-
 
 /****************************************************************************/
 /* STILE BASE DEGLI ELEMENTI */
@@ -120,10 +117,11 @@ tutto il sito. */
 
 /******************************/
 /*Testo generale del sito*/
-body{
-   color: #dadada; /*colore base dei caratteri*/
-   font-family: times new roman;
+body {
+    color: #dadada; /*colore base dei caratteri*/
+    font-family: times new roman;
 }
+
 /******************************/
 
 /******************************/
@@ -131,38 +129,40 @@ body{
 /** * Nota: solo Internet explorer supporta la funzionalità, consiglierei di evitarne l'uso
 	* @author Blancks
 */
-body{
-   scrollbar-highlight-color: #333333;
-   scrollbar-shadow-color: #222222;
-   scrollbar-3dlight-color: #888888;
-   scrollbar-arrow-color: #000000;
-   scrollbar-track-color: #4e4d4d;
-   scrollbar-darkshadow-color: #111111;
+body {
+    scrollbar-highlight-color: #333333;
+    scrollbar-shadow-color: #222222;
+    scrollbar-3dlight-color: #888888;
+    scrollbar-arrow-color: #000000;
+    scrollbar-track-color: #4e4d4d;
+    scrollbar-darkshadow-color: #111111;
 }
+
 /******************************/
 
 /******************************/
 /*Aspetto generale delle immagini*/
-img{
+img {
     border: none;
 }
+
 /******************************/
 
 /******************************/
 /*Aspetto dei link*/
 
-a, a:visited{
+a, a:visited {
     border: none;
-	color:  #dadada; /*colore base dei link*/
-	font-weight: bolder;
-	text-decoration: none;
+    color: #dadada; /*colore base dei link*/
+    font-weight: bolder;
+    text-decoration: none;
 }
 
-a:hover{
+a:hover {
     border: none;
-	color:  white; /*colore base dei link al passaggio del mouse*/
-	font-weight: bolder;
-	text-decoration: none;
+    color: white; /*colore base dei link al passaggio del mouse*/
+    font-weight: bolder;
+    text-decoration: none;
 }
 
 /******************************/
@@ -171,22 +171,24 @@ a:hover{
 /*Titolo e corpo pagina */
 
 /*Titolo pagina: Appare in alto ad ogni riquadro dell'interfaccia.*/
-div.page_title h2{
-   font-size: 14px;
-   font-weight: bold;
-   text-transform: uppercase;
-   text-align: center;
-   margin-left: auto ;
-   margin-right: auto ;
+div.page_title h2 {
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /*Contenuto della pagina.*/
-div.page_body{text-align:left;}
+div.page_body {
+    text-align: left;
+}
 
-div.page_body table{ 
-  margin-left: auto ;
-  margin-right: auto ;
-  width: 80%;
+div.page_body table {
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
 }
 
 /******************************/
@@ -197,83 +199,115 @@ div.page_body table{
 /*Link delle voci di menu. 
 Ha effetto su i menù della finestra principale e su quelli delle pagine
 secondarie, compresa l'area gestione.*/
-div.link_menu{
-   margin: 0 0 5px 40px;
+div.link_menu {
+    margin: 0 0 5px 40px;
 }
-div.link_menu a{
-   font-size: 14px;
+
+div.link_menu a {
+    font-size: 14px;
 }
+
+div.link_menu a.sprite {
+    display: block;
+    width: 50px;
+    height: 50px;
+    background: no-repeat top left;
+}
+
+div.link_menu a.sprite:hover {
+    background-position: 0 100%;
+}
+
 /*Immagine "punto voce di elenco" dei menu.*/
-img.link_menu_point{ }
+img.link_menu_point {
+}
 
 /******************************/
 
 /******************************/
 /*Link interni alle pagine*/
 
-div.link_back{margin: 5px auto 5px auto; text-align: center; clear: both;}
-div.link_back a{}
+div.link_back {
+    margin: 5px auto 5px auto;
+    text-align: center;
+    clear: both;
+}
+
+div.link_back a {
+}
 
 /******************************/
 
 /******************************/
 /*Aspetto dei form*/
 
-
 /*Form dell'area gestione*/
-div.form_gestione{ margin-left: 3px; }
+div.form_gestione {
+    margin-left: 3px;
+}
+
 /*Form dell'area di gioco*/
-div.form_gioco{ margin-left: 3px; }
+div.form_gioco {
+    margin-left: 3px;
+}
 
 /*Box pannelli di modifica*/
-div.panels_box{
-   margin: 3px 5px 6px 5px;
+div.panels_box {
+    margin: 3px 5px 6px 5px;
 }
 
 /*Testo della label di una voce
 di menu*/
-div.form_label{
-   margin: 10px 5px 2px 5px;
-   font-style: italic;
+div.form_label {
+    margin: 10px 5px 2px 5px;
+    font-style: italic;
 }
-/*Testo di aiuto di una voce di 
+
+/*Testo di aiuto di una voce di
 menu*/
-div.form_info{
-   font-size: 12px;
-   margin: 2px 5px 0 5px;
+div.form_info {
+    font-size: 12px;
+    margin: 2px 5px 0 5px;
 }
+
 /*Contenitore della voce di menu*/
-div.form_field{
-   margin: 0 5px 0 5px;
-   width: 100%;
+div.form_field {
+    margin: 0 5px 0 5px;
+    width: 100%;
 }
+
 /*Aspetto delle inputbox*/
-div.form_field input{
-   width: 95%;
+div.form_field input {
+    width: 95%;
 }
+
 /*Aspetto delle selectbox*/
-div.form_field select{
-   width: 95%;
+div.form_field select {
+    width: 95%;
 }
+
 /*Aspetto delle date*/
-div.form_field select.day, div.form_field select.month{
-   width: 45px;
+div.form_field select.day, div.form_field select.month {
+    width: 45px;
 }
-div.form_field select.year{
-   width: 55px;   
+
+div.form_field select.year {
+    width: 55px;
 }
+
 /*Aspetto delle textbox*/
-div.form_field textarea{
-   width: 95%;
-   height: 80px;
+div.form_field textarea {
+    width: 95%;
+    height: 80px;
 }
+
 /*Aspetto dei bottoni submit*/
-div.form_submit{
-   text-align: center;
-   margin-top: 15px; 
-   margin-left: auto;
-   margin-bottom: 5px;
-   margin-right: auto;
+div.form_submit {
+    text-align: center;
+    margin-top: 15px;
+    margin-left: auto;
+    margin-bottom: 5px;
+    margin-right: auto;
 }
 
 /*****************************/
@@ -283,94 +317,111 @@ div.form_submit{
 
 /*Box di un elenco dell'area 
 gestione*/
-div.elenco_record_gestione{
-  width: 100%;
-  text-align: center;
-}
-div.elenco_record_gestione table{ 
-   width: 90%; 
-}
-div.elenco_record_gestione td{ 
-   height: 15px; 
-   vertical-align: top;
-}
-div.elenco_record_gioco table{ 
-   width: 90%; 
-}
-div.elenco_record_gioco td{ 
-   height: 15px; 
-   vertical-align: top;
-}
-td.casella_titolo{}
-td.casella_elemento{
-   background-color: gray;
-   /* filter: alpha(opacity=65);
-  -moz-opacity: 0.65;
-  opacity: 0.65;*/
-   text-align: justify;
+div.elenco_record_gestione {
+    width: 100%;
+    text-align: center;
 }
 
+div.elenco_record_gestione table {
+    width: 90%;
+}
 
+div.elenco_record_gestione td {
+    height: 15px;
+    vertical-align: top;
+}
 
-td.casella_controlli{}
+div.elenco_record_gioco table {
+    width: 90%;
+}
+
+div.elenco_record_gioco td {
+    height: 15px;
+    vertical-align: top;
+}
+
+td.casella_titolo {
+}
+
+td.casella_elemento {
+    background-color: gray;
+    /* filter: alpha(opacity=65);
+   -moz-opacity: 0.65;
+   opacity: 0.65;*/
+    text-align: justify;
+}
+
+td.casella_controlli {
+}
+
 /*Box di un elenco dell'area di gioco*/
-div.elenco_record_gioco{text-align:center;}
+div.elenco_record_gioco {
+    text-align: center;
+}
+
 /*Separatore elenco*/
-div.capitolo_elenco{ 
-  font-weight: bold;
-  font-size: 12px;
-  font-style: italic;
-  text-align: center;
+div.capitolo_elenco {
+    font-weight: bold;
+    font-size: 12px;
+    font-style: italic;
+    text-align: center;
 }
+
 /*Aspetto dei titoli di colonna*/
-div.titoli_elenco{ 
-  font-weight: bold;
-  font-size: 12px;
-  font-style: italic;
+div.titoli_elenco {
+    font-weight: bold;
+    font-size: 12px;
+    font-style: italic;
 }
 
-div.icone_elenco img{
-  width: 25px;
-  height: 25px;
+div.icone_elenco img {
+    width: 25px;
+    height: 25px;
 }
+
 /*Testo delle colonne*/
-div.elementi_elenco{ 
-   padding: 0 2px 0 2px;
+div.elementi_elenco {
+    padding: 0 2px 0 2px;
 }
+
 /*Testo delle colonne (gestione)*/
-div.elenco_record_gestione div.elementi_elenco{
-  color: white;
+div.elenco_record_gestione div.elementi_elenco {
+    color: white;
 }
+
 /*Testo delle colonne (gioco)*/
-div.elenco_record_gioco div.elementi_elenco{
-  color: white;
+div.elenco_record_gioco div.elementi_elenco {
+    color: white;
 }
+
 /*Icone dei controlli di elenco*/
-div.controlli_elenco{
-   width: 60px;
-}
-div.controllo_elenco{
-   float: left;
-   margin: 2px 0 0 3px;
-}
-div.controllo_elenco form{
-   padding: 0px;
-   margin: 0px;
-}
-div.controllo_elenco input{
-  height: 15px;
-  margin: 0 0 0 0;
+div.controlli_elenco {
+    width: 60px;
 }
 
+div.controllo_elenco {
+    float: left;
+    margin: 2px 0 0 3px;
+}
 
-/*Aspetto del paginatore 
+div.controllo_elenco form {
+    padding: 0px;
+    margin: 0px;
+}
+
+div.controllo_elenco input {
+    height: 15px;
+    margin: 0 0 0 0;
+}
+
+/*Aspetto del paginatore
 dell'elenco*/
-div.pager{ }
+div.pager {
+}
 
 /*****************************/
 
 /****************************************************************************/
-
 
 /****************************************************************************/
 /* STILE DELLA MAPPA CLICCABILE */
@@ -378,67 +429,62 @@ div.pager{ }
 /* HELP: */
 
 /*Box della mappa*/
-div.mappaclick_box{
-   width: 100%;
-   height: 80%;
- }
+div.mappaclick_box {
+    width: 100%;
+    height: 80%;
+}
 
 /*Immagine mappa*/
-div.mappaclick_map{
-	text-align:left;	/* Fix IE6/9 */
-	margin:0 auto;
+div.mappaclick_map {
+    text-align: left; /* Fix IE6/9 */
+    margin: 0 auto;
 }
 
-div.mappaclick_more{
-   margin: 10px;
-   text-align: center;
+div.mappaclick_more {
+    margin: 10px;
+    text-align: center;
 }
 
-
-/** * stile della tooltip di descrizione sulla mappa 
+/** * stile della tooltip di descrizione sulla mappa
 	* @author Blancks
 */
-div#descriptionLoc{
-	position:absolute; 
-	width:200px;
-	background:#111;
-	padding:20px;
-	font-size:12px;
-	border:solid 1px #666;
-	font-family:Verdana,Sans;
-	
-	-moz-border-radius:5px;		/* Bordi arrotondati */
-	-webkit-border-radius:5px;
-	-khtml-border-radius: 5px;
-	border-radius:5px;
-	
-	display:none;/*NON TOCCARE* Di configurazione: nasconde la tip in partenza */
-	z-index:9999;/*NON TOCCARE* Di configurazione: mostra la tooltip sopra gli altri link */
+div#descriptionLoc {
+    position: absolute;
+    width: 200px;
+    background: #111;
+    padding: 20px;
+    font-size: 12px;
+    border: solid 1px #666;
+    font-family: Verdana, Sans;
+
+    -moz-border-radius: 5px; /* Bordi arrotondati */
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    border-radius: 5px;
+
+    display: none; /*NON TOCCARE* Di configurazione: nasconde la tip in partenza */
+    z-index: 9999; /*NON TOCCARE* Di configurazione: mostra la tooltip sopra gli altri link */
 }
 
-
-div.mappaclick_map a, div.mappaclick_map a:visited{
+div.mappaclick_map a, div.mappaclick_map a:visited {
     font-size: 16px;
     border: none;
-	color:  white; /*colore base dei link*/
-	font-weight: bolder;
-	text-decoration: none;
-	text-shadow: 1px 1px 2px #000000, 1px 1px 2px #000000;
+    color: white; /*colore base dei link*/
+    font-weight: bolder;
+    text-decoration: none;
+    text-shadow: 1px 1px 2px #000000, 1px 1px 2px #000000;
 }
 
-div.mappaclick_map a:hover{
+div.mappaclick_map a:hover {
     font-size: 16px;
     border: none;
-	color:  gray; /*colore base dei link al passaggio del mouse*/
-	font-weight: bolder;
-	text-decoration: none;
-		text-shadow: 1px 1px 2px #000000, 1px 1px 2px #000000;
+    color: gray; /*colore base dei link al passaggio del mouse*/
+    font-weight: bolder;
+    text-decoration: none;
+    text-shadow: 1px 1px 2px #000000, 1px 1px 2px #000000;
 }
-
-
 
 /****************************************************************************/
-
 
 /****************************************************************************/
 /* STILE DELLA FINESTRA MENU */
@@ -449,25 +495,35 @@ div.mappaclick_map a:hover{
 - Lo sfondo del del menu */
 
 /*Menu della finestra principale*/
-div.pagina_link_menu{ }
+div.pagina_link_menu {
+}
 
 /*Voci del menu (Stile della lista)*/
-div.pagina_link_menu il{}
-div.pagina_link_menu ul{}
+div.pagina_link_menu il {
+}
+
+div.pagina_link_menu ul {
+}
 
 /*Voci del menu (Stile del link)*/
-div.pagina_link_menu a{ }
+div.pagina_link_menu a {
+}
 
 /*Immagine "punto voce di elenco" dei menu.*/
-img.link_menu_point{ }
+img.link_menu_point {
+}
 
 /*Altri menu*/
-div.pagina_gestione{ }
-div.pagina_uffici{ }
-div.pagina_controlli_utente{ }
+div.pagina_gestione {
+}
+
+div.pagina_uffici {
+}
+
+div.pagina_controlli_utente {
+}
 
 /****************************************************************************/
-
 
 /****************************************************************************/
 /* STILE DELLA FINESTRA MESSAGGI E BACHECHE */
@@ -479,51 +535,59 @@ div.pagina_controlli_utente{ }
 - Il modo di segnalazione di nuovi messaggi*/
 
 /*Frame dei link ai messaggi*/
-div.msgs iframe.iframe_messaggi{
-   width: 175px;
-   height: 50px;
-   border:none;
-   overflow: hidden;
+div.msgs iframe.iframe_messaggi {
+    width: 175px;
+    height: 50px;
+    border: none;
+    overflow: hidden;
 }
 
 /*Box avviso messaggi e topic*/
-div.pagina_messaggi{
-   margin-left: auto;
-   margin-right: auto;
+div.pagina_messaggi {
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /*Link avviso nuovi messaggi*/
-div.messaggio_forum{
-	margin:10px auto 0 auto;
-	font-size: 14px;
-	text-transform: uppercase;
-	text-align:center;
-}
-div.messaggio_forum_nuovo{
-   
-    margin:10px auto 0 auto;
-	font-size: 14px;
-	text-align:center;
-
-	text-transform: uppercase;
-	text-shadow:-1px 0 yellow, 0 1px yellow, 1px 0 yellow, 0 -1px yellow;
-
+div.messaggio_forum {
+    margin: 10px auto 0 auto;
+    font-size: 14px;
+    text-transform: uppercase;
+    text-align: center;
 }
 
-span.messaggio_forum_nuovo a,  span.messaggio_forum_nuovo a:visited {color: red;}
-span.messaggio_forum_nuovo a:hover {color: black;}
+div.messaggio_forum_nuovo {
+
+    margin: 10px auto 0 auto;
+    font-size: 14px;
+    text-align: center;
+
+    text-transform: uppercase;
+    text-shadow: -1px 0 yellow, 0 1px yellow, 1px 0 yellow, 0 -1px yellow;
+
+}
+
+span.messaggio_forum_nuovo a, span.messaggio_forum_nuovo a:visited {
+    color: red;
+}
+
+span.messaggio_forum_nuovo a:hover {
+    color: black;
+}
 
 /*Immagini avviso nuovi messaggi e topic*/
-div.messaggio_forum img{ }
-div.messaggio_forum_nuovo img{ }
+div.messaggio_forum img {
+}
+
+div.messaggio_forum_nuovo img {
+}
 
 /*Icone dell'elenco messaggi messaggi*/
-img.colonna_elengo_messaggi_icon{
+img.colonna_elengo_messaggi_icon {
     height: 25px;
 }
 
 /****************************************************************************/
-
 
 /****************************************************************************/
 /* STILE DELLA FINESTRA INFORMAZIONI */
@@ -534,191 +598,215 @@ img.colonna_elengo_messaggi_icon{
 - Lo sfondo del pannello informazioni */
 
 /*Immagine luogo*/
-div.info div.info_image img{
-   width: 160px;
-   height: 90px;
-   margin: 5px 0 5px 3px;
+div.info div.info_image img {
+    width: 160px;
+    height: 90px;
+    margin: 5px 0 5px 3px;
 }
 
-div.info img.immagine_luogo { }
+div.info img.immagine_luogo {
+}
 
-div.info div.box_stato_luogo { }
+div.info div.box_stato_luogo {
+}
 
-div.info marquee.stato_luogo { }
+div.info marquee.stato_luogo {
+}
 
 div.info div.meteo {
-   text-align: center;
-   font-size: 12px;
+    text-align: center;
+    font-size: 12px;
 }
 
 div.info div.meteo_date {
-   margin: 5px 0 5px 0;
-   text-align: center;
-   font-size: 12px;
+    margin: 5px 0 5px 0;
+    text-align: center;
+    font-size: 12px;
 }
 
 div.info div.time {
-   display: none;
+    display: none;
 }
 
 /****************************************************************************/
-
 
 /****************************************************************************/
 /*STILE DELL'AREA SERVIZI IN GIOCO*/
 
-div.pagina_servizi_lavoro{}
-div.pagina_servizi_banca{}
-div.pagina_servizi_gilde{}
-
-div.pagina_servizi_lavoro div.controllo_elenco input{
-  height: 20px;
-  margin: 0 0 0 0;
+div.pagina_servizi_lavoro {
 }
 
-
-div.pagina_servizi_banca div.status_bancario{
-  margin: 20px 0 0 5px;
+div.pagina_servizi_banca {
 }
 
-div.pagina_servizi_gilde div.elenco_breve div.capitolo_elenco, 
+div.pagina_servizi_gilde {
+}
+
+div.pagina_servizi_lavoro div.controllo_elenco input {
+    height: 20px;
+    margin: 0 0 0 0;
+}
+
+div.pagina_servizi_banca div.status_bancario {
+    margin: 20px 0 0 5px;
+}
+
+div.pagina_servizi_gilde div.elenco_breve div.capitolo_elenco,
 div.pagina_servizi_gilde div.elenco_esteso div.capitolo_elenco {
-   text-align: center;
-   font-weight: bolder;
-   font-size: 12px;
-   margin-top: 20px;
+    text-align: center;
+    font-weight: bolder;
+    font-size: 12px;
+    margin-top: 20px;
 }
-div.pagina_servizi_gilde div.elenco_breve img{
-   width: 25px;
-   height: 25px;
+
+div.pagina_servizi_gilde div.elenco_breve img {
+    width: 25px;
+    height: 25px;
 }
+
 div.pagina_servizi_gilde div.elenco_esteso img {
-   width: 25px;
-   height: 25px;
+    width: 25px;
+    height: 25px;
 }
 
 /****************************************************************************/
-
-
 
 /****************************************************************************/
 /*STILE DEL MERCATO*/
 
-div.pagina_servizi_mercato { }
-
-
-div.pagina_servizi_mercato td.casella_elemento{  
-  font-size: 10px;
-  font-weight: bolder;
-  padding: 3px;
+div.pagina_servizi_mercato {
 }
 
-
-div.pagina_servizi_mercato div.inventario_img img{
-  height: 120px;
-  width: 120px;
-
-}
-div.pagina_servizi_mercato div.inventario_img{
-  width: 122px;
-}
-div.pagina_servizi_mercato div.inventario_nome{
-  width: 122px;
-}
-div.pagina_servizi_mercato div.inventario_quantita{
-  width: 122px;
+div.pagina_servizi_mercato td.casella_elemento {
+    font-size: 10px;
+    font-weight: bolder;
+    padding: 3px;
 }
 
+div.pagina_servizi_mercato div.inventario_img img {
+    height: 120px;
+    width: 120px;
 
+}
+
+div.pagina_servizi_mercato div.inventario_img {
+    width: 122px;
+}
 
 div.pagina_servizi_mercato div.inventario_nome {
-  font-size: 10px;
-  text-transform: uppercase;
+    width: 122px;
+}
+
+div.pagina_servizi_mercato div.inventario_quantita {
+    width: 122px;
+}
+
+div.pagina_servizi_mercato div.inventario_nome {
+    font-size: 10px;
+    text-transform: uppercase;
 }
 
 div.pagina_servizi_mercato div.form_label {
-  font-size: 10px;
-  margin: 0;
+    font-size: 10px;
+    margin: 0;
 }
 
 div.pagina_servizi_mercato div.form_submit {
-  font-size: 10px;
-  margin: 4px 0 0 0;
+    font-size: 10px;
+    margin: 4px 0 0 0;
 }
 
 /****************************************************************************/
-
-
 
 /****************************************************************************/
 /*STILE DELL'AREA GESTIONE*/
 
-div.pagina_gestione{}
-div.pagina_gestione_bacheche{}
-div.pagina_gestione_gilde{}
-div.pagina_gestione_luoghi{}
-div.pagina_gestione_mappe{}
-div.pagina_gestione_mercato{}
-div.pagina_gestione_personaggi{}
-div.pagina_gestione_tipi{}
-div.pagina_gestione_permessi{}
-div.pagina_gestione_permessi div.form_label{
-  float: left;
-  width: auto;
-  margin-top: 0px;
-}
-div.pagina_gestione_permessi div.form_field{
-  float: left;
-  width: auto;
-}
-div.pagina_gestione_permessi div.form_field select{
-  width: auto;
-}
-div.pagina_gestione_permessi div.form_submit{
-  text-align: left;
-  width: auto;
- 
+div.pagina_gestione {
 }
 
+div.pagina_gestione_bacheche {
+}
+
+div.pagina_gestione_gilde {
+}
+
+div.pagina_gestione_luoghi {
+}
+
+div.pagina_gestione_mappe {
+}
+
+div.pagina_gestione_mercato {
+}
+
+div.pagina_gestione_personaggi {
+}
+
+div.pagina_gestione_tipi {
+}
+
+div.pagina_gestione_permessi {
+}
+
+div.pagina_gestione_permessi div.form_label {
+    float: left;
+    width: auto;
+    margin-top: 0px;
+}
+
+div.pagina_gestione_permessi div.form_field {
+    float: left;
+    width: auto;
+}
+
+div.pagina_gestione_permessi div.form_field select {
+    width: auto;
+}
+
+div.pagina_gestione_permessi div.form_submit {
+    text-align: left;
+    width: auto;
+
+}
 
 /****************************************************************************/
-
 
 /****************************************************************************/
 /*STILE DEI MESSAGGI DI SISTEMA*/
 
-div.error{
-   margin-top: 2px;
-   margin-left: auto;
-   margin-right: auto;
-   width:80%;
-   border-style: solid;
-   border-width: 1px;
-   border-color: red;
-   background-color: #ffddee;
-   color: red;
-   text-transform: uppercase;
-   font-size: 13px;
-   font-weight: bolder;
-   padding: 0 2px 0 2px;
-}  
-
-div.warning{
-   margin-top: 2px;
-   margin-left: auto;
-   margin-right: auto;
-   width:80%;
-   border-style: solid;
-   border-width: 1px;
-   border-color: yellow;
-   background-color: brown;
-   color: yellow;
-   text-transform: uppercase;
-   font-size: 13px;
-   font-weight: bolder;
-   padding: 0 2px 0 2px;
+div.error {
+    margin-top: 2px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+    border-style: solid;
+    border-width: 1px;
+    border-color: red;
+    background-color: #ffddee;
+    color: red;
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: bolder;
+    padding: 0 2px 0 2px;
 }
 
-span.error_details{ }
+div.warning {
+    margin-top: 2px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+    border-style: solid;
+    border-width: 1px;
+    border-color: yellow;
+    background-color: brown;
+    color: yellow;
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: bolder;
+    padding: 0 2px 0 2px;
+}
+
+span.error_details {
+}
 
 /****************************************************************************/

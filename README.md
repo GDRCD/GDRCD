@@ -1,4 +1,4 @@
-# GDRCD 5.2 "Stable" - Users Manual
+# GDRCD 5.x - Users Manual
 
 
 
@@ -17,7 +17,7 @@ ampliate le correnti su suggerimento dell'utenza.
 
 ## COMMUNITY DI SVILUPPO
 
-GDRCD 5.2 e' un progetto Open Source e come tale e' aperto ai contributi.
+GDRCD 5.x e' un progetto Open Source e come tale e' aperto ai contributi.
 Mi riservo di vagliare personalmente eventuali modifiche da
 inserire direttamente nel core ufficiale del programma, ma nulla
 vieta di rilasciarle come MODs o di produrre release alternative.
@@ -175,8 +175,8 @@ password: super
 Se il login viene effettuato tutto è andato liscio, altrimenti c'e' qualcosa
 che non va. Prova ad installare manualmente il database con il servizio di
 phpmyadmin offerto dal tuo spazio web, scegliendo l'opzione "importa" e caricando
-il file gdrcd5.sql. Se nel database sono gia' presenti alcune, ma non tutte, 
-tabelle di gdrcd5 allora eliminale prima di importare il file.
+il file gdrcd5.4.sql. Se nel database sono gia' presenti alcune, ma non tutte, 
+tabelle di gdrcd5.4 allora eliminale prima di importare il file.
 
 7. Finalmente dovresti essere loggato nel tuo sito. Sei l'amministratore ed
 hai accesso al pannello di gestione. Adesso dovresti creare il tuo mondo,
@@ -206,5 +206,7 @@ ne verrai a capo. Buon Divertimento!
 
 
 Fabrizio Pedani.
+
 Files aggiornato e revisionato da Salvatore Rotondo.
+
 Files aggiornato e revisionato successivamente da Breaker.
