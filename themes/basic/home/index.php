@@ -21,10 +21,23 @@
                                 <div class="form_field"><input name="login1"/></div>
                                 <div class="form_label"><?php echo $MESSAGE['homepage']['forms']['password']; ?></div>
                                 <div class="form_field"><input type="password" name="pass1"/></div>
-                                <?php if ($PARAMETERS['mode']['popup_choise'] == 'ON')
-                                { ?>
+                                <?php if (!empty($PARAMETERS['themes']['available']) and count($PARAMETERS['themes']['available']) > 1): ?>
+                                    <div class="form_label"><?= gdrcd_filter('out', $MESSAGE['homepage']['forms']['theme_choice']) ?></div>
+                                    <div class="form_field"><select name="theme" id="theme">
+                                            <?php
+                                            foreach ($PARAMETERS['themes']['available'] as $k => $name) {
+                                                echo '<option value="' . gdrcd_filter('out', $k) . '"';
+                                                if ($k == $PARAMETERS['themes']['current_theme']) {
+                                                    echo ' selected="selected"';
+                                                }
+                                                echo '>' . gdrcd_filter('out', $name) . '</option>';
+                                            }
+                                            ?>
+                                        </select></div>
+                                <?php endif; ?>
+                                <?php if ($PARAMETERS['mode']['popup_choise'] == 'ON') { ?>
                                     <div
-                                        class="form_label"><?php echo $MESSAGE['homepage']['forms']['open_in_popup']; ?></div>
+                                            class="form_label"><?php echo $MESSAGE['homepage']['forms']['open_in_popup']; ?></div>
                                     <div class="form_field"><input type="checkbox" id="allow_popup"/></div>
                                 <?php } ?>
                                 <div class="form_submit"><input type="submit"
@@ -38,14 +51,12 @@
                 <!-- Password dimenticata -->
                 <div class="password_change">
                     <div class="panels_box">
-                        <?php if ($_POST['newp'] == "changepass")
-                        {
+                        <?php if ($_POST['newp'] == "changepass") {
 
                             $newpass = gdrcd_query("SELECT email FROM personaggio WHERE email = '" . gdrcd_filter('in',
                                     $_POST['email']) . "' LIMIT 1", 'result');
 
-                            if (gdrcd_query($newpass, 'num_rows') > 0)
-                            {
+                            if (gdrcd_query($newpass, 'num_rows') > 0) {
                                 gdrcd_query($newpass, 'free');
 
                                 $pass = gdrcd_genera_pass();
@@ -64,14 +75,12 @@
                                 <div class="warning">
                                     <?php echo gdrcd_filter('out', $MESSAGE['warning']['modified']); ?>
                                 </div>
-                            <?php } else
-                            { ?>
+                            <?php } else { ?>
                                 <div class="error">
                                     <?php echo gdrcd_filter('out', $MESSAGE['warning']['cant_do']); ?>
                                 </div>
                             <?php }//else
-                        } else
-                        { ?>
+                        } else { ?>
                             <div class="form_gioco">
                                 <form name="do_login" action="index.php" method="post">
                                     <div class="page_title"><h2>
@@ -81,7 +90,7 @@
                                     <div class="form_field"><input name="email"/></div>
                                     <div class="form_submit"><input type="submit"
                                                                     value="<?php echo $MESSAGE['homepage']['forms']['new_pass']; ?>"/><input
-                                            type="hidden" name="newp" value="changepass"/></div>
+                                                type="hidden" name="newp" value="changepass"/></div>
                                 </form>
                             </div>
                         <?php } ?>
@@ -110,8 +119,7 @@
 
             <td class="home_center">
 
-                <?php if ($PARAMETERS['mode']['welcome_message_homepage'] == 'ON')
-                { ?>
+                <?php if ($PARAMETERS['mode']['welcome_message_homepage'] == 'ON') { ?>
                     <div class="homepage_main_content">
                         <div class="page_title"><h2>
                                 <?php echo $MESSAGE['homepage']['main_content']['welcome']; ?>

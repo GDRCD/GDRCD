@@ -1,36 +1,57 @@
+
 <?php
 /** * Skin Advanced
  * Markup e procedure della homepage
  * @author Blancks
  */
 ?>
+
 <div id="main">
     <div id="site_width">
         <div id="header">
             <div class="login_form">
                 <form action="login.php" id="do_login"
-                      method="post"<?php if($PARAMETERS['mode']['popup_choise'] == 'ON') {
+                      method="post"<?php if ($PARAMETERS['mode']['popup_choise'] == 'ON') {
                     echo ' onsubmit="check_login(); return false;"';
                 } ?>>
                     <div>
                         <span class="form_label"><label
                                     for="username"><?php echo $MESSAGE['homepage']['forms']['username']; ?></label></span>
-                        <input type="text" id="username" name="login1" />
+                        <input type="text" id="username" name="login1"/>
                     </div>
                     <div>
                         <span class="form_label"><label
                                     for="password"><?php echo $MESSAGE['homepage']['forms']['password']; ?></label></span>
-                        <input type="password" id="password" name="pass1" />
+                        <input type="password" id="password" name="pass1"/>
                     </div>
-                    <?php if($PARAMETERS['mode']['popup_choise'] == 'ON') { ?>
+
+                    <?php if (!empty($PARAMETERS['themes']['available']) and count($PARAMETERS['themes']['available']) > 1): ?>
+                        <div>
+  <span class="form_label"><label for="theme"><?= gdrcd_filter('out', $MESSAGE['homepage']['forms']['theme_choice'])
+          ?></label></span>
+                            <select name="theme" id="theme">
+                                <?php
+                                foreach ($PARAMETERS['themes']['available'] as $k => $name) {
+                                    echo '<option value="' . gdrcd_filter('out', $k) . '"';
+                                    if ($k == $PARAMETERS['themes']['current_theme']) {
+                                        echo ' selected="selected"';
+                                    }
+                                    echo '>' . gdrcd_filter('out', $name) . '</option>';
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if ($PARAMETERS['mode']['popup_choise'] == 'ON') { ?>
                         <div>
                             <span class="form_label"><label
                                         for="allow_popup"><?php echo $MESSAGE['homepage']['forms']['open_in_popup']; ?></label></span>
-                            <input type="checkbox" id="allow_popup" />
+                            <input type="checkbox" id="allow_popup"/>
                             <input type="hidden" value="0" name="popup" id="popup">
                         </div>
                     <?php } ?>
-                    <input type="submit" value="<?php echo $MESSAGE['homepage']['forms']['login']; ?>" />
+                    <input type="submit" value="<?php echo $MESSAGE['homepage']['forms']['login']; ?>"/>
                 </form>
             </div>
             <h1><a href="index.php"><?php echo $MESSAGE['homepage']['main_content']['site_title']; ?></a></h1>
@@ -56,16 +77,16 @@
                     <strong><?php echo $users['online'], ' ', gdrcd_filter('out', $MESSAGE['homepage']['forms']['online_now']); ?></strong>
                 </div>
                 <div class="side_modules">
-                    <?php if(empty($RP_response)) { ?>
+                    <?php if (empty($RP_response)) { ?>
                         <strong><?php echo gdrcd_filter('out', $MESSAGE['homepage']['forms']['forgot']); ?></strong>
                         <div class="pass_rec">
                             <form action="index.php" method="post">
                                 <div>
                                     <span class="form_label"><label
                                                 for="passrecovery"><?php echo $MESSAGE['homepage']['forms']['email']; ?></label></span>
-                                    <input type="text" id="passrecovery" name="email" />
+                                    <input type="text" id="passrecovery" name="email"/>
                                 </div>
-                                <input type="submit" value="<?php echo $MESSAGE['homepage']['forms']['new_pass']; ?>" />
+                                <input type="submit" value="<?php echo $MESSAGE['homepage']['forms']['new_pass']; ?>"/>
                             </form>
                         </div>
                     <?php } else { ?>
@@ -75,17 +96,17 @@
                     <?php } ?>
                 </div>
                 <div class="side_modules">
-                    <?php include 'themes/'.$PARAMETERS['themes']['current_theme'].'/home/user_stats.php'; ?>
+                    <?php include 'themes/' . $PARAMETERS['themes']['current_theme'] . '/home/user_stats.php'; ?>
                 </div>
             </div>
             <div class="content_body">
                 <?php
-                if(file_exists('themes/'.$PARAMETERS['themes']['current_theme'].'/home/'.$content.'.php')) {
-                    include 'themes/'.$PARAMETERS['themes']['current_theme'].'/home/'.$content.'.php';
+                if (file_exists('themes/' . $PARAMETERS['themes']['current_theme'] . '/home/' . $content . '.php')) {
+                    include 'themes/' . $PARAMETERS['themes']['current_theme'] . '/home/' . $content . '.php';
                 }
                 ?>
             </div>
-            <br class="blank" />
+            <br class="blank"/>
         </div>
         <div id="footer">
             <div>
