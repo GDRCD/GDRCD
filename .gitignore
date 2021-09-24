@@ -162,3 +162,11 @@ pip-log.txt
 
 # Mac crap
 .DS_Store
+
+
+#############
+## GDRCD
+#############
+
+# chat_save
+giocate/
