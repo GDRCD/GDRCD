@@ -176,12 +176,21 @@ $numresults = gdrcd_query($result, 'num_rows');
             ?>
         </table>
         <?php
-        echo '<div>
-          <form id="multiple_delete" method="post" action="main.php?page=messages_center" onSubmit="return checked_copy();">
-            <input type="hidden" name="op" value="erase_checked" />
-            <input type="hidden" name="type" value="'.$delType.'" />
-            <input type="submit" value="Cancella Messaggi Selezionati">
-          </form>
+        echo '<div class="pulsanti_elenco">
+                <!-- //Pulsante elimina messaggi selezionati-->
+                <form id="multiple_delete" method="post" action="main.php?page=messages_center" onSubmit="return checked_copy();">
+                    <input type="hidden" name="op" value="erase_checked" />
+                    <input type="hidden" name="type" value="'.$delType.'" />
+                    <input type="submit" value="Cancella Messaggi Selezionati">
+                </form>
+                <!-- //Pulsante elimina messaggi letti-->
+                <form action="main.php?page=messages_center'.($_GET['op'] == 'inviati' ? '&op=inviati' : '').'" method="post">
+                    <div class="form_submit">
+                        <input type="hidden" name="op" value="eraseall" />
+                        <input type="hidden" name="type" value="'.$delType.'" />
+                        <input type="submit" value="Cancella tutti i Messaggi Letti" />
+                    </div>
+                </form>
         </div>';
     } else {
         if($totaleresults > $PARAMETERS['settings']['messages_limit']) {
@@ -207,12 +216,6 @@ $numresults = gdrcd_query($result, 'num_rows');
 <div class="link_back">
     <a href="main.php?page=messages_center&op=create">
         <?php echo $MESSAGE['interface']['messages']['new']; ?>
-    </a>
-</div>
-<!-- link scrivi messaggio -->
-<div class="link_back">
-    <a href="main.php?page=messages_center&op=eraseall">
-        <?php echo $MESSAGE['interface']['messages']['erase_all']; ?>
     </a>
 </div>
 <script type="text/javascript">
