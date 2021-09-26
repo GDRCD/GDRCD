@@ -304,6 +304,16 @@ $PARAMETERS['mode']['chat_avatar'] = 'ON';
 $PARAMETERS['settings']['chat_avatar']['width'] = 50;    # Dimensione in pixel della larghezza dell'immagine consentita
 $PARAMETERS['settings']['chat_avatar']['height'] = 50;    # Dimensione in pixel dell'altezza dell'imagine consentita
 
+$PARAMETERS['settings']['chat_avatar']['link']['mode'] = 'ON';
+// Permette di rendere cliccabile l'avatar da chat ed aprire così la scheda del personaggio in questione (!! non funziona nel chat_save)
+//ON: abilita l'apertura della scheda del personaggio tramite click dell'avatar da chat
+//OFF disabilita
+
+$PARAMETERS['settings']['chat_avatar']['link']['popup'] = 'OFF';
+// Se è abilitata l'apertura della scheda del personaggio dall'avatar da chat, permette di aprire la pagina in un pop
+//ON: la scheda del personaggio viene aperta in una modale
+//OFF la scheda del personaggio viene aperta sulla pagina corrente
+
 
 /** * uso di una tooltip di preview per le descrizioni sulla mappa
  * @author Blancks
