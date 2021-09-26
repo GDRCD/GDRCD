@@ -153,11 +153,26 @@ $numresults = gdrcd_query($result, 'num_rows');
                     </td>
                 </tr>
                 <?php
-                $_SESSION['last_istant_message'] = $row['id'];
+
+                // Salvo l'id dell'ultimo messaggio ricevuto per consentire le notifiche in caso di nuovi messaggi
+                if($_GET['op'] != 'inviati') {
+                    // Se non ho ancora stabilito un ultimo id o quello che sto scrivendo ha un id più alto rispetto a quello già salvato, allora lo salvo
+                    if(!isset($lastMessageReceived) || $row['id'] > $lastMessageReceived) {
+                        $lastMessageReceived = $row['id'];
+                    }
+                }
+
             }//while
 
             gdrcd_query($result, 'free');
-            gdrcd_query("UPDATE personaggio SET ultimo_messaggio = ".$_SESSION['last_istant_message']." WHERE nome='".$_SESSION['login']."'");
+
+            // Aggiorno l'ultimo messaggio visualizzato
+            if(isset($lastMessageReceived)){
+                // Salvo l'ID nella sessione
+                $_SESSION['last_istant_message'] = $lastMessageReceived;
+                // Salvo l'ID nella riga del personaggio
+                gdrcd_query("UPDATE personaggio SET ultimo_messaggio = ".$lastMessageReceived." WHERE nome='".$_SESSION['login']."'");
+            }
             ?>
         </table>
         <?php
