@@ -47,40 +47,28 @@ $numresults = gdrcd_query($result, 'num_rows');
                     <!-- Icona -->
                 </td>
                 <td>
-            <span class="titoli_elenco">
-                <?php if($_GET['op'] == 'inviati') {
-                    echo "Destinatario";
-                } else {
-                    echo gdrcd_filter('out', $MESSAGE['interface']['messages']['sender']);
-                }
-                ?>
-            </span>
-                </td>
-                <td width="185" align="left" valign="bottom">
-            <span class="titoli_elenco" style="font-weight:bold;">
-                <?php
-                if($_GET['op'] == 'inviati') {
-                    echo "Inviato il";
-                } else {
-                    echo gdrcd_filter('out', $MESSAGE['interface']['messages']['date']);
-                }
-                ?>
-            </span>
-                </td>
-                <td width="192" align="left" valign="bottom">
-            <span class="titoli_elenco" style="font-weight:bold;">
-                <?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['preview']); ?>
- 	        </span>
+                    <span class="titoli_elenco">
+                        <?php if($_GET['op'] == 'inviati') {
+                            echo "Destinatario";
+                        } else {
+                            echo gdrcd_filter('out', $MESSAGE['interface']['messages']['sender']);
+                        }
+                        ?>
+                    </span>
                 </td>
                 <td>
- 	        <span class="titoli_elenco">
- 	            <?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['date']); ?>
- 	        </span>
+                    <span class="titoli_elenco">
+                        <?php
+                        echo ($_GET['op'] == 'inviati')
+                            ? "Inviato il"
+                            : gdrcd_filter('out', $MESSAGE['interface']['messages']['date']);
+                        ?>
+                    </span>
                 </td>
                 <td>
-    	    <span class="titoli_elenco">
- 	            <?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['preview']); ?>
- 	        </span>
+                    <span class="titoli_elenco">
+                        <?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['preview']); ?>
+                    </span>
                 </td>
                 <td>
                     <!-- Controlli -->
