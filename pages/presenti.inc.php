@@ -235,7 +235,7 @@
         echo '</div>';
 
         // Conteggio i presenti.
-        $record = gdrcd_query("SELECT COUNT(*) AS numero FROM personaggio WHERE (personaggio.ora_entrata > personaggio.ora_uscita AND DATE_ADD(personaggio.ultimo_refresh, INTERVAL 4 MINUTE) > NOW())");
+        $record = gdrcd_query("SELECT COUNT(*) AS numero FROM personaggio WHERE personaggio.ora_entrata > personaggio.ora_uscita AND DATE_ADD(personaggio.ultimo_refresh, INTERVAL 4 MINUTE) > NOW() AND personaggio.is_invisible = 0");
 
         //numero utenti presenti.
         echo '<div class="link_presenti"><a href="../main.php?page=presenti_estesi" target="_top">';
