@@ -47,40 +47,28 @@ $numresults = gdrcd_query($result, 'num_rows');
                     <!-- Icona -->
                 </td>
                 <td>
-            <span class="titoli_elenco">
-                <?php if($_GET['op'] == 'inviati') {
-                    echo "Destinatario";
-                } else {
-                    echo gdrcd_filter('out', $MESSAGE['interface']['messages']['sender']);
-                }
-                ?>
-            </span>
-                </td>
-                <td width="185" align="left" valign="bottom">
-            <span class="titoli_elenco" style="font-weight:bold;">
-                <?php
-                if($_GET['op'] == 'inviati') {
-                    echo "Inviato il";
-                } else {
-                    echo gdrcd_filter('out', $MESSAGE['interface']['messages']['date']);
-                }
-                ?>
-            </span>
-                </td>
-                <td width="192" align="left" valign="bottom">
-            <span class="titoli_elenco" style="font-weight:bold;">
-                <?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['preview']); ?>
- 	        </span>
+                    <span class="titoli_elenco">
+                        <?php if($_GET['op'] == 'inviati') {
+                            echo "Destinatario";
+                        } else {
+                            echo gdrcd_filter('out', $MESSAGE['interface']['messages']['sender']);
+                        }
+                        ?>
+                    </span>
                 </td>
                 <td>
- 	        <span class="titoli_elenco">
- 	            <?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['date']); ?>
- 	        </span>
+                    <span class="titoli_elenco">
+                        <?php
+                        echo ($_GET['op'] == 'inviati')
+                            ? "Inviato il"
+                            : gdrcd_filter('out', $MESSAGE['interface']['messages']['date']);
+                        ?>
+                    </span>
                 </td>
                 <td>
-    	    <span class="titoli_elenco">
- 	            <?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['preview']); ?>
- 	        </span>
+                    <span class="titoli_elenco">
+                        <?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['preview']); ?>
+                    </span>
                 </td>
                 <td>
                     <!-- Controlli -->
@@ -165,20 +153,44 @@ $numresults = gdrcd_query($result, 'num_rows');
                     </td>
                 </tr>
                 <?php
-                $_SESSION['last_istant_message'] = $row['id'];
+
+                // Salvo l'id dell'ultimo messaggio ricevuto per consentire le notifiche in caso di nuovi messaggi
+                if($_GET['op'] != 'inviati') {
+                    // Se non ho ancora stabilito un ultimo id o quello che sto scrivendo ha un id più alto rispetto a quello già salvato, allora lo salvo
+                    if(!isset($lastMessageReceived) || $row['id'] > $lastMessageReceived) {
+                        $lastMessageReceived = $row['id'];
+                    }
+                }
+
             }//while
 
             gdrcd_query($result, 'free');
-            gdrcd_query("UPDATE personaggio SET ultimo_messaggio = ".$_SESSION['last_istant_message']." WHERE nome='".$_SESSION['login']."'");
+
+            // Aggiorno l'ultimo messaggio visualizzato
+            if(isset($lastMessageReceived)){
+                // Salvo l'ID nella sessione
+                $_SESSION['last_istant_message'] = $lastMessageReceived;
+                // Salvo l'ID nella riga del personaggio
+                gdrcd_query("UPDATE personaggio SET ultimo_messaggio = ".$lastMessageReceived." WHERE nome='".$_SESSION['login']."'");
+            }
             ?>
         </table>
         <?php
-        echo '<div>
-          <form id="multiple_delete" method="post" action="main.php?page=messages_center" onSubmit="return checked_copy();">
-            <input type="hidden" name="op" value="erase_checked" />
-            <input type="hidden" name="type" value="'.$delType.'" />
-            <input type="submit" value="Cancella Messaggi Selezionati">
-          </form>
+        echo '<div class="pulsanti_elenco">
+                <!-- //Pulsante elimina messaggi selezionati-->
+                <form id="multiple_delete" method="post" action="main.php?page=messages_center" onSubmit="return checked_copy();">
+                    <input type="hidden" name="op" value="erase_checked" />
+                    <input type="hidden" name="type" value="'.$delType.'" />
+                    <input type="submit" value="Cancella Messaggi Selezionati">
+                </form>
+                <!-- //Pulsante elimina messaggi letti-->
+                <form action="main.php?page=messages_center'.($_GET['op'] == 'inviati' ? '&op=inviati' : '').'" method="post">
+                    <div class="form_submit">
+                        <input type="hidden" name="op" value="eraseall" />
+                        <input type="hidden" name="type" value="'.$delType.'" />
+                        <input type="submit" value="Cancella tutti i Messaggi Letti" />
+                    </div>
+                </form>
         </div>';
     } else {
         if($totaleresults > $PARAMETERS['settings']['messages_limit']) {
@@ -204,12 +216,6 @@ $numresults = gdrcd_query($result, 'num_rows');
 <div class="link_back">
     <a href="main.php?page=messages_center&op=create">
         <?php echo $MESSAGE['interface']['messages']['new']; ?>
-    </a>
-</div>
-<!-- link scrivi messaggio -->
-<div class="link_back">
-    <a href="main.php?page=messages_center&op=eraseall">
-        <?php echo $MESSAGE['interface']['messages']['erase_all']; ?>
     </a>
 </div>
 <script type="text/javascript">

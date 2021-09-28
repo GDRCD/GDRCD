@@ -16,6 +16,15 @@ div.pagina_messages_center div.elementi_elenco {
     height: 40px;
 }
 
+/*Testo delle colonne*/
+div.pagina_messages_center div.pulsanti_elenco {
+    display: inline-block;
+}
+
+div.pagina_messages_center div.pulsanti_elenco form {
+    float: left;
+}
+
 /*************************/
 /*Visualizzazione del messaggio singolo*/
 div.read_message_box {

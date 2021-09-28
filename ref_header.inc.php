@@ -302,8 +302,23 @@ if((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) 
                  * @author Blancks
                  */
                 if($PARAMETERS['mode']['chat_avatar'] == 'ON' && ! empty($row['url_img_chat'])) {
-                    $add_chat .= '<img src="'.$row['url_img_chat'].'" class="chat_avatar" style="width:'.$PARAMETERS['settings']['chat_avatar']['width'].'px; height:'.$PARAMETERS['settings']['chat_avatar']['height'].'px;" />';
+                    $chat_avatar = '<img src="'.$row['url_img_chat'].'" class="chat_avatar" style="width:'.$PARAMETERS['settings']['chat_avatar']['width'].'px; height:'.$PARAMETERS['settings']['chat_avatar']['height'].'px;" />';
+
+                    // Se è stato impostato il link sull'avatar di chat, avvio la costruzione
+                    if(isset($PARAMETERS['settings']['chat_avatar']['link']['mode']) and ($PARAMETERS['settings']['chat_avatar']['link']['mode']  == 'ON')) {
+                        $chat_avatar_url = ( isset($PARAMETERS['settings']['chat_avatar']['link']['popup']) and ($PARAMETERS['settings']['chat_avatar']['link']['popup'] == 'ON') )
+                            ? "javascript:modalWindow('scheda', 'Scheda di ". $row['mittente'] ."', 'popup.php?page=scheda&pg=". $row['mittente'] ."');"
+                            : "main.php?page=scheda&pg=".$row['mittente'];
+
+                        // Inserisco l'avatar di chat cliccabile
+                        $add_chat .= '<a href="'.$chat_avatar_url.'">'.$chat_avatar.'</a>';
+                    }
+                    // Altrimenti mostro solo l'avatar di chat
+                    else {
+                        $add_chat .= $chat_avatar;
+                    }
                 }
+
                 $add_chat .= '<span class="chat_time">'.gdrcd_format_time($row['ora']).'</span>';
 
                 if($PARAMETERS['mode']['chaticons'] == 'ON') {
