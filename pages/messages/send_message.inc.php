@@ -58,4 +58,3 @@ if (gdrcd_filter('get', $_POST['multipli']) == 'singolo') {
     <div class="warning">
         <?php echo $PARAMETERS['names']['private_message']['sing'] . $MESSAGE['interface']['messages']['sent']; ?>
     </div>
-<?php
