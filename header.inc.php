@@ -27,6 +27,18 @@ require_once('includes/required.php');
 //Eseguo la connessione al database
 $handleDBConnection = gdrcd_connect();
 
+# Controllo del login
+if(!empty($_SESSION['login'])){
+    $me = gdrcd_filter('in',$_SESSION['login']);
+    $check = gdrcd_query("SELECT count(nome) as TOT FROM personaggio WHERE ora_entrata > ora_uscita AND nome='{$me}' LIMIT 1");
+
+    if($check['TOT'] == 0){
+        session_destroy();
+        die('Non sei collegato con nessun pg.');
+    }
+
+}
+
 /** * CONTROLLO PER AGGIORNAMENTO DB
  * Il controllo viene lanciato solo in index e nelle pagine di installer/upgrade.
  * Dopo l'aggiornamento non dovrebbe dare noie.
