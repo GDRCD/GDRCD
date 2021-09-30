@@ -56,6 +56,13 @@ define('INVIAGGIO', -1);
 define('HTML_FILTER_BASE', 0);
 define('HTML_FILTER_HIGH', 1);
 
+/**
+ * Tipo Requisito Abilita'
+ */
+CONST REQUISITO_ABILITA = 1;
+CONST REQUISITO_CAR = 2;
+
+
 /*Vettori globali dei parametri*/
 $PARAMETER = array();
 $MESSAGES = array();
