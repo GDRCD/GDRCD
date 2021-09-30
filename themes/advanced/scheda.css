@@ -145,6 +145,19 @@ div.elenco_abilita {
 
 div.elenco_abilita table {
     margin: 2px auto 5px auto;
+    text-align: center;
+}
+
+div.elenco_abilita table tr{
+    border: solid black;
+    border-width: 0 0 1px 0;
+    display: block;
+    margin: 5px auto;
+    padding:5px 0;
+}
+
+div.elenco_abilita table tr:first-child{
+    border-width: 1px 0;
 }
 
 div.elenco_abilita td {
@@ -152,12 +165,12 @@ div.elenco_abilita td {
 }
 
 div.abilita_scheda_nome {
-    width: 110px;
+    width: 120px;
     font-size: 12px;
 }
 
 div.abilita_scheda_car {
-    width: 70px;
+    width: 90px;
     font-size: 12px;
 }
 
@@ -167,9 +180,10 @@ div.abilita_scheda_tank {
 }
 
 div.abilita_scheda_sub {
-    width: 35px;
+    width: 80px;
     font-size: 12px;
 }
+
 
 /****************************************************************************/
 

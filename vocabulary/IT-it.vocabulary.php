@@ -124,6 +124,7 @@ $MESSAGE['interface']['maps']['Status'] = 'Stato del luogo';
 $MESSAGE['interface']['maps']['set_meteo'] = 'imposta';
 /* Scheda */
 $MESSAGE['interface']['sheet']['page_name'] = 'Scheda del personaggio';
+$MESSAGE['interface']['sheet']['page_name_skill'] = 'Abilità del personaggio';
 $MESSAGE['interface']['sheet']['link']['back'] = 'Torna alla scheda.';
 $MESSAGE['interface']['sheet']['send_message_to']['send'] = 'Invia un';
 $MESSAGE['interface']['sheet']['send_message_to']['to'] = 'a';
@@ -142,6 +143,7 @@ $MESSAGE['interface']['sheet']['profile']['status'] = 'Status';
 $MESSAGE['interface']['sheet']['profile']['uneployed'] = 'Disoccupato';
 $MESSAGE['interface']['sheet']['menu']['update'] = 'Modifica';
 $MESSAGE['interface']['sheet']['menu']['transictions'] = 'Transazioni';
+$MESSAGE['interface']['sheet']['menu']['skill'] = 'Abilità';
 $MESSAGE['interface']['sheet']['menu']['experience'] = 'Esperienza';
 $MESSAGE['interface']['sheet']['menu']['inventory'] = 'Inventario';
 $MESSAGE['interface']['sheet']['menu']['equipment'] = 'Equipaggiamento';

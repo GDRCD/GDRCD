@@ -252,10 +252,6 @@
                     </div>
                 </div>
             </div>
-            <?php //Punteggi, salute, status, classe, razza.
-            if($PARAMETERS['mode']['skillsystem'] == 'ON') { //solo se è attiva la modalità skillsystem
-                include ('scheda/skillsystem.inc.php');
-            } ?>
             <div class="background"><!-- Background, affetti, robe varie -->
                 <div class="titolo_box">
                     <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['box_title']['background']); ?>

@@ -8,6 +8,9 @@ if($_REQUEST['pg'] == $_SESSION['login'] || $_SESSION['permessi'] >= GUILDMODERA
     <a href="main.php?page=scheda_trans&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']); ?>">
         <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['menu']['transictions']); ?>
     </a>
+    <a href="main.php?page=scheda_skill&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']); ?>">
+        <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['menu']['skill']); ?>
+    </a>
     <a href="main.php?page=scheda_px&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']); ?>">
         <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['menu']['experience']); ?>
     </a>
