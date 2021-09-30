@@ -704,6 +704,9 @@ if ($PARAMETERS['mode']['spymessages'] == 'ON')
 $PARAMETERS['administration']['skills']['text'] = 'Gestione abilità';
 $PARAMETERS['administration']['skills']['url'] = 'main.php?page=gestione_abilita';
 $PARAMETERS['administration']['skills']['access_level'] = SUPERUSER;
+$PARAMETERS['administration']['skills_extra']['text'] = 'Gestione abilità dati extra';
+$PARAMETERS['administration']['skills_extra']['url'] = 'main.php?page=gestione_abilita_extra';
+$PARAMETERS['administration']['skills_extra']['access_level'] = SUPERUSER;
 $PARAMETERS['administration']['plot']['text'] = 'Gestione ambientazione';
 $PARAMETERS['administration']['plot']['url'] = 'main.php?page=gestione_ambientazione';
 $PARAMETERS['administration']['plot']['access_level'] = SUPERUSER;
