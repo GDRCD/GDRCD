@@ -37,8 +37,8 @@ else{
     <a href="main.php?page=scheda_trans&pg=<?=$pg; ?>">
         <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['menu']['transictions']); ?>
     </a>
-
 <?php
+/*Visualizza il link se l'utente visualizza la propria scheda o se è almeno un master*/
 if (($_SESSION['permessi'] >= ROLE_PERM || $_REQUEST['pg'] == $_SESSION['login']) && REG_ROLE) { ?>
     <a href="main.php?page=scheda_roles&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']); ?>">
         Giocate registrate
@@ -64,3 +64,4 @@ if ($perm >= MODERATOR) { ?>
         <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['menu']['log']); ?>
     </a>
 <?php }
+}
