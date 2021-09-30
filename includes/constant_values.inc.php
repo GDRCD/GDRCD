@@ -96,7 +96,6 @@ CONST ABI_PUBLIC = true;
 CONST REQUISITO_ABILITA = 1;
 CONST REQUISITO_CAR = 2;
 
-
 /*Vettori globali dei parametri*/
 $PARAMETER = array();
 $MESSAGES = array();
