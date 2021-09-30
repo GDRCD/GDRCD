@@ -57,11 +57,20 @@ define('HTML_FILTER_BASE', 0);
 define('HTML_FILTER_HIGH', 1);
 
 /**
- *  Requisito Abilita'
+ *  Abilita'
  */
+# Gestisce l'inclusione della tabella `abilita_extra` e dei costi e descrizioni per livello
 CONST ABI_EXTRA = true;
+
+# Moltiplicatore default di costo abilita'
 CONST DEFAULT_PX_PER_LVL = 10;
+
+# Livello massimo abilita'
 CONST ABI_LEVEL_CAP = 5;
+
+# Pagina abilita pubblica = true
+# Pagina abilita solo al proprietario o ai moderatori = false
+CONST ABI_PUBLIC = true;
 
 /**
  * Tipo Requisito Abilita'

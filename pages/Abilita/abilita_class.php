@@ -20,6 +20,20 @@ class Abilita
     /**** CONTROLS ****/
 
     /**
+     * @fn AbiVisibility
+     * @note Controlla se la pagina abilita' e' publica o se si hanno i permessi per guardarla
+     * @param $pg
+     * @return bool
+     */
+    public function AbiVisibility($pg){
+
+        $pg = gdrcd_filter('out',$pg);
+
+        # Se non esiste la costante OR se e' true OR se non e' true: se sono il proprietario del pg OR sono moderatore
+        return ( !defined('ABI_PUBLIC') || (ABI_PUBLIC) || ($pg == $this->me) || ($this->permessi >= MODERATOR));
+    }
+
+    /**
      * @fn extreActive
      * @note Controlla se la tabella `abilita_extra` e' attiva
      * @return bool
