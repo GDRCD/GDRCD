@@ -384,6 +384,7 @@ div.innertube {
 }
 
 /**** GESTIONE ****/
+
 .gestione_pagina .gestione_incipit{
     background: grey;
     padding: 10px;
@@ -438,7 +439,6 @@ div.innertube {
     clear: both;
 }
 
-
 .gestione_pagina .gestione_form .single_input{
     width: 100%;
     margin: 5px;
@@ -448,6 +448,7 @@ div.innertube {
     font-size: 13px;
     font-weight: bold;
 }
+
 .gestione_pagina .gestione_form .single_input input,
 .gestione_pagina .gestione_form .single_input textarea,
 .gestione_pagina .gestione_form .single_input select{
