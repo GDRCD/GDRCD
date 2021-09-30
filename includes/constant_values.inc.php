@@ -57,6 +57,14 @@ define('HTML_FILTER_BASE', 0);
 define('HTML_FILTER_HIGH', 1);
 
 /**
+ *  Requisito Abilita'
+ */
+CONST ABI_REQUIREMENT = true;
+CONST DEFAULT_ABI_PRICE = 10;
+CONST DEFAULT_PX_PER_LVL = 10;
+CONST ABI_LEVEL_CAP = 5;
+
+/**
  * Tipo Requisito Abilita'
  */
 CONST REQUISITO_ABILITA = 1;
