@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 require_once(dirname(__FILE__) . '/constant_values.inc.php');
 require_once(dirname(__FILE__) . '/../config.inc.php');
