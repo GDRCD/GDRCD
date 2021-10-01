@@ -9,7 +9,7 @@
 #################################################################################
 
 session_start();
-var_dump(1);
+var_dump(2);
 /* Includo i file necessari */
 include('includes/constant_values.inc.php');
 include('config.inc.php');
