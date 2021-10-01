@@ -218,12 +218,16 @@
                     <!-- controllo -->
                     <!-- ok/form precompilato -->
                     <?php //controlli validità
-                    $result = gdrcd_query("SELECT email FROM personaggio WHERE email='".gdrcd_filter_email($_POST['email'])."' LIMIT 1", 'result');
 
-                    if(gdrcd_query($result, 'num_rows') > 0) {
-                        gdrcd_query($result, 'free');
-                        $ok = false;
-                        echo '<div class="error">'.gdrcd_filter('out', $MESSAGE['register']['error']['email_taken']).'</div>';
+                    $email = gdrcd_filter_email($_POST['email']);
+                    $result = gdrcd_query("SELECT email FROM personaggio", 'result');
+
+                    foreach ($result as $pg){
+                        if(gdrcd_password_check($email,$pg['email'])){
+                            $ok = false;
+                            echo '<div class="error">'.gdrcd_filter('out', $MESSAGE['register']['error']['email_taken']).'</div>';
+                            break;
+                        }
                     }
 
                     if((gdrcd_filter_email($_POST['email']) == '') || (strpos(gdrcd_filter_email($_POST['email']), '@') == false) || (strpos(gdrcd_filter_email($_POST['email']), '.') == false)) {
