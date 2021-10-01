@@ -90,8 +90,9 @@ require 'header.inc.php'; /*Header comune*/
             id bigint(20) NOT NULL auto_increment,
             mittente varchar(20) NOT NULL default '',
             destinatario varchar(20) NOT NULL default '',
-            spedito datetime NOT NULL default '0000-00-00 00:00:00',
+            spedito datetime NOT NULL,
             letto tinyint(1) default '0',
+            oggetto text NULL DEFAULT NULL,
             testo text,
             PRIMARY KEY  (id)
         ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");
