@@ -8,7 +8,7 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
     <div class="form_info">
         <? echo $MESSAGE['interface']['esiti']['gm_page']; ?>
     </div>
-    <a class="but_newd" href='main.php?page=gestione_segnalazioni&segn=esito_index&op=first' target="_blank">
+    <a class="but_newd" href='main.php?page=gestione_segnalazioni&segn=newesito&op=first' target="_blank">
        Apri una nuova serie di esiti
     </a>
 
@@ -36,6 +36,11 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
             <div class="titolo_box">
                 <h2 style="margin-top:3px;">
                     <b><? echo $tit;?> - <? echo $pg;?></b>
+                    <a class="link_new"
+                       href='main.php?page=gestione_segnalazioni&segn=newesito&op=edit&id=<? echo gdrcd_filter('num',$blocco['id']);?>'
+                       target="_blank">
+                        Modifica serie di esiti
+                    </a>
                 </h2>
             </div>
 
