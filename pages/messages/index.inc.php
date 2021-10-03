@@ -188,13 +188,13 @@ $numresults = gdrcd_query($result, 'num_rows');
         <?php
         echo '<div class="pulsanti_elenco">
                 <!-- //Pulsante elimina messaggi selezionati-->
-                <form id="multiple_delete" method="post" action="main.php?page=messages_center" onSubmit="return checked_copy();">
+                <form id="multiple_delete" method="post" action="main.php?page=messages_center" onSubmit="return checkedDelete();">
                     <input type="hidden" name="op" value="erase_checked" />
                     <input type="hidden" name="type" value="'.$delType.'" />
                     <input type="submit" value="Cancella Messaggi Selezionati">
                 </form>
                 <!-- //Pulsante elimina messaggi letti-->
-                <form action="main.php?page=messages_center'.($_GET['op'] == 'inviati' ? '&op=inviati' : '').'" method="post">
+                <form id="viewed_delete" action="main.php?page=messages_center'.($_GET['op'] == 'inviati' ? '&op=inviati' : '').'" method="post">
                     <div class="form_submit">
                         <input type="hidden" name="op" value="eraseall" />
                         <input type="hidden" name="type" value="'.$delType.'" />
@@ -229,18 +229,22 @@ $numresults = gdrcd_query($result, 'num_rows');
     </a>
 </div>
 <script type="text/javascript">
-    function checked_copy() {
-        console.log('call');
-        var messages = document.getElementsByClassName('message_check');
-        var form = document.getElementById('multiple_delete');
-        var n_msg = messages.length;
-        var i;
-        var checked = false;
+    /**
+     * Metodo per la creazione della lista dei messaggi da eliminare con checkbox
+     * Quando viene inviata l'operazione sul submit, vengono presi tutti i checkbox message_check selezionati
+     * e vengono copiati sotto al form multiple_delete e solo poi si passa alla cancellazione
+     */
+    function checkedDelete() {
+        let form = document.getElementById('multiple_delete');
+        let messages = document.getElementsByClassName('message_check');
+        let n_msg = messages.length;
+        let checked = false;
 
+        let i;
         for (i = 0; i < n_msg; i++) {
             if (messages[i].checked) {
                 checked = true;
-                var el = document.createElement('input');
+                let el = document.createElement('input');
                 el.setAttribute('type', 'hidden');
                 el.setAttribute('name', 'ids[]');
                 el.setAttribute('value', messages[i].getAttribute('value'));
@@ -248,10 +252,6 @@ $numresults = gdrcd_query($result, 'num_rows');
             }
         }
 
-        if (checked) {
-            return true;
-        } else {
-            return false;
-        }
+        return checked;
     }
 </script>
