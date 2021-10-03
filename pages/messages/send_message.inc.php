@@ -60,6 +60,7 @@ switch($opRequest) {
      * INVIO MESSAGGIO A TUTTI I PRESENTI
      */
     case 'presenti':
+        // Ottengo i presenti correnti
         $query = "SELECT personaggio.nome 
                     FROM personaggio 
                     WHERE personaggio.ora_entrata > personaggio.ora_uscita 
