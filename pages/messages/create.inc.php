@@ -2,7 +2,7 @@
     <form class="form_messaggi" action="main.php?page=messages_center" method="post">
         <!-- Destinatario -->
         <div class='form_label'>
-            <?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['destination']); ?>
+            <?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['recipient']); ?>
         </div>
         <div class='form_field'>
             <input type="text" list="personaggi" name="destinatario" placeholder="Nome del personaggio" value="<?php echo gdrcd_filter('get', $_REQUEST['reply_dest']); ?>" />

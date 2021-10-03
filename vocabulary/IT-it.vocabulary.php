@@ -204,7 +204,7 @@ $MESSAGE['interface']['sheet']['log']['ip'] = 'IP';
 $MESSAGE['interface']['sheet']['log']['other_account'] = 'Doppio';
 $MESSAGE['interface']['sheet']['log']['message'] = 'Messaggio';
 /*Messaggi privati*/
-$MESSAGE['interface']['messages']['destination'] = 'Destinatario';
+$MESSAGE['interface']['messages']['recipient'] = 'Destinatario';
 $MESSAGE['interface']['messages']['multiple']['title'] = $PARAMETERS['names']['private_message']['sing'] . 'collettivo';
 $MESSAGE['interface']['messages']['multiple']['single'] = 'Destinatario singolo';
 $MESSAGE['interface']['messages']['multiple']['multiple'] = 'Destinatario multiplo';
