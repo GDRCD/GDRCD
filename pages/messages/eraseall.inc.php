@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Eliminao i messaggi letti
+ */
+
 // In base alla tipologia di visualizzazione, elimino i relativi messaggi letti
 if(gdrcd_filter_in($_POST['type']) === 'destinatario_del') {
     $query = "UPDATE messaggi SET destinatario_del = 1 WHERE destinatario='".gdrcd_filter('in', $_SESSION['login'])."' AND letto = 1";

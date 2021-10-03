@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Eliminao i messaggi selezionati
+ *
+ * ATTENZIONE!: Se non è stato selezionato alcun messaggio, allora questa pagina non viene caricata
+ */
+
 // Eseguo l'operazione solo se è stato selezionato almeno un messaggio
 if( !empty($_POST['ids']) ) {
 
