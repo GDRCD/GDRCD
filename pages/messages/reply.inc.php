@@ -58,6 +58,9 @@
                 ?>
             </textarea>
         </div>
+        <div class="form_info">
+            <?php echo gdrcd_filter('out', $MESSAGE['interface']['help']['bbcode']); ?>
+        </div>
         <!-- Submit -->
         <input type="hidden" name="op" value="send_message" />
         <input type="hidden" name="reply_attach" value="<?php echo gdrcd_filter('get', $_POST['reply_attach']); ?>" />
