@@ -34,7 +34,7 @@ switch($opRequest) {
          */
         //
         $destinatariCheck = "'".implode("','", $destinatari)."'";
-        $result = gdrcd_query("SELECT nome FROM personaggio WHERE nome IN (" . $destinatariCheck . ") AND nome IS NOT NULL", 'result');
+        $result = gdrcd_query("SELECT nome FROM personaggio WHERE nome IN (" . $destinatariCheck . ") AND nome IS NOT NULL GROUP BY nome ", 'result');
 
         // Se sono stati individuati record,procedo
         if(gdrcd_query($result, 'num_rows') > 0){

@@ -206,11 +206,11 @@ $MESSAGE['interface']['sheet']['log']['message'] = 'Messaggio';
 /*Messaggi privati*/
 $MESSAGE['interface']['messages']['recipient'] = 'Destinatario';
 $MESSAGE['interface']['messages']['multiple']['title'] = $PARAMETERS['names']['private_message']['sing'] . 'collettivo';
-$MESSAGE['interface']['messages']['multiple']['single'] = 'Destinatario singolo';
-$MESSAGE['interface']['messages']['multiple']['multiple'] = 'Destinatario multiplo';
-$MESSAGE['interface']['messages']['multiple']['online'] = 'Tutti i presenti';
 $MESSAGE['interface']['messages']['multiple']['info'] = 'Destinatari multipli separati da virgola.';
-$MESSAGE['interface']['messages']['multiple']['all'] = 'Tutti gli utenti';
+$MESSAGE['interface']['messages']['multiple']['options']['private'] = 'Privato';
+$MESSAGE['interface']['messages']['multiple']['options']['online'] = 'Tutti i presenti';
+$MESSAGE['interface']['messages']['multiple']['options']['all'] = 'Tutti gli utenti';
+$MESSAGE['interface']['messages']['subject'] = 'Oggetto';
 $MESSAGE['interface']['messages']['body'] = 'Testo';
 $MESSAGE['interface']['messages']['sender'] = 'Mittente';
 $MESSAGE['interface']['messages']['date'] = 'Ricevuto il';
