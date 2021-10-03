@@ -8,7 +8,7 @@
             <?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['multiple']['info']); ?>
         </div>
         <div class='form_field'>
-            <input type="text" list="personaggi" name="destinatario" placeholder="Nome del personaggio" value="<?php echo gdrcd_filter('get', $_POST['destinatario']); ?>" />
+            <input type="text" list="personaggi" name="destinatario" placeholder="Nome del personaggio" value="<?php echo gdrcd_filter('get', $_REQUEST['reply_dest']); ?>" />
         </div>
         <?php
             // Costruisco la lista dei Personaggio da cui attingere per il datalist
@@ -40,7 +40,7 @@
         <div class='form_field'>
             <!--Il placeholder è il testo che compare sul campo prima che l'utente vi scriva-->
             <input type="text" name="oggetto" placeholder="Oggetto o dettaglio ON/OFF"
-                   value="<?php echo gdrcd_filter('out', trim($_POST['oggetto'])); ?>"/>
+                   value="<?php echo gdrcd_filter('out', trim($_REQUEST['reply_subject'])); ?>"/>
         </div>
         <!-- Testo -->
         <div class='form_label'>
@@ -60,11 +60,9 @@
         </div>
         <!-- Submit -->
         <input type="hidden" name="op" value="send_message" />
+        <input type="hidden" name="reply_attach" value="<?php echo gdrcd_filter('get', $_POST['reply_attach']); ?>" />
         <div class='form_submit'>
             <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>" />
         </div>
     </form>
-</div>
-<div class="link_back">
-    <a href="main.php?page=messages_center&offset=0"><?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['go_back']); ?></a>
 </div>

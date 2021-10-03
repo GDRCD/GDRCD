@@ -96,6 +96,10 @@ $totaleresults = gdrcd_query(gdrcd_query($sqlMessages, 'result'), 'num_rows');
                 </tr>
                 <?php
                 while($row = gdrcd_query($result, 'fetch')) {
+
+                    // Suddivido la data di invio
+                    list($data_spedito, $ora_spedito) = explode(' ', $row['spedito']);
+
                     ?>
                     <tr>
                         <td>
@@ -127,11 +131,7 @@ $totaleresults = gdrcd_query(gdrcd_query($sqlMessages, 'result'), 'num_rows');
                         </td>
                         <td>
                             <div class="elementi_elenco">
-                                <?php
-                                $quando = explode(" ", $row['spedito']);
-
-                                echo gdrcd_format_date($quando[0]).'<br/>'.gdrcd_filter('out', $MESSAGE['interface']['messages']['time']).' '.gdrcd_format_time($quando[1]);
-                                ?>
+                                <?php echo gdrcd_format_date($data_spedito).'<br/>'.gdrcd_filter('out', $MESSAGE['interface']['messages']['time']).' '.gdrcd_format_time($ora_spedito); ?>
                             </div>
                         </td>
                         <td>
@@ -154,9 +154,10 @@ $totaleresults = gdrcd_query(gdrcd_query($sqlMessages, 'result'), 'num_rows');
                                         <!-- reply -->
                                         <form action="main.php?page=messages_center" method="post">
                                             <input type="hidden" name="reply_dest" value="<?php echo $row['mittente']; ?>" />
-                                            <input type="hidden" name="genitore" value="<?php echo $row['id']; ?>" />
+                                            <input type="hidden" name="reply_subject" value="Re: <?php echo $row['oggetto']; ?>" />
                                             <input type="hidden" name="op" value="reply" />
-                                            <input type="submit" value="Rispondi" />
+                                            <input type="image" src="imgs/icons/reply.png" value="submit" alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']); ?>"
+                                                   title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']); ?>" />
                                         </form>
                                     </div>
                                 </div>
@@ -167,9 +168,10 @@ $totaleresults = gdrcd_query(gdrcd_query($sqlMessages, 'result'), 'num_rows');
                                         <!-- reply -->
                                         <form action="main.php?page=messages_center" method="post">
                                             <input type="hidden" name="reply_dest" value="<?php echo $row['destinatario']; ?>" />
-                                            <input type="hidden" name="genitore" value="<?php echo $row['id']; ?>" />
+                                            <input type="hidden" name="reply_subject" value="Re: <?php echo $row['oggetto']; ?>" />
                                             <input type="hidden" name="op" value="reply" />
-                                            <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']); ?>" />
+                                            <input type="image" src="imgs/icons/reply.png" value="submit" alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']); ?>"
+                                                   title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']); ?>" />
                                         </form>
                                     </div>
                                 </div>
