@@ -1,7 +1,8 @@
 <?php
 
 // Ottengo i dati del messaggio
-$result = gdrcd_query("SELECT * FROM messaggi WHERE id = ".gdrcd_filter('num', $_REQUEST['id_messaggio'])." and ( destinatario = '".$_SESSION['login']."' or mittente = '".$_SESSION['login']."') LIMIT 1", 'result');
+$id_messaggio = gdrcd_filter('num', $_REQUEST['id_messaggio']);
+$result = gdrcd_query("SELECT * FROM messaggi WHERE id = ".$id_messaggio." and ( destinatario = '".$_SESSION['login']."' or mittente = '".$_SESSION['login']."') LIMIT 1", 'result');
 
 // Se non ottengo alcun risultato, allora mostro un messaggio di errore
 if(gdrcd_query($result, 'num_rows') == 0) { ?>
