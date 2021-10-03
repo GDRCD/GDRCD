@@ -12,27 +12,49 @@ $opRequest = gdrcd_filter('get', $_POST['multipli']);
 
 switch($opRequest) {
     /**
-     * INVIO MESSAGGIO A SINGOLO
-     * ATTENZIONE: nel caso vengano individuati più destinatari (separati da virgola),
-     * verrà comunque inviato il messaggio solo al primo individuo
+     * INVIO MESSAGGIO STANDARD
+     * In caso di invio messaggio a destinatari multipli, occorre separare i destinatari da virgola
      */
     default:
     case 'singolo':
-        // Ottengo il destinatario, prendo il primo inviato
-        $destinatari = explode(',', gdrcd_filter('get', $_POST['destinatario']));
-        $destinatario = trim($destinatari[0]);
+    case 'multiplo':
+        // Ottengo i destinatari
+        $destinatari = explode(',', $_POST['destinatario']);
+        // Rimuovo eventuale sporcizia nella scrittura dei nomi dei Personaggi
+        $destinatari = array_map('trim', $destinatari);
 
-        // In caso di segnalazione
-        if (gdrcd_filter('get', $_POST['url']) != "") {
-            $_POST['testo'] = $_SESSION['login'] . ' ti ha segnalato questo [url=' . $_POST['url'] . ']link[/url].';
-        }
+        /**
+         * Controllo che i destinatari siano effettivamente dei personaggi
+         * I personaggi vengono concatenati nel seguente formato:
+         *
+         * 'NOMEPERSONAGGIO','NOMEPERSONAGGIO2'
+         *
+         * in modo che poi possano essere inseriti nel controllo IN.
+         * Aggiungo che il campo personaggio.nome non sia NULL, per evitare possibili errori.
+         */
+        //
+        $destinatariCheck = "'".implode("','", $destinatari)."'";
+        $result = gdrcd_query("SELECT nome FROM personaggio WHERE nome IN (" . $destinatariCheck . ") AND nome IS NOT NULL", 'result');
 
-        // Determino se il Personaggio a cui sto inviando esiste
-        $result = gdrcd_query("SELECT nome FROM personaggio WHERE nome = '" . $destinatario . "'", 'result');
-        if ((gdrcd_query($result, 'num_rows') > 0) && (empty($destinatario) === false)) {
-            // Inserisco i messaggi
-            gdrcd_query("INSERT INTO messaggi (mittente, destinatario, spedito, oggetto, testo) VALUES ('" . $_SESSION['login'] . "', '" . gdrcd_capital_letter(gdrcd_filter('in', $destinatario)) . "', NOW(), '" . gdrcd_filter('in', $_POST['otteggo']) . "', '" . gdrcd_filter('in', $_POST['testo']) . "')");
-            gdrcd_query("INSERT INTO backmessaggi (mittente, destinatario, spedito, oggetto, testo) VALUES ('" . $_SESSION['login'] . "', '" . gdrcd_capital_letter(gdrcd_filter('in', $destinatario)) . "', NOW(), '" . gdrcd_filter('in', $_POST['otteggo']) . "', '" . gdrcd_filter('in', $_POST['testo']) . "')");
+        // Se sono stati individuati record,procedo
+        if(gdrcd_query($result, 'num_rows') > 0){
+            // In caso di segnalazione
+            if (gdrcd_filter('get', $_POST['url']) != "") {
+                $_POST['testo'] = $_SESSION['login'] . ' ti ha segnalato questo [url=' . $_POST['url'] . ']link[/url].';
+            }
+
+            // Scorro tutti i personaggi
+            while ($record = gdrcd_query($result, 'fetch')) {
+                // Creo l'inserimento
+                $queryInsert[] = "('" . $_SESSION['login'] . "', '" . $record['nome'] . "', NOW(), '" . gdrcd_filter('in', $_POST['oggetto']) . "', '" . gdrcd_filter('in', $_POST['testo']) . "')";
+            }
+
+            // Se ho costruito delle query di inserimento, prevedo la query
+            if(isset($queryInsert)){
+                $query = gdrcd_query("INSERT INTO messaggi (mittente, destinatario, spedito, oggetto, testo) VALUES ".implode(",", $queryInsert));
+                $query = gdrcd_query("INSERT INTO backmessaggi (mittente, destinatario, spedito, oggetto, testo) VALUES ".implode(",", $queryInsert));
+                gdrcd_query($query, 'free');
+            }
         }
         break;
 
@@ -49,44 +71,6 @@ switch($opRequest) {
         // Scorro tutti i presenti individuati
         while ($record = gdrcd_query($result, 'fetch')) {
             gdrcd_query("INSERT INTO messaggi (mittente, destinatario, spedito, oggetto, testo) VALUES ('" . $_SESSION['login'] . "', '" . $record['nome'] . "', NOW(), '" . gdrcd_filter('in', $_POST['oggetto']) . "', '" . gdrcd_filter('in', $_POST['testo']) . "')");
-        }
-        break;
-
-    /**
-     * INVIO MESSAGGIO MULTIPLO
-     * I destinatari vengono separati da virgola
-     */
-    case 'multiplo':
-        // Ottengo i destinatari
-        $destinatari = explode(',', $_POST['destinatario']);
-
-        /**
-         * Controllo che i destinatari siano effettivamente dei personaggi
-         * I personaggi vengono concatenati nel seguente formato:
-         *
-         * 'NOMEPERSONAGGIO','NOMEPERSONAGGIO2'
-         *
-         * in modo che poi possano essere inseriti nel controllo IN.
-         * Aggiungo che il campo personaggio.nome non sia NULL, per evitare possibili errori.
-         */
-        //
-        $destinatariCheck = "'".implode("','", $destinatari)."'";
-        $result = gdrcd_query("SELECT nome FROM personaggio WHERE nome IN (" . $destinatariCheck . ") AND nome IS NOT NULL", 'result');
-
-        // Se sono stati individuati dei personaggi, proseguo con l'invio dei messaggi
-        if(gdrcd_query($result, 'num_rows') > 0){
-            // Scorro tutti i personaggi
-            while ($record = gdrcd_query($result, 'fetch')) {
-                // Creo l'inserimento
-                $queryInsert[] = "('" . $_SESSION['login'] . "', '" . $record['nome'] . "', NOW(), '" . gdrcd_filter('in', $_POST['oggetto']) . "', '" . gdrcd_filter('in', $_POST['testo']) . "')";
-            }
-
-            // Se ho costruito delle query di inserimento, prevedo la query
-            if(isset($queryInsert)){
-                $query = gdrcd_query("INSERT INTO messaggi (mittente, destinatario, spedito, oggetto, testo) VALUES ".implode(",", $queryInsert));
-                $query = gdrcd_query("INSERT INTO backmessaggi (mittente, destinatario, spedito, oggetto, testo) VALUES ".implode(",", $queryInsert));
-                gdrcd_query($query, 'free');
-            }
         }
         break;
 
