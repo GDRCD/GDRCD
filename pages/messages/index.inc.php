@@ -147,9 +147,9 @@ $totaleresults = gdrcd_query(gdrcd_query($sqlMessages, 'result'), 'num_rows');
                             </div>
                         </td>
                         <td>
+                            <div class="controlli_elenco">
                             <?php
                             if($_GET['op'] != 'inviati') { ?>
-                                <div class="controlli_elenco">
                                     <div class="controllo_elenco">
                                         <!-- reply -->
                                         <form action="main.php?page=messages_center" method="post">
@@ -160,10 +160,8 @@ $totaleresults = gdrcd_query(gdrcd_query($sqlMessages, 'result'), 'num_rows');
                                                    title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']); ?>" />
                                         </form>
                                     </div>
-                                </div>
                                 <?php
                             } else { ?>
-                                <div class="controlli_elenco">
                                     <div class="controllo_elenco">
                                         <!-- reply -->
                                         <form action="main.php?page=messages_center" method="post">
@@ -174,9 +172,19 @@ $totaleresults = gdrcd_query(gdrcd_query($sqlMessages, 'result'), 'num_rows');
                                                    title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']); ?>" />
                                         </form>
                                     </div>
-                                </div>
                                 <?php
                             } ?>
+                                <div class="controllo_elenco">
+                                    <!-- reply -->
+                                    <form action="main.php?page=messages_center" method="post">
+                                        <input type="hidden" name="id_messaggio" value="<?php echo $row['id']; ?>" />
+                                        <input type="hidden" name="type" value="<?php echo $delType; ?>" />
+                                        <input type="hidden" name="op" value="erase" />
+                                        <input type="image" src="imgs/icons/erase.png" value="submit" alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['erase']); ?>"
+                                               title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['erase']); ?>" />
+                                    </form>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                     <?php

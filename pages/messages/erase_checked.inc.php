@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Eliminao i messaggi selezionati
+ * Elimino i messaggi selezionati
  *
  * ATTENZIONE!: Se non è stato selezionato alcun messaggio, allora questa pagina non viene caricata
  */
@@ -26,7 +26,10 @@ if( !empty($_POST['ids']) ) {
 
     // Avvio l'operazione
     if(isset($query)) {
+        // Eseguo l'operazione
         gdrcd_query($query);
+
+        // In base alle rige coinvolte, prevedo il messaggio
         if(gdrcd_query("", 'affected') > 0) { ?>
             <div class="warning">
                 <?php echo gdrcd_filter('out', $PARAMETERS['names']['private_message']['plur'].$MESSAGE['interface']['messages']['all_erased']); ?>
