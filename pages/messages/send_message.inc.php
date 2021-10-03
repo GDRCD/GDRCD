@@ -16,8 +16,6 @@ switch($opRequest) {
      * In caso di invio messaggio a destinatari multipli, occorre separare i destinatari da virgola
      */
     default:
-    case 'singolo':
-    case 'multiplo':
         // Ottengo i destinatari
         $destinatari = explode(',', $_POST['destinatario']);
         // Rimuovo eventuale sporcizia nella scrittura dei nomi dei Personaggi
