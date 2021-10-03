@@ -67,6 +67,11 @@ $numresults = gdrcd_query($result, 'num_rows');
                 </td>
                 <td>
                     <span class="titoli_elenco">
+                        <?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['subject']); ?>
+                    </span>
+                </td>
+                <td>
+                    <span class="titoli_elenco">
                         <?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['preview']); ?>
                     </span>
                 </td>
@@ -112,6 +117,11 @@ $numresults = gdrcd_query($result, 'num_rows');
 
                             echo gdrcd_format_date($quando[0]).'<br/>'.gdrcd_filter('out', $MESSAGE['interface']['messages']['time']).' '.gdrcd_format_time($quando[1]);
                             ?>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="elementi_elenco">
+                            <?php echo gdrcd_filter('out', $row['oggetto']); ?>
                         </div>
                     </td>
                     <td>
