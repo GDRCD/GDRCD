@@ -92,6 +92,7 @@ require 'header.inc.php'; /*Header comune*/
             destinatario varchar(20) NOT NULL default '',
             spedito datetime NOT NULL,
             letto tinyint(1) default '0',
+            tipo int(2) NOT NULL default '0',
             oggetto text NULL DEFAULT NULL,
             testo text,
             PRIMARY KEY  (id)
@@ -270,7 +271,8 @@ require 'header.inc.php'; /*Header comune*/
             letto tinyint(1) default '0',
             mittente_del tinyint(1) default '0',
             destinatario_del tinyint(1) default '0',
-            `oggetto` text NULL DEFAULT NULL,
+            tipo int(2) NOT NULL default '0',
+            oggetto text NULL DEFAULT NULL,
             testo text,
             PRIMARY KEY  (id),
             KEY destinatario (destinatario),

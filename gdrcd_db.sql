@@ -120,6 +120,7 @@ CREATE TABLE IF NOT EXISTS `backmessaggi` (
   `destinatario` varchar(20) NOT NULL DEFAULT '',
   `spedito` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `letto` tinyint(1) DEFAULT '0',
+  `tipo` int(2) NOT NULL default '0',
   `oggetto` text NULL DEFAULT NULL,
   `testo` text,
   PRIMARY KEY (`id`)
@@ -403,6 +404,7 @@ CREATE TABLE IF NOT EXISTS `messaggi` (
   `letto` tinyint(1) DEFAULT '0',
   `mittente_del` tinyint(1) DEFAULT '0',
   `destinatario_del` tinyint(1) DEFAULT '0',
+  `tipo` int(2) NOT NULL default '0',
   `oggetto` text NULL DEFAULT NULL,
   `testo` text,
   PRIMARY KEY (`id`),
