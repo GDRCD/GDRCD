@@ -3,8 +3,11 @@
 $pagebegin = isset($_REQUEST['offset']) === false ? 0 : (int)$_REQUEST['offset'] * $PARAMETERS['settings']['messages_per_page'];
 $pageend = $PARAMETERS['settings']['messages_per_page'];
 
+// Determino se la pagina prevede la visualizzazione dei messaggi inviati
+$isSentMessage = $_GET['op'] == 'inviati';
+
 // Costruisco i campi determinanti per la selezione dei messaggi da visualizzare
-$msgType = $_GET['op'] == 'inviati'  ? 'mittente' : 'destinatario';
+$msgType = $isSentMessage  ? 'mittente' : 'destinatario';
 $delType = $msgType.'_del';
 
 // Costruisco la query per i messaggi
@@ -25,7 +28,7 @@ $totaleresults = gdrcd_query(gdrcd_query($sqlMessages, 'result'), 'num_rows');
     <div class="link_back">
         [
             <?php
-               if($_GET['op'] != 'inviati') {
+               if(!$isSentMessage) {
                    echo '<u>Ricevuti</u>';
                }
                else {
@@ -35,7 +38,7 @@ $totaleresults = gdrcd_query(gdrcd_query($sqlMessages, 'result'), 'num_rows');
         ] -
         [
             <?php
-                if($_GET['op'] == 'inviati') {
+                if($isSentMessage) {
                     echo '<u>Inviati</u>';
                 }
                 else {
@@ -63,7 +66,7 @@ $totaleresults = gdrcd_query(gdrcd_query($sqlMessages, 'result'), 'num_rows');
                     </td>
                     <td>
                         <span class="titoli_elenco">
-                            <?php if($_GET['op'] == 'inviati') {
+                            <?php if($isSentMessage) {
                                 echo "Destinatario";
                             } else {
                                 echo gdrcd_filter('out', $MESSAGE['interface']['messages']['sender']);
@@ -74,10 +77,15 @@ $totaleresults = gdrcd_query(gdrcd_query($sqlMessages, 'result'), 'num_rows');
                     <td>
                         <span class="titoli_elenco">
                             <?php
-                            echo ($_GET['op'] == 'inviati')
+                            echo ($isSentMessage)
                                 ? "Inviato il"
                                 : gdrcd_filter('out', $MESSAGE['interface']['messages']['date']);
                             ?>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="titoli_elenco">
+                            <?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['type']['title']); ?>
                         </span>
                     </td>
                     <td>
@@ -120,7 +128,7 @@ $totaleresults = gdrcd_query(gdrcd_query($sqlMessages, 'result'), 'num_rows');
                         <td>
                             <div class="elementi_elenco">
                                 <?php
-                                if($_GET['op'] == 'inviati') {
+                                if($isSentMessage) {
                                     echo '<a href="main.php?page=scheda&pg='.$row['destinatario'].'">'.$row['destinatario'].'</a>';
                                 } elseif(is_numeric($row['mittente']) == true) {
                                     echo gdrcd_filter('out', $MESSAGE['interface']['messages']['to_guild']);
@@ -136,47 +144,37 @@ $totaleresults = gdrcd_query(gdrcd_query($sqlMessages, 'result'), 'num_rows');
                         </td>
                         <td>
                             <div class="elementi_elenco">
+                                <?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['type']['options'][$row['tipo']]); ?>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="elementi_elenco">
                                 <?php echo gdrcd_filter('out', $row['oggetto']); ?>
                             </div>
                         </td>
                         <td>
                             <div class="elementi_elenco">
-                                <a href="main.php?page=messages_center&op=read&id_messaggio=<?php echo $row['id'] ?>"><?php echo gdrcd_filter('out', substr($row['testo'], 0, 40)); ?>
+                                <a href="main.php?page=messages_center&op=read&id_messaggio=<?php echo $row['id'] ?>"><?php echo gdrcd_filter('out', substr(nl2br(gdrcd_bbcoder($row['testo'])), 0, 40)); ?>
                                     ...
                                 </a>
                             </div>
                         </td>
                         <td>
                             <div class="controlli_elenco">
-                            <?php
-                            if($_GET['op'] != 'inviati') { ?>
-                                    <div class="controllo_elenco">
-                                        <!-- reply -->
-                                        <form action="main.php?page=messages_center" method="post">
-                                            <input type="hidden" name="reply_dest" value="<?php echo $row['mittente']; ?>" />
-                                            <input type="hidden" name="reply_subject" value="Re: <?php echo $row['oggetto']; ?>" />
-                                            <input type="hidden" name="op" value="reply" />
-                                            <input type="image" src="imgs/icons/reply.png" value="submit" alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']); ?>"
-                                                   title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']); ?>" />
-                                        </form>
-                                    </div>
-                                <?php
-                            } else { ?>
-                                    <div class="controllo_elenco">
-                                        <!-- reply -->
-                                        <form action="main.php?page=messages_center" method="post">
-                                            <input type="hidden" name="reply_dest" value="<?php echo $row['destinatario']; ?>" />
-                                            <input type="hidden" name="reply_subject" value="Re: <?php echo $row['oggetto']; ?>" />
-                                            <input type="hidden" name="op" value="reply" />
-                                            <input type="image" src="imgs/icons/reply.png" value="submit" alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']); ?>"
-                                                   title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']); ?>" />
-                                        </form>
-                                    </div>
-                                <?php
-                            } ?>
                                 <div class="controllo_elenco">
                                     <!-- reply -->
-                                    <form action="main.php?page=messages_center" method="post">
+                                    <form action="main.php?page=messages_center<?php echo $isSentMessage ? '&op=inviati' : ''; ?>" method="post">
+                                        <input type="hidden" name="reply_dest" value="<?php echo $isSentMessage ? $row['destinatario'] : $row['mittente']; ?>" />
+                                        <input type="hidden" name="reply_subject" value="Re: <?php echo $row['oggetto']; ?>" />
+                                        <input type="hidden" name="reply_tipo" value="<?php echo $row['tipo']; ?>" />
+                                        <input type="hidden" name="op" value="reply" />
+                                        <input type="image" src="imgs/icons/reply.png" value="submit" alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']); ?>"
+                                               title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']); ?>" />
+                                    </form>
+                                </div>
+                                <div class="controllo_elenco">
+                                    <!-- reply -->
+                                    <form action="main.php?page=messages_center<?php echo $isSentMessage ? '&op=inviati' : ''; ?>" method="post">
                                         <input type="hidden" name="id_messaggio" value="<?php echo $row['id']; ?>" />
                                         <input type="hidden" name="type" value="<?php echo $delType; ?>" />
                                         <input type="hidden" name="op" value="erase" />
@@ -190,7 +188,7 @@ $totaleresults = gdrcd_query(gdrcd_query($sqlMessages, 'result'), 'num_rows');
                     <?php
 
                     // Salvo l'id dell'ultimo messaggio ricevuto per consentire le notifiche in caso di nuovi messaggi
-                    if($_GET['op'] != 'inviati') {
+                    if(!$isSentMessage) {
                         // Se non ho ancora stabilito un ultimo id o quello che sto scrivendo ha un id più alto rispetto a quello già salvato, allora lo salvo
                         if(!isset($lastMessageReceived) || $row['id'] > $lastMessageReceived) {
                             $lastMessageReceived = $row['id'];
@@ -212,13 +210,13 @@ $totaleresults = gdrcd_query(gdrcd_query($sqlMessages, 'result'), 'num_rows');
             </table>
             <div class="pulsanti_elenco">
                 <!-- //Pulsante elimina messaggi selezionati-->
-                <form id="multiple_delete" method="post" action="main.php?page=messages_center" onSubmit="return checkedDelete();">
+                <form id="multiple_delete" method="post" action="main.php?page=messages_center<?php echo $isSentMessage ? '&op=inviati' : ''; ?>" onSubmit="return checkedDelete();">
                     <input type="hidden" name="op" value="erase_checked" />
                     <input type="hidden" name="type" value="<?php echo $delType; ?>" />
                     <input type="submit" value="Cancella Messaggi Selezionati">
                 </form>
                 <!-- //Pulsante elimina messaggi letti-->
-                <form id="viewed_delete" action="main.php?page=messages_center'.($_GET['op'] == 'inviati' ? '&op=inviati' : '').'" method="post">
+                <form id="viewed_delete" action="main.php?page=messages_center<?php echo $isSentMessage ? '&op=inviati' : ''; ?>" method="post">
                     <div class="form_submit">
                         <input type="hidden" name="op" value="eraseall" />
                         <input type="hidden" name="type" value="<?php echo $delType; ?>" />
