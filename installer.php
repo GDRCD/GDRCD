@@ -318,6 +318,10 @@ require 'header.inc.php'; /*Header comune*/
 
 
         gdrcd_query("INSERT INTO oggetto VALUES (1, 6, 'Scopa', 'Super', '2009-12-20 14:29:33', 'Una comune scopa di saggina.', 0, 10, 0, 0, '0', 0, 0, 0, 0, 0, 0, 'standard_oggetto.png');");
+        gdrcd_query("INSERT INTO oggetto VALUES (1, 6, 'Scopa', 'Super2', '2009-12-20 14:29:33', 'Una comune scopa di saggina.', 0, 10, 0, 0, '0', 0, 0, 0, 0, 0, 0, 'standard_oggetto.png');");
+        gdrcd_query("INSERT INTO oggetto VALUES (1, 6, 'Scopa', 'Super3', '2009-12-20 14:29:33', 'Una comune scopa di saggina.', 0, 10, 0, 0, '0', 0, 0, 0, 0, 0, 0, 'standard_oggetto.png');");
+        gdrcd_query("INSERT INTO oggetto VALUES (1, 6, 'Scopa', 'Super4', '2009-12-20 14:29:33', 'Una comune scopa di saggina.', 0, 10, 0, 0, '0', 0, 0, 0, 0, 0, 0, 'standard_oggetto.png');");
+        gdrcd_query("INSERT INTO oggetto VALUES (1, 6, 'Scopa', 'Super5', '2009-12-20 14:29:33', 'Una comune scopa di saggina.', 0, 10, 0, 0, '0', 0, 0, 0, 0, 0, 0, 'standard_oggetto.png');");
 
         gdrcd_query("CREATE TABLE personaggio (
             nome varchar(20) NOT NULL default '',
@@ -370,6 +374,10 @@ require 'header.inc.php'; /*Header comune*/
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
         gdrcd_query("INSERT INTO personaggio VALUES ('Super', 'User', '" . gdrcd_encript('super') . "', NULL, now(), '".gdrcd_encript('super@gdrcd.test')."', 4, 1, -1, '2009-07-01', '2009-07-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', 0, 1000, 7, 8, 6, 5, 6, 5, 100, 100, '2009-07-01 00:00:00', 300, 50000, '2009-07-01', '127.0.0.1', 0, '2009-07-01 00:00:00', '2009-07-01 00:00:00', '2009-07-01 00:00:00', 1, 0);");
+        gdrcd_query("INSERT INTO personaggio VALUES ('Super2', 'User', '" . gdrcd_encript('super') . "', NULL, now(), '".gdrcd_encript('super2@gdrcd.test')."', 4, 1, -1, '2009-07-01', '2009-07-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', 0, 1000, 7, 8, 6, 5, 6, 5, 100, 100, '2009-07-01 00:00:00', 300, 50000, '2009-07-01', '127.0.0.1', 0, '2009-07-01 00:00:00', '2009-07-01 00:00:00', '2009-07-01 00:00:00', 1, 0);");
+        gdrcd_query("INSERT INTO personaggio VALUES ('Super3', 'User', '" . gdrcd_encript('super') . "', NULL, now(), '".gdrcd_encript('supe3r@gdrcd.test')."', 4, 1, -1, '2009-07-01', '2009-07-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', 0, 1000, 7, 8, 6, 5, 6, 5, 100, 100, '2009-07-01 00:00:00', 300, 50000, '2009-07-01', '127.0.0.1', 0, '2009-07-01 00:00:00', '2009-07-01 00:00:00', '2009-07-01 00:00:00', 1, 0);");
+        gdrcd_query("INSERT INTO personaggio VALUES ('Super4', 'User', '" . gdrcd_encript('super') . "', NULL, now(), '".gdrcd_encript('supe4r@gdrcd.test')."', 4, 1, -1, '2009-07-01', '2009-07-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', 0, 1000, 7, 8, 6, 5, 6, 5, 100, 100, '2009-07-01 00:00:00', 300, 50000, '2009-07-01', '127.0.0.1', 0, '2009-07-01 00:00:00', '2009-07-01 00:00:00', '2009-07-01 00:00:00', 1, 0);");
+        gdrcd_query("INSERT INTO personaggio VALUES ('Super5', 'User', '" . gdrcd_encript('super') . "', NULL, now(), '".gdrcd_encript('super5@gdrcd.test')."', 4, 1, -1, '2009-07-01', '2009-07-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', 0, 1000, 7, 8, 6, 5, 6, 5, 100, 100, '2009-07-01 00:00:00', 300, 50000, '2009-07-01', '127.0.0.1', 0, '2009-07-01 00:00:00', '2009-07-01 00:00:00', '2009-07-01 00:00:00', 1, 0);");
 
         gdrcd_query("INSERT INTO personaggio VALUES ('Test', 'Di Funzionalià', '" . gdrcd_encript('test') . "', NULL, now(), '".gdrcd_encript('test@gdrcd.test')."', 0, 1, -1, '2009-07-01', '2009-07-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', 0, 1000, 7, 8, 6, 5, 6, 5, 100, 100, '2009-07-01 00:00:00', 50, 50, '2009-07-01', '127.0.0.1', 0, '2009-07-01 00:00:00', '2009-07-01 00:00:00', '2009-07-01 00:00:00', 1, 0);");
 
