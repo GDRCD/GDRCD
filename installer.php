@@ -318,10 +318,6 @@ require 'header.inc.php'; /*Header comune*/
 
 
         gdrcd_query("INSERT INTO oggetto VALUES (1, 6, 'Scopa', 'Super', '2009-12-20 14:29:33', 'Una comune scopa di saggina.', 0, 10, 0, 0, '0', 0, 0, 0, 0, 0, 0, 'standard_oggetto.png');");
-        gdrcd_query("INSERT INTO oggetto VALUES (1, 6, 'Scopa', 'Super2', '2009-12-20 14:29:33', 'Una comune scopa di saggina.', 0, 10, 0, 0, '0', 0, 0, 0, 0, 0, 0, 'standard_oggetto.png');");
-        gdrcd_query("INSERT INTO oggetto VALUES (1, 6, 'Scopa', 'Super3', '2009-12-20 14:29:33', 'Una comune scopa di saggina.', 0, 10, 0, 0, '0', 0, 0, 0, 0, 0, 0, 'standard_oggetto.png');");
-        gdrcd_query("INSERT INTO oggetto VALUES (1, 6, 'Scopa', 'Super4', '2009-12-20 14:29:33', 'Una comune scopa di saggina.', 0, 10, 0, 0, '0', 0, 0, 0, 0, 0, 0, 'standard_oggetto.png');");
-        gdrcd_query("INSERT INTO oggetto VALUES (1, 6, 'Scopa', 'Super5', '2009-12-20 14:29:33', 'Una comune scopa di saggina.', 0, 10, 0, 0, '0', 0, 0, 0, 0, 0, 0, 'standard_oggetto.png');");
 
         gdrcd_query("CREATE TABLE personaggio (
             nome varchar(20) NOT NULL default '',
