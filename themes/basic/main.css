@@ -368,7 +368,8 @@ div.capitolo_elenco {
 }
 
 /*Aspetto dei titoli di colonna*/
-div.titoli_elenco {
+div.titoli_elenco,
+span.titoli_elenco {
     font-weight: bold;
     font-size: 12px;
     font-style: italic;
@@ -810,3 +811,75 @@ span.error_details {
 }
 
 /****************************************************************************/
+
+/**** GESTIONE ****/
+.gestione_pagina .gestione_incipit{
+    background: grey;
+    padding: 10px;
+    color:black;
+    border:1px solid black;
+    width: 80%;
+    margin:5px auto;
+    font-size: 13px;
+}
+
+.gestione_pagina .gestione_incipit .title{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.gestione_pagina .gestione_incipit .subtitle_gst{
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.gestione_pagina .gestione_incipit .highlight{
+    font-weight: bold;
+    color: rgb(177, 71, 71);
+}
+
+.gestione_pagina .gestione_incipit ul{
+    width: 80%;
+    margin:0 auto;
+}
+
+.gestione_pagina .gestione_incipit ul li{
+    padding: 5px 0;
+    text-align: left;
+}
+
+.gestione_pagina .gestione_form_container{
+    width: 90%;
+    margin: 5px auto;
+}
+
+.gestione_pagina .gestione_form_container .gestione_form{
+    width: 100%;
+}
+
+.gestione_pagina .gestione_form_container .gestione_form_title{
+    font-size: 15px;
+    font-weight: bold;
+    border: solid black;
+    border-width: 1px 0;
+    margin: 10px 0;
+    padding: 5px 0;
+    clear: both;
+}
+
+
+.gestione_pagina .gestione_form .single_input{
+    width: 100%;
+    margin: 5px;
+}
+
+.gestione_pagina .gestione_form .single_input .label{
+    font-size: 13px;
+    font-weight: bold;
+}
+.gestione_pagina .gestione_form .single_input input,
+.gestione_pagina .gestione_form .single_input textarea,
+.gestione_pagina .gestione_form .single_input select{
+    margin: 0 !important;
+    max-width: 500px;
+}
