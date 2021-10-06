@@ -31,10 +31,10 @@ if ($_POST['action'] == "searchPersonaggio") {
 
             // Costruisco le intestazioni
             $trs[] = '<tr>
-                        <td class="casella_titolo"><div class="capitolo_elenco">Avatar Chat</div></td>
-                        <td class="casella_titolo"><div class="capitolo_elenco">Personaggio</div></td>
-                        <td class="casella_titolo"><div class="capitolo_elenco">Genere</div></td>
-                        <td class="casella_titolo"><div class="capitolo_elenco">Razza</div></td>
+                        <td class="casella_titolo"><div class="capitolo_elenco">'.$MESSAGE['interface']['pg_list']['search']['img'].'</div></td>
+                        <td class="casella_titolo"><div class="capitolo_elenco">'.$MESSAGE['interface']['pg_list']['search']['personaggio'].'</div></td>
+                        <td class="casella_titolo"><div class="capitolo_elenco">'.$MESSAGE['interface']['pg_list']['search']['sesso'].'</div></td>
+                        <td class="casella_titolo"><div class="capitolo_elenco">'.$MESSAGE['interface']['pg_list']['search']['razza'].'</div></td>
                      </tr>';
 
             // Scorro i risultati
@@ -117,13 +117,13 @@ foreach ($genders as $gender) {
 
         <!-- NOME -->
         <div class="single_input">
-            <div class="label">Nome</div>
+            <div class="label"><?=$MESSAGE['interface']['pg_list']['search']['personaggio'];?></div>
             <input type="text" name="nome" value="<?=gdrcd_filter('out', $_REQUEST['nome']);?>" />
         </div>
 
             <!-- GENERE -->
             <div class="single_input">
-                <div class="label">Genere</div>
+                <div class="label"><?=$MESSAGE['interface']['pg_list']['search']['sesso'];?></div>
                 <select name="genere">
                     <option value=""></option>
                     <?php echo implode('', $optionsGenders); ?>
@@ -132,7 +132,7 @@ foreach ($genders as $gender) {
 
             <!-- RAZZA -->
             <div class="single_input">
-                <div class="label">Razza</div>
+                <div class="label"><?=$MESSAGE['interface']['pg_list']['search']['razza'];?></div>
                 <select name="razza">
                     <option value=""></option>
                     <?php echo implode('', $optionsRazze); ?>
