@@ -346,12 +346,7 @@ $MESSAGE['interface']['hotel']['back'] = 'Indietro';
 $MESSAGE['interface']['hotel']['ok'] = 'Prenotazione completata';
 /*Anagrafe*/
 $MESSAGE['interface']['pg_list']['pg_list'] = 'Anagrafe';
-$MESSAGE['interface']['pg_list']['search']['title'] = 'Ricerca Personaggio';
-$MESSAGE['interface']['pg_list']['search']['img'] = 'Avatar Chat';
-$MESSAGE['interface']['pg_list']['search']['personaggio'] = 'Personaggio';
-$MESSAGE['interface']['pg_list']['search']['sesso'] = 'Sesso';
-$MESSAGE['interface']['pg_list']['search']['razza'] = 'Razza';
-$MESSAGE['interface']['pg_list']['search']['submit'] = 'Cerca';
+$MESSAGE['interface']['pg_list']['select'] = 'Visualizza il personaggio';
 /*Elenco abilita*/
 $MESSAGE['interface']['skills']['page_name'] = 'Elenco abilità';
 $MESSAGE['interface']['skills']['skill'] = 'Abilità';
@@ -608,12 +603,12 @@ $MESSAGE['interface']['administration']['log']['messages']['text'] = 'Testo';
 $MESSAGE['interface']['administration']['log']['chat']['page_name'] = 'Log chat';
 $MESSAGE['interface']['administration']['log']['chat']['log_by_user'] = 'Log chat utente';
 $MESSAGE['interface']['administration']['log']['chat']['log_by_room'] = 'Log chat luogo';
-$MESSAGE['interface']['administration']['log']['chat']['begin'] = 'Ora inizio';
-$MESSAGE['interface']['administration']['log']['chat']['end'] = 'Ora fine';
+$MESSAGE['interface']['administration']['log']['chat']['begin'] = 'Data inizio';
+$MESSAGE['interface']['administration']['log']['chat']['end'] = 'Data fine';
 $MESSAGE['interface']['administration']['log']['chat']['date'] = 'Data';
 $MESSAGE['interface']['administration']['log']['chat']['text'] = 'Testo';
 $MESSAGE['interface']['administration']['log']['chat']['room'] = 'Luogo';
-$MESSAGE['interface']['administration']['log']['chat']['sender'] = 'Luogo';
+$MESSAGE['interface']['administration']['log']['chat']['sender'] = 'Personaggio';
 /********** Pagine del menu' utente *********/
 /*Cambio pass*/
 $MESSAGE['interface']['user']['pass']['page_name'] = 'Cambio password';
