@@ -199,13 +199,7 @@ $totaleresults = gdrcd_query(gdrcd_query($sqlMessages, 'result'), 'num_rows');
 
                 gdrcd_query($result, 'free');
 
-                // Aggiorno l'ultimo messaggio visualizzato
-                if(isset($lastMessageReceived)){
-                    // Salvo l'ID nella sessione
-                    $_SESSION['last_istant_message'] = $lastMessageReceived;
-                    // Salvo l'ID nella riga del personaggio
-                    gdrcd_query("UPDATE personaggio SET ultimo_messaggio = ".$lastMessageReceived." WHERE nome='".$_SESSION['login']."'");
-                }
+
                 ?>
             </table>
             <div class="pulsanti_elenco">
