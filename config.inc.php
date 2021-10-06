@@ -12,6 +12,26 @@
 
 error_reporting(E_ERROR | E_PARSE);
 
+/** * Se il personaggio è connesso avvio la gestione dei suoi spostamenti nella land
+ * Il controllo va messo qui e non in main poichè in main risulterebbe trovarsi dopo l'inclusione del config
+ * dando vita ad un bug sul tastino di aggiornamento della pagina corrente.
+ * @author Blancks
+ */
+
+if( ! empty($_SESSION['login'])) {
+    /** * Aggiornamento della posizione nella mappa del pg
+     * @author Blancks
+     */
+    if(isset($_REQUEST['map_id']) && is_numeric($_REQUEST['map_id'])) {
+        $_SESSION['luogo'] = -1;
+        $_SESSION['mappa'] = $_REQUEST['map_id'];
+    }
+
+    if(isset($_REQUEST['dir']) && is_numeric($_REQUEST['dir'])) {
+        $_SESSION['luogo'] = $_REQUEST['dir'];
+    }
+}
+
 /* PARAMETRI DI CONNESSIONE */
 $PARAMETERS['database']['username'] = 'gdrcd';            //nome utente del database
 $PARAMETERS['database']['password'] = 'gdrcd';            //password del database
