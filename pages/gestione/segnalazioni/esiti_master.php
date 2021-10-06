@@ -8,7 +8,7 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
     <div class="form_info">
         <? echo $MESSAGE['interface']['esiti']['gm_page']; ?>
     </div>
-    <a class="but_newd" href='main.php?page=gestione_segnalazioni&segn=newesito&op=first' target="_blank">
+    <a class="but_newd" href='main.php?page=gestione_segnalazioni&segn=esito_index&op=first' target="_blank">
        Apri una nuova serie di esiti
     </a>
 
@@ -36,11 +36,6 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
             <div class="titolo_box">
                 <h2 style="margin-top:3px;">
                     <b><? echo $tit;?> - <? echo $pg;?></b>
-                    <a class="link_new"
-                       href='main.php?page=gestione_segnalazioni&segn=newesito&op=edit&id=<? echo gdrcd_filter('num',$blocco['id']);?>'
-                       target="_blank">
-                        Modifica serie di esiti
-                    </a>
                 </h2>
             </div>
 
@@ -50,7 +45,12 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
             <? if ($tit['closed']==0) { ?>
                 <div class="titolo_box">
                     <a class="link_new"
-                       href='main.php?page=gestione_segnalazioni&segn=newesito&op=new&blocco=<? echo gdrcd_filter('num',$blocco['id']);?>'
+                       href='main.php?page=gestione_segnalazioni&segn=esito_index&op=edit&id=<? echo gdrcd_filter('num',$blocco['id']);?>'
+                       target="_blank">
+                        Modifica
+                    </a> |
+                    <a class="link_new"
+                       href='main.php?page=gestione_segnalazioni&segn=esito_index&op=new&blocco=<? echo gdrcd_filter('num',$blocco['id']);?>'
                             target="_blank">
                             Invia un nuovo esito
                     </a>
@@ -58,7 +58,7 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
                     if (ESITI_CHAT){
                     ?>
                         | <a class="link_new"
-                             href='main.php?page=gestione_segnalazioni&segn=newesito&op=newchat&blocco=<? echo gdrcd_filter('num',$blocco['id']);?>'
+                             href='main.php?page=gestione_segnalazioni&segn=esito_index&op=newchat&blocco=<? echo gdrcd_filter('num',$blocco['id']);?>'
                              target="_blank">
                             Invia un esito in chat
                         </a>
@@ -73,16 +73,18 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
                      '.gdrcd_format_time($row['data']);?>
                 </div>
 
-                <div class="fate_cont">
+                <div class="fate_title">
                     Titolo: <b><? echo $row['titolo'];?></b>
                     <? if ($row['chat']>0) { echo '- <b><u>Esito in chat</u></b>
                          (Chat: '.$chat['nome'].' | Skill: '.gdrcd_filter('out',$abilita['nome']).')';
                     }?>
                     <br>
-                    <? if ($row['dice_face']>0 && $row['dice_num']>0) { ?>
-                        Risultati tiri: <? echo $row['dice_results'] ?>;
-                    <? }
-                    if ($row['chat']>0) {
+                    <? if ($row['dice_face']>0 && $row['dice_num']>0 && TIRI_ESITO) { ?>
+                    Risultato tiro di <? echo $row['dice_num'].'d'.$row['dice_face'];?>: <b><? echo $row['dice_results'] ?></b>
+                    <? } ?>
+                </div>
+                <div class="fate_cont">
+                <? if ($row['chat']>0) {
                         echo 'Esito per il Fallimento critico: '.$row['CD_1'].'<br> 
                         Esito per il Fallimento: '.$row['CD_2'].'<br> Esito per il Successo: '.$row['CD_3'].'<br>
                         Esito per il Successo critico: '.$row['CD_4'];
@@ -93,7 +95,10 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
                 <b>Note OFF:</b> <? echo $row['noteoff'];?>
             <? } # Singolo esito ?>
         </div><br>
-
+         <!-- Link a piè di pagina -->
+         <div class="link_back">
+             <a href="main.php?page=gestione_segnalazioni&segn=esiti_master">Torna alla lista</a>
+         </div>
     <? }
     else if (isset($_POST['op'])===FALSE) {
     //Determinazione pagina (paginazione)
@@ -128,7 +133,7 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
                 for ($i = 0; $i <= floor($totaleresults / $PARAMETERS['settings']['posts_per_page']); $i++) {
                     if ($i != $_REQUEST['offset']) {
                         ?>
-                        <a href="main.php?page=esiti&offset=<?php echo $i; ?>"><?php echo $i + 1; ?></a>
+                        <a href="main.php?page=gestione_segnalazioni&segn=esiti_master&offset=<?php echo $i; ?>"><?php echo $i + 1; ?></a>
                         <?php
                     } else {
                         echo ' ' . ($i + 1) . ' ';
@@ -180,17 +185,17 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
 
                     <tr>
                         <td class="casella_titolo">
-                            <div class="elementi_elencoroles">
+                            <div class="elementi_elenco">
                                 <?php echo gdrcd_filter('out', gdrcd_format_date($rec['data'])); ?>
                             </div>
                         </td>
                         <td class="casella_titolo">
-                            <div class="elementi_elencoroles">
+                            <div class="elementi_elenco">
                                 <?php echo gdrcd_filter('out', $rec['pg']); ?>
                             </div>
                         </td>
                         <td class="casella_titolo">
-                            <div class="elementi_elencoroles">
+                            <div class="elementi_elenco">
                                 <?php if ($rec['master'] == '0') {
                                     echo '<u>In attesa di risposta</u>';
                                 } else {
@@ -199,12 +204,12 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
                             </div>
                         </td>
                         <td class="casella_titolo">
-                            <div class="elementi_elencoroles">
+                            <div class="elementi_elenco">
                                 <?php echo gdrcd_filter('out', $rec['titolo']); ?>
                             </div>
                         </td>
                         <td class="casella_titolo">
-                            <div class="elementi_elencoroles">
+                            <div class="elementi_elenco">
                                 <?php echo gdrcd_filter('num', $num);
                                 if ($new > 0) {
                                     echo ' - Nuovo messaggio';
@@ -212,8 +217,8 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
                                 ?>
                             </div>
                         </td>
-                        <td style="width: 100px;">
-                            <form action="main.php?page=esiti" method="post">
+                        <td>
+                            <form action="main.php?page=gestione_segnalazioni&segn=esiti_master" method="post">
                                 <input type="hidden"
                                        name="op"
                                        value="list"/>
