@@ -13,9 +13,9 @@
 error_reporting(E_ERROR | E_PARSE);
 
 /* PARAMETRI DI CONNESSIONE */
-$PARAMETERS['database']['username'] = 'provabea';            //nome utente del database
-$PARAMETERS['database']['password'] = '65NCyZVfYcRF';            //password del database
-$PARAMETERS['database']['database_name'] = 'my_provabea';    //nome del database
+$PARAMETERS['database']['username'] = 'gdrcd';            //nome utente del database
+$PARAMETERS['database']['password'] = 'gdrcd';            //password del database
+$PARAMETERS['database']['database_name'] = 'my_gdrcd';    //nome del database
 $PARAMETERS['database']['url'] = 'localhost';        //indirizzo ip del database
 
 
