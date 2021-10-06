@@ -8,7 +8,7 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
     <div class="form_info">
         <? echo $MESSAGE['interface']['esiti']['gm_page']; ?>
     </div>
-    <a class="but_newd" href='main.php?page=gestione_segnalazioni&segn=newesito&op=first' target="_blank">
+    <a class="but_newd" href='main.php?page=gestione_segnalazioni&segn=esito_index&op=first' target="_blank">
        Apri una nuova serie di esiti
     </a>
 
