@@ -29,7 +29,7 @@ include_once('../header.inc.php');
             case 'attach': //Form di composizione di un messaggio
             case 'send':
             case 'reply':
-                include('messages/create.inc.php');
+                include('messages/reply.inc.php');
                 break;
             default:
                 break;

@@ -149,6 +149,8 @@ CREATE TABLE IF NOT EXISTS `backmessaggi` (
   `destinatario` varchar(20) NOT NULL DEFAULT '',
   `spedito` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `letto` tinyint(1) DEFAULT '0',
+  `tipo` int(2) NOT NULL default '0',
+  `oggetto` text NULL DEFAULT NULL,
   `testo` text,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -427,10 +429,12 @@ CREATE TABLE IF NOT EXISTS `messaggi` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `mittente` varchar(40) NOT NULL,
   `destinatario` varchar(20) NOT NULL DEFAULT 'Nessuno',
-  `spedito` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `spedito` datetime NOT NULL,
   `letto` tinyint(1) DEFAULT '0',
   `mittente_del` tinyint(1) DEFAULT '0',
   `destinatario_del` tinyint(1) DEFAULT '0',
+  `tipo` int(2) NOT NULL default '0',
+  `oggetto` text NULL DEFAULT NULL,
   `testo` text,
   PRIMARY KEY (`id`),
   KEY `destinatario` (`destinatario`),
@@ -546,7 +550,6 @@ CREATE TABLE IF NOT EXISTS `personaggio` (
   `ora_entrata` datetime NOT NULL default '2009-07-01 00:00:00',
   `ora_uscita` datetime NOT NULL default CURRENT_TIMESTAMP,
   `posizione` int NOT NULL DEFAULT '1',
-  `ultimo_messaggio` bigint NOT NULL DEFAULT '0',
   PRIMARY KEY (`nome`),
   KEY `IDRazza` (`id_razza`),
   KEY `Esilio` (`esilio`)

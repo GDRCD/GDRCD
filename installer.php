@@ -90,8 +90,10 @@ require 'header.inc.php'; /*Header comune*/
             id bigint(20) NOT NULL auto_increment,
             mittente varchar(20) NOT NULL default '',
             destinatario varchar(20) NOT NULL default '',
-            spedito datetime NOT NULL default '0000-00-00 00:00:00',
+            spedito datetime NOT NULL,
             letto tinyint(1) default '0',
+            tipo int(2) NOT NULL default '0',
+            oggetto text NULL DEFAULT NULL,
             testo text,
             PRIMARY KEY  (id)
         ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");
@@ -265,10 +267,12 @@ require 'header.inc.php'; /*Header comune*/
             id bigint(20) NOT NULL auto_increment,
             mittente varchar(40) NOT NULL,
             destinatario varchar(20) NOT NULL default 'Nessuno',
-            spedito datetime NOT NULL default '0000-00-00 00:00:00',
+            spedito datetime NOT NULL,
             letto tinyint(1) default '0',
             mittente_del tinyint(1) default '0',
             destinatario_del tinyint(1) default '0',
+            tipo int(2) NOT NULL default '0',
+            oggetto text NULL DEFAULT NULL,
             testo text,
             PRIMARY KEY  (id),
             KEY destinatario (destinatario),
@@ -363,7 +367,6 @@ require 'header.inc.php'; /*Header comune*/
             ora_entrata datetime default NULL,
             ora_uscita datetime NOT NULL default '2009-07-01 00:00:00',
             posizione int(4) NOT NULL default '1',
-            ultimo_messaggio bigint(20) NOT NULL default '0',
             PRIMARY KEY  (nome),
             KEY IDRazza (id_razza),
             KEY Esilio (esilio)
