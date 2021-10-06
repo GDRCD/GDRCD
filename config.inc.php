@@ -15,7 +15,7 @@ error_reporting(E_ERROR | E_PARSE);
 /* PARAMETRI DI CONNESSIONE */
 $PARAMETERS['database']['username'] = 'gdrcd';            //nome utente del database
 $PARAMETERS['database']['password'] = 'gdrcd';            //password del database
-$PARAMETERS['database']['database_name'] = 'gdrcd';    //nome del database
+$PARAMETERS['database']['database_name'] = 'my_gdrcd';    //nome del database
 $PARAMETERS['database']['url'] = 'localhost';        //indirizzo ip del database
 
 
@@ -700,6 +700,12 @@ if ($PARAMETERS['mode']['spymessages'] == 'ON')
     $PARAMETERS['administration']['log_messaggi']['text'] = 'Log messaggi';
     $PARAMETERS['administration']['log_messaggi']['url'] = 'main.php?page=log_messaggi';
     $PARAMETERS['administration']['log_messaggi']['access_level'] = MODERATOR;
+}
+if (REG_ROLE && SEND_GM)
+{
+    $PARAMETERS['administration']['send_GM']['text'] = 'Giocate segnalate';
+    $PARAMETERS['administration']['send_GM']['url'] = 'main.php?page=gestione_segnalazioni&segn=roles_gm';
+    $PARAMETERS['administration']['send_GM']['access_level'] = ROLE_PERM;
 }
 $PARAMETERS['administration']['skills']['text'] = 'Gestione abilità';
 $PARAMETERS['administration']['skills']['url'] = 'main.php?page=gestione_abilita';
