@@ -87,7 +87,7 @@ $info = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprieta
                                     | <a href="javascript:parent.modalWindow('rolesreg', '', 'popup.php?page=chat_pannelli_index&pannello=segnalazione_role');">
                                        Registra giocata
                                     </a>
-                                <?  } ?>
+                                <?php  } ?>
                             </div>
                             <div class="casella_chat">
                                 <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>" />
