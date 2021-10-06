@@ -113,7 +113,7 @@ foreach ($genders as $gender) {
 
         <div class="servizi_form_title"><?= gdrcd_filter('out', $MESSAGE['interface']['pg_list']['search']['title']); ?></div>
 
-        <form method="POST" id="FiltriAnagrafeForm" class="servizi_form" action="main.php?page=servizi_anagrafe">
+        <form method="POST" id="FiltriAnagrafeForm" class="servizi_form" action="main.php?page=servizi_anagrafe_index">
 
         <!-- NOME -->
         <div class="single_input">
