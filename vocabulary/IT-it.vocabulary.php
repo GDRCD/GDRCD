@@ -233,7 +233,6 @@ $MESSAGE['interface']['messages']['all_erased'] = ' eliminati';
 $MESSAGE['interface']['messages']['no_message'] = 'Nessun ' . strtolower($PARAMETERS['names']['private_message']['sing']);
 $MESSAGE['interface']['messages']['please_erase'] = 'Si prega di ridurre il numero di ' . strtolower($PARAMETERS['names']['private_message']['plur']) . ' nella casella';
 $MESSAGE['interface']['messages']['go_back'] = 'Torna all\'elenco dei ' . strtolower($PARAMETERS['names']['private_message']['plur']) . '.';
-
 /* Forum */
 $MESSAGE['interface']['forums']['topic']['new_posts']['sing'] = 'Nuovo Messaggio';
 $MESSAGE['interface']['forums']['topic']['new_posts']['plur'] = 'Nuovi Messaggi';
