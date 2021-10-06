@@ -49,18 +49,18 @@ if ($_POST['action'] == "searchPersonaggio") {
                 $tds[] = '<td class="casella_elemento">
                             <div class="elementi_elenco">
                                 <a href="main.php?page=scheda&pg=' . gdrcd_filter('out', $rowSearch['nome']) . '">' .
-                    gdrcd_filter('out', $rowSearch['nome']) . ' ' . gdrcd_filter('out', $rowSearch['cognome']) . '
+                                    gdrcd_filter('out', $rowSearch['nome']) . ' ' . gdrcd_filter('out', $rowSearch['cognome']) . '
                                 </a>
                             </div>                        
                          </td>';
                 $tds[] = '<td class="casella_elemento">
                             <div class="elementi_elenco">' .
-                    gdrcd_filter('out', $MESSAGE['register']['fields']['gender_' . $rowSearch['sesso']]) . '
+                                gdrcd_filter('out', $MESSAGE['register']['fields']['gender_' . $rowSearch['sesso']]) . '
                             </div>
                          </td>';
                 $tds[] = '<td class="casella_elemento">
                             <div class="elementi_elenco">' .
-                    gdrcd_filter('out', $rowSearch['nome_razza']) . '
+                                gdrcd_filter('out', $rowSearch['nome_razza']) . '
                             </div>                     
                          </td>';
 
@@ -113,7 +113,7 @@ foreach ($genders as $gender) {
 
         <div class="servizi_form_title"><?= gdrcd_filter('out', $MESSAGE['interface']['pg_list']['search']['title']); ?></div>
 
-        <form method="POST" id="FiltriAnagrafeForm" class="servizi_form" action="main.php?page=servizi_anagrafe_index">
+        <form method="POST" id="FiltriAnagrafeForm" class="servizi_form" action="main.php?page=servizi_anagrafe">
 
         <!-- NOME -->
         <div class="single_input">

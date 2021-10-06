@@ -654,7 +654,7 @@ $PARAMETERS['menu']['quit']['image_file_onclick'] = '';
 $PARAMETERS['office_page_name'] = 'Servizi';
 $PARAMETERS['office']['image_file'] = '';
 $PARAMETERS['office']['pg_list']['text'] = 'Anagrafe';
-$PARAMETERS['office']['pg_list']['url'] = 'main.php?page=servizi_anagrafe_index';
+$PARAMETERS['office']['pg_list']['url'] = 'main.php?page=servizi_anagrafe';
 $PARAMETERS['office']['pg_list']['access_level'] = USER;
 $PARAMETERS['office']['guilds_adm']['text'] = "Amministrazione " . strtolower($PARAMETERS['names']['guild_name']['sing']);
 $PARAMETERS['office']['guilds_adm']['url'] = 'main.php?page=servizi_adm_gilde';
