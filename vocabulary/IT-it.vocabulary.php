@@ -290,7 +290,7 @@ $MESSAGE['interface']['esitiserie']['intro'] = "Messaggio che spiega come funzio
 $MESSAGE['interface']['esitiserie']['intro_pg'] = "Messaggio che spiega come funzionano le serie di esiti lato pg";
 $MESSAGE['interface']['esiti']['newesito'] = "Messaggio che spiega come funziona l'invio di nuovi esiti lato master";
 $MESSAGE['interface']['esiti']['newesitopg'] = "Messaggio che spiega come funziona l'invio di nuovi esiti lato pg";
-$MESSAGE['interface']['esiti']['esitochat'] = = "Messaggio che spiega come funziona l'invio di nuovi esiti in chat lato master";
+$MESSAGE['interface']['esiti']['esitochat'] = "Messaggio che spiega come funziona l'invio di nuovi esiti in chat lato master";
 
 
 /*Lavoro*/
