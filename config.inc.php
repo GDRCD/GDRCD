@@ -12,10 +12,30 @@
 
 error_reporting(E_ERROR | E_PARSE);
 
+/** * Se il personaggio è connesso avvio la gestione dei suoi spostamenti nella land
+ * Il controllo va messo qui e non in main poichè in main risulterebbe trovarsi dopo l'inclusione del config
+ * dando vita ad un bug sul tastino di aggiornamento della pagina corrente.
+ * @author Blancks
+ */
+
+if( ! empty($_SESSION['login'])) {
+    /** * Aggiornamento della posizione nella mappa del pg
+     * @author Blancks
+     */
+    if(isset($_REQUEST['map_id']) && is_numeric($_REQUEST['map_id'])) {
+        $_SESSION['luogo'] = -1;
+        $_SESSION['mappa'] = $_REQUEST['map_id'];
+    }
+
+    if(isset($_REQUEST['dir']) && is_numeric($_REQUEST['dir'])) {
+        $_SESSION['luogo'] = $_REQUEST['dir'];
+    }
+}
+
 /* PARAMETRI DI CONNESSIONE */
 $PARAMETERS['database']['username'] = 'gdrcd';            //nome utente del database
 $PARAMETERS['database']['password'] = 'gdrcd';            //password del database
-$PARAMETERS['database']['database_name'] = 'gdrcd';    //nome del database
+$PARAMETERS['database']['database_name'] = 'my_gdrcd';    //nome del database
 $PARAMETERS['database']['url'] = 'localhost';        //indirizzo ip del database
 
 
@@ -634,7 +654,7 @@ $PARAMETERS['menu']['quit']['image_file_onclick'] = '';
 $PARAMETERS['office_page_name'] = 'Servizi';
 $PARAMETERS['office']['image_file'] = '';
 $PARAMETERS['office']['pg_list']['text'] = 'Anagrafe';
-$PARAMETERS['office']['pg_list']['url'] = 'main.php?page=servizi_anagrafe';
+$PARAMETERS['office']['pg_list']['url'] = 'main.php?page=servizi_anagrafe_index';
 $PARAMETERS['office']['pg_list']['access_level'] = USER;
 $PARAMETERS['office']['guilds_adm']['text'] = "Amministrazione " . strtolower($PARAMETERS['names']['guild_name']['sing']);
 $PARAMETERS['office']['guilds_adm']['url'] = 'main.php?page=servizi_adm_gilde';
@@ -713,6 +733,7 @@ if (REG_ROLE && SEND_GM)
     $PARAMETERS['administration']['send_GM']['url'] = 'main.php?page=gestione_segnalazioni&segn=roles_gm';
     $PARAMETERS['administration']['send_GM']['access_level'] = ROLE_PERM;
 }
+
 if (ESITI)
 {
     $PARAMETERS['administration']['esiti']['text'] = 'Pannello esiti Master';
