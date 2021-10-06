@@ -509,6 +509,15 @@ function gdrcd_format_datetime($datetime_in)
 }
 
 /**
+ * Funzione di formattazione data completa nel formato standard del database
+ * @param $datetime_in : la data e ora in formato leggibile da strtotime()
+ * @return la data/ora nel formato YYYY-MM-DD hh:mm
+ */
+function gdrcd_format_datetime_standard($datetime_in)
+{
+    return date('Y-m-d H:i', strtotime($datetime_in));
+}
+/**
  * Funzione di formattazione data completa nel formato ita per nome file da catalogare
  * @param string $datetime_in : la data e ora in formato leggibile da strtotime()
  * @return data ora formattata nel formato YYYYMMDD_hhmm
@@ -759,4 +768,3 @@ function gdrcd_brute_debug($args)
     }
     die('FINE');
 }
-

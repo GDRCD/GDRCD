@@ -80,100 +80,23 @@
                                     gdrcd_query($result, 'free');
                                     ?>
                                 </select>
-                            </div>
+                            </div><!-- imposto le date e ora sulla data odierna dalla mezzanotte al momento in cui viene aperto il pannello  -->
                             <div class='form_label'>
                                 <?php echo gdrcd_filter('out',
                                     $MESSAGE['interface']['administration']['log']['chat']['begin']); ?>
                             </div>
                             <div class='form_field'>
-                                <!-- Giorno -->
-                                <select name="day_b" class="day">
-                                    <?php for ($i = 1; $i <= 31; $i++)
-                                    { ?>
-                                        <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
-                                    <?php }//for
-                                    ?>
-                                </select>
-                                <!-- Mese -->
-                                <select name="month_b" class="month">
-                                    <?php for ($i = 1; $i <= 12; $i++)
-                                    { ?>
-                                        <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
-                                    <?php }//for
-                                    ?>
-                                </select>
-                                <!-- Anno -->
-                                <select name="year_b" class="year">
-                                    <?php for ($i = 2010; $i <= strftime('%Y') + 20; $i++)
-                                    { ?>
-                                        <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
-                                    <?php }//for
-                                    ?>
-                                </select> -
-                                <!-- Ora -->
-                                <select name="hour_b" class="month">
-                                    <?php for ($i = 0; $i <= 23; $i++)
-                                    { ?>
-                                        <option value="<?php echo $i; ?>"><?php echo sprintf('%02s', $i); ?></option>
-                                    <?php }//for
-                                    ?>
-                                </select>:
-                                <!-- Minuto -->
-                                <select name="minut_b" class="month">
-                                    <?php for ($i = 0; $i <= 60; $i += 5)
-                                    { ?>
-                                        <option value="<?php echo $i; ?>"><?php echo sprintf('%02s', $i); ?></option>
-                                    <?php }//for
-                                    ?>
-                                </select>
+                              <input type="datetime-local" name="data_a" value="<?php echo date("Y-m-d");?>T00:00">
                             </div>
                             <div class='form_label'>
                                 <?php echo gdrcd_filter('out',
                                     $MESSAGE['interface']['administration']['log']['chat']['end']); ?>
                             </div>
                             <div class='form_field'>
-                                <!-- Giorno -->
-                                <select name="day_e" class="day">
-                                    <?php for ($i = 1; $i <= 31; $i++)
-                                    { ?>
-                                        <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
-                                    <?php }//for
-                                    ?>
-                                </select>
-                                <!-- Mese -->
-                                <select name="month_e" class="month">
-                                    <?php for ($i = 1; $i <= 12; $i++)
-                                    { ?>
-                                        <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
-                                    <?php }//for
-                                    ?>
-                                </select>
-                                <!-- Anno -->
-                                <select name="year_e" class="year">
-                                    <?php for ($i = 2010; $i <= strftime('%Y') + 20; $i++)
-                                    { ?>
-                                        <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
-                                    <?php }//for
-                                    ?>
-                                </select> -
-                                <!-- Ora -->
-                                <select name="hour_e" class="month">
-                                    <?php for ($i = 0; $i <= 23; $i++)
-                                    { ?>
-                                        <option value="<?php echo $i; ?>"><?php echo sprintf('%02s', $i); ?></option>
-                                    <?php }//for
-                                    ?>
-                                </select>:
-                                <!-- Minuto -->
-                                <select name="minut_e" class="month">
-                                    <?php for ($i = 0; $i <= 60; $i += 5)
-                                    { ?>
-                                        <option value="<?php echo $i; ?>"><?php echo sprintf('%02s', $i); ?></option>
-                                    <?php }//for
-                                    ?>
-                                </select>
+                              <input type="datetime-local" name="data_b" value="<?php echo date("Y-m-d");?>T23:59">
                             </div>
-                            <!-- bottoni -->
+                          </div>
+                          <!-- bottoni -->
                             <div class='form_submit'>
                                 <input type="hidden"
                                        value="view_date"
@@ -218,7 +141,7 @@
                                 <td class="casella_titolo">
                                     <div class="titoli_elenco">
                                         <?php echo gdrcd_filter('out',
-                                            $MESSAGE['interface']['administration']['log']['chat']['room']); ?>
+                                            $MESSAGE['interface']['administration']['log']['chat']['sender']); ?>
                                     </div>
                                 </td>
                                 <td class="casella_titolo">
@@ -245,7 +168,7 @@
                                     </td>
                                     <td class="casella_elemento">
                                         <div class="elementi_elenco">
-                                            <?php echo gdrcd_format_date($row['ora']) . ' ' . gdrcd_format_time($row['ora']); ?>
+                                            <?php echo gdrcd_format_datetime($row['ora']); ?>
                                         </div>
                                     </td>
                                     <td class="casella_elemento">
@@ -296,9 +219,8 @@
                 </div>
 
             <?php }//else
-            ?>
 
-            <?php //*Elenco log*/
+             //*Elenco log*/
 
             if (isset($_REQUEST['op']) == 'view_date')
             {
@@ -309,22 +231,13 @@
                 $record_globale = gdrcd_query("SELECT COUNT(*) FROM chat WHERE stanza = '" . gdrcd_filter('get',
                         $_REQUEST['luogo']) . "'");
                 $totaleresults = $record_globale['COUNT(*)'];
+                $data_a=gdrcd_format_datetime_standard($_REQUEST['data_a']);
+                $data_b= gdrcd_format_datetime_standard($_REQUEST['data_b']);
+                $query="SELECT chat.mittente, chat.destinatario, chat.tipo, chat.ora, chat.testo FROM chat WHERE chat.stanza = '" . gdrcd_filter('get',
+                        $_REQUEST['luogo']) . "' AND ora >= '" . $data_a  . "' AND ora <= '" . $data_b . "' ORDER BY ora DESC LIMIT " . $pagebegin . ", " . $pageend;
 
                 //Lettura record
-                $date_b = gdrcd_filter('num', $_REQUEST['year_b']) . '-' . sprintf('%02s',
-                        gdrcd_filter('num', $_REQUEST['month_b'])) . '-' . sprintf('%02s',
-                        gdrcd_filter('num', $_REQUEST['day_b'])) . ' ' . sprintf('%02s',
-                        gdrcd_filter('num', $_REQUEST['hour_b'])) . ':' . sprintf('%02s',
-                        gdrcd_filter('num', $_REQUEST['minut_b'])) . ':00';
-                $date_e = gdrcd_filter('num', $_REQUEST['year_e']) . '-' . sprintf('%02s',
-                        gdrcd_filter('num', $_REQUEST['month_e'])) . '-' . sprintf('%02s',
-                        gdrcd_filter('num', $_REQUEST['day_e'])) . ' ' . sprintf('%02s',
-                        gdrcd_filter('num', $_REQUEST['hour_e'])) . ':' . sprintf('%02s',
-                        gdrcd_filter('num', $_REQUEST['minut_e'])) . ':00';
-
-                $result = gdrcd_query("SELECT chat.mittente, chat.destinatario, chat.tipo, chat.ora, chat.testo FROM chat WHERE chat.stanza = '" . gdrcd_filter('get',
-                        $_REQUEST['luogo']) . "' AND ora >= '" . $date_b . "' AND ora <= '" . $date_e . "' ORDER BY ora DESC LIMIT " . $pagebegin . ", " . $pageend . "",
-                    'result');
+                $result = gdrcd_query($query,'result');
                 $numresults = gdrcd_query($result, 'num_rows');
                 /* Se esistono record */
                 if ($numresults > 0)
@@ -364,7 +277,7 @@
                                     </td>
                                     <td class="casella_elemento">
                                         <div class="elementi_elenco">
-                                            <?php echo gdrcd_format_date($row['ora']) . ' ' . gdrcd_format_time($row['ora']); ?>
+                                            <?php echo gdrcd_format_datetime($row['ora']) ; ?>
                                         </div>
                                     </td>
                                     <td class="casella_elemento">
@@ -397,18 +310,7 @@
                             {
                                 ?>
                                 <a href="main.php?page=log_chat&op=view&luogo=<?php echo gdrcd_filter('get',
-                                    $_REQUEST['luogo']); ?>&year_b=<?php echo gdrcd_filter('num',
-                                    $_REQUEST['year_b']); ?>&day_b=<?php echo sprintf('%02s',
-                                    gdrcd_filter('num', $_REQUEST['day_b'])); ?>&month_b=<?php echo sprintf('%02s',
-                                    gdrcd_filter('num', $_REQUEST['month_b'])); ?>&hour_b=<?php echo sprintf('%02s',
-                                    gdrcd_filter('num', $_REQUEST['hour_b'])); ?>&minut_b=<?php echo sprintf('%02s',
-                                    gdrcd_filter('num', $_REQUEST['minut_b'])); ?>&year_e=<?php echo gdrcd_filter('num',
-                                    $_REQUEST['year_e']); ?>&day_e=<?php echo sprintf('%02s',
-                                    gdrcd_filter('num', $_REQUEST['day_e'])); ?>&month_e=<?php echo sprintf('%02s',
-                                    gdrcd_filter('num', $_REQUEST['month_e'])); ?>&hour_e=<?php echo sprintf('%02s',
-                                    gdrcd_filter('num', $_REQUEST['hour_e'])); ?>&minut_e=<?php echo sprintf('%02s',
-                                    gdrcd_filter('num',
-                                        $_REQUEST['minut_e'])); ?>&offset=<?php echo $i; ?>"><?php echo $i + 1; ?></a>
+                                    $_REQUEST['luogo']); ?>&data_a=<?php echo $data_a;?>&data_b=<?php echo $data_b;?>&offset=<?php echo $i; ?>"><?php echo $i + 1; ?></a>
                             <?php } else
                             {
                                 echo ' ' . ($i + 1) . ' ';
