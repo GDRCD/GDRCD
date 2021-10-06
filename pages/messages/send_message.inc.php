@@ -33,6 +33,10 @@ switch($opRequest) {
         //
         $destinatariCheck = "'".implode("','", $destinatari)."'";
         $result = gdrcd_query("SELECT nome FROM personaggio WHERE nome IN (" . $destinatariCheck . ") AND nome IS NOT NULL GROUP BY nome ", 'result');
+        $sended = gdrcd_query($result,'num_rows');
+        $num_dest = count($destinatari);
+
+        $not_all_sended = ($num_dest > $sended);
 
         // Se sono stati individuati record,procedo
         if(gdrcd_query($result, 'num_rows') > 0){
@@ -53,6 +57,10 @@ switch($opRequest) {
                 $query = gdrcd_query("INSERT INTO backmessaggi (mittente, destinatario, spedito, tipo, oggetto, testo) VALUES ".implode(",", $queryInsert));
                 gdrcd_query($query, 'free');
             }
+        }
+
+        if($not_all_sended){
+            echo '<div class="warning">Attenzione: Non tutti i destinatari selezionati sono esistenti.</div>';
         }
         break;
 
