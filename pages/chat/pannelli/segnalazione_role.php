@@ -16,7 +16,7 @@ $num_log = gdrcd_query($log, 'num_rows');
 
 if ($num_log > 0 && ($row['stanza'] !== $_SESSION['luogo']) && (isset($_POST['op']) === FALSE)) { ?>
     <div class="warning" style="width: auto;">Stai ancora giocando altrove</div>
-    <form action="popup.php?page=pannelli_chat&pannello=segnalazione_role" method="post">
+    <form action="popup.php?page=chat_pannelli_index&pannello=segnalazione_role" method="post">
         <!--- Segnalazione giocate ---->
         <br>
         <div class="form_submit">
@@ -49,7 +49,7 @@ if ($num_log > 0 && ($row['stanza'] !== $_SESSION['luogo']) && (isset($_POST['op
         </div>
         <br>
         <!--- registrazione giocate ---->
-        <form action="popup.php?page=pannelli_chat&pannello=segnalazione_role" method="post">
+        <form action="popup.php?page=chat_pannelli_index&pannello=segnalazione_role" method="post">
             <div class="form_submit">
                 <input type="hidden"
                        name="op"
@@ -61,7 +61,7 @@ if ($num_log > 0 && ($row['stanza'] !== $_SESSION['luogo']) && (isset($_POST['op
         </form>
         <div><b>Oppure</b></div>
         <br>
-        <form action="popup.php?page=pannelli_chat&pannello=segnalazione_role" method="post">
+        <form action="popup.php?page=chat_pannelli_index&pannello=segnalazione_role" method="post">
             <div class='form_field'>
                 <!-- Giorno -->
                 <div class="reg_titolo">Seleziona la <b>data di inizio</b> giocata</div>
@@ -143,7 +143,7 @@ if ($num_log > 0 && ($row['stanza'] !== $_SESSION['luogo']) && (isset($_POST['op
 
     $start_time = date("Y-m-d H:i:s", strtotime("+2 hours", strtotime($row['data_inizio'])));
     $mydate = date('Y-m-d H:i:s'); ?>
-    <form action="popup.php?page=pannelli_chat&pannello=segnalazione_role" method="post">
+    <form action="popup.php?page=chat_pannelli_index&pannello=segnalazione_role" method="post">
         <div style="padding:5px;">
             <div class="form_info"><b>Attenzione:</b> Ogni giocatore deve inviare una propria registrazione della role,
                 segnando eventuali note.
@@ -188,7 +188,7 @@ if ($num_log > 0 && ($row['stanza'] !== $_SESSION['luogo']) && (isset($_POST['op
                    value="Registra la giocata" />
         </div>
     </form>
-    <form action="popup.php?page=pannelli_chat&pannello=segnalazione_role" method="post">
+    <form action="popup.php?page=chat_pannelli_index&pannello=segnalazione_role" method="post">
         <div class="form_submit">
             <input type="hidden"
                    name="op"
@@ -211,7 +211,7 @@ if ($_POST['op'] == 'leave') {
                 " . gdrcd_filter('num', $row['id']) . " LIMIT 1");
     /*Confermo l'operazione*/
     echo '<div class="warning" style="width: auto;">La registrazione aperta è stata cancellata </div>
-		<div class="link_back"> <a href="popup.php?page=pannelli_chat&pannello=segnalazione_role">Torna indietro</a></div>';
+		<div class="link_back"> <a href="popup.php?page=chat_pannelli_index&pannello=segnalazione_role">Torna indietro</a></div>';
 }
 #Apertura nuova segnalazione
 if ($_POST['op'] == 'start_segn') {
@@ -222,7 +222,7 @@ if ($_POST['op'] == 'start_segn') {
 
     /*Confermo l'operazione*/
     echo '<div class="warning" style="width: auto;">La registrazione è stata aperta </div>
-		<div class="link_back"> <a href="popup.php?page=pannelli_chat&pannello=segnalazione_role">Torna indietro</a></div>';
+		<div class="link_back"> <a href="popup.php?page=chat_pannelli_index&pannello=segnalazione_role">Torna indietro</a></div>';
 } #Apertura nuova segnalazione
 else if ($_POST['op'] == 'start_ret') {
 
@@ -266,7 +266,7 @@ else if ($_POST['op'] == 'start_ret') {
     }
     /*Confermo l'operazione*/
     echo '<div class="warning" style="width: auto;">'.$message.'</div>
-			<div class="link_back"> <a href="popup.php?page=pannelli_chat&pannello=segnalazione_role">Torna indietro</a></div>';
+			<div class="link_back"> <a href="popup.php?page=chat_pannelli_index&pannello=segnalazione_role">Torna indietro</a></div>';
 
 } else if ($_POST['op'] == 'send_segn') {
 
@@ -336,7 +336,7 @@ else if ($_POST['op'] == 'start_ret') {
     }
     /*Messaggio di avviso*/
     echo '<div class="warning" style="width: auto;">'.$message.'</div>
-		<div class="link_back"> <a href="popup.php?page=pannelli_chat&pannello=segnalazione_role">Torna indietro</a></div>';
+		<div class="link_back"> <a href="popup.php?page=chat_pannelli_index&pannello=segnalazione_role">Torna indietro</a></div>';
 }
 ?>
 </div>
