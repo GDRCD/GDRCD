@@ -13,9 +13,9 @@
 error_reporting(E_ERROR | E_PARSE);
 
 /* PARAMETRI DI CONNESSIONE */
-$PARAMETERS['database']['username'] = 'provabea';            //nome utente del database
-$PARAMETERS['database']['password'] = '65NCyZVfYcRF';            //password del database
-$PARAMETERS['database']['database_name'] = 'my_provabea';    //nome del database
+$PARAMETERS['database']['username'] = 'gdrcd';            //nome utente del database
+$PARAMETERS['database']['password'] = 'gdrcd';            //password del database
+$PARAMETERS['database']['database_name'] = 'gdrcd';    //nome del database
 $PARAMETERS['database']['url'] = 'localhost';        //indirizzo ip del database
 
 
@@ -648,6 +648,12 @@ $PARAMETERS['office']['guilds']['access_level'] = USER;
 $PARAMETERS['office']['market']['text'] = 'Mercato';
 $PARAMETERS['office']['market']['url'] = 'main.php?page=servizi_mercato';
 $PARAMETERS['office']['market']['access_level'] = USER;
+if (ESITI)
+{
+    $PARAMETERS['office']['esiti']['text'] = 'Pannello esiti';
+    $PARAMETERS['office']['esiti']['url'] = 'main.php?page=servizi_esiti';
+    $PARAMETERS['office']['esiti']['access_level'] = USER;
+}
 if ($PARAMETERS['mode']['privaterooms'] == 'ON')
 {
     $PARAMETERS['office']['hotel']['text'] = 'Prenotazione stanze';
@@ -706,6 +712,12 @@ if (REG_ROLE && SEND_GM)
     $PARAMETERS['administration']['send_GM']['text'] = 'Giocate segnalate';
     $PARAMETERS['administration']['send_GM']['url'] = 'main.php?page=gestione_segnalazioni&segn=roles_gm';
     $PARAMETERS['administration']['send_GM']['access_level'] = ROLE_PERM;
+}
+if (ESITI)
+{
+    $PARAMETERS['administration']['esiti']['text'] = 'Pannello esiti Master';
+    $PARAMETERS['administration']['esiti']['url'] = 'main.php?page=gestione_segnalazioni&segn=esiti_master';
+    $PARAMETERS['administration']['esiti']['access_level'] = ESITI_PERM;
 }
 $PARAMETERS['administration']['skills']['text'] = 'Gestione abilità';
 $PARAMETERS['administration']['skills']['url'] = 'main.php?page=gestione_abilita';
