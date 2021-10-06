@@ -66,11 +66,11 @@ const SAVE_ROLE = true;
 //Attiva o disattiva il salvataggio delle role su pc (default: true)
 const SEND_GM = true;
 //Attiva o disattiva la segnalazione ai GM e la relativa pagina gestionale (default: true)
-const ROLE_PERM = 2;
+const ROLE_PERM = GAMEMASTER;
 //definisce quali permessi hanno accesso alla lista delle giocate dei pg e alle segnalazioni GM (default: gamemaster)
-const LOG_PERM = 2;
+const LOG_PERM = GAMEMASTER;
 //definisce quali permessi hanno accesso ai log chat (default: gamemaster)
-const EDIT_PERM = 2;
+const EDIT_PERM = GAMEMASTER;
 //definisce quali permessi possono modificare le registrazioni (default: gamemaster)
 /*Vettori globali dei parametri*/
 $PARAMETER = array();
