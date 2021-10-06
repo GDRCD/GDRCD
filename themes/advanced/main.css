@@ -294,9 +294,11 @@ div.elementi_elenco {
     text-align: center;
 }
 
-div.titoli_elenco {
-    font-size: 13px;
-    font-weight: bolder;
+div.titoli_elenco,
+span.titoli_elenco {
+    font-weight: bold;
+    font-size: 12px;
+    font-style: italic;
 }
 
 img.colonna_elengo_messaggi_icon {
@@ -323,7 +325,8 @@ div.user_ambientazione div.elementi_elenco, div.servizi_abilita div.elementi_ele
     padding: 5px;
 }
 
-div.user_ambientazione td.casella_titolo div.elementi_elenco, div.servizi_abilita td.casella_titolo div.elementi_elenco {
+div.user_ambientazione td.casella_titolo div.elementi_elenco,
+div.servizi_abilita td.casella_titolo div.elementi_elenco {
     font-size: 14px;
     font-weight: bolder;
     padding: 2px 0 2px 10px;
@@ -383,9 +386,13 @@ div.innertube {
     vertical-align: middle;
 }
 
-/**** GESTIONE ****/
-
-.gestione_pagina .gestione_incipit{
+/**
+ * Stili relative alle pagine dei menù:
+ * GESTIONE
+ * SERVIZI
+ */
+.gestione_pagina .gestione_incipit,
+.servizi_pagina .servizi_incipit {
     background: grey;
     padding: 10px;
     color:black;
@@ -395,17 +402,20 @@ div.innertube {
     font-size: 13px;
 }
 
-.gestione_pagina .gestione_incipit .title{
+.gestione_pagina .gestione_incipit .title,
+.servizi_pagina .servizi_incipit .title {
     font-size: 18px;
     font-weight: bold;
 }
 
-.gestione_pagina .gestione_incipit .subtitle_gst{
+.gestione_pagina .gestione_incipit .subtitle_gst,
+.servizi_pagina .servizi_incipit .subtitle_gst {
     font-size: 15px;
     font-weight: bold;
 }
 
-.gestione_pagina .gestione_incipit .highlight{
+.gestione_pagina .gestione_incipit .highlight,
+.servizi_pagina .servizi_incipit .highlight {
     font-weight: bold;
     color: rgb(177, 71, 71);
 }
@@ -415,21 +425,25 @@ div.innertube {
     margin:0 auto;
 }
 
-.gestione_pagina .gestione_incipit ul li{
+.gestione_pagina .gestione_incipit ul li,
+.servizi_pagina .servizi_incipit ul li {
     padding: 5px 0;
     text-align: left;
 }
 
-.gestione_pagina .gestione_form_container{
+.gestione_pagina .gestione_form_container,
+.servizi_pagina .servizi_form_container {
     width: 90%;
     margin: 5px auto;
 }
 
-.gestione_pagina .gestione_form_container .gestione_form{
+.gestione_pagina .gestione_form_container .gestione_form,
+.servizi_pagina .servizi_form_container .servizi_form {
     width: 100%;
 }
 
-.gestione_pagina .gestione_form_container .gestione_form_title{
+.gestione_pagina .gestione_form_container .gestione_form_title,
+.servizi_pagina .servizi_form_container .servizi_form_title {
     font-size: 15px;
     font-weight: bold;
     border: solid black;
@@ -439,12 +453,15 @@ div.innertube {
     clear: both;
 }
 
-.gestione_pagina .gestione_form .single_input{
+
+.gestione_pagina .gestione_form .single_input,
+.servizi_pagina .servizi_form .single_input {
     width: 100%;
     margin: 5px;
 }
 
-.gestione_pagina .gestione_form .single_input .label{
+.gestione_pagina .gestione_form .single_input .label,
+.servizi_pagina .servizi_form .single_input .label {
     font-size: 13px;
     font-weight: bold;
 }
