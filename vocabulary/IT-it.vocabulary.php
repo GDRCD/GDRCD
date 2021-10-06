@@ -280,6 +280,15 @@ $MESSAGE['interface']['bank']['credit'] = 'Accredito';
 $MESSAGE['interface']['bank']['credit_no'] = 'Accredito ritirato';
 $MESSAGE['interface']['bank']['execute'] = 'Esegui';
 $MESSAGE['interface']['bank']['notice'] = 'ti ha accreditato';
+
+/*Esiti Master*/
+$MESSAGE['interface']['esitiserie']['intro'] = "Messaggio che spiega come funzionano le serie di esiti lato master";
+$MESSAGE['interface']['esitiserie']['intro_pg'] = "Messaggio che spiega come funzionano le serie di esiti lato pg";
+$MESSAGE['interface']['esiti']['newesito'] = "Messaggio che spiega come funziona l'invio di nuovi esiti lato master";
+$MESSAGE['interface']['esiti']['newesitopg'] = "Messaggio che spiega come funziona l'invio di nuovi esiti lato pg";
+$MESSAGE['interface']['esiti']['esitochat'] = = "Messaggio che spiega come funziona l'invio di nuovi esiti in chat lato master";
+
+
 /*Lavoro*/
 $MESSAGE['interface']['job']['page_name'] = 'Lavoro';
 $MESSAGE['interface']['job']['submit']['pick'] = 'Scegli';
