@@ -521,7 +521,6 @@ CREATE TABLE IF NOT EXISTS `personaggio` (
   `ora_entrata` datetime NOT NULL,
     ora_uscita datetime NOT NULL default '2009-07-01 00:00:00',
   `posizione` int NOT NULL DEFAULT '1',
-  `ultimo_messaggio` bigint NOT NULL DEFAULT '0',
   PRIMARY KEY (`nome`),
   KEY `IDRazza` (`id_razza`),
   KEY `Esilio` (`esilio`)
