@@ -204,13 +204,16 @@ $MESSAGE['interface']['sheet']['log']['ip'] = 'IP';
 $MESSAGE['interface']['sheet']['log']['other_account'] = 'Doppio';
 $MESSAGE['interface']['sheet']['log']['message'] = 'Messaggio';
 /*Messaggi privati*/
-$MESSAGE['interface']['messages']['destination'] = 'Destinatario';
+$MESSAGE['interface']['messages']['recipient'] = 'Destinatario';
 $MESSAGE['interface']['messages']['multiple']['title'] = $PARAMETERS['names']['private_message']['sing'] . 'collettivo';
-$MESSAGE['interface']['messages']['multiple']['single'] = 'Destinatario singolo';
-$MESSAGE['interface']['messages']['multiple']['multiple'] = 'Destinatario multiplo';
-$MESSAGE['interface']['messages']['multiple']['online'] = 'Tutti i presenti';
 $MESSAGE['interface']['messages']['multiple']['info'] = 'Destinatari multipli separati da virgola.';
-$MESSAGE['interface']['messages']['multiple']['all'] = 'Tutti gli utenti';
+$MESSAGE['interface']['messages']['multiple']['options']['private'] = 'Privato';
+$MESSAGE['interface']['messages']['multiple']['options']['online'] = 'Tutti i presenti';
+$MESSAGE['interface']['messages']['multiple']['options']['all'] = 'Tutti gli utenti';
+$MESSAGE['interface']['messages']['type']['title'] = 'Tipo';
+$MESSAGE['interface']['messages']['type']['options'][0] = 'OFF';
+$MESSAGE['interface']['messages']['type']['options'][1] = 'ON';
+$MESSAGE['interface']['messages']['subject'] = 'Oggetto';
 $MESSAGE['interface']['messages']['body'] = 'Testo';
 $MESSAGE['interface']['messages']['sender'] = 'Mittente';
 $MESSAGE['interface']['messages']['date'] = 'Ricevuto il';
@@ -230,6 +233,7 @@ $MESSAGE['interface']['messages']['all_erased'] = ' eliminati';
 $MESSAGE['interface']['messages']['no_message'] = 'Nessun ' . strtolower($PARAMETERS['names']['private_message']['sing']);
 $MESSAGE['interface']['messages']['please_erase'] = 'Si prega di ridurre il numero di ' . strtolower($PARAMETERS['names']['private_message']['plur']) . ' nella casella';
 $MESSAGE['interface']['messages']['go_back'] = 'Torna all\'elenco dei ' . strtolower($PARAMETERS['names']['private_message']['plur']) . '.';
+
 /* Forum */
 $MESSAGE['interface']['forums']['topic']['new_posts']['sing'] = 'Nuovo Messaggio';
 $MESSAGE['interface']['forums']['topic']['new_posts']['plur'] = 'Nuovi Messaggi';

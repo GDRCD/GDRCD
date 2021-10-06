@@ -1,36 +1,49 @@
 <?php
-$id_messaggio = gdrcd_filter('num', $_POST['id_messaggio']);
-/** * Bugfix: correzione di un bug che permetteva la cancellazione di messaggi non inviati all'utente.
- * Viene quindi aggiunta nella clausola where il controllo sulla proprietà del messaggio.
- * Inoltre viene effettuato un controllo sul numero di righe cancellate. Se non è stato cancellato nulla
- * non verrà mostrato nessun messaggio ma solo il link per tornare alla schermata messaggi.
- * @author Rhllor
+
+/**
+ * Elimino un messaggio
  */
-//gdrcd_query("DELETE FROM messaggi WHERE id = ".$id_messaggio." LIMIT 1");
-gdrcd_query("DELETE FROM messaggi WHERE id = ".$id_messaggio." and destinatario = '".$_SESSION['login']."' LIMIT 1");
-if(gdrcd_query("", 'affected') > 0) { ?>
-    <div class="warning">
-        <?php echo gdrcd_filter('out', $PARAMETERS['names']['private_message']['sing'].$MESSAGE['interface']['messages']['erased']); ?>
-    </div>
-    <div class="link_back">
-        <a href="main.php?page=messages_center&offset=0"><?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['go_back']); ?></a>
-    </div>
-<?php
-} else {
-    /** * Enhancement: in caso di nessuna riga cancellata si controlla l'esistenza del messaggio,
-     * @author Rhllor
-     */
-    $result = gdrcd_query("SELECT destinatario FROM messaggi WHERE id = ".gdrcd_filter('num', $_REQUEST['id_messaggio'])." and ( destinatario = '".$_SESSION['login']."') LIMIT 1", 'result');
-    if(gdrcd_query($result, 'num_rows') == 0) { ?>
+
+// Ottengo le variabili passate al modulo
+$id_messaggio = gdrcd_filter('num', $_POST['id_messaggio']);
+$delType = gdrcd_filter('in', $_POST['type']);
+
+// In base alla tipologia di visualizzazione, disabilito i relativi messaggi
+if($delType === 'destinatario_del') {
+    $query = "UPDATE messaggi SET destinatario_del = 1 WHERE destinatario='".gdrcd_filter('in', $_SESSION['login'])."' AND id = ".gdrcd_filter('in', $id_messaggio);
+} elseif(gdrcd_filter_in($_POST['type']) === 'mittente_del') {
+    $query = "UPDATE messaggi SET mittente_del = 1 WHERE mittente='".gdrcd_filter('in', $_SESSION['login'])."' AND id = ".gdrcd_filter('in', $id_messaggio);
+}
+
+// Avvio l'operazione
+if(isset($query)) {
+    // Eseguo l'operazione
+    gdrcd_query($query);
+
+    // In base alle rige coinvolte, prevedo il messaggio
+    if(gdrcd_query("", 'affected') > 0) { ?>
         <div class="warning">
-            Il messaggio che stai tentando di cancellare non esiste
-        </div>
-        <div class="link_back">
-            <a href="main.php?page=messages_center&offset=0"><?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['go_back']); ?></a>
+            <?php echo gdrcd_filter('out', $PARAMETERS['names']['private_message']['sing'].$MESSAGE['interface']['messages']['erased']); ?>
         </div>
         <?php
-    } else {
-        $record = gdrcd_query($result, 'fetch');
-        gdrcd_query($result, 'free');
+    }
+    // Se non ho modificato nulla, controllo l'esistenza del messaggio
+    else {
+        // Determino il messaggio in base alla tipologia passata
+        if($delType === 'destinatario_del') {
+            $query = "SELECT destinatario FROM messaggi WHERE destinatario='".gdrcd_filter('in', $_SESSION['login'])."' AND id = ".gdrcd_filter('in', $id_messaggio)." LIMIT 1";
+        } elseif(gdrcd_filter_in($_POST['type']) === 'mittente_del') {
+            $query = "SELECT mittente FROM messaggi WHERE mittente='".gdrcd_filter('in', $_SESSION['login'])."' AND id = ".gdrcd_filter('in', $id_messaggio)." LIMIT 1";
+        }
+
+        // Avvio il controllo
+        if(isset($query)) {
+            if(gdrcd_query(gdrcd_query($query, 'result'), 'num_rows') == 0) { ?>
+                <div class="warning">
+                    Il messaggio che stai tentando di cancellare non esiste
+                </div>
+                <?php
+            }
+        }
     }
 }
