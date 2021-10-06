@@ -17,13 +17,18 @@ if ($_POST['action'] == "searchPersonaggio") {
             $whereFilters[] = "personaggio.id_razza = '" . gdrcd_filter('get', $_REQUEST['razza']) . "'";
         }
 
+        $limit_val = gdrcd_filter('num', $_REQUEST['limit']);
+
+        $limit = (isset($_REQUEST['limit']) && ($_REQUEST['limit'] > 0)) ? " LIMIT {$_REQUEST['limit']} " : '';
+
+
         // Costruisco la query
         $querySearch = "SELECT personaggio.url_img_chat, personaggio.nome, personaggio.cognome, personaggio.sesso, 
                                razza.nome_razza 
                         FROM personaggio 
                         LEFT JOIN razza ON personaggio.id_razza = razza.id_razza 
                         WHERE 1 " . (isset($whereFilters) ? ' AND ' . implode(' AND ', $whereFilters) : NULL) . '
-                        ORDER BY nome DESC';
+                        ORDER BY nome DESC '.$limit;
         $resultSearch = gdrcd_query($querySearch, 'result');
 
         // Se ottengo dei risultati, costruisco la tabella
@@ -31,10 +36,10 @@ if ($_POST['action'] == "searchPersonaggio") {
 
             // Costruisco le intestazioni
             $trs[] = '<tr>
-                        <td class="casella_titolo"><div class="capitolo_elenco">'.$MESSAGE['interface']['pg_list']['search']['img'].'</div></td>
-                        <td class="casella_titolo"><div class="capitolo_elenco">'.$MESSAGE['interface']['pg_list']['search']['personaggio'].'</div></td>
-                        <td class="casella_titolo"><div class="capitolo_elenco">'.$MESSAGE['interface']['pg_list']['search']['sesso'].'</div></td>
-                        <td class="casella_titolo"><div class="capitolo_elenco">'.$MESSAGE['interface']['pg_list']['search']['razza'].'</div></td>
+                        <td class="casella_titolo"><div class="capitolo_elenco">' . $MESSAGE['interface']['pg_list']['search']['img'] . '</div></td>
+                        <td class="casella_titolo"><div class="capitolo_elenco">' . $MESSAGE['interface']['pg_list']['search']['personaggio'] . '</div></td>
+                        <td class="casella_titolo"><div class="capitolo_elenco">' . $MESSAGE['interface']['pg_list']['search']['sesso'] . '</div></td>
+                        <td class="casella_titolo"><div class="capitolo_elenco">' . $MESSAGE['interface']['pg_list']['search']['razza'] . '</div></td>
                      </tr>';
 
             // Scorro i risultati
@@ -49,18 +54,18 @@ if ($_POST['action'] == "searchPersonaggio") {
                 $tds[] = '<td class="casella_elemento">
                             <div class="elementi_elenco">
                                 <a href="main.php?page=scheda&pg=' . gdrcd_filter('out', $rowSearch['nome']) . '">' .
-                                    gdrcd_filter('out', $rowSearch['nome']) . ' ' . gdrcd_filter('out', $rowSearch['cognome']) . '
+                    gdrcd_filter('out', $rowSearch['nome']) . ' ' . gdrcd_filter('out', $rowSearch['cognome']) . '
                                 </a>
                             </div>                        
                          </td>';
                 $tds[] = '<td class="casella_elemento">
                             <div class="elementi_elenco">' .
-                                gdrcd_filter('out', $MESSAGE['register']['fields']['gender_' . $rowSearch['sesso']]) . '
+                    gdrcd_filter('out', $MESSAGE['register']['fields']['gender_' . $rowSearch['sesso']]) . '
                             </div>
                          </td>';
                 $tds[] = '<td class="casella_elemento">
                             <div class="elementi_elenco">' .
-                                gdrcd_filter('out', $rowSearch['nome_razza']) . '
+                    gdrcd_filter('out', $rowSearch['nome_razza']) . '
                             </div>                     
                          </td>';
 
@@ -115,15 +120,15 @@ foreach ($genders as $gender) {
 
         <form method="POST" id="FiltriAnagrafeForm" class="servizi_form" action="main.php?page=servizi_anagrafe">
 
-        <!-- NOME -->
-        <div class="single_input">
-            <div class="label"><?=$MESSAGE['interface']['pg_list']['search']['personaggio'];?></div>
-            <input type="text" name="nome" value="<?=gdrcd_filter('out', $_REQUEST['nome']);?>" />
-        </div>
+            <!-- NOME -->
+            <div class="single_input">
+                <div class="label"><?= $MESSAGE['interface']['pg_list']['search']['personaggio']; ?></div>
+                <input type="text" name="nome" value="<?= gdrcd_filter('out', $_REQUEST['nome']); ?>"/>
+            </div>
 
             <!-- GENERE -->
             <div class="single_input">
-                <div class="label"><?=$MESSAGE['interface']['pg_list']['search']['sesso'];?></div>
+                <div class="label"><?= $MESSAGE['interface']['pg_list']['search']['sesso']; ?></div>
                 <select name="genere">
                     <option value=""></option>
                     <?php echo implode('', $optionsGenders); ?>
@@ -132,11 +137,18 @@ foreach ($genders as $gender) {
 
             <!-- RAZZA -->
             <div class="single_input">
-                <div class="label"><?=$MESSAGE['interface']['pg_list']['search']['razza'];?></div>
+                <div class="label"><?= $MESSAGE['interface']['pg_list']['search']['razza']; ?></div>
                 <select name="razza">
                     <option value=""></option>
                     <?php echo implode('', $optionsRazze); ?>
                 </select>
+            </div>
+
+            <!-- LIMITE PG -->
+            <div class="single_input">
+                <div class="label"><?= $MESSAGE['interface']['pg_list']['search']['limit']; ?></div>
+                <input type="number" name="limit"
+                       value="<?= isset($_REQUEST['limit']) ? gdrcd_filter('out', $_REQUEST['limit']) : 0; ?>"/>
             </div>
 
             <!-- SUBMIT + EXTRA -->
