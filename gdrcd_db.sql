@@ -632,6 +632,38 @@ INSERT INTO `ruolo` (`id_ruolo`, `gilda`, `nome_ruolo`, `immagine`, `stipendio`,
 (3, 1, 'Soldato della guardia', 'standard_gilda.png', 40, 0),
 (4, 1, 'Recluta della guardia', 'standard_gilda.png', 15, 0);
 
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `segnalazione_role` (Registrazione giocate)
+--
+
+CREATE TABLE IF NOT EXISTS `segnalazione_role` (
+    `id` bigint(20) NOT NULL AUTO_INCREMENT,
+    `stanza` int(11) NOT NULL,
+    `conclusa` int(11) NOT NULL DEFAULT '0',
+    `partecipanti` text CHARACTER SET utf8,
+    `mittente` varchar(20) CHARACTER SET utf8 NOT NULL,
+    `data_inizio` datetime DEFAULT NULL,
+    `data_fine` datetime DEFAULT NULL,
+    `tags` text CHARACTER SET utf8,
+    `quest` text CHARACTER SET utf8,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=119 ;
+
+--
+-- Struttura della tabella `send_GM` (Registrazione giocate)
+--
+
+CREATE TABLE IF NOT EXISTS `send_GM` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `data` datetime NOT NULL,
+    `autore` text CHARACTER SET utf8 NOT NULL,
+    `role_reg` int(11) NOT NULL,
+    `note` text CHARACTER SET utf8,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

@@ -37,10 +37,23 @@ else{
     <a href="main.php?page=scheda_trans&pg=<?=$pg; ?>">
         <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['menu']['transictions']); ?>
     </a>
+
 <?php
+if (($_SESSION['permessi'] >= ROLE_PERM || $_REQUEST['pg'] == $_SESSION['login']) && REG_ROLE) { ?>
+    <a href="main.php?page=scheda_roles&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']); ?>">
+        Giocate registrate
+    </a>
+<?php
+}
 if ( ($pg == $me) || ($perm >= GUILDMODERATOR) ) { ?>
     <a href="main.php?page=scheda_modifica&pg=<?=$pg; ?>">
         <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['menu']['update']); ?>
+<?php /*Visualizza il link se l'utente visualizza la propria scheda o se è almeno un master*/
+
+/*Visualizza il link modifica se l'utente visualizza la propria scheda o se è almeno un capogilda*/
+if($_SESSION['permessi'] >= MODERATOR) { ?>
+    <a href="main.php?page=scheda_log&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']); ?>">
+        <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['menu']['log']); ?>
     </a>
 <?php }  /*Visualizza il link modifica se l'utente visualizza la propria scheda o se è almeno un capogilda*/
 if ($perm >= MODERATOR) { ?>

@@ -426,6 +426,27 @@ require 'header.inc.php'; /*Header comune*/
 
         gdrcd_query("INSERT INTO ruolo VALUES (4, 1, 'Recluta della guardia', 'standard_gilda.png', 15, 0);");
 
+        gdrcd_query("CREATE TABLE  segnalazione_role (
+          id bigint(20) NOT NULL AUTO_INCREMENT,
+          stanza int(11) NOT NULL,
+          conclusa int(11) NOT NULL DEFAULT '0',
+          partecipanti text CHARACTER SET utf8,
+          mittente varchar(20) CHARACTER SET utf8 NOT NULL,
+          data_inizio datetime DEFAULT NULL,
+          data_fine datetime DEFAULT NULL,
+          tags text CHARACTER SET utf8,
+          quest text CHARACTER SET utf8,
+          PRIMARY KEY (id)
+        ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=119 ;");
+
+        gdrcd_query("CREATE TABLE send_GM (
+          id int(11) NOT NULL AUTO_INCREMENT,
+          data datetime NOT NULL,
+          autore text CHARACTER SET utf8 NOT NULL,
+          role_reg int(11) NOT NULL,
+          note text CHARACTER SET utf8,
+          PRIMARY KEY (id)
+        ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;");
         echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['homepage']['installer']['done']) . '</div>';
         } ?>
         <!-- Link di ritorno alla homepage -->
