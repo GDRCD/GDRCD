@@ -4,7 +4,7 @@ if ($_GET['op']=='first') { ?>
         <h2>Nuova serie di esiti</h2>
     </div>
     <div class="form_info">
-        <? echo $MESSAGE['interface']['esitiserie']['intro'];?>
+        <?php echo $MESSAGE['interface']['esitiserie']['intro'];?>
     </div>
     <form action="main.php?page=gestione_segnalazioni&segn=esito_index"
           method="post"
@@ -54,6 +54,6 @@ if ($_GET['op']=='first') { ?>
         </div>
 
     </form>
-<? }
+<?php }
 
 ?>

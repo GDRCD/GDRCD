@@ -6,11 +6,11 @@ if (gdrcd_filter('num',$blocco['id'])>0) {
     ?>
 
     <div class="page_title">
-        <h2>Serie di esiti: <? echo $blocco['titolo'];?></h2>
+        <h2>Serie di esiti: <?php echo $blocco['titolo'];?></h2>
     </div>
 
     <div class="form_info">
-        <? echo $MESSAGE['interface']['esiti']['newesitopg'];?>
+        <?php echo $MESSAGE['interface']['esiti']['newesitopg'];?>
     </div>
     <form action="main.php?page=servizi_esitinew"
           method="post"
@@ -30,7 +30,7 @@ if (gdrcd_filter('num',$blocco['id'])>0) {
             <textarea name="contenuto"></textarea>
         </div>
 
-        <? if (TIRI_ESITO) { ?>
+        <?php if (TIRI_ESITO) { ?>
             <div class='form_label'>
                 Tira dei dadi
             </div>
@@ -38,7 +38,7 @@ if (gdrcd_filter('num',$blocco['id'])>0) {
                 Numero di dadi: <input name="dice_num" value="" /><br>
                 Numero di facce dei dadi: <input name="dice_face" value="" /><br>
             </div>
-        <? } ?>
+        <?php } ?>
         <div class='form_label'>
             Note OFF
         </div>
@@ -55,13 +55,13 @@ if (gdrcd_filter('num',$blocco['id'])>0) {
                    value="add">
             <input type="hidden"
                    name="id"
-                   value="<? echo $_GET['blocco'];?>">
+                   value="<?php echo $_GET['blocco'];?>">
             <input type="submit"
                    value="<?php echo gdrcd_filter('out',$MESSAGE['interface']['forms']['submit']);?>" />
         </div>
 
     </form>
-<?  } else {
+<?php } else {
     echo '<div class="warning">Non hai i permessi per visualizzare questa sezione</div>';
     }
 

@@ -8,7 +8,7 @@
     <!-- Box principale -->
     <div class="page_body">
         <div class="form_info">
-            <? echo $MESSAGE['interface']['esiti']['pg_page']; ?>
+            <?php echo $MESSAGE['interface']['esiti']['pg_page']; ?>
         </div>
             <a class="but_newd" href='main.php?page=servizi_esitinew&op=first' target="_blank">
                 Apri una nuova serie di esiti
@@ -32,46 +32,46 @@
                 <div class="fate_frame">
                     <div class="titolo_box">
                         <h2 >
-                            <? echo $tit; ?>
+                            <?php echo $tit; ?>
                         </h2>
                     </div>
 
-                    <? 	$quer="SELECT * FROM esiti WHERE id_blocco = ".$id." AND chat = 0 
+                    <?php $quer="SELECT * FROM esiti WHERE id_blocco = ".$id." AND chat = 0 
                         AND pg = '".gdrcd_filter('in',$_SESSION['login'])."' ORDER BY data DESC";
                     $res=gdrcd_query($quer, 'result'); ?>
 
-                    <? if ($tit['closed']==0) { ?>
+                    <?php if ($tit['closed']==0) { ?>
                         <div class="titolo_box">
                             <a class="link_new"
-                               href='main.php?page=servizi_esitinew&op=new&blocco=<? echo gdrcd_filter('num',$id);?>'
+                               href='main.php?page=servizi_esitinew&op=new&blocco=<?php echo gdrcd_filter('num',$id);?>'
                                target="_blank">
                                 Invia una nuova richiesta di esito
                             </a>
                         </div>
-                    <?	} ?>
-                    <? while  ($row=gdrcd_query($res, 'fetch')) {
+                    <?php } ?>
+                    <?php while  ($row=gdrcd_query($res, 'fetch')) {
                         $chat=gdrcd_query("SELECT nome FROM mappa WHERE id = ".$row['chat']." ");	?>
 
-                        <div class="title_esi">Autore:<b><? echo $row['autore'].'</b> | 
+                        <div class="title_esi">Autore:<b><?php echo $row['autore'].'</b> | 
                             Creato il: '.gdrcd_format_date($row['data']).' alle '.gdrcd_format_time($row['data']);?></div>
 
-                        <div class="fate_title">Titolo: <b><? echo $row['titolo'];?></b>
-                            <? if ($row['dice_face']>0 && $row['dice_num']>0 && TIRI_ESITO) { ?>
-                               <br> Risultato tiro di <? echo $row['dice_num'].'d'.$row['dice_face'];?>: <b><? echo $row['dice_results'] ?></b>
-                            <? } ?>
+                        <div class="fate_title">Titolo: <b><?php echo $row['titolo'];?></b>
+                            <?php if ($row['dice_face']>0 && $row['dice_num']>0 && TIRI_ESITO) { ?>
+                               <br> Risultato tiro di <?php echo $row['dice_num'].'d'.$row['dice_face'];?>: <b><?php echo $row['dice_results'] ?></b>
+                            <?php } ?>
                         </div>
                         <div class="fate_cont">
-                            <? echo $row['contenuto']; ?>
+                            <?php echo $row['contenuto']; ?>
                         </div>
 
-                        <b>Note OFF:</b> <? echo $row['noteoff']; ?>
-                    <? 	} # Singolo esito ?>
+                        <b>Note OFF:</b> <?php echo $row['noteoff']; ?>
+                    <?php } # Singolo esito ?>
                 </div>
                 <!-- Link a piè di pagina -->
                 <div class="link_back">
                     <a href="main.php?page=servizi_esiti">Torna indietro</a>
                 </div>
-            <? }
+            <?php }
             else if (isset($_POST['op'])===FALSE) {
             /** VISUALIZZAZIONE BASE (LATO PG) **/
 
@@ -138,7 +138,7 @@
                                     </div>
                                 </td>
                             </tr>
-                            <?	while($rec=gdrcd_query($result, 'fetch')) {
+                            <?php while($rec=gdrcd_query($result, 'fetch')) {
                                 $num=gdrcd_query(gdrcd_query("SELECT * FROM esiti 
                                     WHERE id_blocco = ".gdrcd_filter('num',$rec['id'])." AND autore != '".$_SESSION['login']."' 
                                     ORDER BY data DESC", 'result'), 'num_rows');
@@ -155,7 +155,7 @@
                                     </td>
                                     <td class="casella_titolo">
                                         <div class="elementi_elenco">
-                                            <? if ($rec['master']=='0') { echo 'In attesa di risposta';}
+                                            <?php if ($rec['master']=='0') { echo 'In attesa di risposta';}
                                             else { echo gdrcd_filter('out',$rec['master']); } ?>
                                         </div>
                                     </td>
@@ -183,10 +183,10 @@
                                         </form>
                                     </td>
                                 </tr>
-                            <? 	} #Fine blocco  ?>
+                            <?php } #Fine blocco  ?>
                         </table>
                     </div>
-            <?
+                    <?php
                 }
             }
         ?>
