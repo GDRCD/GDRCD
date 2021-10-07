@@ -28,10 +28,10 @@ class Abilita
     public function AbiVisibility(string $pg): bool
     {
 
-        $pg = gdrcd_filter('out',$pg);
+        $pg = gdrcd_filter('out', $pg);
 
         # Se non esiste la costante OR se e' true OR se non e' true: se sono il proprietario del pg OR sono moderatore
-        return ( !defined('ABI_PUBLIC') || (ABI_PUBLIC) || ($pg == $this->me) || ($this->permessi >= MODERATOR));
+        return (!defined('ABI_PUBLIC') || (ABI_PUBLIC) || ($pg == $this->me) || ($this->permessi >= MODERATOR));
     }
 
     /**
@@ -42,6 +42,75 @@ class Abilita
     public function extraActive(): bool
     {
         return (defined('ABI_EXTRA') && ABI_EXTRA);
+    }
+
+    /**
+     * @fn requirementActive
+     * @note Controlla se la tabella `abilita_requisiti` e' attiva
+     * @return bool
+     */
+    public function requirementActive(): bool
+    {
+        return (defined('ABI_REQUIREMENT') && ABI_REQUIREMENT);
+    }
+
+    /**
+     * @fn requirementControl
+     * @param string $pg
+     * @param int $abi
+     * @param int $grado
+     * @return bool
+     */
+    public function requirementControl(string $pg, int $abi, int $grado): bool
+    {
+
+        if ($this->requirementActive()) {
+
+            $pg = gdrcd_filter('out', $pg);
+            $abi = gdrcd_filter('num', $abi);
+            $grado = gdrcd_filter('num', $grado);
+
+            $requisiti = gdrcd_query("SELECT abilita_requisiti.* FROM abilita_requisiti WHERE abilita='{$abi}' AND grado='{$grado}'", 'result');
+            $esito = true;
+
+            foreach ($requisiti as $requisito) {
+                $tipo = gdrcd_filter('num', $requisito['tipo']);
+                $rif = gdrcd_filter('num', $requisito['id_riferimento']);
+                $rif_lvl = gdrcd_filter('num', $requisito['liv_riferimento']);
+
+                switch ($tipo) {
+                    case REQUISITO_ABI:
+                        $contr = gdrcd_query("SELECT COUNT(id_abilita) as TOT 
+                                        FROM clgpersonaggioabilita 
+                                        WHERE 
+                                              clgpersonaggioabilita.id_abilita = '{$rif}' 
+                                          AND clgpersonaggioabilita.nome='{$pg}' 
+                                          AND clgpersonaggioabilita.grado >= '{$rif_lvl}' LIMIT 1");
+
+                        if ($contr['TOT'] == 0) {
+                            $esito = false;
+                        }
+
+                        break;
+                    case REQUISITO_STAT:
+
+                        $contr = gdrcd_query("SELECT car{$rif} FROM personaggio WHERE nome='{$pg}' LIMIT 1");
+                        $stat = gdrcd_filter('num', $contr['car' . $rif]);
+
+                        if ($stat < $rif_lvl) {
+                            $esito = false;
+                        }
+
+                        break;
+                }
+
+
+            }
+
+            return $esito;
+        } else {
+            return true;
+        }
     }
 
     /***** DATI ABILITA *****/
@@ -69,9 +138,9 @@ class Abilita
      * @fn AbilityList
      * @note Estrae la lista abilita, se specificato un pg ci associa anche il grado
      * @param string $pg
-     * @return string
+     * @return bool|int|un
      */
-    public function AbilityList(string $pg = ''): string
+    public function AbilityList(string $pg = '')
     {
 
         $pg = gdrcd_filter('in', $pg);
@@ -234,10 +303,10 @@ class Abilita
     public function upgradeSkillPermission(string $pg, int $grado): bool
     {
         $pg = gdrcd_filter('in', $pg);
-        $grado = gdrcd_filter('num',$grado);
-        $new_grado = gdrcd_filter('num',($grado + 1));
+        $grado = gdrcd_filter('num', $grado);
+        $new_grado = gdrcd_filter('num', ($grado + 1));
 
-        return ( (($this->me == $pg) || ($this->permessi >= MODERATOR)) && ($new_grado <= ABI_LEVEL_CAP));
+        return ((($this->me == $pg) || ($this->permessi >= MODERATOR)) && ($new_grado <= ABI_LEVEL_CAP));
     }
 
     /**
@@ -255,36 +324,41 @@ class Abilita
         $abi_pg = $this->AbilitaPg($pg, $abi);
         $grado = gdrcd_filter('num', $abi_pg['grado']);
 
-        if ($this->upgradeSkillPermission($pg,$grado)) {
+        if ($this->upgradeSkillPermission($pg, $grado)) {
 
             $new_grado = gdrcd_filter('num', ($grado + 1));
-            $exp_remained = $this->RemainedExp($pg);
 
-            if ($this->extraActive()) {
+            if ($this->requirementControl($pg, $abi, $new_grado)) {
+                $exp_remained = $this->RemainedExp($pg);
 
-                $extra = $this->abiExtra($abi, $new_grado);
+                if ($this->extraActive()) {
 
-                if (!empty($extra['costo']) && ($extra['costo'] > 0)) {
-                    $costo = gdrcd_filter('num', $extra['costo']);
+                    $extra = $this->abiExtra($abi, $new_grado);
+
+                    if (!empty($extra['costo']) && ($extra['costo'] > 0)) {
+                        $costo = gdrcd_filter('num', $extra['costo']);
+                    } else {
+                        $costo = (DEFAULT_PX_PER_LVL * $new_grado);
+                    }
+
                 } else {
                     $costo = (DEFAULT_PX_PER_LVL * $new_grado);
                 }
 
-            } else {
-                $costo = (DEFAULT_PX_PER_LVL * $new_grado);
-            }
+                if ($exp_remained >= $costo) {
 
-            if ($exp_remained >= $costo) {
+                    if ($grado == 0) {
+                        gdrcd_query("INSERT INTO clgpersonaggioabilita(nome,id_abilita,grado) VALUES('{$pg}','{$abi}','{$new_grado}')");
+                    } else {
+                        gdrcd_query("UPDATE clgpersonaggioabilita SET grado='{$new_grado}' WHERE nome='{$pg}' AND id_abilita='{$abi}' LIMIT 1");
+                    }
 
-                if ($grado == 0) {
-                    gdrcd_query("INSERT INTO clgpersonaggioabilita(nome,id_abilita,grado) VALUES('{$pg}','{$abi}','{$new_grado}')");
+                    return ['response' => true, 'mex' => 'Abilità aumentata con successo.'];
                 } else {
-                    gdrcd_query("UPDATE clgpersonaggioabilita SET grado='{$new_grado}' WHERE nome='{$pg}' AND id_abilita='{$abi}' LIMIT 1");
+                    return ['response' => false, 'mex' => 'Non hai abbastanza esperienza per l\'acquisto.'];
                 }
-
-                return ['response' => true, 'mex' => 'Abilità aumentata con successo.'];
             } else {
-                return ['response' => false, 'mex' => 'Non hai abbastanza esperienza per l\'acquisto.'];
+                return ['response' => false, 'mex' => 'Non hai i requisiti necessari per questa abilita.'];
             }
         } else {
             return ['response' => false, 'mex' => 'Non hai i permessi per gestire questo personaggio o hai raggiunto il livello massimo.'];
@@ -300,7 +374,7 @@ class Abilita
      */
     public function downgradeSkillPermission(int $grado): bool
     {
-        $grado = gdrcd_filter('num',$grado);
+        $grado = gdrcd_filter('num', $grado);
         return (($this->permessi >= MODERATOR) && ($grado > 0));
     }
 
@@ -313,26 +387,25 @@ class Abilita
     public function downgradeSkill(int $abi, string $pg): array
     {
 
-        $abi = gdrcd_filter('num',$abi);
-        $pg = gdrcd_filter('in',$pg);
+        $abi = gdrcd_filter('num', $abi);
+        $pg = gdrcd_filter('in', $pg);
 
-        $abi_data = $this->AbilitaPg($pg,$abi);
-        $grado = gdrcd_filter('num',$abi_data['grado']);
+        $abi_data = $this->AbilitaPg($pg, $abi);
+        $grado = gdrcd_filter('num', $abi_data['grado']);
 
-        if($this->downgradeSkillPermission($grado)){
+        if ($this->downgradeSkillPermission($grado)) {
 
             $new_grado = ($grado - 1);
 
-            if($new_grado == 0){
+            if ($new_grado == 0) {
                 gdrcd_query("DELETE FROM clgpersonaggioabilita WHERE nome='{$pg}' AND id_abilita='{$abi}' LIMIT 1");
-            }
-            else{
+            } else {
                 gdrcd_query("UPDATE clgpersonaggioabilita SET grado='{$new_grado}' WHERE nome='{$pg}' AND id_abilita='{$abi}' LIMIT 1");
             }
 
-            return ['response'=>true,'mex'=>'Abilità diminuita correttamente.'];
-        }else{
-            return ['response'=>false,'mex'=>'Non puoi diminuire quest\'abilità.'];
+            return ['response' => true, 'mex' => 'Abilità diminuita correttamente.'];
+        } else {
+            return ['response' => false, 'mex' => 'Non puoi diminuire quest\'abilità.'];
         }
 
     }
@@ -457,8 +530,8 @@ class Abilita
     /**
      * @fn ListaRequisiti
      * @note Lista dei requisiti abilita', ritorna valori per una select
-     * @example return : <option value='id'>nome</option>
      * @return string
+     * @example return : <option value='id'>nome</option>
      */
     public function ListaRequisiti(): string
     {
@@ -473,14 +546,14 @@ class Abilita
         $html .= '<optgroup label="Abilita">';
         foreach ($abi_req_abi as $new) {
 
-            $id = gdrcd_filter('num',$new['id']);
+            $id = gdrcd_filter('num', $new['id']);
 
-            $id_riferimento = gdrcd_filter('num',$new['id_riferimento']);
-            $lvl_rif = gdrcd_filter('num',$new['liv_riferimento']);
-            $grado = gdrcd_filter('num',$new['grado']);
+            $id_riferimento = gdrcd_filter('num', $new['id_riferimento']);
+            $lvl_rif = gdrcd_filter('num', $new['liv_riferimento']);
+            $grado = gdrcd_filter('num', $new['grado']);
             $nome_abi = gdrcd_filter('out', $new['nome']);
 
-            $dati_rif =gdrcd_query("SELECT nome FROM abilita WHERE id_abilita='{$id_riferimento}' LIMIT 1");
+            $dati_rif = gdrcd_query("SELECT nome FROM abilita WHERE id_abilita='{$id_riferimento}' LIMIT 1");
 
             $nome_riferimento = gdrcd_filter('out', $dati_rif['nome']);
 
@@ -496,14 +569,14 @@ class Abilita
         $html .= '<optgroup label="Caratteristiche">';
         foreach ($abi_req_stat as $new) {
 
-            $id = gdrcd_filter('num',$new['id']);
+            $id = gdrcd_filter('num', $new['id']);
 
-            $id_riferimento = gdrcd_filter('num',$new['id_riferimento']);
-            $lvl_rif = gdrcd_filter('num',$new['liv_riferimento']);
-            $grado = gdrcd_filter('num',$new['grado']);
+            $id_riferimento = gdrcd_filter('num', $new['id_riferimento']);
+            $lvl_rif = gdrcd_filter('num', $new['liv_riferimento']);
+            $grado = gdrcd_filter('num', $new['grado']);
             $nome_abi = gdrcd_filter('out', $new['nome']);
 
-            $nome_riferimento = $PARAMETERS['names']['stats']['car'.$id_riferimento];
+            $nome_riferimento = $PARAMETERS['names']['stats']['car' . $id_riferimento];
 
             $html .= "<option value='{$id}'>{$nome_abi} {$grado} - {$nome_riferimento} {$lvl_rif}</option>";
         }
@@ -608,7 +681,7 @@ class Abilita
             gdrcd_query("DELETE FROM abilita_requisiti WHERE id='{$id}' LIMIT 1");
 
             return true;
-        } else{
+        } else {
             return false;
         }
     }
