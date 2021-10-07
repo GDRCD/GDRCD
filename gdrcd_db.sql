@@ -655,4 +655,4 @@ CREATE TABLE IF NOT EXISTS `diario` (
     `titolo` varchar(50) NOT NULL DEFAULT '',
     `testo` text NOT NULL,
     PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
