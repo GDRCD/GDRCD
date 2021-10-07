@@ -14,14 +14,14 @@ if ($_GET['op']=='edit' && ($_SESSION['permessi']>=ESITI_PERM)) {  ?>
         <form action="main.php?page=gestione_segnalazioni&segn=esito_index"
               method="post"
               class="form_gestione">
-            <? 	$tit=gdrcd_query($id_edit, 'fetch'); ?>
+            <?php 	$tit=gdrcd_query($id_edit, 'fetch'); ?>
 
             <div class='form_label'>
                 Titolo
             </div>
             <div class='form_field'>
                 <input name="titolo"
-                       value="<? echo $tit['titolo'];?>"/>
+                       value="<?php echo $tit['titolo'];?>"/>
             </div>
 
             <div class='form_label'>
@@ -29,8 +29,8 @@ if ($_GET['op']=='edit' && ($_SESSION['permessi']>=ESITI_PERM)) {  ?>
             </div>
             <div class='form_field'>
                 <select name="stato">
-                    <option value="0" <? if ($tit['closed']==0) {echo 'selected';}?> >Aperta</option>
-                    <option value="1" <? if ($tit['closed']==1) {echo 'selected';}?> >Chiusa</option>
+                    <option value="0" <?php if ($tit['closed']==0) {echo 'selected';}?> >Aperta</option>
+                    <option value="1" <?php if ($tit['closed']==1) {echo 'selected';}?> >Chiusa</option>
                 </select>
             </div>
             <!-- bottoni -->
@@ -40,12 +40,12 @@ if ($_GET['op']=='edit' && ($_SESSION['permessi']>=ESITI_PERM)) {  ?>
                        value="modify">
                 <input type="hidden"
                        name="id"
-                       value="<? echo $tit['id'];?>">
+                       value="<?php echo $tit['id'];?>">
                 <input type="submit"
                        value="<?php echo gdrcd_filter('out',$MESSAGE['interface']['forms']['submit']);?>" />
             </div>
 
         </form>
-    <? }
+    <?php }
 }
 ?>

@@ -74,17 +74,17 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
                 </div>
 
                 <div class="fate_title">
-                    Titolo: <b><? echo $row['titolo'];?></b>
-                    <? if ($row['chat']>0) { echo '- <b><u>Esito in chat</u></b>
+                    Titolo: <b><?php echo $row['titolo'];?></b>
+                    <?php if ($row['chat']>0) { echo '- <b><u>Esito in chat</u></b>
                          (Chat: '.$chat['nome'].' | Skill: '.gdrcd_filter('out',$abilita['nome']).')';
                     }?>
                     <br>
-                    <? if ($row['dice_face']>0 && $row['dice_num']>0 && TIRI_ESITO) { ?>
-                    Risultato tiro di <? echo $row['dice_num'].'d'.$row['dice_face'];?>: <b><? echo $row['dice_results'] ?></b>
-                    <? } ?>
+                    <?php if ($row['dice_face']>0 && $row['dice_num']>0 && TIRI_ESITO) { ?>
+                    Risultato tiro di <?php echo $row['dice_num'].'d'.$row['dice_face'];?>: <b><?php echo $row['dice_results'] ?></b>
+                    <?php } ?>
                 </div>
                 <div class="fate_cont">
-                <? if ($row['chat']>0) {
+                <?php if ($row['chat']>0) {
                         echo 'Esito per il Fallimento critico: '.$row['CD_1'].'<br> 
                         Esito per il Fallimento: '.$row['CD_2'].'<br> Esito per il Successo: '.$row['CD_3'].'<br>
                         Esito per il Successo critico: '.$row['CD_4'];
@@ -92,14 +92,14 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
                         echo $row['contenuto'];
                     } ?>
                 </div>
-                <b>Note OFF:</b> <? echo $row['noteoff'];?>
-            <? } # Singolo esito ?>
+                <b>Note OFF:</b> <?php echo $row['noteoff'];?>
+            <?php } # Singolo esito ?>
         </div><br>
          <!-- Link a piè di pagina -->
          <div class="link_back">
              <a href="main.php?page=gestione_segnalazioni&segn=esiti_master">Torna alla lista</a>
          </div>
-    <? }
+    <?php }
     else if (isset($_POST['op'])===FALSE) {
     //Determinazione pagina (paginazione)
     $pagebegin = (int)$_REQUEST['offset'] * $PARAMETERS['settings']['posts_per_page'];
@@ -176,7 +176,7 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
                         </div>
                     </td>
                 </tr>
-                <? while ($rec = gdrcd_query($blocco, 'fetch')) {
+                <?php while ($rec = gdrcd_query($blocco, 'fetch')) {
                     $num = gdrcd_query(gdrcd_query("SELECT * FROM esiti WHERE id_blocco = " . gdrcd_filter('num', $rec['id']) . " 
                     AND autore != '" . $rec['pg'] . "' ORDER BY master, data DESC", 'result'), 'num_rows');
                     $new = gdrcd_query(gdrcd_query("SELECT * FROM esiti WHERE id_blocco = " . gdrcd_filter('num', $rec['id']) . " 
@@ -229,7 +229,7 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
                             </form>
                         </td>
                     </tr>
-                <? } #Fine blocco  ?>
+                <?php } #Fine blocco  ?>
             </table>
         </div>
     <?php

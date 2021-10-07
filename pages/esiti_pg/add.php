@@ -10,7 +10,7 @@ if ($_POST['op']=='add') {
             <div class="warning">
                 Questa serie di esiti è al momento chiusa
             </div>
-        <?
+            <?php
         } else {
             if (isset($_POST['note'])===FALSE) { $note = 'Nessuna';} else { $note = gdrcd_filter('in',$_POST['note']); }
             if (isset($_POST['dice_face'])===FALSE) { $facce = 0;} else { $facce=gdrcd_filter('num',$_POST['dice_face']);}
@@ -43,7 +43,7 @@ if ($_POST['op']=='add') {
             <div class="link_back">
                 <a href="main.php?page=servizi_esiti">Torna indietro</a>
             </div>
-        <?  }
+        <?php }
     } else {
         echo '<div class="warning">Non hai i permessi per visualizzare questa sezione</div>';
     }

@@ -26,11 +26,11 @@ if ($_SESSION['permessi']>=ESITI_PERM && ESITI_CHAT && $blocco['pg']!==$_SESSION
                 Scegli la chat
             </div>
             <div class='form_field'>
-                <? $quer=gdrcd_query("SELECT * FROM mappa ORDER BY id ", 'result'); ?>
+                <?php $quer=gdrcd_query("SELECT * FROM mappa ORDER BY id ", 'result'); ?>
                 <select name="chat">
-                    <? while ($res=gdrcd_query($quer, 'fetch')) { ?>
-                        <option value="<? echo $res['id'];?>"><? echo $res['nome'];?></option>
-                    <? } ?>
+                    <?php while ($res=gdrcd_query($quer, 'fetch')) { ?>
+                        <option value="<?php echo $res['id'];?>"><?php echo $res['nome'];?></option>
+                    <?php } ?>
                 </select>
             </div>
 
@@ -38,11 +38,11 @@ if ($_SESSION['permessi']>=ESITI_PERM && ESITI_CHAT && $blocco['pg']!==$_SESSION
                 Skill da tirare
             </div>
             <div class='form_field'>
-                <? $ability=gdrcd_query("SELECT * FROM abilita WHERE id_razza = -1 ORDER BY nome ", 'result'); ?>
+                <?php $ability=gdrcd_query("SELECT * FROM abilita WHERE id_razza = -1 ORDER BY nome ", 'result'); ?>
                 <select name="id_ab">
-                    <? while ($r_ab=gdrcd_query($ability, 'fetch')) { ?>
-                        <option value="<? echo $r_ab['id_abilita'];?>"><? echo $r_ab['nome'];?></option>
-                    <? } ?>
+                    <?php while ($r_ab=gdrcd_query($ability, 'fetch')) { ?>
+                        <option value="<?php echo $r_ab['id_abilita'];?>"><?php echo $r_ab['nome'];?></option>
+                    <?php } ?>
                 </select>
             </div>
 
@@ -88,12 +88,12 @@ if ($_SESSION['permessi']>=ESITI_PERM && ESITI_CHAT && $blocco['pg']!==$_SESSION
                        value="add">
                 <input type="hidden"
                        name="id"
-                       value="<? echo $_GET['blocco'];?>">
+                       value="<?php echo $_GET['blocco'];?>">
                 <input type="submit"
                        value="<?php echo gdrcd_filter('out',$MESSAGE['interface']['forms']['submit']);?>" />
             </div>
 
         </form>
-    <? }
+    <?php }
 }
 ?>

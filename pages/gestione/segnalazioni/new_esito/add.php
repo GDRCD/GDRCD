@@ -9,7 +9,7 @@ if ($_POST['op']=='add') {
         <div class="warning">
             Questa serie di esiti è al momento chiusa
         </div>
-    <? 	} else {
+    <?php 	} else {
         if (isset($_POST['note'])===FALSE) { $note = 'Nessuna';} else { $note = gdrcd_filter('in',$_POST['note']); }
         if (isset($_POST['chat'])===FALSE) { $chat = 0;} else { $chat = gdrcd_filter('num',$_POST['chat']); }
         if (isset($_POST['id_ab'])===FALSE) { $ab = 0;} else { $ab = gdrcd_filter('num',$_POST['id_ab']); }
@@ -42,15 +42,14 @@ if ($_POST['op']=='add') {
 
         /*Eseguo l'inserimento del singolo esito*/
         gdrcd_query("INSERT INTO esiti (titolo, pg, autore, contenuto, noteoff, id_ab, chat, CD_1, CD_2, 
-                   CD_3, CD_4, id_blocco, master, modificatore, dice_face, dice_num, dice_results,letto_master) 
+                   CD_3, CD_4, id_blocco, master, dice_face, dice_num, dice_results,letto_master) 
                    VALUES 
                           ('".gdrcd_filter('in',$_POST['titolo'])."',
                    '".gdrcd_filter('in', $load_blocco['pg'])."','".gdrcd_filter('in', $_SESSION['login'])."',
                    '".gdrcd_filter('in', $_POST['contenuto'])."','".$note."', ".$ab.", ".$chat.", 
                    '".gdrcd_filter('in', $_POST['CD_1'])."', '".gdrcd_filter('in', $_POST['CD_2'])."', 
                    '".gdrcd_filter('in', $_POST['CD_3'])."', '".gdrcd_filter('in', $_POST['CD_4'])."', 
-                   ".$_POST['id'].", '".$master."', ".gdrcd_filter('num', $_POST['mod']).", 
-                   ".gdrcd_filter('num', $facce).",
+                   ".$_POST['id'].", '".$master."', ".gdrcd_filter('num', $facce).",
                    ".gdrcd_filter('num', $num).", '".gdrcd_filter('in', $dice_res)."', 1 )");
 
         #Aggiorno il master se non presente
@@ -64,5 +63,5 @@ if ($_POST['op']=='add') {
         <div class="warning">
             <?php echo gdrcd_filter('out',$MESSAGE['warning']['inserted']);?>
         </div>
-    <?  	   }
+    <?php  	   }
 } ?>
