@@ -730,7 +730,7 @@ if (REG_ROLE && SEND_GM)
 $PARAMETERS['administration']['skills']['text'] = 'Gestione abilità';
 $PARAMETERS['administration']['skills']['url'] = 'main.php?page=gestione_abilita';
 $PARAMETERS['administration']['skills']['access_level'] = SUPERUSER;
-$PARAMETERS['administration']['skills_extra']['text'] = 'Gestione abilità dati extra';
+$PARAMETERS['administration']['skills_extra']['text'] = 'Gestione Dati Extra Abilità';
 $PARAMETERS['administration']['skills_extra']['url'] = 'main.php?page=gestione_abilita_extra';
 $PARAMETERS['administration']['skills_extra']['access_level'] = SUPERUSER;
 $PARAMETERS['administration']['plot']['text'] = 'Gestione ambientazione';
