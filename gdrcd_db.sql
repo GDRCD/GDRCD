@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Set 30, 2021 alle 17:12
+-- Generation Time: Ott 07, 2021 alle 15:22
 -- Versione del server: 8.0.21
 -- PHP Version: 5.6.40
 
@@ -64,12 +64,13 @@ INSERT INTO `abilita` (`id_abilita`, `nome`, `car`, `descrizione`, `id_razza`) V
 --
 
 CREATE TABLE IF NOT EXISTS `abilita_extra` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `abilita` int NOT NULL,
   `grado` int NOT NULL,
   `descrizione` text NOT NULL,
-  `costo` int NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  `costo` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -78,13 +79,14 @@ CREATE TABLE IF NOT EXISTS `abilita_extra` (
 --
 
 CREATE TABLE IF NOT EXISTS `abilita_requisiti` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `abilita` int NOT NULL,
   `grado` int NOT NULL,
   `tipo` int NOT NULL,
   `id_riferimento` int NOT NULL,
-  `liv_riferimento` int NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  `liv_riferimento` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -149,8 +151,8 @@ CREATE TABLE IF NOT EXISTS `backmessaggi` (
   `destinatario` varchar(20) NOT NULL DEFAULT '',
   `spedito` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `letto` tinyint(1) DEFAULT '0',
-  `tipo` int(2) NOT NULL default '0',
-  `oggetto` text NULL DEFAULT NULL,
+  `tipo` int NOT NULL DEFAULT '0',
+  `oggetto` text,
   `testo` text,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -433,8 +435,8 @@ CREATE TABLE IF NOT EXISTS `messaggi` (
   `letto` tinyint(1) DEFAULT '0',
   `mittente_del` tinyint(1) DEFAULT '0',
   `destinatario_del` tinyint(1) DEFAULT '0',
-  `tipo` int(2) NOT NULL default '0',
-  `oggetto` text NULL DEFAULT NULL,
+  `tipo` int NOT NULL DEFAULT '0',
+  `oggetto` text,
   `testo` text,
   PRIMARY KEY (`id`),
   KEY `destinatario` (`destinatario`),
@@ -546,9 +548,9 @@ CREATE TABLE IF NOT EXISTS `personaggio` (
   `ultimo_stipendio` date NOT NULL DEFAULT '2009-07-01',
   `last_ip` varchar(16) DEFAULT NULL,
   `is_invisible` tinyint(1) NOT NULL DEFAULT '0',
-  `ultimo_refresh` datetime NOT NULL default '2009-07-01 00:00:00',
-  `ora_entrata` datetime NOT NULL default '2009-07-01 00:00:00',
-  `ora_uscita` datetime NOT NULL default CURRENT_TIMESTAMP,
+  `ultimo_refresh` datetime NOT NULL DEFAULT '2009-07-01 00:00:00',
+  `ora_entrata` datetime NOT NULL DEFAULT '2009-07-01 00:00:00',
+  `ora_uscita` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `posizione` int NOT NULL DEFAULT '1',
   PRIMARY KEY (`nome`),
   KEY `IDRazza` (`id_razza`),
@@ -559,9 +561,9 @@ CREATE TABLE IF NOT EXISTS `personaggio` (
 -- Dump dei dati per la tabella `personaggio`
 --
 
-INSERT INTO `personaggio` (`nome`, `cognome`, `pass`, `ultimo_cambiopass`, `data_iscrizione`, `email`, `permessi`, `ultima_mappa`, `ultimo_luogo`, `esilio`, `data_esilio`, `motivo_esilio`, `autore_esilio`, `sesso`, `id_razza`, `descrizione`, `affetti`, `stato`, `online_status`, `disponibile`, `url_img`, `url_img_chat`, `url_media`, `blocca_media`, `esperienza`, `car0`, `car1`, `car2`, `car3`, `car4`, `car5`, `salute`, `salute_max`, `data_ultima_gilda`, `soldi`, `banca`, `ultimo_stipendio`, `last_ip`, `is_invisible`, `ultimo_refresh`, `ora_entrata`, `ora_uscita`, `posizione`, `ultimo_messaggio`) VALUES
-('Super', 'User', '$P$BcH1cP941XHOf0X61wVWWjzXqcCi2a/', NULL, '2011-06-04 00:47:48', 'email@domain.ext', 4, 1, -1, '0000-00-00', '0000-00-00', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 7, 8, 6, 5, 6, 5, 100, 100, '0000-00-00 00:00:00', 300, 50000, '0000-00-00', '127.0.0.1', 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 0),
-('Test', 'Di FunzionaliÃ ', '$P$BUoa19QUuXsgIDlhGC3chR/3Q7hoRy0', NULL, '2011-06-04 00:47:48', 'test@domain.ext', 0, 1, -1, '0000-00-00', '0000-00-00', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 7, 8, 6, 5, 6, 5, 100, 100, '0000-00-00 00:00:00', 50, 50, '0000-00-00', '127.0.0.1', 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 0);
+INSERT INTO `personaggio` (`nome`, `cognome`, `pass`, `ultimo_cambiopass`, `data_iscrizione`, `email`, `permessi`, `ultima_mappa`, `ultimo_luogo`, `esilio`, `data_esilio`, `motivo_esilio`, `autore_esilio`, `sesso`, `id_razza`, `descrizione`, `affetti`, `stato`, `online_status`, `disponibile`, `url_img`, `url_img_chat`, `url_media`, `blocca_media`, `esperienza`, `car0`, `car1`, `car2`, `car3`, `car4`, `car5`, `salute`, `salute_max`, `data_ultima_gilda`, `soldi`, `banca`, `ultimo_stipendio`, `last_ip`, `is_invisible`, `ultimo_refresh`, `ora_entrata`, `ora_uscita`, `posizione`) VALUES
+('Super', 'User', '$P$BcH1cP941XHOf0X61wVWWjzXqcCi2a/', NULL, '2011-06-04 00:47:48', '$P$BRlKNAh58WjvJvswEk/FLnYGURuU27.', 4, 1, -1, '0000-00-00', '0000-00-00', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, '', '', '', '0', '1000.0000', 5, 8, 6, 5, 6, 5, 100, 100, '0000-00-00 00:00:00', 300, 50000, '2021-10-07', '93.56.163.158', 0, '2021-10-07 15:22:12', '2021-10-07 14:26:10', '0000-00-00 00:00:00', 1),
+('Test', 'Di FunzionaliÃ ', '$P$BUoa19QUuXsgIDlhGC3chR/3Q7hoRy0', NULL, '2011-06-04 00:47:48', '$P$Bd1amPCKkOF9GdgYsibZ96U92D5CtR0', 0, 1, -1, '0000-00-00', '0000-00-00', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 7, 8, 6, 5, 6, 5, 100, 100, '0000-00-00 00:00:00', 50, 50, '0000-00-00', '127.0.0.1', 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1);
 
 -- --------------------------------------------------------
 
@@ -638,34 +640,36 @@ INSERT INTO `ruolo` (`id_ruolo`, `gilda`, `nome_ruolo`, `immagine`, `stipendio`,
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `segnalazione_role` (Registrazione giocate)
+-- Struttura della tabella `segnalazione_role`
 --
 
 CREATE TABLE IF NOT EXISTS `segnalazione_role` (
-    `id` bigint(20) NOT NULL AUTO_INCREMENT,
-    `stanza` int(11) NOT NULL,
-    `conclusa` int(11) NOT NULL DEFAULT '0',
-    `partecipanti` text CHARACTER SET utf8,
-    `mittente` varchar(20) CHARACTER SET utf8 NOT NULL,
-    `data_inizio` datetime DEFAULT NULL,
-    `data_fine` datetime DEFAULT NULL,
-    `tags` text CHARACTER SET utf8,
-    `quest` text CHARACTER SET utf8,
-    PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=119 ;
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `stanza` int NOT NULL,
+  `conclusa` int NOT NULL DEFAULT '0',
+  `partecipanti` text CHARACTER SET utf8 COLLATE utf8_general_ci,
+  `mittente` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `data_inizio` datetime DEFAULT NULL,
+  `data_fine` datetime DEFAULT NULL,
+  `tags` text CHARACTER SET utf8 COLLATE utf8_general_ci,
+  `quest` text CHARACTER SET utf8 COLLATE utf8_general_ci,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
 
 --
--- Struttura della tabella `send_GM` (Registrazione giocate)
+-- Struttura della tabella `send_GM`
 --
 
 CREATE TABLE IF NOT EXISTS `send_GM` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `data` datetime NOT NULL,
-    `autore` text CHARACTER SET utf8 NOT NULL,
-    `role_reg` int(11) NOT NULL,
-    `note` text CHARACTER SET utf8,
-    PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+  `id` int NOT NULL AUTO_INCREMENT,
+  `data` datetime NOT NULL,
+  `autore` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `role_reg` int NOT NULL,
+  `note` text CHARACTER SET utf8 COLLATE utf8_general_ci,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
