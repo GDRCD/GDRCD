@@ -11,9 +11,9 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT = @@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS = @@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION = @@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
 
 --
@@ -143,6 +143,25 @@ CREATE TABLE IF NOT EXISTS `blacklist` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
+
+--
+-- Struttura della tabella `blocco_esiti`
+--
+
+CREATE TABLE IF NOT EXISTS `blocco_esiti`
+(
+    `id`     int(11)                         NOT NULL AUTO_INCREMENT,
+    `titolo` text CHARACTER SET utf8         NOT NULL,
+    `data`   datetime                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `autore` varchar(255) CHARACTER SET utf8 NOT NULL,
+    `pg`     varchar(255) CHARACTER SET utf8 NOT NULL,
+    `id_min` int(11)                                  DEFAULT NULL,
+    `master` varchar(255) CHARACTER SET utf8 NOT NULL DEFAULT '0',
+    `closed` int(11)                         NOT NULL DEFAULT '0',
+    PRIMARY KEY (`id`)
+) ENGINE = MyISAM
+  DEFAULT CHARSET = latin1;
+
 
 --
 -- Struttura della tabella `chat`
@@ -276,6 +295,37 @@ INSERT INTO `codtipooggetto` (`cod_tipo`, `descrizione`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `esiti`
+--
+
+CREATE TABLE IF NOT EXISTS `esiti`
+(
+    `id`           int(11)                         NOT NULL AUTO_INCREMENT,
+    `sent`         int(11)                         NOT NULL DEFAULT '0',
+    `titolo`       varchar(255) CHARACTER SET utf8 NOT NULL,
+    `data`         datetime                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `chat`         int(11)                         NOT NULL DEFAULT '0',
+    `autore`       varchar(255) CHARACTER SET utf8 NOT NULL,
+    `contenuto`    mediumtext CHARACTER SET utf8,
+    `noteoff`      text CHARACTER SET utf8,
+    `master`       varchar(255) CHARACTER SET utf8          DEFAULT NULL,
+    `pg`           varchar(255) CHARACTER SET utf8          DEFAULT NULL,
+    `id_blocco`    int(11)                         NOT NULL,
+    `id_ab`        int(11)                                  DEFAULT '0',
+    `CD_1`         text CHARACTER SET utf8,
+    `CD_2`         text CHARACTER SET utf8,
+    `CD_3`         text CHARACTER SET utf8,
+    `CD_4`         text CHARACTER SET utf8,
+    `letto_master` int(11)                         NOT NULL DEFAULT '0',
+    `letto_pg`     int(11)                         NOT NULL DEFAULT '0',
+    `dice_face`    int(4)                          NOT NULL DEFAULT '0',
+    `dice_num`     int(4)                          NOT NULL DEFAULT '0',
+    `dice_results` varchar(1000)                            DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE = MyISAM
+  DEFAULT CHARSET = latin1;
+
+--
 -- Struttura della tabella `gilda`
 --
 
@@ -400,7 +450,7 @@ CREATE TABLE IF NOT EXISTS `messaggi` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `mittente` varchar(40) NOT NULL,
   `destinatario` varchar(20) NOT NULL DEFAULT 'Nessuno',
-  `spedito` datetime NOT NULL,
+  `spedito` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
   `letto` tinyint(1) DEFAULT '0',
   `mittente_del` tinyint(1) DEFAULT '0',
   `destinatario_del` tinyint(1) DEFAULT '0',
@@ -470,7 +520,6 @@ CREATE TABLE IF NOT EXISTS `oggetto` (
 
 INSERT INTO `oggetto` (`id_oggetto`, `tipo`, `nome`, `creatore`, `data_inserimento`, `descrizione`, `ubicabile`, `costo`, `difesa`, `attacco`, `cariche`, `bonus_car0`, `bonus_car1`, `bonus_car2`, `bonus_car3`, `bonus_car4`, `bonus_car5`, `urlimg`) VALUES
 (1, 6, 'Scopa', 'Super', '2009-12-20 14:29:33', 'Una comune scopa di saggina.', 0, 10, 0, 0, '0', 0, 0, 0, 0, 0, 0, 'standard_oggetto.png');
-                                                                                                                                                                                                                                                               ;
 
 -- --------------------------------------------------------
 
