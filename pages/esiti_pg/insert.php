@@ -28,5 +28,5 @@ if ($_POST['op']=='insert') {
     <div class="link_back">
         <a href="main.php?page=servizi_esiti">Torna indietro</a>
     </div>
-<?	}
+<?php }
 ?>
