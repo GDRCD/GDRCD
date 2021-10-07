@@ -22,6 +22,20 @@ if ($abi_class->AbiVisibility($pg)) {
             $res = $abi_class->downgradeSkill($id_abilita, $pg);
             break;
 
+        case 'operationDone':
+            $mex_id = gdrcd_filter('out',$_REQUEST['mex']);
+            $mex = $abi_class->operationDone($mex_id);
+            break;
+    }
+
+    # Cambio pagina per evitare doppio invio
+    if(isset($res)){
+        $mex_id = $res['mex']; ?>
+
+        <script>window.location.href = '/main.php?page=scheda_skill&pg=Super&op=operationDone&mex=<?=$mex_id;?>';</script>
+
+        <?php
+        die();
     }
 
     $abi_list = $abi_class->AbilityList($pg);
@@ -38,9 +52,9 @@ if ($abi_class->AbiVisibility($pg)) {
             </div>
             <div class="elenco_abilita"><!-- Elenco abilità -->
 
-                <?php if (isset($res)) { ?>
+                <?php if (isset($mex)) { ?>
 
-                    <div class="warning"><?= gdrcd_filter('out', $res['mex']); ?></div>
+                    <div class="warning"><?= gdrcd_filter('out', $mex); ?></div>
 
                 <?php } ?>
 
@@ -87,6 +101,7 @@ if ($abi_class->AbiVisibility($pg)) {
                                             <a href="main.php?page=scheda_skill&pg=<?= $pg; ?>&op=downgradeSkill&what=<?= $id ?>">-</a>]
                                         <?php } ?>
                                     </div>
+                                </td>
                             </tr>
                         <?php } ?>
 

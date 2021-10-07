@@ -113,6 +113,41 @@ class Abilita
         }
     }
 
+    /**
+     * @fn operationDone
+     * @note Ritorna un messaggio di successo/fallimento per l'operazione eseguita
+     * @param string $mex
+     * @return string
+     */
+    public function operationDone(string $mex): string
+    {
+
+        $mex = gdrcd_filter('out',$mex);
+
+        switch ($mex){
+            case 'UpOk':
+                $text = 'Abilità aumentata con successo.';
+                break;
+            case 'downOk':
+                $text = 'Abilità diminuita correttamente.';
+                break;
+            case 'ExpKo':
+                $text = 'Non hai abbastanza esperienza per l\'acquisto.';
+                break;
+            case 'ReqKo':
+                $text = 'Non hai i requisiti necessari per questa abilita.';
+                break;
+            case 'PermKo':
+                $text = 'Non hai i permessi per effettuare questa operazione.';
+                break;
+            default:
+                $text = 'Errore sconosciuto, contattare lo staff.';
+                break;
+        }
+
+        return $text;
+    }
+
     /***** DATI ABILITA *****/
 
     /**
@@ -353,15 +388,15 @@ class Abilita
                         gdrcd_query("UPDATE clgpersonaggioabilita SET grado='{$new_grado}' WHERE nome='{$pg}' AND id_abilita='{$abi}' LIMIT 1");
                     }
 
-                    return ['response' => true, 'mex' => 'Abilità aumentata con successo.'];
+                    return ['response' => true, 'mex' => 'UpOk'];
                 } else {
-                    return ['response' => false, 'mex' => 'Non hai abbastanza esperienza per l\'acquisto.'];
+                    return ['response' => false, 'mex' => 'ExpKo'];
                 }
             } else {
-                return ['response' => false, 'mex' => 'Non hai i requisiti necessari per questa abilita.'];
+                return ['response' => false, 'mex' => 'ReqKo'];
             }
         } else {
-            return ['response' => false, 'mex' => 'Non hai i permessi per gestire questo personaggio o hai raggiunto il livello massimo.'];
+            return ['response' => false, 'mex' => 'PermKo'];
         }
 
     }
@@ -403,9 +438,9 @@ class Abilita
                 gdrcd_query("UPDATE clgpersonaggioabilita SET grado='{$new_grado}' WHERE nome='{$pg}' AND id_abilita='{$abi}' LIMIT 1");
             }
 
-            return ['response' => true, 'mex' => 'Abilità diminuita correttamente.'];
+            return ['response' => true, 'mex' => 'downOk'];
         } else {
-            return ['response' => false, 'mex' => 'Non puoi diminuire quest\'abilità.'];
+            return ['response' => false, 'mex' => 'PermKo'];
         }
 
     }
