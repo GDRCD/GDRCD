@@ -122,9 +122,9 @@ class Abilita
     public function operationDone(string $mex): string
     {
 
-        $mex = gdrcd_filter('out',$mex);
+        $mex = gdrcd_filter('out', $mex);
 
-        switch ($mex){
+        switch ($mex) {
             case 'UpOk':
                 $text = 'Abilità aumentata con successo.';
                 break;
@@ -211,6 +211,18 @@ class Abilita
         return gdrcd_query("SELECT * FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
     }
 
+    /**
+     * @fn defaultCalcUp
+     * @note Formula di default in caso di valore assente
+     * @param int $grado
+     * @return int
+     */
+    public function defaultCalcUp(int $grado):int
+    {
+        $grado = gdrcd_filter('num', $grado);
+        return round($grado * DEFAULT_PX_PER_LVL);
+    }
+
     /***** DATI ABILITA->PG ****/
 
     /**
@@ -286,7 +298,7 @@ class Abilita
                     if (!empty($extra['costo']) && ($extra['costo'] > 0)) {
                         $px_abi = gdrcd_filter('num', $extra['costo']);
                     } else {
-                        $px_abi = (DEFAULT_PX_PER_LVL * $count);
+                        $px_abi = $this->defaultCalcUp($count);
                     }
 
                     # Aggiungo il costo calcolato
@@ -309,7 +321,7 @@ class Abilita
                 while ($count <= $grado) {
 
                     # Calcolo il costo del livello
-                    $px_abi = (DEFAULT_PX_PER_LVL * $count);
+                    $px_abi = $this->defaultCalcUp($count);
 
                     # Lo aggiungo ai costi
                     $px_spesi += $px_abi;
@@ -373,11 +385,11 @@ class Abilita
                     if (!empty($extra['costo']) && ($extra['costo'] > 0)) {
                         $costo = gdrcd_filter('num', $extra['costo']);
                     } else {
-                        $costo = (DEFAULT_PX_PER_LVL * $new_grado);
+                        $costo = $this->defaultCalcUp($new_grado);
                     }
 
                 } else {
-                    $costo = (DEFAULT_PX_PER_LVL * $new_grado);
+                    $costo = $this->defaultCalcUp($new_grado);
                 }
 
                 if ($exp_remained >= $costo) {
