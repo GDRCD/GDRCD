@@ -90,7 +90,7 @@ if ($_REQUEST['pg'] == $_SESSION['login']) {
         #Imposta messaggio
         $message = 'Non puoi segnalare una giocata con un solo partecipante';
     } #Minimo 3 azioni
-    else if ($num_az < $PARAMETERS['settings']['min_az']) {
+    else if ($num_az < REG_MIN_AZIONI) {
         #Imposta messaggio
         $message = 'Non hai inviato azioni sufficienti ad una registrazione';
     } #Controllo che l'orario non si sovrapponga ad altre segnalazioni fatte (doppia segnalazione)

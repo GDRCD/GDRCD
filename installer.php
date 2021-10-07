@@ -90,7 +90,7 @@ require 'header.inc.php'; /*Header comune*/
             id bigint(20) NOT NULL auto_increment,
             mittente varchar(20) NOT NULL default '',
             destinatario varchar(20) NOT NULL default '',
-            spedito datetime NOT NULL,
+            spedito datetime NOT NULL default '0000-00-00 00:00:00',
             letto tinyint(1) default '0',
             tipo int(2) NOT NULL default '0',
             oggetto text NULL DEFAULT NULL,
@@ -107,6 +107,22 @@ require 'header.inc.php'; /*Header comune*/
             PRIMARY KEY  (ip),
             KEY Ora (ora)
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
+
+
+            gdrcd_query("CREATE TABLE IF NOT EXISTS blocco_esiti
+(
+    id     int(11)                         NOT NULL AUTO_INCREMENT,
+    titolo text CHARACTER SET utf8         NOT NULL,
+    data   datetime                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    autore varchar(255) CHARACTER SET utf8 NOT NULL,
+    pg     varchar(255) CHARACTER SET utf8 NOT NULL,
+    id_min int(11)                                  DEFAULT NULL,
+    master varchar(255) CHARACTER SET utf8 NOT NULL DEFAULT '0',
+    closed int(11)                         NOT NULL DEFAULT '0',
+    PRIMARY KEY (id)
+) ENGINE = MyISAM
+  DEFAULT CHARSET = latin1;");
+
 
         gdrcd_query("CREATE TABLE chat (
             id bigint(20) NOT NULL auto_increment,
@@ -189,6 +205,31 @@ require 'header.inc.php'; /*Header comune*/
 
         gdrcd_query("INSERT INTO codtipooggetto VALUES (0, 'Vario');");
 
+    gdrcd_query("CREATE TABLE esiti (
+        id int(11) NOT NULL AUTO_INCREMENT,
+        sent int(11) NOT NULL DEFAULT '0',
+        titolo varchar(255) CHARACTER SET utf8 NOT NULL,
+        data datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        chat int(11) NOT NULL DEFAULT '0',
+         autore varchar(255) CHARACTER SET utf8 NOT NULL,
+        contenuto mediumtext CHARACTER SET utf8,
+        noteoff text CHARACTER SET utf8,
+        master varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+        pg varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+        id_blocco int(11) NOT NULL,
+        id_ab int(11) DEFAULT '0',
+        CD_1 text CHARACTER SET utf8,
+        CD_2 text CHARACTER SET utf8,
+        CD_3 text CHARACTER SET utf8,
+        CD_4 text CHARACTER SET utf8,
+        letto_master int(11) NOT NULL DEFAULT '0',
+        letto_pg int(11) NOT NULL DEFAULT '0',
+        dice_face int(4) NOT NULL DEFAULT '0',
+        dice_num int(4) NOT NULL DEFAULT '0',
+        dice_results varchar(1000) DEFAULT NULL,
+        PRIMARY KEY (id)
+        ) ENGINE=MyISAM  DEFAULT CHARSET=latin1;");
+
         gdrcd_query("CREATE TABLE gilda (
             id_gilda int(4) NOT NULL auto_increment,
             nome char(50) NOT NULL default '',
@@ -267,7 +308,7 @@ require 'header.inc.php'; /*Header comune*/
             id bigint(20) NOT NULL auto_increment,
             mittente varchar(40) NOT NULL,
             destinatario varchar(20) NOT NULL default 'Nessuno',
-            spedito datetime NOT NULL,
+            spedito datetime NOT NULL default CURRENT_TIMESTAMP,
             letto tinyint(1) default '0',
             mittente_del tinyint(1) default '0',
             destinatario_del tinyint(1) default '0',
