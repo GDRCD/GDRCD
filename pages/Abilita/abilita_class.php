@@ -22,10 +22,11 @@ class Abilita
     /**
      * @fn AbiVisibility
      * @note Controlla se la pagina abilita' e' publica o se si hanno i permessi per guardarla
-     * @param $pg
+     * @param string $pg
      * @return bool
      */
-    public function AbiVisibility($pg){
+    public function AbiVisibility(string $pg): bool
+    {
 
         $pg = gdrcd_filter('out',$pg);
 
@@ -38,7 +39,7 @@ class Abilita
      * @note Controlla se la tabella `abilita_extra` e' attiva
      * @return bool
      */
-    public function extraActive()
+    public function extraActive(): bool
     {
         return (defined('ABI_EXTRA') && ABI_EXTRA);
     }
@@ -50,7 +51,7 @@ class Abilita
      * @note Ritorna una serie di option per una select contenente la lista abilita'
      * @return string
      */
-    public function ListaAbilita()
+    public function ListaAbilita(): string
     {
         $html = '';
         $news = gdrcd_query("SELECT * FROM abilita WHERE 1 ORDER BY nome", 'result');
@@ -67,9 +68,10 @@ class Abilita
     /**
      * @fn AbilityList
      * @note Estrae la lista abilita, se specificato un pg ci associa anche il grado
+     * @param string $pg
      * @return string
      */
-    public function AbilityList($pg = '')
+    public function AbilityList(string $pg = ''): string
     {
 
         $pg = gdrcd_filter('in', $pg);
@@ -96,7 +98,7 @@ class Abilita
      * @note Estrae i dati di un livello di abilita dalla tabella `abilita_extra`
      * @param int $abi
      * @param int $grado
-     * @return bool|int|un
+     * @return mixed
      */
     public function abiExtra(int $abi, int $grado)
     {
@@ -133,7 +135,7 @@ class Abilita
      * @param string $pg
      * @return int
      */
-    public function ExpPG($pg)
+    public function ExpPG(string $pg): int
     {
         $pg = gdrcd_filter('in', $pg);
         $exp = gdrcd_query("SELECT esperienza FROM personaggio WHERE nome='{$pg}' LIMIT 1");
@@ -144,10 +146,10 @@ class Abilita
     /**
      * @fn RemainedExp
      * @note Esperienza Rimasta al pg
-     * @param $pg
-     * @return false|float|int|string|una
+     * @param string $pg
+     * @return float
      */
-    public function RemainedExp($pg)
+    public function RemainedExp(string $pg): float
     {
         # Filtro dati passati
         $pg = gdrcd_filter('in', $pg);
@@ -216,13 +218,20 @@ class Abilita
         }
 
         # Ritorno la differenza tra l'esperienza del pg e quella spesa
-        return ($exp_pg - $px_spesi);
+        return round($exp_pg - $px_spesi);
     }
 
 
     /*** FUNCTIONS ***/
 
-    public function upgradeSkillPermission($pg,$grado)
+    /**
+     * @fn upgradeSkillPermission
+     * @note Controlla i permessi per l'upgrade delle skill
+     * @param string $pg
+     * @param int $grado
+     * @return bool
+     */
+    public function upgradeSkillPermission(string $pg, int $grado): bool
     {
         $pg = gdrcd_filter('in', $pg);
         $grado = gdrcd_filter('num',$grado);
@@ -301,7 +310,8 @@ class Abilita
      * @param int $abi
      * @param string $pg
      */
-    public function downgradeSkill(int $abi, string $pg){
+    public function downgradeSkill(int $abi, string $pg): array
+    {
 
         $abi = gdrcd_filter('num',$abi);
         $pg = gdrcd_filter('in',$pg);
@@ -598,6 +608,8 @@ class Abilita
             gdrcd_query("DELETE FROM abilita_requisiti WHERE id='{$id}' LIMIT 1");
 
             return true;
+        } else{
+            return false;
         }
     }
 
