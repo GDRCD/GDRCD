@@ -35,7 +35,7 @@ if( ! empty($_SESSION['login'])) {
 /* PARAMETRI DI CONNESSIONE */
 $PARAMETERS['database']['username'] = 'gdrcd';            //nome utente del database
 $PARAMETERS['database']['password'] = 'gdrcd';            //password del database
-$PARAMETERS['database']['database_name'] = 'my_gdrcd';    //nome del database
+$PARAMETERS['database']['database_name'] = 'gdrcd';    //nome del database
 $PARAMETERS['database']['url'] = 'localhost';        //indirizzo ip del database
 
 
@@ -260,7 +260,7 @@ $PARAMETERS['settings']['cars_cap'] = 10;//Punteggio massimo per una caratterist
 $PARAMETERS['settings']['cars_sum'] = 40;//Punteggio totale da distribuire tra le caratteristiche in fase di iscrizione.
 $PARAMETERS['settings']['view_logs'] = 10; //Numero di log visualizzato.
 $PARAMETERS['settings']['auto_salary'] = 'OFF'; //ON per attivare l'accredito automatico dello stipendio al primo login
-
+$PARAMETERS['settings']['min_az'] = 4; //Azioni minime per poter registrare una giocata
 
 
 /** * Abilitazione dell'audio in land
@@ -668,6 +668,12 @@ $PARAMETERS['office']['guilds']['access_level'] = USER;
 $PARAMETERS['office']['market']['text'] = 'Mercato';
 $PARAMETERS['office']['market']['url'] = 'main.php?page=servizi_mercato';
 $PARAMETERS['office']['market']['access_level'] = USER;
+if (ESITI)
+{
+    $PARAMETERS['office']['esiti']['text'] = 'Pannello esiti';
+    $PARAMETERS['office']['esiti']['url'] = 'main.php?page=servizi_esiti';
+    $PARAMETERS['office']['esiti']['access_level'] = USER;
+}
 if ($PARAMETERS['mode']['privaterooms'] == 'ON')
 {
     $PARAMETERS['office']['hotel']['text'] = 'Prenotazione stanze';
@@ -726,6 +732,12 @@ if (REG_ROLE && SEND_GM)
     $PARAMETERS['administration']['send_GM']['text'] = 'Giocate segnalate';
     $PARAMETERS['administration']['send_GM']['url'] = 'main.php?page=gestione_segnalazioni&segn=roles_gm';
     $PARAMETERS['administration']['send_GM']['access_level'] = ROLE_PERM;
+}
+if (ESITI)
+{
+    $PARAMETERS['administration']['esiti']['text'] = 'Pannello esiti Master';
+    $PARAMETERS['administration']['esiti']['url'] = 'main.php?page=gestione_segnalazioni&segn=esiti_master';
+    $PARAMETERS['administration']['esiti']['access_level'] = ESITI_PERM;
 }
 $PARAMETERS['administration']['skills']['text'] = 'Gestione abilità';
 $PARAMETERS['administration']['skills']['url'] = 'main.php?page=gestione_abilita';
