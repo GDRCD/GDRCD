@@ -472,3 +472,34 @@ div.innertube {
     margin: 0 !important;
     max-width: 500px;
 }
+
+
+/*** FAKE-TABLE ***/
+
+.fake-table{
+    margin: 5px 0;
+}
+
+.fake-table .tr{
+    width: 100%;
+    height: auto;
+    margin: 5px 0;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.fake-table .tr .td{
+    display: inline-block;
+    vertical-align: top;
+}
+
+.fake-table .table-subtitle{
+    font-size: 15px;
+    font-weight: bold;
+    padding: 5px 0;
+}
+
+.fake-table .table-text{
+    margin:5px 0;
+    text-align: left;
+}
