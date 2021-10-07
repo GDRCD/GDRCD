@@ -235,7 +235,6 @@ $MESSAGE['interface']['messages']['all_erased'] = ' eliminati';
 $MESSAGE['interface']['messages']['no_message'] = 'Nessun ' . strtolower($PARAMETERS['names']['private_message']['sing']);
 $MESSAGE['interface']['messages']['please_erase'] = 'Si prega di ridurre il numero di ' . strtolower($PARAMETERS['names']['private_message']['plur']) . ' nella casella';
 $MESSAGE['interface']['messages']['go_back'] = 'Torna all\'elenco dei ' . strtolower($PARAMETERS['names']['private_message']['plur']) . '.';
-
 /* Forum */
 $MESSAGE['interface']['forums']['topic']['new_posts']['sing'] = 'Nuovo Messaggio';
 $MESSAGE['interface']['forums']['topic']['new_posts']['plur'] = 'Nuovi Messaggi';
@@ -286,6 +285,15 @@ $MESSAGE['interface']['bank']['credit'] = 'Accredito';
 $MESSAGE['interface']['bank']['credit_no'] = 'Accredito ritirato';
 $MESSAGE['interface']['bank']['execute'] = 'Esegui';
 $MESSAGE['interface']['bank']['notice'] = 'ti ha accreditato';
+
+/*Esiti Master*/
+$MESSAGE['interface']['esitiserie']['intro'] = "Messaggio che spiega come funzionano le serie di esiti lato master";
+$MESSAGE['interface']['esitiserie']['intro_pg'] = "Messaggio che spiega come funzionano le serie di esiti lato pg";
+$MESSAGE['interface']['esiti']['newesito'] = "Messaggio che spiega come funziona l'invio di nuovi esiti lato master";
+$MESSAGE['interface']['esiti']['newesitopg'] = "Messaggio che spiega come funziona l'invio di nuovi esiti lato pg";
+$MESSAGE['interface']['esiti']['esitochat'] = "Messaggio che spiega come funziona l'invio di nuovi esiti in chat lato master";
+
+
 /*Lavoro*/
 $MESSAGE['interface']['job']['page_name'] = 'Lavoro';
 $MESSAGE['interface']['job']['submit']['pick'] = 'Scegli';
