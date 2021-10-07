@@ -23,13 +23,13 @@ if ($abi_class->AbiVisibility($pg)) {
             break;
 
         case 'operationDone':
-            $mex_id = gdrcd_filter('out',$_REQUEST['mex']);
+            $mex_id = gdrcd_filter('out', $_REQUEST['mex']);
             $mex = $abi_class->operationDone($mex_id);
             break;
     }
 
     # Cambio pagina per evitare doppio invio
-    if(isset($res)){
+    if (isset($res)) {
         $mex_id = $res['mex']; ?>
 
         <script>window.location.href = '/main.php?page=scheda_skill&pg=Super&op=operationDone&mex=<?=$mex_id;?>';</script>
@@ -66,32 +66,27 @@ if ($abi_class->AbiVisibility($pg)) {
                 </div>
                 <div class="div_colonne_abilita_scheda">
 
-                    <table class="colonne_abilita_scheda">
+                    <div class="fake-table colonne_abilita_scheda">
                         <?php foreach ($abi_list as $abi) {
 
                             $id = gdrcd_filter('num', $abi['id_abilita']);
                             $nome = gdrcd_filter('out', $abi['nome']);
                             $car = gdrcd_filter('out', $PARAMETERS['names']['stats']['car' . gdrcd_filter('out', $abi['car'])]);
                             $grado = gdrcd_filter('num', $abi['grado']);
-                            ?>
-                            <tr>
-                                <td>
-                                    <div class="abilita_scheda_nome">
+                            $abi_extra_data = $abi_class->LvlData($id, $grado); ?>
+
+                            <div class="tr">
+                                <div class="sub-tr">
+                                    <div class="abilita_scheda_nome td" title="Clicca per aprire/chiudere la descrizione.">
                                         <?= $nome; ?>
                                     </div>
-                                </td>
-                                <td>
-                                    <div class="abilita_scheda_car">
+                                    <div class="abilita_scheda_car td">
                                         <?= "({$car})"; ?>
                                     </div>
-                                </td>
-                                <td>
-                                    <div class="abilita_scheda_tank">
+                                    <div class="abilita_scheda_tank td">
                                         <?= $grado; ?>
                                     </div>
-                                </td>
-                                <td>
-                                    <div class="abilita_scheda_sub">
+                                    <div class="abilita_scheda_sub td">
                                         <?php if ($abi_class->upgradeSkillPermission($pg, $grado)) { ?>
                                             [
                                             <a href="main.php?page=scheda_skill&pg=<?= $pg; ?>&op=upgradeSkill&what=<?= $id ?>">+</a>]
@@ -101,11 +96,41 @@ if ($abi_class->AbiVisibility($pg)) {
                                             <a href="main.php?page=scheda_skill&pg=<?= $pg; ?>&op=downgradeSkill&what=<?= $id ?>">-</a>]
                                         <?php } ?>
                                     </div>
-                                </td>
-                            </tr>
+                                </div>
+                                <div class="sub-tr">
+                                    <div class="abilita_scheda_text">
+                                        <div class="default_tex">
+                                            <div class="table-subtitle">Descrizione</div>
+                                            <div class="table-text"><?= $abi_extra_data['text']; ?></div>
+                                        </div>
+                                        <?php if ($abi_class->extraActive()) { ?>
+                                            <div class="actual_extra_text">
+                                                <div class="table-subtitle">Descrizione Livello attuale</div>
+                                                <div class="table-text"><?= $abi_extra_data['lvl_extra_text']; ?></div>
+                                            </div>
+                                            <div class="next_extra_text">
+                                                <div class="table-subtitle">Descrizione Livello successivo</div>
+                                                <div class="table-text"><?= $abi_extra_data['next_lvl_extra_text']; ?></div>
+                                            </div>
+                                            <div class="next_extra_text">
+                                                <div class="table-subtitle">Costo Livello successivo</div>
+                                                <div class="table-text" style="text-align: center"><?= $abi_extra_data['price']; ?></div>
+                                            </div>
+                                        <?php }
+                                        if ($abi_class->requirementActive()) {
+                                            ?>
+                                            <div class="next_req_text">
+                                                <div class="table-subtitle">Requisiti Livello successivo</div>
+                                                <div class="table-text"><?= $abi_extra_data['requirement']; ?></div>
+                                            </div>
+                                        <?php } ?>
+                                    </div>
+                                </div>
+
+                            </div>
                         <?php } ?>
 
-                    </table>
+                    </div>
 
                 </div>
                 <div class="form_info">
@@ -114,7 +139,22 @@ if ($abi_class->AbiVisibility($pg)) {
             </div>
         </div>
     </div>
-<?php } else{ ?>
+
+    <script>
+        $(function(){
+
+            $('.colonne_abilita_scheda .abilita_scheda_nome').on('click',function(e){
+                e.stopImmediatePropagation();
+
+                $(this).closest('.tr').find('.abilita_scheda_text').slideToggle();
+            })
+
+        })
+
+
+    </script>
+
+<?php } else { ?>
 
     <div class="warning">Non hai i permessi per visualizzare le abilità di questo personaggio.</div>
 

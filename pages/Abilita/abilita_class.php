@@ -9,12 +9,15 @@ class Abilita
 {
 
     private $me,
-        $permessi;
+        $permessi,
+        $parameters;
 
     public function __construct()
     {
+        global $PARAMETERS;
         $this->me = gdrcd_filter('in', $_SESSION['login']);
         $this->permessi = gdrcd_filter('num', $_SESSION['permessi']);
+        $this->parameters = $PARAMETERS;
     }
 
     /**** CONTROLS ****/
@@ -335,6 +338,102 @@ class Abilita
 
         # Ritorno la differenza tra l'esperienza del pg e quella spesa
         return round($exp_pg - $px_spesi);
+    }
+
+    /**
+     * @fn LvlData
+     * @note Estrae i dati per la compilazione della descrizione del livello
+     * @param int $abi
+     * @param int $grado
+     * @return array
+     */
+    public function LvlData(int $abi, int $grado): array
+    {
+        # Filter passed data
+        $abi = gdrcd_filter('num', $abi);
+        $grado = gdrcd_filter('num', $grado);
+
+        # Controllo se non ho il livello massimo consentito
+        $new_grado = ($grado < ABI_LEVEL_CAP) ? ($grado + 1) : 0;
+
+        # Create return array
+        $default_descr = gdrcd_query("SELECT descrizione FROM abilita WHERE id_abilita='{$abi}' LIMIT 1");
+        $data = [
+            'text' => gdrcd_html_filter($default_descr['descrizione']),
+            'requirement' => '',
+            'lvl_extra_text' => '',
+            'next_lvl_extra_text' => '',
+            'next_price' => ''
+        ];
+
+        # Se i dati extra sono attivi
+        if ($this->extraActive()) {
+
+            # Estraggo la descrizione extra attuale
+            $actual_descr = gdrcd_query("SELECT descrizione FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
+
+            # Se esiste la descrizione extra, la aggiungo
+            if (!empty($actual_descr['descrizione'])) {
+                $data['lvl_extra_text'] = gdrcd_html_filter($actual_descr['descrizione']);
+            }
+
+            # Se non ho il livello massimo
+            if ($new_grado > 0) {
+
+                # Estraggo la descrizione del livello successivo
+                $next_descr = gdrcd_query("SELECT descrizione,costo FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$new_grado}' LIMIT 1");
+                $costo = gdrcd_filter('num', $next_descr['costo']);
+
+                # Se esiste la descrizione extra del successivo, la aggiungo
+                if (!empty($next_descr['descrizione'])) {
+                    $data['next_lvl_extra_text'] = gdrcd_html_filter($next_descr['descrizione']);
+                }
+
+                # Se il costo esiste ed e' maggiore di 0, lo setti, altrimenti usi il calcolo di default
+                if (!empty($costo) && ($costo > 0)) {
+                    $data['price'] = $costo;
+                } else {
+                    $data['price'] = $this->defaultCalcUp($new_grado);
+                }
+            }
+        }
+
+        # Se i requisiti sono attivi
+        if ($this->requirementActive()) {
+
+            # Li estraggo
+            $requisiti = gdrcd_query("SELECT abilita_requisiti.* FROM abilita_requisiti WHERE abilita='{$abi}' AND grado='{$new_grado}' ORDER BY tipo DESC", 'result');
+
+            # Per ogni requisito
+            foreach ($requisiti as $requisito) {
+
+                # Estraggo i suoi dati
+                $tipo = gdrcd_filter('num', $requisito['tipo']);
+                $rif = gdrcd_filter('num', $requisito['id_riferimento']);
+                $rif_lvl = gdrcd_filter('num', $requisito['liv_riferimento']);
+
+                # Compongo l'html in base al tipo
+                switch ($tipo) {
+                    case REQUISITO_ABI:
+                        $req_data = gdrcd_query("SELECT nome FROM abilita WHERE id_abilita='{$rif}' LIMIT 1");
+                        $nome = gdrcd_filter('out', $req_data['nome']);
+
+                        $data['requirement'] .= " {$nome} {$rif_lvl}, ";
+
+                        break;
+                    case REQUISITO_STAT:
+                        $nome = gdrcd_filter('out', $this->parameters['names']['stats']['car' . $rif]);
+                        $data['requirement'] .= " {$nome} {$rif_lvl}, ";
+                        break;
+                }
+            }
+
+            # Levo l'ultima ", " dal testo, partendo da destra
+            $data['requirement'] = rtrim($data['requirement'], ", ");
+        }
+
+        # Ritorno i dati estratti
+        return $data;
     }
 
 
