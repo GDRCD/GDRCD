@@ -349,7 +349,12 @@ $MESSAGE['interface']['hotel']['back'] = 'Indietro';
 $MESSAGE['interface']['hotel']['ok'] = 'Prenotazione completata';
 /*Anagrafe*/
 $MESSAGE['interface']['pg_list']['pg_list'] = 'Anagrafe';
-$MESSAGE['interface']['pg_list']['select'] = 'Visualizza il personaggio';
+$MESSAGE['interface']['pg_list']['search']['title'] = 'Ricerca Personaggio';
+$MESSAGE['interface']['pg_list']['search']['img'] = 'Avatar Chat';
+$MESSAGE['interface']['pg_list']['search']['personaggio'] = 'Personaggio';
+$MESSAGE['interface']['pg_list']['search']['sesso'] = 'Sesso';
+$MESSAGE['interface']['pg_list']['search']['razza'] = 'Razza';
+$MESSAGE['interface']['pg_list']['search']['submit'] = 'Cerca';
 /*Elenco abilita*/
 $MESSAGE['interface']['skills']['page_name'] = 'Elenco abilità';
 $MESSAGE['interface']['skills']['skill'] = 'Abilità';
