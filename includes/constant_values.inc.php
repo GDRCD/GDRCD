@@ -73,7 +73,6 @@ const LOG_PERM = GAMEMASTER;
 const EDIT_PERM = GAMEMASTER;
 //definisce quali permessi possono modificare le registrazioni (default: gamemaster)
 
-
 /**
  *  Abilita'
  */

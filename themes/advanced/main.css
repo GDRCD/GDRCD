@@ -420,7 +420,8 @@ div.innertube {
     color: rgb(177, 71, 71);
 }
 
-.gestione_pagina .gestione_incipit ul{
+.gestione_pagina .gestione_incipit ul,
+.servizi_pagina .servizi_incipit ul {
     width: 80%;
     margin:0 auto;
 }
