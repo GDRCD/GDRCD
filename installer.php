@@ -90,7 +90,7 @@ require 'header.inc.php'; /*Header comune*/
             id bigint(20) NOT NULL auto_increment,
             mittente varchar(20) NOT NULL default '',
             destinatario varchar(20) NOT NULL default '',
-            spedito datetime NOT NULL default '0000-00-00 00:00:00',
+            spedito datetime NOT NULL,
             letto tinyint(1) default '0',
             tipo int(2) NOT NULL default '0',
             oggetto text NULL DEFAULT NULL,
@@ -109,7 +109,7 @@ require 'header.inc.php'; /*Header comune*/
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
 
-            gdrcd_query("CREATE TABLE IF NOT EXISTS blocco_esiti
+    gdrcd_query("CREATE TABLE IF NOT EXISTS blocco_esiti
 (
     id     int(11)                         NOT NULL AUTO_INCREMENT,
     titolo text CHARACTER SET utf8         NOT NULL,
@@ -205,7 +205,7 @@ require 'header.inc.php'; /*Header comune*/
 
         gdrcd_query("INSERT INTO codtipooggetto VALUES (0, 'Vario');");
 
-            gdrcd_query("CREATE TABLE esiti (
+    gdrcd_query("CREATE TABLE esiti (
         id int(11) NOT NULL AUTO_INCREMENT,
         sent int(11) NOT NULL DEFAULT '0',
         titolo varchar(255) CHARACTER SET utf8 NOT NULL,
@@ -308,7 +308,7 @@ require 'header.inc.php'; /*Header comune*/
             id bigint(20) NOT NULL auto_increment,
             mittente varchar(40) NOT NULL,
             destinatario varchar(20) NOT NULL default 'Nessuno',
-            spedito datetime NOT NULL default '0000-00-00 00:00:00',
+            spedito datetime NOT NULL,
             letto tinyint(1) default '0',
             mittente_del tinyint(1) default '0',
             destinatario_del tinyint(1) default '0',
@@ -416,6 +416,7 @@ require 'header.inc.php'; /*Header comune*/
 
         gdrcd_query("INSERT INTO personaggio VALUES ('Super', 'User', '" . gdrcd_encript('super') . "', NULL, now(), '".gdrcd_encript('super@gdrcd.test')."', 4, 1, -1, '2009-07-01', '2009-07-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', 0, 1000, 7, 8, 6, 5, 6, 5, 100, 100, '2009-07-01 00:00:00', 300, 50000, '2009-07-01', '127.0.0.1', 0, '2009-07-01 00:00:00', '2009-07-01 00:00:00', '2009-07-01 00:00:00', 1);");
         gdrcd_query("INSERT INTO personaggio VALUES ('Test', 'Di Funzionalià', '" . gdrcd_encript('test') . "', NULL, now(), '".gdrcd_encript('test@gdrcd.test')."', 0, 1, -1, '2009-07-01', '2009-07-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', 0, 1000, 7, 8, 6, 5, 6, 5, 100, 100, '2009-07-01 00:00:00', 50, 50, '2009-07-01', '127.0.0.1', 0, '2009-07-01 00:00:00', '2009-07-01 00:00:00', '2009-07-01 00:00:00', 1);");
+
 
 
         gdrcd_query("CREATE TABLE razza (
