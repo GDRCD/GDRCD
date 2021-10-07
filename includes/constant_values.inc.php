@@ -83,11 +83,10 @@ const ESITI_CHAT = false;
 //Attiva o disattiva l'invio degli esiti in chat (default: false) -- Funzionalità in sviluppo
 const TIRI_ESITO = true;
 //Attiva o disattiva i tiri via esito (default: true)
-const ESITI_PERM = 2;
+const ESITI_PERM = GAMEMASTER;
 //definisce quali permessi hanno accesso alla pagina di gestione degli esiti (default: gamemaster)
-const FULL_PERM = 3;
+const FULL_PERM = MODERATOR;
 //definisce quali permessi hanno accesso alla visione di tutti gli esiti (default: moderator)
-
 
 /*Vettori globali dei parametri*/
 $PARAMETER = array();
