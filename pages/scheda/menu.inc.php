@@ -17,6 +17,13 @@ if($_REQUEST['pg'] == $_SESSION['login'] || $_SESSION['permessi'] >= GUILDMODERA
     <a href="main.php?page=scheda_equip&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']); ?>">
         <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['menu']['equipment']); ?>
     </a>
+    <?php
+        if($PARAMETERS['settings']['diary']==="ON"){?>
+            <a href="main.php?page=scheda_diario&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']); ?>">
+                <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['menu']['diary']); ?>
+            </a>
+    <?php    }
+    ?>
 <?php /*Visualizza il link se l'utente visualizza la propria scheda o se è almeno un master*/
 if (($_SESSION['permessi'] >= ROLE_PERM || $_REQUEST['pg'] == $_SESSION['login']) && REG_ROLE) { ?>
     <a href="main.php?page=scheda_roles&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']); ?>">

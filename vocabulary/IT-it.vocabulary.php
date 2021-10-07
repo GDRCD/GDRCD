@@ -145,6 +145,7 @@ $MESSAGE['interface']['sheet']['menu']['transictions'] = 'Transazioni';
 $MESSAGE['interface']['sheet']['menu']['experience'] = 'Esperienza';
 $MESSAGE['interface']['sheet']['menu']['inventory'] = 'Inventario';
 $MESSAGE['interface']['sheet']['menu']['equipment'] = 'Equipaggiamento';
+$MESSAGE['interface']['sheet']['menu']['diary'] = 'Diario';
 $MESSAGE['interface']['sheet']['menu']['gst'] = 'Amministra';
 $MESSAGE['interface']['sheet']['menu']['log'] = 'Log';
 $MESSAGE['interface']['sheet']['modify_form']['last_name'] = 'Cognome';
@@ -203,6 +204,14 @@ $MESSAGE['interface']['sheet']['log']['date'] = 'Data';
 $MESSAGE['interface']['sheet']['log']['ip'] = 'IP';
 $MESSAGE['interface']['sheet']['log']['other_account'] = 'Doppio';
 $MESSAGE['interface']['sheet']['log']['message'] = 'Messaggio';
+$MESSAGE['interface']['sheet']['diary']['new'] = 'Nuova pagina';
+$MESSAGE['interface']['sheet']['diary']['title']= 'Titolo';
+$MESSAGE['interface']['sheet']['diary']['date']= 'Data';
+$MESSAGE['interface']['sheet']['diary']['visible']= 'Visibile a tutti';
+$MESSAGE['interface']['sheet']['diary']['text']= 'Testo';
+$MESSAGE['interface']['sheet']['diary']['back']= 'Torna al diario';
+$MESSAGE['interface']['sheet']['diary']['button_save']='Salva';
+
 /*Messaggi privati*/
 $MESSAGE['interface']['messages']['recipient'] = 'Destinatario';
 $MESSAGE['interface']['messages']['multiple']['title'] = $PARAMETERS['names']['private_message']['sing'] . 'collettivo';

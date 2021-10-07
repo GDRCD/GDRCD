@@ -260,6 +260,7 @@ $PARAMETERS['settings']['cars_cap'] = 10;//Punteggio massimo per una caratterist
 $PARAMETERS['settings']['cars_sum'] = 40;//Punteggio totale da distribuire tra le caratteristiche in fase di iscrizione.
 $PARAMETERS['settings']['view_logs'] = 10; //Numero di log visualizzato.
 $PARAMETERS['settings']['auto_salary'] = 'OFF'; //ON per attivare l'accredito automatico dello stipendio al primo login
+$PARAMETERS['settings']['diary'] = 'ON'; //ON per attivare il diario personale del personaggio
 
 
 
