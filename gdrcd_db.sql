@@ -11,9 +11,9 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT = @@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS = @@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION = @@COLLATION_CONNECTION */;
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
 
 --
@@ -450,7 +450,7 @@ CREATE TABLE IF NOT EXISTS `messaggi` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `mittente` varchar(40) NOT NULL,
   `destinatario` varchar(20) NOT NULL DEFAULT 'Nessuno',
-  `spedito` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+  `spedito` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `letto` tinyint(1) DEFAULT '0',
   `mittente_del` tinyint(1) DEFAULT '0',
   `destinatario_del` tinyint(1) DEFAULT '0',
@@ -571,6 +571,7 @@ CREATE TABLE IF NOT EXISTS `personaggio` (
   `ora_entrata` datetime NOT NULL default '2009-07-01 00:00:00',
   `ora_uscita` datetime NOT NULL default CURRENT_TIMESTAMP,
   `posizione` int NOT NULL DEFAULT '1',
+  `ultimo_messaggio` bigint NOT NULL DEFAULT '0',
   PRIMARY KEY (`nome`),
   KEY `IDRazza` (`id_razza`),
   KEY `Esilio` (`esilio`)
