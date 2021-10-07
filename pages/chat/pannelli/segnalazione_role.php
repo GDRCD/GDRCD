@@ -44,7 +44,7 @@ if ($num_log > 0 && ($row['stanza'] !== $_SESSION['luogo']) && (isset($_POST['op
 
         <div class="form_info"><b>Attenzione:</b> Ogni giocatore deve inviare una propria registrazione della role.
             La registrazione deve essere avviata all'inizio della giocata e chiusa alla fine per essere valida.
-            Giocate con un numero di azioni inferiori a <?php echo $PARAMETERS['settings']['min_az']; ?>
+            Giocate con un numero di azioni inferiori a <?=REG_MIN_AZIONI;?>
             non saranno considerate segnalabili. La giocata sarà salvata e farà fede per eventuali segnalazioni ai
             Master.
         </div>
@@ -323,7 +323,7 @@ else if ($_POST['op'] == 'start_ret') {
         $message = 'Non puoi segnalare una giocata con un solo partecipante';
 
     } #Minimo 5 azioni
-    else if ($num_az < $PARAMETERS['settings']['min_az']) {
+    else if ($num_az < REG_MIN_AZIONI) {
         /*Imposto il messaggio*/
         $message = 'Non hai inviato azioni sufficienti ad una registrazione';
 

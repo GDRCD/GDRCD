@@ -59,19 +59,26 @@ define('HTML_FILTER_HIGH', 1);
 /**
  * Impostazioni registrazioni giocate
  */
+//Azioni minime per poter registrare una giocata
+CONST REG_MIN_AZIONI = 4;
 
-const REG_ROLE = true;
 //Attiva o disattiva il pacchetto intero (default: true)
-const SAVE_ROLE = true;
+const REG_ROLE = true;
+
 //Attiva o disattiva il salvataggio delle role su pc (default: true)
-const SEND_GM = true;
+const SAVE_ROLE = true;
+
 //Attiva o disattiva la segnalazione ai GM e la relativa pagina gestionale (default: true)
-const ROLE_PERM = GAMEMASTER;
+const SEND_GM = true;
+
 //definisce quali permessi hanno accesso alla lista delle giocate dei pg e alle segnalazioni GM (default: gamemaster)
-const LOG_PERM = GAMEMASTER;
+const ROLE_PERM = GAMEMASTER;
+
 //definisce quali permessi hanno accesso ai log chat (default: gamemaster)
-const EDIT_PERM = GAMEMASTER;
+const LOG_PERM = GAMEMASTER;
+
 //definisce quali permessi possono modificare le registrazioni (default: gamemaster)
+const EDIT_PERM = GAMEMASTER;
 
 /**
  * Impostazioni esiti
