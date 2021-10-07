@@ -642,3 +642,17 @@ CREATE TABLE IF NOT EXISTS `send_GM` (
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+
+-- Dump della struttura di tabella my_gdrcd.diario
+CREATE TABLE IF NOT EXISTS `diario` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `personaggio` varchar(20) DEFAULT NULL,
+    `data` date NOT NULL,
+    `data_inserimento` datetime NOT NULL,
+    `data_modifica` datetime DEFAULT NULL,
+    `visibile` char(5) NOT NULL,
+    `titolo` varchar(50) NOT NULL DEFAULT '',
+    `testo` text NOT NULL,
+    PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

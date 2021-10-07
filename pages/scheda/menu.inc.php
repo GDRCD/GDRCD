@@ -18,7 +18,8 @@ if($_REQUEST['pg'] == $_SESSION['login'] || $_SESSION['permessi'] >= GUILDMODERA
         <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['menu']['equipment']); ?>
     </a>
     <?php
-        if($PARAMETERS['settings']['diary']==="ON"){?>
+if(defined('PG_DIARY_ENABLED') AND PG_DIARY_ENABLED){
+    ?>
             <a href="main.php?page=scheda_diario&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']); ?>">
                 <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['menu']['diary']); ?>
             </a>

@@ -72,6 +72,8 @@ const LOG_PERM = GAMEMASTER;
 //definisce quali permessi hanno accesso ai log chat (default: gamemaster)
 const EDIT_PERM = GAMEMASTER;
 //definisce quali permessi possono modificare le registrazioni (default: gamemaster)
+CONST PG_DIARY_ENABLED = true;
+//Attiva o disattiva il diario del PG
 /*Vettori globali dei parametri*/
 $PARAMETER = array();
 $MESSAGES = array();
