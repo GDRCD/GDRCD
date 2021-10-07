@@ -91,10 +91,14 @@ CONST ABI_LEVEL_CAP = 5;
 CONST ABI_PUBLIC = true;
 
 /**
- * Tipo Requisito Abilita'
+ *  Requisito Abilita'
  */
-CONST REQUISITO_ABILITA = 1;
-CONST REQUISITO_CAR = 2;
+# Gestisce l'inclusione dei requisiti abilita'
+CONST ABI_REQUIREMENT = true;
+
+# Definisce i tipi di requisiti abilita'
+CONST REQUISITO_ABI = 1;
+CONST REQUISITO_STAT = 2;
 
 /*Vettori globali dei parametri*/
 $PARAMETER = array();
