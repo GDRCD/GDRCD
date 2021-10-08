@@ -81,20 +81,29 @@ const LOG_PERM = GAMEMASTER;
 const EDIT_PERM = GAMEMASTER;
 
 /**
+ * Fasi Lunari
+ */
+//Attiva le fasi lunari
+const MOON = true;
+
+/**
  * Impostazioni esiti
  */
 
-const ESITI = true;
 //Attiva o disattiva il pacchetto intero (default: true)
-const ESITI_CHAT = false;
-//Attiva o disattiva l'invio degli esiti in chat (default: false) -- Funzionalità in sviluppo
-const TIRI_ESITO = true;
-//Attiva o disattiva i tiri via esito (default: true)
+const ESITI = true;
 
-const ESITI_PERM = GAMEMASTER;
+//Attiva o disattiva l'invio degli esiti in chat (default: false) -- Funzionalità in sviluppo
+const ESITI_CHAT = false;
+
+//Attiva o disattiva i tiri via esito (default: true)
+const TIRI_ESITO = true;
+
 //definisce quali permessi hanno accesso alla pagina di gestione degli esiti (default: gamemaster)
-const FULL_PERM = MODERATOR;
+const ESITI_PERM = GAMEMASTER;
+
 //definisce quali permessi hanno accesso alla visione di tutti gli esiti (default: moderator)
+const FULL_PERM = MODERATOR;
 
 /*Vettori globali dei parametri*/
 $PARAMETER = array();

@@ -98,9 +98,9 @@ function gdrcd_query($sql, $mode = 'query')
 
         case 'assoc':
             return mysqli_fetch_array($sql, MYSQLI_ASSOC);
-            break;        
-		
-		case 'object':
+            break;
+
+        case 'object':
             return mysqli_fetch_object($sql);
             break;
 
@@ -521,6 +521,7 @@ function gdrcd_format_datetime_standard($datetime_in)
 {
     return date('Y-m-d H:i', strtotime($datetime_in));
 }
+
 /**
  * Funzione di formattazione data completa nel formato ita per nome file da catalogare
  * @param string $datetime_in : la data e ora in formato leggibile da strtotime()
