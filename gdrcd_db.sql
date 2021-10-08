@@ -294,6 +294,24 @@ INSERT INTO `codtipooggetto` (`cod_tipo`, `descrizione`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `diario`
+--
+
+CREATE TABLE IF NOT EXISTS `diario` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `personaggio` varchar(20) DEFAULT NULL,
+  `data` date NOT NULL,
+  `data_inserimento` datetime NOT NULL,
+  `data_modifica` datetime DEFAULT NULL,
+  `visibile` char(5) NOT NULL,
+  `titolo` varchar(50) NOT NULL DEFAULT '',
+  `testo` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `esiti`
 --
 
@@ -570,7 +588,6 @@ CREATE TABLE IF NOT EXISTS `personaggio` (
   `ora_entrata` datetime NOT NULL DEFAULT '2009-07-01 00:00:00',
   `ora_uscita` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `posizione` int NOT NULL DEFAULT '1',
-  `ultimo_messaggio` bigint NOT NULL DEFAULT '0',
   PRIMARY KEY (`nome`),
   KEY `IDRazza` (`id_razza`),
   KEY `Esilio` (`esilio`)
@@ -579,6 +596,7 @@ CREATE TABLE IF NOT EXISTS `personaggio` (
 --
 -- Dump dei dati per la tabella `personaggio`
 --
+
 
 INSERT INTO `personaggio` (`nome`, `cognome`, `pass`, `ultimo_cambiopass`, `data_iscrizione`, `email`, `permessi`, `ultima_mappa`, `ultimo_luogo`, `esilio`, `data_esilio`, `motivo_esilio`, `autore_esilio`, `sesso`, `id_razza`, `descrizione`, `affetti`, `stato`, `online_status`, `disponibile`, `url_img`, `url_img_chat`, `url_media`, `blocca_media`, `esperienza`, `car0`, `car1`, `car2`, `car3`, `car4`, `car5`, `salute`, `salute_max`, `data_ultima_gilda`, `soldi`, `banca`, `ultimo_stipendio`, `last_ip`, `is_invisible`, `ultimo_refresh`, `ora_entrata`, `ora_uscita`, `posizione`, `ultimo_messaggio`) VALUES
 ('Super', 'User', '$P$BcH1cP941XHOf0X61wVWWjzXqcCi2a/', NULL, '2011-06-04 00:47:48', '$P$BNZYtz9JOQE.O4Tv7qZyl3SzIoZzzR.', 4, 1, -1, '0000-00-00', '0000-00-00', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 7, 8, 6, 5, 6, 5, 100, 100, '0000-00-00 00:00:00', 300, 50000, '0000-00-00', '127.0.0.1', 0, '2021-10-08 00:28:13', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 0),

@@ -308,7 +308,7 @@ require 'header.inc.php'; /*Header comune*/
             id bigint(20) NOT NULL auto_increment,
             mittente varchar(40) NOT NULL,
             destinatario varchar(20) NOT NULL default 'Nessuno',
-            spedito datetime NOT NULL default '0000-00-00 00:00:00',
+            spedito datetime NOT NULL default CURRENT_TIMESTAMP,
             letto tinyint(1) default '0',
             mittente_del tinyint(1) default '0',
             destinatario_del tinyint(1) default '0',
@@ -408,7 +408,6 @@ require 'header.inc.php'; /*Header comune*/
             ora_entrata datetime default NULL,
             ora_uscita datetime NOT NULL default '2009-07-01 00:00:00',
             posizione int(4) NOT NULL default '1',
-            ultimo_messaggio bigint(20) NOT NULL default '0',
             PRIMARY KEY  (nome),
             KEY IDRazza (id_razza),
             KEY Esilio (esilio)
@@ -416,7 +415,6 @@ require 'header.inc.php'; /*Header comune*/
 
         gdrcd_query("INSERT INTO personaggio VALUES ('Super', 'User', '" . gdrcd_encript('super') . "', NULL, now(), '".gdrcd_encript('super@gdrcd.test')."', 4, 1, -1, '2009-07-01', '2009-07-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', 0, 1000, 7, 8, 6, 5, 6, 5, 100, 100, '2009-07-01 00:00:00', 300, 50000, '2009-07-01', '127.0.0.1', 0, '2009-07-01 00:00:00', '2009-07-01 00:00:00', '2009-07-01 00:00:00', 1, 0);");
         gdrcd_query("INSERT INTO personaggio VALUES ('Test', 'Di Funzionalià', '" . gdrcd_encript('test') . "', NULL, now(), '".gdrcd_encript('test@gdrcd.test')."', 0, 1, -1, '2009-07-01', '2009-07-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', 0, 1000, 7, 8, 6, 5, 6, 5, 100, 100, '2009-07-01 00:00:00', 50, 50, '2009-07-01', '127.0.0.1', 0, '2009-07-01 00:00:00', '2009-07-01 00:00:00', '2009-07-01 00:00:00', 1, 0);");
-
 
 
         gdrcd_query("CREATE TABLE razza (
@@ -488,8 +486,6 @@ require 'header.inc.php'; /*Header comune*/
           note text CHARACTER SET utf8,
           PRIMARY KEY (id)
         ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;");
-
-
         echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['homepage']['installer']['done']) . '</div>';
         } ?>
         <!-- Link di ritorno alla homepage -->
