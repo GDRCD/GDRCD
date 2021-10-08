@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: 'Creazione report BUG '
+about: Rendi noto un bug o una problematica del progetto
 title: "[BUG] - {title}"
 labels: bug, wontfix
 assignees: Kasui92, gianni10049, annamereu, Jansna
