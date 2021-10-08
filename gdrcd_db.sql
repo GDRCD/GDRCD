@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Set 30, 2021 alle 16:58
+-- Generation Time: Ott 08, 2021 alle 23:14
 -- Versione del server: 8.0.21
 -- PHP Version: 5.6.40
 
@@ -11,9 +11,9 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT = @@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS = @@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION = @@COLLATION_CONNECTION */;
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
 
 --
@@ -120,8 +120,8 @@ CREATE TABLE IF NOT EXISTS `backmessaggi` (
   `destinatario` varchar(20) NOT NULL DEFAULT '',
   `spedito` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `letto` tinyint(1) DEFAULT '0',
-  `tipo` int(2) NOT NULL default '0',
-  `oggetto` text NULL DEFAULT NULL,
+  `tipo` int NOT NULL DEFAULT '0',
+  `oggetto` text,
   `testo` text,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -148,20 +148,19 @@ CREATE TABLE IF NOT EXISTS `blacklist` (
 -- Struttura della tabella `blocco_esiti`
 --
 
-CREATE TABLE IF NOT EXISTS `blocco_esiti`
-(
-    `id`     int(11)                         NOT NULL AUTO_INCREMENT,
-    `titolo` text CHARACTER SET utf8         NOT NULL,
-    `data`   datetime                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `autore` varchar(255) CHARACTER SET utf8 NOT NULL,
-    `pg`     varchar(255) CHARACTER SET utf8 NOT NULL,
-    `id_min` int(11)                                  DEFAULT NULL,
-    `master` varchar(255) CHARACTER SET utf8 NOT NULL DEFAULT '0',
-    `closed` int(11)                         NOT NULL DEFAULT '0',
-    PRIMARY KEY (`id`)
-) ENGINE = MyISAM
-  DEFAULT CHARSET = latin1;
+CREATE TABLE IF NOT EXISTS `blocco_esiti` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `titolo` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `data` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `autore` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `pg` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `id_min` int DEFAULT NULL,
+  `master` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0',
+  `closed` int NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
 
 --
 -- Struttura della tabella `chat`
@@ -295,34 +294,53 @@ INSERT INTO `codtipooggetto` (`cod_tipo`, `descrizione`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `diario`
+--
+
+CREATE TABLE IF NOT EXISTS `diario` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `personaggio` varchar(20) DEFAULT NULL,
+  `data` date NOT NULL,
+  `data_inserimento` datetime NOT NULL,
+  `data_modifica` datetime DEFAULT NULL,
+  `visibile` char(5) NOT NULL,
+  `titolo` varchar(50) NOT NULL DEFAULT '',
+  `testo` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `esiti`
 --
 
-CREATE TABLE IF NOT EXISTS `esiti`(
-`id`     int(11)                         NOT NULL AUTO_INCREMENT,
-    `sent`         int(11)                         NOT NULL DEFAULT '0',
-    `titolo`       varchar(255) CHARACTER SET utf8 NOT NULL,
-    `data`         datetime                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `chat`         int(11)                         NOT NULL DEFAULT '0',
-    `autore`       varchar(255) CHARACTER SET utf8 NOT NULL,
-    `contenuto`    mediumtext CHARACTER SET utf8,
-    `noteoff`      text CHARACTER SET utf8,
-    `master`       varchar(255) CHARACTER SET utf8          DEFAULT NULL,
-    `pg`           varchar(255) CHARACTER SET utf8          DEFAULT NULL,
-    `id_blocco`    int(11)                         NOT NULL,
-    `id_ab`        int(11)                                  DEFAULT '0',
-    `CD_1`         text CHARACTER SET utf8,
-    `CD_2`         text CHARACTER SET utf8,
-    `CD_3`         text CHARACTER SET utf8,
-    `CD_4`         text CHARACTER SET utf8,
-    `letto_master` int(11)                         NOT NULL DEFAULT '0',
-    `letto_pg`     int(11)                         NOT NULL DEFAULT '0',
-    `dice_face`    int(4)                          NOT NULL DEFAULT '0',
-    `dice_num`     int(4)                          NOT NULL DEFAULT '0',
-    `dice_results` varchar(1000)                            DEFAULT NULL,
-    PRIMARY KEY (`id`)
-) ENGINE = MyISAM
-  DEFAULT CHARSET = latin1;
+CREATE TABLE IF NOT EXISTS `esiti` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `sent` int NOT NULL DEFAULT '0',
+  `titolo` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `data` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `chat` int NOT NULL DEFAULT '0',
+  `autore` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `contenuto` mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci,
+  `noteoff` text CHARACTER SET utf8 COLLATE utf8_general_ci,
+  `master` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `pg` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `id_blocco` int NOT NULL,
+  `id_ab` int DEFAULT '0',
+  `CD_1` text CHARACTER SET utf8 COLLATE utf8_general_ci,
+  `CD_2` text CHARACTER SET utf8 COLLATE utf8_general_ci,
+  `CD_3` text CHARACTER SET utf8 COLLATE utf8_general_ci,
+  `CD_4` text CHARACTER SET utf8 COLLATE utf8_general_ci,
+  `letto_master` int NOT NULL DEFAULT '0',
+  `letto_pg` int NOT NULL DEFAULT '0',
+  `dice_face` int NOT NULL DEFAULT '0',
+  `dice_num` int NOT NULL DEFAULT '0',
+  `dice_results` varchar(1000) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
 
 --
 -- Struttura della tabella `gilda`
@@ -449,12 +467,12 @@ CREATE TABLE IF NOT EXISTS `messaggi` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `mittente` varchar(40) NOT NULL,
   `destinatario` varchar(20) NOT NULL DEFAULT 'Nessuno',
-  `spedito` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+  `spedito` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `letto` tinyint(1) DEFAULT '0',
   `mittente_del` tinyint(1) DEFAULT '0',
   `destinatario_del` tinyint(1) DEFAULT '0',
-  `tipo` int(2) NOT NULL default '0',
-  `oggetto` text NULL DEFAULT NULL,
+  `tipo` int NOT NULL DEFAULT '0',
+  `oggetto` text,
   `testo` text,
   PRIMARY KEY (`id`),
   KEY `destinatario` (`destinatario`),
@@ -519,7 +537,6 @@ CREATE TABLE IF NOT EXISTS `oggetto` (
 
 INSERT INTO `oggetto` (`id_oggetto`, `tipo`, `nome`, `creatore`, `data_inserimento`, `descrizione`, `ubicabile`, `costo`, `difesa`, `attacco`, `cariche`, `bonus_car0`, `bonus_car1`, `bonus_car2`, `bonus_car3`, `bonus_car4`, `bonus_car5`, `urlimg`) VALUES
 (1, 6, 'Scopa', 'Super', '2009-12-20 14:29:33', 'Una comune scopa di saggina.', 0, 10, 0, 0, '0', 0, 0, 0, 0, 0, 0, 'standard_oggetto.png');
-                                                                                                                                                                                                                                                               ;
 
 -- --------------------------------------------------------
 
@@ -567,9 +584,9 @@ CREATE TABLE IF NOT EXISTS `personaggio` (
   `ultimo_stipendio` date NOT NULL DEFAULT '2009-07-01',
   `last_ip` varchar(16) DEFAULT NULL,
   `is_invisible` tinyint(1) NOT NULL DEFAULT '0',
-  `ultimo_refresh` datetime NOT NULL default '2009-07-01 00:00:00',
-  `ora_entrata` datetime NOT NULL default '2009-07-01 00:00:00',
-  `ora_uscita` datetime NOT NULL default CURRENT_TIMESTAMP,
+  `ultimo_refresh` datetime NOT NULL DEFAULT '2009-07-01 00:00:00',
+  `ora_entrata` datetime NOT NULL DEFAULT '2009-07-01 00:00:00',
+  `ora_uscita` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `posizione` int NOT NULL DEFAULT '1',
   PRIMARY KEY (`nome`),
   KEY `IDRazza` (`id_razza`),
@@ -659,49 +676,37 @@ INSERT INTO `ruolo` (`id_ruolo`, `gilda`, `nome_ruolo`, `immagine`, `stipendio`,
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `segnalazione_role` (Registrazione giocate)
+-- Struttura della tabella `segnalazione_role`
 --
 
 CREATE TABLE IF NOT EXISTS `segnalazione_role` (
-    `id` bigint(20) NOT NULL AUTO_INCREMENT,
-    `stanza` int(11) NOT NULL,
-    `conclusa` int(11) NOT NULL DEFAULT '0',
-    `partecipanti` text CHARACTER SET utf8,
-    `mittente` varchar(20) CHARACTER SET utf8 NOT NULL,
-    `data_inizio` datetime DEFAULT NULL,
-    `data_fine` datetime DEFAULT NULL,
-    `tags` text CHARACTER SET utf8,
-    `quest` text CHARACTER SET utf8,
-    PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=119 ;
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `stanza` int NOT NULL,
+  `conclusa` int NOT NULL DEFAULT '0',
+  `partecipanti` text CHARACTER SET utf8 COLLATE utf8_general_ci,
+  `mittente` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `data_inizio` datetime DEFAULT NULL,
+  `data_fine` datetime DEFAULT NULL,
+  `tags` text CHARACTER SET utf8 COLLATE utf8_general_ci,
+  `quest` text CHARACTER SET utf8 COLLATE utf8_general_ci,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
 
 --
--- Struttura della tabella `send_GM` (Registrazione giocate)
+-- Struttura della tabella `send_GM`
 --
 
 CREATE TABLE IF NOT EXISTS `send_GM` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `data` datetime NOT NULL,
-    `autore` text CHARACTER SET utf8 NOT NULL,
-    `role_reg` int(11) NOT NULL,
-    `note` text CHARACTER SET utf8,
-    PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+  `id` int NOT NULL AUTO_INCREMENT,
+  `data` datetime NOT NULL,
+  `autore` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `role_reg` int NOT NULL,
+  `note` text CHARACTER SET utf8 COLLATE utf8_general_ci,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
-
--- Dump della struttura di tabella my_gdrcd.diario
-CREATE TABLE IF NOT EXISTS `diario` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `personaggio` varchar(20) DEFAULT NULL,
-    `data` date NOT NULL,
-    `data_inserimento` datetime NOT NULL,
-    `data_modifica` datetime DEFAULT NULL,
-    `visibile` char(5) NOT NULL,
-    `titolo` varchar(50) NOT NULL DEFAULT '',
-    `testo` text NOT NULL,
-    PRIMARY KEY (`id`)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
