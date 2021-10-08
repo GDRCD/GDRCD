@@ -42,6 +42,7 @@
                 include ('scheda/diario/new.inc.php');
                 break;
             case 'save_edit':
+            case 'delete':
             case 'save_new': //Inserimento nuova pagina
                 include ('scheda/diario/save.inc.php');
                 break;

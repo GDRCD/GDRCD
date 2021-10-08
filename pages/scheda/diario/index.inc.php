@@ -68,7 +68,7 @@
                    <td class="casella_elemento">
                        <form action="main.php?page=scheda_diario&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']);?>" method="post">
                            <input hidden value="delete" name="op">
-                           <button type="submit" name="id" value="<?php echo gdrcd_filter('out', $row['id']); ?>" class="btn-link">[<?php echo gdrcd_filter('out', $MESSAGE['interface']['forums']['link']['delete']); ?>]</button>
+                           <button type="submit" name="id" onClick='return confirmSubmit()' value="<?php echo gdrcd_filter('out', $row['id']); ?>" class="btn-link">[<?php echo gdrcd_filter('out', $MESSAGE['interface']['forums']['link']['delete']); ?>]</button>
                        </form>
                    </td>
 
@@ -89,3 +89,15 @@
         $_REQUEST['pg']); ?>"><?php echo gdrcd_filter('out',
             $MESSAGE['interface']['sheet']['link']['back']); ?></a>
 </div>
+<script LANGUAGE="JavaScript">
+<!--
+function confirmSubmit()
+{
+  var agree=confirm("Vuoi eliminare la pagina?");
+  if (agree)
+    return true ;
+  else
+  return false ;
+}
+// -->
+</script>

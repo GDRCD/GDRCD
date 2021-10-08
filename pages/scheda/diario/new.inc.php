@@ -17,7 +17,7 @@
             <?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['diary']['date']); ?>
         </div>
         <div class='form_field'>
-            <input type="date" name="data" class="form_input"/>
+            <input type="date" name="data" class="form_input" value="<?php echo (strftime('%Y') + $PARAMETERS['date']['offset']).'-'.strftime('%m').'-'.strftime('%d'); ?>"/>
         </div>
         <div class='form_label'>
             <?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['diary']['visible']); ?>

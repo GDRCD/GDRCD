@@ -13,8 +13,8 @@ if(isset($_REQUEST['pg']) === false) {
 $query="SELECT data, titolo, testo, data_modifica, data_inserimento FROM diario WHERE id='".gdrcd_filter('url',
         $_POST['id'])."'  ";
 
-$result = gdrcd_query($query, 'result');
-while ($row = gdrcd_query($result, 'fetch')){?>
+$row = gdrcd_query($query, 'query');
+?>
         <tr><td class="casella_elemento"><?php echo gdrcd_filter('out', $row['titolo']); ?></td>
             <td class="casella_elemento"><?php echo gdrcd_format_date( $row['data']); ?></td></tr>
     <tr><td class="casella_elemento" colspan="2"><?php echo gdrcd_filter('out', $row['testo']); ?></td></tr>
@@ -27,9 +27,6 @@ Data inserimento: <?php echo gdrcd_format_datetime( $row['data_inserimento']); ?
                ?>
         </div></td></tr>
 
-        <?php
-}
-?>
     </table>
 
         <!-- Link a piè di pagina -->
