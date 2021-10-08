@@ -772,7 +772,11 @@ function gdrcd_brute_debug($args)
     }
     die('FINE');
 }
-function gdrcd_lunar_phase($year, $month, $days){
+function gdrcd_lunar_phase(){
+  $year=date('Y');
+  $month=date('n');
+  $days=date('j');
+
   if ($month < 4) {
     $year = $year - 1; $month = $month + 12;
   }
