@@ -117,10 +117,10 @@ $totaleresults = gdrcd_query(gdrcd_query($sqlMessages, 'result'), 'num_rows');
                             <div class="elementi_elenco">
                                 <?php
                                 if($row['letto'] == 0) { ?>
-                                    <img src="imgs/icons/mail_new.png" class="colonna_elengo_messaggi_icon">
+                                    <img src="imgs/icons/mail_new.png" class="colonna_elenco_messaggi_icon">
                                     <?php
                                 } else { ?>
-                                    <img src="imgs/icons/mail_read.png" class="colonna_elengo_messaggi_icon">
+                                    <img src="imgs/icons/mail_read.png" class="colonna_elenco_messaggi_icon">
                                     <?php
                                 } ?>
                             </div>

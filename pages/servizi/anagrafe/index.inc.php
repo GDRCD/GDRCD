@@ -40,6 +40,7 @@ if ($_POST['action'] == "searchPersonaggio") {
                         <td class="casella_titolo"><div class="capitolo_elenco">' . $MESSAGE['interface']['pg_list']['search']['personaggio'] . '</div></td>
                         <td class="casella_titolo"><div class="capitolo_elenco">' . $MESSAGE['interface']['pg_list']['search']['sesso'] . '</div></td>
                         <td class="casella_titolo"><div class="capitolo_elenco">' . $MESSAGE['interface']['pg_list']['search']['razza'] . '</div></td>
+                        <td class="casella_titolo"></td>
                      </tr>';
 
             // Scorro i risultati
@@ -54,20 +55,29 @@ if ($_POST['action'] == "searchPersonaggio") {
                 $tds[] = '<td class="casella_elemento">
                             <div class="elementi_elenco">
                                 <a href="main.php?page=scheda&pg=' . gdrcd_filter('out', $rowSearch['nome']) . '">' .
-                    gdrcd_filter('out', $rowSearch['nome']) . ' ' . gdrcd_filter('out', $rowSearch['cognome']) . '
+                                    gdrcd_filter('out', $rowSearch['nome']) . ' ' . gdrcd_filter('out', $rowSearch['cognome']) . '
                                 </a>
                             </div>                        
                          </td>';
                 $tds[] = '<td class="casella_elemento">
                             <div class="elementi_elenco">' .
-                    gdrcd_filter('out', $MESSAGE['register']['fields']['gender_' . $rowSearch['sesso']]) . '
+                                gdrcd_filter('out', $MESSAGE['register']['fields']['gender_' . $rowSearch['sesso']]) . '
                             </div>
                          </td>';
                 $tds[] = '<td class="casella_elemento">
                             <div class="elementi_elenco">' .
-                    gdrcd_filter('out', $rowSearch['nome_razza']) . '
+                                gdrcd_filter('out', $rowSearch['nome_razza']) . '
                             </div>                     
                          </td>';
+                $tds[] = '<td class="casella_elemento">
+                            <div class="controllo_elenco">
+                                <form action="main.php?page=messages_center&op=create" method="post">
+                                    <input type="hidden" name="destinatario" value="'.$rowSearch['nome'].'" />
+                                    <input type="image" src="imgs/icons/reply.png" value="submit" alt="'.gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']).'"
+                                           title="'.gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']).'" />
+                                </form>
+                            </div>
+                           </td>';
 
                 // Costruisco la riga
                 $trs[] = '<tr>' . implode('', $tds) . '</tr>';

@@ -84,9 +84,17 @@ const EDIT_PERM = GAMEMASTER;
  * Diari PG
  */
 
+//Attiva o disattiva il diario del PG
+CONST PG_DIARY_ENABLED = true;
+
 //definisce quali permessi possono modificare le registrazioni (default: gamemaster)
 const PERMESSI_DIARIO = MODERATOR;
 
+/**
+ * Fasi Lunari
+ */
+//Attiva le fasi lunari
+const MOON = true;
 
 /**
  * Impostazioni esiti
@@ -106,9 +114,6 @@ const ESITI_PERM = GAMEMASTER;
 
 //definisce quali permessi hanno accesso alla visione di tutti gli esiti (default: moderator)
 const FULL_PERM = MODERATOR;
-
-//Attiva o disattiva il diario del PG
-CONST PG_DIARY_ENABLED = true;
 
 /*Vettori globali dei parametri*/
 $PARAMETER = array();

@@ -96,6 +96,10 @@ function gdrcd_query($sql, $mode = 'query')
             return mysqli_fetch_array($sql, MYSQLI_BOTH);
             break;
 
+        case 'assoc':
+            return mysqli_fetch_array($sql, MYSQLI_ASSOC);
+            break;
+
         case 'object':
             return mysqli_fetch_object($sql);
             break;
@@ -388,7 +392,7 @@ function gdrcd_html_filter($str)
         "#(<iframe.*?\/?>.*?(<\/iframe>)?)#is" => "Frame non consentiti",
         "#(<object.*?>.*?(<\/object>)?)#is" => "Contenuti multimediali non consentiti",
         "#(<embed.*?\/?>.*?(<\/embed>)?)#is" => "Contenuti multimediali non consentiti",
-        "#( on[a-zA-Z]+=\"?'?[^\s\"']+'?\"?)#is" => "",
+        "#([on,ON](.*)=(.*)\"?'?[^\s\"']+'?\"?)#is" => " ",
         "#(javascript:[^\s\"']+)#is" => ""
     ];
 
@@ -517,6 +521,7 @@ function gdrcd_format_datetime_standard($datetime_in)
 {
     return date('Y-m-d H:i', strtotime($datetime_in));
 }
+
 /**
  * Funzione di formattazione data completa nel formato ita per nome file da catalogare
  * @param string $datetime_in : la data e ora in formato leggibile da strtotime()
