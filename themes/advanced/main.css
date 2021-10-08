@@ -161,6 +161,13 @@ div.meteo, div.meteo_date {
     font-size: 12px;
 }
 
+div.meteo_luna img{
+    margin:0 auto;
+    width: 30px;
+    height: 30px;
+    display: block;
+}
+
 /** * Frame Messaggi 
 */
 iframe.iframe_messaggi {

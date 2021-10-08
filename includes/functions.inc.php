@@ -100,7 +100,7 @@ function gdrcd_query($sql, $mode = 'query')
             return mysqli_fetch_array($sql, MYSQLI_ASSOC);
             break;
 
-		case 'object':
+        case 'object':
             return mysqli_fetch_object($sql);
             break;
 
@@ -521,6 +521,7 @@ function gdrcd_format_datetime_standard($datetime_in)
 {
     return date('Y-m-d H:i', strtotime($datetime_in));
 }
+
 /**
  * Funzione di formattazione data completa nel formato ita per nome file da catalogare
  * @param string $datetime_in : la data e ora in formato leggibile da strtotime()
@@ -771,27 +772,4 @@ function gdrcd_brute_debug($args)
         gdrcd_dump($arg);
     }
     die('FINE');
-}
-function gdrcd_lunar_phase(){
-  $year=date('Y');
-  $month=date('n');
-  $days=date('j');
-
-  if ($month < 4) {
-    $year = $year - 1; $month = $month + 12;
-  }
-    $days_y = 365.25 * $year;
-    $days_m = 30.42 * $month;
-    $plenilunio = $days_y + $days_m + $day - 694039.09;
-    $plenilunio = $plenilunio / 29.53;
-    $phase = intval($plenilunio);
-    $plenilunio = $plenilunio - $phase;
-    $phase = round($plenilunio * 8 + 0.5);
-    if ($phase == 8) {
-      $phase = 0;
-    }
-      $phase_array = array('nuova', 'crescente', 'primo-quarto', 'gibbosa-crescente', 'piena', 'gibbosa-calante', 'ultimo-quarto', 'calante');
-      $phase_title = array('Nuova', 'Crescente', 'Primo Quarto', 'Gibbosa crescente', 'Piena', 'Gibbosa calante', 'Ultimo quarto', 'Calante');
-    $result=array('phase'=>$phase_array[$phase], 'title'=>$phase_title[$phase]);
-    return $result;
 }
