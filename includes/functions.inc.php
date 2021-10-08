@@ -96,7 +96,11 @@ function gdrcd_query($sql, $mode = 'query')
             return mysqli_fetch_array($sql, MYSQLI_BOTH);
             break;
 
-        case 'object':
+        case 'assoc':
+            return mysqli_fetch_array($sql, MYSQLI_ASSOC);
+            break;        
+		
+		case 'object':
             return mysqli_fetch_object($sql);
             break;
 
