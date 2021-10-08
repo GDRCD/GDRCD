@@ -10,7 +10,8 @@
         </form>
 
 
-    <?php } ?>
+    <?php
+  } ?>
     <div class="panels_box">
         <table>
             <tr>
@@ -26,6 +27,12 @@
                 </td>
                 <?php
                 if($_REQUEST['pg'] == $_SESSION['login'] || $_SESSION['permessi'] >= MODERATOR) { ?>
+                  <td class="casella_titolo">
+                      <div class="titoli_elenco">
+                          <?php echo $MESSAGE['interface']['sheet']['diary']['visible']; ?>
+                      </div>
+                  </td>
+
                 <td class="casella_titolo">
                     <div class="titoli_elenco">
                         <?php echo $MESSAGE['interface']['forums']['link']['edit']; ?>
@@ -41,9 +48,11 @@
                 ?></tr>
 
             <?php
-            $query="SELECT id, data, titolo, testo FROM diario WHERE personaggio='".gdrcd_filter('url',
-                $_REQUEST['pg'])."' ORDER BY data DESC";
-
+            if($_REQUEST['pg'] == $_SESSION['login'] || $_SESSION['permessi'] >= PERMESSI_DIARIO) {
+              $query="SELECT id, data, titolo, testo, visibile FROM diario WHERE personaggio='".gdrcd_filter('url',$_REQUEST['pg'])."' ORDER BY data DESC";
+            }else{
+              $query="SELECT id, data, titolo, testo, visibile FROM diario WHERE personaggio='".gdrcd_filter('url',$_REQUEST['pg'])."' and visibile='si' ORDER BY data DESC";
+            }
             $result = gdrcd_query($query, 'result');
 
            while ($row = gdrcd_query($result, 'fetch')){?>
@@ -58,7 +67,10 @@
 
                        </a></td>
                    <?php
-                   if($_REQUEST['pg'] == $_SESSION['login'] || $_SESSION['permessi'] >= MODERATOR) { ?>
+                   if($_REQUEST['pg'] == $_SESSION['login'] || $_SESSION['permessi'] >= PERMESSI_DIARIO) { ?>
+                     <td class="casella_elemento">
+                         <?php echo gdrcd_filter('out',$row['visibile']); ?>
+                     </td>
                    <td class="casella_elemento">
                        <form action="main.php?page=scheda_diario&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']);?>" method="post">
                            <input hidden value="edit" name="op">

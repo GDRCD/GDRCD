@@ -80,6 +80,8 @@ const LOG_PERM = GAMEMASTER;
 //definisce quali permessi possono modificare le registrazioni (default: gamemaster)
 const EDIT_PERM = GAMEMASTER;
 
+//definisce quali permessi possono modificare le registrazioni (default: gamemaster)
+const PERMESSI_DIARIO = MODERATOR;
 /**
  * Impostazioni esiti
  */
