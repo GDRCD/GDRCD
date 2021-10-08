@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Creazione report BUG - Lasciare in inglese per internazionalizzazione
+about: 'Creazione report BUG '
 title: "[BUG] - {title}"
 labels: bug, wontfix
 assignees: Kasui92, gianni10049, annamereu, Jansna
