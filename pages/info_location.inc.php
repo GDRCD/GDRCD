@@ -147,7 +147,12 @@
                     <?php echo strftime('%d').'/'.strftime('%m').'/'.(strftime('%Y') + $PARAMETERS['date']['offset']); ?>
                 </div>
                 <div class="meteo">
-                    <?php echo $meteo; ?>
+                <?php
+                  if(defined('MOON') AND MOON){
+                    $moon=gdrcd_lunar_phase(date('Y'), date('n'), date('j'));
+                    echo  '<img title="'. $moon['title'].'"  src="themes/'.gdrcd_filter('out', $PARAMETERS['themes']['current_theme']).'/imgs/luna/'. $moon['phase'].'.png">';
+                  }
+                echo $meteo; ?>
                 </div>
             <?php } ?>
         <?php
