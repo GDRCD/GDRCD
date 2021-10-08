@@ -120,7 +120,7 @@ div.innertube h2, div.output h2, div.page_title h2 {
 
 /** * Stile dei contenitori grigi con i bordini arrotondati
 */
-div.pagina_info_location, div.msgs, div.menu, div.presenti, div.output {
+div.pagina_info_location, div.messages, div.forums, div.menu, div.presenti, div.output {
     margin: 5px auto;
     padding: 10px;
     width: 180px;
@@ -170,17 +170,21 @@ div.meteo_luna img{
 
 /** * Frame Messaggi 
 */
-iframe.iframe_messaggi {
-    height: 33px;
+iframe.iframe_messages,
+iframe.iframe_forums {
+    height: 20px;
     width: 180px;
 }
 
-div.pagina_messaggi {
+div.box_messages, .box_forums {
     text-align: center;
     font-size: 14px;
 }
 
-div.pagina_messaggi a, div.pagina_messaggi a:visited {
+div.box_messages a,
+div.box_forums a,
+div.box_messages a:visited,
+div.box_forums a:visited {
     text-decoration: none;
     color: #444;
 }
