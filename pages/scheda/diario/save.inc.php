@@ -1,30 +1,47 @@
 <?php
-if(isset($_REQUEST['pg']) === false) {
+if (isset($_REQUEST['pg']) === false) {
     echo gdrcd_filter('out', $MESSAGE['error']['unknonw_character_sheet']);
     exit();
 }
-switch ($_POST['op']){
+switch ($_POST['op']) {
+
+    # Creazione Diario
     case 'save_new':
-        $query="INSERT INTO diario (titolo,data, data_inserimento, visibile, testo, personaggio )  VALUES
-        ('" . gdrcd_filter('in',$_POST['titolo']) . "', '" . gdrcd_filter('in',$_POST['data']) . "',NOW(),
-        '" . gdrcd_filter('in', $_POST['visibile']) . "' ,'" . gdrcd_filter('in',  $_POST['testo']) . "',
-        '". $_REQUEST['pg'] ."') ";
-        gdrcd_query($query);
+        $titolo = gdrcd_filter('in', $_POST['titolo']);
+        $data = gdrcd_filter('in', $_POST['data']);
+        $inv = gdrcd_filter('in', $_POST['visibile']);
+        $testo = gdrcd_filter('in', $_POST['testo']);
+        $pg = gdrcd_filter('in', $_POST['pg']);
+
+        gdrcd_query("INSERT INTO diario (titolo,data, data_inserimento, visibile, testo, personaggio )  VALUES
+        ('{$titolo}', '{$data}',NOW(),'{$inv}' ,'{$testo}','{$pg}') ");
         break;
+
+    # Modifica Diario
     case 'save_edit':
-    $query="UPDATE  diario SET titolo = '" . gdrcd_filter('in',$_POST['titolo']) . "',
-      data='" . gdrcd_filter('in',$_POST['data']) . "',  visibile='" . gdrcd_filter('in', $_POST['visibile']) . "' ,
-      testo='" . gdrcd_filter('in',  $_POST['testo']) . "',  data_modifica=NOW()WHERE id='" . gdrcd_filter('in', $_POST['id']) . "' ";
-      gdrcd_query($query);
-      break;
+        $id = gdrcd_filter('in', $_POST['id']);
+        $titolo = gdrcd_filter('in', $_POST['titolo']);
+        $data = gdrcd_filter('in', $_POST['data']);
+        $inv = gdrcd_filter('in', $_POST['visibile']);
+        $testo = gdrcd_filter('in', $_POST['testo']);
+        $pg = gdrcd_filter('in', $_POST['pg']);
+
+        gdrcd_query("UPDATE  diario 
+                SET titolo = '{$titolo}',data='{$data}',  visibile='{$inv}' ,testo='{$testo}',  data_modifica=NOW()
+                WHERE id='{$id}' LIMIT 1 ");
+        break;
+
+    # Delete diario
     case 'delete':
-          $query="DELETE FROM diario WHERE id=" . gdrcd_filter('in', $_POST['id']) . "";
-          gdrcd_query($query);
+        $id = gdrcd_filter('in', $_POST['id']);
+        gdrcd_query("DELETE FROM diario WHERE id='{$id}'");
         break;
+
     default:
-        break;
+        die('Operazione non riconosciuta.');
 }
-    echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['warning']['done']) . '</div>';
+
+echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['warning']['done']) . '</div>';
 
 ?>
 <!-- Link a piè di pagina -->

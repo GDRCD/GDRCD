@@ -1,99 +1,94 @@
+<?php /*Controllo che il diario sia del pg loggato, per inserimento nuove pagine*/
+if ($_REQUEST['pg'] == $_SESSION['login']) { ?>
+    <form action="main.php?page=scheda_diario&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']); ?>" method="post">
+        <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['diary']['new']); ?>">
+        <input type="hidden" name="op" value="new"/>
+    </form>
+<?php } ?>
 
-    <?php /*Controllo che il diario sia del pg loggato*/
-    if($_REQUEST['pg'] == $_SESSION['login']) { ?>
+<div class="fake-table">
+    <div class="tr">
+        <div class="td">
+            <div class="titoli_elenco">
+                <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['diary']['date']); ?>
+            </div>
+        </div>
+        <div class="td">
+            <div class="titoli_elenco">
+                <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['diary']['title']); ?>
+            </div>
+        </div>
+        <?php
+        if ($_REQUEST['pg'] == $_SESSION['login'] || $_SESSION['permessi'] >= MODERATOR) { ?>
+            <div class="td">
+                <div class="titoli_elenco">
+                    <?php echo $MESSAGE['interface']['sheet']['diary']['visible']; ?>
+                </div>
+            </div>
 
-        <form action="main.php?page=scheda_diario&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']);?>" method="post">
-            <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['diary']['new']); ?>">
-
-
-            <input type="hidden"  name="op" value="new"/>
-        </form>
-
+            <div class="td">
+                <div class="titoli_elenco">
+                    <?php echo $MESSAGE['interface']['forums']['link']['edit']; ?>
+                </div>
+            </div>
+            <div class="td">
+                <div class="titoli_elenco">
+                    <?php echo $MESSAGE['interface']['forums']['link']['delete']; ?>
+                </div>
+            </div>
+        <?php } ?>
+    </div>
 
     <?php
-  } ?>
-    <div class="panels_box">
-        <table>
-            <tr>
-                <td class="casella_titolo">
-                    <div class="titoli_elenco">
-                        <?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['diary']['date']); ?>
-                    </div>
-                </td>
-                <td class="casella_titolo">
-                    <div class="titoli_elenco">
-                        <?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['diary']['title']); ?>
-                    </div>
-                </td>
-                <?php
-                if($_REQUEST['pg'] == $_SESSION['login'] || $_SESSION['permessi'] >= MODERATOR) { ?>
-                  <td class="casella_titolo">
-                      <div class="titoli_elenco">
-                          <?php echo $MESSAGE['interface']['sheet']['diary']['visible']; ?>
-                      </div>
-                  </td>
+    if ($_REQUEST['pg'] == $_SESSION['login'] || $_SESSION['permessi'] >= PERMESSI_DIARIO) {
+        $query = "SELECT id, data, titolo, testo, visibile FROM diario WHERE personaggio='" . gdrcd_filter('url', $_REQUEST['pg']) . "' ORDER BY data DESC";
+    } else {
+        $query = "SELECT id, data, titolo, testo, visibile FROM diario WHERE personaggio='" . gdrcd_filter('url', $_REQUEST['pg']) . "' and visibile='si' ORDER BY data DESC";
+    }
+    $result = gdrcd_query($query, 'result');
 
-                <td class="casella_titolo">
-                    <div class="titoli_elenco">
-                        <?php echo $MESSAGE['interface']['forums']['link']['edit']; ?>
-                    </div>
-                </td>
-                <td class="casella_titolo">
-                    <div class="titoli_elenco">
-                        <?php echo $MESSAGE['interface']['forums']['link']['delete']; ?>
-                    </div>
-                </td>
-                <?php
-                }
-                ?></tr>
-
+    while ($row = gdrcd_query($result, 'fetch')) {
+        ?>
+        <div class="tr">
+            <div class="td">
+                <?php echo gdrcd_format_date($row['data']); ?>
+            </div>
+            <div class="td">
+                <form action="main.php?page=scheda_diario&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']); ?>"
+                      method="post">
+                    <input hidden value="view" name="op">
+                    <button type="submit" name="id" value="<?php echo gdrcd_filter('out', $row['id']); ?>"
+                            class="btn-link"><?php echo gdrcd_filter('out', $row['titolo']); ?></button>
+                </form>
+            </div>
             <?php
-            if($_REQUEST['pg'] == $_SESSION['login'] || $_SESSION['permessi'] >= PERMESSI_DIARIO) {
-              $query="SELECT id, data, titolo, testo, visibile FROM diario WHERE personaggio='".gdrcd_filter('url',$_REQUEST['pg'])."' ORDER BY data DESC";
-            }else{
-              $query="SELECT id, data, titolo, testo, visibile FROM diario WHERE personaggio='".gdrcd_filter('url',$_REQUEST['pg'])."' and visibile='si' ORDER BY data DESC";
-            }
-            $result = gdrcd_query($query, 'result');
-
-           while ($row = gdrcd_query($result, 'fetch')){?>
-               <tr>
-                   <td class="casella_elemento"><?php echo gdrcd_format_date( $row['data']); ?></td>
-                   <td class="casella_elemento">
-                       <form action="main.php?page=scheda_diario&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']);?>" method="post">
-                           <input hidden value="view" name="op">
-                           <button type="submit" name="id" value="<?php echo gdrcd_filter('out', $row['id']); ?>" class="btn-link"><?php echo gdrcd_filter('out', $row['titolo']); ?></button>
-                       </form>
-
-
-                       </a></td>
-                   <?php
-                   if($_REQUEST['pg'] == $_SESSION['login'] || $_SESSION['permessi'] >= PERMESSI_DIARIO) { ?>
-                     <td class="casella_elemento">
-                         <?php echo gdrcd_filter('out',$row['visibile']); ?>
-                     </td>
-                   <td class="casella_elemento">
-                       <form action="main.php?page=scheda_diario&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']);?>" method="post">
-                           <input hidden value="edit" name="op">
-                           <button type="submit" name="id" value="<?php echo gdrcd_filter('out', $row['id']); ?>" class="btn-link">[<?php echo $MESSAGE['interface']['forums']['link']['edit']; ?>]</button>
-                       </form>
-                   </td>
-                   <td class="casella_elemento">
-                       <form action="main.php?page=scheda_diario&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']);?>" method="post">
-                           <input hidden value="delete" name="op">
-                           <button type="submit" name="id" onClick='return confirmSubmit()' value="<?php echo gdrcd_filter('out', $row['id']); ?>" class="btn-link">[<?php echo gdrcd_filter('out', $MESSAGE['interface']['forums']['link']['delete']); ?>]</button>
-                       </form>
-                   </td>
-
-                   <?php
-                   }
-                   ?>
-               </tr>
-            <?php
-           }
-            ?>
-
-        </table>
-    </div>
+            if ($_REQUEST['pg'] == $_SESSION['login'] || $_SESSION['permessi'] >= PERMESSI_DIARIO) { ?>
+                <div class="td">
+                    <?php echo gdrcd_filter('out', $row['visibile']); ?>
+                </div>
+                <div class="td">
+                    <form action="main.php?page=scheda_diario&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']); ?>"
+                          method="post">
+                        <input hidden value="edit" name="op">
+                        <button type="submit" name="id" value="<?php echo gdrcd_filter('out', $row['id']); ?>"
+                                class="btn-link">[<?php echo $MESSAGE['interface']['forums']['link']['edit']; ?>]
+                        </button>
+                    </form>
+                </div>
+                <div class="td">
+                    <form action="main.php?page=scheda_diario&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']); ?>"
+                          method="post">
+                        <input hidden value="delete" name="op">
+                        <button type="submit" name="id" onClick='return confirmSubmit()'
+                                value="<?php echo gdrcd_filter('out', $row['id']); ?>" class="btn-link">
+                            [<?php echo gdrcd_filter('out', $MESSAGE['interface']['forums']['link']['delete']); ?>]
+                        </button>
+                    </form>
+                </div>
+            <?php } ?>
+        </div>
+    <?php } ?>
+</div>
 
 <!-- Link a piè di pagina -->
 <div class="link_back">
@@ -101,15 +96,12 @@
         $_REQUEST['pg']); ?>"><?php echo gdrcd_filter('out',
             $MESSAGE['interface']['sheet']['link']['back']); ?></a>
 </div>
-<script LANGUAGE="JavaScript">
-<!--
-function confirmSubmit()
-{
-  var agree=confirm("Vuoi eliminare la pagina?");
-  if (agree)
-    return true ;
-  else
-  return false ;
-}
-// -->
+<script>
+    function confirmSubmit() {
+        var agree = confirm("Vuoi eliminare la pagina?");
+        if (agree)
+            return true;
+        else
+            return false;
+    }
 </script>

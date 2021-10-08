@@ -1,44 +1,51 @@
-    <?php /*HELP: */
-    //Se non e' stato specificato il nome del pg
-    if(isset($_REQUEST['pg']) === false) {
-        echo gdrcd_filter('out', $MESSAGE['error']['unknonw_character_sheet']);
-        exit();
-    }
-    ?>
-    <div class="form_gioco">
-        <form action="main.php?page=scheda_diario&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']); ?>" method="post">
-        <div class='form_label'>
-            <?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['diary']['title']); ?>
+<?php /*HELP: */
+//Se non e' stato specificato il nome del pg
+if (isset($_REQUEST['pg']) === false) {
+    echo gdrcd_filter('out', $MESSAGE['error']['unknonw_character_sheet']);
+    exit();
+}
+?>
+
+<div class="form_container">
+    <form class="form"
+          action="main.php?page=scheda_diario&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']); ?>" method="post">
+
+        <!-- TITOLO -->
+        <div class="single_input">
+            <div class="label"><?= gdrcd_filter('out', $MESSAGE['interface']['sheet']['diary']['title']); ?></div>
+            <input type="text" name="titolo" class="form_input" required/>
         </div>
-        <div class='form_field'>
-            <input type="text" name="titolo" class="form_input" required />
+
+        <!-- DATA -->
+        <div class="single_input">
+            <div class="label"><?= gdrcd_filter('out', $MESSAGE['interface']['sheet']['diary']['date']); ?></div>
+            <input required type="date" name="data" class="form_input" value="<?= date('Y-m-d'); ?>"/>
         </div>
-        <div class='form_label'>
-            <?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['diary']['date']); ?>
+
+        <!-- VISIBILE -->
+        <div class="single_input">
+            <div class="label"><?= gdrcd_filter('out', $MESSAGE['interface']['sheet']['diary']['visible']); ?></div>
+            <select name="visibile" required>
+                <option value="si">si</option>
+                <option value="no">no</option>
+            </select>
         </div>
-        <div class='form_field'>
-            <input type="date" name="data" class="form_input" value="<?php echo (strftime('%Y') + $PARAMETERS['date']['offset']).'-'.strftime('%m').'-'.strftime('%d'); ?>"/>
+
+        <!-- TESTO -->
+        <div class="single_input">
+            <div class="label"><?= gdrcd_filter('out', $MESSAGE['interface']['sheet']['diary']['text']); ?></div>
+            <textarea name="testo"></textarea>
         </div>
-        <div class='form_label'>
-            <?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['diary']['visible']); ?>
+
+        <!-- SUBMIT -->
+        <div class="single_input">
+            <input type="submit" name="submit" value="Salva"/>
+            <input type="hidden" name="op" value="save_new">
+            <input type="hidden" name="pg" value="<?= gdrcd_filter('out', $_REQUEST['pg']); ?>">
         </div>
-        <div class='form_field'>
-            <select name="visibile"><option value="si">si</option> <option value="no">no</option> </select>
-        </div>
-        <div class='form_label'>
-            <?php echo gdrcd_filter('out',$MESSAGE['interface']['sheet']['diary']['text']); ?>
-        </div>
-        <div class='form_field'>
-            <textarea type="textbox" name="testo" class="form_textarea"></textarea>
-        </div>
-        <!--- registrazione giocate ---->
-        <div class="form_submit">
-            <input type="submit"  name="submit"  value="Salva" />
-            <input hidden name="op" value="save_new">
-        </div>
-    </div>
-    <!-- Link a piè di pagina -->
-    <div class="link_back">
-        <a href="main.php?page=scheda_diario&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']); ?>"><?php echo gdrcd_filter('out',
-                $MESSAGE['interface']['sheet']['diary']['back']); ?></a>
-    </div>
+</div>
+<!-- Link a piè di pagina -->
+<div class="link_back">
+    <a href="main.php?page=scheda_diario&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']); ?>"><?php echo gdrcd_filter('out',
+            $MESSAGE['interface']['sheet']['diary']['back']); ?></a>
+</div>
