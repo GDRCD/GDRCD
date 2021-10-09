@@ -1,12 +1,9 @@
 <?php
-session_start();
-
-header('Content-Type:text/html; charset=UTF-8');
-
-$last_message = isset($_SESSION['last_message']) ? $_SESSION['last_message'] : 0;
 
 //Includio i parametri, la configurazione, la lingua e le funzioni
 require ('includes/required.php');
+
+$last_message = isset($_SESSION['last_message']) ? $_SESSION['last_message'] : 0;
 
 if(!empty($_SESSION['theme']) and array_key_exists($_SESSION['theme'], $PARAMETERS['themes']['available'])){
     $PARAMETERS['themes']['current_theme'] = $_SESSION['theme'];
