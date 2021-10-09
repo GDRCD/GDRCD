@@ -1,4 +1,7 @@
 <?php
+
+var_dump('MASTER BRANCH CD');
+
 header('Content-Type:text/html; charset=UTF-8');
 
 //Includo i parametri, la configurazione, la lingua e le funzioni
