@@ -1,7 +1,5 @@
 <?php
 
-header('Content-Type:text/html; charset=UTF-8');
-
 //Includio i parametri, la configurazione, la lingua e le funzioni
 require ('../../../includes/required.php');
 
@@ -107,17 +105,10 @@ if($PARAMETERS['mode']['check_messages'] === 'ON') {
 
             if(isset($PARAMETERS['settings']['audiotype']['.'.strtolower(end($ext))])) {
                 $cntMessagesFrame .= '
-                    <object data="../../../sounds/'.$PARAMETERS['settings']['audio_new_messagges'].'"
-                            type="'.$PARAMETERS['settings']['audiotype']['.'.strtolower(end($ext))].'"
-                            autostart="true"
-                            style="width:1px; height:0px;">
-                        <embed src="../../../sounds/'.$PARAMETERS['settings']['audio_new_messagges'].'" autostart="true"
-                               hidden="true" hidden="true" style="width:1px; height:0px;" />
-                    </object>
-
-                <!--[if IE 9]>
-                    <embed src="../sounds/'.$PARAMETERS['settings']['audio_new_messagges'].'" autostart="true"hidden="true"/>
-                <![endif]-->';
+                    <audio autoplay preload="none">
+                        <source src="../../../sounds/'.$PARAMETERS['settings']['audio_new_messagges'].'" type="'.$PARAMETERS['settings']['audiotype']['.'.strtolower(end($ext))].'">
+                        Your browser does not support the audio element.
+                    </audio>';
             }
         }
     }

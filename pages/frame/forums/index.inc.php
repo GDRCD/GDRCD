@@ -1,7 +1,5 @@
 <?php
 
-header('Content-Type:text/html; charset=UTF-8');
-
 //Includio i parametri, la configurazione, la lingua e le funzioni
 require ('../../../includes/required.php');
 
