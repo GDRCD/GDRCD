@@ -1,6 +1,6 @@
 <?php
 
-var_dump('MASTER BRANCH CD');
+var_dump('MASTER BRANCH CD!');
 
 header('Content-Type:text/html; charset=UTF-8');
 
