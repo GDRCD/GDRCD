@@ -1,5 +1,4 @@
 <?php
-session_start();
 include_once('../header.inc.php');
 /*Header comune*/
 ?>
