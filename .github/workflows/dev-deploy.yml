@@ -28,7 +28,7 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Upload
-        uses: amKirkland/FTP-Deploy-Action@4.1.0
+        uses: SamKirkland/FTP-Deploy-Action@4.1.0
         with: 
           server: ${{ secrets.ftp_server }}
           username: ${{ secrets.ftp_user }}
