@@ -63,7 +63,7 @@ div.info {
 }
 
 /*Area avviso messaggi*/
-div.msgs {
+div.messages {
     margin: 10px 0;
     width: 185px;
     height: 50px;
@@ -536,7 +536,8 @@ div.pagina_controlli_utente {
 - Il modo di segnalazione di nuovi messaggi*/
 
 /*Frame dei link ai messaggi*/
-div.msgs iframe.iframe_messaggi {
+div.messages iframe.iframe_messages,
+div.forums iframe.iframe_forums {
     width: 175px;
     height: 50px;
     border: none;
@@ -544,7 +545,8 @@ div.msgs iframe.iframe_messaggi {
 }
 
 /*Box avviso messaggi e topic*/
-div.pagina_messaggi {
+div.box_messages,
+div.box_forums {
     margin-left: auto;
     margin-right: auto;
 }
