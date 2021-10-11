@@ -43,6 +43,6 @@ Elenco delle modifiche al codice
  
 ### Corretto
  
--  [BugFix] conflitti con merge precedenti.
+- [BugFix] conflitti con merge precedenti.
 - [BugFix] __$PARAMETERS['settings']['protection_password'] = 'gdrcd';__ non era stato implementato correttamente.
 - [BugFix] Elimina messaggi selezionati.

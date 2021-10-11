@@ -1,15 +1,15 @@
 ========================================================================================
-LICENZA GDRCD5.5 (Gioco di Ruolo a Codice Distribuito)
+LICENZA GDRCD5.6 (Gioco di Ruolo a Codice Distribuito)
 ========================================================================================
 
-Versione 5.5
+Versione 5.6
 
 
 ========================================================================================
-COS'E' GDRCD5.5?
+COS'E' GDRCD5.6?
 ========================================================================================
 
-GDRCD5.5 e' un software CMS (Content Management System) per la realizzazione
+GDRCD5.6 e' un software CMS (Content Management System) per la realizzazione
 di browser game di genere "gioco di ruolo play by chat".
 
 Il prodotto e' da considerarsi Open Source ed e' distribuito gratuitamente.
