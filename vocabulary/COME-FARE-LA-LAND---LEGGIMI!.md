@@ -233,4 +233,4 @@ Files aggiornato e revisionato da Salvatore Rotondo.
 
 Files aggiornato e revisionato successivamente da Breaker.
 
-Files aggiornato e revisionato successivamente da gianni10049 e Kasui92.
+Files aggiornato e revisionato successivamente da gianni10049 e Kasui92 per la versione 5.6.
