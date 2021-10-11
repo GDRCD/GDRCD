@@ -42,7 +42,7 @@ Prendendo atto che:
 * Rinuncia — Le condizioni sopracitate possono decadere ottenendo il permesso dell’autore.
 * Pubblico Dominio — Where the work or any of its elements is in the public domain under applicable law, that status is in no way affected by the license.
 
- Other Rights — In no way are any of the following rights affected by the license:
+Other Rights — In no way are any of the following rights affected by the license:
 *Your fair dealing or fair use rights, or other applicable copyright exceptions and limitations;
 *I diritti morali dell'autore;
 *Rights other persons may have either in the work itself or in how the work is used, such as publicity or privacy rights.
@@ -73,6 +73,8 @@ Il prodotto può essere correlato di manuale o di guida all'uso, ma l'autore non
 ========================================================================================
 FUORI L'AUTORE!
 ========================================================================================
+
+GDRCD 5.6 "Stable" è stato sviluppato da piu' autori sulla base di GDRCD 5.1 di Salvatore (Blancks) Rotondo
 
 GDRCD 5.5 è stato sviluppato da Breaker sulla base di GDRCD 5.4 - email: breakeryouko@gmail.com
 
