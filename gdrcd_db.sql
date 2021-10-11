@@ -493,6 +493,7 @@ CREATE TABLE IF NOT EXISTS `messaggioaraldo` (
   `messaggio` text,
   `autore` varchar(20) DEFAULT NULL,
   `data_messaggio` datetime DEFAULT NULL,
+  `data_ultimo_messaggio` datetime DEFAULT NULL,
   `importante` binary(1) NOT NULL DEFAULT '0',
   `chiuso` binary(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_messaggio`),
