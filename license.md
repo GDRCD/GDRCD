@@ -1,15 +1,15 @@
 ========================================================================================
-LICENZA GDRCD5.2 (Gioco di Ruolo a Codice Distribuito)
+LICENZA GDRCD5.6 (Gioco di Ruolo a Codice Distribuito)
 ========================================================================================
 
-Versione 5.2 Stable 
+Versione 5.6 Stable 
 
 
 ========================================================================================
-COS'E' GDRCD5.2 "Stable"?
+COS'E' GDRCD5.6 "Stable"?
 ========================================================================================
 
-GDRCD5.2 "Stable" e' un software CMS (Content Management System) per la realizzazione 
+GDRCD5.6 "Stable" e' un software CMS (Content Management System) per la realizzazione 
 di broser game di genere "gioco di ruolo play by chat".
 
 Il prodotto e' da considerarsi Open Source ed e' distribuito gratuitamente.
@@ -73,6 +73,14 @@ Il prodotto può essere correlato di manuale o di guida all'uso, ma l'autore non
 ========================================================================================
 FUORI L'AUTORE!
 ========================================================================================
+
+GDRCD 5.6 "Stable" è stato sviluppato da piu' autori sulla base di GDRCD 5.1 di Salvatore (Blancks) Rotondo
+
+GDRCD 5.5 è stato sviluppato da Breaker sulla base di GDRCD 5.4 - email: breakeryouko@gmail.com
+
+GDRCD 5.4 "Optimus" è stato sviluppato da Breaker sulla base di GDRCD 5.3 - email: breakeryouko@gmail.com
+
+GDRCD 5.3 è stato sviluppato da Breaker sulla base di GDRCD 5.2 - email: breakeryouko@gmail.com
 
 GDRCD 5.2 "Stable" è stato sviluppato da Breaker sulla base di GDRCD 5.1 di Salvatore (Blancks) Rotondo - email: breakeryouko@gmail.com
 
