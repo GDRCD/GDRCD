@@ -491,7 +491,7 @@
                     <!-- Torna alla home -->
                     <div class="link_back">
                         <a href="index.php">
-                            '.gdrcd_filter('out', $MESSAGE['register']['welcome']['back'].' '.gdrcd_filter('out', strtolower($PARAMETERS['info']['homepage_name']))).'
+                            ' .gdrcd_filter('out', $MESSAGE['register']['welcome']['back'].' '.gdrcd_filter('out', strtolower($PARAMETERS['info']['homepage_name']))).'
                         </a>
                     </div>';
                 break;

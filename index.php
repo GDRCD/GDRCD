@@ -29,7 +29,6 @@ $page = ( ! empty($_GET['page'])) ? gdrcd_filter('include', $_GET['page']) : 'in
  * Utile se si vuol mantenere la struttura della homepage quando si aprono i link
  */
 $content = ( ! empty($_GET['content'])) ? gdrcd_filter('include', $_GET['content']) : 'home';
-
 /*
  * Conteggio utenti online
  */
@@ -68,8 +67,7 @@ if ( ! empty($_POST['email'])) {
 /*
  * Fine Recupero Password
  */
-
-include 'themes/' . $PARAMETERS['themes']['current_theme'] . '/home/' . $page . '.php';
+include 'home/' . $page . '.php';
 
 require 'footer.inc.php';
 ?>

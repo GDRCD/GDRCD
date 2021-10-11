@@ -96,14 +96,14 @@
                     <?php } ?>
                 </div>
                 <div class="side_modules">
-                    <?php include 'themes/' . $PARAMETERS['themes']['current_theme'] . '/home/user_stats.php'; ?>
+                    <?php include 'user_stats.php'; ?>
                 </div>
             </div>
             <div class="content_body">
                 <?php
-                if (file_exists('themes/' . $PARAMETERS['themes']['current_theme'] . '/home/' . $content . '.php')) {
-                    include 'themes/' . $PARAMETERS['themes']['current_theme'] . '/home/' . $content . '.php';
-                }
+                    if (file_exists('home/' . $content . '.php')) {
+                        include 'home/' . $content . '.php';
+                    }
                 ?>
             </div>
             <br class="blank"/>
