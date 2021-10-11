@@ -84,8 +84,7 @@ $PARAMETERS['themes']['current_theme'] = 'advanced'; //tema in uso
  * il tema di default
  */
 $PARAMETERS['themes']['available'] = array(
-    'advanced' => 'Tema Advanced GDRCD',
-    'basic' => 'Tema Base GDRCD',
+    'advanced' => 'Tema "Advanced" GDRCD',
     //'il_mio_tema_preferito' => 'Il mio tema troppo figo'
 );
 
