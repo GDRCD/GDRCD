@@ -1,5 +1,26 @@
 <h2><?php echo $MESSAGE['homepage']['main_content']['welcome']; ?></h2>
 <p>
+    GDRCD5.6 è un upgrade della versione 5.5, sviluppato da vari programmatori in un progetto comunitario gestito da:
+    - gianni10049 (https://github.com/gianni10049)
+    - Kasui92 (https://github.com/kasui92).
+
+    Lato tecnico e sviluppo hanno contribuito:
+    - Anneth (https://github.com/annamereu)
+    - Jansna (https://github.com/Jansna)
+    - Leoblacksoul (https://github.com/ste-camp)
+    - Dyrr (Github)
+
+    Lato grafico hanno contribuito:
+    - Evolve
+    - Nightspire
+    - Sara
+
+    Lato tester hanno contribuito:
+    - Musicamusa
+    - Jariel
+    - Zorya
+</p>
+<p>
     GDRCD5.5 è un upgrade della versione 5.4, sviluppato da Breaker.
 </p>
 <p>
