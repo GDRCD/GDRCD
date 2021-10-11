@@ -11,7 +11,7 @@
     - Dyrr (Github)
 
     Lato grafico hanno contribuito:
-    - Evolve
+    - Evolve (https://www.deviantart.com/tuffi8472)
     - Nightspire
     - Sara
 
