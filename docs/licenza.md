@@ -74,6 +74,8 @@ Il prodotto può essere correlato di manuale o di guida all'uso, ma l'autore non
 FUORI L'AUTORE!
 ========================================================================================
 
+GDRCD 5.6 "Stable" è stato sviluppato da piu' autori sulla base di GDRCD 5.1 di Salvatore (Blancks) Rotondo
+
 GDRCD 5.5 è stato sviluppato da Breaker sulla base di GDRCD 5.4 - email: breakeryouko@gmail.com
 
 GDRCD 5.4 "Optimus" è stato sviluppato da Breaker sulla base di GDRCD 5.3 - email: breakeryouko@gmail.com
