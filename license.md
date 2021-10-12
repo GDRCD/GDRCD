@@ -2,15 +2,15 @@
 LICENZA GDRCD5.6 (Gioco di Ruolo a Codice Distribuito)
 ========================================================================================
 
-Versione 5.6 Stable 
+Versione 5.6
 
 
 ========================================================================================
-COS'E' GDRCD5.6 "Stable"?
+COS'E' GDRCD5.6?
 ========================================================================================
 
-GDRCD5.6 "Stable" e' un software CMS (Content Management System) per la realizzazione 
-di broser game di genere "gioco di ruolo play by chat".
+GDRCD5.6 e' un software CMS (Content Management System) per la realizzazione
+di browser game di genere "gioco di ruolo play by chat".
 
 Il prodotto e' da considerarsi Open Source ed e' distribuito gratuitamente.
 
@@ -35,19 +35,19 @@ Tu sei libero:
 * di modificare quest'opera
 
 Alle seguenti condizioni:
-* Attribuzione — Devi attribuire la paternità dell'opera nei modi indicati dall'autore o da chi ti ha dato l'opera in licenza e in modo tale da non suggerire che essi avallino te o il modo in cui tu usi l'opera. 
-* Condividi allo stesso modo — Se alteri, trasformi o ampli quest’opera  puoi ridistribuirla SOLO con una licenza simile o compatibile. 
+* Attribuzione — Devi attribuire la paternità dell'opera nei modi indicati dall'autore o da chi ti ha dato l'opera in licenza e in modo tale da non suggerire che essi avallino te o il modo in cui tu usi l'opera.
+* Condividi allo stesso modo — Se alteri, trasformi o ampli quest’opera  puoi ridistribuirla SOLO con una licenza simile o compatibile.
 
 Prendendo atto che:
-* Rinuncia — Le condizioni sopracitate possono decadere ottenendo il permesso dell’autore. 
-* Pubblico Dominio — Where the work or any of its elements is in the public domain under applicable law, that status is in no way affected by the license. 
+* Rinuncia — Le condizioni sopracitate possono decadere ottenendo il permesso dell’autore.
+* Pubblico Dominio — Where the work or any of its elements is in the public domain under applicable law, that status is in no way affected by the license.
 
- Other Rights — In no way are any of the following rights affected by the license: 
-*Your fair dealing or fair use rights, or other applicable copyright exceptions and limitations; 
+Other Rights — In no way are any of the following rights affected by the license:
+*Your fair dealing or fair use rights, or other applicable copyright exceptions and limitations;
 *I diritti morali dell'autore;
-*Rights other persons may have either in the work itself or in how the work is used, such as publicity or privacy rights. 
+*Rights other persons may have either in the work itself or in how the work is used, such as publicity or privacy rights.
 
-Notice — Ogni volta che usi o distribuisci quest'opera, devi farlo secondo i termini di questa licenza, che va comunicata con chiarezza. 
+Notice — Ogni volta che usi o distribuisci quest'opera, devi farlo secondo i termini di questa licenza, che va comunicata con chiarezza.
 
 
 ========================================================================================
