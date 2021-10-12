@@ -6,7 +6,7 @@ IMPORTANTE! non cancellate alcuna delle righe, ne modificate quanto scritto tra 
 /********** Homepage **********/
 /*Testo centrale homepage*/
 $MESSAGE['homepage']['main_content']['site_title'] = 'GDRCD 5.6';
-$MESSAGE['homepage']['main_content']['site_subtitle'] = 'Enhanced by Breaker';
+$MESSAGE['homepage']['main_content']['site_subtitle'] = 'Il CMS Open Source per i Giochi di Ruolo play-by-chat';
 $MESSAGE['homepage']['main_content']['welcome'] = 'Benvenuto in GDRCD 5.6!';
 $MESSAGE['homepage']['main_content']['infos'] = 'Prima di iniziare a realizzare il tuo sito, hai letto la LICENZA D\'USO che accompagna il prodotto? Se non l\'hai ancora fatto premurati gentilmente di leggerla. Troverai le istruzioni su come utilizzare  GDRCD 5.4 nel manuale allegato. Buon diverimento!';
 /*Box informativi*/
