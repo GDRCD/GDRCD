@@ -55,7 +55,6 @@ $PARAMETERS['info']['webmaster_email'] = 'webmaster@gdrhost.it'; //email ufficia
 $PARAMETERS['info']['homepage_name'] = 'Homepage'; //nome con il quale si indica la prima pagina visualizzata
 $PARAMETERS['info']['dbadmin_name'] = 'Admin DB';
 $PARAMETERS['info']['GDRCD'] = '5.6'; //nome del gioco
-$PARAMETERS['mode']['welcome_message_homepage'] = 'ON';//Attiva il messaggio di bevenuto in homepage
 
 /* HELP: I parametri di questa voce compaiono come informazioni sulla homepage. */
 
