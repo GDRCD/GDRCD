@@ -67,7 +67,6 @@ if ( ! empty($_POST['email'])) {
 /*
  * Fine Recupero Password
  */
-include 'home/' . $page . '.php';
+include 'pages/home/' . $page . '.php';
 
 require 'footer.inc.php';
-?>

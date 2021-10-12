@@ -101,8 +101,8 @@
             </div>
             <div class="content_body">
                 <?php
-                    if (file_exists('home/' . $content . '.php')) {
-                        include 'home/' . $content . '.php';
+                    if (file_exists(__DIR__ . '/' . $content . '.php')) {
+                        include (__DIR__ . '/' . $content . '.php');
                     }
                 ?>
             </div>
