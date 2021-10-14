@@ -490,7 +490,7 @@ function gdrcd_load_modules($page, $params = [])
         include($modulePath);
     }
     catch(Exception $e) {
-        die($e->getMessage());
+        echo $e->getMessage();
     }
 }
 
