@@ -96,6 +96,9 @@ $MESSAGE['logout']['logbackin'] = 'Per rientrare nel gioco tornare alla';
 /* Errori di interfaccia */
 
 $MESSAGE['interface']['layout_not_found'] = 'Modulo non trovato';
+$MESSAGE['interface']['page_missing'] = 'Parametro pagina mancante';
+$MESSAGE['interface']['page_not_found'] = 'Pagina non trovata';
+$MESSAGE['interface']['multiple_page_found'] = 'Non e stato possibile determinare la pagina, una o piu pagine vanno in conflitto';
 
 
 /**    * Termine inserimento
