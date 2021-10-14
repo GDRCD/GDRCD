@@ -473,7 +473,7 @@ function gdrcd_check_time($time)
 function gdrcd_load_modules($page, $params = [])
 {
     global $MESSAGE;
-    global $PARAMETER;
+    global $PARAMETERS;
 
     // Costruisco i parametri del modulo
     $MODULE = $params;
