@@ -312,6 +312,15 @@ div#header {
     height: 180px;
 }
 
+div#header > div {
+    float: left;
+    height: 100%;
+}
+
+div#header .titlecontent {
+    width: calc(100% - 250px);
+}
+
 /** * Corpo contenuti della pagina
 */
 div#content {
