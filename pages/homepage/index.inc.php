@@ -47,7 +47,7 @@
                     <input type="submit" value="<?php echo $MESSAGE['homepage']['forms']['login']; ?>"/>
                 </form>
             </div>
-            <h1><a href="index.php"><?php echo $MESSAGE['homepage']['main_content']['site_title']; ?></a></h1>
+            <h1><a href="index.inc.php"><?php echo $MESSAGE['homepage']['main_content']['site_title']; ?></a></h1>
             <div class="subtitle"><?php echo $MESSAGE['homepage']['main_content']['site_subtitle']; ?></div>
         </div>
 
@@ -55,16 +55,16 @@
             <div class="sidecontent">
                 <ul>
                     <li>
-                        <a href="index.php?page=index&content=iscrizione"><?php echo $MESSAGE['homepage']['registration']; ?></a>
+                        <a href="index.inc.php?page=index&content=iscrizione"><?php echo $MESSAGE['homepage']['registration']; ?></a>
                     </li>
                     <li>
-                        <a href="index.php?page=index&content=user_regolamento"><?php echo $MESSAGE['homepage']['rules']; ?></a>
+                        <a href="index.inc.php?page=index&content=user_regolamento"><?php echo $MESSAGE['homepage']['rules']; ?></a>
                     </li>
                     <li>
-                        <a href="index.php?page=index&content=user_ambientazione"><?php echo $MESSAGE['homepage']['storyline']; ?></a>
+                        <a href="index.inc.php?page=index&content=user_ambientazione"><?php echo $MESSAGE['homepage']['storyline']; ?></a>
                     </li>
                     <li>
-                        <a href="index.php?page=index&content=user_razze"><?php echo $MESSAGE['homepage']['races']; ?></a>
+                        <a href="index.inc.php?page=index&content=user_razze"><?php echo $MESSAGE['homepage']['races']; ?></a>
                     </li>
                 </ul>
 
@@ -76,7 +76,7 @@
                     <?php if (empty($RP_response)) { ?>
                         <strong><?php echo gdrcd_filter('out', $MESSAGE['homepage']['forms']['forgot']); ?></strong>
                         <div class="pass_rec">
-                            <form action="index.php" method="post">
+                            <form action="index.inc.php" method="post">
                                 <div>
                                     <span class="form_label"><label for="passrecovery"><?php echo $MESSAGE['homepage']['forms']['email']; ?></label></span>
                                     <input type="text" id="passrecovery" name="email"/>
@@ -101,11 +101,9 @@
 
             <div class="content_body">
                 <?php
-                    // Include la pagina aperta nel contenitore centrale
-                    if (file_exists(__DIR__ . '/' . $content . '.php')) {
-                        include (__DIR__ . '/' . $content . '.php');
-                    }
-                ?>
+                    gdrcd_load_modules('homepage__'.$MODULE['content']);
+
+                    ?>
             </div>
             <br class="blank"/>
         </div>

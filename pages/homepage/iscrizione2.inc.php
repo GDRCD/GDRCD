@@ -26,7 +26,7 @@
                 </div>
                 <!-- Non accetto le condizioni -->
                 <div class="form_gioco">
-                    <form action="index.php" method="post">
+                    <form action="index.inc.php" method="post">
                         <div class="form_submit">
                             <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['register']['forms']['refuse']); ?>" />
                         </div>
@@ -106,7 +106,7 @@
                         </div>
                         <?php if($PARAMETERS['mode']['racialinfo'] == 'ON') { ?>
                             <div class="form_info">
-                                <a href="ambientazione.php?page=user_razze" target="_new">
+                                <a href="ambientazione.inc.php?page=user_razze" target="_new">
                                     <?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['race_info']); ?>
                                 </a>
                             </div>
@@ -207,7 +207,7 @@
                     </form>
                 </div>
                 <div class="form_gioco">
-                    <form action="index.php" method="post">
+                    <form action="index.inc.php" method="post">
                         <div class="form_submit">
                             <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['register']['forms']['abort']); ?>" />
                         </div>
@@ -496,7 +496,7 @@
     </div>
     <!-- Torna alla home -->
     <div class="link_back">
-        <a href="index.php">
+        <a href="index.inc.php">
             <?php echo gdrcd_filter('out', $MESSAGE['register']['welcome']['back'].' '.gdrcd_filter('out', strtolower($PARAMETERS['info']['homepage_name']))); ?>
         </a>
     </div>

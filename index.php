@@ -8,7 +8,7 @@ if ($PARAMETERS['settings']['protection'] == 'ON'){
     require 'protezione.php';
 }
 
-require 'header.inc.php';
+require('header.inc.php'); /*Header comune*/
 require 'includes/credits.inc.php';
 
 /*
@@ -22,13 +22,14 @@ if($record['number'] == 0 ) {
 /*
  * Definizione pagina da visualizzare
  */
-$page = ( ! empty($_GET['page'])) ? gdrcd_filter('include', $_GET['page']) : 'index';
+$page = ( ! empty($_GET['page'])) ? gdrcd_filter('include', $_GET['page']) : 'homepage';
 
 /*
  * Definizione dell'eventuale contenuto interno
  * Utile se si vuol mantenere la struttura della homepage quando si aprono i link
  */
 $content = ( ! empty($_GET['content'])) ? gdrcd_filter('include', $_GET['content']) : 'home';
+
 /*
  * Conteggio utenti online
  */
@@ -67,6 +68,8 @@ if ( ! empty($_POST['email'])) {
 /*
  * Fine Recupero Password
  */
-include 'pages/homepage/' . $page . '.php';
+
+// Includo la pagina
+gdrcd_load_modules($page, ['content' => $content]);
 
 require 'footer.inc.php';
