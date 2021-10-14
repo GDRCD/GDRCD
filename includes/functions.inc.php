@@ -540,7 +540,6 @@ function gdrcd_pages_path($page)
     // Scorro i percorsi impostati per individuare corrispondenze
     foreach ($routes AS $route) {
         $file = implode(DIRECTORY_SEPARATOR, [$pagesPath, $pageFormatted.$route]);
-        gdrcd_debug($file);
         // Se esiste la corrispondenza, allora inserisco
         if(file_exists($file)) {
             $modules[] = $file;
