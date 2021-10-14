@@ -1,9 +1,21 @@
 <?php
 
-/** * Skin Advanced
+/** Homepage
  * Markup e procedure della homepage
  * @author Blancks
  */
+
+/*
+ * Includo i Crediti
+ */
+require 'includes/credits.inc.php';
+
+/*
+ * Conteggio utenti online
+ */
+$users = gdrcd_query("SELECT COUNT(nome) AS online FROM personaggio WHERE ora_entrata > ora_uscita AND DATE_ADD(ultimo_refresh, INTERVAL 4 MINUTE) > NOW()");
+
+
 ?>
 <div id="main">
     <div id="site_width">
@@ -47,7 +59,7 @@
                     <input type="submit" value="<?php echo $MESSAGE['homepage']['forms']['login']; ?>"/>
                 </form>
             </div>
-            <h1><a href="index.inc.php"><?php echo $MESSAGE['homepage']['main_content']['site_title']; ?></a></h1>
+            <h1><a href="index.php"><?php echo $MESSAGE['homepage']['main_content']['site_title']; ?></a></h1>
             <div class="subtitle"><?php echo $MESSAGE['homepage']['main_content']['site_subtitle']; ?></div>
         </div>
 
@@ -55,16 +67,16 @@
             <div class="sidecontent">
                 <ul>
                     <li>
-                        <a href="index.inc.php?page=index&content=iscrizione"><?php echo $MESSAGE['homepage']['registration']; ?></a>
+                        <a href="index.php?page=homepage&content=iscrizione2"><?php echo $MESSAGE['homepage']['registration']; ?></a>
                     </li>
                     <li>
-                        <a href="index.inc.php?page=index&content=user_regolamento"><?php echo $MESSAGE['homepage']['rules']; ?></a>
+                        <a href="index.php?page=homepage&content=user_regolamento"><?php echo $MESSAGE['homepage']['rules']; ?></a>
                     </li>
                     <li>
-                        <a href="index.inc.php?page=index&content=user_ambientazione"><?php echo $MESSAGE['homepage']['storyline']; ?></a>
+                        <a href="index.php?page=homepage&content=user_ambientazione"><?php echo $MESSAGE['homepage']['storyline']; ?></a>
                     </li>
                     <li>
-                        <a href="index.inc.php?page=index&content=user_razze"><?php echo $MESSAGE['homepage']['races']; ?></a>
+                        <a href="index.php?page=homepage&content=user_razze"><?php echo $MESSAGE['homepage']['races']; ?></a>
                     </li>
                 </ul>
 
@@ -73,29 +85,17 @@
                 </div>
 
                 <div class="side_modules">
-                    <?php if (empty($RP_response)) { ?>
-                        <strong><?php echo gdrcd_filter('out', $MESSAGE['homepage']['forms']['forgot']); ?></strong>
-                        <div class="pass_rec">
-                            <form action="index.inc.php" method="post">
-                                <div>
-                                    <span class="form_label"><label for="passrecovery"><?php echo $MESSAGE['homepage']['forms']['email']; ?></label></span>
-                                    <input type="text" id="passrecovery" name="email"/>
-                                </div>
-                                <input type="submit" value="<?php echo $MESSAGE['homepage']['forms']['new_pass']; ?>"/>
-                            </form>
-                        </div>
-                    <?php } else { ?>
-                        <div class="pass_rec">
-                            <?php echo $RP_response; ?>
-                        </div>
-                    <?php } ?>
+                    <?php
+                        // Include il modulo di reset della password
+                        include (__DIR__ . '/reset_password.inc.php');
+                    ?>
                 </div>
 
                 <div class="side_modules">
                     <?php
                         // Include le statistiche del sito
-                        include (__DIR__ . '/user_stats.php');
-                        ?>
+                        include (__DIR__ . '/user_stats.inc.php');
+                    ?>
                 </div>
             </div>
 

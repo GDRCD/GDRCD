@@ -6,7 +6,7 @@
     </div>
     <div class="page_body">
         <?php /**** Fase 0 ****/
-        switch ($_POST['fase']) {
+        switch (gdrcd_filter('get', $_POST['fase'])) {
             case false: ?>
                 <div class="panels_box">
                     <!-- condizioni d'uso -->
@@ -109,7 +109,7 @@
                             </div>
                             <?php if ($PARAMETERS['mode']['racialinfo'] == 'ON') { ?>
                                 <div class="form_info">
-                                    <a href="index.inc.php?page=user_razze" target="_new">
+                                    <a href="index.php?page=user_razze" target="_new">
                                         <?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['race_info']); ?>
                                     </a>
                                 </div>
@@ -214,7 +214,7 @@
                         </form>
                     </div>
                     <div class="form_gioco">
-                        <form action="index.inc.php" method="post">
+                        <form action="index.php" method="post">
                             <div class="form_submit">
                                 <input type="submit"
                                        value="<?php echo gdrcd_filter('out', $MESSAGE['register']['forms']['abort']); ?>"/>
@@ -465,6 +465,7 @@
                 </div>
                 <?php break;
             case 3:
+                echo '<div class="panels_box">';
                 if ((gdrcd_filter('num', $_POST['car0']) + gdrcd_filter('num', $_POST['car1']) + gdrcd_filter('num', $_POST['car2']) + gdrcd_filter('num', $_POST['car3']) + gdrcd_filter('num', $_POST['car4']) + gdrcd_filter('num', $_POST['car5'])) != $PARAMETERS['settings']['cars_sum']) {
                     echo '<div class="error">' . gdrcd_filter('out', $MESSAGE['register']['fields']['stats_info'] . ' ' . $PARAMETERS['settings']['cars_sum']) . '</div>';
                 } else {
@@ -563,7 +564,7 @@
                 echo '</div>
                     <!-- Torna alla home -->
                     <div class="link_back">
-                        <a href="index.inc.php">
+                        <a href="index.php">
                             ' .gdrcd_filter('out', $MESSAGE['register']['welcome']['back'].' '.gdrcd_filter('out', strtolower($PARAMETERS['info']['homepage_name']))).'
                         </a>
                     </div>';
