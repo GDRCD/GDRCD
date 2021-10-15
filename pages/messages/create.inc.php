@@ -60,16 +60,14 @@
             <?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['body']); ?>
         </div>
         <div class='form_field'>
- 	  	    <textarea type="textbox" name="testo" required>
-                <?php
+ 	  	    <textarea type="textbox" name="testo" required><?php
                 /**    * Fix per evitare le parentesi quadre vuote quando si compone un nuovo messaggio
                  * @author Blancks
                  */
                 if(isset($_POST['testo'])) {
                     echo "\n\n\n[".gdrcd_filter('out', trim($_POST['testo']))."]";
                 }
-                ?>
-            </textarea>
+                ?></textarea>
         </div>
         <div class="form_info">
             <?php echo gdrcd_filter('out', $MESSAGE['interface']['help']['bbcode']); ?>
