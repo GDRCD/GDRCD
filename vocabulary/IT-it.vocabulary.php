@@ -125,6 +125,7 @@ $MESSAGE['interface']['maps']['set_meteo'] = 'imposta';
 /* Scheda */
 $MESSAGE['interface']['sheet']['page_name'] = 'Scheda del personaggio';
 $MESSAGE['interface']['sheet']['link']['back'] = 'Torna alla scheda.';
+$MESSAGE['interface']['sheet']['link']['back_roles'] = 'Torna alle giocate registrate.';
 $MESSAGE['interface']['sheet']['send_message_to']['send'] = 'Invia un';
 $MESSAGE['interface']['sheet']['send_message_to']['to'] = 'a';
 $MESSAGE['interface']['sheet']['first_login'] = 'Data registrazione';
