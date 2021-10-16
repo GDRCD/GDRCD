@@ -6,32 +6,28 @@ if (isset($_REQUEST['pg']) === false) {
 }
 ?>
 <div class="panels_box">
-    <div class="fake-table">
+    <div class="fake-table view-table">
         <?php
         $id_diario = gdrcd_filter('num', $_POST['id']);
         $row = gdrcd_query("SELECT data, titolo, testo, data_modifica, data_inserimento FROM diario WHERE id='{$id_diario}' LIMIT 1 ");
 
         ?>
-        <div class="tr">
+        <div class="tr header">
             <div class="td"><?php echo gdrcd_filter('out', $row['titolo']); ?></div>
             <div class="td"><?php echo gdrcd_format_date($row['data']); ?></div>
         </div>
         <div class="tr">
             <div class="td" colspan="2"><?php echo gdrcd_filter('out', $row['testo']); ?></div>
         </div>
-        <div class="tr">
+        <div class="tr footer">
             <div class="td">
-                <div class="link_back">
-                    Data inserimento: <?php echo gdrcd_format_datetime($row['data_inserimento']); ?>
-                </div>
+                Data inserimento: <br> <?php echo gdrcd_format_datetime($row['data_inserimento']); ?>
             </div>
             <div class="td">
-                <div class="link_back">
-                    Ultima modifica: <?php if (isset($row['data_modifica'])) {
-                        echo gdrcd_format_datetime($row['data_modifica']);
-                    }
-                    ?>
-                </div>
+                Ultima modifica: <br> <?php if (isset($row['data_modifica'])) {
+                    echo gdrcd_format_datetime($row['data_modifica']);
+                }
+                ?>
             </div>
         </div>
 
