@@ -563,6 +563,7 @@ CREATE TABLE IF NOT EXISTS `personaggio` (
   `id_razza` int DEFAULT '1000',
   `descrizione` text,
   `affetti` text,
+  `storia` text,
   `stato` varchar(255) DEFAULT 'nessuna',
   `online_status` varchar(255) DEFAULT NULL,
   `disponibile` tinyint(1) NOT NULL DEFAULT '1',
