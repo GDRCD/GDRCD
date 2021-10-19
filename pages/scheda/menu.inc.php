@@ -6,7 +6,13 @@ if (($_REQUEST['pg'] == $_SESSION['login']) || ($_SESSION['permessi'] >= GUILDMO
         <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['menu']['update']); ?>
     </a>
 <?php } ?>
-
+    <!-- Descrizione e Storia separate dalla pagina principale della scheda -->
+    <a href="main.php?page=scheda_descrizione&pg=<?php echo $_SESSION['login']; ?>">
+        <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['menu']['detail']); ?>
+    </a>
+    <a href="main.php?page=scheda_storia&pg=<?php echo $_SESSION['login']; ?>">
+        <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['menu']['background']); ?>
+    </a>
     <!-- TRASFERIMENTI -->
     <a href="main.php?page=scheda_trans&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']); ?>">
         <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['menu']['transictions']); ?>

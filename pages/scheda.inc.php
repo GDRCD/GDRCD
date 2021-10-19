@@ -256,58 +256,10 @@
             if($PARAMETERS['mode']['skillsystem'] == 'ON') { //solo se è attiva la modalità skillsystem
                 include ('scheda/skillsystem.inc.php');
             } ?>
-            <div class="background"><!-- Background, affetti, robe varie -->
-                <div class="titolo_box">
-                    <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['box_title']['background']); ?>
-                </div>
-                <div class="body_box">
-                    <?php
-                    /** * Html, bbcode o entrambi ?
-                     * @author Blancks
-                     */
-                    if($PARAMETERS['mode']['user_bbcode'] == 'ON') {
-                        if($PARAMETERS['settings']['user_bbcode']['type'] == 'bbd' && $PARAMETERS['settings']['bbd']['free_html'] == 'ON') {
-                            echo bbdecoder(gdrcd_html_filter($personaggio['descrizione']), true);
-                        } elseif($PARAMETERS['settings']['user_bbcode']['type'] == 'bbd') {
-                            echo bbdecoder(gdrcd_filter('out', $personaggio['descrizione']), true);
-                        } else {
-                            echo gdrcd_bbcoder(gdrcd_filter('out', $personaggio['descrizione']));
-                        }
-                    } else {
-                        echo gdrcd_html_filter($personaggio['descrizione']);
-                    } ?>
-                </div>
-            </div>
-            <div class="background"><!-- Background, affetti, robe varie -->
-                <div class="titolo_box">
-                    <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['box_title']['relationships']); ?>
-                </div>
-                <div class="body_box">
-                    <?php
-                    /** * Html, bbcode o entrambi ?
-                     * @author Blancks
-                     */
-                    if($PARAMETERS['mode']['user_bbcode'] == 'ON') {
-                        if($PARAMETERS['settings']['user_bbcode']['type'] == 'bbd' && $PARAMETERS['settings']['bbd']['free_html'] == 'ON') {
-                            echo bbdecoder(gdrcd_html_filter($personaggio['affetti']), true);
-                        } elseif($PARAMETERS['settings']['user_bbcode']['type'] == 'bbd') {
-                            echo bbdecoder(gdrcd_filter('out', $personaggio['affetti']), true);
-                        } else {
-                            echo gdrcd_bbcoder(gdrcd_filter('out', $personaggio['affetti']));
-                        }
-                    } else {
-                        echo gdrcd_html_filter($personaggio['affetti']);
-                    }
-                    ?>
-                </div>
-            </div>
-            <!-- Background, affetti, robe varie -->
+
+
         </div>
-        <div class="link_back">
-            <a href="main.php?page=scheda&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']); ?>">
-                <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['link']['back']); ?>
-            </a>
-        </div>
+
     </div><!-- Elenco abilità -->
     <?php
     /********* CHIUSURA SCHEDA **********/
