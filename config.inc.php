@@ -66,6 +66,9 @@ $PARAMETERS['languages']['set'] = 'IT-it'; //lingua italiana
 
 
 /* SCELTA DEL TEMA */
+// HOMEPAGE
+$PARAMETERS['themes']['homepage'] = 'advanced'; //tema in uso
+// MAINPAGE
 $PARAMETERS['themes']['current_theme'] = 'advanced'; //tema in uso
 //$PARAMETERS['themes']['current_theme'] = 'medieval';
 

@@ -5,9 +5,9 @@ IMPORTANTE! non cancellate alcuna delle righe, ne modificate quanto scritto tra 
 
 /********** Homepage **********/
 /*Testo centrale homepage*/
-$MESSAGE['homepage']['main_content']['site_title'] = 'GDRCD 5.6';
-$MESSAGE['homepage']['main_content']['site_subtitle'] = 'Enhanced by Breaker';
-$MESSAGE['homepage']['main_content']['welcome'] = 'Benvenuto in GDRCD 5.6!';
+$MESSAGE['homepage']['main_content']['site_title'] = '<img src="imgs/logo_gdrcd.png" alt="GDRCD"/>';
+$MESSAGE['homepage']['main_content']['site_subtitle'] = 'Il CMS Open Source per i Giochi di Ruolo play-by-chat';
+$MESSAGE['homepage']['main_content']['welcome'] = 'Benvenuto in GDRCD!';
 $MESSAGE['homepage']['main_content']['infos'] = 'Prima di iniziare a realizzare il tuo sito, hai letto la LICENZA D\'USO che accompagna il prodotto? Se non l\'hai ancora fatto premurati gentilmente di leggerla. Troverai le istruzioni su come utilizzare  GDRCD 5.4 nel manuale allegato. Buon diverimento!';
 /*Box informativi*/
 $MESSAGE['homepage']['forms']['access_to'] = 'Accedi';
@@ -96,6 +96,9 @@ $MESSAGE['logout']['logbackin'] = 'Per rientrare nel gioco tornare alla';
 /* Errori di interfaccia */
 
 $MESSAGE['interface']['layout_not_found'] = 'Modulo non trovato';
+$MESSAGE['interface']['page_missing'] = 'Parametro pagina mancante';
+$MESSAGE['interface']['page_not_found'] = 'Pagina non trovata';
+$MESSAGE['interface']['multiple_page_found'] = 'Non e stato possibile determinare la pagina, una o piu pagine vanno in conflitto';
 
 
 /**    * Termine inserimento
