@@ -353,3 +353,75 @@ div#footer {
 
 
 /** *** Fine stili regolatori del layout *** */
+
+/**
+ * TABELLA
+ */
+
+div.elenco_record_gioco {
+    padding: 20px;
+}
+
+div.elenco_record_gioco table {
+    width: 100%;
+    background-color: #d1d1d1;
+    -moz-border-radius: 5px; /* Bordi arrotondati */
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    border-radius: 5px;
+}
+
+div.elementi_elenco {
+    padding-top: 5px;
+    text-align: center;
+}
+
+div.titoli_elenco,
+span.titoli_elenco {
+    font-weight: bold;
+    font-size: 12px;
+    font-style: italic;
+}
+
+img.colonna_elenco_messaggi_icon {
+    width: 30px;
+    height: 30px;
+}
+
+div.controlli_elenco {
+    width: 60px;
+}
+
+div.controllo_elenco {
+    width: 20px;
+    float: left;
+}
+
+div.controllo_elenco input[type='image'] {
+    width: 15px;
+}
+
+
+div.elementi_elenco {
+    min-height: 20px;
+}
+
+td.casella_elemento, div.elementi_elenco {
+    font-size: 12px;
+    background-color: #d9d9d9;
+}
+
+div.controllo_elenco input[type='image'] {
+    height: 15px;
+    width: 15px;
+    display: block;
+    margin: 2px 5px;
+}
+
+div.elementi_elenco a {
+    font-weight: bolder;
+}
+
+div.elementi_elenco a:hover {
+    text-decoration: none;
+}
