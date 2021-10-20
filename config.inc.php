@@ -766,10 +766,12 @@ $PARAMETERS['administration']['races']['access_level'] = SUPERUSER;
 $PARAMETERS['administration']['rules']['text'] = 'Gestione regolamento';
 $PARAMETERS['administration']['rules']['url'] = 'main.php?page=gestione_regolamento';
 $PARAMETERS['administration']['rules']['access_level'] = SUPERUSER;
+$PARAMETERS['administration']['meteo_condition']['text'] = 'Gestione Condizioni meteo';
+$PARAMETERS['administration']['meteo_condition']['url'] = 'main.php?page=gestione_meteo_condizioni';
+$PARAMETERS['administration']['meteo_condition']['access_level'] = SUPERUSER;
 $PARAMETERS['administration']['maintenance']['text'] = 'Manutenzione';
 $PARAMETERS['administration']['maintenance']['url'] = 'main.php?page=gestione_manutenzione';
 $PARAMETERS['administration']['maintenance']['access_level'] = SUPERUSER;
-
 
 /* HELP: Elenco delle voci dei menu' dei servizi e di gestione. E' sconsigliato operare modifiche. Le opzioni sono disponibili solo agli account con il livello d'accesso specificato o superiore.
 Livelli di accesso utente:

@@ -455,6 +455,12 @@ $MESSAGE['interface']['administration']['locations']['owner_err'] = 'Nessun grup
 $MESSAGE['interface']['administration']['locations']['expiration_date'] = 'Scadenza';
 $MESSAGE['interface']['administration']['locations']['rent'] = 'Costo orario di affitto';
 
+/*Condizioni meteo*/
+$MESSAGE['interface']['administration']['meteo_condition']['page_name'] = 'Gestione Condizioni Meteo';
+$MESSAGE['interface']['administration']['meteo_condition']['link']['new']='Crea nuova condizione';
+$MESSAGE['interface']['administration']['meteo_condition']['wind_name']='Vento';
+
+
 /**    * Denonimazioni relative al link immagine e collegamento mappa
  * @author Blancks
  */
