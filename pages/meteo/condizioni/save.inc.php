@@ -6,14 +6,16 @@ switch ($_POST['op']) {
     case 'save_new':
         $nome = gdrcd_filter('in', $_POST['nome']);
         $vento = implode(",",$_POST['vento']);
-        $class->new($nome, $vento);
+        $img = gdrcd_filter('in', $_POST['img']);
+        $class->new($nome, $vento,$img);
         break;
         #Modifica condizione
     case 'save_edit':
         $nome = gdrcd_filter('in', $_POST['nome']);
         $vento = implode(",",$_POST['vento']);
         $id=gdrcd_filter('in', $_POST['id']);
-        $class->edit($nome, $vento, $id);
+        $img = gdrcd_filter('in', $_POST['img']);
+        $class->edit($nome, $vento, $id,$img);
         break;
     # Delete condizione
     case 'delete':

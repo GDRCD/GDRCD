@@ -712,3 +712,24 @@ CREATE TABLE IF NOT EXISTS `send_GM` (
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+
+--
+-- Struttura della tabella `meteo_condizioni`
+--
+CREATE TABLE IF NOT EXISTS `meteo_condizioni` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `nome` varchar(255) DEFAULT NULL,
+    `img` varchar(255) DEFAULT NULL,
+    `vento` varchar(255) DEFAULT NULL,
+    PRIMARY KEY (`id`)
+    ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+--
+-- Dati default per meteo_condizioni
+--
+
+INSERT INTO `meteo_condizioni` (`id`, `nome`, `img`, `vento`) VALUES
+(1, 'Pioggia', 'imgs/meteo/pioggia.gif', 'Brezza intensa,Vento Forte,Burrasca'),
+(2, 'Sereno', 'imgs/meteo/sereno.gif', 'Assente,Brezza,Brezza intensa'),
+(3, 'Temporale', 'imgs/meteo/temporale.gif', 'Brezza intensa,Vento Forte,Burrasca'),
+(4, 'Neve', 'imgs/meteo/neve.gif', 'Assente,Brezza,Brezza intensa,Vento Forte,Burrasca');

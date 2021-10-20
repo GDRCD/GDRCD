@@ -1,7 +1,7 @@
 <!-- Corpo della pagina -->
 
-<div class="fake-table">
-    <div class="tr">
+<div class="fake-table index-table">
+    <div class="tr header">
         <div class="td">
                 <div class="titoli_elenco"><?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['name_col']); ?></div>
         </div>
@@ -27,13 +27,20 @@
 
     <div class="tr">
         <div class="td">
-                <div class="elementi_elenco"><?php echo $row['nome']; ?></div>
+            <?php
+            if(isset($row['img'])){
+                echo "<img src={$row['img']}>";
+            }
+            ?>
+        </div>
+        <div class="td">
+             <?php echo $row['nome']; ?>
             </div>
         <div class="td">
-                <div class="elementi_elenco"><?php echo gdrcd_filter('out', $row['vento']); ?></div>
+                <?php echo gdrcd_filter('out', $row['vento']); ?>
         </div>
         <div class="td"><!-- Iconcine dei controlli -->
-                <div class="controlli_elenco">
+
                     <!-- Modifica -->
                          <form action="main.php?page=gestione_meteo_condizioni&id=<?php echo gdrcd_filter('out', $row['id']); ?>"
                               method="post">
@@ -42,10 +49,8 @@
                                     class="btn-link">[<?php echo $MESSAGE['interface']['forums']['link']['edit']; ?>]
                             </button>
                         </form>
-                </div>
         </div>
         <div class="td"><!-- Iconcine dei controlli -->
-            <div class="controlli_elenco">
 
                     <!-- Elimina -->
                     <form action="main.php?page=gestione_meteo_condizioni"  method="post">
@@ -56,7 +61,7 @@
                             [<?php echo gdrcd_filter('out', $MESSAGE['interface']['forums']['link']['delete']); ?>]
                         </button>
                     </form>
-                </div>
+
         </div>
     </div>
         <?php
