@@ -3,6 +3,7 @@
 <script type="text/javascript" src="/includes/corefunctions.js"></script>
 <!--<script type="text/javascript" src="includes/gdrcdskills.js"></script>-->
 <script type="text/javascript" src="/includes/modal.js"></script>
+
 <?php
 /** * Abilitazione tooltip
  * @author Blancks

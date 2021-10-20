@@ -1,69 +1,85 @@
 <!-- Corpo della pagina -->
-<div class="page_body">
-    <table>
-        <!-- Intestazione tabella -->
-        <tr>
-            <td class="casella_titolo">
+
+<div class="fake-table">
+    <div class="tr">
+        <div class="td">
                 <div class="titoli_elenco"><?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['name_col']); ?></div>
-            </td>
-            <td class="casella_titolo">
-                <div class="titoli_elenco"><?php echo gdrcd_filter('out',$MESSAGE['interface']['administration']['meteo_condition']['wind_name']); ?></div>
-            </td>
-            <td class="casella_titolo">
+        </div>
+        <div class="td">
+                <div class="titoli_elenco"><?php echo gdrcd_filter('out',$MESSAGE['interface']['administration']['meteo_condition']['wind_name']); ?>
+                </div>
+        </div>
+            <div class="td">
                 <div class="titoli_elenco"><?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops_col']); ?></div>
-            </td>
-        </tr>
+            </div>
+        <div class="td">
+            <div class="titoli_elenco"><?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops_col']); ?></div>
+
+        </div>
+        </div>
         <!-- Record -->
 
     <?php
-
     $all=$class->getAll();
-
     while($row = gdrcd_query($all, 'fetch')){
     ?>
 
 
-        <tr>
-            <td class="casella_elemento">
+    <div class="tr">
+        <div class="td">
                 <div class="elementi_elenco"><?php echo $row['nome']; ?></div>
-            </td>
-            <td class="casella_elemento">
+            </div>
+        <div class="td">
                 <div class="elementi_elenco"><?php echo gdrcd_filter('out', $row['vento']); ?></div>
-            </td>
-            <td class="casella_controlli"><!-- Iconcine dei controlli -->
+        </div>
+        <div class="td"><!-- Iconcine dei controlli -->
                 <div class="controlli_elenco">
                     <!-- Modifica -->
-                    <div class="controllo_elenco">
-                        <form action="main.php?page=gestione_luoghi" method="post">
-                            <input type="hidden" name="id_record"
-                                   value="<?php echo $row['id'] ?>" />
-                            <input type="hidden" name="op" value="edit" />
-                            <input type="image"
-                                   src="imgs/icons/edit.png"
-                                   alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['edit']); ?>"
-                                   title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['edit']); ?>" />
+                         <form action="main.php?page=gestione_meteo_condizioni&id=<?php echo gdrcd_filter('out', $row['id']); ?>"
+                              method="post">
+                            <input hidden value="edit" name="op">
+                            <button type="submit" name="id" value="<?php echo gdrcd_filter('out', $row['id']); ?>"
+                                    class="btn-link">[<?php echo $MESSAGE['interface']['forums']['link']['edit']; ?>]
+                            </button>
                         </form>
-                    </div>
-                    <!-- Elimina -->
-                    <div class="controllo_elenco">
-                        <form action="main.php?page=gestione_luoghi" method="post">
-                            <input type="hidden" name="id_record"
-                                   value="<?php echo $row['id'] ?>" />
-                            <input type="hidden" name="op" value="erase" />
-                            <input type="image"
-                                   src="imgs/icons/erase.png"
-                                   alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['erase']); ?>"
-                                   title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['erase']
-                                   ); ?>" />
-                        </form>
-                    </div>
                 </div>
-            </td>
-        </tr>
+        </div>
+        <div class="td"><!-- Iconcine dei controlli -->
+            <div class="controlli_elenco">
+
+                    <!-- Elimina -->
+                    <form action="main.php?page=gestione_meteo_condizioni"  method="post">
+                        <input hidden value="delete" name="op">
+
+                        <button type="submit" name="id" onClick='return confirmSubmit()'
+                                value="<?php echo gdrcd_filter('out', $row['id']); ?>" class="btn-link">
+                            [<?php echo gdrcd_filter('out', $MESSAGE['interface']['forums']['link']['delete']); ?>]
+                        </button>
+                    </form>
+                </div>
+        </div>
+    </div>
         <?php
-
     }
-
     ?>
+</div>
+
+        <!-- link crea nuovo -->
 
 </div>
+<div class="link_back">
+    <form action="main.php?page=gestione_meteo_condizioni" method="post">
+        <input type="submit" class="btn-link" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['diary']['new']); ?>">
+        <input type="hidden" name="op" value="new"/>
+    </form>
+</div>
+
+<script>
+    function confirmSubmit() {
+        var agree = confirm("Vuoi eliminare la condizione meteo?");
+        if (agree)
+            return true;
+        else
+            return false;
+    }
+</script>

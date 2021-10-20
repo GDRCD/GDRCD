@@ -32,16 +32,49 @@ class Condizioni
     }
     /**
      * @fn getAll
-     * @note Estrae lista delle condizioni meterologiche
+     * @note Estrae lista delle condizioni meteo
      * @return array
      */
     public function getAll()
     {
-        return gdrcd_query("SELECT * FROM meteo_condizioni", 'result');
-
-
-
-
+        return gdrcd_query("SELECT id, nome, vento FROM meteo_condizioni", 'result');
     }
-  
+    /**
+     * @fn getOne
+     * @note Estrae una condizione meteo
+     * @return array
+     */
+    public function getOne($id)
+    {
+        $id = gdrcd_filter('num',$id);
+        return gdrcd_query("SELECT id, nome, vento FROM meteo_condizioni WHERE id='{$id}'", 'query');
+    }
+    /**
+     * @fn new
+     * @note Inserisce una nuova condizione
+     */
+    public function new(string $nome,  $vento )
+    {
+        gdrcd_query("INSERT INTO meteo_condizioni (nome,vento )  VALUES
+        ('{$nome}', '{$vento}') ");
+    }
+    /**
+     * @fn edit
+     * @note Aggiorna una condizione meteo
+     */
+    public function edit(string $nome,  $vento, $id)
+    {
+        $id = gdrcd_filter('num',$id);
+        gdrcd_query("UPDATE  meteo_condizioni 
+                SET nome = '{$nome}',vento='{$vento}' WHERE id='{$id}'");
+    }
+    /**
+     * @fn delete
+     * @note Cancella una condizione meteo
+     */
+    public function delete(int  $id)
+    {
+        $id = gdrcd_filter('num',$id);
+        gdrcd_query("DELETE FROM meteo_condizioni WHERE id='{$id}'");
+    }
 }
