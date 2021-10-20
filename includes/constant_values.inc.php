@@ -56,6 +56,65 @@ define('INVIAGGIO', -1);
 define('HTML_FILTER_BASE', 0);
 define('HTML_FILTER_HIGH', 1);
 
+/**
+ * Impostazioni registrazioni giocate
+ */
+//Azioni minime per poter registrare una giocata
+CONST REG_MIN_AZIONI = 4;
+
+//Attiva o disattiva il pacchetto intero (default: true)
+const REG_ROLE = true;
+
+//Attiva o disattiva il salvataggio delle role su pc (default: true)
+const SAVE_ROLE = true;
+
+//Attiva o disattiva la segnalazione ai GM e la relativa pagina gestionale (default: true)
+const SEND_GM = true;
+
+//definisce quali permessi hanno accesso alla lista delle giocate dei pg e alle segnalazioni GM (default: gamemaster)
+const ROLE_PERM = GAMEMASTER;
+
+//definisce quali permessi hanno accesso ai log chat (default: gamemaster)
+const LOG_PERM = GAMEMASTER;
+
+//definisce quali permessi possono modificare le registrazioni (default: gamemaster)
+const EDIT_PERM = GAMEMASTER;
+
+/**
+ * Diari PG
+ */
+
+//Attiva o disattiva il diario del PG
+CONST PG_DIARY_ENABLED = true;
+
+//definisce quali permessi possono modificare le registrazioni (default: gamemaster)
+const PERMESSI_DIARIO = MODERATOR;
+
+/**
+ * Fasi Lunari
+ */
+//Attiva le fasi lunari
+const MOON = true;
+
+/**
+ * Impostazioni esiti
+ */
+
+//Attiva o disattiva il pacchetto intero (default: true)
+const ESITI = true;
+
+//Attiva o disattiva l'invio degli esiti in chat (default: false) -- Funzionalità in sviluppo
+const ESITI_CHAT = false;
+
+//Attiva o disattiva i tiri via esito (default: true)
+const TIRI_ESITO = true;
+
+//definisce quali permessi hanno accesso alla pagina di gestione degli esiti (default: gamemaster)
+const ESITI_PERM = GAMEMASTER;
+
+//definisce quali permessi hanno accesso alla visione di tutti gli esiti (default: moderator)
+const FULL_PERM = MODERATOR;
+
 /*Vettori globali dei parametri*/
 $PARAMETER = array();
 $MESSAGES = array();

@@ -162,3 +162,12 @@ pip-log.txt
 
 # Mac crap
 .DS_Store
+
+
+#############
+## GDRCD
+#############
+
+# chat_save
+giocate/
+includes/config-overrides.php

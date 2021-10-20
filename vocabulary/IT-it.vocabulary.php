@@ -5,9 +5,9 @@ IMPORTANTE! non cancellate alcuna delle righe, ne modificate quanto scritto tra 
 
 /********** Homepage **********/
 /*Testo centrale homepage*/
-$MESSAGE['homepage']['main_content']['site_title'] = 'GDRCD 5.5';
-$MESSAGE['homepage']['main_content']['site_subtitle'] = 'Enhanced by Breaker';
-$MESSAGE['homepage']['main_content']['welcome'] = 'Benvenuto in GDRCD 5.5!';
+$MESSAGE['homepage']['main_content']['site_title'] = '<img src="imgs/logo_gdrcd.png" alt="GDRCD"/>';
+$MESSAGE['homepage']['main_content']['site_subtitle'] = 'Il CMS Open Source per i Giochi di Ruolo play-by-chat';
+$MESSAGE['homepage']['main_content']['welcome'] = 'Benvenuto in GDRCD!';
 $MESSAGE['homepage']['main_content']['infos'] = 'Prima di iniziare a realizzare il tuo sito, hai letto la LICENZA D\'USO che accompagna il prodotto? Se non l\'hai ancora fatto premurati gentilmente di leggerla. Troverai le istruzioni su come utilizzare  GDRCD 5.4 nel manuale allegato. Buon diverimento!';
 /*Box informativi*/
 $MESSAGE['homepage']['forms']['access_to'] = 'Accedi';
@@ -32,6 +32,7 @@ $MESSAGE['installer']['instal'] = "Installa il database.";
 $MESSAGE['homepage']['updater']['done'] = 'Il Database è stato reso compatibile con GDRCD5.4';
 $MESSAGE['homepage']['updater']['update'] = 'Aggiorna adesso il database.';
 $MESSAGE['homepage']['updater']['no_fields'] = 'Non sono state rilevate mancanze nel database attualmente in uso.';
+$MESSAGE['homepage']['forms']['theme_choice']='Scegli il tema da usare';
 
 
 /********** Iscrizione **********/
@@ -95,6 +96,9 @@ $MESSAGE['logout']['logbackin'] = 'Per rientrare nel gioco tornare alla';
 /* Errori di interfaccia */
 
 $MESSAGE['interface']['layout_not_found'] = 'Modulo non trovato';
+$MESSAGE['interface']['page_missing'] = 'Parametro pagina mancante';
+$MESSAGE['interface']['page_not_found'] = 'Pagina non trovata';
+$MESSAGE['interface']['multiple_page_found'] = 'Non e stato possibile determinare la pagina, una o piu pagine vanno in conflitto';
 
 
 /**    * Termine inserimento
@@ -124,6 +128,7 @@ $MESSAGE['interface']['maps']['set_meteo'] = 'imposta';
 /* Scheda */
 $MESSAGE['interface']['sheet']['page_name'] = 'Scheda del personaggio';
 $MESSAGE['interface']['sheet']['link']['back'] = 'Torna alla scheda.';
+$MESSAGE['interface']['sheet']['link']['back_roles'] = 'Torna alle giocate registrate.';
 $MESSAGE['interface']['sheet']['send_message_to']['send'] = 'Invia un';
 $MESSAGE['interface']['sheet']['send_message_to']['to'] = 'a';
 $MESSAGE['interface']['sheet']['first_login'] = 'Data registrazione';
@@ -144,8 +149,13 @@ $MESSAGE['interface']['sheet']['menu']['transictions'] = 'Transazioni';
 $MESSAGE['interface']['sheet']['menu']['experience'] = 'Esperienza';
 $MESSAGE['interface']['sheet']['menu']['inventory'] = 'Inventario';
 $MESSAGE['interface']['sheet']['menu']['equipment'] = 'Equipaggiamento';
+$MESSAGE['interface']['sheet']['menu']['diary'] = 'Diario';
 $MESSAGE['interface']['sheet']['menu']['gst'] = 'Amministra';
 $MESSAGE['interface']['sheet']['menu']['log'] = 'Log';
+$MESSAGE['interface']['sheet']['menu']['detail']='Descrizione e Conoscenze';
+$MESSAGE['interface']['sheet']['menu']['background']='Storia';
+$MESSAGE['interface']['sheet']['menu']['description']='Descrizione';
+$MESSAGE['interface']['sheet']['menu']['friend']='Conoscenze';
 $MESSAGE['interface']['sheet']['modify_form']['last_name'] = 'Cognome';
 $MESSAGE['interface']['sheet']['modify_form']['relationships'] = 'Affetti';
 $MESSAGE['interface']['sheet']['modify_form']['background'] = 'Background';
@@ -202,14 +212,25 @@ $MESSAGE['interface']['sheet']['log']['date'] = 'Data';
 $MESSAGE['interface']['sheet']['log']['ip'] = 'IP';
 $MESSAGE['interface']['sheet']['log']['other_account'] = 'Doppio';
 $MESSAGE['interface']['sheet']['log']['message'] = 'Messaggio';
+$MESSAGE['interface']['sheet']['diary']['new'] = 'Nuova pagina';
+$MESSAGE['interface']['sheet']['diary']['title']= 'Titolo';
+$MESSAGE['interface']['sheet']['diary']['date']= 'Data';
+$MESSAGE['interface']['sheet']['diary']['visible']= 'Visibile a tutti';
+$MESSAGE['interface']['sheet']['diary']['text']= 'Testo';
+$MESSAGE['interface']['sheet']['diary']['back']= 'Torna al diario';
+$MESSAGE['interface']['sheet']['diary']['button_save']='Salva';
+
 /*Messaggi privati*/
-$MESSAGE['interface']['messages']['destination'] = 'Destinatario';
+$MESSAGE['interface']['messages']['recipient'] = 'Destinatario';
 $MESSAGE['interface']['messages']['multiple']['title'] = $PARAMETERS['names']['private_message']['sing'] . 'collettivo';
-$MESSAGE['interface']['messages']['multiple']['single'] = 'Destinatario singolo';
-$MESSAGE['interface']['messages']['multiple']['multiple'] = 'Destinatario multiplo';
-$MESSAGE['interface']['messages']['multiple']['online'] = 'Tutti i presenti';
 $MESSAGE['interface']['messages']['multiple']['info'] = 'Destinatari multipli separati da virgola.';
-$MESSAGE['interface']['messages']['multiple']['all'] = 'Tutti gli utenti';
+$MESSAGE['interface']['messages']['multiple']['options']['private'] = 'Privato';
+$MESSAGE['interface']['messages']['multiple']['options']['online'] = 'Tutti i presenti';
+$MESSAGE['interface']['messages']['multiple']['options']['all'] = 'Tutti gli utenti';
+$MESSAGE['interface']['messages']['type']['title'] = 'Tipo';
+$MESSAGE['interface']['messages']['type']['options'][0] = 'OFF';
+$MESSAGE['interface']['messages']['type']['options'][1] = 'ON';
+$MESSAGE['interface']['messages']['subject'] = 'Oggetto';
 $MESSAGE['interface']['messages']['body'] = 'Testo';
 $MESSAGE['interface']['messages']['sender'] = 'Mittente';
 $MESSAGE['interface']['messages']['date'] = 'Ricevuto il';
@@ -279,6 +300,15 @@ $MESSAGE['interface']['bank']['credit'] = 'Accredito';
 $MESSAGE['interface']['bank']['credit_no'] = 'Accredito ritirato';
 $MESSAGE['interface']['bank']['execute'] = 'Esegui';
 $MESSAGE['interface']['bank']['notice'] = 'ti ha accreditato';
+
+/*Esiti Master*/
+$MESSAGE['interface']['esitiserie']['intro'] = "Messaggio che spiega come funzionano le serie di esiti lato master";
+$MESSAGE['interface']['esitiserie']['intro_pg'] = "Messaggio che spiega come funzionano le serie di esiti lato pg";
+$MESSAGE['interface']['esiti']['newesito'] = "Messaggio che spiega come funziona l'invio di nuovi esiti lato master";
+$MESSAGE['interface']['esiti']['newesitopg'] = "Messaggio che spiega come funziona l'invio di nuovi esiti lato pg";
+$MESSAGE['interface']['esiti']['esitochat'] = "Messaggio che spiega come funziona l'invio di nuovi esiti in chat lato master";
+
+
 /*Lavoro*/
 $MESSAGE['interface']['job']['page_name'] = 'Lavoro';
 $MESSAGE['interface']['job']['submit']['pick'] = 'Scegli';
@@ -340,6 +370,13 @@ $MESSAGE['interface']['hotel']['ok'] = 'Prenotazione completata';
 /*Anagrafe*/
 $MESSAGE['interface']['pg_list']['pg_list'] = 'Anagrafe';
 $MESSAGE['interface']['pg_list']['select'] = 'Visualizza il personaggio';
+$MESSAGE['interface']['pg_list']['search']['title'] = 'Ricerca Personaggio';
+$MESSAGE['interface']['pg_list']['search']['img'] = 'Avatar Chat';
+$MESSAGE['interface']['pg_list']['search']['personaggio'] = 'Personaggio';
+$MESSAGE['interface']['pg_list']['search']['sesso'] = 'Sesso';
+$MESSAGE['interface']['pg_list']['search']['razza'] = 'Razza';
+$MESSAGE['interface']['pg_list']['search']['limit'] = 'Limite personaggio estratti. Inserire 0 per ottenerli tutti.';
+$MESSAGE['interface']['pg_list']['search']['submit'] = 'Cerca';
 /*Elenco abilita*/
 $MESSAGE['interface']['skills']['page_name'] = 'Elenco abilità';
 $MESSAGE['interface']['skills']['skill'] = 'Abilità';
@@ -596,12 +633,12 @@ $MESSAGE['interface']['administration']['log']['messages']['text'] = 'Testo';
 $MESSAGE['interface']['administration']['log']['chat']['page_name'] = 'Log chat';
 $MESSAGE['interface']['administration']['log']['chat']['log_by_user'] = 'Log chat utente';
 $MESSAGE['interface']['administration']['log']['chat']['log_by_room'] = 'Log chat luogo';
-$MESSAGE['interface']['administration']['log']['chat']['begin'] = 'Ora inizio';
-$MESSAGE['interface']['administration']['log']['chat']['end'] = 'Ora fine';
+$MESSAGE['interface']['administration']['log']['chat']['begin'] = 'Data inizio';
+$MESSAGE['interface']['administration']['log']['chat']['end'] = 'Data fine';
 $MESSAGE['interface']['administration']['log']['chat']['date'] = 'Data';
 $MESSAGE['interface']['administration']['log']['chat']['text'] = 'Testo';
 $MESSAGE['interface']['administration']['log']['chat']['room'] = 'Luogo';
-$MESSAGE['interface']['administration']['log']['chat']['sender'] = 'Luogo';
+$MESSAGE['interface']['administration']['log']['chat']['sender'] = 'Personaggio';
 /********** Pagine del menu' utente *********/
 /*Cambio pass*/
 $MESSAGE['interface']['user']['pass']['page_name'] = 'Cambio password';

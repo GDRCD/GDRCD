@@ -1,9 +1,25 @@
 <?php
-gdrcd_query("DELETE FROM messaggi WHERE destinatario = '".$_SESSION['login']."' AND letto = 1");
-?>
-<div class="warning">
-    <?php echo gdrcd_filter('out', $PARAMETERS['names']['private_message']['sing'].$MESSAGE['interface']['messages']['erased']); ?>
-</div>
-<div class="link_back">
-    <a href="main.php?page=messages_center&offset=0"><?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['go_back']); ?></a>
-</div>
+
+/**
+ * Eliminao i messaggi letti
+ */
+
+// In base alla tipologia di visualizzazione, elimino i relativi messaggi letti
+if(gdrcd_filter_in($_POST['type']) === 'destinatario_del') {
+    $query = "UPDATE messaggi SET destinatario_del = 1 WHERE destinatario='".gdrcd_filter('in', $_SESSION['login'])."' AND letto = 1";
+} elseif(gdrcd_filter_in($_POST['type']) === 'mittente_del') {
+    $query = "UPDATE messaggi SET mittente_del = 1 WHERE mittente='".gdrcd_filter('in', $_SESSION['login'])."' AND letto = 1";
+}
+
+// Avvio l'operazione
+if(isset($query)){
+    // Eseguo la query
+    gdrcd_query($query);
+
+    // Mostro il messaggio
+    ?>
+    <div class="warning">
+        <?php echo gdrcd_filter('out', $PARAMETERS['names']['private_message']['plur'].$MESSAGE['interface']['messages']['all_erased']); ?>
+    </div>
+    <?php
+}

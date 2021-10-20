@@ -23,7 +23,7 @@ $iscriz = $iscriz['0'];
                     <div class="error">
                         <?php echo gdrcd_filter('out', $MESSAGE['error']['existing_name']); ?>
                     </div>
-                <?php
+                    <?php
                 } else {
                     gdrcd_query("UPDATE personaggio SET nome = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE nome = '".$_SESSION['login']."'");
                     gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".gdrcd_filter('in', $_POST['new_name'])."','".$_SESSION['login']."', NOW(), ".CHANGEDNAME." ,'".$_SESSION['login'].' -> '.gdrcd_filter('in', $_POST['new_name'])."')");
@@ -43,7 +43,7 @@ $iscriz = $iscriz['0'];
                     <div class="warning">
                         <?php echo gdrcd_filter('out', $MESSAGE['warning']['modified']); ?>
                     </div>
-                <?php
+                    <?php
                 }
             } else { ?>
                 <div class="error">
@@ -68,7 +68,7 @@ $iscriz = $iscriz['0'];
                     <div class="error">
                         <?php echo gdrcd_filter('out', $MESSAGE['error']['existing_name']); ?>
                     </div>
-                <?php} else {
+                <?php } else {
                     if($_SESSION['permessi'] == SUPERUSER) {
 
                         gdrcd_query("UPDATE log SET nome_interessato = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE nome_interessato = '".gdrcd_filter('in', $_POST['account'])."'");
@@ -102,7 +102,7 @@ $iscriz = $iscriz['0'];
                     <div class="warning">
                         <?php echo gdrcd_filter('out', $MESSAGE['warning']['modified']); ?>
                     </div>
-                <?php
+                    <?php
                 }
             } else { ?>
                 <div class="error">

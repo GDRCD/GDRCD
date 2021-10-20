@@ -90,8 +90,10 @@ require 'header.inc.php'; /*Header comune*/
             id bigint(20) NOT NULL auto_increment,
             mittente varchar(20) NOT NULL default '',
             destinatario varchar(20) NOT NULL default '',
-            spedito datetime NOT NULL default '0000-00-00 00:00:00',
+            spedito datetime NOT NULL default CURRENT_TIMESTAMP,
             letto tinyint(1) default '0',
+            tipo int(2) NOT NULL default '0',
+            oggetto text NULL DEFAULT NULL,
             testo text,
             PRIMARY KEY  (id)
         ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");
@@ -106,13 +108,29 @@ require 'header.inc.php'; /*Header comune*/
             KEY Ora (ora)
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
+
+            gdrcd_query("CREATE TABLE IF NOT EXISTS blocco_esiti
+(
+    id     int(11)                         NOT NULL AUTO_INCREMENT,
+    titolo text CHARACTER SET utf8         NOT NULL,
+    data   datetime                        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    autore varchar(255) CHARACTER SET utf8 NOT NULL,
+    pg     varchar(255) CHARACTER SET utf8 NOT NULL,
+    id_min int(11)                                  DEFAULT NULL,
+    master varchar(255) CHARACTER SET utf8 NOT NULL DEFAULT '0',
+    closed int(11)                         NOT NULL DEFAULT '0',
+    PRIMARY KEY (id)
+) ENGINE = MyISAM
+  DEFAULT CHARSET = latin1;");
+
+
         gdrcd_query("CREATE TABLE chat (
             id bigint(20) NOT NULL auto_increment,
             stanza int(4) NOT NULL default '0',
             imgs varchar(100) NOT NULL default '',
             mittente varchar(20) NOT NULL default '',
             destinatario varchar(20) default NULL,
-            ora datetime NOT NULL default '0000-00-00 00:00:00',
+            ora datetime NOT NULL default CURRENT_TIMESTAMP ,
             tipo char(1) default NULL,
             testo text,
             PRIMARY KEY  (id),
@@ -187,6 +205,31 @@ require 'header.inc.php'; /*Header comune*/
 
         gdrcd_query("INSERT INTO codtipooggetto VALUES (0, 'Vario');");
 
+    gdrcd_query("CREATE TABLE esiti (
+        id int(11) NOT NULL AUTO_INCREMENT,
+        sent int(11) NOT NULL DEFAULT '0',
+        titolo varchar(255) CHARACTER SET utf8 NOT NULL,
+        data datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        chat int(11) NOT NULL DEFAULT '0',
+         autore varchar(255) CHARACTER SET utf8 NOT NULL,
+        contenuto mediumtext CHARACTER SET utf8,
+        noteoff text CHARACTER SET utf8,
+        master varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+        pg varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+        id_blocco int(11) NOT NULL,
+        id_ab int(11) DEFAULT '0',
+        CD_1 text CHARACTER SET utf8,
+        CD_2 text CHARACTER SET utf8,
+        CD_3 text CHARACTER SET utf8,
+        CD_4 text CHARACTER SET utf8,
+        letto_master int(11) NOT NULL DEFAULT '0',
+        letto_pg int(11) NOT NULL DEFAULT '0',
+        dice_face int(4) NOT NULL DEFAULT '0',
+        dice_num int(4) NOT NULL DEFAULT '0',
+        dice_results varchar(1000) DEFAULT NULL,
+        PRIMARY KEY (id)
+        ) ENGINE=MyISAM  DEFAULT CHARSET=latin1;");
+
         gdrcd_query("CREATE TABLE gilda (
             id_gilda int(4) NOT NULL auto_increment,
             nome char(50) NOT NULL default '',
@@ -204,7 +247,7 @@ require 'header.inc.php'; /*Header comune*/
             id int(11) NOT NULL auto_increment,
             nome_interessato varchar(20) NOT NULL default '',
             autore varchar(60) NOT NULL default '',
-            data_evento datetime NOT NULL default '0000-00-00 00:00:00',
+            data_evento datetime NOT NULL default CURRENT_TIMESTAMP,
             codice_evento char(20) NOT NULL default '',
             descrizione_evento char(100) NOT NULL default '',
             PRIMARY KEY  (id)
@@ -235,9 +278,9 @@ require 'header.inc.php'; /*Header comune*/
             FULLTEXT KEY Invitati (invitati)
         ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;");
 
-        gdrcd_query("INSERT INTO mappa VALUES (1, 'Strada', 'Via che congiunge la periferia al centro.', 'Nella norma', '', 1, 'standard_luogo.png', '', 1, '', '', 0, 180, 150, '', 0, 'Nessuno', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0);");
+        gdrcd_query("INSERT INTO mappa VALUES (1, 'Strada', 'Via che congiunge la periferia al centro.', 'Nella norma', '', 1, 'standard_luogo.png', '', 1, '', '', 0, 180, 150, '', 0, 'Nessuno', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 0);");
 
-        gdrcd_query("INSERT INTO mappa VALUES (2, 'Piazza', 'Piccola piazza con panchine ed una fontana al centro.', 'Nella norma', '', 1, 'standard_luogo.png', '', 1, '', '', 0, 80, 150, '', 0, 'Nessuno', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0);");
+        gdrcd_query("INSERT INTO mappa VALUES (2, 'Piazza', 'Piccola piazza con panchine ed una fontana al centro.', 'Nella norma', '', 1, 'standard_luogo.png', '', 1, '', '', 0, 80, 150, '', 0, 'Nessuno', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 0);");
 
         gdrcd_query("CREATE TABLE mappa_click (
             id_click int(1) NOT NULL auto_increment,
@@ -265,10 +308,12 @@ require 'header.inc.php'; /*Header comune*/
             id bigint(20) NOT NULL auto_increment,
             mittente varchar(40) NOT NULL,
             destinatario varchar(20) NOT NULL default 'Nessuno',
-            spedito datetime NOT NULL default '0000-00-00 00:00:00',
+            spedito datetime NOT NULL default CURRENT_TIMESTAMP,
             letto tinyint(1) default '0',
             mittente_del tinyint(1) default '0',
             destinatario_del tinyint(1) default '0',
+            tipo int(2) NOT NULL default '0',
+            oggetto text NULL DEFAULT NULL,
             testo text,
             PRIMARY KEY  (id),
             KEY destinatario (destinatario),
@@ -282,8 +327,8 @@ require 'header.inc.php'; /*Header comune*/
             titolo varchar(255) default NULL,
             messaggio text,
             autore varchar(20) default NULL,
-            data_messaggio datetime default NULL,
-            data_ultimo_messaggio datetime default NULL,
+            data_messaggio datetime default CURRENT_TIMESTAMP,
+            data_ultimo_messaggio datetime default CURRENT_TIMESTAMP,
             importante binary(1) NOT NULL DEFAULT '0',
             chiuso binary(1) NOT NULL DEFAULT '0',
             PRIMARY KEY  (id_messaggio),
@@ -298,7 +343,7 @@ require 'header.inc.php'; /*Header comune*/
             tipo int(2) NOT NULL default '0',
             nome varchar(50) NOT NULL default 'Sconosciuto',
             creatore varchar(20) NOT NULL default 'System Op',
-            data_inserimento datetime NOT NULL default '0000-00-00 00:00:00',
+            data_inserimento datetime NOT NULL default CURRENT_TIMESTAMP,
             descrizione varchar(255) NOT NULL default 'Nessuna',
             ubicabile int(2) NOT NULL default '0',
             costo int(11) NOT NULL default '0',
@@ -361,17 +406,15 @@ require 'header.inc.php'; /*Header comune*/
             is_invisible tinyint(1) NOT NULL default '0',
             ultimo_refresh datetime default NULL,
             ora_entrata datetime default NULL,
-            ora_uscita datetime default NULL,
+            ora_uscita datetime NOT NULL default '2009-07-01 00:00:00',
             posizione int(4) NOT NULL default '1',
-            ultimo_messaggio bigint(20) NOT NULL default '0',
             PRIMARY KEY  (nome),
             KEY IDRazza (id_razza),
             KEY Esilio (esilio)
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
-        gdrcd_query("INSERT INTO personaggio VALUES ('Super', 'User', '" . gdrcd_encript('super') . "', NULL, now(), '".gdrcd_encript('super@gdrcd.test')."', 4, 1, -1, '2009-07-01', '2009-07-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', 0, 1000, 7, 8, 6, 5, 6, 5, 100, 100, '2009-07-01 00:00:00', 300, 50000, '2009-07-01', '127.0.0.1', 0, '2009-07-01 00:00:00', '2009-07-01 00:00:00', '2009-07-01 00:00:00', 1, 0);");
-
-        gdrcd_query("INSERT INTO personaggio VALUES ('Test', 'Di Funzionalià', '" . gdrcd_encript('test') . "', NULL, now(), '".gdrcd_encript('test@gdrcd.test')."', 0, 1, -1, '2009-07-01', '2009-07-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', 0, 1000, 7, 8, 6, 5, 6, 5, 100, 100, '2009-07-01 00:00:00', 50, 50, '2009-07-01', '127.0.0.1', 0, '2009-07-01 00:00:00', '2009-07-01 00:00:00', '2009-07-01 00:00:00', 1, 0);");
+        gdrcd_query("INSERT INTO personaggio VALUES ('Super', 'User', '" . gdrcd_encript('super') . "', NULL, now(), '".gdrcd_encript('super@gdrcd.test')."', 4, 1, -1, '2009-07-01', '2009-07-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', 0, 1000, 7, 8, 6, 5, 6, 5, 100, 100, '2009-07-01 00:00:00', 300, 50000, '2009-07-01', '127.0.0.1', 0, '2009-07-01 00:00:00', '2009-07-01 00:00:00', '2009-07-01 00:00:00', 1);");
+        gdrcd_query("INSERT INTO personaggio VALUES ('Test', 'Di Funzionalià', '" . gdrcd_encript('test') . "', NULL, now(), '".gdrcd_encript('test@gdrcd.test')."', 0, 1, -1, '2009-07-01', '2009-07-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', 0, 1000, 7, 8, 6, 5, 6, 5, 100, 100, '2009-07-01 00:00:00', 50, 50, '2009-07-01', '127.0.0.1', 0, '2009-07-01 00:00:00', '2009-07-01 00:00:00', '2009-07-01 00:00:00', 1);");
 
 
         gdrcd_query("CREATE TABLE razza (
@@ -422,6 +465,27 @@ require 'header.inc.php'; /*Header comune*/
 
         gdrcd_query("INSERT INTO ruolo VALUES (4, 1, 'Recluta della guardia', 'standard_gilda.png', 15, 0);");
 
+        gdrcd_query("CREATE TABLE  segnalazione_role (
+          id bigint(20) NOT NULL AUTO_INCREMENT,
+          stanza int(11) NOT NULL,
+          conclusa int(11) NOT NULL DEFAULT '0',
+          partecipanti text CHARACTER SET utf8,
+          mittente varchar(20) CHARACTER SET utf8 NOT NULL,
+          data_inizio datetime DEFAULT NULL,
+          data_fine datetime DEFAULT NULL,
+          tags text CHARACTER SET utf8,
+          quest text CHARACTER SET utf8,
+          PRIMARY KEY (id)
+        ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=119 ;");
+
+        gdrcd_query("CREATE TABLE send_GM (
+          id int(11) NOT NULL AUTO_INCREMENT,
+          data datetime NOT NULL,
+          autore text CHARACTER SET utf8 NOT NULL,
+          role_reg int(11) NOT NULL,
+          note text CHARACTER SET utf8,
+          PRIMARY KEY (id)
+        ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;");
         echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['homepage']['installer']['done']) . '</div>';
         } ?>
         <!-- Link di ritorno alla homepage -->

@@ -82,7 +82,12 @@ $info = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprieta
                                             Salva Chat
                                         </a>
                                     </span>
-                                <?php } ?>
+                                <?php }
+                                if (REG_ROLE) { ?>
+                                    | <a href="javascript:parent.modalWindow('rolesreg', '', 'popup.php?page=chat_pannelli_index&pannello=segnalazione_role');">
+                                       Registra giocata
+                                    </a>
+                                <?php  } ?>
                             </div>
                             <div class="casella_chat">
                                 <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>" />
@@ -160,7 +165,7 @@ $info = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprieta
                                         <select name="id_item" id="id_item">
                                             <option value="no_item"></option>
                                             <?php while($row = gdrcd_query($result, 'fetch')) { ?>
-                                                <option value="<?php echo $row['id_oggetto'].'-'.$row['cariche'].'-'.gdrcd_filter('out', $row['nome']); ?>">
+                                                <option value="<?php echo $row['id_oggetto'];?>">
                                                     <?php echo $row['nome']; ?>
                                                 </option>
                                             <?php

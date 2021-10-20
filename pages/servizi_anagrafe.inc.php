@@ -1,40 +1,19 @@
-<?php /*HELP: */
-$query = ($_SESSION['permessi'] >= MODERATOR) ? "SELECT nome, cognome, email FROM personaggio ORDER BY nome" : "SELECT nome, cognome FROM personaggio WHERE permessi > -1 ORDER BY nome";
-$result = gdrcd_query($query, 'result'); ?>
+<div class="servizi_pagina">
 
-<div class="pagina_servizi_anagrafe">
     <!-- Titolo della pagina -->
-    <div class="page_title">
-        <h2><?php echo gdrcd_filter('out', $MESSAGE['interface']['pg_list']['page_name']); ?></h2>
+    <div class="servizi_incipit">
+        <div class="title"><?php echo gdrcd_filter('out', $MESSAGE['interface']['pg_list']['pg_list']); ?></div>
     </div>
-    <!-- Operazioni bancarie -->
-    <div class="page_body">
-        <?php /*Visualizzazione di base*/ ?>
-        <div class="panels_box">
-            <!-- Deposito -->
-            <div class="form_gioco">
-                <form action="main.php?page=scheda"
-                      method="post">
-                    <div class="form_label">
-                        <?php echo gdrcd_filter('out', $MESSAGE['interface']['pg_list']['select']) ?>
-                    </div>
-                    <div class='form_field'>
-                        <select name="pg">
-                            <?php while($row = gdrcd_query($result, 'fetch')) { ?>
-                                <option value="<?php echo gdrcd_filter('out', $row['nome']) ?>">
-                                    <?php echo gdrcd_filter('out', $row['nome']).' '.gdrcd_filter('out', $row['cognome']); ?>
-                                </option>
-                            <?php }
-                            gdrcd_query($result, 'free');
-                            ?>
-                        </select>
-                    </div>
-                    <div class='form_submit'>
-                        <input name="conferma" type="submit" class="form_gestione_input" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']) ?>" />
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!-- banca_operazioni-->
-</div><!-- banca_box -->
+
+    <!-- Corpo della pagina -->
+    <?php
+    /*
+     * Richieste POST
+     */
+    switch(gdrcd_filter_get($_POST['op'])) {
+        default: // Pagina di default
+            include ('servizi/anagrafe/index.inc.php');
+            break;
+    }
+    ?>
+</div>

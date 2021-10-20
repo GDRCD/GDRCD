@@ -1,9 +1,7 @@
 <?php
-/*Inizio la sessione */
-session_start();
 
 /*Includo i file principali */
-require_once('includes/required.php');
+require_once(__DIR__.'/includes/required.php');
 
 /*Connessione al database*/
 $handleDBConnection = gdrcd_connect();
@@ -52,7 +50,7 @@ $login1=$Maiusc.substr($login1,1);
 $login1 = ucwords(strtolower(trim($login1)));
 
 /*Carico dal database il profilo dell'account (personaggio)*/
-$record = gdrcd_query("SELECT personaggio.pass, personaggio.nome, personaggio.cognome, personaggio.permessi, personaggio.sesso, personaggio.ultima_mappa, personaggio.ultimo_luogo, personaggio.id_razza, personaggio.ultimo_messaggio, personaggio.blocca_media, personaggio.ora_entrata, personaggio.ora_uscita, personaggio.ultimo_refresh, razza.sing_m, razza.sing_f, razza.icon AS url_img_razza FROM personaggio LEFT JOIN razza ON personaggio.id_razza = razza.id_razza WHERE nome = '".gdrcd_filter('in', $login1)."' LIMIT 1");
+$record = gdrcd_query("SELECT personaggio.pass, personaggio.nome, personaggio.cognome, personaggio.permessi, personaggio.sesso, personaggio.ultima_mappa, personaggio.ultimo_luogo, personaggio.id_razza, personaggio.blocca_media, personaggio.ora_entrata, personaggio.ora_uscita, personaggio.ultimo_refresh, razza.sing_m, razza.sing_f, razza.icon AS url_img_razza FROM personaggio LEFT JOIN razza ON personaggio.id_razza = razza.id_razza WHERE nome = '".gdrcd_filter('in', $login1)."' LIMIT 1");
 
 /*Se esiste un personaggio corrispondente al nome ed alla password specificati*/
 /** * Aggiunti i controlli sugli orari di connessione e disconnessione per impedire i doppi login con gli stessi account
@@ -84,7 +82,6 @@ if( ! empty($record) and gdrcd_password_check($pass1, $record['pass']) && ($reco
     $_SESSION['luogo'] = (empty($record['ultimo_luogo']) === true) ? -1 :  $_SESSION['luogo'] = $record['ultimo_luogo'];
     $_SESSION['tag'] = "";
     $_SESSION['last_message'] = 0;
-    $_SESSION['last_istant_message'] = $record['ultimo_messaggio'];
 
     $res = gdrcd_query("SELECT ruolo.gilda, ruolo.immagine FROM ruolo JOIN clgpersonaggioruolo ON clgpersonaggioruolo.id_ruolo = ruolo.id_ruolo WHERE clgpersonaggioruolo.personaggio = '".gdrcd_filter('in', $record['nome'])."'", 'result');
 
@@ -204,4 +201,3 @@ if($_SESSION['login'] != '') {
 </html>
 <?php
 gdrcd_close_connection($handleDBConnection);
-?>

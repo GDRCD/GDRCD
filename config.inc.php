@@ -12,6 +12,26 @@
 
 error_reporting(E_ERROR | E_PARSE);
 
+/** * Se il personaggio è connesso avvio la gestione dei suoi spostamenti nella land
+ * Il controllo va messo qui e non in main poichè in main risulterebbe trovarsi dopo l'inclusione del config
+ * dando vita ad un bug sul tastino di aggiornamento della pagina corrente.
+ * @author Blancks
+ */
+
+if( ! empty($_SESSION['login'])) {
+    /** * Aggiornamento della posizione nella mappa del pg
+     * @author Blancks
+     */
+    if(isset($_REQUEST['map_id']) && is_numeric($_REQUEST['map_id'])) {
+        $_SESSION['luogo'] = -1;
+        $_SESSION['mappa'] = $_REQUEST['map_id'];
+    }
+
+    if(isset($_REQUEST['dir']) && is_numeric($_REQUEST['dir'])) {
+        $_SESSION['luogo'] = $_REQUEST['dir'];
+    }
+}
+
 /* PARAMETRI DI CONNESSIONE */
 $PARAMETERS['database']['username'] = 'gdrcd';            //nome utente del database
 $PARAMETERS['database']['password'] = 'gdrcd';            //password del database
@@ -28,14 +48,13 @@ $PARAMETERS['database']['url'] = 'localhost';        //indirizzo ip del database
  */
 
 /* INFORMAZIONI SUL SITO */
-$PARAMETERS['info']['site_name'] = 'GDRCD 5.5'; //nome del gioco
+$PARAMETERS['info']['site_name'] = 'GDRCD 5.6'; //nome del gioco
 $PARAMETERS['info']['site_url'] = 'http://gdrcd.test/'; //indirizzo URL del gioco
 $PARAMETERS['info']['webmaster_name'] = 'Webmaster'; //nome e cognome del responsabile del sito
 $PARAMETERS['info']['webmaster_email'] = 'webmaster@gdrhost.it'; //email ufficiale del webmaster (è visibile in homepage)
 $PARAMETERS['info']['homepage_name'] = 'Homepage'; //nome con il quale si indica la prima pagina visualizzata
 $PARAMETERS['info']['dbadmin_name'] = 'Admin DB';
-$PARAMETERS['info']['GDRCD'] = '5.5'; //nome del gioco
-$PARAMETERS['mode']['welcome_message_homepage'] = 'ON';//Attiva il messaggio di bevenuto in homepage
+$PARAMETERS['info']['GDRCD'] = '5.6'; //nome del gioco
 
 /* HELP: I parametri di questa voce compaiono come informazioni sulla homepage. */
 
@@ -47,12 +66,33 @@ $PARAMETERS['languages']['set'] = 'IT-it'; //lingua italiana
 
 
 /* SCELTA DEL TEMA */
+// HOMEPAGE
+$PARAMETERS['themes']['homepage'] = 'advanced'; //tema in uso
+// MAINPAGE
 $PARAMETERS['themes']['current_theme'] = 'advanced'; //tema in uso
 //$PARAMETERS['themes']['current_theme'] = 'medieval';
 
+/**
+ * Inserendo i nomi dei temi in questo elenco è possibile rendere disponibili agli utenti temi alternativi
+ * rispetto a quello di default
+ * Il primo elemento di ogni riga deve corrispondere al nome della cartella in cui è contenuto il tema
+ * in themes/<nome tema>
+ * Il secondo elemento è il nome che verrà presentato agli utenti durante la scelta
+ *
+ * Se non si vuole dare gli utenti la possibilità di scegliere temi alternativi, è sufficiente non impostare
+ * alcun tema in questa variabile
+ *
+ * NOTA: le pagine esterne del sito, cioè quelle visualizzate prima del login saranno sempre visualizzate con
+ * il tema di default
+ */
+$PARAMETERS['themes']['available'] = array(
+    'advanced' => 'Tema "Advanced" GDRCD',
+    //'il_mio_tema_preferito' => 'Il mio tema troppo figo'
+);
+
 /* Attiva nel frame l'avviso in caso di nuovi messaggi privati e/o bacheche */
 $PARAMETERS['mode']['check_forum'] = 'ON';
-$PARAMETERS['text']['check_forum']['new'] = '(Nuovo)';
+$PARAMETERS['text']['check_forum']['new'] = '(Nuovo)'; // Mettendo FALSE o lasciandolo vuoto, non si vedrà il messaggio
 $PARAMETERS['mode']['check_messages'] = 'ON';
 
 /**
@@ -138,8 +178,10 @@ $PARAMETERS['right_column']['activate'] = 'ON';
 /*COLONNA SINISTRA */
 $PARAMETERS['left_column']['box']['info_location']['class'] = 'info';
 $PARAMETERS['left_column']['box']['info_location']['page'] = 'info_location'; //Meteo e informazioni sul luogo.
-$PARAMETERS['left_column']['box']['frame_messaggi']['class'] = 'msgs';
-$PARAMETERS['left_column']['box']['frame_messaggi']['page'] = 'frame_messaggi'; //Link ai messaggi ed al forum.
+$PARAMETERS['left_column']['box']['frame_messages']['class'] = 'messages';
+$PARAMETERS['left_column']['box']['frame_messages']['page'] = 'frame_messages'; //Link ai messaggi
+$PARAMETERS['left_column']['box']['frame_forum']['class'] = 'forums';
+$PARAMETERS['left_column']['box']['frame_forum']['page'] = 'frame_forums'; //Link al forum
 $PARAMETERS['left_column']['box']['link_menu']['class'] = 'menu';
 $PARAMETERS['left_column']['box']['link_menu']['page'] = 'link_menu'; //Menu' del gioco.
 
@@ -163,6 +205,7 @@ $PARAMETERS['names']['forum']['sing'] = 'Bacheca'; //nome dei forum (singolare)
 $PARAMETERS['names']['forum']['plur'] = 'Bacheche'; //nome dei forum (plurale)
 $PARAMETERS['names']['forum']['image_file'] = ''; //immagine del forum
 $PARAMETERS['names']['forum']['image_file_onclick'] = ''; //immagine al passaggio del mouse del forum
+$PARAMETERS['names']['forum']['image_file_new'] = ''; //immagine nuove attività forum
 $PARAMETERS['names']['guild_name']['sing'] = 'Gilda'; //nome delle gilde nel gioco (singolare)
 $PARAMETERS['names']['guild_name']['plur'] = 'Gilde'; //nome delle gilde nel gioco (plurale)
 $PARAMETERS['names']['guild_name']['lead'] = 'Capogilda'; //nome del capo gilda nel gioco (plurale)
@@ -220,6 +263,8 @@ $PARAMETERS['settings']['cars_cap'] = 10;//Punteggio massimo per una caratterist
 $PARAMETERS['settings']['cars_sum'] = 40;//Punteggio totale da distribuire tra le caratteristiche in fase di iscrizione.
 $PARAMETERS['settings']['view_logs'] = 10; //Numero di log visualizzato.
 $PARAMETERS['settings']['auto_salary'] = 'OFF'; //ON per attivare l'accredito automatico dello stipendio al primo login
+
+
 
 /** * Abilitazione dell'audio in land
  * @author Blancks
@@ -281,6 +326,16 @@ $PARAMETERS['mode']['chat_avatar'] = 'ON';
 
 $PARAMETERS['settings']['chat_avatar']['width'] = 50;    # Dimensione in pixel della larghezza dell'immagine consentita
 $PARAMETERS['settings']['chat_avatar']['height'] = 50;    # Dimensione in pixel dell'altezza dell'imagine consentita
+
+$PARAMETERS['settings']['chat_avatar']['link']['mode'] = 'ON';
+// Permette di rendere cliccabile l'avatar da chat ed aprire così la scheda del personaggio in questione (!! non funziona nel chat_save)
+//ON: abilita l'apertura della scheda del personaggio tramite click dell'avatar da chat
+//OFF disabilita
+
+$PARAMETERS['settings']['chat_avatar']['link']['popup'] = 'OFF';
+// Se è abilitata l'apertura della scheda del personaggio dall'avatar da chat, permette di aprire la pagina in un pop
+//ON: la scheda del personaggio viene aperta in una modale
+//OFF la scheda del personaggio viene aperta sulla pagina corrente
 
 
 /** * uso di una tooltip di preview per le descrizioni sulla mappa
@@ -563,11 +618,6 @@ $PARAMETERS['menu']['profile']['url']="javascript:modalWindow('scheda', 'Scheda 
 $PARAMETERS['menu']['profile']['image_file'] = '';
 $PARAMETERS['menu']['profile']['image_file_onclick'] = '';
 
-$PARAMETERS['menu']['forum']['text'] = 'Bacheca';
-$PARAMETERS['menu']['forum']['url'] = 'main.php?page=forum';
-$PARAMETERS['menu']['forum']['image_file'] = '';
-$PARAMETERS['menu']['forum']['image_file_onclick'] = '';
-
 if ($_SESSION['permessi'] >= MODERATOR)
 {
     $PARAMETERS['menu']['backend']['text'] = 'Gestione';
@@ -616,6 +666,12 @@ $PARAMETERS['office']['guilds']['access_level'] = USER;
 $PARAMETERS['office']['market']['text'] = 'Mercato';
 $PARAMETERS['office']['market']['url'] = 'main.php?page=servizi_mercato';
 $PARAMETERS['office']['market']['access_level'] = USER;
+if (ESITI)
+{
+    $PARAMETERS['office']['esiti']['text'] = 'Pannello esiti';
+    $PARAMETERS['office']['esiti']['url'] = 'main.php?page=servizi_esiti';
+    $PARAMETERS['office']['esiti']['access_level'] = USER;
+}
 if ($PARAMETERS['mode']['privaterooms'] == 'ON')
 {
     $PARAMETERS['office']['hotel']['text'] = 'Prenotazione stanze';
@@ -668,6 +724,18 @@ if ($PARAMETERS['mode']['spymessages'] == 'ON')
     $PARAMETERS['administration']['log_messaggi']['text'] = 'Log messaggi';
     $PARAMETERS['administration']['log_messaggi']['url'] = 'main.php?page=log_messaggi';
     $PARAMETERS['administration']['log_messaggi']['access_level'] = MODERATOR;
+}
+if (REG_ROLE && SEND_GM)
+{
+    $PARAMETERS['administration']['send_GM']['text'] = 'Giocate segnalate';
+    $PARAMETERS['administration']['send_GM']['url'] = 'main.php?page=gestione_segnalazioni&segn=roles_gm';
+    $PARAMETERS['administration']['send_GM']['access_level'] = ROLE_PERM;
+}
+if (ESITI)
+{
+    $PARAMETERS['administration']['esiti']['text'] = 'Pannello esiti Master';
+    $PARAMETERS['administration']['esiti']['url'] = 'main.php?page=gestione_segnalazioni&segn=esiti_master';
+    $PARAMETERS['administration']['esiti']['access_level'] = ESITI_PERM;
 }
 $PARAMETERS['administration']['skills']['text'] = 'Gestione abilità';
 $PARAMETERS['administration']['skills']['url'] = 'main.php?page=gestione_abilita';
