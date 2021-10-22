@@ -733,3 +733,24 @@ INSERT INTO `meteo_condizioni` (`id`, `nome`, `img`, `vento`) VALUES
 (2, 'Sereno', 'imgs/meteo/sereno.gif', 'Assente,Brezza,Brezza intensa'),
 (3, 'Temporale', 'imgs/meteo/temporale.gif', 'Brezza intensa,Vento Forte,Burrasca'),
 (4, 'Neve', 'imgs/meteo/neve.gif', 'Assente,Brezza,Brezza intensa,Vento Forte,Burrasca');
+--
+-- Struttura della tabella `meteo_stagioni`
+--
+CREATE TABLE `meteo_stagioni` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `nome` VARCHAR(255) NULL DEFAULT NULL,
+    `minima` INT NULL,
+    `massima` INT NULL,
+     `data_inizio` DATE NULL DEFAULT NULL,
+     `alba` TIME NULL DEFAULT NULL,
+     `tramonto` TIME NULL DEFAULT NULL,
+     PRIMARY KEY (`id`)
+)ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+--
+-- Dati default per le stagioni
+--
+INSERT INTO `meteo_stagioni` (`id`, `nome`, `minima`,`massima`, `data_inizio`, `alba`,   `tramonto`) VALUES
+    (1, 'Autunno', '8', '18', '2021-09-23', '06:45:00', '19:00:00'),
+    (2, 'Inverno',  '-5', '10', '2021-12-21', '07:00:00', '16:00:00'),
+    (3, 'Primavera', '10', '21', '2022-03-21', '06:30:00', '18:00:00'),
+    (4, 'Estate',  '18', '36', '2022-06-21', '05:30:00', '20:00:00');
