@@ -460,6 +460,17 @@ $MESSAGE['interface']['administration']['meteo_condition']['page_name'] = 'Gesti
 $MESSAGE['interface']['administration']['meteo_condition']['link']['new']='Crea nuova condizione';
 $MESSAGE['interface']['administration']['meteo_condition']['wind_name']='Vento';
 
+/*Condizioni stagioni*/
+$MESSAGE['interface']['administration']['meteo_season']['page_name'] = 'Gestione delle stagioni';
+$MESSAGE['interface']['administration']['meteo_season']['minim']='Temperatura minima';
+$MESSAGE['interface']['administration']['meteo_season']['max']='Temperatura massima';
+$MESSAGE['interface']['administration']['meteo_season']['minim']='Data inizio';
+$MESSAGE['interface']['administration']['meteo_season']['sunrise']='Alba';
+$MESSAGE['interface']['administration']['meteo_season']['sunset']='Tramonto';
+
+
+
+
 
 /**    * Denonimazioni relative al link immagine e collegamento mappa
  * @author Blancks
