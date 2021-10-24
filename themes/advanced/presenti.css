@@ -1,0 +1,107 @@
+/****************************************************************************/
+/* STILE DELLA FINESTRA PRESENTI */
+
+/* HELP: Da qui è possibile modificare:
+- I font ed i colori dei presenti
+- Le dimensioni e la posizione della finestra dei presenti
+- Lo sfondo della finestra dei presenti */
+
+/*Frame dei presenti*/
+div.presenti iframe.iframe_presenti {
+    width: 180px;
+    height: 520px;
+    border: none;
+    overflow: auto;
+    background-color: transparent;
+}
+
+div.presenti iframe.iframe_presenti body.transparent_body {
+    background-color: none;
+}
+
+div.luogo {
+    margin: 10px 0 0 0;
+    font-size: 13px;
+    font-weight: bolder;
+}
+
+div.presente {
+    font-weight: normal;
+    font-size: 12px;
+}
+
+div.link_presenti {
+    margin-top: 20px;
+}
+
+/*Icone di stato dei presenti*/
+div.pagina_presenti img.sesso_ico,
+div.pagina_presenti img.status_ico,
+div.pagina_presenti img.disponibile,
+div.pagina_presenti_estesa img.sesso_ico,
+div.pagina_presenti_estesa img.status_ico,
+div.pagina_presenti_estesa img.disponibile {
+    margin: 0 2px 0 0;
+}
+
+div.pagina_presenti img.disponibile_switch {
+
+}
+
+/*Link nella colonna presenti */
+div.pagina_presenti a,
+div.pagina_presenti a:visited,
+div.pagina_presenti_estesa a,
+div.pagina_presenti_estesa a:visited {
+    border: none;
+}
+
+div.pagina_presenti a:hover,
+div.pagina_presenti_estesa a:hover {
+    border: none;
+}
+
+/*Testo nella colonna presenti*/
+div.pagina_presenti ul.elenco_presenti,
+div.pagina_presenti_estesa ul.elenco_presenti {
+    list-style-type: none;
+    list-style-position: inside;
+    padding: 0px;
+    margin: 0px;
+    text-align: left;
+}
+
+/*Nomi dei luoghi*/
+div.pagina_presenti ul.elenco_presenti li.luogo,
+div.pagina_presenti_estesa ul.elenco_presenti li.luogo {
+    font-size: 11px;
+    font-weight: bold;
+    margin: 3px 0 1px 8px;
+    text-transform: uppercase;
+}
+
+div.pagina_presenti_estesa ul.elenco_presenti li.mappa {
+    font-size: 11px;
+    font-weight: bold;
+    margin: 3px 0 1px 0;
+    text-transform: uppercase;
+}
+
+/* Nomi dei personaggi */
+div.pagina_presenti ul.elenco_presenti li.presente,
+div.pagina_presenti_estesa ul.elenco_presenti li.presente {
+    font-size: 11px;
+    margin: 0 0 0 5px;
+}
+
+div.pagina_presenti_estesa div.presenti_estesi {
+    margin-left: 150px;
+}
+
+/*Icone presenti*/
+img.presenti_ico {
+    margin-left: 2px;
+    width: 10px;
+    height: 10px;
+    border: none;
+}
