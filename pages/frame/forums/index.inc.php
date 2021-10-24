@@ -1,7 +1,7 @@
 <?php
 
 //Includio i parametri, la configurazione, la lingua e le funzioni
-require('../../../includes/required.php');
+require ('../../../includes/required.php');
 
 // Determino il tema selezionato
 if(!empty($_SESSION['theme']) and array_key_exists($_SESSION['theme'], $PARAMETERS['themes']['available'])){
@@ -70,7 +70,7 @@ if($PARAMETERS['mode']['check_forum'] === 'ON') {
                 </script>';
             // Inserisco l'immagine
             $textForum .= '<a onMouseOver="msg_over_button()" onMouseOut="msg_up_button()" href="../../../main.php?page=forum"  target="_top">
-                                    <img src="../../../themes/' .$PARAMETERS['themes']['current_theme'].'/imgs/menu/'.$PARAMETERS['names']['forum']['image_file'].'" alt="'.gdrcd_filter('out', $PARAMETERS['names']['forum']['plur']).'" title="'.gdrcd_filter('out', $PARAMETERS['names']['forum']['plur']).'" name="msg_buttonOne" />
+                                    <img src="../../../themes/'.$PARAMETERS['themes']['current_theme'].'/imgs/menu/'.$PARAMETERS['names']['forum']['image_file'].'" alt="'.gdrcd_filter('out', $PARAMETERS['names']['forum']['plur']).'" title="'.gdrcd_filter('out', $PARAMETERS['names']['forum']['plur']).'" name="msg_buttonOne" />
                               </a>';
         }
         // Testo normale
@@ -79,7 +79,7 @@ if($PARAMETERS['mode']['check_forum'] === 'ON') {
         }
 
         // Preparo il modulo
-        $linkForum = '<a href="../../../main.php?page=forum" target="_top">' .$textForum.'</a>';
+        $linkForum = '<a href="../../../main.php?page=forum" target="_top">'.$textForum.'</a>';
         $cntForumFrame = '<div class="messaggio_forum">'.$linkForum.'</div>';
     }
     // NUOVI TOPIC
@@ -95,7 +95,7 @@ if($PARAMETERS['mode']['check_forum'] === 'ON') {
         }
 
         // Preparo il modulo
-        $linkForum = '<a href="../../../main.php?page=forum" target="_top">' .$textForum.'</a>';
+        $linkForum = '<a href="../../../main.php?page=forum" target="_top">'.$textForum.'</a>';
         $cntForumFrame = '<div class="messaggio_forum_nuovo">'.$linkForum.'</div>';
     }
 }

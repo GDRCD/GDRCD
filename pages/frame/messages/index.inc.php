@@ -1,7 +1,7 @@
 <?php
 
 //Includio i parametri, la configurazione, la lingua e le funzioni
-require('../../../includes/required.php');
+require ('../../../includes/required.php');
 
 // Determino il tema selezionato
 if(!empty($_SESSION['theme']) and array_key_exists($_SESSION['theme'], $PARAMETERS['themes']['available'])){
@@ -61,7 +61,7 @@ if($PARAMETERS['mode']['check_messages'] === 'ON') {
                 </script>';
             // Inserisco l'immagine
             $textMessages .= '<a onMouseOver="msg_over_button()" onMouseOut="msg_up_button()" href="../../../main.php?page=messages_center&offset=0"  target="_top">
-                                    <img src="../../../themes/' .$PARAMETERS['themes']['current_theme'].'/imgs/menu/'.$PARAMETERS['names']['private_message']['image_file'].'" alt="'.gdrcd_filter('out', $PARAMETERS['names']['private_message']['plur']).'" title="'.gdrcd_filter('out', $PARAMETERS['names']['private_message']['plur']).'" name="msg_buttonOne" />
+                                    <img src="../../../themes/'.$PARAMETERS['themes']['current_theme'].'/imgs/menu/'.$PARAMETERS['names']['private_message']['image_file'].'" alt="'.gdrcd_filter('out', $PARAMETERS['names']['private_message']['plur']).'" title="'.gdrcd_filter('out', $PARAMETERS['names']['private_message']['plur']).'" name="msg_buttonOne" />
                               </a>';
         }
         // Testo normale
@@ -70,7 +70,7 @@ if($PARAMETERS['mode']['check_messages'] === 'ON') {
         }
 
         // Preparo il modulo
-        $linkMessages = '<a href="../../../main.php?page=messages_center&offset=0" target="_top">' .$textMessages.'</a>';
+        $linkMessages = '<a href="../../../main.php?page=messages_center&offset=0" target="_top">'.$textMessages.'</a>';
         $cntMessagesFrame = '<div class="messaggio_forum">'.$linkMessages.'</div>';
 
         // Forzo lo stop della notifica sul title se previsto
@@ -91,7 +91,7 @@ if($PARAMETERS['mode']['check_messages'] === 'ON') {
         }
 
         // Preparo il modulo
-        $linkMessages = '<a href="../../../main.php?page=messages_center&offset=0" target="_top">' .$textMessages.'</a>';
+        $linkMessages = '<a href="../../../main.php?page=messages_center&offset=0" target="_top">'.$textMessages.'</a>';
         $cntMessagesFrame = '<div class="messaggio_forum_nuovo">'.$linkMessages.'</div>';
 
         // Avvio notifica sul title

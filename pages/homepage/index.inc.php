@@ -91,14 +91,14 @@ $users = gdrcd_query("SELECT COUNT(nome) AS online FROM personaggio WHERE ora_en
                 <div class="side_modules">
                     <?php
                         // Include il modulo di reset della password
-                        include(__DIR__ . '/reset_password.inc.php');
+                        include (__DIR__ . '/reset_password.inc.php');
                     ?>
                 </div>
 
                 <div class="side_modules">
                     <?php
                         // Include le statistiche del sito
-                        include(__DIR__ . '/user_stats.inc.php');
+                        include (__DIR__ . '/user_stats.inc.php');
                     ?>
                 </div>
             </div>

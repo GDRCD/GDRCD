@@ -70,7 +70,7 @@
         }
         ?>
         <div class="menu_scheda"><!-- Menu scheda -->
-            <?php include('scheda/menu.inc.php'); ?>
+            <?php include ('scheda/menu.inc.php'); ?>
         </div>
         <div class="page_body">
             <div class="ritratto"><!-- nome, ritratto, ultimo ingresso -->
@@ -254,7 +254,7 @@
             </div>
             <?php //Punteggi, salute, status, classe, razza.
             if($PARAMETERS['mode']['skillsystem'] == 'ON') { //solo se è attiva la modalità skillsystem
-                include('scheda/skillsystem.inc.php');
+                include ('scheda/skillsystem.inc.php');
             } ?>
 
 
