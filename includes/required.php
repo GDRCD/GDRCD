@@ -19,6 +19,3 @@ require_once(dirname(__FILE__).'/base.class.php');
 require_once(dirname(__FILE__).'/routing.class.php');
 $router = Router::getInstance();
 $router->startClasses();
-
-# Inserimento file di configurazione della chat
-require_once(__DIR__.'/../pages/chat/config.php');
