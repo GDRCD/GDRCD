@@ -1,0 +1,1 @@
+<?php# Importazione pagine necessarierequire(__DIR__ . '/../../../../includes/required.php');# Inizializzazione classe necessaria$abi_class = Abilita::getInstance();# Switch operazioneswitch ($_POST['action']) {    # Estrazione dinamica dati via Ajax    case 'DatiAbiExtra':        echo json_encode($abi_class->DatiAbiExtra($_POST));        break;}

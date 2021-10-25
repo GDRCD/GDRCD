@@ -6,7 +6,7 @@ $(function(){
             grado = $('#ModAbiExtraForm select[name="grado"]').val();
 
         $.ajax({
-           url:'/pages/Abilita/Extra/gestione_abilita_ajax.php',
+           url:'/pages/gestione/abilita/Extra/gestione_abilita_ajax.php',
             type:"POST",
             data:{'action':'DatiAbiExtra','abi':abi,'grado':grado},
             success:function(data){
