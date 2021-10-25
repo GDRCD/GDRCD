@@ -19,10 +19,10 @@ abstract class BaseClass
 
     protected function __construct()
     {
-        global $PARAMETER;
+        global $PARAMETERS;
         $this->me = gdrcd_filter('out', $_SESSION['login']);
         $this->permission = gdrcd_filter('num', $_SESSION['permessi']);
-        $this->parameters = $PARAMETER;
+        $this->parameters = $PARAMETERS;
     }
 
     /**
