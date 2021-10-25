@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Ott 07, 2021 alle 15:22
+-- Generation Time: Ott 08, 2021 alle 00:28
 -- Versione del server: 8.0.21
 -- PHP Version: 5.6.40
 
@@ -11,9 +11,9 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT = @@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS = @@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION = @@COLLATION_CONNECTION */;
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
 
 --
@@ -56,37 +56,6 @@ INSERT INTO `abilita` (`id_abilita`, `nome`, `car`, `descrizione`, `id_razza`) V
 (15, 'Pronto soccorso', 3, 'Il personaggio Ã¨ in grado di eseguire interventi d''emergenza su individui feriti o la cui salute sia in qualche modo minacciata.', -1),
 (16, 'FurtivitÃ ', 2, 'Il personaggio Ã¨ in grado di muoversi ed agire senza dare nell''occhio, e di scassinare serrature.', -1),
 (19, 'VolontÃ ', 4, 'Il personaggio Ã¨ fortemente determinato e difficilmente si lascia persuadere o dissuadere.', -1);
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `abilita_extra`
---
-
-CREATE TABLE IF NOT EXISTS `abilita_extra` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `abilita` int NOT NULL,
-  `grado` int NOT NULL,
-  `descrizione` text NOT NULL,
-  `costo` int NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `abilita_requisiti`
---
-
-CREATE TABLE IF NOT EXISTS `abilita_requisiti` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `abilita` int NOT NULL,
-  `grado` int NOT NULL,
-  `tipo` int NOT NULL,
-  `id_riferimento` int NOT NULL,
-  `liv_riferimento` int NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -241,14 +210,13 @@ CREATE TABLE IF NOT EXISTS `clgpersonaggiomostrine` (
 --
 
 CREATE TABLE IF NOT EXISTS `clgpersonaggiooggetto` (
-  `id` INT NOT NULL AUTO_INCREMENT,
   `nome` varchar(255) NOT NULL DEFAULT '',
   `id_oggetto` int NOT NULL DEFAULT '0',
   `numero` int DEFAULT '1',
   `cariche` int NOT NULL DEFAULT '-1',
   `commento` varchar(255) DEFAULT NULL,
   `posizione` int NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`nome`,`id_oggetto`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
