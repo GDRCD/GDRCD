@@ -36,15 +36,6 @@ class Router
     }
 
     /**
-     * @fn __construct
-     * @note Router constructor.
-     * @return void
-     */
-    private function __construct()
-    {
-    }
-
-    /**
      * @fn addRoutes
      * @note Get all php files whit routes in folder and sub-folders
      * @param string $routes_folder
