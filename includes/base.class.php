@@ -14,12 +14,15 @@ abstract class BaseClass
      * @var int $perm
      */
     protected $me,
-        $permission;
+        $permission,
+        $parameters;
 
     protected function __construct()
     {
+        global $PARAMETER;
         $this->me = gdrcd_filter('out', $_SESSION['login']);
         $this->permission = gdrcd_filter('num', $_SESSION['permessi']);
+        $this->parameters = $PARAMETER;
     }
 
     /**
