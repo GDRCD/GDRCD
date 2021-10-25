@@ -252,12 +252,6 @@
                     </div>
                 </div>
             </div>
-            <?php //Punteggi, salute, status, classe, razza.
-            if($PARAMETERS['mode']['skillsystem'] == 'ON') { //solo se è attiva la modalità skillsystem
-                include ('scheda/skillsystem.inc.php');
-            } ?>
-
-
         </div>
 
     </div><!-- Elenco abilità -->
