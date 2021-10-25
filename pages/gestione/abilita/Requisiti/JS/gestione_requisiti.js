@@ -5,7 +5,7 @@ $(function(){
         let id = $(this).val();
 
         $.ajax({
-           url:'/pages/Abilita/Requisiti/gestione_requisiti_ajax.php',
+           url:'/pages/gestione/abilita/Requisiti/gestione_requisiti_ajax.php',
             type:"POST",
             data:{'action':'DatiAbiRequisito','id':id},
             success:function(data){

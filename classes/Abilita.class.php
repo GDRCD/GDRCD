@@ -5,20 +5,8 @@
  * @note Classe per la gestione centralizzata delle abilita
  * @required PHP 7.1+
  */
-class Abilita
+class Abilita extends BaseClass
 {
-
-    private $me,
-        $permessi,
-        $parameters;
-
-    public function __construct()
-    {
-        global $PARAMETERS;
-        $this->me = gdrcd_filter('in', $_SESSION['login']);
-        $this->permessi = gdrcd_filter('num', $_SESSION['permessi']);
-        $this->parameters = $PARAMETERS;
-    }
 
     /**** CONTROLS ****/
 
@@ -34,11 +22,11 @@ class Abilita
         $pg = gdrcd_filter('out', $pg);
 
         # Se non esiste la costante OR se e' true OR se non e' true: se sono il proprietario del pg OR sono moderatore
-        return (!defined('ABI_PUBLIC') || (ABI_PUBLIC) || ($pg == $this->me) || ($this->permessi >= MODERATOR));
+        return (!defined('ABI_PUBLIC') || (ABI_PUBLIC) || ($pg == $this->me) || ($this->permission >= MODERATOR));
     }
 
     /**
-     * @fn extreActive
+     * @fn extraActive
      * @note Controlla se la tabella `abilita_extra` e' attiva
      * @return bool
      */
@@ -452,7 +440,7 @@ class Abilita
         $grado = gdrcd_filter('num', $grado);
         $new_grado = gdrcd_filter('num', ($grado + 1));
 
-        return ((($this->me == $pg) || ($this->permessi >= MODERATOR)) && ($new_grado <= ABI_LEVEL_CAP));
+        return ((($this->me == $pg) || ($this->permission >= MODERATOR)) && ($new_grado <= ABI_LEVEL_CAP));
     }
 
     /**
@@ -521,7 +509,7 @@ class Abilita
     public function downgradeSkillPermission(int $grado): bool
     {
         $grado = gdrcd_filter('num', $grado);
-        return (($this->permessi >= MODERATOR) && ($grado > 0));
+        return (($this->permission >= MODERATOR) && ($grado > 0));
     }
 
     /**

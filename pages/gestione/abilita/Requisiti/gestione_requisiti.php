@@ -1,8 +1,6 @@
 <?php
 
-require_once(__DIR__ . '/../abilita_class.php');
-
-$abiReq = new Abilita();
+$abiReq = Abilita::getInstance();
 
 if (isset($_POST['action'])) {
 
@@ -251,5 +249,5 @@ if (isset($_POST['action'])) {
     </div>
 
     <!-- JS per caricamento dati requisiti -->
-    <script src="/pages/Abilita/Requisiti/JS/gestione_requisiti.js"></script>
+    <script src="/pages/gestione/abilita/Requisiti/JS/gestione_requisiti.js"></script>
 </div>
