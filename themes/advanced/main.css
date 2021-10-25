@@ -120,7 +120,7 @@ div.innertube h2, div.output h2, div.page_title h2 {
 
 /** * Stile dei contenitori grigi con i bordini arrotondati
 */
-div.pagina_info_location, div.msgs, div.menu, div.presenti, div.output {
+div.pagina_info_location, div.messages, div.forums, div.menu, div.presenti, div.output {
     margin: 5px auto;
     padding: 10px;
     width: 180px;
@@ -161,19 +161,30 @@ div.meteo, div.meteo_date {
     font-size: 12px;
 }
 
+div.meteo_luna img{
+    margin:0 auto;
+    width: 30px;
+    height: 30px;
+    display: block;
+}
+
 /** * Frame Messaggi 
 */
-iframe.iframe_messaggi {
-    height: 33px;
+iframe.iframe_messages,
+iframe.iframe_forums {
+    height: 20px;
     width: 180px;
 }
 
-div.pagina_messaggi {
+div.box_messages, .box_forums {
     text-align: center;
     font-size: 14px;
 }
 
-div.pagina_messaggi a, div.pagina_messaggi a:visited {
+div.box_messages a,
+div.box_forums a,
+div.box_messages a:visited,
+div.box_forums a:visited {
     text-decoration: none;
     color: #444;
 }
@@ -301,7 +312,7 @@ span.titoli_elenco {
     font-style: italic;
 }
 
-img.colonna_elengo_messaggi_icon {
+img.colonna_elenco_messaggi_icon {
     width: 30px;
     height: 30px;
 }
@@ -379,6 +390,18 @@ div.elenco_record_gestione table {
     display: table;
 }
 
+/*** DIARI ***/
+.btn-link {
+    border: none;
+    outline: none;
+    background: none;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+    font-family: inherit;
+    font-size: inherit;
+}
+
 /** * margine delle colonne */
 div.innertube {
     margin: 0;
@@ -433,18 +456,21 @@ div.innertube {
 }
 
 .gestione_pagina .gestione_form_container,
-.servizi_pagina .servizi_form_container {
+.servizi_pagina .servizi_form_container,
+.form_container{
     width: 90%;
     margin: 5px auto;
 }
 
 .gestione_pagina .gestione_form_container .gestione_form,
-.servizi_pagina .servizi_form_container .servizi_form {
+.servizi_pagina .servizi_form_container .servizi_form,
+.form_container .form{
     width: 100%;
 }
 
 .gestione_pagina .gestione_form_container .gestione_form_title,
-.servizi_pagina .servizi_form_container .servizi_form_title {
+.servizi_pagina .servizi_form_container .servizi_form_title,
+.form_container .form .form_title{
     font-size: 15px;
     font-weight: bold;
     border: solid black;
@@ -456,20 +482,24 @@ div.innertube {
 
 
 .gestione_pagina .gestione_form .single_input,
-.servizi_pagina .servizi_form .single_input {
+.servizi_pagina .servizi_form .single_input
+.form_container .form .single_input{
     width: 100%;
     margin: 5px;
 }
 
 .gestione_pagina .gestione_form .single_input .label,
-.servizi_pagina .servizi_form .single_input .label {
+.servizi_pagina .servizi_form .single_input .label,
+.form_container .form .single_input .label{
     font-size: 13px;
     font-weight: bold;
 }
 
-.gestione_pagina .gestione_form .single_input input,
-.gestione_pagina .gestione_form .single_input textarea,
-.gestione_pagina .gestione_form .single_input select{
+.gestione_pagina .gestione_form .single_input input textarea select,
+.servizi_pagina .servizi_form .single_input input textarea select,
+.form_container .form .single_input input,
+.form_container .form .single_input textarea,
+.form_container .form .single_input select{
     margin: 0 !important;
     max-width: 500px;
 }

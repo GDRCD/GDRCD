@@ -1,4 +1,5 @@
-<?php session_start();
+<?php
+
 //Includio i parametri, la configurazione, la lingua e le funzioni
 require ('includes/required.php');
 

@@ -1,9 +1,7 @@
 <?php
-/*Inizio la sessione */
-session_start();
 
 /*Includo i file principali */
-require_once('includes/required.php');
+require_once(__DIR__.'/includes/required.php');
 
 /*Connessione al database*/
 $handleDBConnection = gdrcd_connect();
@@ -203,4 +201,3 @@ if($_SESSION['login'] != '') {
 </html>
 <?php
 gdrcd_close_connection($handleDBConnection);
-?>

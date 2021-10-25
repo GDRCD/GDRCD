@@ -19,7 +19,7 @@ if( ! empty($_GET['map_id'])) {
 }
 
 if(isset($_REQUEST['page'])) {
-    $strInnerPage = gdrcd_filter('include', $_REQUEST['page']).'.inc.php';
+    $strInnerPage = $_REQUEST['page'].'.inc.php';
 
     //se e' impostato dir allora cambio stanza.
 } elseif(isset($_REQUEST['dir']) && is_numeric($_REQUEST['dir'])) {

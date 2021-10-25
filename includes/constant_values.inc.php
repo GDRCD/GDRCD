@@ -81,6 +81,22 @@ const LOG_PERM = GAMEMASTER;
 const EDIT_PERM = GAMEMASTER;
 
 /**
+ * Diari PG
+ */
+
+//Attiva o disattiva il diario del PG
+CONST PG_DIARY_ENABLED = true;
+
+//definisce quali permessi possono modificare le registrazioni (default: gamemaster)
+const PERMESSI_DIARIO = MODERATOR;
+
+/**
+ * Fasi Lunari
+ */
+//Attiva le fasi lunari
+const MOON = true;
+
+/**
  * Impostazioni esiti
  */
 
@@ -88,7 +104,7 @@ const EDIT_PERM = GAMEMASTER;
 const ESITI = true;
 
 //Attiva o disattiva l'invio degli esiti in chat (default: false) -- Funzionalità in sviluppo
-const ESITI_CHAT = true;
+const ESITI_CHAT = false;
 
 //Attiva o disattiva i tiri via esito (default: true)
 const TIRI_ESITO = true;
@@ -98,7 +114,6 @@ const ESITI_PERM = GAMEMASTER;
 
 //definisce quali permessi hanno accesso alla visione di tutti gli esiti (default: moderator)
 const FULL_PERM = MODERATOR;
-
 /**
  *  Abilita'
  */

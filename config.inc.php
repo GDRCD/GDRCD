@@ -48,14 +48,13 @@ $PARAMETERS['database']['url'] = 'localhost';        //indirizzo ip del database
  */
 
 /* INFORMAZIONI SUL SITO */
-$PARAMETERS['info']['site_name'] = 'GDRCD 5.5'; //nome del gioco
+$PARAMETERS['info']['site_name'] = 'GDRCD 5.6'; //nome del gioco
 $PARAMETERS['info']['site_url'] = 'http://gdrcd.test/'; //indirizzo URL del gioco
 $PARAMETERS['info']['webmaster_name'] = 'Webmaster'; //nome e cognome del responsabile del sito
 $PARAMETERS['info']['webmaster_email'] = 'webmaster@gdrhost.it'; //email ufficiale del webmaster (è visibile in homepage)
 $PARAMETERS['info']['homepage_name'] = 'Homepage'; //nome con il quale si indica la prima pagina visualizzata
 $PARAMETERS['info']['dbadmin_name'] = 'Admin DB';
-$PARAMETERS['info']['GDRCD'] = '5.5'; //nome del gioco
-$PARAMETERS['mode']['welcome_message_homepage'] = 'ON';//Attiva il messaggio di bevenuto in homepage
+$PARAMETERS['info']['GDRCD'] = '5.6'; //nome del gioco
 
 /* HELP: I parametri di questa voce compaiono come informazioni sulla homepage. */
 
@@ -67,6 +66,9 @@ $PARAMETERS['languages']['set'] = 'IT-it'; //lingua italiana
 
 
 /* SCELTA DEL TEMA */
+// HOMEPAGE
+$PARAMETERS['themes']['homepage'] = 'advanced'; //tema in uso
+// MAINPAGE
 $PARAMETERS['themes']['current_theme'] = 'advanced'; //tema in uso
 //$PARAMETERS['themes']['current_theme'] = 'medieval';
 
@@ -84,8 +86,7 @@ $PARAMETERS['themes']['current_theme'] = 'advanced'; //tema in uso
  * il tema di default
  */
 $PARAMETERS['themes']['available'] = array(
-    'advanced' => 'Tema Advanced GDRCD',
-    'basic' => 'Tema Base GDRCD',
+    'advanced' => 'Tema "Advanced" GDRCD',
     //'il_mio_tema_preferito' => 'Il mio tema troppo figo'
 );
 
@@ -177,8 +178,10 @@ $PARAMETERS['right_column']['activate'] = 'ON';
 /*COLONNA SINISTRA */
 $PARAMETERS['left_column']['box']['info_location']['class'] = 'info';
 $PARAMETERS['left_column']['box']['info_location']['page'] = 'info_location'; //Meteo e informazioni sul luogo.
-$PARAMETERS['left_column']['box']['frame_messaggi']['class'] = 'msgs';
-$PARAMETERS['left_column']['box']['frame_messaggi']['page'] = 'frame_messaggi'; //Link ai messaggi ed al forum.
+$PARAMETERS['left_column']['box']['frame_messages']['class'] = 'messages';
+$PARAMETERS['left_column']['box']['frame_messages']['page'] = 'frame_messages'; //Link ai messaggi
+$PARAMETERS['left_column']['box']['frame_forum']['class'] = 'forums';
+$PARAMETERS['left_column']['box']['frame_forum']['page'] = 'frame_forums'; //Link al forum
 $PARAMETERS['left_column']['box']['link_menu']['class'] = 'menu';
 $PARAMETERS['left_column']['box']['link_menu']['page'] = 'link_menu'; //Menu' del gioco.
 
@@ -614,11 +617,6 @@ $PARAMETERS['menu']['profile']['url']="javascript:modalWindow('scheda', 'Scheda 
 */
 $PARAMETERS['menu']['profile']['image_file'] = '';
 $PARAMETERS['menu']['profile']['image_file_onclick'] = '';
-
-$PARAMETERS['menu']['forum']['text'] = 'Bacheca';
-$PARAMETERS['menu']['forum']['url'] = 'main.php?page=forum';
-$PARAMETERS['menu']['forum']['image_file'] = '';
-$PARAMETERS['menu']['forum']['image_file_onclick'] = '';
 
 if ($_SESSION['permessi'] >= MODERATOR)
 {

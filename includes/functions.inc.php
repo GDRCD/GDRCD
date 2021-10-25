@@ -96,6 +96,10 @@ function gdrcd_query($sql, $mode = 'query')
             return mysqli_fetch_array($sql, MYSQLI_BOTH);
             break;
 
+        case 'assoc':
+            return mysqli_fetch_array($sql, MYSQLI_ASSOC);
+            break;
+
         case 'object':
             return mysqli_fetch_object($sql);
             break;
@@ -388,7 +392,7 @@ function gdrcd_html_filter($str)
         "#(<iframe.*?\/?>.*?(<\/iframe>)?)#is" => "Frame non consentiti",
         "#(<object.*?>.*?(<\/object>)?)#is" => "Contenuti multimediali non consentiti",
         "#(<embed.*?\/?>.*?(<\/embed>)?)#is" => "Contenuti multimediali non consentiti",
-        "#( on[a-zA-Z]+=\"?'?[^\s\"']+'?\"?)#is" => "",
+        "#([o,O][N,n](.*?)=(.*?)\"?'?[^\s\"']+'?\"?)#is" => " ",
         "#(javascript:[^\s\"']+)#is" => ""
     ];
 
@@ -466,16 +470,94 @@ function gdrcd_check_time($time)
  * @param string $path : il percorso filesystem del file da includere
  * @param array $params : un array di dati aggiuntivi passabili al modulo
  */
-function gdrcd_load_modules($path, $params = [])
+function gdrcd_load_modules($page, $params = [])
 {
     global $MESSAGE;
     global $PARAMETERS;
 
-    if (file_exists($path)) {
-        include($path);
-    } else {
-        echo $MESSAGE['interface']['layout_not_found'];
+    // Costruisco i parametri del modulo
+    $MODULE = $params;
+
+    try {
+        // Controllo la tipologia di informazione passata (file o page) e poi determino il percorso del modulo
+        $modulePath = is_file($page) ? $page : gdrcd_pages_path($page);
+
+        if(!file_exists($modulePath)) {
+            throw new Exception($MESSAGE['interface']['layout_not_found']);
+        }
+
+        // Includo il modulo
+        include($modulePath);
     }
+    catch(Exception $e) {
+        echo $e->getMessage();
+    }
+}
+
+/**
+ * Formatto il nome della pagina per consentire la ricerca
+ * @param string $page il nome della pagina
+ * @return string
+ */
+function gdrcd_pages_format($page)
+{
+    $page = str_replace('\\',DIRECTORY_SEPARATOR, $page);
+    //converte la combinaizone di caratteri __ nel separatore di directory
+    $page = str_replace('__',DIRECTORY_SEPARATOR, $page);
+    //
+    return gdrcd_filter('include', $page);
+}
+
+/**
+ * Eseguo un controllo sul contenuto della cartella /pages
+ * e cerco una corrispondenza tra i moduli e i file presenti
+ * @param string $page il nome della pagina da cercare
+ * @return string
+ * @throws Exception
+ */
+function gdrcd_pages_path($page)
+{
+    global $MESSAGE;
+
+    // Controllo che sia stato attribuito un valore a page
+    if(empty($page)) {
+        throw new Exception($MESSAGE['interface']['page_missing']);
+    }
+
+    // Inizializzo le variabili del metodo
+    $pagesPath = dirname(__FILE__) . DIRECTORY_SEPARATOR. '..'.DIRECTORY_SEPARATOR.'pages';
+    $pageFormatted = gdrcd_pages_format($page);
+
+    // Imposto i possibili percorsi che posso caricare
+    $routes = [
+        '.inc.php',
+        DIRECTORY_SEPARATOR.'index.inc.php'
+    ];
+
+    // Inizializzo la variabile contenitore dei moduli
+    $modules = [];
+
+    // Scorro i percorsi impostati per individuare corrispondenze
+    foreach ($routes AS $route) {
+        $file = implode(DIRECTORY_SEPARATOR, [$pagesPath, $pageFormatted.$route]);
+        // Se esiste la corrispondenza, allora inserisco
+        if(file_exists($file)) {
+            $modules[] = $file;
+        }
+    }
+
+    // Controllo che sia stata trovata almeno una corrispondenza
+    if(empty($modules)) {
+        throw new Exception($MESSAGE['interface']['page_not_found']);
+    }
+
+    // Se sono state trovate piu corrispondenze, blocco il caricamento
+    if(count($modules) > 1) {
+        throw new Exception($MESSAGE['interface']['multiple_page_found']);
+    }
+
+    // Ritorno il modulo
+    return $modules[0];
 }
 
 /**
@@ -517,6 +599,7 @@ function gdrcd_format_datetime_standard($datetime_in)
 {
     return date('Y-m-d H:i', strtotime($datetime_in));
 }
+
 /**
  * Funzione di formattazione data completa nel formato ita per nome file da catalogare
  * @param string $datetime_in : la data e ora in formato leggibile da strtotime()

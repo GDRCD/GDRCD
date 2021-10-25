@@ -57,11 +57,18 @@ switch($opRequest) {
                 $query = gdrcd_query("INSERT INTO backmessaggi (mittente, destinatario, spedito, tipo, oggetto, testo) VALUES ".implode(",", $queryInsert));
                 gdrcd_query($query, 'free');
             }
+
+
+            echo '<div class="warning">'.$PARAMETERS['names']['private_message']['sing'] . $MESSAGE['interface']['messages']['sent'].'</div>';
+        }
+        else{
+            echo '<div class="warning">Attenzione: Non hai selezionato nessun destinatario.</div>';
         }
 
-        if($not_all_sended){
-            echo '<div class="warning">Attenzione: Non tutti i destinatari selezionati sono esistenti.</div>';
+        if($not_all_sended && ($num_dest > 0) ) {
+            echo '<div class="warning">Attenzione: Alcuni dei destinatari selezionati sono inesistenti.</div>';
         }
+
         break;
 
     /**
@@ -80,6 +87,8 @@ switch($opRequest) {
             gdrcd_query("INSERT INTO messaggi (mittente, destinatario, spedito, tipo, oggetto, testo) 
                                 VALUES ('" . $_SESSION['login'] . "', '" . $record['nome'] . "', NOW(), '" . gdrcd_filter('in', $_POST['tipo']) . "', '" . gdrcd_filter('in', $_POST['oggetto']) . "', '" . gdrcd_filter('in', $_POST['testo']) . "')");
         }
+
+        echo '<div class="warning">'.$PARAMETERS['names']['private_message']['sing'] . $MESSAGE['interface']['messages']['sent'].'</div>';
         break;
 
 
@@ -97,11 +106,10 @@ switch($opRequest) {
                                     VALUES ('" . $_SESSION['login'] . "', '" . $row['nome'] . "' , NOW(), '" . gdrcd_filter('in', $_POST['tipo']) . "', '" . gdrcd_filter('in', $_POST['oggetto']) . "', '" . gdrcd_filter('in', $_POST['testo']) . "')");
             }
             gdrcd_query($query, 'free');
+
+            echo '<div class="warning">'.$PARAMETERS['names']['private_message']['sing'] . $MESSAGE['interface']['messages']['sent'].'</div>';
         }
         break;
 }
 
 ?>
-    <div class="warning">
-        <?php echo $PARAMETERS['names']['private_message']['sing'] . $MESSAGE['interface']['messages']['sent']; ?>
-    </div>

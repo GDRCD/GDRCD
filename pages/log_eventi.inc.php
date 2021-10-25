@@ -3,11 +3,9 @@
 
 
     /*Controllo permessi utente*/
-    if ($_SESSION['permessi'] < MODERATOR)
-    {
+    if ($_SESSION['permessi'] < SUPERUSER) {
         echo '<div class="error">' . gdrcd_filter('out', $MESSAGE['error']['not_allowed']) . '</div>';
-    } else
-    { ?>
+    } else { ?>
 
 
         <!-- Titolo della pagina -->
@@ -22,8 +20,7 @@
 
 
             <?php /*Form di scelta del log (visualizzazione di base)*/
-            if ((isset($_POST['op']) === false) && (isset($_REQUEST['op']) === false))
-            { ?>
+            if ((isset($_POST['op']) === false) && (isset($_REQUEST['op']) === false)) { ?>
 
                 <!-- Form di inserimento/modifica -->
                 <div class="panels_box">
@@ -37,8 +34,7 @@
                             <div class='form_field'>
                                 <select name="which_log">
                                     <?php $count = 1;
-                                    foreach ($MESSAGE['event'] as $event)
-                                    { ?>
+                                    foreach ($MESSAGE['event'] as $event) { ?>
                                         <option value="<?php echo $count; ?>"><?php echo $event; ?></option>
                                         <?php $count++;
                                     } ?>
@@ -64,10 +60,9 @@
 
             <?php //*Elenco log*/
 
-            if ((isset($_REQUEST['op']) == 'view') && (is_numeric($_REQUEST['which_log']) === true))
-            {
+            if ((isset($_REQUEST['op']) == 'view') && (is_numeric($_REQUEST['which_log']) === true)) {
                 //Determinazione pagina (paginazione)
-                $pagebegin = (int) $_REQUEST['offset'] * $PARAMETERS['settings']['records_per_page'];
+                $pagebegin = (int)$_REQUEST['offset'] * $PARAMETERS['settings']['records_per_page'];
                 $pageend = $PARAMETERS['settings']['records_per_page'];
                 //Conteggio record totali
                 $record_globale = gdrcd_query("SELECT COUNT(*) FROM log WHERE codice_evento =" . gdrcd_filter('num',
@@ -78,9 +73,9 @@
                     'result');
                 $numresults = gdrcd_query($result, 'num_rows');
 
+
                 /* Se esistono record */
-                if ($numresults > 0)
-                { ?>
+                if ($numresults > 0) { ?>
                     <!-- Elenco dei record paginato -->
                     <div class="elenco_record_gestione">
                         <table>
@@ -112,12 +107,41 @@
                                 </td>
                             </tr>
                             <!-- Record -->
-                            <?php while ($row = gdrcd_query($result, 'fetch'))
-                            { ?>
+                            <?php while ($row = gdrcd_query($result, 'fetch')) {
+
+                                switch ($_REQUEST['which_log']) {
+                                    case BLOCKED:
+                                    case LOGGEDIN:
+                                    case ERRORELOGIN:
+                                        $list = explode('.', $row['descrizione_evento']);
+                                        $list[3] = 'X';
+                                        $list[2] = 'X';
+                                        $descr = implode('.', $list);
+                                        break;
+                                    default;
+                                        $descr = $row['descrizione_evento'];
+                                        break;
+                                }
+
+                                switch ($_REQUEST['which_log']) {
+                                    case BLOCKED:
+                                    case LOGGEDIN:
+                                    case ERRORELOGIN:
+                                        $list2 = explode('.', $row['autore']);
+                                        $list2[3] = 'X';
+                                        $list2[2] = 'X';
+                                        $autore = implode('.', $list2);
+                                        break;
+                                    default;
+                                        $autore = $row['autore'];
+                                        break;
+                                }
+
+                                ?>
                                 <tr class="risultati_elenco_record_gestione">
                                     <td class="casella_elemento">
                                         <div class="elementi_elenco">
-                                            <?php echo gdrcd_filter('out', $row['autore']); ?>
+                                            <?php echo gdrcd_filter('out', $autore); ?>
                                         </div>
                                     </td>
                                     <td class="casella_elemento">
@@ -135,7 +159,7 @@
                                     </td>
                                     <td class="casella_elemento">
                                         <div class="elementi_elenco">
-                                            <?php echo gdrcd_filter('out', $row['descrizione_evento']); ?>
+                                            <?php echo gdrcd_filter('out', $descr); ?>
                                         </div>
                                     </td>
                                 </tr>
@@ -151,17 +175,13 @@
 
                 <!-- Paginatore elenco -->
                 <div class="pager">
-                    <?php if ($totaleresults > $PARAMETERS['settings']['records_per_page'])
-                    {
+                    <?php if ($totaleresults > $PARAMETERS['settings']['records_per_page']) {
                         echo gdrcd_filter('out', $MESSAGE['interface']['pager']['pages_name']);
-                        for ($i = 0; $i <= floor($totaleresults / $PARAMETERS['settings']['records_per_page']); $i++)
-                        {
-                            if ($i != $_REQUEST['offset'])
-                            {
+                        for ($i = 0; $i <= floor($totaleresults / $PARAMETERS['settings']['records_per_page']); $i++) {
+                            if ($i != $_REQUEST['offset']) {
                                 ?>
                                 <a href="main.php?page=log_eventi&op=view&which_log=<?php echo $_REQUEST['which_log']; ?>&offset=<?php echo $i; ?>"><?php echo $i + 1; ?></a>
-                            <?php } else
-                            {
+                            <?php } else {
                                 echo ' ' . ($i + 1) . ' ';
                             }
                         } //for

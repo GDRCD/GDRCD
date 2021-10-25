@@ -78,15 +78,6 @@ ROOT
 |   |	         |--- maps
 |   |	         |--- menus
 |   |	   	 	 |--- races
-|   |--- basic
-|	|	  |---- home
-|   |     |---- imgs
-|   |            |--- guilds
-|   |	         |--- items
-|   |	         |--- locations
-|   |	         |--- maps
-|   |	         |--- menus
-|   |	   	 	 |--- races
 |- vocabulary
 
 imgs: La cartella contiene alcune immagini utilizzate dal sistema, in
@@ -186,17 +177,14 @@ essere abbastanza intuitivo ed in questa breve quida non trattero' le sue voci.
 
 8. Adesso manca soltanto la grafica e qui ti è richiesta almeno un poco di 
 competenza con il CSS. Non ce l'hai? Non allarmarti, c'e' una scorciatoia.
-Seleziona prima di tutto la skin basic dal relativo parametro in config.inc.php.
-A questo punto, avrai visto che tutta la grafica dell'homepage e quella interna 
-di questa skin sono ottenute con due immagini singole. 
-Sostituiscile, rispettando i riquadri, con immagini create da te, e avrai gia' cosi' 
-una grafica tua originale per il sito. 
+GDRCD ti mette a disposizione di default la skin "Advanced", realizzata da Blankcs,
+che fornisce un ottimo punto di partenza per realizzare la tua personale interfaccia, 
+giocando con CSS.
 Altrimenti potresti scaricare e installare skin realizzate da altri utenti, 
 semplicemente facendo l'upload della cartella della skin nella cartella
-themes ed andando ad attivarla nel file config.inc.php alla voce "Temi".
-Se invece hai più esperienza col CSS ti invito a provare a dare un occhio alla skin
-"advanced" che presenta questa nuova versione con un interfaccia grafica più accattivante
-e magari può tornarti utile per darti idea di come fare un lavoro ancora più personalizzato.
+themes ed andando ad attivarla nel file config.inc.php alla voce "Temi". 
+Se sei particolarmente bravo con i Temi, puoi permetterti anche di averne più di uno,
+fornendo al giocare la possibilità di scegliere il suo preferito!
 
 
 ## BUON LAVORO E BUON DIVERTIMENTO
@@ -210,3 +198,5 @@ Fabrizio Pedani.
 Files aggiornato e revisionato da Salvatore Rotondo.
 
 Files aggiornato e revisionato successivamente da Breaker.
+
+Files aggiornato e revisionato successivamente da gianni10049 e kasui92 per la versione 5.6.

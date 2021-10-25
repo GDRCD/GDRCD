@@ -5,9 +5,9 @@ IMPORTANTE! non cancellate alcuna delle righe, ne modificate quanto scritto tra 
 
 /********** Homepage **********/
 /*Testo centrale homepage*/
-$MESSAGE['homepage']['main_content']['site_title'] = 'GDRCD 5.5';
-$MESSAGE['homepage']['main_content']['site_subtitle'] = 'Enhanced by Breaker';
-$MESSAGE['homepage']['main_content']['welcome'] = 'Benvenuto in GDRCD 5.5!';
+$MESSAGE['homepage']['main_content']['site_title'] = '<img src="imgs/logo_gdrcd.png" alt="GDRCD"/>';
+$MESSAGE['homepage']['main_content']['site_subtitle'] = 'Il CMS Open Source per i Giochi di Ruolo play-by-chat';
+$MESSAGE['homepage']['main_content']['welcome'] = 'Benvenuto in GDRCD!';
 $MESSAGE['homepage']['main_content']['infos'] = 'Prima di iniziare a realizzare il tuo sito, hai letto la LICENZA D\'USO che accompagna il prodotto? Se non l\'hai ancora fatto premurati gentilmente di leggerla. Troverai le istruzioni su come utilizzare  GDRCD 5.4 nel manuale allegato. Buon diverimento!';
 /*Box informativi*/
 $MESSAGE['homepage']['forms']['access_to'] = 'Accedi';
@@ -96,6 +96,9 @@ $MESSAGE['logout']['logbackin'] = 'Per rientrare nel gioco tornare alla';
 /* Errori di interfaccia */
 
 $MESSAGE['interface']['layout_not_found'] = 'Modulo non trovato';
+$MESSAGE['interface']['page_missing'] = 'Parametro pagina mancante';
+$MESSAGE['interface']['page_not_found'] = 'Pagina non trovata';
+$MESSAGE['interface']['multiple_page_found'] = 'Non e stato possibile determinare la pagina, una o piu pagine vanno in conflitto';
 
 
 /**    * Termine inserimento
@@ -126,6 +129,7 @@ $MESSAGE['interface']['maps']['set_meteo'] = 'imposta';
 $MESSAGE['interface']['sheet']['page_name'] = 'Scheda del personaggio';
 $MESSAGE['interface']['sheet']['page_name_skill'] = 'Abilità del personaggio';
 $MESSAGE['interface']['sheet']['link']['back'] = 'Torna alla scheda.';
+$MESSAGE['interface']['sheet']['link']['back_roles'] = 'Torna alle giocate registrate.';
 $MESSAGE['interface']['sheet']['send_message_to']['send'] = 'Invia un';
 $MESSAGE['interface']['sheet']['send_message_to']['to'] = 'a';
 $MESSAGE['interface']['sheet']['first_login'] = 'Data registrazione';
@@ -147,8 +151,13 @@ $MESSAGE['interface']['sheet']['menu']['skill'] = 'Abilità';
 $MESSAGE['interface']['sheet']['menu']['experience'] = 'Esperienza';
 $MESSAGE['interface']['sheet']['menu']['inventory'] = 'Inventario';
 $MESSAGE['interface']['sheet']['menu']['equipment'] = 'Equipaggiamento';
+$MESSAGE['interface']['sheet']['menu']['diary'] = 'Diario';
 $MESSAGE['interface']['sheet']['menu']['gst'] = 'Amministra';
 $MESSAGE['interface']['sheet']['menu']['log'] = 'Log';
+$MESSAGE['interface']['sheet']['menu']['detail']='Descrizione e Conoscenze';
+$MESSAGE['interface']['sheet']['menu']['background']='Storia';
+$MESSAGE['interface']['sheet']['menu']['description']='Descrizione';
+$MESSAGE['interface']['sheet']['menu']['friend']='Conoscenze';
 $MESSAGE['interface']['sheet']['modify_form']['last_name'] = 'Cognome';
 $MESSAGE['interface']['sheet']['modify_form']['relationships'] = 'Affetti';
 $MESSAGE['interface']['sheet']['modify_form']['background'] = 'Background';
@@ -205,6 +214,14 @@ $MESSAGE['interface']['sheet']['log']['date'] = 'Data';
 $MESSAGE['interface']['sheet']['log']['ip'] = 'IP';
 $MESSAGE['interface']['sheet']['log']['other_account'] = 'Doppio';
 $MESSAGE['interface']['sheet']['log']['message'] = 'Messaggio';
+$MESSAGE['interface']['sheet']['diary']['new'] = 'Nuova pagina';
+$MESSAGE['interface']['sheet']['diary']['title']= 'Titolo';
+$MESSAGE['interface']['sheet']['diary']['date']= 'Data';
+$MESSAGE['interface']['sheet']['diary']['visible']= 'Visibile a tutti';
+$MESSAGE['interface']['sheet']['diary']['text']= 'Testo';
+$MESSAGE['interface']['sheet']['diary']['back']= 'Torna al diario';
+$MESSAGE['interface']['sheet']['diary']['button_save']='Salva';
+
 /*Messaggi privati*/
 $MESSAGE['interface']['messages']['recipient'] = 'Destinatario';
 $MESSAGE['interface']['messages']['multiple']['title'] = $PARAMETERS['names']['private_message']['sing'] . 'collettivo';
