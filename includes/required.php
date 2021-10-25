@@ -19,6 +19,4 @@ require_once(dirname(__FILE__).'/base.class.php');
 require_once(dirname(__FILE__).'/routing.class.php');
 
 $router = Router::getInstance();
-$router->addRoutes([
-    ['Path'=>'classes','Ext'=>'*.class.php']
-]);
+$router->startClasses();

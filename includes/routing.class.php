@@ -36,53 +36,33 @@ class Router
     }
 
     /**
-     * @fn addRoutes
-     * @note Get all php files whit routes in folder and sub-folders
-     * @param string $routes_folder
+     * @fn startClasses
+     * @note Start loader for dynamic integrations of the classes
      * @return void
      */
-    public function addRoutes($array)
+    public function startClasses()
     {
-        # Start container array for all routes
-        $alldirs = [];
+        spl_autoload_register([$this, 'loadController']);
+    }
 
-        foreach ($array as $path) {
-            $file_path = $path['Path'];
-            $ext = $path['Ext'];
+    /**
+     * @fn loadController
+     * @note Load called class
+     * @param string $className
+     * @throws Exception
+     * @return void
+     */
+    private function loadController(string $className)
+    {
+        $originalName = $className;
+        $className = __DIR__.'/../classes/' . $className . '.class.php';
 
-            # If folder exist and is correct
-            if (is_dir($file_path)) {
-
-                # Extract all sub-folders and files in the folder
-                $files = glob("{$file_path}/{$ext}"); //GLOB_MARK adds a slash to directories returned
-
-                # Foreach extracted path
-                foreach ($files as $file) {
-                    # Get dir extension
-                    $extention = pathinfo($file, PATHINFO_EXTENSION);
-
-                    # If is a php file
-                    if ($extention == 'php') {
-
-                        # Add the path to the general paths array
-                        array_push($alldirs, $file);
-                    } else {
-
-                        # Scan sub-folder and repeat process
-                        $this->addRoutes($file);
-                    }
-                }
-            }
-
-        }
-
-
-
-        # Foreach extracted dir
-        foreach ($alldirs as $dir) {
-
-            # Include extracted dir
-            require_once($dir);
+        if(is_readable($className)) {
+            require_once($className);
+        }else{
+            throw new Exception(
+                "Class '$originalName' not exists.'");
         }
     }
+
 }
