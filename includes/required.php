@@ -13,3 +13,11 @@ require_once(dirname(__FILE__) . '/functions.inc.php');
 if(!empty($_SESSION['theme']) and array_key_exists($_SESSION['theme'], $PARAMETERS['themes']['available'])){
     $PARAMETERS['themes']['current_theme'] = $_SESSION['theme'];
 }
+
+# Inclusione file tramite routing
+require_once(dirname(__FILE__).'/routing.class.php');
+
+$router = Router::getInstance();
+$router->addRoutes([
+    ['Path'=>'classes','Ext'=>'*.class.php']
+]);
