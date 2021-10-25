@@ -740,6 +740,12 @@ if (ESITI)
 $PARAMETERS['administration']['skills']['text'] = 'Gestione abilità';
 $PARAMETERS['administration']['skills']['url'] = 'main.php?page=gestione_abilita';
 $PARAMETERS['administration']['skills']['access_level'] = SUPERUSER;
+$PARAMETERS['administration']['skills_extra']['text'] = 'Gestione Dati Extra Abilità';
+$PARAMETERS['administration']['skills_extra']['url'] = 'main.php?page=gestione_abilita_extra';
+$PARAMETERS['administration']['skills_extra']['access_level'] = SUPERUSER;
+$PARAMETERS['administration']['skills_req']['text'] = 'Gestione Requisiti Abilità';
+$PARAMETERS['administration']['skills_req']['url'] = 'main.php?page=gestione_abilita_requisiti';
+$PARAMETERS['administration']['skills_req']['access_level'] = SUPERUSER;
 $PARAMETERS['administration']['plot']['text'] = 'Gestione ambientazione';
 $PARAMETERS['administration']['plot']['url'] = 'main.php?page=gestione_ambientazione';
 $PARAMETERS['administration']['plot']['access_level'] = SUPERUSER;
