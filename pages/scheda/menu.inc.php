@@ -78,7 +78,6 @@ if (class_exists('Abilita')) {
 
     <!-- AMMINISTRA -->
     <a href="main.php?page=scheda_gst&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']); ?>">
-        >>>>>>> dev
         <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['menu']['gst']); ?>
     </a>
     <a href="main.php?page=scheda_log&pg=<?= $pg; ?>">
