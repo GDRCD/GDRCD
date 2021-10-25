@@ -1,9 +1,8 @@
 <?php
 
 require_once(__DIR__ . '/../includes/required.php');
-require_once(__DIR__ . '/Abilita/abilita_class.php');
 
-$abi_class = new Abilita();
+$abi_class = Abilita::getInstance();
 
 $pg = gdrcd_filter('in', $_REQUEST['pg']);
 $op = gdrcd_filter('out', $_REQUEST['op']);

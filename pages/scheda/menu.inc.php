@@ -4,15 +4,13 @@ $pg = gdrcd_filter('out', $_REQUEST['pg']);
 $me = gdrcd_filter('out', $_SESSION['login']);
 $perm = gdrcd_filter('out', $_SESSION['permessi']);
 
-include_once(__DIR__ . '/../Abilita/abilita_class.php');
-
 # Se la classe esiste, utilizza il controllo dato dalla classe, altrimenti utilizza quello di default
 if (class_exists('Abilita')) {
-    $abi_class = new Abilita();
+    $abi_class = Abilita::getInstance();
     $abi_public = $abi_class->AbiVisibility($pg);
 } else {
     # Se non esiste la costante OR se e' true OR se non e' true: se sono il proprietario del pg OR sono moderatore
-    $abi_public = (!defined('ABI_PUBLIC') || (ABI_PUBLIC) || ($pg == $this->me) || ($this->permessi >= MODERATOR));
+    $abi_public = (!defined('ABI_PUBLIC') || (ABI_PUBLIC) || ($pg == $this->me) || ($this->permessi >= 123));
 }
 
 
