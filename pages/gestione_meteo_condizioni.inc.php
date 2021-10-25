@@ -10,7 +10,7 @@ $op = gdrcd_filter('out', $_REQUEST['op']);
     <!-- Titolo della pagina -->
     <div class="page_title">
         <h2><?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['meteo_condition']['page_name']); ?></h2>
-    </div>gestione_meteo_condizioni.inc.php
+    </div>
     <!-- Box principale -->
     <div class="page_body">
         <div class="panels_box">

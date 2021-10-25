@@ -462,9 +462,9 @@ $MESSAGE['interface']['administration']['meteo_condition']['wind_name']='Vento';
 
 /*Condizioni stagioni*/
 $MESSAGE['interface']['administration']['meteo_season']['page_name'] = 'Gestione delle stagioni';
-$MESSAGE['interface']['administration']['meteo_season']['minim']='Temperatura minima';
+$MESSAGE['interface']['administration']['meteo_season']['min']='Temperatura minima';
 $MESSAGE['interface']['administration']['meteo_season']['max']='Temperatura massima';
-$MESSAGE['interface']['administration']['meteo_season']['minim']='Data inizio';
+$MESSAGE['interface']['administration']['meteo_season']['date_start']='Data inizio';
 $MESSAGE['interface']['administration']['meteo_season']['sunrise']='Alba';
 $MESSAGE['interface']['administration']['meteo_season']['sunset']='Tramonto';
 

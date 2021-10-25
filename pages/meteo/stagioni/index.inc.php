@@ -6,20 +6,20 @@
             <div class="titoli_elenco"><?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['name_col']); ?></div>
         </div>
         <div class="td">
-            <div class="titoli_elenco"><?php echo gdrcd_filter('out',$MESSAGE['interface']['administration']['meteo_season']['minim']='Temperatura minima'); ?>
+            <div class="titoli_elenco"><?php echo gdrcd_filter('out',$MESSAGE['interface']['administration']['meteo_season']['min']); ?>
             </div>
         </div>
         <div class="td">
-            <div class="titoli_elenco"><?php echo gdrcd_filter('out',$MESSAGE['interface']['administration']['meteo_season']['max']='Temperatura massima'); ?></div>
+            <div class="titoli_elenco"><?php echo gdrcd_filter('out',$MESSAGE['interface']['administration']['meteo_season']['max']); ?></div>
         </div>
         <div class="td">
-            <div class="titoli_elenco"><?php echo gdrcd_filter('out',$MESSAGE['interface']['administration']['meteo_season']['date_start']='Data inizio'); ?></div>
+            <div class="titoli_elenco"><?php echo gdrcd_filter('out',$MESSAGE['interface']['administration']['meteo_season']['date_start']); ?></div>
         </div>
         <div class="td">
-            <div class="titoli_elenco"><?php echo gdrcd_filter('out',$MESSAGE['interface']['administration']['meteo_season']['sunrise']='Alba'); ?></div>
+            <div class="titoli_elenco"><?php echo gdrcd_filter('out',$MESSAGE['interface']['administration']['meteo_season']['sunrise']); ?></div>
         </div>
         <div class="td">
-            <div class="titoli_elenco"><?php echo gdrcd_filter('out',$MESSAGE['interface']['administration']['meteo_season']['sunset']='Tramonto'); ?></div>
+            <div class="titoli_elenco"><?php echo gdrcd_filter('out',$MESSAGE['interface']['administration']['meteo_season']['sunset']); ?></div>
         </div>
         <div class="td">
             <div class="titoli_elenco"><?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops_col']); ?></div>
