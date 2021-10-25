@@ -14,9 +14,8 @@ if(!empty($_SESSION['theme']) and array_key_exists($_SESSION['theme'], $PARAMETE
     $PARAMETERS['themes']['current_theme'] = $_SESSION['theme'];
 }
 
-# Inclusione file tramite routing
+# Inclusione file classe tramite routing
 require_once(dirname(__FILE__).'/base.class.php');
 require_once(dirname(__FILE__).'/routing.class.php');
-
 $router = Router::getInstance();
 $router->startClasses();
