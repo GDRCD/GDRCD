@@ -1,6 +1,6 @@
 <?php
 
-class Example{
+class Example extends BaseClass{
 
     /**
      * Init vars PUBLIC STATIC
@@ -11,17 +11,7 @@ class Example{
 
     public function __construct()
     {
+        parent::__construct();
     }
 
-    /**
-     * @fn getInstance
-     * @note Self Instance
-     */
-    public static function getInstance()
-    {
-        if (!(self::$_instance instanceof self)) {
-            self::$_instance = new self();
-        }
-        return self::$_instance;
-    }
 }
