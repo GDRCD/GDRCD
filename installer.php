@@ -2,18 +2,18 @@
 $dont_check = true;
 require 'header.inc.php'; /*Header comune*/
 ?>
-<div class="pagina_ambientazione">
-    <?php
-    $query = "SHOW TABLES";
-    $result = gdrcd_query($query, 'result');
-    $table = gdrcd_query($result, 'num_rows');
+    <div class="pagina_ambientazione">
+        <?php
+        $query = "SHOW TABLES";
+        $result = gdrcd_query($query, 'result');
+        $table = gdrcd_query($result, 'num_rows');
 
-    if ($table > 0) {
-        echo '<div class="error">' . $MESSAGE['homepage']['installer']['not_empty'] . '</div>';
-    } else {
-        gdrcd_query('SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO"');
+        if ($table > 0) {
+            echo '<div class="error">' . $MESSAGE['homepage']['installer']['not_empty'] . '</div>';
+        } else {
+            gdrcd_query('SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO"');
 
-        gdrcd_query("CREATE TABLE abilita (
+            gdrcd_query("CREATE TABLE abilita (
             id_abilita int(4) NOT NULL auto_increment,
             nome varchar(20) NOT NULL,
             car tinyint(1) NOT NULL default '0',
@@ -22,45 +22,45 @@ require 'header.inc.php'; /*Header comune*/
             PRIMARY KEY  (id_abilita)
         )ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1");
 
-        gdrcd_query("INSERT INTO abilita VALUES (18, 'Resistenza', 1, 'Il personaggio è in grado di sopportare il dolore ed il disagio e sopporta minime dosi di agenti tossici nel proprio organismo. ', -1);");
+            gdrcd_query("INSERT INTO abilita VALUES (18, 'Resistenza', 1, 'Il personaggio è in grado di sopportare il dolore ed il disagio e sopporta minime dosi di agenti tossici nel proprio organismo. ', -1);");
 
-        gdrcd_query("INSERT INTO abilita VALUES (17, 'Sopravvivenza', 4, 'Il personaggio è in grado di procurarsi cibo e riparo all\'aperto, con mezzi minimi.', -1);");
+            gdrcd_query("INSERT INTO abilita VALUES (17, 'Sopravvivenza', 4, 'Il personaggio è in grado di procurarsi cibo e riparo all\'aperto, con mezzi minimi.', -1);");
 
-        gdrcd_query("INSERT INTO abilita VALUES (4, 'Atletica', 2, 'Il personaggio è ben allenato ed è in grado di saltare efficacemente, arrampicarsi, nuotare, schivare e compiere, genericamente, movimenti fisicamente impegnativi.', -1);");
+            gdrcd_query("INSERT INTO abilita VALUES (4, 'Atletica', 2, 'Il personaggio è ben allenato ed è in grado di saltare efficacemente, arrampicarsi, nuotare, schivare e compiere, genericamente, movimenti fisicamente impegnativi.', -1);");
 
-        gdrcd_query("INSERT INTO abilita VALUES (5, 'Cercare', 5, 'Il personaggio è rapido ed efficace nel perquisire un ambiente in cerca di qualcosa.', -1);");
+            gdrcd_query("INSERT INTO abilita VALUES (5, 'Cercare', 5, 'Il personaggio è rapido ed efficace nel perquisire un ambiente in cerca di qualcosa.', -1);");
 
-        gdrcd_query("INSERT INTO abilita VALUES (6, 'Conoscenza', 3, 'Il personaggio ha accumulato cultura ed esperienze, e potrebbe avere maggiori informazioni sulla situazione in cui si trova. A fronte di una prova di conoscenza il master dovrebbe fornire informazioni al giocatore via sussurro.', -1);");
+            gdrcd_query("INSERT INTO abilita VALUES (6, 'Conoscenza', 3, 'Il personaggio ha accumulato cultura ed esperienze, e potrebbe avere maggiori informazioni sulla situazione in cui si trova. A fronte di una prova di conoscenza il master dovrebbe fornire informazioni al giocatore via sussurro.', -1);");
 
-        gdrcd_query("INSERT INTO abilita VALUES (7, 'Percepire intenzioni', 4, 'Il personaggio è abile nel determinare, durante una conversazione o un interazione, se il suo interlocutore stia mentendo, sia ostile o sia ben disposto.', -1);");
+            gdrcd_query("INSERT INTO abilita VALUES (7, 'Percepire intenzioni', 4, 'Il personaggio è abile nel determinare, durante una conversazione o un interazione, se il suo interlocutore stia mentendo, sia ostile o sia ben disposto.', -1);");
 
-        gdrcd_query("INSERT INTO abilita VALUES (8, 'Cavalcare', 2, 'Il personaggio è in grado di cavalcare animali addestrati a tale scopo.', -1);");
+            gdrcd_query("INSERT INTO abilita VALUES (8, 'Cavalcare', 2, 'Il personaggio è in grado di cavalcare animali addestrati a tale scopo.', -1);");
 
-        gdrcd_query("INSERT INTO abilita VALUES (9, 'Addestrare animali', 4, 'Il personaggio comprende gli atteggiamenti e le reazioni degli animali ed è in grado di interagire con loro, addomesticarli ed addestrarli.', -1);");
+            gdrcd_query("INSERT INTO abilita VALUES (9, 'Addestrare animali', 4, 'Il personaggio comprende gli atteggiamenti e le reazioni degli animali ed è in grado di interagire con loro, addomesticarli ed addestrarli.', -1);");
 
-        gdrcd_query("INSERT INTO abilita VALUES (10, 'Armi bianche', 0, 'Il personaggio è addestrato al combattimento con armi bianche, scudi e protezioni.', -1);");
+            gdrcd_query("INSERT INTO abilita VALUES (10, 'Armi bianche', 0, 'Il personaggio è addestrato al combattimento con armi bianche, scudi e protezioni.', -1);");
 
-        gdrcd_query("INSERT INTO abilita VALUES (11, 'Armi da tiro', 5, 'Il personaggio è addestrato all\'uso di armi da diro o da lancio.', -1);");
+            gdrcd_query("INSERT INTO abilita VALUES (11, 'Armi da tiro', 5, 'Il personaggio è addestrato all\'uso di armi da diro o da lancio.', -1);");
 
-        gdrcd_query("INSERT INTO abilita VALUES (12, 'Lotta', 0, 'Il personaggio è addestrato al combattimento senza armi.', -1);");
+            gdrcd_query("INSERT INTO abilita VALUES (12, 'Lotta', 0, 'Il personaggio è addestrato al combattimento senza armi.', -1);");
 
-        gdrcd_query("INSERT INTO abilita VALUES (13, 'Competenze tecniche', 3, 'Il personaggio è in grado di realizzare e riparare strumenti tecnologici. Il tipo ed il numero di tecnologie in cui è competente dovrebbe essere specificato nel background e proporzionale al punteggio di intelligenza.', -1);");
+            gdrcd_query("INSERT INTO abilita VALUES (13, 'Competenze tecniche', 3, 'Il personaggio è in grado di realizzare e riparare strumenti tecnologici. Il tipo ed il numero di tecnologie in cui è competente dovrebbe essere specificato nel background e proporzionale al punteggio di intelligenza.', -1);");
 
-        gdrcd_query("INSERT INTO abilita VALUES (14, 'Mezzi di trasporto', 5, 'Il personaggio è in grado di governare o pilotare specifici mezzi di trasporto. L\'elenco dei mezzi dovrebbe essere riportato nel background e proporzionale al punteggio di intelligenza.', -1);");
+            gdrcd_query("INSERT INTO abilita VALUES (14, 'Mezzi di trasporto', 5, 'Il personaggio è in grado di governare o pilotare specifici mezzi di trasporto. L\'elenco dei mezzi dovrebbe essere riportato nel background e proporzionale al punteggio di intelligenza.', -1);");
 
-        gdrcd_query("INSERT INTO abilita VALUES (15, 'Pronto soccorso', 3, 'Il personaggio è in grado di eseguire interventi d\'emergenza su individui feriti o la cui salute sia in qualche modo minacciata.', -1);");
+            gdrcd_query("INSERT INTO abilita VALUES (15, 'Pronto soccorso', 3, 'Il personaggio è in grado di eseguire interventi d\'emergenza su individui feriti o la cui salute sia in qualche modo minacciata.', -1);");
 
-        gdrcd_query("INSERT INTO abilita VALUES (16, 'Furtività', 2, 'Il personaggio è in grado di muoversi ed agire senza dare nell\'occhio, e di scassinare serrature.', -1);");
+            gdrcd_query("INSERT INTO abilita VALUES (16, 'Furtività', 2, 'Il personaggio è in grado di muoversi ed agire senza dare nell\'occhio, e di scassinare serrature.', -1);");
 
-        gdrcd_query("INSERT INTO abilita VALUES (19, 'Volontà', 4, 'Il personaggio è fortemente determinato e difficilmente si lascia persuadere o dissuadere.', -1);");
+            gdrcd_query("INSERT INTO abilita VALUES (19, 'Volontà', 4, 'Il personaggio è fortemente determinato e difficilmente si lascia persuadere o dissuadere.', -1);");
 
-        gdrcd_query("CREATE TABLE ambientazione (
+            gdrcd_query("CREATE TABLE ambientazione (
             capitolo int(2) NOT NULL,
             testo text NOT NULL,
             titolo varchar(30) NOT NULL
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
-        gdrcd_query("CREATE TABLE araldo (
+            gdrcd_query("CREATE TABLE araldo (
             id_araldo int(4) NOT NULL auto_increment,
             tipo int(2) NOT NULL default '0',
             nome char(50) default NULL,
@@ -68,15 +68,15 @@ require 'header.inc.php'; /*Header comune*/
             PRIMARY KEY  (id_araldo)
         ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;");
 
-        gdrcd_query("INSERT INTO araldo VALUES (1, 4, 'Resoconti quest', 0);");
+            gdrcd_query("INSERT INTO araldo VALUES (1, 4, 'Resoconti quest', 0);");
 
-        gdrcd_query("INSERT INTO araldo VALUES (2, 0, 'Notizie in gioco', 0);");
+            gdrcd_query("INSERT INTO araldo VALUES (2, 0, 'Notizie in gioco', 0);");
 
-        gdrcd_query("INSERT INTO araldo VALUES (3, 2, 'Umani', 1000);");
+            gdrcd_query("INSERT INTO araldo VALUES (3, 2, 'Umani', 1000);");
 
-        gdrcd_query("INSERT INTO araldo VALUES (4, 3, 'Ordini alla Guardia', 1);");
+            gdrcd_query("INSERT INTO araldo VALUES (4, 3, 'Ordini alla Guardia', 1);");
 
-        gdrcd_query("CREATE TABLE araldo_letto (
+            gdrcd_query("CREATE TABLE araldo_letto (
             id int(20) NOT NULL auto_increment,
             nome char(50) default NULL,
             araldo_id int(7) NOT NULL,
@@ -84,9 +84,9 @@ require 'header.inc.php'; /*Header comune*/
             PRIMARY KEY  (id)
         ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");
 
-        gdrcd_query("ALTER TABLE  `araldo_letto` ADD INDEX (  `nome` ,  `thread_id` ) ;");
+            gdrcd_query("ALTER TABLE  `araldo_letto` ADD INDEX (  `nome` ,  `thread_id` ) ;");
 
-        gdrcd_query("CREATE TABLE backmessaggi (
+            gdrcd_query("CREATE TABLE backmessaggi (
             id bigint(20) NOT NULL auto_increment,
             mittente varchar(20) NOT NULL default '',
             destinatario varchar(20) NOT NULL default '',
@@ -98,7 +98,7 @@ require 'header.inc.php'; /*Header comune*/
             PRIMARY KEY  (id)
         ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");
 
-        gdrcd_query("CREATE TABLE blacklist (
+            gdrcd_query("CREATE TABLE blacklist (
             ip char(15) NOT NULL default '',
             nota char(255) default NULL,
             granted tinyint(1) NOT NULL default '0',
@@ -124,7 +124,7 @@ require 'header.inc.php'; /*Header comune*/
   DEFAULT CHARSET = latin1;");
 
 
-        gdrcd_query("CREATE TABLE chat (
+            gdrcd_query("CREATE TABLE chat (
             id bigint(20) NOT NULL auto_increment,
             stanza int(4) NOT NULL default '0',
             imgs varchar(100) NOT NULL default '',
@@ -137,19 +137,19 @@ require 'header.inc.php'; /*Header comune*/
             KEY Stanza (stanza)
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");
 
-        gdrcd_query("CREATE TABLE clgpersonaggioabilita (
+            gdrcd_query("CREATE TABLE clgpersonaggioabilita (
             nome varchar(20) NOT NULL,
             id_abilita int(4) NOT NULL,
             grado int(4) NOT NULL
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
-        gdrcd_query("CREATE TABLE clgpersonaggiomostrine (
+            gdrcd_query("CREATE TABLE clgpersonaggiomostrine (
             nome char(20) NOT NULL default '',
             id_mostrina char(20) NOT NULL default '',
             PRIMARY KEY  (nome, id_mostrina)
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
-        gdrcd_query("CREATE TABLE clgpersonaggiooggetto (
+            gdrcd_query("CREATE TABLE clgpersonaggiooggetto (
             nome varchar(20) NOT NULL default '',
             id_oggetto int(4) NOT NULL default '0',
             numero int(8) default '1',
@@ -159,11 +159,24 @@ require 'header.inc.php'; /*Header comune*/
             PRIMARY KEY  (nome, id_oggetto)
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
-        gdrcd_query("CREATE TABLE clgpersonaggioruolo (
+            gdrcd_query("CREATE TABLE clgpersonaggioruolo (
             personaggio varchar(20) NOT NULL,
             id_ruolo int(4) NOT NULL default '0',
             scadenza date NOT NULL default '2010-01-01'
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
+
+
+            gdrcd_query("CREATE TABLE clgpgquest  (
+            id int(11) NOT NULL AUTO_INCREMENT,
+            id_quest int(11) NOT NULL,
+           nome  varchar(255) CHARACTER SET utf8 NOT NULL,
+           data  timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+           commento  mediumtext CHARACTER SET utf8 NOT NULL,
+           nome_pg  varchar(255) CHARACTER SET utf8 NOT NULL,
+           px_assegnati  int(11) NOT NULL,
+           autore  varchar(55) CHARACTER SET utf8 NOT NULL,
+          PRIMARY KEY ( id )
+        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;")
 
         gdrcd_query("CREATE TABLE codmostrina (
             id_mostrina int(4) NOT NULL auto_increment,
@@ -413,9 +426,20 @@ require 'header.inc.php'; /*Header comune*/
             KEY Esilio (esilio)
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
-        gdrcd_query("INSERT INTO personaggio VALUES ('Super', 'User', '" . gdrcd_encript('super') . "', NULL, now(), '".gdrcd_encript('super@gdrcd.test')."', 4, 1, -1, '2009-07-01', '2009-07-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', 0, 1000, 7, 8, 6, 5, 6, 5, 100, 100, '2009-07-01 00:00:00', 300, 50000, '2009-07-01', '127.0.0.1', 0, '2009-07-01 00:00:00', '2009-07-01 00:00:00', '2009-07-01 00:00:00', 1);");
-        gdrcd_query("INSERT INTO personaggio VALUES ('Test', 'Di Funzionalià', '" . gdrcd_encript('test') . "', NULL, now(), '".gdrcd_encript('test@gdrcd.test')."', 0, 1, -1, '2009-07-01', '2009-07-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', 0, 1000, 7, 8, 6, 5, 6, 5, 100, 100, '2009-07-01 00:00:00', 50, 50, '2009-07-01', '127.0.0.1', 0, '2009-07-01 00:00:00', '2009-07-01 00:00:00', '2009-07-01 00:00:00', 1);");
+        gdrcd_query("INSERT INTO personaggio VALUES ('Super', 'User', '" . gdrcd_encript('super') . "', NULL, now(), '" . gdrcd_encript('super@gdrcd.test') . "', 4, 1, -1, '2009-07-01', '2009-07-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', 0, 1000, 7, 8, 6, 5, 6, 5, 100, 100, '2009-07-01 00:00:00', 300, 50000, '2009-07-01', '127.0.0.1', 0, '2009-07-01 00:00:00', '2009-07-01 00:00:00', '2009-07-01 00:00:00', 1);");
+        gdrcd_query("INSERT INTO personaggio VALUES ('Test', 'Di Funzionalià', '" . gdrcd_encript('test') . "', NULL, now(), '" . gdrcd_encript('test@gdrcd.test') . "', 0, 1, -1, '2009-07-01', '2009-07-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', 0, 1000, 7, 8, 6, 5, 6, 5, 100, 100, '2009-07-01 00:00:00', 50, 50, '2009-07-01', '127.0.0.1', 0, '2009-07-01 00:00:00', '2009-07-01 00:00:00', '2009-07-01 00:00:00', 1);");
 
+         gdrcd_query("CREATE TABLE IF NOT EXISTS  quest  (
+            id  int(11) NOT NULL AUTO_INCREMENT,
+            titolo  mediumtext CHARACTER SET utf8 NOT NULL,
+            partecipanti  mediumtext CHARACTER SET utf8 NOT NULL,
+            descrizione  mediumtext CHARACTER SET utf8 NOT NULL,
+            trama  int(11) NOT NULL DEFAULT '0',
+            data  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            autore  varchar(255) CHARACTER SET utf8 NOT NULL,
+            ultima_modifica  varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+           PRIMARY KEY ( id )
+        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;")
 
         gdrcd_query("CREATE TABLE razza (
             id_razza int(4) NOT NULL auto_increment,
@@ -486,13 +510,26 @@ require 'header.inc.php'; /*Header comune*/
           note text CHARACTER SET utf8,
           PRIMARY KEY (id)
         ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;");
+
+gdrcd_query("CREATE TABLE IF NOT EXISTS  trama  (
+               id  int(11) NOT NULL AUTO_INCREMENT,
+               titolo  varchar(255) CHARACTER SET utf8 NOT NULL,
+               descrizione  mediumtext CHARACTER SET utf8 NOT NULL,
+               data  datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+               autore  varchar(255) CHARACTER SET utf8 NOT NULL,
+               ultima_modifica  varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+               stato  int(11) NOT NULL DEFAULT '0',
+               quests  text CHARACTER SET utf8,
+              PRIMARY KEY ( id )
+            ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;")
+
         echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['homepage']['installer']['done']) . '</div>';
         } ?>
         <!-- Link di ritorno alla homepage -->
         <div class="link_back">
-        <a href="index.php">
-        <?php echo gdrcd_filter('out', $PARAMETERS['info']['homepage_name']); ?>
-        </a>
+            <a href="index.php">
+                <?php echo gdrcd_filter('out', $PARAMETERS['info']['homepage_name']); ?>
+            </a>
         </div>
-        </div>
-        <?php require('footer.inc.php');  /*Footer comune*/ ?>
+    </div>
+<?php require('footer.inc.php');  /*Footer comune*/ ?>
