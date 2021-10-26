@@ -5,8 +5,6 @@ header('Content-Type:text/html; charset=UTF-8');
 //Includo i parametri, la configurazione, la lingua e le funzioni
 require_once('includes/required.php');
 
-//Eseguo la connessione al database
-$handleDBConnection = gdrcd_connect();
 
 # Controllo del login
 if(!empty($_SESSION['login'])){

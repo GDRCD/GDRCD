@@ -326,6 +326,19 @@ INSERT INTO `codtipooggetto` (`cod_tipo`, `descrizione`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `config`
+--
+
+CREATE TABLE IF NOT EXISTS `config` (
+ `id` int(11) NOT NULL,
+ `const_name` varchar(255) NOT NULL,
+ `value` varchar(255) NOT NULL,
+ PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `diario`
 --
 

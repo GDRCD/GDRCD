@@ -3,9 +3,6 @@
 /*Includo i file principali */
 require_once(__DIR__.'/includes/required.php');
 
-/*Connessione al database*/
-$handleDBConnection = gdrcd_connect();
-
 /*Leggo i dati del form di login*/
 $login1 = gdrcd_filter('get', $_POST['login1']);
 $pass1 = gdrcd_filter('get', $_POST['pass1']);
@@ -199,5 +196,3 @@ if($_SESSION['login'] != '') {
 ?>
     </body>
 </html>
-<?php
-gdrcd_close_connection($handleDBConnection);

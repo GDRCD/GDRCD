@@ -259,7 +259,7 @@ function gdrcd_mysql_error($details = false)
  */
 function gdrcd_encript($str)
 {
-    require_once(dirname(__FILE__) . '/PasswordHash.php');
+    require_once(dirname(__FILE__) . '/../includes/PasswordHash.php');
     $hasher = new PasswordHash(8, true);
 
     return $hasher->HashPassword($str);
@@ -267,7 +267,7 @@ function gdrcd_encript($str)
 
 function gdrcd_password_check($pass, $stored)
 {
-    require_once(dirname(__FILE__) . '/PasswordHash.php');
+    require_once(dirname(__FILE__) . '/../includes/PasswordHash.php');
     $hasher = new PasswordHash(8, true);
 
     return $hasher->CheckPassword($pass, $stored);

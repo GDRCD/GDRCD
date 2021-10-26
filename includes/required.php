@@ -1,21 +1,38 @@
 <?php
 session_start();
 
-require_once(dirname(__FILE__) . '/constant_values.inc.php');
-require_once(dirname(__FILE__) . '/../config.inc.php');
-if(file_exists(dirname(__FILE__).'/config-overrides.php')){
-    include_once dirname(__FILE__).'/config-overrides.php';
+# Inizializzo funzioni necessarie
+require_once(dirname(__FILE__) . '/../core/functions.php');
+
+# Carico le constanti principali
+require_once(dirname(__FILE__) . '/../core/constant_values.php');
+
+# Carico i dati di configurazione del db
+require_once(dirname(__FILE__)).'/../core/db_config.php';
+
+# Se esiste un file di overrides di connessione del db, caricalo
+if(file_exists(dirname(__FILE__).'/../core/db_overrides.php')){
+    include_once dirname(__FILE__).'/../core/db_overrides.php';
 }
 
-require_once(dirname(__FILE__) . '/../vocabulary/' . $PARAMETERS['languages']['set'] . '.vocabulary.php');
-require_once(dirname(__FILE__) . '/functions.inc.php');
+# Eseguo la connessione al database
+$handleDBConnection = gdrcd_connect();
 
+# Inizializzo le classi dinamicamente
+require_once(dirname(__FILE__) . '/../classes/Base.class.php');
+require_once(dirname(__FILE__).'/../classes/Routing.class.php');
+$router = Router::getInstance();
+
+# Inclusione file classe tramite routing
+$router->startClasses();
+
+# Inserisco il resto delle configurazioni
+require_once(dirname(__FILE__) . '/../config.inc.php');
+
+# Se ho selezionato un tema, sovrascrivo quello di default
 if(!empty($_SESSION['theme']) and array_key_exists($_SESSION['theme'], $PARAMETERS['themes']['available'])){
     $PARAMETERS['themes']['current_theme'] = $_SESSION['theme'];
 }
 
-# Inclusione file classe tramite routing
-require_once(dirname(__FILE__).'/base.class.php');
-require_once(dirname(__FILE__).'/routing.class.php');
-$router = Router::getInstance();
-$router->startClasses();
+require_once(dirname(__FILE__) . '/../vocabulary/' . $PARAMETERS['languages']['set'] . '.vocabulary.php');
+
