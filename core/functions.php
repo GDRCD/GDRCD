@@ -290,52 +290,6 @@ function gdrcd_check_pass($str)
 }
 
 /**
- * Funzione di filtraggio di codici malevoli negli input utente
- * @param string $what : modalità da utilizzare per controllare la stringa. Sono opzioni valide: in o get, num, out, addslashes, email, includes
- * @param string $str : la stringa da controllare
- * @return una versione filtrata di $str
- */
-function gdrcd_filter($what, $str)
-{
-    switch (strtolower($what)) {
-        case 'in':
-        case 'get':
-            $str = addslashes(str_replace('\\', '', $str));
-            break;
-
-        case 'num':
-            $str = (int)$str;
-            break;
-
-        case 'out':
-            $str = html_entity_decode($str, ENT_HTML5, 'utf-8');
-            break;
-
-        case 'addslashes':
-            $str = addslashes($str);
-            break;
-
-        case 'email':
-            $str = (preg_match("#^[a-z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,4}$#is", $str)) ? $str : false;
-            break;
-
-        case 'includes':
-            $str = (preg_match("#[^:]#is")) ? htmlentities($str, ENT_QUOTES) : false;
-            break;
-
-        case 'url':
-            $str = urlencode($str);
-            break;
-
-        case 'fullurl':
-            $str = filter_var(str_replace(' ', '%20', $str), FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED);
-            break;
-    }
-
-    return $str;
-}
-
-/**
  * Funzioni di alias per gdrcd_filter()
  */
 function gdrcd_filter_in($str)
@@ -850,4 +804,72 @@ function gdrcd_brute_debug($args)
         gdrcd_dump($arg);
     }
     die('FINE');
+}
+
+/** NUOVI HELPER */
+
+/**
+ * @fn get_constant
+ * @note Helper per l'estrazione delle costanti dal db
+ * @param string $name
+ * @return mixed
+ */
+function get_constant(string $name)
+{
+    return Functions::getInstance()->get_constant($name);
+}
+
+/**
+ * @fn gdrcd_filter
+ * @note Funzione di filtraggio dati
+ * @param string $type - Modalita' controllo utilizzata
+ * @param string $val - Stringa da controllare
+ */
+function gdrcd_filter($type, $val)
+{
+    return Functions::getInstance()->gdrcd_filter($type, $val);
+}
+
+/**
+ * @fn f_out
+ * @note Helper per filtro di tipo out
+ * @param mixed $val
+ * @return string
+ */
+function f_out($val): string
+{
+    return Functions::getInstance()->gdrcd_filter('out', $val);
+}
+
+/**
+ * @fn f_in
+ * @note Helper per filtro di tipo in
+ * @param mixed $val
+ * @return string
+ */
+function f_in($val): string
+{
+    return Functions::getInstance()->gdrcd_filter('in', $val);
+}
+
+/**
+ * @fn f_int
+ * @note Helper per filtro di tipo int
+ * @param mixed $val
+ * @return int
+ */
+function f_int($val): int
+{
+    return Functions::getInstance()->gdrcd_filter('int', $val);
+}
+
+/**
+ * @fn f_url
+ * @note Helper per filtro di tipo url
+ * @param mixed $val
+ * @return string
+ */
+function f_url($val):string
+{
+    return Functions::getInstance()->gdrcd_filter('url', $val);
 }
