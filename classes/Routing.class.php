@@ -40,9 +40,9 @@ class Router
      * @note Start loader for dynamic integrations of the classes
      * @return void
      */
-    public function startClasses()
+    public static function startClasses()
     {
-        spl_autoload_register([$this, 'loadController']);
+        spl_autoload_register([Router::getInstance(), 'loadController']);
     }
 
     /**

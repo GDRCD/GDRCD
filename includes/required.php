@@ -15,16 +15,16 @@ if(file_exists(dirname(__FILE__).'/../core/db_overrides.php')){
     include_once dirname(__FILE__).'/../core/db_overrides.php';
 }
 
-# Eseguo la connessione al database
-$handleDBConnection = gdrcd_connect();
-
-# Inizializzo le classi dinamicamente
+# Inizializzo le classi fondamentali
 require_once(dirname(__FILE__) . '/../classes/Base.class.php');
 require_once(dirname(__FILE__).'/../classes/Routing.class.php');
-$router = Router::getInstance();
+require_once(dirname(__FILE__) . '/../classes/DB.class.php');
+
+# Creo la connessione
+$handleDBConnection = DB::connect();
 
 # Inclusione file classe tramite routing
-$router->startClasses();
+Router::startClasses();
 
 # Inserisco il resto delle configurazioni
 require_once(dirname(__FILE__) . '/../config.inc.php');
@@ -35,4 +35,5 @@ if(!empty($_SESSION['theme']) and array_key_exists($_SESSION['theme'], $PARAMETE
 }
 
 require_once(dirname(__FILE__) . '/../vocabulary/' . $PARAMETERS['languages']['set'] . '.vocabulary.php');
+
 
