@@ -2,7 +2,7 @@
 
 require_once(__DIR__.'/../../includes/required.php');
 
-$chat_id = gdrcd_filter('num', $_GET['dir']);
+$chat_id = Filters::int($_GET['dir']);
 $_SESSION['last_action_id'] = 0;
 
 $chat = Chat::getInstance();
@@ -16,7 +16,7 @@ $chat->resetClass();
 
     <?php if ($chat->chatAccess()) {
 
-        if (CHAT_NOTIFY && $chat->audioActivated()) { ?>
+        if ($chat->chat_notify && $chat->audioActivated()) { ?>
             <audio src="/sounds/beep.wav" id="chat_audio"></audio>
         <?php } ?>
 

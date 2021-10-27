@@ -345,7 +345,20 @@ INSERT INTO `config` (`const_name`,`val`,`section`) VALUES
     ('ABI_REQUIREMENT',1,'Abilita'),
     ('REQUISITO_ABI',1,'Abilita'),
     ('REQUISITO_STAT',2,'Abilita'),
-    ('ABI_EXTRA',1,'Abilita');
+    ('CHAT_TIME',2,'Chat'),
+    ('CHAT_EXP',1,'Chat'),
+    ('CHAT_PVT_EXP',0,'Chat'),
+    ('CHAT_EXP_MASTER',1,'Chat'),
+    ('CHAT_EXP_AZIONE',1,'Chat'),
+    ('CHAT_EXP_MIN',500,'Chat'),
+    ('CHAT_ICONE',1,'Chat'),
+    ('CHAT_AVATAR',1,'Chat'),
+    ('CHAT_NOTIFY',1,'Chat'),
+    ('CHAT_DICE',1,'Chat'),
+    ('CHAT_DICE_BASE',20,'Chat'),
+    ('CHAT_SKILL_BUYED',0,'Chat'),
+    ('CHAT_EQUIP_BONUS',0,'Chat'),
+    ('CHAT_EQUIP_EQUIPPED',1,'Chat');
 
 
 

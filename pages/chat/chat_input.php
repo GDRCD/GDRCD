@@ -62,12 +62,12 @@ if (!isset($chat)) {
             <div class="input_container small">
                 <select name="caratteristica">
                     <option value="">Caratteristica</option>
-                    <option value="0"><?= gdrcd_filter('out',$PARAMETERS['names']['stats']['car0']);?></option>
-                    <option value="1"><?= gdrcd_filter('out',$PARAMETERS['names']['stats']['car1']);?></option>
-                    <option value="2"><?= gdrcd_filter('out',$PARAMETERS['names']['stats']['car2']);?></option>
-                    <option value="3"><?= gdrcd_filter('out',$PARAMETERS['names']['stats']['car3']);?></option>
-                    <option value="4"><?= gdrcd_filter('out',$PARAMETERS['names']['stats']['car4']);?></option>
-                    <option value="5"><?= gdrcd_filter('out',$PARAMETERS['names']['stats']['car5']);?></option>
+                    <option value="0"><?= Filters::out($PARAMETERS['names']['stats']['car0']);?></option>
+                    <option value="1"><?= Filters::out($PARAMETERS['names']['stats']['car1']);?></option>
+                    <option value="2"><?= Filters::out($PARAMETERS['names']['stats']['car2']);?></option>
+                    <option value="3"><?= Filters::out($PARAMETERS['names']['stats']['car3']);?></option>
+                    <option value="4"><?= Filters::out($PARAMETERS['names']['stats']['car4']);?></option>
+                    <option value="5"><?= Filters::out($PARAMETERS['names']['stats']['car5']);?></option>
                 </select>
             </div>
 

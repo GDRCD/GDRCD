@@ -2,7 +2,7 @@
 
 require_once(__DIR__ . '/../../includes/required.php');
 
-$action = gdrcd_filter('in', $_POST['action']);
+$action = Filters::in($_POST['action']);
 $chat = Chat::getInstance();
 
 switch ($action) {
