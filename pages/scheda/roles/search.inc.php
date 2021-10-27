@@ -261,5 +261,6 @@ while ($ry = gdrcd_query($year, 'fetch')) {
 <div class="link_back">
     <a href="main.php?page=scheda_roles&pg=<?php echo gdrcd_filter('url',
         $_REQUEST['pg']); ?>"><?php echo gdrcd_filter('out',
-            $MESSAGE['interface']['sheet']['link']['back']); ?></a>
+            $MESSAGE['interface']['sheet']['link']['back_roles']); ?>
+    </a>
 </div>

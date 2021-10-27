@@ -158,8 +158,8 @@ if ($_REQUEST['pg'] == $_SESSION['login']) {
     /*Confermo l'operazione*/
     echo '<div class="warning">' . $message . '</div>
 		<div class="link_back">
-		    <a href="popup.php?page=scheda_roles&pg=' . gdrcd_filter('in', $_REQUEST['pg']) . '">
-		        Torna indietro
+		    <a href="popup.php?page=scheda_roles&pg=' . gdrcd_filter('in', $_REQUEST['pg']) . '">'. gdrcd_filter('out',
+            $MESSAGE['interface']['sheet']['link']['back_roles']).'
 		    </a>
 		</div>';
 

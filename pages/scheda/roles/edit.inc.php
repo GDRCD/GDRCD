@@ -9,7 +9,8 @@ if ($_SESSION['permessi'] >= EDIT_PERM || $_REQUEST['pg'] == $_SESSION['login'])
         echo '<div class="warning">Registrazione modificata con successo</div>
         <div class="link_back">
             <a href="main.php?page=scheda_roles&pg=' . gdrcd_filter('in', $_REQUEST['pg']) . '">
-                Torna indietro
+            '. gdrcd_filter('out',
+            $MESSAGE['interface']['sheet']['link']['back_roles']).'
             </a>
         </div>';
     }
@@ -54,7 +55,8 @@ if ($_SESSION['permessi'] >= EDIT_PERM || $_REQUEST['pg'] == $_SESSION['login'])
         </form>
         <div class="link_back">
             <a href="main.php?page=scheda_roles&pg=<? echo gdrcd_filter('in', $_REQUEST['pg']); ?>">
-                Torna indietro
+                <?php echo gdrcd_filter('out',
+                    $MESSAGE['interface']['sheet']['link']['back_roles']); ?>
             </a>
         </div>
         <?php

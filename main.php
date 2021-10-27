@@ -19,12 +19,12 @@ if( ! empty($_GET['map_id'])) {
 }
 
 if(isset($_REQUEST['page'])) {
-    $strInnerPage = gdrcd_filter('include', $_REQUEST['page']).'.inc.php';
+    $strInnerPage = $_REQUEST['page'].'.inc.php';
 
     //se e' impostato dir allora cambio stanza.
 } elseif(isset($_REQUEST['dir']) && is_numeric($_REQUEST['dir'])) {
     if($_REQUEST['dir'] >= 0) {
-        $strInnerPage = 'frame_chat.inc.php';
+        $strInnerPage = 'chat/chat_box.php';
     } else {
         $strInnerPage = 'mappaclick.inc.php';
         $_REQUEST['id_map'] = $_SESSION['mappa'];

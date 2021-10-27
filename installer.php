@@ -90,7 +90,7 @@ require 'header.inc.php'; /*Header comune*/
             id bigint(20) NOT NULL auto_increment,
             mittente varchar(20) NOT NULL default '',
             destinatario varchar(20) NOT NULL default '',
-            spedito datetime NOT NULL default '0000-00-00 00:00:00',
+            spedito datetime NOT NULL default CURRENT_TIMESTAMP,
             letto tinyint(1) default '0',
             tipo int(2) NOT NULL default '0',
             oggetto text NULL DEFAULT NULL,
@@ -130,7 +130,7 @@ require 'header.inc.php'; /*Header comune*/
             imgs varchar(100) NOT NULL default '',
             mittente varchar(20) NOT NULL default '',
             destinatario varchar(20) default NULL,
-            ora datetime NOT NULL default '0000-00-00 00:00:00',
+            ora datetime NOT NULL default CURRENT_TIMESTAMP ,
             tipo char(1) default NULL,
             testo text,
             PRIMARY KEY  (id),
@@ -247,7 +247,7 @@ require 'header.inc.php'; /*Header comune*/
             id int(11) NOT NULL auto_increment,
             nome_interessato varchar(20) NOT NULL default '',
             autore varchar(60) NOT NULL default '',
-            data_evento datetime NOT NULL default '0000-00-00 00:00:00',
+            data_evento datetime NOT NULL default CURRENT_TIMESTAMP,
             codice_evento char(20) NOT NULL default '',
             descrizione_evento char(100) NOT NULL default '',
             PRIMARY KEY  (id)
@@ -278,9 +278,9 @@ require 'header.inc.php'; /*Header comune*/
             FULLTEXT KEY Invitati (invitati)
         ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;");
 
-        gdrcd_query("INSERT INTO mappa VALUES (1, 'Strada', 'Via che congiunge la periferia al centro.', 'Nella norma', '', 1, 'standard_luogo.png', '', 1, '', '', 0, 180, 150, '', 0, 'Nessuno', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0);");
+        gdrcd_query("INSERT INTO mappa VALUES (1, 'Strada', 'Via che congiunge la periferia al centro.', 'Nella norma', '', 1, 'standard_luogo.png', '', 1, '', '', 0, 180, 150, '', 0, 'Nessuno', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 0);");
 
-        gdrcd_query("INSERT INTO mappa VALUES (2, 'Piazza', 'Piccola piazza con panchine ed una fontana al centro.', 'Nella norma', '', 1, 'standard_luogo.png', '', 1, '', '', 0, 80, 150, '', 0, 'Nessuno', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0);");
+        gdrcd_query("INSERT INTO mappa VALUES (2, 'Piazza', 'Piccola piazza con panchine ed una fontana al centro.', 'Nella norma', '', 1, 'standard_luogo.png', '', 1, '', '', 0, 80, 150, '', 0, 'Nessuno', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 0);");
 
         gdrcd_query("CREATE TABLE mappa_click (
             id_click int(1) NOT NULL auto_increment,
@@ -343,7 +343,7 @@ require 'header.inc.php'; /*Header comune*/
             tipo int(2) NOT NULL default '0',
             nome varchar(50) NOT NULL default 'Sconosciuto',
             creatore varchar(20) NOT NULL default 'System Op',
-            data_inserimento datetime NOT NULL default '0000-00-00 00:00:00',
+            data_inserimento datetime NOT NULL default CURRENT_TIMESTAMP,
             descrizione varchar(255) NOT NULL default 'Nessuna',
             ubicabile int(2) NOT NULL default '0',
             costo int(11) NOT NULL default '0',

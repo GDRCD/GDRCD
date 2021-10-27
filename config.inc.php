@@ -55,7 +55,6 @@ $PARAMETERS['info']['webmaster_email'] = 'webmaster@gdrhost.it'; //email ufficia
 $PARAMETERS['info']['homepage_name'] = 'Homepage'; //nome con il quale si indica la prima pagina visualizzata
 $PARAMETERS['info']['dbadmin_name'] = 'Admin DB';
 $PARAMETERS['info']['GDRCD'] = '5.6'; //nome del gioco
-$PARAMETERS['mode']['welcome_message_homepage'] = 'ON';//Attiva il messaggio di bevenuto in homepage
 
 /* HELP: I parametri di questa voce compaiono come informazioni sulla homepage. */
 
@@ -67,6 +66,9 @@ $PARAMETERS['languages']['set'] = 'IT-it'; //lingua italiana
 
 
 /* SCELTA DEL TEMA */
+// HOMEPAGE
+$PARAMETERS['themes']['homepage'] = 'advanced'; //tema in uso
+// MAINPAGE
 $PARAMETERS['themes']['current_theme'] = 'advanced'; //tema in uso
 //$PARAMETERS['themes']['current_theme'] = 'medieval';
 
@@ -84,8 +86,7 @@ $PARAMETERS['themes']['current_theme'] = 'advanced'; //tema in uso
  * il tema di default
  */
 $PARAMETERS['themes']['available'] = array(
-    'advanced' => 'Tema Advanced GDRCD',
-    'basic' => 'Tema Base GDRCD',
+    'advanced' => 'Tema "Advanced" GDRCD',
     //'il_mio_tema_preferito' => 'Il mio tema troppo figo'
 );
 
@@ -739,6 +740,12 @@ if (ESITI)
 $PARAMETERS['administration']['skills']['text'] = 'Gestione abilità';
 $PARAMETERS['administration']['skills']['url'] = 'main.php?page=gestione_abilita';
 $PARAMETERS['administration']['skills']['access_level'] = SUPERUSER;
+$PARAMETERS['administration']['skills_extra']['text'] = 'Gestione Dati Extra Abilità';
+$PARAMETERS['administration']['skills_extra']['url'] = 'main.php?page=gestione_abilita_extra';
+$PARAMETERS['administration']['skills_extra']['access_level'] = SUPERUSER;
+$PARAMETERS['administration']['skills_req']['text'] = 'Gestione Requisiti Abilità';
+$PARAMETERS['administration']['skills_req']['url'] = 'main.php?page=gestione_abilita_requisiti';
+$PARAMETERS['administration']['skills_req']['access_level'] = SUPERUSER;
 $PARAMETERS['administration']['plot']['text'] = 'Gestione ambientazione';
 $PARAMETERS['administration']['plot']['url'] = 'main.php?page=gestione_ambientazione';
 $PARAMETERS['administration']['plot']['access_level'] = SUPERUSER;

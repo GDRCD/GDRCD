@@ -6,35 +6,25 @@ if ($_REQUEST['pg'] == $_SESSION['login']) { ?>
     </form>
 <?php } ?>
 
-<div class="fake-table">
-    <div class="tr">
+<div class="fake-table index-table">
+    <div class="tr header">
         <div class="td">
-            <div class="titoli_elenco">
-                <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['diary']['date']); ?>
-            </div>
+            <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['diary']['date']); ?>
         </div>
         <div class="td">
-            <div class="titoli_elenco">
-                <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['diary']['title']); ?>
-            </div>
+            <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['diary']['title']); ?>
         </div>
         <?php
         if ($_REQUEST['pg'] == $_SESSION['login'] || $_SESSION['permessi'] >= MODERATOR) { ?>
             <div class="td">
-                <div class="titoli_elenco">
-                    <?php echo $MESSAGE['interface']['sheet']['diary']['visible']; ?>
-                </div>
+                <?php echo $MESSAGE['interface']['sheet']['diary']['visible']; ?>
             </div>
 
             <div class="td">
-                <div class="titoli_elenco">
-                    <?php echo $MESSAGE['interface']['forums']['link']['edit']; ?>
-                </div>
+                <?php echo $MESSAGE['interface']['forums']['link']['edit']; ?>
             </div>
             <div class="td">
-                <div class="titoli_elenco">
-                    <?php echo $MESSAGE['interface']['forums']['link']['delete']; ?>
-                </div>
+                <?php echo $MESSAGE['interface']['forums']['link']['delete']; ?>
             </div>
         <?php } ?>
     </div>

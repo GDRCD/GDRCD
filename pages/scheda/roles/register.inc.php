@@ -120,7 +120,10 @@ if ($_REQUEST['pg'] == $_SESSION['login']) {
     </div>
     <!-- Link a piè di pagina -->
     <div class="link_back">
-        <a href="main.php?page=scheda_roles&pg=<?php echo gdrcd_filter('in',$_REQUEST['pg']); ?>">Torna alla lista</a>
+        <a href="main.php?page=scheda_roles&pg=<?php echo gdrcd_filter('in',$_REQUEST['pg']); ?>">
+            <?php echo gdrcd_filter('out',
+                $MESSAGE['interface']['sheet']['link']['back_roles']); ?>
+        </a>
     </div>
 <?php
 } else {

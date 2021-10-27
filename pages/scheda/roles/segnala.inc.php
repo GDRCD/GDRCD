@@ -33,7 +33,8 @@ if (SEND_GM) {
         </form>
         <div class="link_back">
             <a href="main.php?page=scheda_roles&pg=<? echo gdrcd_filter('in', $_REQUEST['pg']);?>">
-                Torna indietro
+                <?php echo gdrcd_filter('out',
+                    $MESSAGE['interface']['sheet']['link']['back_roles']); ?>
             </a>
         </div>
     <? }
@@ -50,8 +51,8 @@ if (SEND_GM) {
             Segnalazione inviata con successo
             </div>
             <div class="link_back">
-                <a href="main.php?page=scheda_roles&pg=' . gdrcd_filter('in', $_REQUEST['pg']) . '">
-                    Torna indietro
+                <a href="main.php?page=scheda_roles&pg=' . gdrcd_filter('in', $_REQUEST['pg']) . '">'. gdrcd_filter('out',
+            $MESSAGE['interface']['sheet']['link']['back_roles']).'
                 </a>
             </div>';
     }

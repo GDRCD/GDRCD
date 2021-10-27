@@ -1,12 +1,37 @@
 <?php
 
-# Modifica
-if (($_REQUEST['pg'] == $_SESSION['login']) || ($_SESSION['permessi'] >= GUILDMODERATOR)) { ?>
-    <a href="main.php?page=scheda_modifica&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']); ?>">
-        <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['menu']['update']); ?>
+$pg = gdrcd_filter('out', $_REQUEST['pg']);
+$me = gdrcd_filter('out', $_SESSION['login']);
+$perm = gdrcd_filter('out', $_SESSION['permessi']);
+
+# Se la classe esiste, utilizza il controllo dato dalla classe, altrimenti utilizza quello di default
+if (class_exists('Abilita')) {
+    $abi_class = Abilita::getInstance();
+    $abi_public = $abi_class->AbiVisibility($pg);
+} else {
+    # Se non esiste la costante OR se e' true OR se non e' true: se sono il proprietario del pg OR sono moderatore
+    $abi_public = (!defined('ABI_PUBLIC') || (ABI_PUBLIC) || ($pg == $this->me) || ($this->permessi >= 123));
+}
+
+
+/*Visualizza il link modifica se l'utente visualizza la propria scheda o se è almeno un capogilda*/
+?>
+
+    <!-- ABILITA -->
+<?php if ($abi_public) { ?>
+    <a href="main.php?page=scheda_skill&pg=<?= $pg ?>">
+        <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['menu']['skill']); ?>
     </a>
 <?php } ?>
 
+
+    <!-- Descrizione e Storia separate dalla pagina principale della scheda -->
+    <a href="main.php?page=scheda_descrizione&pg=<?php echo $_SESSION['login']; ?>">
+        <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['menu']['detail']); ?>
+    </a>
+    <a href="main.php?page=scheda_storia&pg=<?php echo $_SESSION['login']; ?>">
+        <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['menu']['background']); ?>
+    </a>
     <!-- TRASFERIMENTI -->
     <a href="main.php?page=scheda_trans&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']); ?>">
         <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['menu']['transictions']); ?>
@@ -53,4 +78,14 @@ if (($_REQUEST['pg'] == $_SESSION['login']) || ($_SESSION['permessi'] >= GUILDMO
     <a href="main.php?page=scheda_gst&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']); ?>">
         <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['menu']['gst']); ?>
     </a>
-<?php }
+    <a href="main.php?page=scheda_log&pg=<?= $pg; ?>">
+        <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['menu']['log']); ?>
+    </a>
+<?php } ?>
+
+    <!-- MODIFICA -->
+<?php if (($_REQUEST['pg'] == $_SESSION['login']) || ($_SESSION['permessi'] >= GUILDMODERATOR)) { ?>
+    <a href="main.php?page=scheda_modifica&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']); ?>">
+        <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['menu']['update']); ?>
+    </a>
+<?php } ?>

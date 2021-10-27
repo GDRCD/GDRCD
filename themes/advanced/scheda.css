@@ -145,6 +145,19 @@ div.elenco_abilita {
 
 div.elenco_abilita table {
     margin: 2px auto 5px auto;
+    text-align: center;
+}
+
+div.elenco_abilita table tr{
+    border: solid black;
+    border-width: 0 0 1px 0;
+    display: block;
+    margin: 5px auto;
+    padding:5px 0;
+}
+
+div.elenco_abilita table tr:first-child{
+    border-width: 1px 0;
 }
 
 div.elenco_abilita td {
@@ -152,12 +165,39 @@ div.elenco_abilita td {
 }
 
 div.abilita_scheda_nome {
-    width: 110px;
+    width: 250px;
     font-size: 12px;
+    background: #222222;
+    border:1px solid black;
+    color:white;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+
+div.abilita_scheda_nome:hover{
+    background: #555555;
+}
+
+div.abilita_scheda_text{
+    width: 100%;
+    background: grey;
+    border:1px solid black;
+    border-radius: 5px;
+    margin: 3px 0;
+    padding: 0 5px;
+    box-sizing: border-box;
+    display: none;
+}
+
+div.abilita_scheda_text .table-subtitle{
+    border-bottom: 1px solid black;
+    width: 90%;
+    margin: 3px auto;
 }
 
 div.abilita_scheda_car {
-    width: 70px;
+    width: 90px;
     font-size: 12px;
 }
 
@@ -167,9 +207,10 @@ div.abilita_scheda_tank {
 }
 
 div.abilita_scheda_sub {
-    width: 35px;
+    width: 80px;
     font-size: 12px;
 }
+
 
 /****************************************************************************/
 
@@ -373,4 +414,64 @@ div.pagina_scheda_oggetti form {
 
 
 /****************************************************************************/
+
+/** DIARIO **/
+
+.pagina_scheda_diario{
+    width: 100%;
+}
+
+.pagina_scheda_diario .fake-table{
+    width: 100%;
+    margin: 20px auto;
+}
+
+.pagina_scheda_diario .fake-table .footer,
+.pagina_scheda_diario .fake-table .header{
+    background: #23272a !important;
+    border-radius: 5px 5px 0 0;
+    color: #ccc !important;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+.pagina_scheda_diario .fake-table.view-table .footer{
+    border-radius: 0 0 5px 5px;
+}
+
+.pagina_scheda_diario .fake-table.view-table .header .td,
+.pagina_scheda_diario .fake-table.view-table .footer .td{
+    width: 49%;
+}
+
+.pagina_scheda_diario .fake-table .td{
+    width: 120px;
+    border-right: 1px solid #4d5259;
+}
+
+.pagina_scheda_diario .fake-table .td button{
+    color: #ccc;
+    text-decoration: none;
+}
+
+.pagina_scheda_diario .fake-table .td button:hover{
+    color: #fff;
+}
+
+.pagina_scheda_diario .fake-table .tr {
+    background: #7289da;
+    margin: 0 auto;
+    width: 650px;
+    color: #23272a;
+    border: solid black;
+    border-width: 0 1px 1px 1px;
+}
+
+.pagina_scheda_diario .fake-table .tr:nth-child(2){
+    border-top:none;
+}
+
+.pagina_scheda_diario .fake-table .td:last-child{
+    border-right: none;
+}
 

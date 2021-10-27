@@ -63,11 +63,14 @@
                  */
                 $modifica_affetti = gdrcd_filter('in', $_POST['modifica_affetti']);
                 $modifica_background = gdrcd_filter('in', $_POST['modifica_background']);
+                $modifica_storia = gdrcd_filter('in', $_POST['modifica_storia']);
+
 
                 if ($PARAMETERS['mode']['user_bbcode'] == 'OFF' || ($PARAMETERS['mode']['user_bbcode'] == 'ON' && $PARAMETERS['settings']['forum_bbcode']['type'] == 'bbd' && $PARAMETERS['settings']['bbd']['free_html'] == 'ON'))
                 {
                     $modifica_affetti = gdrcd_filter('addslashes', $_POST['modifica_affetti']);
                     $modifica_background = gdrcd_filter('addslashes', $_POST['modifica_background']);
+                    $modifica_storia = gdrcd_filter('addslashes', $_POST['modifica_storia']);
                 }
 
                 /** * Online status allowed ?
@@ -82,7 +85,7 @@
 
 
                 gdrcd_query("UPDATE personaggio SET cognome = '" . gdrcd_filter('in',
-                        $_POST['modifica_cognome']) . "', affetti = '" . $modifica_affetti . "', descrizione = '" . $modifica_background . "', url_media = '" . gdrcd_filter('in',
+                        $_POST['modifica_cognome']) . "', storia = '" . $modifica_storia . "',  affetti = '" . $modifica_affetti . "', descrizione = '" . $modifica_background . "', url_media = '" . gdrcd_filter('in',
                         gdrcd_filter('fullurl',
                             $_POST['modifica_url_media'])) . "', blocca_media = " . (int) $blocca_media . ", url_img = '" . gdrcd_filter('in',
                         gdrcd_filter('fullurl',
@@ -131,7 +134,7 @@
         } else
         {
             /*Carico le informazioni del PG*/
-            $record = gdrcd_query("SELECT descrizione, affetti, cognome, online_status, url_img, url_img_chat, url_media, blocca_media, stato, salute FROM personaggio WHERE nome='" . gdrcd_filter('get',
+            $record = gdrcd_query("SELECT descrizione, storia, affetti, cognome, online_status, url_img, url_img_chat, url_media, blocca_media, stato, salute FROM personaggio WHERE nome='" . gdrcd_filter('get',
                     $_REQUEST['pg']) . "'");
         }
 
@@ -213,12 +216,24 @@
 
                             <div class='form_label'>
                                 <?php echo gdrcd_filter('out',
-                                    $MESSAGE['interface']['sheet']['modify_form']['background']); ?>
+                                    $MESSAGE['interface']['sheet']['menu']['description']); ?>
                             </div>
                             <div class='form_field'>
                                 <textarea type="textbox" name="modifica_background"
                                           class="form_textarea"><?php echo gdrcd_filter('out',
                                         $record['descrizione']); ?></textarea>
+                            </div>
+                            <div class="form_info">
+                                <?php echo gdrcd_filter('out', $MESSAGE['interface']['help']['bbcode']); ?>
+                            </div>
+                            <div class='form_label'>
+                                <?php echo gdrcd_filter('out',
+                                    $MESSAGE['interface']['sheet']['modify_form']['background']); ?>
+                            </div>
+                            <div class='form_field'>
+                                <textarea type="textbox" name="modifica_storia"
+                                          class="form_textarea"><?php echo gdrcd_filter('out',
+                                        $record['storia']); ?></textarea>
                             </div>
                             <div class="form_info">
                                 <?php echo gdrcd_filter('out', $MESSAGE['interface']['help']['bbcode']); ?>

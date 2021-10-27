@@ -201,4 +201,3 @@ if($_SESSION['login'] != '') {
 </html>
 <?php
 gdrcd_close_connection($handleDBConnection);
-?>
