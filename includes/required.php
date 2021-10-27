@@ -16,9 +16,9 @@ if(file_exists(dirname(__FILE__).'/../core/db_overrides.php')){
 }
 
 # Inizializzo le classi fondamentali
-require_once(dirname(__FILE__) . '/../classes/Base.class.php');
-require_once(dirname(__FILE__).'/../classes/Routing.class.php');
-require_once(dirname(__FILE__) . '/../classes/DB.class.php');
+require_once(dirname(__FILE__) . '/../classes/Libraries/Base.class.php');
+require_once(dirname(__FILE__) . '/../classes/Libraries/Routing.class.php');
+require_once(dirname(__FILE__) . '/../classes/Libraries/DB.class.php');
 
 # Creo la connessione
 $handleDBConnection = DB::connect();
