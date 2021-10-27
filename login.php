@@ -55,7 +55,7 @@ $record = gdrcd_query("SELECT personaggio.pass, personaggio.nome, personaggio.co
  * @author Blancks
  */
 if( ! empty($record) and gdrcd_password_check($pass1, $record['pass']) && ($record['permessi'] > -1) && (strtotime($record['ora_entrata']) < strtotime($record['ora_uscita']) || (strtotime($record['ultimo_refresh']) + 300) < time())) {
-    $_SESSION['login'] = gdrcd_filter_in($record['nome']);
+    $_SESSION['login'] = Filters::in($record['nome']);
     $_SESSION['cognome'] = $record['cognome'];
     $_SESSION['permessi'] = $record['permessi'];
     $_SESSION['sesso'] = $record['sesso'];

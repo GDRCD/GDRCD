@@ -85,7 +85,7 @@ if(($PARAMETERS['mode']['user_bbcode'] == 'ON' && $PARAMETERS['settings']['user_
  * @author Blancks
  */
 if((($table == 0) && isset($dont_check) && ! $dont_check) && isset($check_for_update) && $check_for_update) {
-    echo '<div class="error">', $MESSAGE['error']['db_empty'], '</div>', '<div class="link_back"><a href="installer.php">', gdrcd_filter_out($MESSAGE['installer']['instal']), '</a></div>', '</body></html>';
+    echo '<div class="error">', $MESSAGE['error']['db_empty'], '</div>', '<div class="link_back"><a href="installer.php">', Filters::out($MESSAGE['installer']['instal']), '</a></div>', '</body></html>';
     exit();
 
 } elseif((isset($updating_queryes[0]) && ! empty($updating_queryes[0]) && ! $dont_check) && isset($check_for_update) && $check_for_update) {
@@ -95,7 +95,7 @@ if((($table == 0) && isset($dont_check) && ! $dont_check) && isset($check_for_up
         echo '<div class="error">', $MESSAGE['warning']['pass_not_encripted'], '</div>';
     }
 
-    echo '<div class="link_back"><a href="upgrade.php">', gdrcd_filter_out($MESSAGE['homepage']['updater']['update']), '</a></div>', '</body></html>';
+    echo '<div class="link_back"><a href="upgrade.php">', Filters::out($MESSAGE['homepage']['updater']['update']), '</a></div>', '</body></html>';
 
     exit();
 }

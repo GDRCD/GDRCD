@@ -9,7 +9,7 @@ if(!empty($_SESSION['theme']) and array_key_exists($_SESSION['theme'], $PARAMETE
 }
 
 //Ricevo il tempo di reload
-$i_ref_time = gdrcd_filter_get($_GET['ref']);
+$i_ref_time = Filters::get($_GET['ref']);
 
 // Nel caso in cui sia presente il controllo sui nuovi messaggi ottenuti, prevedo le operazioni
 if($PARAMETERS['mode']['check_forum'] === 'ON') {

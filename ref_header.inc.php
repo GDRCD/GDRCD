@@ -12,9 +12,9 @@ if(!empty($_SESSION['theme']) and array_key_exists($_SESSION['theme'], $PARAMETE
 //Eseguo la connessione al database
 $handleDBConnection = gdrcd_connect();
 //Ricevo il tempo di reload
-$i_ref_time = gdrcd_filter_get($_GET['ref']);
+$i_ref_time = Filters::get($_GET['ref']);
 
-if((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) === false)) {
+if((Filters::get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) === false)) {
     /*Aggiornamento chat*/
     /*Se ho inviato un azione*/
     if((gdrcd_filter('get', $_POST['op']) == 'take_action') && (($PARAMETERS['mode']['skillsystem'] == 'ON') || ($PARAMETERS['mode']['dices'] == 'ON'))) {
@@ -127,7 +127,7 @@ if((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) 
         if($PARAMETERS['mode']['exp_by_chat'] == 'ON') {
             $msg_length = strlen($chat_message);
             $char_needed = gdrcd_filter('num', $PARAMETERS['settings']['exp_by_chat']['number']);
-            $exp_bonus = ($PARAMETERS['settings']['exp_by_chat']['value'] = '0') ? $msg_length / $char_needed : gdrcd_filter_num($PARAMETERS['settings']['exp_by_chat']['value']);
+            $exp_bonus = ($PARAMETERS['settings']['exp_by_chat']['value'] = '0') ? $msg_length / $char_needed : Filters::int($PARAMETERS['settings']['exp_by_chat']['value']);
         }
 
         if($type < "5") {
@@ -374,7 +374,7 @@ if((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) 
     }
     gdrcd_query($query, 'free');
     $_SESSION['last_message'] = $last_message;
-}// Fine (gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) === false)
+}// Fine (Filters::get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) === false)
 /******************************************************************************************/
 ?>
 <!DOCTYPE html>

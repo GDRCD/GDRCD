@@ -11,7 +11,7 @@ $email = $row['email'];
     <div class="page_body">
         <?php /*Cancella il tuo account*/
         if($_POST['op'] == 'delete') {
-            if(($email == gdrcd_filter_email($_POST['email'])) && (gdrcd_check_pass($_POST['new_pass']) === true)) {
+            if(($email == Filters::email($_POST['email'])) && (gdrcd_check_pass($_POST['new_pass']) === true)) {
                 gdrcd_query("UPDATE personaggio SET permessi = -1 WHERE nome = '".$_SESSION['login']."' AND pass = '".gdrcd_encript($_POST['new_pass'])."'");
                 gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".$_SESSION['login']."','".$_SESSION['login']."', NOW(), ".DELETEPG." ,'".gdrcd_filter('in', $MESSAGE['interface']['user']['delete']['undeleted'])."')");
                 ?>

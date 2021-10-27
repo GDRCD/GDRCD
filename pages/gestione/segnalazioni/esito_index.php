@@ -3,7 +3,7 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
     /*
     * Richieste POST
     */
-    switch (gdrcd_filter_get($_POST['op'])) {
+    switch (Filters::get($_POST['op'])) {
         case 'modify': //Modifica blocco esiti
             include('new_esito/modify.php');
             break;
@@ -17,7 +17,7 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
     /*
     * Richieste GET
     */
-    switch (gdrcd_filter_get($_GET['op'])) {
+    switch (Filters::get($_GET['op'])) {
         case 'new': //Invia nuovo esito
             include('new_esito/new.php');
             break;

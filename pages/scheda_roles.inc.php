@@ -11,7 +11,7 @@
         /*
          * Richieste POST
          */
-        switch(gdrcd_filter_get($_POST['op'])) {
+        switch(Filters::get($_POST['op'])) {
             case 'search': //Ricerca role fra quelle registrate
                 include ('scheda/roles/search.inc.php');
                 break;

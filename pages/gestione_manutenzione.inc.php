@@ -16,7 +16,7 @@
             /*
              * Richieste POST
              */
-            switch(gdrcd_filter_get($_POST['op'])) {
+            switch(Filters::get($_POST['op'])) {
                 case 'blacklisted': //Elimina blacklist
                     include ('gestione/manutenzione/blacklisted.inc.php');
                     break;

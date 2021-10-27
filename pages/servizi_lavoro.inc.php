@@ -111,7 +111,7 @@ gdrcd_query($result, 'free');
 
             echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['interface']['job']['ok_job']).'</div>';
 
-            gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES ('".$_SESSION['login']."', '".$_SESSION['login']."', NOW(), ".NUOVOLAVORO.", '".gdrcd_filter_in($_POST['nome_lavoro'])."')");
+            gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES ('".$_SESSION['login']."', '".$_SESSION['login']."', NOW(), ".NUOVOLAVORO.", '".Filters::in($_POST['nome_lavoro'])."')");
             ?>
             <div class="link_back">
                 <a href="main.php?page=servizi_lavoro"><?php echo gdrcd_filter('out', $MESSAGE['interface']['job']['back']); ?></a>

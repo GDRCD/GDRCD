@@ -289,48 +289,6 @@ function gdrcd_check_pass($str)
     return true;
 }
 
-/**
- * Funzioni di alias per gdrcd_filter()
- */
-function gdrcd_filter_in($str)
-{
-    return gdrcd_filter('in', $str);
-}
-
-function gdrcd_filter_out($str)
-{
-    return gdrcd_filter('out', $str);
-}
-
-function gdrcd_filter_get($str)
-{
-    return gdrcd_filter('get', $str);
-}
-
-function gdrcd_filter_num($str)
-{
-    return gdrcd_filter('num', $str);
-}
-
-function gdrcd_filter_addslashes($str)
-{
-    return gdrcd_filter('addslashes', $str);
-}
-
-function gdrcd_filter_email($str)
-{
-    return gdrcd_filter('email', $str);
-}
-
-function gdrcd_filter_includes($str)
-{
-    return gdrcd_filter('includes', $str);
-}
-
-function gdrcd_filter_url($str)
-{
-    return gdrcd_filter('url', $str);
-}
 
 /**
  * Funzione basilare di filtraggio degli elementi pericolosi in html
@@ -339,26 +297,7 @@ function gdrcd_filter_url($str)
  * @param string $str : la stringa da filtrare
  * @return $str con gli elementi illegali sosituiti con una stringa di errore
  */
-function gdrcd_html_filter($str)
-{
-    $notAllowed = [
-        "#(<script.*?>.*?(<\/script>)?)#is" => "Script non consentiti",
-        "#(<iframe.*?\/?>.*?(<\/iframe>)?)#is" => "Frame non consentiti",
-        "#(<object.*?>.*?(<\/object>)?)#is" => "Contenuti multimediali non consentiti",
-        "#(<embed.*?\/?>.*?(<\/embed>)?)#is" => "Contenuti multimediali non consentiti",
-        "#([o,O][N,n](.*?)=(.*?)\"?'?[^\s\"']+'?\"?)#is" => " ",
-        "#(javascript:[^\s\"']+)#is" => ""
-    ];
 
-    if ($GLOBALS['PARAMETERS']['settings']['html'] == HTML_FILTER_HIGH) {
-        $notAllowed = array_merge($notAllowed, [
-            "#(<img.*?\/?>)#is" => "Immagini non consentite",
-            "#(url\(.*?\))#is" => "none",
-        ]);
-    }
-
-    return preg_replace(array_keys($notAllowed), array_values($notAllowed), $str);
-}
 
 /**
  * Controlli di routine di gdrcd sui personaggi
@@ -386,7 +325,7 @@ function gdrcd_controllo_esilio($pg)
     $exiled = gdrcd_query("SELECT autore_esilio, esilio, motivo_esilio FROM personaggio WHERE nome='" . gdrcd_filter('in', $pg) . "' LIMIT 1");
 
     if (strtotime($exiled['esilio']) > time()) {
-        echo '<div class="error">', gdrcd_filter_out($pg), ' ', gdrcd_filter_out($GLOBALS['MESSAGE']['warning']['character_exiled']), ' ', gdrcd_format_date($exiled['esilio']), ' (', $exiled['motivo_esilio'], ' - ', $exiled['autore_esilio'], ')</div>';
+        echo '<div class="error">', Filters::out($pg), ' ', Filters::out($GLOBALS['MESSAGE']['warning']['character_exiled']), ' ', gdrcd_format_date($exiled['esilio']), ' (', $exiled['motivo_esilio'], ' - ', $exiled['autore_esilio'], ')</div>';
 
         return true;
     }
@@ -576,7 +515,7 @@ function gdrcd_capital_letter($word)
 
 function gdrcd_safe_name($word)
 {
-    return trim(gdrcd_capital_letter(gdrcd_filter_in($word)));
+    return trim(gdrcd_capital_letter(Filters::in($word)));
 }
 
 /**
@@ -827,49 +766,5 @@ function get_constant(string $name)
  */
 function gdrcd_filter($type, $val)
 {
-    return Functions::getInstance()->gdrcd_filter($type, $val);
-}
-
-/**
- * @fn f_out
- * @note Helper per filtro di tipo out
- * @param mixed $val
- * @return string
- */
-function f_out($val): string
-{
-    return Functions::getInstance()->gdrcd_filter('out', $val);
-}
-
-/**
- * @fn f_in
- * @note Helper per filtro di tipo in
- * @param mixed $val
- * @return string
- */
-function f_in($val): string
-{
-    return Functions::getInstance()->gdrcd_filter('in', $val);
-}
-
-/**
- * @fn f_int
- * @note Helper per filtro di tipo int
- * @param mixed $val
- * @return int
- */
-function f_int($val): int
-{
-    return Functions::getInstance()->gdrcd_filter('int', $val);
-}
-
-/**
- * @fn f_url
- * @note Helper per filtro di tipo url
- * @param mixed $val
- * @return string
- */
-function f_url($val):string
-{
-    return Functions::getInstance()->gdrcd_filter('url', $val);
+    return Filters::gdrcd_filter($type, $val);
 }
