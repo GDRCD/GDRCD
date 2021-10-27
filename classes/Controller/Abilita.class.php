@@ -42,7 +42,7 @@ class Abilita extends BaseClass
         # I dati abilita' extra sono attivi?
         $this->abi_extra = Functions::get_constant('ABI_EXTRA');
     }
-
+  
     /**** CONTROLS ****/
 
     /**
@@ -119,6 +119,7 @@ class Abilita extends BaseClass
 
                         $contr = DB::query("SELECT car{$rif} FROM personaggio WHERE nome='{$pg}' LIMIT 1");
                         $stat = Filters::int($contr['car' . $rif]);
+
 
                         if ($stat < $rif_lvl) {
                             $esito = false;
@@ -309,7 +310,6 @@ class Abilita extends BaseClass
                 # Estraggo i dati dell'abilita
                 $grado = Filters::int($row_pg['grado']);
                 $abi_id = Filters::int($row_pg['id_abilita']);
-
                 # Per ogni livello dell'abilita
                 while ($count <= $grado) {
 
@@ -422,7 +422,7 @@ class Abilita extends BaseClass
 
             # Li estraggo
             $requisiti =  DB::query("SELECT abilita_requisiti.* FROM abilita_requisiti WHERE abilita='{$abi}' AND grado='{$new_grado}' ORDER BY tipo DESC", 'result');
-
+            
             # Per ogni requisito
             foreach ($requisiti as $requisito) {
 
@@ -483,7 +483,6 @@ class Abilita extends BaseClass
      */
     public function upgradeskill(int $abi, string $pg): array
     {
-
         $abi = Filters::int($abi);
         $pg = Filters::in($pg);
         $abi_pg = $this->AbilitaPg($pg, $abi);
@@ -551,7 +550,6 @@ class Abilita extends BaseClass
      */
     public function downgradeSkill(int $abi, string $pg): array
     {
-
         $abi = Filters::int($abi);
         $pg = Filters::in($pg);
 
@@ -626,7 +624,6 @@ class Abilita extends BaseClass
     {
 
         if ($this->AbiExtraManagePermission()) {
-
             $abi = Filters::int($post['abi']);
             $grado = Filters::int($post['grado']);
             $descr = Filters::in($post['descr']);
@@ -653,8 +650,8 @@ class Abilita extends BaseClass
     public function ModAbiExtra(array $post): bool
     {
 
-        if ($this->AbiExtraManagePermission()) {
-
+        if ($this->AbiExtraManagePermission())
+        {
             $abi = Filters::int($post['abi']);
             $grado = Filters::int($post['grado']);
             $descr = Filters::in($post['descr']);
@@ -677,8 +674,8 @@ class Abilita extends BaseClass
     public function DelAbiExtra(array $post): bool
     {
 
-        if ($this->AbiExtraManagePermission()) {
-
+        if ($this->AbiExtraManagePermission()) 
+        {
             $abi = Filters::int($post['abi']);
             $grado = Filters::int($post['grado']);
 
@@ -709,8 +706,8 @@ class Abilita extends BaseClass
 
 
         $html .= '<optgroup label="Abilita">';
-        foreach ($abi_req_abi as $new) {
-
+        foreach ($abi_req_abi as $new) 
+        {
             $id = Filters::int($new['id']);
 
             $id_riferimento = Filters::int($new['id_riferimento']);
@@ -732,8 +729,8 @@ class Abilita extends BaseClass
             WHERE tipo=2 ORDER BY abilita.nome", 'result');
 
         $html .= '<optgroup label="Caratteristiche">';
-        foreach ($abi_req_stat as $new) {
-
+        foreach ($abi_req_stat as $new)
+        {
             $id = Filters::int($new['id']);
 
             $id_riferimento = Filters::int($new['id_riferimento']);
@@ -760,7 +757,8 @@ class Abilita extends BaseClass
     public function DatiAbiRequisito(array $post)
     {
 
-        if ($_SESSION['permessi'] >= GAMEMASTER) {
+        if ($_SESSION['permessi'] >= GAMEMASTER) 
+        {
             $id = Filters::int($post['id']);
 
             $data =  DB::query("SELECT * FROM abilita_requisiti WHERE id='{$id}' LIMIT 1");
@@ -789,8 +787,8 @@ class Abilita extends BaseClass
     public function NewAbiRequisito(array $post): bool
     {
 
-        if ($_SESSION['permessi'] >= GAMEMASTER) {
-
+        if ($_SESSION['permessi'] >= GAMEMASTER) 
+        {
             $abi = Filters::int($post['abi']);
             $grado = Filters::int($post['grado']);
             $tipo = Filters::int($post['tipo']);
@@ -814,8 +812,8 @@ class Abilita extends BaseClass
     public function ModAbiRequisito(array $post): bool
     {
 
-        if ($_SESSION['permessi'] >= GAMEMASTER) {
-
+        if ($_SESSION['permessi'] >= GAMEMASTER) 
+        {
             $id = Filters::int($post['req_id']);
             $abi = Filters::int($post['abi']);
             $grado = Filters::int($post['grado']);
@@ -841,9 +839,11 @@ class Abilita extends BaseClass
     {
 
         if ($_SESSION['permessi'] >= GAMEMASTER) {
+
             $id = Filters::int($post['req_id']);
 
              DB::query("DELETE FROM abilita_requisiti WHERE id='{$id}' LIMIT 1");
+
 
             return true;
         } else {
