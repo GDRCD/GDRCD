@@ -328,17 +328,16 @@ INSERT INTO `codtipooggetto` (`cod_tipo`, `descrizione`) VALUES
 --
 -- Struttura della tabella `config`
 --
-
 CREATE TABLE IF NOT EXISTS `config` (
- `id` int NOT NULL AUTO_INCREMENT,
- `const_name` varchar(255) NOT NULL,
- `val` varchar(255) NOT NULL,
- `label` varchar(255) DEFAULT NULL,
- `section` varchar(255) NOT NULL,
- `description` text DEFAULT NULL,
- `type` varchar(255) DEFAULT 'String',
- `editable` tinyint(1) DEFAULT 1,
- PRIMARY KEY (`id`)
+  `id` int NOT NULL AUTO_INCREMENT,
+  `const_name` varchar(255) NOT NULL,
+  `val` varchar(255) NOT NULL,
+  `label` varchar(255) DEFAULT NULL,
+  `section` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `type` varchar(255) DEFAULT 'String',
+  `editable` tinyint(1) DEFAULT 1,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 
