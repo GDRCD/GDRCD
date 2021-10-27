@@ -22,22 +22,22 @@ class Abilita extends BaseClass
         parent::__construct();
 
         # Le abilita sono pubbliche?
-        $this->abi_public= Functions::get_constant('ABI_PUBLIC');
+        $this->abi_public = Functions::get_constant('ABI_PUBLIC');
 
         # Livello massimo abilita
-        $this->abi_level_cap= Functions::get_constant('ABI_LEVEL_CAP');
+        $this->abi_level_cap = Functions::get_constant('ABI_LEVEL_CAP');
 
         # Default moltiplicatore livello, se costo non specificato in abi_extra
-        $this->default_px_lvl= Functions::get_constant('DEFAULT_PX_PER_LVL');
+        $this->default_px_lvl = Functions::get_constant('DEFAULT_PX_PER_LVL');
 
         # I requisiti abilita' sono attivi?
-        $this->abi_requirement= Functions::get_constant('ABI_REQUIREMENT');
+        $this->abi_requirement = Functions::get_constant('ABI_REQUIREMENT');
 
         # Requisito di tipo abilita
-        $this->requisito_abi= Functions::get_constant('REQUISITO_ABI');
+        $this->requisito_abi = Functions::get_constant('REQUISITO_ABI');
 
         # Requisito di tipo statistica
-        $this->requisito_stat= Functions::get_constant('REQUISITO_STAT');
+        $this->requisito_stat = Functions::get_constant('REQUISITO_STAT');
 
         # I dati abilita' extra sono attivi?
         $this->abi_extra = Functions::get_constant('ABI_EXTRA');
@@ -116,7 +116,6 @@ class Abilita extends BaseClass
 
                         break;
                     case $this->requisito_stat:
-
                         $contr = DB::query("SELECT car{$rif} FROM personaggio WHERE nome='{$pg}' LIMIT 1");
                         $stat = Filters::int($contr['car' . $rif]);
 
@@ -217,7 +216,7 @@ class Abilita extends BaseClass
             '(abilita.id_razza = -1 OR abilita.id_razza = personaggio.id_razza)' :
             '1';
 
-        return  DB::query("SELECT abilita.* {$extraVal} FROM abilita {$left} WHERE {$where} ORDER BY abilita.nome", 'result');
+        return DB::query("SELECT abilita.* {$extraVal} FROM abilita {$left} WHERE {$where} ORDER BY abilita.nome", 'result');
     }
 
     /**
@@ -229,8 +228,8 @@ class Abilita extends BaseClass
      */
     public function abiExtra(int $abi, int $grado)
     {
-        $abi = Filters::int( $abi);
-        $grado = Filters::int( $grado);
+        $abi = Filters::int($abi);
+        $grado = Filters::int($grado);
         return DB::query("SELECT * FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
     }
 
@@ -240,7 +239,7 @@ class Abilita extends BaseClass
      * @param int $grado
      * @return int
      */
-    public function defaultCalcUp(int $grado):int
+    public function defaultCalcUp(int $grado): int
     {
         return round(Filters::int($grado) * $this->default_px_lvl);
     }
@@ -389,7 +388,7 @@ class Abilita extends BaseClass
         if ($this->extraActive()) {
 
             # Estraggo la descrizione extra attuale
-            $actual_descr =  DB::query("SELECT descrizione FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
+            $actual_descr = DB::query("SELECT descrizione FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
 
             # Se esiste la descrizione extra, la aggiungo
             if (!empty($actual_descr['descrizione'])) {
@@ -400,7 +399,7 @@ class Abilita extends BaseClass
             if ($new_grado > 0) {
 
                 # Estraggo la descrizione del livello successivo
-                $next_descr =  DB::query("SELECT descrizione,costo FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$new_grado}' LIMIT 1");
+                $next_descr = DB::query("SELECT descrizione,costo FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$new_grado}' LIMIT 1");
                 $costo = Filters::int($next_descr['costo']);
 
                 # Se esiste la descrizione extra del successivo, la aggiungo
@@ -421,7 +420,7 @@ class Abilita extends BaseClass
         if ($this->requirementActive()) {
 
             # Li estraggo
-            $requisiti =  DB::query("SELECT abilita_requisiti.* FROM abilita_requisiti WHERE abilita='{$abi}' AND grado='{$new_grado}' ORDER BY tipo DESC", 'result');
+            $requisiti = DB::query("SELECT abilita_requisiti.* FROM abilita_requisiti WHERE abilita='{$abi}' AND grado='{$new_grado}' ORDER BY tipo DESC", 'result');
 
             # Per ogni requisito
             foreach ($requisiti as $requisito) {
@@ -434,7 +433,7 @@ class Abilita extends BaseClass
                 # Compongo l'html in base al tipo
                 switch ($tipo) {
                     case $this->requisito_abi:
-                        $req_data =  DB::query("SELECT nome FROM abilita WHERE id_abilita='{$rif}' LIMIT 1");
+                        $req_data = DB::query("SELECT nome FROM abilita WHERE id_abilita='{$rif}' LIMIT 1");
                         $nome = Filters::out($req_data['nome']);
 
                         $data['requirement'] .= " {$nome} {$rif_lvl}, ";
@@ -483,7 +482,6 @@ class Abilita extends BaseClass
      */
     public function upgradeskill(int $abi, string $pg): array
     {
-
         $abi = Filters::int($abi);
         $pg = Filters::in($pg);
         $abi_pg = $this->AbilitaPg($pg, $abi);
@@ -513,9 +511,9 @@ class Abilita extends BaseClass
                 if ($exp_remained >= $costo) {
 
                     if ($grado == 0) {
-                         DB::query("INSERT INTO clgpersonaggioabilita(nome,id_abilita,grado) VALUES('{$pg}','{$abi}','{$new_grado}')");
+                        DB::query("INSERT INTO clgpersonaggioabilita(nome,id_abilita,grado) VALUES('{$pg}','{$abi}','{$new_grado}')");
                     } else {
-                         DB::query("UPDATE clgpersonaggioabilita SET grado='{$new_grado}' WHERE nome='{$pg}' AND id_abilita='{$abi}' LIMIT 1");
+                        DB::query("UPDATE clgpersonaggioabilita SET grado='{$new_grado}' WHERE nome='{$pg}' AND id_abilita='{$abi}' LIMIT 1");
                     }
 
                     return ['response' => true, 'mex' => 'UpOk'];
@@ -551,7 +549,6 @@ class Abilita extends BaseClass
      */
     public function downgradeSkill(int $abi, string $pg): array
     {
-
         $abi = Filters::int($abi);
         $pg = Filters::in($pg);
 
@@ -563,9 +560,9 @@ class Abilita extends BaseClass
             $new_grado = ($grado - 1);
 
             if ($new_grado == 0) {
-                 DB::query("DELETE FROM clgpersonaggioabilita WHERE nome='{$pg}' AND id_abilita='{$abi}' LIMIT 1");
+                DB::query("DELETE FROM clgpersonaggioabilita WHERE nome='{$pg}' AND id_abilita='{$abi}' LIMIT 1");
             } else {
-                 DB::query("UPDATE clgpersonaggioabilita SET grado='{$new_grado}' WHERE nome='{$pg}' AND id_abilita='{$abi}' LIMIT 1");
+                DB::query("UPDATE clgpersonaggioabilita SET grado='{$new_grado}' WHERE nome='{$pg}' AND id_abilita='{$abi}' LIMIT 1");
             }
 
             return ['response' => true, 'mex' => 'downOk'];
@@ -600,7 +597,7 @@ class Abilita extends BaseClass
             $abi = Filters::int($post['abi']);
             $grado = Filters::int($post['grado']);
 
-            $data =  DB::query("SELECT * FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
+            $data = DB::query("SELECT * FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
 
             if (!empty($data['abilita'])) {
                 $descr = Filters::in($data['descrizione']);
@@ -626,16 +623,15 @@ class Abilita extends BaseClass
     {
 
         if ($this->AbiExtraManagePermission()) {
-
             $abi = Filters::int($post['abi']);
             $grado = Filters::int($post['grado']);
             $descr = Filters::in($post['descr']);
             $costo = Filters::int($post['costo']);
 
-            $contr =  DB::query("SELECT count(id) as TOT FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
+            $contr = DB::query("SELECT count(id) as TOT FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
 
             if ($contr['TOT'] == 0) {
-                 DB::query("INSERT INTO abilita_extra(abilita,grado,descrizione,costo) VALUES('{$abi}','{$grado}','{$descr}','{$costo}')");
+                DB::query("INSERT INTO abilita_extra(abilita,grado,descrizione,costo) VALUES('{$abi}','{$grado}','{$descr}','{$costo}')");
             }
 
             return true;
@@ -654,13 +650,12 @@ class Abilita extends BaseClass
     {
 
         if ($this->AbiExtraManagePermission()) {
-
             $abi = Filters::int($post['abi']);
             $grado = Filters::int($post['grado']);
             $descr = Filters::in($post['descr']);
             $costo = Filters::int($post['costo']);
 
-             DB::query("UPDATE abilita_extra SET abilita='{$abi}',grado='{$grado}',descrizione='{$descr}',costo='{$costo}' WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
+            DB::query("UPDATE abilita_extra SET abilita='{$abi}',grado='{$grado}',descrizione='{$descr}',costo='{$costo}' WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
 
             return true;
         } else {
@@ -678,11 +673,10 @@ class Abilita extends BaseClass
     {
 
         if ($this->AbiExtraManagePermission()) {
-
             $abi = Filters::int($post['abi']);
             $grado = Filters::int($post['grado']);
 
-             DB::query("DELETE FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
+            DB::query("DELETE FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
 
             return true;
         } else {
@@ -702,7 +696,7 @@ class Abilita extends BaseClass
     {
         global $PARAMETERS;
         $html = '';
-        $abi_req_abi =  DB::query("
+        $abi_req_abi = DB::query("
             SELECT abilita_requisiti.*,abilita.nome FROM abilita_requisiti 
                 LEFT JOIN abilita ON (abilita.id_abilita = abilita_requisiti.abilita) 
             WHERE tipo=1 ORDER BY abilita.nome", 'result');
@@ -710,15 +704,13 @@ class Abilita extends BaseClass
 
         $html .= '<optgroup label="Abilita">';
         foreach ($abi_req_abi as $new) {
-
             $id = Filters::int($new['id']);
-
             $id_riferimento = Filters::int($new['id_riferimento']);
             $lvl_rif = Filters::int($new['liv_riferimento']);
             $grado = Filters::int($new['grado']);
             $nome_abi = Filters::out($new['nome']);
 
-            $dati_rif =  DB::query("SELECT nome FROM abilita WHERE id_abilita='{$id_riferimento}' LIMIT 1");
+            $dati_rif = DB::query("SELECT nome FROM abilita WHERE id_abilita='{$id_riferimento}' LIMIT 1");
 
             $nome_riferimento = Filters::out($dati_rif['nome']);
 
@@ -726,14 +718,14 @@ class Abilita extends BaseClass
         }
         $html .= "</optgroup>";
 
-        $abi_req_stat =  DB::query("
+        $abi_req_stat = DB::query("
             SELECT abilita_requisiti.*,abilita.nome FROM abilita_requisiti 
             LEFT JOIN abilita ON (abilita.id_abilita = abilita_requisiti.abilita) 
             WHERE tipo=2 ORDER BY abilita.nome", 'result');
 
         $html .= '<optgroup label="Caratteristiche">';
-        foreach ($abi_req_stat as $new) {
 
+        foreach ($abi_req_stat as $new) {
             $id = Filters::int($new['id']);
 
             $id_riferimento = Filters::int($new['id_riferimento']);
@@ -763,7 +755,7 @@ class Abilita extends BaseClass
         if ($_SESSION['permessi'] >= GAMEMASTER) {
             $id = Filters::int($post['id']);
 
-            $data =  DB::query("SELECT * FROM abilita_requisiti WHERE id='{$id}' LIMIT 1");
+            $data = DB::query("SELECT * FROM abilita_requisiti WHERE id='{$id}' LIMIT 1");
 
             if (!empty($data['abilita'])) {
                 $abi = Filters::int($data['abilita']);
@@ -788,16 +780,14 @@ class Abilita extends BaseClass
      */
     public function NewAbiRequisito(array $post): bool
     {
-
         if ($_SESSION['permessi'] >= GAMEMASTER) {
-
             $abi = Filters::int($post['abi']);
             $grado = Filters::int($post['grado']);
             $tipo = Filters::int($post['tipo']);
             $id_rif = Filters::int($post['id_req']);
             $lvl_rif = Filters::int($post['liv_req']);
 
-             DB::query("INSERT INTO abilita_requisiti(abilita,grado,tipo,id_riferimento,liv_riferimento) VALUES('{$abi}','{$grado}','{$tipo}','{$id_rif}','{$lvl_rif}')");
+            DB::query("INSERT INTO abilita_requisiti(abilita,grado,tipo,id_riferimento,liv_riferimento) VALUES('{$abi}','{$grado}','{$tipo}','{$id_rif}','{$lvl_rif}')");
 
             return true;
         } else {
@@ -815,7 +805,6 @@ class Abilita extends BaseClass
     {
 
         if ($_SESSION['permessi'] >= GAMEMASTER) {
-
             $id = Filters::int($post['req_id']);
             $abi = Filters::int($post['abi']);
             $grado = Filters::int($post['grado']);
@@ -823,7 +812,7 @@ class Abilita extends BaseClass
             $id_rif = Filters::int($post['id_req']);
             $lvl_rif = Filters::int($post['liv_req']);
 
-             DB::query("UPDATE abilita_requisiti SET abilita='{$abi}',grado='{$grado}',tipo='{$tipo}',id_riferimento='{$id_rif}',liv_riferimento='{$lvl_rif}' WHERE id='{$id}' LIMIT 1");
+            DB::query("UPDATE abilita_requisiti SET abilita='{$abi}',grado='{$grado}',tipo='{$tipo}',id_riferimento='{$id_rif}',liv_riferimento='{$lvl_rif}' WHERE id='{$id}' LIMIT 1");
 
             return true;
         } else {
@@ -841,9 +830,9 @@ class Abilita extends BaseClass
     {
 
         if ($_SESSION['permessi'] >= GAMEMASTER) {
-            $id = Filters::int($post['req_id']);
 
-             DB::query("DELETE FROM abilita_requisiti WHERE id='{$id}' LIMIT 1");
+            $id = Filters::int($post['req_id']);
+            DB::query("DELETE FROM abilita_requisiti WHERE id='{$id}' LIMIT 1");
 
             return true;
         } else {
