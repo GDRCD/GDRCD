@@ -333,18 +333,19 @@ CREATE TABLE IF NOT EXISTS `config` (
  `id` int NOT NULL AUTO_INCREMENT,
  `const_name` varchar(255) NOT NULL,
  `val` varchar(255) NOT NULL,
+ `section` varchar(255) NOT NULL,
  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 
-INSERT INTO `config` (`const_name`,`val`) VALUES
-    ('ABI_PUBLIC',1),
-    ('ABI_LEVEL_CAP',5),
-    ('DEFAULT_PX_PER_LVL',10),
-    ('ABI_REQUIREMENT',1),
-    ('REQUISITO_ABI',1),
-    ('REQUISITO_STAT',2),
-    ('ABI_EXTRA',1);
+INSERT INTO `config` (`const_name`,`val`,`section`) VALUES
+    ('ABI_PUBLIC',1,'Abilita'),
+    ('ABI_LEVEL_CAP',5,'Abilita'),
+    ('DEFAULT_PX_PER_LVL',10,'Abilita'),
+    ('ABI_REQUIREMENT',1,'Abilita'),
+    ('REQUISITO_ABI',1,'Abilita'),
+    ('REQUISITO_STAT',2,'Abilita'),
+    ('ABI_EXTRA',1,'Abilita');
 
 
 
