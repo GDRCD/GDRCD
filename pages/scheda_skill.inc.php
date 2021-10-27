@@ -4,25 +4,25 @@ require_once(__DIR__ . '/../includes/required.php');
 
 $abi_class = Abilita::getInstance();
 
-$pg = gdrcd_filter('in', $_REQUEST['pg']);
-$op = gdrcd_filter('out', $_REQUEST['op']);
+$pg = Filters::in($_REQUEST['pg']);
+$op = Filters::out($_REQUEST['op']);
 
 if ($abi_class->AbiVisibility($pg)) {
 
     switch ($op) {
         case 'upgradeSkill':
-            $id_abilita = gdrcd_filter('num', $_REQUEST['what']);
-            $pg = gdrcd_filter('in', $_REQUEST['pg']);
+            $id_abilita = Filters::int($_REQUEST['what']);
+            $pg = Filters::in($_REQUEST['pg']);
             $res = $abi_class->upgradeskill($id_abilita, $pg);
             break;
         case 'downgradeSkill':
-            $id_abilita = gdrcd_filter('num', $_REQUEST['what']);
-            $pg = gdrcd_filter('in', $_REQUEST['pg']);
+            $id_abilita = Filters::int($_REQUEST['what']);
+            $pg = Filters::in($_REQUEST['pg']);
             $res = $abi_class->downgradeSkill($id_abilita, $pg);
             break;
 
         case 'operationDone':
-            $mex_id = gdrcd_filter('out', $_REQUEST['mex']);
+            $mex_id = Filters::out($_REQUEST['mex']);
             $mex = $abi_class->operationDone($mex_id);
             break;
     }
@@ -43,7 +43,7 @@ if ($abi_class->AbiVisibility($pg)) {
 
     <div class="pagina_scheda">
         <div class="page_title">
-            <h2><?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['page_name']); ?></h2>
+            <h2><?php echo Filters::out($MESSAGE['interface']['sheet']['page_name']); ?></h2>
         </div>
         <div class="page_body">
             <div class="menu_scheda"><!-- Menu scheda -->
@@ -53,25 +53,25 @@ if ($abi_class->AbiVisibility($pg)) {
 
                 <?php if (isset($mex)) { ?>
 
-                    <div class="warning"><?= gdrcd_filter('out', $mex); ?></div>
+                    <div class="warning"><?= Filters::out($mex); ?></div>
 
                 <?php } ?>
 
                 <div class="titolo_box">
-                    <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['box_title']['skills']); ?>
+                    <?php echo Filters::out($MESSAGE['interface']['sheet']['box_title']['skills']); ?>
                 </div>
                 <div class="form_info">
-                    <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['avalaible_xp']) . ': ' . $px_rimasti; ?>
+                    <?php echo Filters::out($MESSAGE['interface']['sheet']['avalaible_xp']) . ': ' . $px_rimasti; ?>
                 </div>
                 <div class="div_colonne_abilita_scheda">
 
                     <div class="fake-table colonne_abilita_scheda">
                         <?php foreach ($abi_list as $abi) {
 
-                            $id = gdrcd_filter('num', $abi['id_abilita']);
-                            $nome = gdrcd_filter('out', $abi['nome']);
-                            $car = gdrcd_filter('out', $PARAMETERS['names']['stats']['car' . gdrcd_filter('out', $abi['car'])]);
-                            $grado = gdrcd_filter('num', $abi['grado']);
+                            $id = Filters::int($abi['id_abilita']);
+                            $nome = Filters::out($abi['nome']);
+                            $car = Filters::out($PARAMETERS['names']['stats']['car' . Filters::out($abi['car'])]);
+                            $grado = Filters::int($abi['grado']);
                             $abi_extra_data = $abi_class->LvlData($id, $grado); ?>
 
                             <div class="tr">
@@ -133,7 +133,7 @@ if ($abi_class->AbiVisibility($pg)) {
 
                 </div>
                 <div class="form_info">
-                    <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['info_skill_cost']); ?>
+                    <?php echo Filters::out($MESSAGE['interface']['sheet']['info_skill_cost']); ?>
                 </div>
             </div>
         </div>

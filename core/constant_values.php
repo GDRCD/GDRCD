@@ -116,31 +116,6 @@ const ESITI_PERM = GAMEMASTER;
 
 //definisce quali permessi hanno accesso alla visione di tutti gli esiti (default: moderator)
 const FULL_PERM = MODERATOR;
-/**
- *  Abilita'
- */
-# Gestisce l'inclusione della tabella `abilita_extra` e dei costi e descrizioni per livello
-CONST ABI_EXTRA = true;
-
-# Moltiplicatore default di costo abilita'
-CONST DEFAULT_PX_PER_LVL = 10;
-
-# Livello massimo abilita'
-CONST ABI_LEVEL_CAP = 5;
-
-# Pagina abilita pubblica = true
-# Pagina abilita solo al proprietario o ai moderatori = false
-CONST ABI_PUBLIC = true;
-
-/**
- *  Requisito Abilita'
- */
-# Gestisce l'inclusione dei requisiti abilita'
-CONST ABI_REQUIREMENT = true;
-
-# Definisce i tipi di requisiti abilita'
-CONST REQUISITO_ABI = 1;
-CONST REQUISITO_STAT = 2;
 
 /** CHAT */
 
