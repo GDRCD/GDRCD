@@ -10,7 +10,7 @@ if(!empty($_SESSION['theme']) and array_key_exists($_SESSION['theme'], $PARAMETE
 }
 
 //Eseguo la connessione al database
-$handleDBConnection = gdrcd_connect();
+$handleDBConnection = DB::connect();
 //Ricevo il tempo di reload
 $i_ref_time = Filters::get($_GET['ref']);
 
