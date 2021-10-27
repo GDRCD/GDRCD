@@ -1,5 +1,7 @@
 <?php
 
+CONST ROOT = __DIR__.'/../';
+
 /*Livelli di accesso utente*/
 define('DELETED', -1);
 define('USER', 0);

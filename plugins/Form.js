@@ -20,14 +20,3 @@ function Form(selector,path,success=false) {
     });
   });
 }
-
-function CheckingNull(selector) {
-
-  $('#'+selector+' input[type="file"]').val('');
-  $('#'+selector+' input[type="number"]').val('');
-  $('#'+selector+' input[type="text"]').val('');
-  $('#'+selector+' input[type="checkbox"]').prop('checked',false);
-  $('#'+selector+' select').val('');
-  $('#'+selector+' textarea').val('');
-
-}

@@ -10,7 +10,7 @@ $chat->resetClass();
 
 ?>
 
-<script src="/includes/Form.js"></script>
+<script src="/plugins/Form.js"></script>
 
 <div class="chat_box">
 

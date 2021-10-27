@@ -16,7 +16,7 @@ $iscriz = $iscriz['0'];
     <div class="page_body">
         <?php /*Cambio pass utenti*/
         if($_POST['op'] == 'new') {
-            if(($email == gdrcd_filter_email($_POST['email'])) && ($pass == gdrcd_encript($_POST['new_pass'])) && ($iscriz >= strftime('%Y-%m-%d')) && (empty($_POST['new_name']) === false)) {
+            if(($email == Filters::email($_POST['email'])) && ($pass == gdrcd_encript($_POST['new_pass'])) && ($iscriz >= strftime('%Y-%m-%d')) && (empty($_POST['new_name']) === false)) {
                 $query = "SELECT nome FROM personaggio WHERE nome ='".gdrcd_filter('in', $_POST['new_name'])."'";
                 $result = gdrcd_query($query, 'result');
                 if(gdrcd_query($result, 'num_rows') > 0) { ?>

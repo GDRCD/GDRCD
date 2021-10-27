@@ -25,7 +25,7 @@ if ($table > 0) {
 
     foreach ($tables as $tablename => $newfields) {
         if (in_array($tablename, $tables_list)) {//Facciamo il controllo solo se la tabella esiste per davvero
-            $fields = gdrcd_check_tables($tablename);
+            $fields = DB::checkTable($tablename);
 
             foreach ($newfields as $newfield_name => $newfield_info) {
                 $match = false;

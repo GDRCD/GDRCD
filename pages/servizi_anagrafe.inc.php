@@ -10,7 +10,7 @@
     /*
      * Richieste POST
      */
-    switch(gdrcd_filter_get($_POST['op'])) {
+    switch(Filters::get($_POST['op'])) {
         default: // Pagina di default
             include ('servizi/anagrafe/index.inc.php');
             break;

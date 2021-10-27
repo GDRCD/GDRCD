@@ -347,7 +347,7 @@ class Abilita extends BaseClass
         # Create return array
         $default_descr = gdrcd_query("SELECT descrizione FROM abilita WHERE id_abilita='{$abi}' LIMIT 1");
         $data = [
-            'text' => gdrcd_html_filter($default_descr['descrizione']),
+            'text' => Filters::html($default_descr['descrizione']),
             'requirement' => '',
             'lvl_extra_text' => '',
             'next_lvl_extra_text' => '',
@@ -362,7 +362,7 @@ class Abilita extends BaseClass
 
             # Se esiste la descrizione extra, la aggiungo
             if (!empty($actual_descr['descrizione'])) {
-                $data['lvl_extra_text'] = gdrcd_html_filter($actual_descr['descrizione']);
+                $data['lvl_extra_text'] = Filters::html($actual_descr['descrizione']);
             }
 
             # Se non ho il livello massimo
@@ -374,7 +374,7 @@ class Abilita extends BaseClass
 
                 # Se esiste la descrizione extra del successivo, la aggiungo
                 if (!empty($next_descr['descrizione'])) {
-                    $data['next_lvl_extra_text'] = gdrcd_html_filter($next_descr['descrizione']);
+                    $data['next_lvl_extra_text'] = Filters::html($next_descr['descrizione']);
                 }
 
                 # Se il costo esiste ed e' maggiore di 0, lo setti, altrimenti usi il calcolo di default

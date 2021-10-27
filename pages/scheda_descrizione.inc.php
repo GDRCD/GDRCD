@@ -28,14 +28,14 @@
                  */
                 if($PARAMETERS['mode']['user_bbcode'] == 'ON') {
                     if($PARAMETERS['settings']['user_bbcode']['type'] == 'bbd' && $PARAMETERS['settings']['bbd']['free_html'] == 'ON') {
-                        echo bbdecoder(gdrcd_html_filter($personaggio['descrizione']), true);
+                        echo bbdecoder(Filters::html($personaggio['descrizione']), true);
                     } elseif($PARAMETERS['settings']['user_bbcode']['type'] == 'bbd') {
                         echo bbdecoder(gdrcd_filter('out', $personaggio['descrizione']), true);
                     } else {
                         echo gdrcd_bbcoder(gdrcd_filter('out', $personaggio['descrizione']));
                     }
                 } else {
-                    echo gdrcd_html_filter($personaggio['descrizione']);
+                    echo Filters::html($personaggio['descrizione']);
                 } ?>
             </div>
         </div>
@@ -54,14 +54,14 @@
                  */
                 if($PARAMETERS['mode']['user_bbcode'] == 'ON') {
                     if($PARAMETERS['settings']['user_bbcode']['type'] == 'bbd' && $PARAMETERS['settings']['bbd']['free_html'] == 'ON') {
-                        echo bbdecoder(gdrcd_html_filter($personaggio['affetti']), true);
+                        echo bbdecoder(Filters::html($personaggio['affetti']), true);
                     } elseif($PARAMETERS['settings']['user_bbcode']['type'] == 'bbd') {
                         echo bbdecoder(gdrcd_filter('out', $personaggio['affetti']), true);
                     } else {
                         echo gdrcd_bbcoder(gdrcd_filter('out', $personaggio['affetti']));
                     }
                 } else {
-                    echo gdrcd_html_filter($personaggio['affetti']);
+                    echo Filters::html($personaggio['affetti']);
                 } ?>
             </div>
         </div>

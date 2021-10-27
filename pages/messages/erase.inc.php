@@ -11,7 +11,7 @@ $delType = gdrcd_filter('in', $_POST['type']);
 // In base alla tipologia di visualizzazione, disabilito i relativi messaggi
 if($delType === 'destinatario_del') {
     $query = "UPDATE messaggi SET destinatario_del = 1 WHERE destinatario='".gdrcd_filter('in', $_SESSION['login'])."' AND id = ".gdrcd_filter('in', $id_messaggio);
-} elseif(gdrcd_filter_in($_POST['type']) === 'mittente_del') {
+} elseif(Filters::in($_POST['type']) === 'mittente_del') {
     $query = "UPDATE messaggi SET mittente_del = 1 WHERE mittente='".gdrcd_filter('in', $_SESSION['login'])."' AND id = ".gdrcd_filter('in', $id_messaggio);
 }
 
@@ -32,7 +32,7 @@ if(isset($query)) {
         // Determino il messaggio in base alla tipologia passata
         if($delType === 'destinatario_del') {
             $query = "SELECT destinatario FROM messaggi WHERE destinatario='".gdrcd_filter('in', $_SESSION['login'])."' AND id = ".gdrcd_filter('in', $id_messaggio)." LIMIT 1";
-        } elseif(gdrcd_filter_in($_POST['type']) === 'mittente_del') {
+        } elseif(Filters::in($_POST['type']) === 'mittente_del') {
             $query = "SELECT mittente FROM messaggi WHERE mittente='".gdrcd_filter('in', $_SESSION['login'])."' AND id = ".gdrcd_filter('in', $id_messaggio)." LIMIT 1";
         }
 

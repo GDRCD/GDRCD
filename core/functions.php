@@ -7,247 +7,6 @@
  */
 
 /**
- * Funzionalità di dialogo col database
- * Set di funzioni da core che implementano il dialogo gestito col db
- */
-
-/**
- * Connettore al database MySql
- */
-function gdrcd_connect()
-{
-    static $db_link = false;
-
-    if ($db_link === false) {
-        $db_user = $GLOBALS['PARAMETERS']['database']['username'];
-        $db_pass = $GLOBALS['PARAMETERS']['database']['password'];
-        $db_name = $GLOBALS['PARAMETERS']['database']['database_name'];
-        $db_host = $GLOBALS['PARAMETERS']['database']['url'];
-        $db_error = $GLOBALS['MESSAGE']['error']['db_not_found'];
-
-        #$db = mysql_connect($db_host, $db_user, $db_pass)or die(gdrcd_mysql_error());
-        #mysql_select_db($db_name)or die(gdrcd_mysql_error($db_error));
-
-        $db_link = mysqli_connect($db_host, $db_user, $db_pass, $db_name);
-
-        mysqli_set_charset($db_link, "utf8");
-
-        if (mysqli_connect_errno()) {
-            gdrcd_mysql_error($db_error);
-        }
-    }
-    return $db_link;
-}
-
-/**
- * Chiusura della connessione col db MySql
- * @param resource $db : una connessione mysqli
- */
-function gdrcd_close_connection($db)
-{
-    mysqli_close($db);
-}
-
-/**
- * Gestore delle query, offre una basilare astrazione del database per la maggior parte delle funzionalità del database più usate.
- * @param string|mysqli_result $sql : il codice SQL da inviare al database o una risorsa risultato di MySqli
- * @param string $mode : La modalità con cui eseguire la query. Default "query"
- * Modalità accettate:
- *  query: esegue la query e ritorna come risultato la prima riga del resultset
- *  result: esegue la query e ritorna la risorsa MySql associata al risultato
- *  num_rows: accetta come parametro una risorsa mysqli e ritorna il numero di righe nel resultset
- *  fetch: accetta come parametro una risorsa mysqli e ritorna il successivo risultato dal resultset come array
- *  object: uguale a fetch, eccetto che ritorna un oggetto al posto di un array
- *  free: libera la memoria occupata dalla risorsa mysqli passata in $sql
- *  last_id: ritorna l'id del record generato dall'ultima query, se non era una INSERT o UPDATE ritorna 0. In questo caso $sql non viene considerato
- *  affected: ritorna il numero di record toccati dall'ultima query (INSERT, UPDATE, DELETE o SELECT). In questo caso $sql non viene considerato
- * @return un booleano in caso di esecuzione di query non SELECT e modalità 'query'. Altrimenti ritorna come specificato nella descrizione di $mode
- */
-function gdrcd_query($sql, $mode = 'query')
-{
-    $db_link = gdrcd_connect();
-
-    switch (strtolower(trim($mode))) {
-        case 'query':
-            switch (strtoupper(substr(trim($sql), 0, 6))) {
-                case 'SELECT':
-                    $result = mysqli_query($db_link, $sql) or die(gdrcd_mysql_error($sql));
-                    $row = mysqli_fetch_array($result, MYSQLI_BOTH);
-                    mysqli_free_result($result);
-
-                    return $row;
-                    break;
-                default:
-                    return mysqli_query($db_link, $sql) or die(gdrcd_mysql_error($sql));
-                    break;
-            }
-
-        case 'result':
-            $result = mysqli_query($db_link, $sql) or die(gdrcd_mysql_error($sql));
-
-            return $result;
-            break;
-
-        case 'num_rows':
-            return (int)mysqli_num_rows($sql);
-            break;
-
-        case 'fetch':
-            return mysqli_fetch_array($sql, MYSQLI_BOTH);
-            break;
-
-        case 'assoc':
-            return mysqli_fetch_array($sql, MYSQLI_ASSOC);
-            break;
-
-        case 'object':
-            return mysqli_fetch_object($sql);
-            break;
-
-        case 'free':
-            return mysqli_free_result($sql);
-            break;
-
-        case 'last_id':
-            return mysqli_insert_id($db_link);
-            break;
-
-        case 'affected':
-            return (int)mysqli_affected_rows($db_link);
-            break;
-    }
-}
-
-
-/*
-    * Prepared Statements
-    * @param string $sql: il codice SQL da inviare al database
-    * @param array $binds: array dei parametri associati alla query
-    *
-    * E' obbligatorio specificare nell'indice zero dell'array binds i tipi delle variabili che si stanno immettendo nella query
-    * Tali tipi sono i seguenti:
-    * i      corrispondente ai valori integer
-    * d     corrispondente ai valori float/double
-    * s     corrispondente alle stringhe
-    * b     corrispondende a valori di tipo blob
-    *
-    * @return mysqli_result
-*/
-function gdrcd_stmt($sql, $binds = array())
-{
-    $db_link = gdrcd_connect();
-
-    if ($stmt = mysqli_prepare($db_link, $sql)) {
-
-        if (!empty($binds)) {
-
-            #> E' necessario referenziare ogni parametro da passare alla query
-            #> MySqli è suscettibile in proposito.
-            $ref = array();
-
-            foreach ($binds as $k => $v) {
-                if ($k > 0) {
-                    $ref[$k] = &$binds[$k];
-                } else {
-                    $ref[$k] = $v;
-                }
-            }
-
-            array_unshift($ref, $stmt);
-            call_user_func_array('mysqli_stmt_bind_param', $ref);
-        }
-
-        mysqli_stmt_execute($stmt);
-        $result = mysqli_stmt_get_result($stmt);
-        $stmtError = mysqli_stmt_error($stmt);
-
-        if (!empty($stmtError))
-            die(gdrcd_mysql_error($stmtError));
-
-        mysqli_stmt_close($stmt);
-
-        return $result;
-
-    } else {
-        die(gdrcd_mysql_error('Failed when creating the statement.'));
-    }
-}
-
-
-/**
- * Funzione di recupero delle colonne e della loro dichiarazione della tabella specificata.
- * Si usa per la verifica dell'aggiornamento db da vecchie versioni di gdrcd5
- * @param string $table : il nome della tabella da controllare
- * @return un oggetto contenente la descrizione della tabella negli attributi
- */
-function gdrcd_check_tables($table)
-{
-    $result = gdrcd_query("SELECT * FROM $table LIMIT 1", 'result');
-    $describe = gdrcd_query("SHOW COLUMNS FROM $table", 'result');
-
-    $i = 0;
-    $output = [];
-
-    while ($field = gdrcd_query($describe, 'object')) {
-        $defInfo = mysqli_fetch_field_direct($result, $i);
-
-        $field->auto_increment = (strpos($field->Extra, 'auto_increment') === false ? 0 : 1);
-        $field->definition = $field->Type;
-
-        if ($field->Null == 'NO' && $field->Key != 'PRI') {
-            $field->definition .= ' NOT NULL';
-        }
-
-        if ($field->Default) {
-            $field->definition .= " DEFAULT '" . mysqli_real_escape_string(gdrcd_connect(), $field->Default) . "'";
-        }
-
-        if ($field->auto_increment) {
-            $field->definition .= ' AUTO_INCREMENT';
-        }
-
-        switch ($field->Key) {
-            case 'PRI':
-                $field->definition .= ' PRIMARY KEY';
-                break;
-            case 'UNI':
-                $field->definition .= ' UNIQUE KEY';
-                break;
-            case 'MUL':
-                $field->definition .= ' KEY';
-                break;
-        }
-
-        $field->len = $defInfo->length;
-        $output[$field->Field] = $field;
-        ++$i;
-
-        unset($defInfo);
-    }
-    gdrcd_query($describe, 'free');
-
-    return $output;
-}
-
-/**
- * Gestione degli errori tornati dalle query
- * @param string $details : una descrizione dell'errore avvenuto
- * @return una stringa HTML che descrive l'errore riscontrato
- */
-function gdrcd_mysql_error($details = false)
-{
-    $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 50);
-
-    $error_msg = '<strong>GDRCD MySQLi Error</strong> [File: ' . basename($backtrace[1]['file']) . '; Line: ' . $backtrace[1]['line'] . ']<br>' . '<strong>Error Code</strong>: ' . mysqli_errno(gdrcd_connect()) . '<br>' . '<strong>Error String</strong>: ' . mysqli_error(gdrcd_connect());
-
-    if ($details !== false) {
-        $error_msg .= '<br><br><strong>Error Detail</strong>: ' . $details;
-    }
-
-    return $error_msg;
-}
-
-/**
  * Funzionalità di escape
  * Set di funzioni escape per filtrare i possibili contenuti introdotti da un utente ;-)
  */
@@ -259,7 +18,7 @@ function gdrcd_mysql_error($details = false)
  */
 function gdrcd_encript($str)
 {
-    require_once(dirname(__FILE__) . '/PasswordHash.php');
+    require_once(dirname(__FILE__) . '/../includes/PasswordHash.php');
     $hasher = new PasswordHash(8, true);
 
     return $hasher->HashPassword($str);
@@ -267,7 +26,7 @@ function gdrcd_encript($str)
 
 function gdrcd_password_check($pass, $stored)
 {
-    require_once(dirname(__FILE__) . '/PasswordHash.php');
+    require_once(dirname(__FILE__) . '/../includes/PasswordHash.php');
     $hasher = new PasswordHash(8, true);
 
     return $hasher->CheckPassword($pass, $stored);
@@ -287,123 +46,6 @@ function gdrcd_password_check($pass, $stored)
 function gdrcd_check_pass($str)
 {
     return true;
-}
-
-/**
- * Funzione di filtraggio di codici malevoli negli input utente
- * @param string $what : modalità da utilizzare per controllare la stringa. Sono opzioni valide: in o get, num, out, addslashes, email, includes
- * @param string $str : la stringa da controllare
- * @return una versione filtrata di $str
- */
-function gdrcd_filter($what, $str)
-{
-    switch (strtolower($what)) {
-        case 'in':
-        case 'get':
-            $str = addslashes(str_replace('\\', '', $str));
-            break;
-
-        case 'num':
-            $str = (int)$str;
-            break;
-
-        case 'out':
-            $str = html_entity_decode($str, ENT_HTML5, 'utf-8');
-            break;
-
-        case 'addslashes':
-            $str = addslashes($str);
-            break;
-
-        case 'email':
-            $str = (preg_match("#^[a-z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,4}$#is", $str)) ? $str : false;
-            break;
-
-        case 'includes':
-            $str = (preg_match("#[^:]#is")) ? htmlentities($str, ENT_QUOTES) : false;
-            break;
-
-        case 'url':
-            $str = urlencode($str);
-            break;
-
-        case 'fullurl':
-            $str = filter_var(str_replace(' ', '%20', $str), FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED);
-            break;
-    }
-
-    return $str;
-}
-
-/**
- * Funzioni di alias per gdrcd_filter()
- */
-function gdrcd_filter_in($str)
-{
-    return gdrcd_filter('in', $str);
-}
-
-function gdrcd_filter_out($str)
-{
-    return gdrcd_filter('out', $str);
-}
-
-function gdrcd_filter_get($str)
-{
-    return gdrcd_filter('get', $str);
-}
-
-function gdrcd_filter_num($str)
-{
-    return gdrcd_filter('num', $str);
-}
-
-function gdrcd_filter_addslashes($str)
-{
-    return gdrcd_filter('addslashes', $str);
-}
-
-function gdrcd_filter_email($str)
-{
-    return gdrcd_filter('email', $str);
-}
-
-function gdrcd_filter_includes($str)
-{
-    return gdrcd_filter('includes', $str);
-}
-
-function gdrcd_filter_url($str)
-{
-    return gdrcd_filter('url', $str);
-}
-
-/**
- * Funzione basilare di filtraggio degli elementi pericolosi in html
- * Serve a consentire l'uso di html e css in sicurezza nelle zone editabili della scheda
- * Il livello di filtraggio viene controllato da config: $PARAMETERS['settings']['html']
- * @param string $str : la stringa da filtrare
- * @return $str con gli elementi illegali sosituiti con una stringa di errore
- */
-function gdrcd_html_filter($str)
-{
-    $notAllowed = [
-        "#(<script.*?>.*?(<\/script>)?)#is" => "Script non consentiti",
-        "#(<iframe.*?\/?>.*?(<\/iframe>)?)#is" => "Frame non consentiti",
-        "#(<object.*?>.*?(<\/object>)?)#is" => "Contenuti multimediali non consentiti",
-        "#(<embed.*?\/?>.*?(<\/embed>)?)#is" => "Contenuti multimediali non consentiti",
-        "#([o,O][N,n](.*?)=(.*?)\"?'?[^\s\"']+'?\"?)#is" => " ",
-        "#(javascript:[^\s\"']+)#is" => ""
-    ];
-
-    if ($GLOBALS['PARAMETERS']['settings']['html'] == HTML_FILTER_HIGH) {
-        $notAllowed = array_merge($notAllowed, [
-            "#(<img.*?\/?>)#is" => "Immagini non consentite",
-            "#(url\(.*?\))#is" => "none",
-        ]);
-    }
-
-    return preg_replace(array_keys($notAllowed), array_values($notAllowed), $str);
 }
 
 /**
@@ -432,7 +74,7 @@ function gdrcd_controllo_esilio($pg)
     $exiled = gdrcd_query("SELECT autore_esilio, esilio, motivo_esilio FROM personaggio WHERE nome='" . gdrcd_filter('in', $pg) . "' LIMIT 1");
 
     if (strtotime($exiled['esilio']) > time()) {
-        echo '<div class="error">', gdrcd_filter_out($pg), ' ', gdrcd_filter_out($GLOBALS['MESSAGE']['warning']['character_exiled']), ' ', gdrcd_format_date($exiled['esilio']), ' (', $exiled['motivo_esilio'], ' - ', $exiled['autore_esilio'], ')</div>';
+        echo '<div class="error">', Filters::out($pg), ' ', Filters::out($GLOBALS['MESSAGE']['warning']['character_exiled']), ' ', gdrcd_format_date($exiled['esilio']), ' (', $exiled['motivo_esilio'], ' - ', $exiled['autore_esilio'], ')</div>';
 
         return true;
     }
@@ -622,7 +264,7 @@ function gdrcd_capital_letter($word)
 
 function gdrcd_safe_name($word)
 {
-    return trim(gdrcd_capital_letter(gdrcd_filter_in($word)));
+    return trim(gdrcd_capital_letter(Filters::in($word)));
 }
 
 /**
@@ -850,4 +492,29 @@ function gdrcd_brute_debug($args)
         gdrcd_dump($arg);
     }
     die('FINE');
+}
+
+/** NUOVI HELPER */
+
+/**
+ * @fn gdrcd_filter
+ * @note Funzione di filtraggio dati
+ * @param string $type - Modalita' controllo utilizzata
+ * @param string $val - Stringa da controllare
+ */
+function gdrcd_filter($type, $val)
+{
+    return Filters::gdrcd_filter($type, $val);
+}
+
+/**
+ * @fn gdrcd_query
+ * @note Funzione di appoggio per db
+ * @param $sql
+ * @param string $mode
+ * @return bool|int|mixed|string
+ */
+function gdrcd_query($sql, string $mode = 'query')
+{
+    return DB::query($sql,$mode);
 }

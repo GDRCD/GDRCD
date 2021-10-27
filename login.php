@@ -3,9 +3,6 @@
 /*Includo i file principali */
 require_once(__DIR__.'/includes/required.php');
 
-/*Connessione al database*/
-$handleDBConnection = gdrcd_connect();
-
 /*Leggo i dati del form di login*/
 $login1 = gdrcd_filter('get', $_POST['login1']);
 $pass1 = gdrcd_filter('get', $_POST['pass1']);
@@ -58,7 +55,7 @@ $record = gdrcd_query("SELECT personaggio.pass, personaggio.nome, personaggio.co
  * @author Blancks
  */
 if( ! empty($record) and gdrcd_password_check($pass1, $record['pass']) && ($record['permessi'] > -1) && (strtotime($record['ora_entrata']) < strtotime($record['ora_uscita']) || (strtotime($record['ultimo_refresh']) + 300) < time())) {
-    $_SESSION['login'] = gdrcd_filter_in($record['nome']);
+    $_SESSION['login'] = Filters::in($record['nome']);
     $_SESSION['cognome'] = $record['cognome'];
     $_SESSION['permessi'] = $record['permessi'];
     $_SESSION['sesso'] = $record['sesso'];
@@ -199,5 +196,3 @@ if($_SESSION['login'] != '') {
 ?>
     </body>
 </html>
-<?php
-gdrcd_close_connection($handleDBConnection);
