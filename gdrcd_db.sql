@@ -333,6 +333,7 @@ CREATE TABLE IF NOT EXISTS `config` (
  `id` int NOT NULL AUTO_INCREMENT,
  `const_name` varchar(255) NOT NULL,
  `value` varchar(255) NOT NULL,
+ `section` varchar(255) NOT NULL,
  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
