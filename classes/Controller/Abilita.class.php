@@ -8,6 +8,41 @@
 class Abilita extends BaseClass
 {
 
+    private
+        $abi_public,
+        $abi_level_cap,
+        $default_px_lvl,
+        $abi_requirement,
+        $requisito_abi,
+        $requisito_stat,
+        $abi_extra;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        # Le abilita sono pubbliche?
+        $this->abi_public= Functions::get_constant('ABI_PUBLIC');
+
+        # Livello massimo abilita
+        $this->abi_level_cap= Functions::get_constant('ABI_LEVEL_CAP');
+
+        # Default moltiplicatore livello, se costo non specificato in abi_extra
+        $this->default_px_lvl= Functions::get_constant('DEFAULT_PX_PER_LVL');
+
+        # I requisiti abilita' sono attivi?
+        $this->abi_requirement= Functions::get_constant('ABI_REQUIREMENT');
+
+        # Requisito di tipo abilita
+        $this->requisito_abi= Functions::get_constant('REQUISITO_ABI');
+
+        # Requisito di tipo statistica
+        $this->requisito_stat= Functions::get_constant('REQUISITO_STAT');
+
+        # I dati abilita' extra sono attivi?
+        $this->abi_extra = Functions::get_constant('ABI_EXTRA');
+    }
+
     /**** CONTROLS ****/
 
     /**
@@ -18,11 +53,8 @@ class Abilita extends BaseClass
      */
     public function AbiVisibility(string $pg): bool
     {
-
-        $pg = gdrcd_filter('out', $pg);
-
-        # Se non esiste la costante OR se e' true OR se non e' true: se sono il proprietario del pg OR sono moderatore
-        return (!defined('ABI_PUBLIC') || (ABI_PUBLIC) || ($pg == $this->me) || ($this->permission >= MODERATOR));
+        # Se la costante e' true OR se non e' true: se sono il proprietario del pg OR sono moderatore+
+        return ($this->abi_public || (Filters::out($pg) == $this->me) || ($this->permission >= MODERATOR));
     }
 
     /**
@@ -32,7 +64,7 @@ class Abilita extends BaseClass
      */
     public function extraActive(): bool
     {
-        return (defined('ABI_EXTRA') && ABI_EXTRA);
+        return $this->abi_extra;
     }
 
     /**
@@ -42,7 +74,7 @@ class Abilita extends BaseClass
      */
     public function requirementActive(): bool
     {
-        return (defined('ABI_REQUIREMENT') && ABI_REQUIREMENT);
+        return $this->abi_requirement;
     }
 
     /**
@@ -57,21 +89,21 @@ class Abilita extends BaseClass
 
         if ($this->requirementActive()) {
 
-            $pg = gdrcd_filter('out', $pg);
-            $abi = gdrcd_filter('num', $abi);
-            $grado = gdrcd_filter('num', $grado);
+            $pg = Filters::out($pg);
+            $abi = Filters::int($abi);
+            $grado = Filters::int($grado);
 
-            $requisiti = gdrcd_query("SELECT abilita_requisiti.* FROM abilita_requisiti WHERE abilita='{$abi}' AND grado='{$grado}'", 'result');
+            $requisiti = DB::query("SELECT abilita_requisiti.* FROM abilita_requisiti WHERE abilita='{$abi}' AND grado='{$grado}'", 'result');
             $esito = true;
 
             foreach ($requisiti as $requisito) {
-                $tipo = gdrcd_filter('num', $requisito['tipo']);
-                $rif = gdrcd_filter('num', $requisito['id_riferimento']);
-                $rif_lvl = gdrcd_filter('num', $requisito['liv_riferimento']);
+                $tipo = Filters::int($requisito['tipo']);
+                $rif = Filters::int($requisito['id_riferimento']);
+                $rif_lvl = Filters::int($requisito['liv_riferimento']);
 
                 switch ($tipo) {
-                    case REQUISITO_ABI:
-                        $contr = gdrcd_query("SELECT COUNT(id_abilita) as TOT 
+                    case $this->requisito_abi:
+                        $contr = DB::query("SELECT COUNT(id_abilita) as TOT 
                                         FROM clgpersonaggioabilita 
                                         WHERE 
                                               clgpersonaggioabilita.id_abilita = '{$rif}' 
@@ -83,10 +115,10 @@ class Abilita extends BaseClass
                         }
 
                         break;
-                    case REQUISITO_STAT:
+                    case $this->requisito_stat:
 
-                        $contr = gdrcd_query("SELECT car{$rif} FROM personaggio WHERE nome='{$pg}' LIMIT 1");
-                        $stat = gdrcd_filter('num', $contr['car' . $rif]);
+                        $contr = DB::query("SELECT car{$rif} FROM personaggio WHERE nome='{$pg}' LIMIT 1");
+                        $stat = Filters::int($contr['car' . $rif]);
 
                         if ($stat < $rif_lvl) {
                             $esito = false;
@@ -113,7 +145,7 @@ class Abilita extends BaseClass
     public function operationDone(string $mex): string
     {
 
-        $mex = gdrcd_filter('out', $mex);
+        $mex = Filters::out($mex);
 
         switch ($mex) {
             case 'UpOk':
@@ -149,11 +181,11 @@ class Abilita extends BaseClass
     public function ListaAbilita(): string
     {
         $html = '';
-        $news = gdrcd_query("SELECT * FROM abilita WHERE 1 ORDER BY nome", 'result');
+        $news = DB::query("SELECT * FROM abilita WHERE 1 ORDER BY nome", 'result');
 
         foreach ($news as $new) {
-            $nome = gdrcd_filter('out', $new['nome']);
-            $id = gdrcd_filter('num', $new['id_abilita']);
+            $nome = Filters::out($new['nome']);
+            $id = Filters::int($new['id_abilita']);
             $html .= "<option value='{$id}'>{$nome}</option>";
         }
 
@@ -164,12 +196,12 @@ class Abilita extends BaseClass
      * @fn AbilityList
      * @note Estrae la lista abilita, se specificato un pg ci associa anche il grado
      * @param string $pg
-     * @return bool|int|un
+     * @return bool|int
      */
     public function AbilityList(string $pg = '')
     {
 
-        $pg = gdrcd_filter('in', $pg);
+        $pg = Filters::out($pg);
 
         $left = !empty($pg) ?
             "LEFT JOIN clgpersonaggioabilita ON (abilita.id_abilita = clgpersonaggioabilita.id_abilita AND clgpersonaggioabilita.nome='{$pg}')
@@ -185,7 +217,7 @@ class Abilita extends BaseClass
             '(abilita.id_razza = -1 OR abilita.id_razza = personaggio.id_razza)' :
             '1';
 
-        return gdrcd_query("SELECT abilita.* {$extraVal} FROM abilita {$left} WHERE {$where} ORDER BY abilita.nome", 'result');
+        return  DB::query("SELECT abilita.* {$extraVal} FROM abilita {$left} WHERE {$where} ORDER BY abilita.nome", 'result');
     }
 
     /**
@@ -197,9 +229,9 @@ class Abilita extends BaseClass
      */
     public function abiExtra(int $abi, int $grado)
     {
-        $abi = gdrcd_filter('num', $abi);
-        $grado = gdrcd_filter('num', $grado);
-        return gdrcd_query("SELECT * FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
+        $abi = Filters::int( $abi);
+        $grado = Filters::int( $grado);
+        return DB::query("SELECT * FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
     }
 
     /**
@@ -210,8 +242,7 @@ class Abilita extends BaseClass
      */
     public function defaultCalcUp(int $grado):int
     {
-        $grado = gdrcd_filter('num', $grado);
-        return round($grado * DEFAULT_PX_PER_LVL);
+        return round(Filters::int($grado) * $this->default_px_lvl);
     }
 
     /***** DATI ABILITA->PG ****/
@@ -221,19 +252,19 @@ class Abilita extends BaseClass
      * @note Estrae lista abilita pg
      * @param string $pg
      * @param int $abi
-     * @return array|bool|int|un
+     * @return array|bool|int
      */
     public function AbilitaPg(string $pg, int $abi = 0)
     {
-        $pg = gdrcd_filter('in', $pg);
+        $pg = Filters::out($pg);
 
-        $id = gdrcd_filter('num', $abi);
+        $id = Filters::int($abi);
 
         $extra = ($id > 0) ? " AND id_abilita='{$id}' LIMIT 1" : '';
 
-        $data = gdrcd_query("SELECT id_abilita, grado FROM clgpersonaggioabilita WHERE nome='{$pg}' {$extra}", 'result');
+        $data = DB::query("SELECT id_abilita, grado FROM clgpersonaggioabilita WHERE nome='{$pg}' {$extra}", 'result');
 
-        return ($id > 0) ? gdrcd_query($data, 'fetch') : $data;
+        return ($id > 0) ? DB::query($data, 'fetch') : $data;
     }
 
     /**
@@ -244,10 +275,10 @@ class Abilita extends BaseClass
      */
     public function ExpPG(string $pg): int
     {
-        $pg = gdrcd_filter('in', $pg);
-        $exp = gdrcd_query("SELECT esperienza FROM personaggio WHERE nome='{$pg}' LIMIT 1");
+        $pg = Filters::in($pg);
+        $exp = DB::query("SELECT esperienza FROM personaggio WHERE nome='{$pg}' LIMIT 1");
 
-        return gdrcd_filter('num', $exp['esperienza']);
+        return Filters::int($exp['esperienza']);
     }
 
     /**
@@ -259,7 +290,7 @@ class Abilita extends BaseClass
     public function RemainedExp(string $pg): float
     {
         # Filtro dati passati
-        $pg = gdrcd_filter('in', $pg);
+        $pg = Filters::in($pg);
 
         # Estraggo abilita' ed esperienza pg
         $abi_pg = $this->AbilitaPg($pg);
@@ -276,8 +307,8 @@ class Abilita extends BaseClass
             foreach ($abi_pg as $row_pg) {
 
                 # Estraggo i dati dell'abilita
-                $grado = gdrcd_filter('num', $row_pg['grado']);
-                $abi_id = gdrcd_filter('num', $row_pg['id_abilita']);
+                $grado = Filters::int($row_pg['grado']);
+                $abi_id = Filters::int($row_pg['id_abilita']);
 
                 # Per ogni livello dell'abilita
                 while ($count <= $grado) {
@@ -287,7 +318,7 @@ class Abilita extends BaseClass
 
                     # Se non c'e' un costo, calcolo quello di default per quel livello
                     if (!empty($extra['costo']) && ($extra['costo'] > 0)) {
-                        $px_abi = gdrcd_filter('num', $extra['costo']);
+                        $px_abi = Filters::int($extra['costo']);
                     } else {
                         $px_abi = $this->defaultCalcUp($count);
                     }
@@ -306,7 +337,7 @@ class Abilita extends BaseClass
             foreach ($abi_pg as $row_pg) {
 
                 # Estraggo il grado
-                $grado = gdrcd_filter('num', $row_pg['grado']);
+                $grado = Filters::int($row_pg['grado']);
 
                 # Per ogni livello
                 while ($count <= $grado) {
@@ -338,14 +369,14 @@ class Abilita extends BaseClass
     public function LvlData(int $abi, int $grado): array
     {
         # Filter passed data
-        $abi = gdrcd_filter('num', $abi);
-        $grado = gdrcd_filter('num', $grado);
+        $abi = Filters::int($abi);
+        $grado = Filters::int($grado);
 
         # Controllo se non ho il livello massimo consentito
-        $new_grado = ($grado < ABI_LEVEL_CAP) ? ($grado + 1) : 0;
+        $new_grado = ($grado < $this->abi_level_cap) ? ($grado + 1) : 0;
 
         # Create return array
-        $default_descr = gdrcd_query("SELECT descrizione FROM abilita WHERE id_abilita='{$abi}' LIMIT 1");
+        $default_descr = DB::query("SELECT descrizione FROM abilita WHERE id_abilita='{$abi}' LIMIT 1");
         $data = [
             'text' => Filters::html($default_descr['descrizione']),
             'requirement' => '',
@@ -358,7 +389,7 @@ class Abilita extends BaseClass
         if ($this->extraActive()) {
 
             # Estraggo la descrizione extra attuale
-            $actual_descr = gdrcd_query("SELECT descrizione FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
+            $actual_descr =  DB::query("SELECT descrizione FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
 
             # Se esiste la descrizione extra, la aggiungo
             if (!empty($actual_descr['descrizione'])) {
@@ -369,8 +400,8 @@ class Abilita extends BaseClass
             if ($new_grado > 0) {
 
                 # Estraggo la descrizione del livello successivo
-                $next_descr = gdrcd_query("SELECT descrizione,costo FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$new_grado}' LIMIT 1");
-                $costo = gdrcd_filter('num', $next_descr['costo']);
+                $next_descr =  DB::query("SELECT descrizione,costo FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$new_grado}' LIMIT 1");
+                $costo = Filters::int($next_descr['costo']);
 
                 # Se esiste la descrizione extra del successivo, la aggiungo
                 if (!empty($next_descr['descrizione'])) {
@@ -390,27 +421,27 @@ class Abilita extends BaseClass
         if ($this->requirementActive()) {
 
             # Li estraggo
-            $requisiti = gdrcd_query("SELECT abilita_requisiti.* FROM abilita_requisiti WHERE abilita='{$abi}' AND grado='{$new_grado}' ORDER BY tipo DESC", 'result');
+            $requisiti =  DB::query("SELECT abilita_requisiti.* FROM abilita_requisiti WHERE abilita='{$abi}' AND grado='{$new_grado}' ORDER BY tipo DESC", 'result');
 
             # Per ogni requisito
             foreach ($requisiti as $requisito) {
 
                 # Estraggo i suoi dati
-                $tipo = gdrcd_filter('num', $requisito['tipo']);
-                $rif = gdrcd_filter('num', $requisito['id_riferimento']);
-                $rif_lvl = gdrcd_filter('num', $requisito['liv_riferimento']);
+                $tipo = Filters::int($requisito['tipo']);
+                $rif = Filters::int($requisito['id_riferimento']);
+                $rif_lvl = Filters::int($requisito['liv_riferimento']);
 
                 # Compongo l'html in base al tipo
                 switch ($tipo) {
-                    case REQUISITO_ABI:
-                        $req_data = gdrcd_query("SELECT nome FROM abilita WHERE id_abilita='{$rif}' LIMIT 1");
-                        $nome = gdrcd_filter('out', $req_data['nome']);
+                    case $this->requisito_abi:
+                        $req_data =  DB::query("SELECT nome FROM abilita WHERE id_abilita='{$rif}' LIMIT 1");
+                        $nome = Filters::out($req_data['nome']);
 
                         $data['requirement'] .= " {$nome} {$rif_lvl}, ";
 
                         break;
-                    case REQUISITO_STAT:
-                        $nome = gdrcd_filter('out', $this->parameters['names']['stats']['car' . $rif]);
+                    case $this->requisito_stat:
+                        $nome = Filters::out($this->parameters['names']['stats']['car' . $rif]);
                         $data['requirement'] .= " {$nome} {$rif_lvl}, ";
                         break;
                 }
@@ -436,11 +467,11 @@ class Abilita extends BaseClass
      */
     public function upgradeSkillPermission(string $pg, int $grado): bool
     {
-        $pg = gdrcd_filter('in', $pg);
-        $grado = gdrcd_filter('num', $grado);
-        $new_grado = gdrcd_filter('num', ($grado + 1));
+        $pg = Filters::in($pg);
+        $grado = Filters::int($grado);
+        $new_grado = Filters::int(($grado + 1));
 
-        return ((($this->me == $pg) || ($this->permission >= MODERATOR)) && ($new_grado <= ABI_LEVEL_CAP));
+        return ((($this->me == $pg) || ($this->permission >= MODERATOR)) && ($new_grado <= $this->abi_level_cap));
     }
 
     /**
@@ -453,14 +484,14 @@ class Abilita extends BaseClass
     public function upgradeskill(int $abi, string $pg): array
     {
 
-        $abi = gdrcd_filter('num', $abi);
-        $pg = gdrcd_filter('in', $pg);
+        $abi = Filters::int($abi);
+        $pg = Filters::in($pg);
         $abi_pg = $this->AbilitaPg($pg, $abi);
-        $grado = gdrcd_filter('num', $abi_pg['grado']);
+        $grado = Filters::int($abi_pg['grado']);
 
         if ($this->upgradeSkillPermission($pg, $grado)) {
 
-            $new_grado = gdrcd_filter('num', ($grado + 1));
+            $new_grado = Filters::int(($grado + 1));
 
             if ($this->requirementControl($pg, $abi, $new_grado)) {
                 $exp_remained = $this->RemainedExp($pg);
@@ -470,7 +501,7 @@ class Abilita extends BaseClass
                     $extra = $this->abiExtra($abi, $new_grado);
 
                     if (!empty($extra['costo']) && ($extra['costo'] > 0)) {
-                        $costo = gdrcd_filter('num', $extra['costo']);
+                        $costo = Filters::int($extra['costo']);
                     } else {
                         $costo = $this->defaultCalcUp($new_grado);
                     }
@@ -482,9 +513,9 @@ class Abilita extends BaseClass
                 if ($exp_remained >= $costo) {
 
                     if ($grado == 0) {
-                        gdrcd_query("INSERT INTO clgpersonaggioabilita(nome,id_abilita,grado) VALUES('{$pg}','{$abi}','{$new_grado}')");
+                         DB::query("INSERT INTO clgpersonaggioabilita(nome,id_abilita,grado) VALUES('{$pg}','{$abi}','{$new_grado}')");
                     } else {
-                        gdrcd_query("UPDATE clgpersonaggioabilita SET grado='{$new_grado}' WHERE nome='{$pg}' AND id_abilita='{$abi}' LIMIT 1");
+                         DB::query("UPDATE clgpersonaggioabilita SET grado='{$new_grado}' WHERE nome='{$pg}' AND id_abilita='{$abi}' LIMIT 1");
                     }
 
                     return ['response' => true, 'mex' => 'UpOk'];
@@ -508,7 +539,7 @@ class Abilita extends BaseClass
      */
     public function downgradeSkillPermission(int $grado): bool
     {
-        $grado = gdrcd_filter('num', $grado);
+        $grado = Filters::int($grado);
         return (($this->permission >= MODERATOR) && ($grado > 0));
     }
 
@@ -521,20 +552,20 @@ class Abilita extends BaseClass
     public function downgradeSkill(int $abi, string $pg): array
     {
 
-        $abi = gdrcd_filter('num', $abi);
-        $pg = gdrcd_filter('in', $pg);
+        $abi = Filters::int($abi);
+        $pg = Filters::in($pg);
 
         $abi_data = $this->AbilitaPg($pg, $abi);
-        $grado = gdrcd_filter('num', $abi_data['grado']);
+        $grado = Filters::int($abi_data['grado']);
 
         if ($this->downgradeSkillPermission($grado)) {
 
             $new_grado = ($grado - 1);
 
             if ($new_grado == 0) {
-                gdrcd_query("DELETE FROM clgpersonaggioabilita WHERE nome='{$pg}' AND id_abilita='{$abi}' LIMIT 1");
+                 DB::query("DELETE FROM clgpersonaggioabilita WHERE nome='{$pg}' AND id_abilita='{$abi}' LIMIT 1");
             } else {
-                gdrcd_query("UPDATE clgpersonaggioabilita SET grado='{$new_grado}' WHERE nome='{$pg}' AND id_abilita='{$abi}' LIMIT 1");
+                 DB::query("UPDATE clgpersonaggioabilita SET grado='{$new_grado}' WHERE nome='{$pg}' AND id_abilita='{$abi}' LIMIT 1");
             }
 
             return ['response' => true, 'mex' => 'downOk'];
@@ -566,14 +597,14 @@ class Abilita extends BaseClass
     {
 
         if ($_SESSION['permessi'] >= GAMEMASTER) {
-            $abi = gdrcd_filter('num', $post['abi']);
-            $grado = gdrcd_filter('num', $post['grado']);
+            $abi = Filters::int($post['abi']);
+            $grado = Filters::int($post['grado']);
 
-            $data = gdrcd_query("SELECT * FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
+            $data =  DB::query("SELECT * FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
 
             if (!empty($data['abilita'])) {
-                $descr = gdrcd_filter('in', $data['descrizione']);
-                $costo = gdrcd_filter('num', $data['costo']);
+                $descr = Filters::in($data['descrizione']);
+                $costo = Filters::int($data['costo']);
 
                 return ['response' => true, 'Descr' => $descr, 'Costo' => $costo];
             } else {
@@ -596,15 +627,15 @@ class Abilita extends BaseClass
 
         if ($this->AbiExtraManagePermission()) {
 
-            $abi = gdrcd_filter('num', $post['abi']);
-            $grado = gdrcd_filter('num', $post['grado']);
-            $descr = gdrcd_filter('in', $post['descr']);
-            $costo = gdrcd_filter('num', $post['costo']);
+            $abi = Filters::int($post['abi']);
+            $grado = Filters::int($post['grado']);
+            $descr = Filters::in($post['descr']);
+            $costo = Filters::int($post['costo']);
 
-            $contr = gdrcd_query("SELECT count(id) as TOT FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
+            $contr =  DB::query("SELECT count(id) as TOT FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
 
             if ($contr['TOT'] == 0) {
-                gdrcd_query("INSERT INTO abilita_extra(abilita,grado,descrizione,costo) VALUES('{$abi}','{$grado}','{$descr}','{$costo}')");
+                 DB::query("INSERT INTO abilita_extra(abilita,grado,descrizione,costo) VALUES('{$abi}','{$grado}','{$descr}','{$costo}')");
             }
 
             return true;
@@ -624,12 +655,12 @@ class Abilita extends BaseClass
 
         if ($this->AbiExtraManagePermission()) {
 
-            $abi = gdrcd_filter('num', $post['abi']);
-            $grado = gdrcd_filter('num', $post['grado']);
-            $descr = gdrcd_filter('in', $post['descr']);
-            $costo = gdrcd_filter('num', $post['costo']);
+            $abi = Filters::int($post['abi']);
+            $grado = Filters::int($post['grado']);
+            $descr = Filters::in($post['descr']);
+            $costo = Filters::int($post['costo']);
 
-            gdrcd_query("UPDATE abilita_extra SET abilita='{$abi}',grado='{$grado}',descrizione='{$descr}',costo='{$costo}' WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
+             DB::query("UPDATE abilita_extra SET abilita='{$abi}',grado='{$grado}',descrizione='{$descr}',costo='{$costo}' WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
 
             return true;
         } else {
@@ -648,10 +679,10 @@ class Abilita extends BaseClass
 
         if ($this->AbiExtraManagePermission()) {
 
-            $abi = gdrcd_filter('num', $post['abi']);
-            $grado = gdrcd_filter('num', $post['grado']);
+            $abi = Filters::int($post['abi']);
+            $grado = Filters::int($post['grado']);
 
-            gdrcd_query("DELETE FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
+             DB::query("DELETE FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
 
             return true;
         } else {
@@ -671,7 +702,7 @@ class Abilita extends BaseClass
     {
         global $PARAMETERS;
         $html = '';
-        $abi_req_abi = gdrcd_query("
+        $abi_req_abi =  DB::query("
             SELECT abilita_requisiti.*,abilita.nome FROM abilita_requisiti 
                 LEFT JOIN abilita ON (abilita.id_abilita = abilita_requisiti.abilita) 
             WHERE tipo=1 ORDER BY abilita.nome", 'result');
@@ -680,22 +711,22 @@ class Abilita extends BaseClass
         $html .= '<optgroup label="Abilita">';
         foreach ($abi_req_abi as $new) {
 
-            $id = gdrcd_filter('num', $new['id']);
+            $id = Filters::int($new['id']);
 
-            $id_riferimento = gdrcd_filter('num', $new['id_riferimento']);
-            $lvl_rif = gdrcd_filter('num', $new['liv_riferimento']);
-            $grado = gdrcd_filter('num', $new['grado']);
-            $nome_abi = gdrcd_filter('out', $new['nome']);
+            $id_riferimento = Filters::int($new['id_riferimento']);
+            $lvl_rif = Filters::int($new['liv_riferimento']);
+            $grado = Filters::int($new['grado']);
+            $nome_abi = Filters::out($new['nome']);
 
-            $dati_rif = gdrcd_query("SELECT nome FROM abilita WHERE id_abilita='{$id_riferimento}' LIMIT 1");
+            $dati_rif =  DB::query("SELECT nome FROM abilita WHERE id_abilita='{$id_riferimento}' LIMIT 1");
 
-            $nome_riferimento = gdrcd_filter('out', $dati_rif['nome']);
+            $nome_riferimento = Filters::out($dati_rif['nome']);
 
             $html .= "<option value='{$id}'>{$nome_abi} {$grado} - {$nome_riferimento} {$lvl_rif}</option>";
         }
         $html .= "</optgroup>";
 
-        $abi_req_stat = gdrcd_query("
+        $abi_req_stat =  DB::query("
             SELECT abilita_requisiti.*,abilita.nome FROM abilita_requisiti 
             LEFT JOIN abilita ON (abilita.id_abilita = abilita_requisiti.abilita) 
             WHERE tipo=2 ORDER BY abilita.nome", 'result');
@@ -703,12 +734,12 @@ class Abilita extends BaseClass
         $html .= '<optgroup label="Caratteristiche">';
         foreach ($abi_req_stat as $new) {
 
-            $id = gdrcd_filter('num', $new['id']);
+            $id = Filters::int($new['id']);
 
-            $id_riferimento = gdrcd_filter('num', $new['id_riferimento']);
-            $lvl_rif = gdrcd_filter('num', $new['liv_riferimento']);
-            $grado = gdrcd_filter('num', $new['grado']);
-            $nome_abi = gdrcd_filter('out', $new['nome']);
+            $id_riferimento = Filters::int($new['id_riferimento']);
+            $lvl_rif = Filters::int($new['liv_riferimento']);
+            $grado = Filters::int($new['grado']);
+            $nome_abi = Filters::out($new['nome']);
 
             $nome_riferimento = $PARAMETERS['names']['stats']['car' . $id_riferimento];
 
@@ -730,16 +761,16 @@ class Abilita extends BaseClass
     {
 
         if ($_SESSION['permessi'] >= GAMEMASTER) {
-            $id = gdrcd_filter('num', $post['id']);
+            $id = Filters::int($post['id']);
 
-            $data = gdrcd_query("SELECT * FROM abilita_requisiti WHERE id='{$id}' LIMIT 1");
+            $data =  DB::query("SELECT * FROM abilita_requisiti WHERE id='{$id}' LIMIT 1");
 
             if (!empty($data['abilita'])) {
-                $abi = gdrcd_filter('num', $data['abilita']);
-                $grado = gdrcd_filter('num', $data['grado']);
-                $tipo = gdrcd_filter('num', $data['tipo']);
-                $id_rif = gdrcd_filter('num', $data['id_riferimento']);
-                $lvl_rif = gdrcd_filter('num', $data['liv_riferimento']);
+                $abi = Filters::int($data['abilita']);
+                $grado = Filters::int($data['grado']);
+                $tipo = Filters::int($data['tipo']);
+                $id_rif = Filters::int($data['id_riferimento']);
+                $lvl_rif = Filters::int($data['liv_riferimento']);
 
                 return ['response' => true, 'Abi' => $abi, 'Grado' => $grado, 'Tipo' => $tipo, 'IdRif' => $id_rif, 'LivRif' => $lvl_rif];
             } else {
@@ -760,13 +791,13 @@ class Abilita extends BaseClass
 
         if ($_SESSION['permessi'] >= GAMEMASTER) {
 
-            $abi = gdrcd_filter('num', $post['abi']);
-            $grado = gdrcd_filter('num', $post['grado']);
-            $tipo = gdrcd_filter('num', $post['tipo']);
-            $id_rif = gdrcd_filter('num', $post['id_req']);
-            $lvl_rif = gdrcd_filter('num', $post['liv_req']);
+            $abi = Filters::int($post['abi']);
+            $grado = Filters::int($post['grado']);
+            $tipo = Filters::int($post['tipo']);
+            $id_rif = Filters::int($post['id_req']);
+            $lvl_rif = Filters::int($post['liv_req']);
 
-            gdrcd_query("INSERT INTO abilita_requisiti(abilita,grado,tipo,id_riferimento,liv_riferimento) VALUES('{$abi}','{$grado}','{$tipo}','{$id_rif}','{$lvl_rif}')");
+             DB::query("INSERT INTO abilita_requisiti(abilita,grado,tipo,id_riferimento,liv_riferimento) VALUES('{$abi}','{$grado}','{$tipo}','{$id_rif}','{$lvl_rif}')");
 
             return true;
         } else {
@@ -785,14 +816,14 @@ class Abilita extends BaseClass
 
         if ($_SESSION['permessi'] >= GAMEMASTER) {
 
-            $id = gdrcd_filter('num', $post['req_id']);
-            $abi = gdrcd_filter('num', $post['abi']);
-            $grado = gdrcd_filter('num', $post['grado']);
-            $tipo = gdrcd_filter('num', $post['tipo']);
-            $id_rif = gdrcd_filter('num', $post['id_req']);
-            $lvl_rif = gdrcd_filter('num', $post['liv_req']);
+            $id = Filters::int($post['req_id']);
+            $abi = Filters::int($post['abi']);
+            $grado = Filters::int($post['grado']);
+            $tipo = Filters::int($post['tipo']);
+            $id_rif = Filters::int($post['id_req']);
+            $lvl_rif = Filters::int($post['liv_req']);
 
-            gdrcd_query("UPDATE abilita_requisiti SET abilita='{$abi}',grado='{$grado}',tipo='{$tipo}',id_riferimento='{$id_rif}',liv_riferimento='{$lvl_rif}' WHERE id='{$id}' LIMIT 1");
+             DB::query("UPDATE abilita_requisiti SET abilita='{$abi}',grado='{$grado}',tipo='{$tipo}',id_riferimento='{$id_rif}',liv_riferimento='{$lvl_rif}' WHERE id='{$id}' LIMIT 1");
 
             return true;
         } else {
@@ -810,9 +841,9 @@ class Abilita extends BaseClass
     {
 
         if ($_SESSION['permessi'] >= GAMEMASTER) {
-            $id = gdrcd_filter('num', $post['req_id']);
+            $id = Filters::int($post['req_id']);
 
-            gdrcd_query("DELETE FROM abilita_requisiti WHERE id='{$id}' LIMIT 1");
+             DB::query("DELETE FROM abilita_requisiti WHERE id='{$id}' LIMIT 1");
 
             return true;
         } else {
