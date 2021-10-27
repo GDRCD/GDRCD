@@ -8,7 +8,7 @@ class Functions extends BaseClass
 {
 
     /**
-     * @fn get_constants
+     * @fn get_constant
      * @note Funzione di estrazione delle costanti dal db
      * @param string $name
      * @return mixed
