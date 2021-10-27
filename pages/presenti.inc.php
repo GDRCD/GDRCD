@@ -1,4 +1,4 @@
-<?php include('../ref_header.inc.php'); /*Header comune*/ ?>
+<?php include('../header.inc.php'); /*Header comune*/ ?>
     <!-- Box presenti-->
     <div class="pagina_presenti">
         <div class="page_title">
