@@ -330,7 +330,7 @@ INSERT INTO `codtipooggetto` (`cod_tipo`, `descrizione`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `config` (
- `id` int(11) NOT NULL,
+ `id` int NOT NULL AUTO_INCREMENT,
  `const_name` varchar(255) NOT NULL,
  `value` varchar(255) NOT NULL,
  PRIMARY KEY (`id`)
