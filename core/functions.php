@@ -748,17 +748,6 @@ function gdrcd_brute_debug($args)
 /** NUOVI HELPER */
 
 /**
- * @fn get_constant
- * @note Helper per l'estrazione delle costanti dal db
- * @param string $name
- * @return mixed
- */
-function get_constant(string $name)
-{
-    return Functions::getInstance()->get_constant($name);
-}
-
-/**
  * @fn gdrcd_filter
  * @note Funzione di filtraggio dati
  * @param string $type - Modalita' controllo utilizzata
