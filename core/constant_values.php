@@ -117,20 +117,6 @@ const ESITI_PERM = GAMEMASTER;
 //definisce quali permessi hanno accesso alla visione di tutti gli esiti (default: moderator)
 const FULL_PERM = MODERATOR;
 
-/** CHAT SAVE */
-
-# Attiva salva chat
-CONST CHAT_SAVE = true;
-
-# Attiva salva chat in chat private
-CONST CHAT_PVT_SAVE = false;
-
-# Salva chat in link
-CONST CHAT_SAVE_LINK = true;
-
-# Salva chat in download
-CONST CHAT_SAVE_DOWNLOAD = true;
-
 /*Vettori globali dei parametri*/
 $PARAMETER = array();
 $MESSAGES = array();
