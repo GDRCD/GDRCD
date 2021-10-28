@@ -2,6 +2,71 @@
 
 class Gestione extends BaseClass{
 
+    /*** GENERICO */
+
+    /**
+     * @fn inputByType
+     * @note Crea un input specifico in base al tipo di dato necessario
+     * @param string $name
+     * @param mixed $val
+     * @param string $type
+     * @return string
+     */
+    private final function inputByType(string $name, $val, string $type): string
+    {
+
+        $type = Filters::out($type);
+        $name = Filters::out($name);
+        $val = Filters::out($val);
+
+        switch ($type){
+            case 'bool':
+                $checked = ($val == 1) ? 'checked' : '';
+                $html = "<input type='checkbox' name='{$name}' {$checked} />";
+                break;
+
+            case 'int':
+                $html = "<input type='number' name='{$name}' value='{$val}' />";
+                break;
+
+            default:
+            case 'string':
+                $html = "<input type='text' name='{$name}' value='{$val}' />";
+                break;
+
+        }
+
+        return $html;
+    }
+
+    /**
+     * @fn errorConstant
+     * @note Crea l'errore e la lista delle costanti in errore
+     * @param array $consts
+     * @param string $type
+     * @return string
+     */
+    private final function errorConstant(array $consts, string $type): string
+    {
+
+        switch ($type){
+            case 'empty':
+                $resp = 'Le costanti devono essere tutte. Costanti mancanti nel form: <br>';
+                break;
+            case 'save':
+                $resp = 'Errore durante l\'update delle costanti: <br>';
+                break;
+        }
+
+        foreach ($consts as $e){
+
+            $resp .= "- {$e} <br>";
+        }
+
+        return $resp;
+    }
+
+    /*** COSTANTI */
 
     /**
      * @fn costantList
@@ -38,41 +103,6 @@ class Gestione extends BaseClass{
 
             $html .= "</div>";
             $html .= "</div>";
-        }
-
-        return $html;
-    }
-
-    /**
-     * @fn inputByType
-     * @note Crea un input specifico in base al tipo di dato necessario
-     * @param string $name
-     * @param mixed $val
-     * @param string $type
-     * @return string
-     */
-    private final function inputByType(string $name, $val, string $type): string
-    {
-
-        $type = Filters::out($type);
-        $name = Filters::out($name);
-        $val = Filters::out($val);
-
-        switch ($type){
-            case 'bool':
-                $checked = ($val == 1) ? 'checked' : '';
-                $html = "<input type='checkbox' name='{$name}' {$checked} />";
-                break;
-
-            case 'int':
-                $html = "<input type='number' name='{$name}' value='{$val}' />";
-                break;
-
-            default:
-            case 'string':
-                $html = "<input type='text' name='{$name}' value='{$val}' />";
-                break;
-
         }
 
         return $html;
@@ -132,33 +162,6 @@ class Gestione extends BaseClass{
     }
 
     /**
-     * @fn errorConstant
-     * @note Crea l'errore e la lista delle costanti in errore
-     * @param array $consts
-     * @param string $type
-     * @return string
-     */
-    private final function errorConstant(array $consts, string $type): string
-    {
-
-        switch ($type){
-            case 'empty':
-                $resp = 'Le costanti devono essere tutte. Costanti mancanti nel form: <br>';
-                break;
-            case 'save':
-                $resp = 'Errore durante l\'update delle costanti: <br>';
-                break;
-        }
-
-        foreach ($consts as $e){
-
-            $resp .= "- {$e} <br>";
-        }
-
-        return $resp;
-    }
-
-    /**
      * @fn saveConstant
      * @note Funzione di salvataggio e controllo tipologia del dato salvato
      * @param string $name
@@ -193,6 +196,4 @@ class Gestione extends BaseClass{
 
         return DB::query("UPDATE config SET val='{$val}' WHERE const_name='{$name}' LIMIT 1");
     }
-
-
 }
