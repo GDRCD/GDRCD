@@ -408,6 +408,11 @@ div.innertube {
     vertical-align: middle;
 }
 
+.gestione_costanti .single_input{
+    margin: 10px auto !important;
+}
+
+
 /**
  * Stili relative alle pagine dei menù:
  * GESTIONE
@@ -501,6 +506,12 @@ div.innertube {
 .form_container .form .single_input select{
     margin: 0 !important;
     max-width: 500px;
+}
+
+.single_input.w-33{
+    width: 32% !important;
+    display: inline-block;
+    vertical-align: top;
 }
 
 
