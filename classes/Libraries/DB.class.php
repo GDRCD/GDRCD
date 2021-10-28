@@ -78,6 +78,7 @@ class DB extends BaseClass
 
             case 'fetch':
                 return mysqli_fetch_array($sql);
+
             case 'assoc':
                 return mysqli_fetch_array($sql, MYSQLI_ASSOC);
 

@@ -29,6 +29,21 @@ class Gestione extends BaseClass{
                 $html = "<input type='number' name='{$name}' value='{$val}' />";
                 break;
 
+            case 'permission':
+                $list = Permissions::getInstance()->permissionsList();
+
+                $html = "<select name='{$name}'>";
+
+                foreach ($list as $perm => $perm_name){
+                    $selected = ($perm == $val) ? 'selected' : '';
+
+                    $html .= "<option value='{$perm_name}' {$selected}>{$perm_name}</option>";
+                }
+
+                $html .= "</select>";
+
+                break;
+
             default:
             case 'string':
                 $html = "<input type='text' name='{$name}' value='{$val}' />";
@@ -39,7 +54,18 @@ class Gestione extends BaseClass{
         return $html;
     }
 
+
     /*** COSTANTI */
+
+    /**
+     * @fn constantsPermission
+     * @note Permessi per la gestione delle costanti
+     * @return bool
+     */
+    public function constantsPermission(): bool
+    {
+        return (!Permissions::permission('+','SUPERUSER'));
+    }
 
     /**
      * @fn costantList
