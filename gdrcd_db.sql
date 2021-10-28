@@ -378,6 +378,8 @@ CREATE TABLE IF NOT EXISTS `config_permission` (
     `id` int NOT NULL AUTO_INCREMENT,
     `permission_name` varchar(255) NOT NULL,
     `level` int NOT NULL,
+    `deletable` int NOT NULL DEFAULT 0,
+    `editable` tinyint(1) NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 

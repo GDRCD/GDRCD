@@ -18,10 +18,11 @@ class Permissions extends BaseClass{
      * @note Estrae la lista dei permessi esistenti nella tabella 'config_permission'
      * @return array
      */
-    public function permissionsList(): array
+    public static function permissionsList($order = 'level'): array
     {
         $data = [];
-        $list = DB::query("SELECT * FROM config_permission WHERE 1", 'result');
+        $order = Filters::in($order);
+        $list = DB::query("SELECT * FROM config_permission WHERE 1 ORDER BY {$order}", 'result');
 
         foreach ($list as $row) {
             $lev = Filters::int($row['level']);

@@ -30,7 +30,7 @@ class Gestione extends BaseClass{
                 break;
 
             case 'permission':
-                $list = Permissions::getInstance()->permissionsList();
+                $list = Permissions::permissionsList();
 
                 $html = "<select name='{$name}'>";
 
@@ -221,5 +221,42 @@ class Gestione extends BaseClass{
         }
 
         return $resp;
+    }
+
+
+    /*** PERMESSI */
+    /**
+     * @fn permissionsListDrag
+     * @note Creazione della lista dei permessi esistenti per l'ordinamento della gerarchia
+     * @return string
+     */
+    public function permissionsListDrag():string{
+
+        $html = '';
+
+        $permessi = Permissions::permissionsList();
+
+        foreach ($permessi as $level => $name) {
+            $name = Filters::out($name);
+
+            $html .= "<li data-id='{$name}'>{$name}</li>";
+
+        }
+
+        return $html;
+    }
+
+    public function orderPermission($post){
+
+        $order = $post['order'];
+
+        foreach ($order as $key => $permission) {
+            $level = Filters::int($key);
+            $permission = Filters::in($permission);
+
+            DB::query("UPDATE config_permission SET level='{$level}' WHERE permission_name='{$permission}' LIMIT 1");
+        }
+
+        return ['response'=>true];
     }
 }

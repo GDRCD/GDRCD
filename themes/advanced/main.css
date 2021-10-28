@@ -424,6 +424,19 @@ div.innertube {
     display: none;
 }
 
+/** GESTIONE PERMESSI **/
+.gestione_permessi #permessi_gerarchia{
+    list-style: none;
+}
+
+.gestione_permessi #permessi_gerarchia li{
+    width: 50%;
+    margin: 5px auto;
+    background: grey;
+    border:1px solid black;
+    color: white;
+}
+
 
 /**
  * Stili relative alle pagine dei menù:
