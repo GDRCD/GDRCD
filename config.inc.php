@@ -733,11 +733,11 @@ if (ESITI)
     $PARAMETERS['administration']['esiti']['access_level'] = ESITI_PERM;
 }
 
-if (QUEST_ENABLED)
+if (Functions::get_constant('QUEST_ENABLED'))
 {
     $PARAMETERS['administration']['esiti']['text'] = 'Gestione quest';
     $PARAMETERS['administration']['esiti']['url'] = 'main.php?page=gestione_quest';
-    $PARAMETERS['administration']['esiti']['access_level'] = QUEST_PERM;
+    $PARAMETERS['administration']['esiti']['access_level'] = Functions::get_constant('QUEST_PERM');
 }
 
 $PARAMETERS['administration']['costanti']['text'] = 'Gestione Costanti';

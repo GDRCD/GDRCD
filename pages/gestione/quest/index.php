@@ -6,7 +6,7 @@ if (isset($_POST['op'])===FALSE){
 $pagebegin=(int)$_REQUEST['offset']*$PARAMETERS['settings']['records_per_page'];
 $pageend=$PARAMETERS['settings']['records_per_page'];
 
-if (VIEW_OTHER) {
+if (Functions::get_constant('QUEST_VIEW_OTHER')) {
 //Conteggio record totali
     $record_globale = gdrcd_query("SELECT COUNT(*) FROM quest");
 //Lettura record
@@ -27,7 +27,7 @@ $numresults=gdrcd_query($result, 'num_rows'); ?>
 		Registra nuova quest
     </a>
 </div>
-<?php if ($_SESSION['permessi'] >= VIEW_TRAME && TRAME_ENABLED) { ?>
+<?php if ($_SESSION['permessi'] >= Functions::get_constant('TRAME_VIEW')  && Functions::get_constant('TRAME_ENABLED')) { ?>
     <div class="link_back" >
         <a href = "main.php?page=gestione_quest&op=lista_trame" >
         Lista delle trame
@@ -46,7 +46,7 @@ if ($numresults>0){ ?>
                 <td class="casella_titolo"><div class="titoli_elenco">Titolo</div></td>
                 <td class="casella_titolo"><div class="titoli_elenco">Autore</div></td>
                 <td class="casella_titolo"><div class="titoli_elenco">Partecipanti</div></td>
-                <?php if ($_SESSION['permessi'] >= VIEW_TRAME){
+                <?php if ($_SESSION['permessi'] >= Functions::get_constant('TRAME_VIEW')){
                     echo '<td class="casella_titolo"><div class="titoli_elenco">Trama</div></td>';
                 } ?>
                 <td class="casella_titolo"><div class="titoli_elenco">Ultima modifica</div></td>
@@ -79,7 +79,7 @@ if ($numresults>0){ ?>
                             <?php echo gdrcd_filter('out',$row['partecipanti']); ?>
                         </div>
                     </td>
-                    <?php if ($_SESSION['permessi'] >= VIEW_TRAME){
+                    <?php if ($_SESSION['permessi'] >= Functions::get_constant('TRAME_VIEW')){
                         $quer="SELECT * FROM trama WHERE id = '".$row['trama']."' ";
                         $res=gdrcd_query($quer, 'result');
                         $rec=gdrcd_query($res, 'fetch');

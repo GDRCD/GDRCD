@@ -2,8 +2,11 @@
     <?php
     /*HELP: */
     /*Controllo permessi utente*/
-    if($_SESSION['permessi'] < QUEST_PERM && QUEST_ENABLED) {
-        echo '<div class="error">'.gdrcd_filter('out', $MESSAGE['error']['not_allowed']).'</div>';
+    if (
+    ($_SESSION['permessi'] < Functions::get_constant('QUEST_PERM')) &&
+    Functions::get_constant('QUEST_ENABLED')
+    ) {
+        echo '<div class="error">' . gdrcd_filter('out', $MESSAGE['error']['not_allowed']) . '</div>';
     } else {
     ?>
     <!-- Titolo della pagina -->
@@ -15,45 +18,45 @@
         <?php
 
         /** Richieste POST */
-        switch(gdrcd_filter_get($_POST['op'])) {
+        switch (gdrcd_filter_get($_POST['op'])) {
             case 'edit_quest':
-                include ('gestione/quest/registra_quest.php');
+                include('gestione/quest/registra_quest.php');
                 break;
             case 'doedit_quest':
-                include ('gestione/quest/doedit_quest.php');
+                include('gestione/quest/doedit_quest.php');
                 break;
             case 'insert_quest':
-                include ('gestione/quest/insert_quest.php');
+                include('gestione/quest/insert_quest.php');
                 break;
             case 'doedit_trama':
-                include ('gestione/quest/doedit_trama.php');
+                include('gestione/quest/doedit_trama.php');
                 break;
             case 'insert_trama':
-                include ('gestione/quest/insert_trama.php');
+                include('gestione/quest/insert_trama.php');
                 break;
             case 'edit_trama':
-                include ('gestione/quest/registra_trama.php');
+                include('gestione/quest/registra_trama.php');
                 break;
             case 'delete_quest':
-                include ('gestione/quest/delete_quest.php');
+                include('gestione/quest/delete_quest.php');
                 break;
             case 'delete_trama':
-                include ('gestione/quest/delete_trama.php');
+                include('gestione/quest/delete_trama.php');
                 break;
         }
         /** Richieste GET */
-        switch(gdrcd_filter_get($_GET['op'])) {
+        switch (gdrcd_filter_get($_GET['op'])) {
             case 'new_quest':
-                include ('gestione/quest/registra_quest.php');
+                include('gestione/quest/registra_quest.php');
                 break;
             case 'new_trama':
-                include ('gestione/quest/registra_trama.php');
+                include('gestione/quest/registra_trama.php');
                 break;
             case 'lista_trame':
-                include ('gestione/quest/lista_trame.php');
+                include('gestione/quest/lista_trame.php');
                 break;
             default: //Form di manutenzione
-                include ('gestione/quest/index.php');
+                include('gestione/quest/index.php');
                 break;
         }
 

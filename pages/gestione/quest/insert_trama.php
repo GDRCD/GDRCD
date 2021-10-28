@@ -1,5 +1,5 @@
 <?php /*Inserimento di un nuovo record*/
-if ($_POST['op']=='insert_trama' && TRAME_ENABLED) {
+if ($_POST['op']=='insert_trama' && Functions::get_constant('TRAME_ENABLED')) {
 
     /*Eseguo l'inserimento*/
     gdrcd_query("INSERT INTO trama (titolo, data, descrizione, autore, stato) VALUES 

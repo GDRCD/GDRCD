@@ -1,7 +1,7 @@
 <?php /* Cancellatura in un record */
 if ($_POST['op']=='delete_quest'){
     #Verifico che l'id passato sia valido
-    if ($_SESSION['permessi']<EDIT_ALL_QUEST){
+    if ($_SESSION['permessi']<Functions::get_constant('QUEST_SUPER_PERMISSION')){
         $id=gdrcd_query("SELECT * FROM quest WHERE id = '".$_POST['id_record']."' AND autore ='".$_SESSION['login']."'", 'result');
     } else {
         $id=gdrcd_query("SELECT * FROM quest WHERE id = '".$_POST['id_record']."' ", 'result');
@@ -47,7 +47,7 @@ if ($_POST['op']=='delete_quest'){
                             ".PX.", '(-".gdrcd_filter('num',$rec_pg['px_assegnati']).' px) '.gdrcd_filter('in',$cause)."')");
 
                     #Notifica
-                    if (QUEST_ALERT) {
+                    if (Functions::get_constant('QUEST_NOTIFY')) {
                         $text = 'Il resoconto quest relativo alla Quest: <b>' . $loaded_record['titolo'] . '</b> è stato cancellato da 
                                 ' . gdrcd_filter('in', $_SESSION['login']);
                         gdrcd_query("INSERT INTO messaggi (destinatario, mittente, spedito, oggetto, testo) VALUES 

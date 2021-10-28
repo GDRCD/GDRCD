@@ -334,7 +334,17 @@ INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,
     ('CHAT_SAVE',1,'Chat Salvataggio','Salva chat','Salva chat attivo?','bool',1),
     ('CHAT_PVT_SAVE',1,'Chat Salvataggio','Salva chat pvt','Salva chat attivo in pvt?','bool',1),
     ('CHAT_SAVE_LINK',1,'Chat Salvataggio','Salva chat in link','Salva chat in modalità link?','bool',1),
-    ('CHAT_SAVE_DOWNLOAD',1,'Chat Salvataggio','Salva chat download','Salva chat con download?','bool',1);
+    ('CHAT_SAVE_DOWNLOAD',1,'Chat Salvataggio','Salva chat download','Salva chat con download?','bool',1),
+    ('QUEST_ENABLED',1,'Quest','Quest migliorate','Gestione quest migliorata, attiva?','bool',1),
+    ('QUEST_PERM',2,'Quest','Permessi quest','Permesso minimo per registrazione/modifica delle quest','int',1),
+    ('QUEST_VIEW',2,'Quest','Permessi visual quest','Permesso minimo per visualizzazione delle quest','int',1),
+    ('QUEST_VIEW_OTHER',1,'Quest','Visual quest altri','Possibilità per un pg abilitato a registrare quest, di poter visualizzare (non modificare) le quest altrui','bool',1),
+    ('TRAME_ENABLED',1,'Quest','Trame','Sistema trame attivo?','bool',1),
+    ('TRAME_PERM',2,'Quest','Permessi Trame','Permesso minimo per registrazione/modifica delle trame','int',1),
+    ('TRAME_VIEW',2,'Quest','Permessi visual trame','Permesso minimo per visualizzazione delle trame','int',1),
+    ('TRAME_VIEW_OTHER',1,'Quest','Visual trame altri','Possibilità per un pg abilitato a registrare trame, di poter visualizzare (non modificare) le trame altrui','bool',1),
+    ('QUEST_SUPER_PERMISSION',3,'Quest','Permessi speciali','Permesso minimo per modificare qualsiasi parte del pacchetto','int',1),
+    ('QUEST_NOTIFY',0,'Quest','Notifiche quest','Definisce la possibilità di inviare messaggi automatici di avviso agli utenti che partecipano ad una quest','bool',1);
 
 
 

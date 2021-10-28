@@ -43,8 +43,8 @@
 		  </div>
 
 
-    <?php if ((($_SESSION['permessi']>=TRAME_PERM && $loaded_record['autore']==$_SESSION['login'])|| $_SESSION['permessi']>=EDIT_ALL_QUEST)
-        && TRAME_ENABLED) { ?>
+    <?php if ((($_SESSION['permessi']>=Functions::get_constant('TRAME_PERM') && $loaded_record['autore']==$_SESSION['login'])|| $_SESSION['permessi']>=Functions::get_constant('QUEST_SUPER_PERMISSION'))
+        && Functions::get_constant('TRAME_ENABLED')) { ?>
 		  <div class='form_label'>
             Trama di riferimento
           </div>

@@ -3,7 +3,7 @@ if ($_POST['op']=='doedit_quest'){
     /*Processo le informazioni ricevute dal form*/
 
     #Verifico che l'id passato sia valido
-    if ($_SESSION['permessi']<EDIT_ALL_QUEST){
+    if ($_SESSION['permessi']<Functions::get_constant('QUEST_SUPER_PERMISSION')){
         $id=gdrcd_query("SELECT * FROM quest WHERE id = '".$_POST['id_record']."' AND autore ='".$_SESSION['login']."'", 'result');
     } else {
         $id=gdrcd_query("SELECT * FROM quest WHERE id = '".$_POST['id_record']."' ", 'result');
@@ -60,7 +60,7 @@ if ($_POST['op']=='doedit_quest'){
                                     AND nome_pg = '" . gdrcd_filter('in', $_POST['part' . $a . '']) . "' ");
 
                         #Notifica
-                        if (QUEST_ALERT) {
+                        if (Functions::get_constant('QUEST_NOTIFY')) {
                             $text = 'Il resoconto quest relativo alla Quest: <b>' . $_POST['titolo'] . '</b> è stato modificato da 
                                 ' . gdrcd_filter('in', $_SESSION['login']) . '. Puoi consultarlo andando su Scheda > 
                                 Esperienza > Resoconti quest';
@@ -91,7 +91,7 @@ if ($_POST['op']=='doedit_quest'){
 
                         }
                         #Notifica
-                        if (QUEST_ALERT) {
+                        if (Functions::get_constant('QUEST_NOTIFY')) {
                             $text = 'Il resoconto quest relativo alla Quest: <b>' . $_POST['titolo'] . '</b> è stato inserito. 
                             Puoi consultarlo andando su Scheda > Esperienza > Resoconti quest';
                             gdrcd_query("INSERT INTO messaggi (destinatario, mittente, spedito, oggetto, testo) VALUES 

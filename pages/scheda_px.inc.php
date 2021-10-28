@@ -54,7 +54,7 @@
     <div class="page_body">
         <div class="panels_box">
 
-            <?php if ($_SESSION['permessi'] >=VIEW_QUEST || $_REQUEST['pg']==$_SESSION['login']) { ?>
+            <?php if ($_SESSION['permessi'] >=Functions::get_constant('QUEST_VIEW') || $_REQUEST['pg']==$_SESSION['login']) { ?>
                 <form action="main.php?page=scheda_px&pg=<?php echo gdrcd_filter('get',$_REQUEST['pg']); ?>" method="post">
                     <div class="form_submit">
                         <input type="submit" value="Riepilogo PX" />
@@ -148,7 +148,7 @@
                     </form>
                 </div>
             <?php }
-            } else if ($_POST['op']=='quest' && ($_SESSION['permessi'] >=VIEW_QUEST || $_REQUEST['pg']==$_SESSION['login'])) {
+            } else if ($_POST['op']=='quest' && ($_SESSION['permessi'] >=Functions::get_constant('QUEST_VIEW')  || $_REQUEST['pg']==$_SESSION['login'])) {
 
                 $query="SELECT * FROM clgpgquest WHERE nome_pg = '".gdrcd_filter('in',$_REQUEST['pg'])."' 
                 ORDER BY data DESC LIMIT ".$num_logs."";

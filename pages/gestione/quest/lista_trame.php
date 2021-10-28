@@ -1,6 +1,6 @@
 <?php
 /*Controllo permessi utente*/
-if ($_SESSION['permessi']<VIEW_TRAME && TRAME_ENABLED===FALSE){
+if ($_SESSION['permessi']<Functions::get_constant('TRAME_VIEW') && Functions::get_constant('TRAME_ENABLED')===FALSE){
     echo '<div class="error">'.gdrcd_filter('out',$MESSAGE['error']['not_allowed']).'</div>';
 } else { ?>
     <!-- Titolo della pagina -->
@@ -18,7 +18,7 @@ if ($_SESSION['permessi']<VIEW_TRAME && TRAME_ENABLED===FALSE){
     $pagebegin=(int)$_REQUEST['offset']*$PARAMETERS['settings']['records_per_page'];
     $pageend=$PARAMETERS['settings']['records_per_page'];
 
-    if (VIEW_TRAME_OTHER || $_SESSION['permessi']>=EDIT_ALL_QUEST) {
+    if (Functions::get_constant('TRAME_VIEW_OTHER') || $_SESSION['permessi']>=Functions::get_constant('QUEST_SUPER_PERMISSION')) {
     //Conteggio record totali
     $record_globale = gdrcd_query("SELECT COUNT(*) FROM trama");
     //Lettura record

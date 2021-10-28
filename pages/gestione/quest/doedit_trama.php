@@ -2,9 +2,9 @@
 if ($_POST['op']=='doedit_trama'){
         /*Processo le informazioni ricevute dal form*/
 
-    if ($_SESSION['permessi']>=TRAME_PERM && TRAME_ENABLED) {
+    if ($_SESSION['permessi']>=Functions::get_constant('TRAME_PERM') && Functions::get_constant('TRAME_ENABLED')) {
         #Verifico che l'id passato sia valido
-        if ($_SESSION['permessi'] < EDIT_ALL_QUEST) {
+        if ($_SESSION['permessi'] < Functions::get_constant('QUEST_SUPER_PERMISSION')) {
             $id = gdrcd_query("SELECT * FROM trama WHERE id = '" . $_POST['id_record'] . "' 
             AND autore ='" . $_SESSION['login'] . "'", 'result');
         } else {

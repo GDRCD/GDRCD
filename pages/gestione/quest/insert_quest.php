@@ -36,7 +36,7 @@ if ($_POST['op']=='insert_quest') {
         if ($_POST['part'.$a.'']!=='') {
 
             #Notifica
-            if (QUEST_ALERT) {
+            if (Functions::get_constant('QUEST_NOTIFY')) {
                 $text = 'Il resoconto quest relativo alla Quest: <b>' . $_POST['titolo'] . '</b> è stato inserito. 
                     Puoi consultarlo andando su Scheda > Esperienza > Resoconti quest';
                 gdrcd_query("INSERT INTO messaggi (destinatario, mittente, spedito, oggetto, testo) VALUES 
