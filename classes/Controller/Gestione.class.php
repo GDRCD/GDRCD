@@ -39,33 +39,6 @@ class Gestione extends BaseClass{
         return $html;
     }
 
-    /**
-     * @fn errorConstant
-     * @note Crea l'errore e la lista delle costanti in errore
-     * @param array $consts
-     * @param string $type
-     * @return string
-     */
-    private final function errorConstant(array $consts, string $type): string
-    {
-
-        switch ($type){
-            case 'empty':
-                $resp = 'Le costanti devono essere tutte. Costanti mancanti nel form: <br>';
-                break;
-            case 'save':
-                $resp = 'Errore durante l\'update delle costanti: <br>';
-                break;
-        }
-
-        foreach ($consts as $e){
-
-            $resp .= "- {$e} <br>";
-        }
-
-        return $resp;
-    }
-
     /*** COSTANTI */
 
     /**
@@ -195,5 +168,32 @@ class Gestione extends BaseClass{
         }
 
         return DB::query("UPDATE config SET val='{$val}' WHERE const_name='{$name}' LIMIT 1");
+    }
+
+    /**
+     * @fn errorConstant
+     * @note Crea l'errore e la lista delle costanti in errore
+     * @param array $consts
+     * @param string $type
+     * @return string
+     */
+    private final function errorConstant(array $consts, string $type): string
+    {
+
+        switch ($type){
+            case 'empty':
+                $resp = 'Le costanti devono essere tutte. Costanti mancanti nel form: <br>';
+                break;
+            case 'save':
+                $resp = 'Errore durante l\'update delle costanti: <br>';
+                break;
+        }
+
+        foreach ($consts as $e){
+
+            $resp .= "- {$e} <br>";
+        }
+
+        return $resp;
     }
 }
