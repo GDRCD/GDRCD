@@ -117,6 +117,40 @@ const ESITI_PERM = GAMEMASTER;
 //definisce quali permessi hanno accesso alla visione di tutti gli esiti (default: moderator)
 const FULL_PERM = MODERATOR;
 
+/**
+ * Impostazioni QUEST
+ */
+
+//Attiva o disattiva il pacchetto intero (default: true)
+const QUEST_ENABLED = true;
+
+//definisce i permessi minimi necessari alla registrazione/modifica delle quest (default: gamemaster)
+const QUEST_PERM = GAMEMASTER;
+
+//Attiva o disattiva il sistema trame (default: true)
+const TRAME_ENABLED = true;
+
+//definisce i permessi minimi necessari alla registrazione/modifica delle trame (default: gamemaster)
+const TRAME_PERM = GAMEMASTER;
+
+//definisce quali permessi hanno accesso alla visione della sezione "resoconti quest" dei pg (default: gamemaster)
+const VIEW_QUEST = GAMEMASTER;
+
+//definisce quali permessi hanno accesso alla visione della sezione "trame" (default: gamemaster)
+const VIEW_TRAME = GAMEMASTER;
+
+//Definisce la possibilità per un pg abilitato a registrare quest di poter visualizzare (non modificare) le quest altrui (default: true)
+const VIEW_OTHER = true;
+
+//Definisce la possibilità per un pg abilitato a registrare trame di poter visualizzare (non modificare) le trame altrui (default: true)
+const VIEW_TRAME_OTHER = true;
+
+//Permessi minimi per modificare tutte le parti del pacchetto (default: moderator)
+const EDIT_ALL_QUEST = MODERATOR;
+
+//Definisce la possibilità di inviare messaggi automatici di avviso agli utenti che partecipano ad una quest (default: false)
+const QUEST_ALERT = false;
+
 /*Vettori globali dei parametri*/
 $PARAMETER = array();
 $MESSAGES = array();
