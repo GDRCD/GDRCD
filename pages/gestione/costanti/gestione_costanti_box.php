@@ -45,3 +45,5 @@ switch ($_POST['action']) {
 
 
 </div>
+
+<script src="/pages/gestione/costanti/gestione_costanti_box.js"></script>

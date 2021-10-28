@@ -12,8 +12,9 @@ class Gestione extends BaseClass{
         foreach ($const_category as $category) {
             $section = Filters::out($category['section']);
 
-
+            $html .= "<div class='single_section'>";
             $html .= "<div class='gestione_form_title'>{$section}</div>";
+            $html .= "<div class='box_input'>";
 
             $const_list = DB::query("SELECT const_name,label,val,type,description FROM config WHERE section='{$section}' AND editable=1 ORDER BY label",'result');
 
@@ -29,6 +30,9 @@ class Gestione extends BaseClass{
                 $html .= $this->inputByType($name,$val,$type);
                 $html .= "</div>";
             }
+
+            $html .= "</div>";
+            $html .= "</div>";
         }
 
         return $html;

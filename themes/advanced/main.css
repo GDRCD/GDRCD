@@ -408,8 +408,20 @@ div.innertube {
     vertical-align: middle;
 }
 
+
+/**
+ GESTIONE COSTANTI
+ */
 .gestione_costanti .single_input{
     margin: 10px auto !important;
+}
+
+.gestione_costanti .single_section .gestione_form_title{
+    cursor: pointer;
+}
+
+.gestione_costanti .single_section .box_input{
+    display: none;
 }
 
 
