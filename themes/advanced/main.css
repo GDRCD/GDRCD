@@ -10,7 +10,6 @@ body {
     color: #222;
     font-family: Verdana, Sans;
     font-size: 11px;
-    background: url("imgs/bg.gif") top left repeat;
 }
 
 body.transparent_body {
