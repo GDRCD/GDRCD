@@ -45,7 +45,7 @@
                             <td class="casella_elemento">
                                 <div class="elementi_elenco">
                                     <?php
-                                    if (gdrcd_filter_get($_REQUEST['links']) == 'yes') { ?>
+                                    if (Filters::get($_REQUEST['links']) == 'yes') { ?>
                                         <a href='main.php?page=user_stats&op=esiliati'>
                                             <?php echo $row['stat']; ?>
                                         </a>
@@ -118,7 +118,7 @@
                             <td class="casella_elemento">
                                 <div class="elementi_elenco">
                                     <?php
-                                    if (gdrcd_filter_get($_REQUEST['links']) == 'yes') { ?>
+                                    if (Filters::get($_REQUEST['links']) == 'yes') { ?>
                                         <a href='main.php?page=user_stats&op=nuovi'>
                                             <?php echo $row['stat']; ?>
                                         </a>
@@ -135,7 +135,7 @@
             </div><!--panels_box-->
         <?php
         }//if
-        if (gdrcd_filter_get($_REQUEST['op']) == 'nuovi') {/*Nuovi iscritti*/
+        if (Filters::get($_REQUEST['op']) == 'nuovi') {/*Nuovi iscritti*/
             $query = "SELECT nome, cognome, data_iscrizione FROM personaggio WHERE data_iscrizione > DATE_SUB(NOW(), INTERVAL 7 DAY) ORDER BY data_iscrizione DESC";
             $result = gdrcd_query($query, 'result'); ?>
             <div class="panels_box">
@@ -183,7 +183,7 @@
             </div>
         <?php
         }
-        if (gdrcd_filter_get($_REQUEST['op']) == 'esiliati') {/*Esiliati*/
+        if (Filters::get($_REQUEST['op']) == 'esiliati') {/*Esiliati*/
             $query = "SELECT nome, cognome, esilio, data_esilio, autore_esilio, motivo_esilio FROM personaggio WHERE esilio > NOW() ORDER BY data_esilio DESC";
             $result = gdrcd_query($query, 'result'); ?>
             <div class="panels_box">

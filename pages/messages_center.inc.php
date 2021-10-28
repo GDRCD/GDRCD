@@ -12,7 +12,7 @@ include_once('../header.inc.php');
         /*
          * Richieste POST
          */
-        switch(gdrcd_filter_get($_POST['op'])) {
+        switch(Filters::get($_POST['op'])) {
             case 'erase': //Eliminazione di un messaggio
                 include('messages/erase.inc.php');
                 break;
@@ -36,7 +36,7 @@ include_once('../header.inc.php');
         /*
          * Richieste GET
          */
-        switch(gdrcd_filter_get($_GET['op'])) {
+        switch(Filters::get($_GET['op'])) {
             case 'read': //Visualizzazione completa di un messaggio
                 include('messages/read.inc.php');
                 break;

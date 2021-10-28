@@ -21,7 +21,7 @@ if(gdrcd_query($thread, 'num_rows')) {
         if($_POST['padre'] == -1) {
             $_POST['padre'] = gdrcd_query('', 'last_id');
         } else {
-            gdrcd_query("UPDATE messaggioaraldo SET data_ultimo_messaggio = NOW() WHERE id_messaggio = ".gdrcd_filter_num($_POST['padre']));
+            gdrcd_query("UPDATE messaggioaraldo SET data_ultimo_messaggio = NOW() WHERE id_messaggio = ".Filters::int($_POST['padre']));
         }
         ?>
         <div class="warning">

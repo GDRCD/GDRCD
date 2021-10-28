@@ -20,9 +20,7 @@ if (isset($_POST['action'])) {
             echo "<div class='warning'>Requisito abilita' eliminato con successo.</div>";
             break;
     }
-
 }
-
 
 ?>
 
@@ -76,7 +74,7 @@ if (isset($_POST['action'])) {
                 <div class="label">Grado</div>
                 <select name="grado" required>
                     <option value=""></option>
-                    <?php for ($i = 1; $i <= ABI_LEVEL_CAP; $i++) { ?>
+                    <?php for ($i = 1; $i <= Functions::get_constant('ABI_LEVEL_CAP'); $i++) { ?>
                         <option value="<?= $i; ?>"><?= $i; ?></option>
                     <?php } ?>
                 </select>
@@ -87,8 +85,8 @@ if (isset($_POST['action'])) {
                 <div class="label">Tipo di requisito</div>
                 <select name="tipo" required>
                     <option value=""></option>
-                    <option value="<?= REQUISITO_ABI; ?>">Abilità</option>
-                    <option value="<?= REQUISITO_STAT; ?>">Statistica</option>
+                    <option value="<?= Functions::get_constant('REQUISITO_ABI'); ?>">Abilità</option>
+                    <option value="<?= Functions::get_constant('REQUISITO_STAT'); ?>">Statistica</option>
                 </select>
             </div>
 
@@ -102,17 +100,17 @@ if (isset($_POST['action'])) {
                     </optgroup>
                     <optgroup label="Caratteristiche">
                         <option value="0">
-                            <?php echo gdrcd_filter('out', $PARAMETERS['names']['stats']['car0']); ?></option>
+                            <?php echo Filters::out($PARAMETERS['names']['stats']['car0']); ?></option>
                         <option value="1">
-                            <?php echo gdrcd_filter('out', $PARAMETERS['names']['stats']['car1']); ?></option>
+                            <?php echo Filters::out($PARAMETERS['names']['stats']['car1']); ?></option>
                         <option value="2">
-                            <?php echo gdrcd_filter('out', $PARAMETERS['names']['stats']['car2']); ?></option>
+                            <?php echo Filters::out($PARAMETERS['names']['stats']['car2']); ?></option>
                         <option value="3">
-                            <?php echo gdrcd_filter('out', $PARAMETERS['names']['stats']['car3']); ?></option>
+                            <?php echo Filters::out($PARAMETERS['names']['stats']['car3']); ?></option>
                         <option value="4">
-                            <?php echo gdrcd_filter('out', $PARAMETERS['names']['stats']['car4']); ?></option>
+                            <?php echo Filters::out($PARAMETERS['names']['stats']['car4']); ?></option>
                         <option value="5">
-                            <?php echo gdrcd_filter('out', $PARAMETERS['names']['stats']['car5']); ?></option>
+                            <?php echo Filters::out($PARAMETERS['names']['stats']['car5']); ?></option>
                     </optgroup>
                 </select>
             </div>
@@ -122,7 +120,7 @@ if (isset($_POST['action'])) {
                 <div class="label">Livello requisito</div>
                 <select name="liv_req" required>
                     <option value=""></option>
-                    <?php for ($i = 1; $i <= ABI_LEVEL_CAP; $i++) { ?>
+                    <?php for ($i = 1; $i <= Functions::get_constant('ABI_LEVEL_CAP'); $i++) { ?>
                         <option value="<?= $i; ?>"><?= $i; ?></option>
                     <?php } ?>
                 </select>
@@ -167,7 +165,7 @@ if (isset($_POST['action'])) {
                 <div class="label">Grado</div>
                 <select name="grado" required>
                     <option value=""></option>
-                    <?php for ($i = 1; $i <= ABI_LEVEL_CAP; $i++) { ?>
+                    <?php for ($i = 1; $i <= Functions::get_constant('ABI_LEVEL_CAP'); $i++) { ?>
                         <option value="<?= $i; ?>"><?= $i; ?></option>
                     <?php } ?>
                 </select>
@@ -178,8 +176,8 @@ if (isset($_POST['action'])) {
                 <div class="label">Tipo di requisito</div>
                 <select name="tipo" required>
                     <option value=""></option>
-                    <option value="<?= REQUISITO_ABI; ?>">Abilità</option>
-                    <option value="<?= REQUISITO_STAT; ?>">Statistica</option>
+                    <option value="<?= Functions::get_constant('REQUISITO_ABI'); ?>">Abilità</option>
+                    <option value="<?= Functions::get_constant('REQUISITO_STAT'); ?>">Statistica</option>
                 </select>
             </div>
 
@@ -193,17 +191,17 @@ if (isset($_POST['action'])) {
                     </optgroup>
                     <optgroup label="Caratteristiche">
                         <option value="0">
-                            <?php echo gdrcd_filter('out', $PARAMETERS['names']['stats']['car0']); ?></option>
+                            <?php echo Filters::out($PARAMETERS['names']['stats']['car0']); ?></option>
                         <option value="1">
-                            <?php echo gdrcd_filter('out', $PARAMETERS['names']['stats']['car1']); ?></option>
+                            <?php echo Filters::out($PARAMETERS['names']['stats']['car1']); ?></option>
                         <option value="2">
-                            <?php echo gdrcd_filter('out', $PARAMETERS['names']['stats']['car2']); ?></option>
+                            <?php echo Filters::out($PARAMETERS['names']['stats']['car2']); ?></option>
                         <option value="3">
-                            <?php echo gdrcd_filter('out', $PARAMETERS['names']['stats']['car3']); ?></option>
+                            <?php echo Filters::out($PARAMETERS['names']['stats']['car3']); ?></option>
                         <option value="4">
-                            <?php echo gdrcd_filter('out', $PARAMETERS['names']['stats']['car4']); ?></option>
+                            <?php echo Filters::out($PARAMETERS['names']['stats']['car4']); ?></option>
                         <option value="5">
-                            <?php echo gdrcd_filter('out', $PARAMETERS['names']['stats']['car5']); ?></option>
+                            <?php echo Filters::out($PARAMETERS['names']['stats']['car5']); ?></option>
                     </optgroup>
                 </select>
             </div>
@@ -213,7 +211,7 @@ if (isset($_POST['action'])) {
                 <div class="label">Livello requisito</div>
                 <select name="liv_req" required>
                     <option value=""></option>
-                    <?php for ($i = 1; $i <= ABI_LEVEL_CAP; $i++) { ?>
+                    <?php for ($i = 1; $i <= Functions::get_constant('ABI_LEVEL_CAP'); $i++) { ?>
                         <option value="<?= $i; ?>"><?= $i; ?></option>
                     <?php } ?>
                 </select>

@@ -11,7 +11,7 @@
         /*
          * Richieste POST
          */
-        switch(gdrcd_filter_get($_POST['op'])) {
+        switch(Filters::get($_POST['op'])) {
             case 'delete': //Cancellazione messaggio o topic
                 include ('forum/delete.inc.php');
                 break;
@@ -30,7 +30,7 @@
         /*
          * Richieste GET
          */
-        switch(gdrcd_filter_get($_GET['op'])) {
+        switch(Filters::get($_GET['op'])) {
             case 'composer': //Creazione nuovi messaggi e topic
                 include ('forum/composer.inc.php');
                 break;

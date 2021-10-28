@@ -27,14 +27,14 @@
                      */
                     if($PARAMETERS['mode']['user_bbcode'] == 'ON') {
                         if($PARAMETERS['settings']['user_bbcode']['type'] == 'bbd' && $PARAMETERS['settings']['bbd']['free_html'] == 'ON') {
-                            echo bbdecoder(gdrcd_html_filter($personaggio['storia']), true);
+                            echo bbdecoder(Filters::html($personaggio['storia']), true);
                         } elseif($PARAMETERS['settings']['user_bbcode']['type'] == 'bbd') {
                             echo bbdecoder(gdrcd_filter('out', $personaggio['storia']), true);
                         } else {
                             echo gdrcd_bbcoder(gdrcd_filter('out', $personaggio['storia']));
                         }
                     } else {
-                        echo gdrcd_html_filter($personaggio['storia']);
+                        echo Filters::html($personaggio['storia']);
                     } ?>
         </div>
         </div>

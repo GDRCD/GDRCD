@@ -37,7 +37,6 @@ if($PARAMETERS['mode']['popup_choise'] == 'ON') {
 </html>
 <?php
 /*Chiudo la connessione al database*/
-gdrcd_close_connection($handleDBConnection);
 
 /**    * Per ottimizzare le risorse impiegate le liberiamo dopo che non ne abbiamo pi� bisogno
  * @author Blancks

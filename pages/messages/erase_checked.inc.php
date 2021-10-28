@@ -18,9 +18,9 @@ if( !empty($_POST['ids']) ) {
     $msgs = implode(',', $_POST['ids']);
 
     // In base alla tipologia di visualizzazione, disabilito i relativi messaggi
-    if(gdrcd_filter_in($_POST['type']) === 'destinatario_del') {
+    if(Filters::in($_POST['type']) === 'destinatario_del') {
         $query = "UPDATE messaggi SET destinatario_del = 1 WHERE destinatario='".gdrcd_filter('in', $_SESSION['login'])."' AND id IN (".$msgs.")";
-    } elseif(gdrcd_filter_in($_POST['type']) === 'mittente_del') {
+    } elseif(Filters::in($_POST['type']) === 'mittente_del') {
         $query = "UPDATE messaggi SET mittente_del = 1 WHERE mittente='".gdrcd_filter('in', $_SESSION['login'])."' AND id IN (".$msgs.")";
     }
 

@@ -15,7 +15,23 @@ class Chat extends BaseClass
      */
     private
         $luogo,
-        $last_action;
+        $last_action,
+        $chat_time,
+        $chat_exp,
+        $chat_pvt_exp,
+        $chat_exp_master,
+        $chat_exp_azione,
+        $chat_exp_min,
+        $chat_icone,
+        $chat_avatar,
+        $chat_dice,
+        $chat_dice_base,
+        $chat_skill_buyed,
+        $chat_equip_bonus,
+        $chat_equip_equipped;
+
+    public
+        $chat_notify;
 
 
 
@@ -38,17 +54,60 @@ class Chat extends BaseClass
      */
     public function resetClass()
     {
-        $this->luogo = gdrcd_filter('num', $_SESSION['luogo']);
-        $this->last_action = gdrcd_filter('num', $_SESSION['last_action_id']);
+        # Variabili di sessione
+        $this->luogo = Filters::int($_SESSION['luogo']);
+        $this->last_action = Filters::int($_SESSION['last_action_id']);
+
+        # Ore di caricamento della chat
+        $this->chat_time = Functions::get_constant('CHAT_TIME');
+
+        # Esperienza in chat, attiva?
+        $this->chat_exp = Functions::get_constant('CHAT_EXP');
+
+        # Esperienza in chat pvt, attiva?
+        $this->chat_pvt_exp = Functions::get_constant('CHAT_PVT_EXP');
+
+        # Esperienza guadagnata con azione master
+        $this->chat_exp_master = Functions::get_constant('CHAT_EXP_MASTER');
+
+        # Esperienza guadagnata con azione normale
+        $this->chat_exp_azione = Functions::get_constant('CHAT_EXP_AZIONE');
+
+        # Minimo caratteri per esperienza
+        $this->chat_exp_min = Functions::get_constant('CHAT_EXP_MIN');
+
+        # Icone in chat, attive?
+        $this->chat_icone = Functions::get_constant('CHAT_ICONE');
+
+        # Avatar in chat, attivo?
+        $this->chat_avatar = Functions::get_constant('CHAT_AVATAR');
+
+        # Suono chat per nuove azioni, attivo?
+        $this->chat_notify = Functions::get_constant('CHAT_NOTIFY');
+
+        # Dadi in chat, attivi?
+        $this->chat_dice = Functions::get_constant('CHAT_DICE');
+
+        # Facce del dado baso
+        $this->chat_dice_base = Functions::get_constant('CHAT_DICE_BASE');
+
+        # Mostra solo le abilita' acquistate?
+        $this->chat_skill_buyed = Functions::get_constant('CHAT_SKILL_BUYED');
+
+        # Aggiungere ai tiri in chat i bonus per gli equipaggiamenti indossati?
+        $this->chat_equip_bonus = Functions::get_constant('CHAT_EQUIP_BONUS');
+
+        # Mostrare in chat solo gli equipaggiamenti indossati?
+        $this->chat_equip_equipped = Functions::get_constant('CHAT_EQUIP_EQUIPPED');
     }
 
     public function controllaChat($post)
     {
 
-        $dir = gdrcd_filter('num', $post['dir']);
+        $dir = Filters::int($post['dir']);
 
-        $luogo = gdrcd_query("SELECT ultimo_luogo FROM personaggio WHERE nome='{$this->me}' LIMIT 1");
-        $luogo_id = gdrcd_filter('num', $luogo['ultimo_luogo']);
+        $luogo = DB::query("SELECT ultimo_luogo FROM personaggio WHERE nome='{$this->me}' LIMIT 1");
+        $luogo_id = Filters::int($luogo['ultimo_luogo']);
 
         $response = ($dir == $luogo_id);
 
@@ -77,29 +136,29 @@ class Chat extends BaseClass
     private function assignExp($azione)
     {
         # Filtro i valori passati
-        $tipo = gdrcd_filter('in', $azione['tipo']);
-        $testo = gdrcd_filter('in', $azione['testo']);
+        $tipo = Filters::in($azione['tipo']);
+        $testo = Filters::in($azione['testo']);
 
         # Calcolo la lunghezza del testo
         $lunghezza_testo = strlen($testo);
 
         # Controllo se la chat e' privata
-        $luogo_pvt = gdrcd_query("SELECT privata FROM mappa WHERE id='{$this->luogo}' LIMIT 1")['privata'];
+        $luogo_pvt = DB::query("SELECT privata FROM mappa WHERE id='{$this->luogo}' LIMIT 1")['privata'];
 
         # Se e' privata e l'assegnazione privata e' attivo, oppure non e' privata
-        if (($luogo_pvt && CHAT_PVT_EXP) || (!$luogo_pvt)) {
+        if (($luogo_pvt && $this->chat_pvt_exp) || (!$luogo_pvt)) {
 
             # Se la lunghezza del testo supera il minimo caratteri neccesari all'assegnazione exp
-            if ($lunghezza_testo >= CHAT_EXP_MIN) {
+            if ($lunghezza_testo >= $this->chat_exp_min) {
 
                 # In base al tipo scelgo quanta exp assegnare
                 switch ($tipo) {
                     case 'A':
                     case 'P':
-                        $exp = CHAT_EXP_AZIONE;
+                        $exp = $this->chat_exp_azione;
                         break;
                     case 'M':
-                        $exp = CHAT_EXP_MASTER;
+                        $exp = $this->chat_exp_master;
                         break;
                     default:
                         $exp = 0;
@@ -108,7 +167,7 @@ class Chat extends BaseClass
 
                 # Se per quel tipo e' segnato un valore di exp, lo assegno, altrimenti no
                 if ($exp > 0) {
-                    gdrcd_query("UPDATE personaggio SET esperienza=esperienza+'{$exp}' WHERE nome='{$this->me}' LIMIT 1");
+                    DB::query("UPDATE personaggio SET esperienza=esperienza+'{$exp}' WHERE nome='{$this->me}' LIMIT 1");
                 }
             }
         }
@@ -121,7 +180,7 @@ class Chat extends BaseClass
      */
     public function audioActivated()
     {
-        return gdrcd_query("SELECT blocca_media FROM personaggio WHERE nome='{$this->me}' LIMIT 1")['blocca_media'];
+        return DB::query("SELECT blocca_media FROM personaggio WHERE nome='{$this->me}' LIMIT 1")['blocca_media'];
     }
 
     /**
@@ -135,16 +194,16 @@ class Chat extends BaseClass
         $resp = false;
 
         # Filtro i dati passati
-        $id = gdrcd_filter('num', $this->luogo);
+        $id = Filters::int($this->luogo);
 
         # Estraggo i dati della chat
-        $data = gdrcd_query("SELECT privata,proprietario,invitati,scadenza FROM mappa WHERE id='{$id}' LIMIT 1");
+        $data = DB::query("SELECT privata,proprietario,invitati,scadenza FROM mappa WHERE id='{$id}' LIMIT 1");
 
         # Filtro i valori estratti
-        $privata = gdrcd_filter('num', $data['privata']);
-        $proprietario = gdrcd_filter('out', $data['proprietario']);
-        $invitati = gdrcd_filter('out', $data['invitati']);
-        $scadenza = gdrcd_filter('out', $data['scadenza']);
+        $privata = Filters::int($data['privata']);
+        $proprietario = Filters::out($data['proprietario']);
+        $invitati = Filters::out($data['invitati']);
+        $scadenza = Filters::out($data['scadenza']);
 
         # Se non e' privata, allora di default e' accessibile
         if (!$privata) {
@@ -174,8 +233,8 @@ class Chat extends BaseClass
     private function pvtInvited($proprietario, $invitati)
     {
         # Filtro i dati passati
-        $proprietario = gdrcd_filter('out', $proprietario);
-        $invitati = gdrcd_filter('out', $invitati);
+        $proprietario = Filters::out($proprietario);
+        $invitati = Filters::out($invitati);
 
         # Trasformo la riga invitati in un array
         $inv_array = explode(',', $invitati);
@@ -196,7 +255,7 @@ class Chat extends BaseClass
     private function pvtClosed($scadenza)
     {
         # Filtro i dati passati
-        $scadenza = gdrcd_filter('out', $scadenza);
+        $scadenza = Filters::out($scadenza);
 
         # Estraggo la data attuale
         $now = date('Y-m-d H:i:s');
@@ -238,20 +297,17 @@ class Chat extends BaseClass
      */
     private function getActions()
     {
-        $interval = CHAT_TIME;
 
         # Se l'ultima azione non e' 0 e quindi non sono appena entrato in chat
-        if ($this->last_action > 0) {
-            $extra_query = " AND chat.id > '{$this->last_action}' ";
-        }
+        $extra_query=  ($this->last_action > 0) ? " AND chat.id > '{$this->last_action}' " : '';
 
         # Estraggo le azioni n base alle condizioni indicate
-        return gdrcd_query("SELECT personaggio.nome,personaggio.url_img_chat,personaggio.sesso,chat.*
+        return DB::query("SELECT personaggio.nome,personaggio.url_img_chat,personaggio.sesso,chat.*
                                     FROM chat 
                                     LEFT JOIN personaggio
                                     ON (personaggio.nome = chat.mittente)
                                     WHERE chat.stanza ='{$this->luogo}' 
-                                      AND chat.ora > DATE_SUB(NOW(),INTERVAL {$interval} HOUR) {$extra_query} 
+                                      AND chat.ora > DATE_SUB(NOW(),INTERVAL {$this->chat_time} HOUR) {$extra_query} 
                                       ORDER BY id", 'result');
     }
 
@@ -264,8 +320,8 @@ class Chat extends BaseClass
     private function Filter($azione)
     {
         # Filtro i dati passati
-        $tipo = gdrcd_filter('out', $azione['tipo']);
-        $id = gdrcd_filter('out', $azione['id']);
+        $tipo = Filters::out($azione['tipo']);
+        $id = Filters::out($azione['id']);
 
         # Inizio l'html con una classe comune ed una di tipologia, uguale per tutte
         $html = "<div class='singola_azione chat_row_{$tipo}'>";
@@ -320,7 +376,7 @@ class Chat extends BaseClass
     private function formattedText($testo)
     {
         # Evidenzio il mio nome e cambio il testo tra le variabili, ritorno il risultato
-        return gdrcd_chatme($this->me, gdrcd_chatcolor(gdrcd_filter('out', $testo)));
+        return gdrcd_chatme($this->me, gdrcd_chatcolor(Filters::out($testo)));
     }
 
     /**
@@ -332,10 +388,10 @@ class Chat extends BaseClass
     private function getIcons($mittente)
     {
         # Filtro il mittente passato
-        $mittente = gdrcd_filter('in', $mittente);
+        $mittente = Filters::in($mittente);
 
         # Ritorno le sue icone estratte
-        return gdrcd_query("SELECT razza.icon,razza.nome_razza,personaggio.sesso
+        return DB::query("SELECT razza.icon,razza.nome_razza,personaggio.sesso
                                 FROM personaggio 
                                     
                                     LEFT JOIN razza 
@@ -358,28 +414,27 @@ class Chat extends BaseClass
     {
 
         # Filtro le variabili necessarie
-        $mittente = gdrcd_filter('out', $azione['mittente']);
-        $tag = gdrcd_filter('out', $azione['destinatario']);
-        $img_chat = gdrcd_filter('out', $azione['url_img_chat']);
-
+        $mittente = Filters::out($azione['mittente']);
+        $tag = Filters::out($azione['destinatario']);
+        $img_chat = Filters::out($azione['url_img_chat']);
         # Formo i testi necessari
         $ora = gdrcd_format_time($azione['ora']);
         $testo = $this->formattedText($azione['testo']);
 
         # Se le icone in chat sono abilitate
-        if (CHAT_ICONE) {
+        if ($this->chat_icone) {
 
             # Estraggo le icone
             $data_imgs = $this->getIcons($mittente);
-            $sesso = gdrcd_filter('out', $data_imgs['sesso']);
-            $razza_nome = gdrcd_filter('out', $data_imgs['nome_razza']);
-            $razza_icon = gdrcd_filter('out', $data_imgs['icon']);
+            $sesso = Filters::out($data_imgs['sesso']);
+            $razza_nome = Filters::out($data_imgs['nome_razza']);
+            $razza_icon = Filters::out($data_imgs['icon']);
 
             # Aggiungo l'html delle icone
             $html = "<span class='chat_icons'>";
 
             # Se l'avatar e' abilitato, aggiungo l'html dell'avatar
-            if (CHAT_AVATAR) {
+            if ($this->chat_avatar) {
                 $html .= " <img class='chat_ico' src='{$img_chat}' class='chat_avatar'> ";
             }
 
@@ -413,8 +468,8 @@ class Chat extends BaseClass
         $html = '';
 
         # Filtro le variabili necessarie
-        $mittente = gdrcd_filter('out', $azione['mittente']);
-        $destinatario = gdrcd_filter('out', $azione['destinatario']);
+        $mittente = Filters::out($azione['mittente']);
+        $destinatario = Filters::out($azione['destinatario']);
 
         # Formo i testi necessari
         $ora = gdrcd_format_time($azione['ora']);
@@ -451,7 +506,7 @@ class Chat extends BaseClass
     private function htmlSussurroGlobale($azione)
     {
         # Filtro i dati necessari
-        $mittente = gdrcd_filter('out', $azione['mittente']);
+        $mittente = Filters::out($azione['mittente']);
         $ora = gdrcd_format_time($azione['ora']);
 
         # Formo i testi necessari
@@ -475,7 +530,7 @@ class Chat extends BaseClass
     private function htmlPNG($azione)
     {
         # Filtro i dati necessari
-        $destinatario = gdrcd_filter('out', $azione['destinatario']);
+        $destinatario = Filters::out($azione['destinatario']);
 
         # Formo i testi necessari
         $ora = gdrcd_format_time($azione['ora']);
@@ -540,11 +595,11 @@ class Chat extends BaseClass
     {
         # Formo i testi necessari
         $ora = gdrcd_format_time($azione['ora']);
-        $testo = gdrcd_filter('fullurl', $azione['testo']);
+        $url = Filters::url($azione['testo']);
 
         # Creo il corpo azione
         $html = "<span class='chat_time'>{$ora}</span> ";
-        $html .= "<span class='chat_msg'><img src='{$testo}'></span> ";
+        $html .= "<span class='chat_msg'><img src='{$url}'></span> ";
 
         # Ritorno l'html dell'azione
         return $html;
@@ -566,7 +621,7 @@ class Chat extends BaseClass
             $resp = [];
 
             # Filtro i dati necessari
-            $tipo = gdrcd_filter('in', $post['tipo']);
+            $tipo = Filters::in($post['tipo']);
 
             # In base al tipo mando l'azione con diversi permessi
             switch ($tipo) {
@@ -588,7 +643,7 @@ class Chat extends BaseClass
             }
 
             # Se l'exp e' attiva assegno l'exp
-            if (CHAT_EXP) {
+            if ($this->chat_exp) {
                 $this->assignExp($post);
             }
 
@@ -607,7 +662,7 @@ class Chat extends BaseClass
     private function sendAction($post, $permission)
     {
         # Filtro le variabili necessarie
-        $permission = gdrcd_filter('num', $permission);
+        $permission = Filters::int($permission);
 
         # Se i permessi sono superiori a quelli necessari
         if ($this->permission >= $permission) {
@@ -641,14 +696,14 @@ class Chat extends BaseClass
     private function sendSussurro($post)
     {
         # Filtro le variabili necessarie
-        $tag = gdrcd_filter('in', $post['tag']);
+        $tag = Filters::in($post['tag']);
         $luogo = $this->luogo;
 
         # Controllo che il personaggio a cui sussurro sia nella mia stessa chat
-        $count = gdrcd_query("SELECT count(nome) AS total FROM personaggio WHERE nome='{$tag}' AND ultimo_luogo='{$luogo}' LIMIT 1");
+        $count = DB::query("SELECT count(nome) AS total FROM personaggio WHERE nome='{$tag}' AND ultimo_luogo='{$luogo}' LIMIT 1");
 
         # Se e' nella mia stessa chat
-        if (gdrcd_filter('num', $count['total']) > 0) {
+        if (Filters::int($count['total']) > 0) {
 
             # Salvo l'azione in DB
             $this->saveAction($post);
@@ -676,12 +731,12 @@ class Chat extends BaseClass
     private function saveAction($post)
     {
         # Filtro le variabili necessarie
-        $tag = gdrcd_filter('in', $post['tag']);
-        $tipo = gdrcd_filter('in', $post['tipo']);
-        $testo = gdrcd_filter('in', $post['testo']);
+        $tag = Filters::in($post['tag']);
+        $tipo = Filters::in($post['tipo']);
+        $testo = Filters::in($post['testo']);
 
         # Salvo l'azione in DB
-        gdrcd_query("INSERT INTO chat(stanza,imgs,mittente,destinatario,tipo,testo)
+        DB::query("INSERT INTO chat(stanza,imgs,mittente,destinatario,tipo,testo)
                               VALUE('{$this->luogo}','test','{$this->me}','{$tag}','{$tipo}','{$testo}')");
     }
 
@@ -716,12 +771,12 @@ class Chat extends BaseClass
     private function allAbility()
     {
         # Se devono essere estratte solo le abilita' gia' acquistate, ne aggiungo la clausola
-        if (CHAT_SKILL_BUYED) {
+        if ($this->chat_skill_buyed) {
             $extra_query = ' AND clgpersonaggioabilita.grado > 0 ';
         }
 
         # Estraggo le abilita secondo i parametri
-        $abilita = gdrcd_query("
+        $abilita = DB::query("
                             SELECT abilita.nome,abilita.id_abilita,clgpersonaggioabilita.grado 
                             FROM abilita 
                             
@@ -733,8 +788,8 @@ class Chat extends BaseClass
 
         # Per ogni abilita' aggiungo il suo id all'array globale
         foreach ($abilita as $abi) {
-            $id_abilita = gdrcd_filter('num', $abi['id_abilita']);
-            $nome_abilita = gdrcd_filter('out', $abi['nome']);
+            $id_abilita = Filters::int($abi['id_abilita']);
+            $nome_abilita = Filters::out($abi['nome']);
 
             $ids[$id_abilita] = $nome_abilita;
         }
@@ -752,15 +807,15 @@ class Chat extends BaseClass
     private function raceAbility($ids)
     {
         # Estaggo la razza del pg
-        $race = gdrcd_query("SELECT id_razza FROM personaggio WHERE nome='{$this->me}' LIMIT 1")['id_razza'];
+        $race = DB::query("SELECT id_razza FROM personaggio WHERE nome='{$this->me}' LIMIT 1")['id_razza'];
 
         # Se devono essere estratte solo le abilita' gia' acquistate, ne aggiungo la clausola
-        if (CHAT_SKILL_BUYED) {
+        if ($this->chat_skill_buyed) {
             $extra_query = ' AND clgpersonaggioabilita.grado > 0 ';
         }
 
         # Estraggo le abilita secondo i parametri
-        $abilita = gdrcd_query("
+        $abilita = DB::query("
                             SELECT abilita.nome,abilita.id_abilita,clgpersonaggioabilita.grado 
                             FROM abilita 
                             
@@ -772,8 +827,8 @@ class Chat extends BaseClass
 
         # Per ogni abilita' aggiungo il suo id all'array globale
         foreach ($abilita as $abi) {
-            $id_abilita = gdrcd_filter('num', $abi['id_abilita']);
-            $nome_abilita = gdrcd_filter('out', $abi['nome']);
+            $id_abilita = Filters::int($abi['id_abilita']);
+            $nome_abilita = Filters::out($abi['nome']);
 
             $ids[$id_abilita] = $nome_abilita;
         }
@@ -798,8 +853,8 @@ class Chat extends BaseClass
 
         # Per ogni id creo una option per la select
         foreach ($ids as $index => $value) {
-            $id = gdrcd_filter('num', $index);
-            $nome = gdrcd_filter('out', $value);
+            $id = Filters::int($index);
+            $nome = Filters::out($value);
 
             $html .= "<option value='{$id}'>{$nome}</option>";
         }
@@ -819,12 +874,12 @@ class Chat extends BaseClass
     {
 
         # Se devono essere estratti solo gli oggetti equipaggiati, ne aggiungo la clausola
-        if (CHAT_EQUIP_EQUIPPED) {
+        if ($this->chat_equip_equipped) {
             $extra_query = ' AND clgpersonaggiooggetto.posizione != 0 AND oggetto.ubicabile = 1 ';
         }
 
         # Estraggo gli oggetti secondo i parametri
-        $objects = gdrcd_query("SELECT clgpersonaggiooggetto.id,oggetto.nome
+        $objects = DB::query("SELECT clgpersonaggiooggetto.id,oggetto.nome
                                         FROM clgpersonaggiooggetto 
                                         LEFT JOIN oggetto 
                                         ON (clgpersonaggiooggetto.id_oggetto = oggetto.id_oggetto)
@@ -834,8 +889,8 @@ class Chat extends BaseClass
 
         # Per ogni oggetto creo una option per la select
         foreach ($objects as $object) {
-            $id = gdrcd_filter('num', $object['id']);
-            $nome = gdrcd_filter('out', $object['nome']);
+            $id = Filters::int($object['id']);
+            $nome = Filters::out($object['nome']);
 
             $html .= "<option value='{$id}'>{$nome}</option>";
         }
@@ -865,9 +920,9 @@ class Chat extends BaseClass
             $obj_dice = '';
 
             # Filtro le variabili necessarie
-            $abi = gdrcd_filter('num', $post['abilita']);
-            $car = gdrcd_filter('in', $post['caratteristica']);
-            $obj = gdrcd_filter('num', $post['oggetto']);
+            $abi = Filters::int($post['abilita']);
+            $car = Filters::in($post['caratteristica']);
+            $obj = Filters::int($post['oggetto']);
 
             # Se ho selezionato l'abilita'
             if ($abi != 0) {
@@ -876,13 +931,13 @@ class Chat extends BaseClass
                 $abi_roll = $this->rollAbility($abi);
 
                 # Filtro i dati ricevuti
-                $abi_dice = gdrcd_filter('num', $abi_roll['abi_dice']);
-                $abi_nome = gdrcd_filter('in', $abi_roll['nome']);
+                $abi_dice = Filters::int($abi_roll['abi_dice']);
+                $abi_nome = Filters::in($abi_roll['nome']);
 
                 # Se non ho selezionato nessuna caratteristica utilizzo quella base dell'abilita'
                 if ($car === '') {
                     # Imposto la stat dell'abilita' come caratteristica richiesta in caso di utilizzo oggetti
-                    $car = gdrcd_filter('num', $abi_roll['car']);
+                    $car = Filters::int($abi_roll['car']);
                 }
             }
 
@@ -894,13 +949,13 @@ class Chat extends BaseClass
                 $car_roll = $this->rollCar($car, $obj);
 
                 # Setto il valore della caratteristica
-                $car_dice = gdrcd_filter('num', $car_roll['car_dice']);
+                $car_dice = Filters::int($car_roll['car_dice']);
 
                 # Se devo aggiungere anche il valore dell'equipaggiamento alla stat
-                if (CHAT_EQUIP_BONUS) {
+                if ($this->chat_equip_bonus) {
 
                     # Valorizzo il campo bonus equip stat per la stampa del testo
-                    $car_bonus = gdrcd_filter('num', $car_roll['car_bonus']);
+                    $car_bonus = Filters::int($car_roll['car_bonus']);
                 }
             }
 
@@ -911,12 +966,12 @@ class Chat extends BaseClass
                 $obj_roll = $this->rollObj($obj, $car);
 
                 # Filtro e setto i dati necessari all'aggiunta del valore al lancio
-                $obj_nome = gdrcd_filter('out', $obj_roll['nome']);
-                $obj_dice = gdrcd_filter('num', $obj_roll['val']);
+                $obj_nome = Filters::out($obj_roll['nome']);
+                $obj_dice = Filters::int($obj_roll['val']);
             }
 
             # Lancio il dado
-            $dice = (CHAT_DICE) ? $this->rollDice() : 0;
+            $dice = ($this->chat_dice) ? $this->rollDice() : 0;
 
             # Formo l'array necessario per il rendering del testo # TODO DA MIGLIORARE
             $data = [
@@ -947,10 +1002,10 @@ class Chat extends BaseClass
     private function rollAbility($id)
     {
         # Filtro le variabili necessarie
-        $id = gdrcd_filter('num', $id);
+        $id = Filters::int($id);
 
         # Estraggo i dati relativi l'abilita'
-        $abi_data = gdrcd_query("SELECT clgpersonaggioabilita.grado, abilita.car,abilita.nome
+        $abi_data = DB::query("SELECT clgpersonaggioabilita.grado, abilita.car,abilita.nome
                                     FROM abilita 
     
                                     LEFT JOIN clgpersonaggioabilita
@@ -959,9 +1014,9 @@ class Chat extends BaseClass
                                     WHERE abilita.id_abilita ='{$id}' LIMIT 1 ");
 
         # Filtro i dati necessari
-        $car = gdrcd_filter('num', $abi_data['car']);
-        $abi_dice = gdrcd_filter('num', $abi_data['abi_dice']);
-        $nome = gdrcd_filter('in', $abi_data['nome']);
+        $car = Filters::int($abi_data['car']);
+        $abi_dice = Filters::int($abi_data['abi_dice']);
+        $nome = Filters::in($abi_data['nome']);
 
         # Ritorno i dati necessari
         return ['nome' => $nome, 'abi_dice' => $abi_dice, 'car' => $car];
@@ -977,17 +1032,17 @@ class Chat extends BaseClass
     private function rollCar($car, $obj)
     {
         # Filtro i dati passati
-        $car = gdrcd_filter('num', $car);
-        $obj = gdrcd_filter('num', $obj);
+        $car = Filters::int($car);
+        $obj = Filters::int($obj);
 
         # Inizializzo il totale
         $total_bonus = 0;
 
         # Se nel conto caratteristica va aggiunto anche il totale degli oggetti equipaggiati
-        if (CHAT_EQUIP_BONUS) {
+        if ($this->chat_equip_bonus) {
 
             # Estraggo i bonus di tutti gli oggetti equipaggiati
-            $objects = gdrcd_query("SELECT oggetto.bonus_car{$car},clgpersonaggiooggetto.id
+            $objects = DB::query("SELECT oggetto.bonus_car{$car},clgpersonaggiooggetto.id
                                         FROM clgpersonaggiooggetto 
                                         LEFT JOIN oggetto 
                                         ON (clgpersonaggiooggetto.id_oggetto = oggetto.id_oggetto)
@@ -1001,15 +1056,15 @@ class Chat extends BaseClass
             foreach ($objects as $object) {
 
                 # Aggiungo il suo bonus al totale
-                $total_bonus += gdrcd_filter('num', $object["bonus_car{$car}"]);
+                $total_bonus += Filters::int($object["bonus_car{$car}"]);
             }
         }
 
         # Seleziono la caratteristica interessata e ritorno il suo valore
-        $query = gdrcd_query("SELECT personaggio.car{$car} FROM personaggio WHERE nome='{$this->me}' LIMIT 1");
+        $query = DB::query("SELECT personaggio.car{$car} FROM personaggio WHERE nome='{$this->me}' LIMIT 1");
 
         # Ritorno un array contenente i vari valori
-        return ['car_dice' => gdrcd_filter('num', $query["car{$car}"]), 'car_bonus' => $total_bonus];
+        return ['car_dice' => Filters::int($query["car{$car}"]), 'car_bonus' => $total_bonus];
     }
 
     /**
@@ -1022,17 +1077,17 @@ class Chat extends BaseClass
     private function rollObj($obj, $car)
     {
         # Filtro le variabili necessarie
-        $obj = gdrcd_filter('num', $obj);
-        $car = gdrcd_filter('num', $car);
+        $obj = Filters::int($obj);
+        $car = Filters::int($car);
 
         # Estraggo i dati dell'oggetto
-        $obj_data = gdrcd_query("SELECT oggetto.nome,oggetto.bonus_car{$car} FROM clgpersonaggiooggetto 
+        $obj_data = DB::query("SELECT oggetto.nome,oggetto.bonus_car{$car} FROM clgpersonaggiooggetto 
                                         LEFT JOIN oggetto ON (oggetto.id_oggetto = clgpersonaggiooggetto.id_oggetto) 
                                         WHERE clgpersonaggiooggetto.id='{$obj}' LIMIT 1");
 
         # Filtro i dati estratti
-        $obj_name = gdrcd_filter('out', $obj_data['nome']);
-        $obj_bonus = gdrcd_filter('num', $obj_data["bonus_car{$car}"]);
+        $obj_name = Filters::out($obj_data['nome']);
+        $obj_bonus = Filters::int($obj_data["bonus_car{$car}"]);
 
         # Ritorno l'array necessario
         return ['nome' => $obj_name, 'val' => $obj_bonus];
@@ -1045,9 +1100,8 @@ class Chat extends BaseClass
      */
     private function rollDice()
     {
-        # Estraggo il dado da lanciare, lo lancio e ritorno il risultato
-        $dice = CHAT_DICE_BASE;
-        return rand(1, $dice);
+        # Lancio il dado
+        return rand(1, $this->chat_dice_base);
     }
 
     /**
@@ -1059,14 +1113,14 @@ class Chat extends BaseClass
     private function saveDice($array)
     {
         # Filtro le variabili necessarie
-        $dice = gdrcd_filter('in', $array['dice']);
-        $abi_nome = gdrcd_filter('in', $array['abi_nome']);
-        $abi_dice = gdrcd_filter('in', $array['abi_dice']);
-        $car = gdrcd_filter('num', $array['car']);
-        $car_dice = gdrcd_filter('in', $array['car_dice']);
-        $car_bonus = gdrcd_filter('in', $array['car_bonus']);
-        $obj_nome = gdrcd_filter('in', $array['obj_nome']);
-        $obj_dice = gdrcd_filter('in', $array['obj_dice']);
+        $dice = Filters::in($array['dice']);
+        $abi_nome = Filters::in($array['abi_nome']);
+        $abi_dice = Filters::in($array['abi_dice']);
+        $car = Filters::int($array['car']);
+        $car_dice = Filters::in($array['car_dice']);
+        $car_bonus = Filters::in($array['car_bonus']);
+        $obj_nome = Filters::in($array['obj_nome']);
+        $obj_dice = Filters::in($array['obj_dice']);
         $total = 0;
 
         # Inizializzo il testo con una parte comune
@@ -1097,16 +1151,16 @@ class Chat extends BaseClass
         }
 
         # Aggiungo il valore del dado al testo
-        if(CHAT_DICE) {
+        if($this->chat_dice) {
             $html .= "Dado: {$dice},";
             $total += $dice;
         }
 
         # Aggiungo il totale al dado
-        $html .= " Totale :{$total}";
+        $html .= " Totale : {$total}";
 
         # Salvo il risultato in DB
-        gdrcd_query("INSERT INTO chat(stanza,mittente,destinatario,tipo,testo)
+        DB::query("INSERT INTO chat(stanza,mittente,destinatario,tipo,testo)
                             VALUE('{$this->luogo}','{$this->me}','','C','{$html}')");
     }
 }

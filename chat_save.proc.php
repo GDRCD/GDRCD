@@ -17,7 +17,7 @@ include('vocabulary/' . $PARAMETERS['languages']['set'] . '.vocabulary.php');
 include('includes/functions.inc.php');
 
 /* Eseguo la connessione al database */
-$handleDBConnection = gdrcd_connect();
+$handleDBConnection = DB::connect();
 
 $typeOrder = ($PARAMETERS['mode']['chat_from_bottom'] == 'ON') ? 'DESC' : 'ASC';
 
