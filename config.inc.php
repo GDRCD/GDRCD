@@ -732,6 +732,9 @@ if (ESITI)
     $PARAMETERS['administration']['esiti']['url'] = 'main.php?page=gestione_segnalazioni&segn=esiti_master';
     $PARAMETERS['administration']['esiti']['access_level'] = ESITI_PERM;
 }
+$PARAMETERS['administration']['costanti']['text'] = 'Gestione Costanti';
+$PARAMETERS['administration']['costanti']['url'] = 'main.php?page=gestione_costanti';
+$PARAMETERS['administration']['costanti']['access_level'] = SUPERUSER;
 $PARAMETERS['administration']['skills']['text'] = 'Gestione abilità';
 $PARAMETERS['administration']['skills']['url'] = 'main.php?page=gestione_abilita';
 $PARAMETERS['administration']['skills']['access_level'] = SUPERUSER;
