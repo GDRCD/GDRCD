@@ -3,7 +3,12 @@
 class Gestione extends BaseClass{
 
 
-    public function costantList(){
+    /**
+     * @fn costantList
+     * @note Creazione della sezione della gestione delle costanti
+     * @return string
+     */
+    public function constantList():string{
 
         $html = '';
 
@@ -38,7 +43,16 @@ class Gestione extends BaseClass{
         return $html;
     }
 
-    public function inputByType($name,$val,$type){
+    /**
+     * @fn inputByType
+     * @note Crea un input specifico in base al tipo di dato necessario
+     * @param string $name
+     * @param mixed $val
+     * @param string $type
+     * @return string
+     */
+    private final function inputByType(string $name, $val, string $type): string
+    {
 
         $type = Filters::out($type);
         $name = Filters::out($name);
@@ -64,7 +78,14 @@ class Gestione extends BaseClass{
         return $html;
     }
 
-    public function updateConstants($post){
+    /**
+     * @fn updateConstants
+     * @note Funzione pubblica/contenitore per l'update delle costanti via POST
+     * @param array $post
+     * @return string
+     */
+    public final function updateConstants(array $post): string
+    {
 
 
         $const_list = DB::query("SELECT * FROM config WHERE editable=1 ORDER BY label",'result');
@@ -110,7 +131,15 @@ class Gestione extends BaseClass{
 
     }
 
-    private function errorConstant($consts,$type){
+    /**
+     * @fn errorConstant
+     * @note Crea l'errore e la lista delle costanti in errore
+     * @param array $consts
+     * @param string $type
+     * @return string
+     */
+    private final function errorConstant(array $consts, string $type): string
+    {
 
         switch ($type){
             case 'empty':
@@ -129,11 +158,18 @@ class Gestione extends BaseClass{
         return $resp;
     }
 
-    private function saveConstant($name,$type,$val){
+    /**
+     * @fn saveConstant
+     * @note Funzione di salvataggio e controllo tipologia del dato salvato
+     * @param string $name
+     * @param string $type
+     * @param mixed $val
+     * @return bool|int|mixed|string
+     */
+    private final function saveConstant(string $name, string $type, $val){
 
         $name = Filters::in($name);
         $type = Filters::out($type);
-
 
         switch ($type){
             case 'bool':

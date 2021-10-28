@@ -31,7 +31,7 @@ switch ($_POST['action']) {
 
         <form method="post" class="gestione_form">
 
-            <?= $gestione->costantList(); ?>
+            <?= $gestione->constantList(); ?>
 
             <div class="single_input">
                 <input type="hidden" name="action" value="save_constants">
