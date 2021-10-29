@@ -67,6 +67,8 @@ class Permissions extends BaseClass
         return $contr['id'];
     }
 
+    /*** FUNZIONI ***/
+
     /**
      * @fn permission
      * @note Controlla se il personaggio loggato ha il permesso specificato, il controllo viene effettuato:
@@ -89,7 +91,8 @@ class Permissions extends BaseClass
 
             return (
                 self::getInstance()->permissionInGroups($perm_groups, $perm_id) ||
-                self::getInstance()->permissionExistInCharacter($pg,$perm_id)
+                self::getInstance()->permissionExistInCharacter($pg,$perm_id) ||
+                self::getInstance()->isSuperUser($perm_groups)
             );
 
 
@@ -105,7 +108,7 @@ class Permissions extends BaseClass
      * @param string $permission
      * @return bool
      */
-    private function permissionInGroups($groups, string $permission): bool
+    public function permissionInGroups($groups, string $permission): bool
     {
 
         $resp = false;
@@ -115,6 +118,29 @@ class Permissions extends BaseClass
             $group_id = Filters::int($group['group_id']);
 
             if ($this->permissionExistInGroup($permission, $group_id)) {
+                $resp = true;
+                break;
+            }
+        }
+
+        return $resp;
+    }
+
+    /**
+     * @fn isSuperUser
+     * @note Controlla se uno dei gruppi del pg bypassa qualsiasi blocco o permesso
+     * @param $groups
+     * @return bool
+     */
+    private function isSuperUser($groups){
+
+        $resp = false;
+        foreach ($groups as $group) {
+            $group_id = Filters::int($group['group_id']);
+
+            $data = DB::query("SELECT superuser FROM permessi_group WHERE id='{$group_id}' LIMIT 1");
+
+            if(Filters::int($data['superuser'])){
                 $resp = true;
                 break;
             }

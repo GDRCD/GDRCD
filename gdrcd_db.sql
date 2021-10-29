@@ -626,7 +626,6 @@ CREATE TABLE `permessi_custom` (
     `id` int(11) NOT NULL,
     `permission_name` varchar(255) NOT NULL,
     `description` text NOT NULL,
-    `default_val` varchar(255) NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -634,8 +633,8 @@ CREATE TABLE `permessi_custom` (
 -- Dump dei dati per la tabella `permessi_custom`
 --
 
-INSERT INTO `permessi_custom` (`id`, `permission_name`, `description`, `default_val`) VALUES
-    (1, 'MANAGE_CONSTANTS', 'Permesso per l\'editing delle costanti', '0');
+INSERT INTO `permessi_custom` (`id`, `permission_name`, `description`) VALUES
+    (1, 'MANAGE_CONSTANTS', 'Permesso per l\'editing delle costanti');
 
 -- --------------------------------------------------------
 
