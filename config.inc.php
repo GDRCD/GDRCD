@@ -735,9 +735,6 @@ if (ESITI)
 $PARAMETERS['administration']['costanti']['text'] = 'Gestione Costanti';
 $PARAMETERS['administration']['costanti']['url'] = 'main.php?page=gestione_costanti';
 $PARAMETERS['administration']['costanti']['access_level'] = SUPERUSER;
-$PARAMETERS['administration']['permission']['text'] = 'Gestione Permessi';
-$PARAMETERS['administration']['permission']['url'] = 'main.php?page=gestione_permessi';
-$PARAMETERS['administration']['permission']['access_level'] = SUPERUSER;
 $PARAMETERS['administration']['skills']['text'] = 'Gestione abilità';
 $PARAMETERS['administration']['skills']['url'] = 'main.php?page=gestione_abilita';
 $PARAMETERS['administration']['skills']['access_level'] = SUPERUSER;
