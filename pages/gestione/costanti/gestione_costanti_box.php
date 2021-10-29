@@ -8,11 +8,12 @@ if(!$gestione->constantsPermission()){
     die('Permesso negato.');
 }
 
-
-switch ($_POST['action']) {
-    case 'save_constants':
-        $resp = $gestione->updateConstants($_POST);
-        break;
+if(isset($_POST['action'])) {
+    switch ($_POST['action']) {
+        case 'save_constants':
+            $resp = $gestione->updateConstants($_POST);
+            break;
+    }
 }
 
 ?>
