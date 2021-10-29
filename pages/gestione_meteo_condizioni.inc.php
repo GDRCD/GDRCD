@@ -1,15 +1,15 @@
 <div class="pagina_scheda_diario">
     <?php
-require_once(__DIR__ . '/../includes/required.php');
-require_once(__DIR__ . '/meteo/condizioni/condizioni.class.php');
 
-$class = new Condizioni();
 
-$op = gdrcd_filter('out', $_REQUEST['op']);
+$class =Condizioni::getInstance();
+
+$op = Filters::out($_REQUEST['op']);
+
 ?>
     <!-- Titolo della pagina -->
     <div class="page_title">
-        <h2><?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['meteo_condition']['page_name']); ?></h2>
+        <h2><?php echo Filters::out( $MESSAGE['interface']['administration']['meteo_condition']['page_name']); ?></h2>
     </div>
     <!-- Box principale -->
     <div class="page_body">
@@ -17,8 +17,9 @@ $op = gdrcd_filter('out', $_REQUEST['op']);
 <?php
 if ($class->Visibility()) {
     # Richieste Post
-            switch (gdrcd_filter_get($_POST['op'])) {
+            switch (Filters::out($_POST['op'])) {
                 case 'view': //Lettura pagina
+
                     include('meteo/condizioni/view.inc.php');
                     break;
 
@@ -37,7 +38,9 @@ if ($class->Visibility()) {
                     break;
 
                 default: //Lista pagine
+
                     include('meteo/condizioni/index.inc.php');
+
                     break;
             } ?>
         </div>

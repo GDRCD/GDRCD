@@ -1,12 +1,12 @@
 <?php
 
-switch ($_POST['op']) {
+switch (Filters::out($_POST['op'])) {
 
     # Creazione Condizione
     case 'save_new':
-        $nome = gdrcd_filter('in', $_POST['nome']);
-        $vento = implode(",",$_POST['vento']);
-        $img = gdrcd_filter('in', $_POST['img']);
+        $nome = Filters::in( $_POST['nome']);
+        $vento = implode(",",Filters::in($_POST['vento']));
+        $img = Filters::in( $_POST['img']);
         $class->new($nome, $vento,$img);
         break;
         #Modifica condizione
