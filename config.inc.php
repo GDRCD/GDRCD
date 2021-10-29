@@ -32,11 +32,6 @@ if( ! empty($_SESSION['login'])) {
     }
 }
 
-/* PARAMETRI DI CONNESSIONE */
-$PARAMETERS['database']['username'] = 'gdrcd';            //nome utente del database
-$PARAMETERS['database']['password'] = 'gdrcd';            //password del database
-$PARAMETERS['database']['database_name'] = 'gdrcd';    //nome del database
-$PARAMETERS['database']['url'] = 'localhost';        //indirizzo ip del database
 
 
 /* HELP: Sostituire le diciture inserite tra le virgolette con i parametri di connessione al Database del proprio dominio. Essi sono forniti al momento della registrazione. Se non si e' in possesso di tali parametri consultare le FAQ della homepage dell'host che fornisce il dominio. Se non le si trovano li contattare lo staff dell'host. */
@@ -737,6 +732,9 @@ if (ESITI)
     $PARAMETERS['administration']['esiti']['url'] = 'main.php?page=gestione_segnalazioni&segn=esiti_master';
     $PARAMETERS['administration']['esiti']['access_level'] = ESITI_PERM;
 }
+$PARAMETERS['administration']['costanti']['text'] = 'Gestione Costanti';
+$PARAMETERS['administration']['costanti']['url'] = 'main.php?page=gestione_costanti';
+$PARAMETERS['administration']['costanti']['access_level'] = SUPERUSER;
 $PARAMETERS['administration']['skills']['text'] = 'Gestione abilità';
 $PARAMETERS['administration']['skills']['url'] = 'main.php?page=gestione_abilita';
 $PARAMETERS['administration']['skills']['access_level'] = SUPERUSER;

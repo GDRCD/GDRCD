@@ -27,7 +27,7 @@
                         $refound = gdrcd_query("SELECT nome FROM clgpersonaggiooggetto WHERE id_oggetto=".gdrcd_filter('num', $_POST['id_oggetto'])."", 'result');
 
                         while($do_refound = gdrcd_query($refound, 'fetch')) {
-                            gdrcd_query("UPDATE personaggio SET soldi = soldi + ".gdrcd_filter('num', $rec['costo'])." WHERE nome = '".gdrcd_filter_in($do_refound['nome'])."'");
+                            gdrcd_query("UPDATE personaggio SET soldi = soldi + ".gdrcd_filter('num', $rec['costo'])." WHERE nome = '".Filters::in($do_refound['nome'])."'");
                         }
                         gdrcd_query($refound, 'free');
                         /*Elimino l'oggetto*/

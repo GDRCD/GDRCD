@@ -11,7 +11,7 @@ $email = $row['email'];
     <div class="page_body">
         <?php /*Cambio pass utenti*/
         if($_POST['op'] == 'new') {
-            if((gdrcd_password_check(gdrcd_filter_email($_POST['email']),$email)) && (gdrcd_check_pass($_POST['new_pass']) === true)) {
+            if((gdrcd_password_check(Filters::email($_POST['email']),$email)) && (gdrcd_check_pass($_POST['new_pass']) === true)) {
                 gdrcd_query("UPDATE personaggio SET pass = '".gdrcd_encript($_POST['new_pass'])."', ultimo_cambiopass = NOW() WHERE nome = '".$_SESSION['login']."'");
                 gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".$_SESSION['login']."','".$_SESSION['login']."', NOW(), ".CHANGEDPASS." ,'".$_SERVER['REMOTE_ADDR']."')");
                 ?>
@@ -33,13 +33,13 @@ $email = $row['email'];
         if(gdrcd_filter('get', $_POST['op']) == 'force') {
             if(($_SESSION['permessi'] >= MODERATOR) && (gdrcd_check_pass($_POST['new_pass']) === true)) {
                 if($_SESSION['permessi'] == SUPERUSER) {
-                    $query = "UPDATE personaggio SET pass = '".gdrcd_encript($_POST['new_pass'])."', ultimo_cambiopass = NOW() WHERE nome = '".gdrcd_filter_in($_POST['account'])."'";
+                    $query = "UPDATE personaggio SET pass = '".gdrcd_encript($_POST['new_pass'])."', ultimo_cambiopass = NOW() WHERE nome = '".Filters::in($_POST['account'])."'";
                 } else {
-                    $query = "UPDATE personaggio SET pass = '".gdrcd_encript($_POST['new_pass'])."', ultimo_cambiopass = NOW() WHERE nome = '".gdrcd_filter_in($_POST['account'])."' AND permessi < ".SUPERUSER."";
+                    $query = "UPDATE personaggio SET pass = '".gdrcd_encript($_POST['new_pass'])."', ultimo_cambiopass = NOW() WHERE nome = '".Filters::in($_POST['account'])."' AND permessi < ".SUPERUSER."";
                 }
                 gdrcd_query($query);
                 /*Registro l'evento */
-                gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".gdrcd_filter_in($_POST['account'])."','".$_SESSION['login']."', NOW(), ".CHANGEDPASS." ,'".$_SERVER['REMOTE_ADDR']."')");
+                gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".Filters::in($_POST['account'])."','".$_SESSION['login']."', NOW(), ".CHANGEDPASS." ,'".$_SERVER['REMOTE_ADDR']."')");
                 ?>
                 <div class="warning">
                     <?php echo gdrcd_filter('out', $MESSAGE['warning']['modified']); ?>

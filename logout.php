@@ -4,7 +4,7 @@
 require ('includes/required.php');
 
 //Eseguo la connessione al database
-$handleDBConnection = gdrcd_connect();
+$handleDBConnection = DB::connect();
 
 /** * Aggiorno l'ora di uscita del pg
 * @author Blancks
@@ -32,7 +32,7 @@ gdrcd_query("UPDATE personaggio SET ora_uscita = NOW() WHERE nome='" . gdrcd_fil
 </html>
 <?php
 /*Chiudo la connessione al database*/
-gdrcd_close_connection($handleDBConnection);
+DB::disconnect($handleDBConnection);
 
 /** * Per ottimizzare le risorse impiegate le liberiamo dopo che non ne abbiamo più bisogno
 * @author Blancks

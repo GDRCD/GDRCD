@@ -13,7 +13,7 @@
     <!-- Link di ritorno alla homepage -->
     <div class="link_back">
         <a href="index.inc.php">
-            <?php echo gdrcd_filter_out($PARAMETERS['info']['homepage_name']); ?>
+            <?php echo Filters::out($PARAMETERS['info']['homepage_name']); ?>
         </a>
     </div>
 </div>

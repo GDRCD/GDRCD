@@ -17,7 +17,7 @@ include('../../../vocabulary/' . $PARAMETERS['languages']['set'] . '.vocabulary.
 include('../../../includes/functions.inc.php');
 
 /* Eseguo la connessione al database */
-$handleDBConnection = gdrcd_connect();
+$handleDBConnection = DB::connect();
 
 
     # Recupero la giocata dall'id, dopo aver verificato che appartenga al pg

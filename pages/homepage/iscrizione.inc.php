@@ -230,7 +230,7 @@
                     <!-- ok/form precompilato -->
                     <?php //controlli validità
 
-                    $email = gdrcd_filter_email($_POST['email']);
+                    $email = Filters::email($_POST['email']);
                     $result = gdrcd_query("SELECT email FROM personaggio", 'result');
 
                     foreach ($result as $pg) {
@@ -241,7 +241,7 @@
                         }
                     }
 
-                    if ((gdrcd_filter_email($_POST['email']) == '') || (strpos(gdrcd_filter_email($_POST['email']), '@') == false) || (strpos(gdrcd_filter_email($_POST['email']), '.') == false)) {
+                    if ((Filters::email($_POST['email']) == '') || (strpos(Filters::email($_POST['email']), '@') == false) || (strpos(Filters::email($_POST['email']), '.') == false)) {
                         $ok = false;
                         echo '<div class="error">' . gdrcd_filter('out', $MESSAGE['register']['error']['email_needed']) . '</div>';
                     }
@@ -486,9 +486,9 @@
                         $lastpasschange_value = ", NOW()";
                     }
 
-                    $email = strtolower(gdrcd_filter_email($_POST['email']));
+                    $email = strtolower(Filters::email($_POST['email']));
 
-                    $email = gdrcd_filter_email($_POST['email']);
+                    $email = Filters::email($_POST['email']);
                     $result = gdrcd_query("SELECT email FROM personaggio", 'result');
 
                     foreach ($result as $pg) {
@@ -499,7 +499,7 @@
                         }
                     }
 
-                    if ((gdrcd_filter_email($_POST['email']) == '') || (strpos(gdrcd_filter_email($_POST['email']), '@') == false) || (strpos(gdrcd_filter_email($_POST['email']), '.') == false)) {
+                    if ((Filters::email($_POST['email']) == '') || (strpos(Filters::email($_POST['email']), '@') == false) || (strpos(Filters::email($_POST['email']), '.') == false)) {
                         $ok = false;
                         echo '<div class="error">' . gdrcd_filter('out', $MESSAGE['register']['error']['email_needed']) . '</div>';
                     }

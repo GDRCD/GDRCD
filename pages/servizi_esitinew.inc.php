@@ -2,7 +2,7 @@
     /*
     * Richieste POST
     */
-    switch (gdrcd_filter_get($_POST['op'])) {
+    switch (Filters::get($_POST['op'])) {
         case 'insert': //Inserimento nuovo blocco
             include('esiti_pg/insert.php');
             break;
@@ -13,7 +13,7 @@
     /*
     * Richieste GET
     */
-    switch (gdrcd_filter_get($_GET['op'])) {
+    switch (Filters::get($_GET['op'])) {
         case 'new': //Invia nuovo esito
             include('esiti_pg/new.php');
             break;

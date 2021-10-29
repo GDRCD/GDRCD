@@ -1,5 +1,7 @@
 <?php
 
+CONST ROOT = __DIR__.'/../';
+
 /*Livelli di accesso utente*/
 define('DELETED', -1);
 define('USER', 0);
@@ -114,95 +116,6 @@ const ESITI_PERM = GAMEMASTER;
 
 //definisce quali permessi hanno accesso alla visione di tutti gli esiti (default: moderator)
 const FULL_PERM = MODERATOR;
-/**
- *  Abilita'
- */
-# Gestisce l'inclusione della tabella `abilita_extra` e dei costi e descrizioni per livello
-CONST ABI_EXTRA = true;
-
-# Moltiplicatore default di costo abilita'
-CONST DEFAULT_PX_PER_LVL = 10;
-
-# Livello massimo abilita'
-CONST ABI_LEVEL_CAP = 5;
-
-# Pagina abilita pubblica = true
-# Pagina abilita solo al proprietario o ai moderatori = false
-CONST ABI_PUBLIC = true;
-
-/**
- *  Requisito Abilita'
- */
-# Gestisce l'inclusione dei requisiti abilita'
-CONST ABI_REQUIREMENT = true;
-
-# Definisce i tipi di requisiti abilita'
-CONST REQUISITO_ABI = 1;
-CONST REQUISITO_STAT = 2;
-
-/** CHAT */
-
-# Massimo tempo dell'ultima azione
-CONST CHAT_TIME = 2;
-
-/** CHAT DICE */
-
-# Dadi attivi in chat
-CONST CHAT_DICE = true;
-
-# Valore dado base
-CONST CHAT_DICE_BASE = 20;
-
-# Mostra solo skill acquistate
-CONST CHAT_SKILL_BUYED = false;
-
-# Aggiunge i bonus degli oggetti equipaggiati al lancio del dado
-CONST CHAT_EQUIP_BONUS = false;
-
-# Mostra solo gli oggetti equipaggiati
-CONST CHAT_EQUIP_EQUIPPED = true;
-
-/** CHAT EXP */
-
-# Esperienza in chat
-CONST CHAT_EXP = true;
-
-# Esperienza in chat privata
-CONST CHAT_PVT_EXP = false;
-
-# Esperienza assegnata alle azioni di tipo master
-CONST CHAT_EXP_MASTER = 1;
-
-# Esperienza assegnata alle azioni di tipo Azione
-CONST CHAT_EXP_AZIONE = 1;
-
-# Minimo caratteri per esperienza
-CONST CHAT_EXP_MIN = 500;
-
-/** CHAT MEDIA */
-
-# Attiva le icone in chat
-CONST CHAT_ICONE = true;
-
-# Attiva l'avatar in chat
-CONST CHAT_AVATAR = true;
-
-# Attiva l'audio in chat quando arrivano nuove azioni
-CONST CHAT_NOTIFY = true;
-
-/** CHAT SAVE */
-
-# Attiva salva chat
-CONST CHAT_SAVE = true;
-
-# Attiva salva chat in chat private
-CONST CHAT_PVT_SAVE = false;
-
-# Salva chat in link
-CONST CHAT_SAVE_LINK = true;
-
-# Salva chat in download
-CONST CHAT_SAVE_DOWNLOAD = true;
 
 /*Vettori globali dei parametri*/
 $PARAMETER = array();
