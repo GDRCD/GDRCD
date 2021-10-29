@@ -368,9 +368,6 @@ INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,
     ('CHAT_SAVE_LINK',1,'Chat Salvataggio','Salva chat in link','Salva chat in modalità link?','bool',1),
     ('CHAT_SAVE_DOWNLOAD',1,'Chat Salvataggio','Salva chat download','Salva chat con download?','bool',1);
 
-
-
-
 -- --------------------------------------------------------
 
 --
@@ -622,10 +619,111 @@ INSERT INTO `oggetto` (`id_oggetto`, `tipo`, `nome`, `creatore`, `data_inserimen
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `permessi_custom`
+--
+
+CREATE TABLE `permessi_custom` (
+    `id` int(11) NOT NULL,
+    `permission_name` varchar(255) NOT NULL,
+    `description` text NOT NULL,
+    `default_val` varchar(255) NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dump dei dati per la tabella `permessi_custom`
+--
+
+INSERT INTO `permessi_custom` (`id`, `permission_name`, `description`, `default_val`) VALUES
+    (1, 'MANAGE_CONSTANTS', 'Permesso per l\'editing delle costanti', '0');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `permessi_group`
+--
+
+CREATE TABLE `permessi_group` (
+    `id` int(11) NOT NULL,
+    `group_name` varchar(255) NOT NULL,
+    `description` text NOT NULL,
+    `superuser` tinyint(1) NOT NULL DEFAULT '0',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dump dei dati per la tabella `permessi_group`
+--
+
+INSERT INTO `permessi_group` (`id`, `group_name`, `description`, `superuser`) VALUES
+    (1, 'MASTER', 'Gruppo permessi master', 0),
+    (2, 'MODERATOR', 'Gruppo permessi moderatore', 0),
+    (3, 'SUPERUSER', 'Gruppo Permessi superuser', 1),
+    (4, 'USER', 'Permessi gruppo user', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `permessi_group_assignment`
+--
+
+CREATE TABLE `permessi_group_assignment` (
+    `id` int(11) NOT NULL,
+    `group_id` int(11) NOT NULL,
+    `permission` int(11) NOT NULL,
+    `assigned_by` varchar(255) NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dump dei dati per la tabella `permessi_group_assignment`
+--
+
+INSERT INTO `permessi_group_assignment` (`id`, `group_id`, `permission`, `assigned_by`) VALUES
+    (1, 3, 1, 'Super');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `permessi_group_personaggio`
+--
+
+CREATE TABLE `permessi_group_personaggio` (
+    `id` int(11) NOT NULL,
+    `group_id` int(11) NOT NULL,
+    `personaggio` varchar(255) NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dump dei dati per la tabella `permessi_group_personaggio`
+--
+
+INSERT INTO `permessi_group_personaggio` (`id`, `group_id`, `personaggio`) VALUES
+    (1, 3, '1');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `permessi_personaggio`
+--
+
+CREATE TABLE `permessi_personaggio` (
+    `id` int(11) NOT NULL,
+    `personaggio` varchar(255) NOT NULL,
+    `permission` int(11) NOT NULL,
+    `assigned_by` varchar(255) NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `personaggio`
 --
 
 CREATE TABLE IF NOT EXISTS `personaggio` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `nome` varchar(255) NOT NULL DEFAULT '',
   `cognome` varchar(255) NOT NULL DEFAULT '-',
   `pass` varchar(255) NOT NULL DEFAULT '',
@@ -670,7 +768,7 @@ CREATE TABLE IF NOT EXISTS `personaggio` (
   `ora_entrata` datetime NOT NULL DEFAULT '2009-07-01 00:00:00',
   `ora_uscita` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `posizione` int NOT NULL DEFAULT '1',
-  PRIMARY KEY (`nome`),
+  PRIMARY KEY (`id`),
   KEY `IDRazza` (`id_razza`),
   KEY `Esilio` (`esilio`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -680,9 +778,9 @@ CREATE TABLE IF NOT EXISTS `personaggio` (
 --
 
 
-INSERT INTO `personaggio` (`nome`, `cognome`, `pass`, `ultimo_cambiopass`, `data_iscrizione`, `email`, `permessi`, `ultima_mappa`, `ultimo_luogo`, `esilio`, `data_esilio`, `motivo_esilio`, `autore_esilio`, `sesso`, `id_razza`, `descrizione`, `affetti`, `stato`, `online_status`, `disponibile`, `url_img`, `url_img_chat`, `url_media`, `blocca_media`, `esperienza`, `car0`, `car1`, `car2`, `car3`, `car4`, `car5`, `salute`, `salute_max`, `data_ultima_gilda`, `soldi`, `banca`, `ultimo_stipendio`, `last_ip`, `is_invisible`, `ultimo_refresh`, `ora_entrata`, `ora_uscita`, `posizione`) VALUES
-('Super', 'User', '$P$BcH1cP941XHOf0X61wVWWjzXqcCi2a/', NULL, '2011-06-04 00:47:48', '$P$BNZYtz9JOQE.O4Tv7qZyl3SzIoZzzR.', 4, 1, -1, '2009-01-01', '2009-01-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 7, 8, 6, 5, 6, 5, 100, 100, '2009-01-01 00:00:00', 300, 50000, '2009-01-01', '127.0.0.1', 0, '2021-10-08 00:28:13', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1),
-('Test', 'Di FunzionaliÃ ', '$P$BUoa19QUuXsgIDlhGC3chR/3Q7hoRy0', NULL, '2011-06-04 00:47:48', '$P$Bd1amPCKkOF9GdgYsibZ96U92D5CtR0', 0, 1, -1, '2009-01-01', '2009-01-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 7, 8, 6, 5, 6, 5, 100, 100, '2009-01-01 00:00:00', 50, 50, '2009-01-01', '127.0.0.1', 0, '2009-01-01 00:00:00', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1);
+INSERT INTO `personaggio` (`id`,`nome`, `cognome`, `pass`, `ultimo_cambiopass`, `data_iscrizione`, `email`, `permessi`, `ultima_mappa`, `ultimo_luogo`, `esilio`, `data_esilio`, `motivo_esilio`, `autore_esilio`, `sesso`, `id_razza`, `descrizione`, `affetti`, `stato`, `online_status`, `disponibile`, `url_img`, `url_img_chat`, `url_media`, `blocca_media`, `esperienza`, `car0`, `car1`, `car2`, `car3`, `car4`, `car5`, `salute`, `salute_max`, `data_ultima_gilda`, `soldi`, `banca`, `ultimo_stipendio`, `last_ip`, `is_invisible`, `ultimo_refresh`, `ora_entrata`, `ora_uscita`, `posizione`) VALUES
+(1,'Super', 'User', '$P$BcH1cP941XHOf0X61wVWWjzXqcCi2a/', NULL, '2011-06-04 00:47:48', '$P$BNZYtz9JOQE.O4Tv7qZyl3SzIoZzzR.', 5, 1, -1, '2009-01-01', '2009-01-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 7, 8, 6, 5, 6, 5, 100, 100, '2009-01-01 00:00:00', 300, 50000, '2009-01-01', '127.0.0.1', 0, '2021-10-08 00:28:13', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1),
+(2,'Test', 'Di FunzionaliÃ ', '$P$BUoa19QUuXsgIDlhGC3chR/3Q7hoRy0', NULL, '2011-06-04 00:47:48', '$P$Bd1amPCKkOF9GdgYsibZ96U92D5CtR0', 0, 1, -1, '2009-01-01', '2009-01-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 7, 8, 6, 5, 6, 5, 100, 100, '2009-01-01 00:00:00', 50, 50, '2009-01-01', '127.0.0.1', 0, '2009-01-01 00:00:00', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1);
 
 -- --------------------------------------------------------
 
