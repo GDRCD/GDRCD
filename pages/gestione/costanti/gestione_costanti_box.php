@@ -4,7 +4,7 @@ require(__DIR__ . '/../../../includes/required.php');
 
 $gestione = Gestione::getInstance();
 
-if($gestione->constantsPermission()){
+if(!$gestione->constantsPermission()){
     die('Permesso negato.');
 }
 
