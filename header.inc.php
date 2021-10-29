@@ -48,14 +48,14 @@ if(($PARAMETERS['mode']['user_bbcode'] == 'ON' && $PARAMETERS['settings']['user_
     <!-- IE9: mi stai ampiamente rompendo i maroni. -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <link rel="shortcut icon" href="favicon.png" type="image/png" />
-    <link rel="stylesheet" href="/themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/homepage.css" type="text/css" />
-    <link rel="stylesheet" href="/themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/main.css" type="text/css" />
-    <link rel="stylesheet" href="/themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/chat.css" type="text/css" />
-    <link rel="stylesheet" href="/themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/presenti.css" type="text/css" />
-    <link rel="stylesheet" href="/themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/scheda.css" type="text/css" />
-    <link rel="stylesheet" href="/themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/messaggi.css" type="text/css" />
-    <link rel="stylesheet" href="/themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/forum.css" type="text/css" />
-    <link rel="stylesheet" href="/themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/presenti.css" type="text/css" />
+    <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['homepage']; ?>/homepage.css" type="text/css" />
+    <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/main.css" type="text/css" />
+    <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/chat.css" type="text/css" />
+    <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/presenti.css" type="text/css" />
+    <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/scheda.css" type="text/css" />
+    <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/messaggi.css" type="text/css" />
+    <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/forum.css" type="text/css" />
+    <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/presenti.css" type="text/css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
 
     <script src="/plugins/Ajax.js"></script>
