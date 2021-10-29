@@ -18,27 +18,6 @@ class Permissions extends BaseClass
     }
 
     /**
-     * @fn permissionsList
-     * @note Estrae la lista dei permessi esistenti nella tabella 'config_permission'
-     * @return array
-     */
-    public static function permissionsList($order = 'level'): array
-    {
-        $data = [];
-        $order = Filters::in($order);
-        $list = DB::query("SELECT * FROM config_permission WHERE 1 ORDER BY {$order}", 'result');
-
-        foreach ($list as $row) {
-            $lev = Filters::int($row['level']);
-            $name = Filters::out($row['permission_name']);
-
-            $data[$lev] = $name;
-        }
-
-        return $data;
-    }
-
-    /**
      * @fn permissionExist
      * @note Controlla se il permesso specificato esiste
      * @param string $val
