@@ -20,6 +20,11 @@ $(function(){
 
             let datas = JSON.parse(data);
 
+            if(datas.response){
+                alert('Permessi ordinati correttamente.');
+                window.location.reload();
+            }
+
         }
     }
 
