@@ -68,24 +68,7 @@ class Permissions extends BaseClass
     }
 
     /**
-     * @fn getPermissionLevel
-     * @note Estrae il livello gerarchico del permesso
-     * @param string $val
-     * @return int|void
-     */
-    public static function getPermissionLevel(string $val)
-    {
-        if (self::permissionExist($val)) {
-            $contr = DB::query("SELECT level FROM config_permission WHERE permission_name='{$val}' LIMIT 1");
-
-            return Filters::int($contr['level']);
-        } else {
-            die('Permesso inesistente: ' . $val);
-        }
-    }
-
-    /**
-     * @fn havePermission
+     * @fn permission
      * @note Controlla se il personaggio loggato ha il permesso specificato, il controllo viene effettuato:
      * - Nei permessi di gruppo
      * - Nei permessi specifici del pg

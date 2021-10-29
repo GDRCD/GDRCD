@@ -368,29 +368,6 @@ INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,
     ('CHAT_SAVE_LINK',1,'Chat Salvataggio','Salva chat in link','Salva chat in modalità link?','bool',1),
     ('CHAT_SAVE_DOWNLOAD',1,'Chat Salvataggio','Salva chat download','Salva chat con download?','bool',1);
 
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `config_permission`
---
-CREATE TABLE IF NOT EXISTS `config_permission` (
-    `id` int NOT NULL AUTO_INCREMENT,
-    `permission_name` varchar(255) NOT NULL,
-    `level` int NOT NULL,
-    `deletable` int NOT NULL DEFAULT 0,
-    `editable` tinyint(1) NOT NULL DEFAULT 0,
-    PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
-INSERT INTO `config_permission` (`permission_name`,`level`) VALUES
-    ('DELETED',0),
-    ('USER',1),
-    ('GUILDMODERATOR',2),
-    ('GAMEMASTER',3),
-    ('MODERATOR',4),
-    ('SUPERUSER',5);
-
 -- --------------------------------------------------------
 
 --
