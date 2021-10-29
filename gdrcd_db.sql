@@ -460,6 +460,47 @@ CREATE TABLE IF NOT EXISTS `log` (
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `menu`
+--
+
+CREATE TABLE `menu` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `menu_name` varchar(255) NOT NULL,
+    `section` varchar(255) NOT NULL,
+    `name` varchar(255) NOT NULL,
+    `page` varchar(255) NOT NULL,
+    `permission` varchar(255) NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Dump dei dati per la tabella `menu`
+--
+
+INSERT INTO `menu` (`menu_name`, `section`, `name`, `page`, `permission`) VALUES
+  ('Gestione', 'Log', 'Log Chat', 'log_chat', 'LOG_CHAT'),
+  ('Gestione', 'Log', 'Log Eventi', 'log_eventi', 'LOG_EVENTI'),
+  ('Gestione', 'Log', 'Log Messaggi', 'log_messaggi', 'LOG_MESSAGGI'),
+  ('Gestione', 'Abilità', 'Gestione Abilità', 'gestione_abilita', 'MANAGE_ABILITY'),
+  ('Gestione', 'Abilità', 'Dati Extra Abilità', 'gestione_abilita_extra', 'MANAGE_ABILITY_EXTRA'),
+  ('Gestione', 'Abilità', 'Requisiti abilità', 'gestione_abilita_requisiti', 'MANAGE_ABILITY_REQUIREMENT'),
+  ('Gestione', 'Locations', 'Gestione Luoghi', 'gestione_luoghi', 'MANAGE_LOCATIONS'),
+  ('Gestione', 'Locations', 'Gestione Mappe', 'gestione_mappe', 'MANAGE_MAPS'),
+  ('Gestione', 'Documentazioni', 'Gestione Ambientazione', 'gestione_ambientazione', 'MANAGE_AMBIENT'),
+  ('Gestione', 'Documentazioni', 'Gestione Regolamento', 'gestione_regolamento', 'MANAGE_RULES'),
+  ('Gestione', 'Razze', 'Gestione Razze', 'gestione_razze', 'MANAGE_RACES'),
+  ('Gestione', 'Bacheche', 'Gestione Bacheche', 'gestione_bacheche', 'MANAGE_FORUMS'),
+  ('Gestione', 'Gilde', 'Gestione Gilde e Ruoli', 'gestione_gilde', 'MANAGE_GUILDS'),
+  ('Gestione', 'Gestione', 'Gestione Costanti', 'gestione_costanti', 'MANAGE_CONSTANTS'),
+  ('Gestione', 'Permessi', 'Gestione Permessi', 'gestione_permessi', 'MANAGE_PERMISSIONS'),
+  ('Gestione', 'Gestione', 'Manutenzione', 'gestione_manutenzione', 'MANAGE_MANUTENTIONS'),
+  ('Gestione', 'Oggetti', 'Gestione Oggetti', 'gestione_oggetti', 'MANAGE_OBJECTS'),
+  ('Gestione', 'Chat', 'Giocate Segnalate', 'gestione_segnalazioni', 'MANAGE_REPORTS'),
+  ('Gestione', 'Chat', 'Esiti in chat', 'gestione_esiti', 'MANAGE_OUTCOMES');
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `mappa`
 --
 
@@ -623,18 +664,37 @@ INSERT INTO `oggetto` (`id_oggetto`, `tipo`, `nome`, `creatore`, `data_inserimen
 --
 
 CREATE TABLE `permessi_custom` (
-    `id` int(11) NOT NULL,
+    `id` int(11) NOT NULL AUTO_INCREMENT,
     `permission_name` varchar(255) NOT NULL,
     `description` text NOT NULL,
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Dump dei dati per la tabella `permessi_custom`
 --
 
-INSERT INTO `permessi_custom` (`id`, `permission_name`, `description`) VALUES
-    (1, 'MANAGE_CONSTANTS', 'Permesso per l\'editing delle costanti');
+INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
+    ('LOG_CHAT', 'Permesso visualizzazione log chat'),
+    ('LOG_EVENTI', 'Permesso visualizzazione log evento'),
+    ('LOG_MESSAGGI', 'Permesso visualizzazione log messaggi'),
+    ('MANAGE_ABILITY', 'Permesso gestione abilità'),
+    ('MANAGE_ABILITY_EXTRA', 'Permesso gestione abilità dati extra'),
+    ('MANAGE_ABILITY_REQUIREMENT', 'Permesso gestione requisiti abilità '),
+    ('MANAGE_LOCATIONS', 'Permesso gestione luoghi'),
+    ('MANAGE_MAPS', 'Permesso gestione mappe'),
+    ('MANAGE_AMBIENT','Gestione ambientazione'),
+    ('MANAGE_RULES','Gestione regolamento'),
+    ('MANAGE_CONSTANTS', 'Permesso per l\'editing delle costanti'),
+    ('MANAGE_RACES', 'Permesso per la gestione delle razze'),
+    ('MANAGE_FORUMS', 'Permesso per la gestione delle bacheche'),
+    ('MANAGE_GUILDS', 'Permesso per la gestione delle gilde'),
+    ('MANAGE_PERMISSIONS', 'Permesso per la gestione dei permessi'),
+    ('MANAGE_MANUTENTIONS', 'Permesso per la gestione della manutenzione del db'),
+    ('MANAGE_OBJECTS', 'Permesso per la gestione degli oggetti'),
+    ('MANAGE_REPORTS', 'Permesso per la gestione delle giocate segnalate'),
+    ('MANAGE_OUTCOMES', 'Permesso per la gestione degli esiti in chat');
+
 
 -- --------------------------------------------------------
 
@@ -643,12 +703,12 @@ INSERT INTO `permessi_custom` (`id`, `permission_name`, `description`) VALUES
 --
 
 CREATE TABLE `permessi_group` (
-    `id` int(11) NOT NULL,
+    `id` int(11) NOT NULL AUTO_INCREMENT,
     `group_name` varchar(255) NOT NULL,
     `description` text NOT NULL,
     `superuser` tinyint(1) NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Dump dei dati per la tabella `permessi_group`
@@ -667,19 +727,12 @@ INSERT INTO `permessi_group` (`id`, `group_name`, `description`, `superuser`) VA
 --
 
 CREATE TABLE `permessi_group_assignment` (
-    `id` int(11) NOT NULL,
+    `id` int(11) NOT NULL AUTO_INCREMENT,
     `group_id` int(11) NOT NULL,
     `permission` int(11) NOT NULL,
     `assigned_by` varchar(255) NOT NULL,
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dump dei dati per la tabella `permessi_group_assignment`
---
-
-INSERT INTO `permessi_group_assignment` (`id`, `group_id`, `permission`, `assigned_by`) VALUES
-    (1, 3, 1, 'Super');
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -688,18 +741,18 @@ INSERT INTO `permessi_group_assignment` (`id`, `group_id`, `permission`, `assign
 --
 
 CREATE TABLE `permessi_group_personaggio` (
-    `id` int(11) NOT NULL,
+    `id` int(11) NOT NULL AUTO_INCREMENT,
     `group_id` int(11) NOT NULL,
     `personaggio` varchar(255) NOT NULL,
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Dump dei dati per la tabella `permessi_group_personaggio`
 --
 
 INSERT INTO `permessi_group_personaggio` (`id`, `group_id`, `personaggio`) VALUES
-    (1, 3, '1');
+    (1, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -708,12 +761,12 @@ INSERT INTO `permessi_group_personaggio` (`id`, `group_id`, `personaggio`) VALUE
 --
 
 CREATE TABLE `permessi_personaggio` (
-    `id` int(11) NOT NULL,
+    `id` int(11) NOT NULL AUTO_INCREMENT,
     `personaggio` varchar(255) NOT NULL,
     `permission` int(11) NOT NULL,
     `assigned_by` varchar(255) NOT NULL,
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
