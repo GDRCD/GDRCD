@@ -1,5 +1,6 @@
 <?php require(__DIR__.'/../../../header.inc.php'); /*Header comune*/ ?>
 
+    <link rel="stylesheet" href="/themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/presenti.css" type="text/css" />
     <!-- Box presenti-->
     <div class="pagina_presenti">
         <div class="page_title">

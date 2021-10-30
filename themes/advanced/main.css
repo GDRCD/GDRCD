@@ -408,6 +408,38 @@ div.innertube {
     vertical-align: middle;
 }
 
+/** MENU DEFAULT **/
+.menu_box .single_menu{
+    margin: 10px auto !important;
+}
+
+.menu_box .single_section .section_title{
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    border: solid black;
+    border-width: 1px 0;
+    margin: 10px 0;
+    padding: 5px 0;
+    clear: both;
+}
+
+.menu_box .single_section .box_input{
+    display:none;
+    background: lightgrey;
+    border:1px solid black;
+    width: 98%;
+    margin: 0 auto;
+}
+
+.menu_box .box_input .single_menu{
+    margin: 10px auto !important;
+    background: grey;
+    border:1px solid black;
+    border-radius: 5px;
+    width: 300px;
+    padding: 5px 0;
+}
 
 /**
  GESTIONE COSTANTI
@@ -422,6 +454,19 @@ div.innertube {
 
 .gestione_costanti .single_section .box_input{
     display: none;
+}
+
+/** GESTIONE PERMESSI **/
+.gestione_permessi #permessi_gerarchia{
+    list-style: none;
+}
+
+.gestione_permessi #permessi_gerarchia li{
+    width: 50%;
+    margin: 5px auto;
+    background: grey;
+    border:1px solid black;
+    color: white;
 }
 
 

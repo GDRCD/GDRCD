@@ -3,12 +3,12 @@
 CONST ROOT = __DIR__.'/../';
 
 /*Livelli di accesso utente*/
-define('DELETED', -1);
-define('USER', 0);
-define('SUPERUSER', 4);
-define('MODERATOR', 3);
-define('GAMEMASTER', 2);
-define('GUILDMODERATOR', 1);
+define('SUPERUSER',5) ;
+define('MODERATOR', 4);
+define('GAMEMASTER', 3);
+define('GUILDMODERATOR', 2);
+define('USER', 1);
+define('DELETED', 0);
 
 /*Codici di log*/
 define('BLOCKED', 1);
