@@ -158,7 +158,7 @@ CREATE TABLE IF NOT EXISTS `blocco_esiti` (
   `master` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0',
   `closed` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -338,7 +338,7 @@ CREATE TABLE IF NOT EXISTS `esiti` (
   `dice_num` int NOT NULL DEFAULT '0',
   `dice_results` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -693,7 +693,7 @@ CREATE TABLE IF NOT EXISTS `segnalazione_role` (
   `tags` text CHARACTER SET utf8 COLLATE utf8_general_ci,
   `quest` text CHARACTER SET utf8 COLLATE utf8_general_ci,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -708,7 +708,24 @@ CREATE TABLE IF NOT EXISTS `send_GM` (
   `role_reg` int NOT NULL,
   `note` text CHARACTER SET utf8 COLLATE utf8_general_ci,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `_gdrcd_db_versions`
+--
+
+CREATE TABLE IF NOT EXISTS _gdrcd_db_versions (
+  `migration_id` varchar(255) NOT NULL,
+  `applied_on` DATETIME NOT NULL ,
+  PRIMARY KEY (`migration_id`)
+);
+
+INSERT INTO _gdrcd_db_versions (migration_id,applied_on) VALUES
+  ('2020072500', NOW()),
+  ('2021103018',NOW());
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

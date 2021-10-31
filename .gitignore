@@ -170,4 +170,7 @@ pip-log.txt
 
 # chat_save
 giocate/
+
 includes/config-overrides.php
+.directory
+.user.ini
