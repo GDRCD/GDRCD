@@ -180,7 +180,7 @@ class DbMigrationEngine
         }
         else{//migration verso una versione specifica
             $lastAppliedIdx = 0;
-            $targetIdx = 0;
+            $targetIdx = -1;
             foreach ($migrations as $k => $m){
                 if((int)$m->getMigrationId() == (int)$lastApplied['migration_id']){
                     $lastAppliedIdx = $k;
@@ -192,6 +192,10 @@ class DbMigrationEngine
                     break;
                 }
             }
+            if($targetIdx == -1){
+                throw new Exception("La Versione del Database specificata non è stata trovata");
+            }
+            
             if($lastAppliedIdx > $targetIdx){
                 $directionUp = false;
                 $migrationsToApply = array_slice($migrations, $targetIdx, ($lastAppliedIdx - $targetIdx));
