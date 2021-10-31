@@ -173,3 +173,4 @@ giocate/
 includes/config-overrides.php
 
 .directory
+.user.ini
