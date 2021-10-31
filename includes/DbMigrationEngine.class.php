@@ -45,6 +45,8 @@ class DbMigrationEngine
                 $applied++;
             }
             catch (Exception $e){
+                //Attenzione questa è una misura di sicurezza debole: le DDL (CREATE TABLE, ALTER TABLE...) provocano
+                // dei commit automatici, a questo punto in realtà non è già più possibile fare rollback
                 $connection->rollback();
                 throw new Exception("Aggiornamento del database fallito: " . $e->getMessage(), 0, $e);
             }
@@ -148,7 +150,6 @@ class DbMigrationEngine
         
         if($tablesCount > 1){//Precedente installazione priva di Db Migrations (pre 5.6)?
             //Eseguiamo solo le migration dalla 5.6 in poi, assumendo il setup della 5.5.1 già fatto
-            $migrations[0]->up();
             self::trackAppliedMigration($migrations[0]->getMigrationId());
             $lastApplied = self::getLastAppliedMigration();
         }
@@ -213,9 +214,9 @@ class DbMigrationEngine
         global $PARAMETERS;
         
         $count = gdrcd_query("SELECT COUNT(*) AS number FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '"
-                                    .$PARAMETERS['database']['database_name']."'");;
+                                    .$PARAMETERS['database']['database_name']."'");
         
-        return $count;
+        return (int)$count['number'];
     }
     
     /**

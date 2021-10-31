@@ -17,6 +17,7 @@ if ($PARAMETERS['settings']['protection'] == 'ON'){
 }
 
 
+
 if(DbMigrationEngine::dbNeedsInstallation()) {
     gdrcd_redirect("installer.php");
 }

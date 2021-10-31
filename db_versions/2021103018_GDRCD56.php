@@ -38,7 +38,7 @@ ADD COLUMN oggetto text NULL DEFAULT NULL");
         gdrcd_query("ALTER TABLE chat
 ALTER COLUMN ora SET DEFAULT CURRENT_TIMESTAMP");
     
-        gdrcd_query("CREATE TABLE esiti (
+        gdrcd_query("CREATE TABLE IF NOT EXISTS esiti (
         id int(11) NOT NULL AUTO_INCREMENT,
         sent int(11) NOT NULL DEFAULT '0',
         titolo varchar(255) CHARACTER SET utf8 NOT NULL,
@@ -63,7 +63,7 @@ ALTER COLUMN ora SET DEFAULT CURRENT_TIMESTAMP");
         PRIMARY KEY (id)
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
     
-        gdrcd_query("ALTER TABLE gilda
+        gdrcd_query("ALTER TABLE log
 ALTER COLUMN data_evento SET DEFAULT CURRENT_TIMESTAMP");
     
         gdrcd_query("ALTER TABLE messaggi
@@ -90,7 +90,7 @@ CHANGE COLUMN ora_uscita ora_uscita datetime NOT NULL default '2009-07-01 00:00:
         gdrcd_query("ALTER TABLE personaggio
 DROP COLUMN ultimo_messaggio");
     
-        gdrcd_query("CREATE TABLE segnalazione_role (
+        gdrcd_query("CREATE TABLE IF NOT EXISTS segnalazione_role (
           id bigint(20) NOT NULL AUTO_INCREMENT,
           stanza int(11) NOT NULL,
           conclusa int(11) NOT NULL DEFAULT '0',
@@ -103,7 +103,7 @@ DROP COLUMN ultimo_messaggio");
           PRIMARY KEY (id)
         ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;");
     
-        gdrcd_query("CREATE TABLE send_GM (
+        gdrcd_query("CREATE TABLE IF NOT EXISTS send_GM (
           id int(11) NOT NULL AUTO_INCREMENT,
           data datetime NOT NULL,
           autore text CHARACTER SET utf8 NOT NULL,
@@ -127,14 +127,14 @@ DROP COLUMN tipo");
         gdrcd_query("ALTER TABLE backmessaggi
 DROP COLUMN oggetto");
     
-        gdrcd_query("DROP TABLE blocco_esiti");
+        gdrcd_query("DROP TABLE IF EXISTS blocco_esiti");
     
         gdrcd_query("ALTER TABLE chat
 ALTER COLUMN ora SET DEFAULT '0000-00-00 00:00:00'");
     
-        gdrcd_query("DROP TABLE esiti");
+        gdrcd_query("DROP TABLE IF EXISTS esiti");
     
-        gdrcd_query("ALTER TABLE gilda
+        gdrcd_query("ALTER TABLE log
 ALTER COLUMN data_evento SET DEFAULT '0000-00-00 00:00:00'");
     
         gdrcd_query("ALTER TABLE messaggi
@@ -161,8 +161,8 @@ CHANGE COLUMN ora_uscita ora_uscita datetime default NULL");
         gdrcd_query("ALTER TABLE personaggio
 ADD COLUMN ultimo_messaggio bigint(20) NOT NULL default '0'");
     
-        gdrcd_query("DROP TABLE segnalazione_role");
+        gdrcd_query("DROP TABLE IF EXISTS segnalazione_role");
     
-        gdrcd_query("DROP TABLE send_GM");
+        gdrcd_query("DROP TABLE IF EXISTS send_GM");
     }
 }
