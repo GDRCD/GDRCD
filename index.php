@@ -16,11 +16,9 @@ if ($PARAMETERS['settings']['protection'] == 'ON'){
     require 'protezione.php';
 }
 
-/*
- * Fix per installare il database la prima volta.
- */
-$record = gdrcd_query("SELECT COUNT(*) AS number FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '".$PARAMETERS['database']['database_name']."'");
-if($record['number'] == 0 ) {
+
+
+if(DbMigrationEngine::dbNeedsInstallation()) {
     gdrcd_redirect("installer.php");
 }
 

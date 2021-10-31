@@ -7,6 +7,9 @@ if(file_exists(dirname(__FILE__).'/config-overrides.php')){
     include_once dirname(__FILE__).'/config-overrides.php';
 }
 
+require_once dirname(__FILE__).'/DbMigrationEngine.class.php';
+require_once dirname(__FILE__).'/DbMigration.class.php';
+
 require_once(dirname(__FILE__) . '/../vocabulary/' . $PARAMETERS['languages']['set'] . '.vocabulary.php');
 require_once(dirname(__FILE__) . '/functions.inc.php');
 
