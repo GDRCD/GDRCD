@@ -45,6 +45,34 @@ class DbMigrationEngine
     }
     
     /**
+     * @fn dbNeedsInstallation
+     * @note Indica se il database di GDRCD è stato installato o meno
+     * @return bool
+     */
+    public function dbNeedsInstallation() {
+        return $this->getTablesCountInDb() <= 1;//Controlliamo sempre 1 e non 0, per escludere la tabella delle  migration
+    }
+    
+    /**
+     * @fn dbNeedsUpdate
+     * @note Indica se il database non si trova all'ultima versione disponibile e necessita quindi di applicare una
+     * migration
+     * @return bool
+     * @throws ReflectionException
+     */
+    public function dbNeedsUpdate() {
+        if($this->dbNeedsInstallation()){
+            return true;
+        }
+    
+        $migrations = $this->loadMigrationClasses();
+        $this->createVersioningTable();//Per sicurezza cerchiamo di crearla sempre
+        $lastApplied = $this->getLastAppliedMigration();
+    
+        return empty($lastApplied) or $migrations[count($migrations) -1]->getMigrationId() != (int)$lastApplied['migration_id'];
+    }
+    
+    /**
      * @fn loadMigrationClasses
      * @note Carica in memoria le classi di migrazione
      * @return DbMigration[] Un array con un oggetto già istanziato per ogni migrazione, nel corretto ordine di
@@ -156,20 +184,23 @@ class DbMigrationEngine
         return $migrationsToApply;
     }
     
+    /**
+     * @fn getTablesCountInDb
+     * @note Trova il numero di tabelle presenti nel DB
+     * @return int
+     */
     private function getTablesCountInDb() {
-        $res = gdrcd_query("SHOW TABLES", 'result');
-        $count = 0;
-        while(gdrcd_query($res, 'fetch')){
-            $count++;
-        }
-        gdrcd_query($res, 'free');
+        global $PARAMETERS;
+        
+        $count = gdrcd_query("SELECT COUNT(*) AS number FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '"
+                                    .$PARAMETERS['database']['database_name']."'");;
         
         return $count;
     }
     
     /**
      * @fn createVersioningTable
-     * @note create sul DB la tabella per il tracciamento delle versioni del DB
+     * @note Crea sul DB la tabella per il tracciamento delle versioni del DB
      */
     private function createVersioningTable()
     {
