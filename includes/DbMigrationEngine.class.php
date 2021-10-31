@@ -10,7 +10,7 @@ class DbMigrationEngine
     /**
      * @fn updateDbSchema
      * @note Esegue le modifiche allo schema del DB portandolo alla versione specificata
-     * @param string|null $migration_id versione a cui portare il DB, corrispondende all'identificativo di una
+     * @param int|null $migration_id versione a cui portare il DB, corrispondende all'identificativo di una
      * migrazione specifica. Se vuoto porta il DB all'ultima versione disponibile
      * @return int Il numero di migrazioni applicate
      * @throws ReflectionException
@@ -79,6 +79,16 @@ class DbMigrationEngine
         $lastApplied = self::getLastAppliedMigration();
     
         return empty($lastApplied) or $migrations[count($migrations) -1]->getMigrationId() != (int)$lastApplied['migration_id'];
+    }
+    
+    /**
+     * @fn getAllAvailableMigration
+     * @note Restituisce un array di tutte le migration disponibili a sistema
+     * @return DbMigration[]
+     * @throws ReflectionException
+     */
+    public static function getAllAvailableMigrations(){
+        return self::loadMigrationClasses();
     }
     
     /**
