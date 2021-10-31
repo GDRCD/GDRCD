@@ -518,18 +518,6 @@ function gdrcd_load_modules($page, $params = [])
         echo $e->getMessage();
     }
 
-    // Controllo che sia stata trovata almeno una corrispondenza
-    if(empty($modules)) {
-        throw new Exception($MESSAGE['interface']['page_not_found']);
-    }
-
-    // Se sono state trovate piu corrispondenze, blocco il caricamento
-    if(count($modules) > 1) {
-        throw new Exception($MESSAGE['interface']['multiple_page_found']);
-    }
-
-    // Ritorno il modulo
-    return $modules[0];
 }
 
 /**
