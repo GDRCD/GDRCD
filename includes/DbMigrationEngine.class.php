@@ -188,7 +188,7 @@ class DbMigrationEngine
                 if((int)$m->getMigrationId() == (int)$targetMigrationId){
                     $targetIdx = $k;
                 }
-                if($targetIdx != 0 && $lastAppliedIdx != 0){
+                if($targetIdx != -1 && $lastAppliedIdx != 0){
                     break;
                 }
             }
@@ -198,10 +198,10 @@ class DbMigrationEngine
             
             if($lastAppliedIdx > $targetIdx){
                 $directionUp = false;
-                $migrationsToApply = array_slice($migrations, $targetIdx, ($lastAppliedIdx - $targetIdx));
+                $migrationsToApply = array_slice($migrations, $targetIdx +1, ($lastAppliedIdx - $targetIdx));
             }
             else{
-                $migrationsToApply = array_slice($migrations, $lastAppliedIdx, ($targetIdx - $lastAppliedIdx));
+                $migrationsToApply = array_slice($migrations, $lastAppliedIdx +1, ($targetIdx - $lastAppliedIdx));
             }
         }
         
@@ -258,7 +258,7 @@ class DbMigrationEngine
      */
     private static function untrackAppliedMigration($migration_id)
     {
-        gdrcd_query("DELETE * FROM _gdrcd_db_versions WHERE migration_id = '" . gdrcd_filter_in($migration_id) ."'");
+        gdrcd_query("DELETE FROM _gdrcd_db_versions WHERE migration_id = '" . gdrcd_filter_in($migration_id) ."'");
     }
     
     /**
