@@ -24,7 +24,7 @@ class GDRCD551 extends DbMigration
             descrizione text NOT NULL,
             id_razza int(2) NOT NULL default '0',
             PRIMARY KEY  (id_abilita)
-        )ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1");
+        )ENGINE=MyISAM  DEFAULT CHARSET=utf8");
     
         gdrcd_query("INSERT INTO abilita VALUES (18, 'Resistenza', 1, 'Il personaggio è in grado di sopportare il dolore ed il disagio e sopporta minime dosi di agenti tossici nel proprio organismo. ', -1);");
     
@@ -70,7 +70,7 @@ class GDRCD551 extends DbMigration
             nome char(50) default NULL,
             proprietari int(2) NOT NULL default '0',
             PRIMARY KEY  (id_araldo)
-        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;");
+        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;");
     
         gdrcd_query("INSERT INTO araldo VALUES (1, 4, 'Resoconti quest', 0);");
     
@@ -86,7 +86,7 @@ class GDRCD551 extends DbMigration
             araldo_id int(7) NOT NULL,
             thread_id int(11) NOT NULL,
             PRIMARY KEY  (id)
-        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");
+        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;");
     
         gdrcd_query("ALTER TABLE  `araldo_letto` ADD INDEX (  `nome` ,  `thread_id` ) ;");
     
@@ -98,7 +98,7 @@ class GDRCD551 extends DbMigration
             letto tinyint(1) default '0',
             testo text,
             PRIMARY KEY  (id)
-        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");
+        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;");
     
         gdrcd_query("CREATE TABLE blacklist (
             ip char(15) NOT NULL default '',
@@ -121,7 +121,7 @@ class GDRCD551 extends DbMigration
             testo text,
             PRIMARY KEY  (id),
             KEY Stanza (stanza)
-        ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");
+        ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
     
         gdrcd_query("CREATE TABLE clgpersonaggioabilita (
             nome varchar(20) NOT NULL,
@@ -157,13 +157,13 @@ class GDRCD551 extends DbMigration
             img_url char(50) NOT NULL default 'grigia.gif',
             descrizione char(255) NOT NULL default 'nessuna',
             PRIMARY KEY  (id_mostrina)
-        ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");
+        ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
     
         gdrcd_query("CREATE TABLE codtipogilda (
             descrizione varchar(50) NOT NULL,
             cod_tipo int(2) NOT NULL auto_increment,
             PRIMARY KEY  (cod_tipo)
-        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;");
+        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;");
     
         gdrcd_query("INSERT INTO codtipogilda VALUES ('Positivo', 1);");
     
@@ -175,7 +175,7 @@ class GDRCD551 extends DbMigration
             cod_tipo int(2) NOT NULL auto_increment,
             descrizione char(20) NOT NULL,
             PRIMARY KEY  (cod_tipo)
-        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;");
+        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;");
     
         gdrcd_query("INSERT INTO codtipooggetto VALUES (1, 'Animale');");
     
@@ -200,7 +200,7 @@ class GDRCD551 extends DbMigration
             statuto text,
             visibile tinyint(1) NOT NULL default '0',
             PRIMARY KEY  (id_gilda)
-        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;");
+        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;");
     
         gdrcd_query("INSERT INTO gilda VALUES (1, 'Guardia cittadina', '1', 'standard_gilda.png', '', '', 1);");
     
@@ -212,7 +212,7 @@ class GDRCD551 extends DbMigration
             codice_evento char(20) NOT NULL default '',
             descrizione_evento char(100) NOT NULL default '',
             PRIMARY KEY  (id)
-        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");
+        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;");
     
         gdrcd_query("CREATE TABLE IF NOT EXISTS mappa (
             id int(4) NOT NULL AUTO_INCREMENT,
@@ -237,7 +237,7 @@ class GDRCD551 extends DbMigration
             costo int(4) DEFAULT '0',
             PRIMARY KEY (id),
             FULLTEXT KEY Invitati (invitati)
-        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;");
+        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;");
     
         gdrcd_query("INSERT INTO mappa VALUES (1, 'Strada', 'Via che congiunge la periferia al centro.', 'Nella norma', '', 1, 'standard_luogo.png', '', 1, '', '', 0, 180, 150, '', 0, 'Nessuno', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0);");
     
@@ -253,7 +253,7 @@ class GDRCD551 extends DbMigration
             larghezza smallint(4) NOT NULL DEFAULT '500',
             altezza smallint(4) NOT NULL DEFAULT '330',
             PRIMARY KEY  (id_click)
-        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;");
+        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;");
     
         gdrcd_query("INSERT INTO mappa_click VALUES (1, 'Mappa principale', 'spacer.gif', 2, 0, '20°c - sereno', 500, 330);");
     
@@ -263,7 +263,7 @@ class GDRCD551 extends DbMigration
             id_oggetto int(4) NOT NULL,
             numero int(4) default '0',
             PRIMARY KEY  (id_oggetto)
-        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");
+        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;");
     
         gdrcd_query("CREATE TABLE messaggi (
             id bigint(20) NOT NULL auto_increment,
@@ -277,7 +277,7 @@ class GDRCD551 extends DbMigration
             PRIMARY KEY  (id),
             KEY destinatario (destinatario),
             KEY letto (letto)
-        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");
+        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;");
     
         gdrcd_query("CREATE TABLE messaggioaraldo (
             id_messaggio bigint(20) NOT NULL auto_increment,
@@ -295,7 +295,7 @@ class GDRCD551 extends DbMigration
             KEY id_messaggio_padre (id_messaggio_padre),
             KEY data_messaggio (data_messaggio),
             KEY importante (importante,chiuso)
-        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1 ;");
+        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 PACK_KEYS=0;");
     
         gdrcd_query("CREATE TABLE oggetto (
             id_oggetto int(4) NOT NULL auto_increment,
@@ -318,7 +318,7 @@ class GDRCD551 extends DbMigration
             urlimg varchar(50) default NULL,
             PRIMARY KEY  (id_oggetto),
             KEY Tipo (tipo)
-        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;");
+        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;");
     
     
         gdrcd_query("INSERT INTO oggetto VALUES (1, 6, 'Scopa', 'Super', '2009-12-20 14:29:33', 'Una comune scopa di saggina.', 0, 10, 0, 0, '0', 0, 0, 0, 0, 0, 0, 'standard_oggetto.png');");
@@ -396,7 +396,7 @@ class GDRCD551 extends DbMigration
             iscrizione tinyint(1) NOT NULL default '1',
             visibile tinyint(1) NOT NULL default '1',
             PRIMARY KEY  (id_razza)
-        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1001 ;");
+        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;");
     
         gdrcd_query("INSERT INTO razza VALUES (1000, 'Umani', 'Umano', 'Umana', '', 0, 0, 0, 0, 0, 0, 'standard_razza.png', 'standard_razza.png', '', 1, 1);");
     
@@ -414,7 +414,7 @@ class GDRCD551 extends DbMigration
             stipendio int(4) NOT NULL default '0',
             capo int(1) NOT NULL default '0',
             PRIMARY KEY  (id_ruolo)
-        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;");
+        ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;");
     
         gdrcd_query("INSERT INTO ruolo VALUES (1, 1, 'Capitano della guardia', 'standard_gilda.png', 100, 1);");
     

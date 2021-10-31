@@ -232,7 +232,7 @@ class DbMigrationEngine
         gdrcd_query("
         create table if not exists _gdrcd_db_versions
 (
-	migration_id varchar(250) null,
+	migration_id varchar(250) NOT NULL,
 	applied_on datetime not null,
 	constraint _gdrcd_db_versions_pk
 		primary key (migration_id)
