@@ -29,16 +29,25 @@ class DbMigrationEngine
         $migrationsToApply = $this->getMigrationsToApply($migrations, $lastApplied, $migration_id, $directionUp);
         
         $applied = 0;
+        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);//Necessario per le transazioni
+        $connection = gdrcd_connect();
         foreach ($migrationsToApply as $m) {
-            if($directionUp) {
-                $m->up();
-                $this->trackAppliedMigration($m->getMigrationId());
+            try {
+                $connection->begin_transaction();
+                if ($directionUp) {
+                    $m->up();
+                    $this->trackAppliedMigration($m->getMigrationId());
+                } else {
+                    $m->down();
+                    $this->untrackAppliedMigration($m->getMigrationId());
+                }
+                $connection->commit();
+                $applied++;
             }
-            else{
-                $m->down();
-                $this->untrackAppliedMigration($m->getMigrationId());
+            catch (Exception $e){
+                $connection->rollback();
+                throw new Exception("Aggiornamento del database fallito: " . $e->getMessage(), 0, $e);
             }
-            $applied++;
         }
         
         return $applied;
