@@ -25,7 +25,9 @@ require 'header.inc.php'; /*Header comune*/
         </form>
         <?php
     }
-    else{
+    /* else{
+
+
         ?>
         <div class="error"><?= $MESSAGE['homepage']['installer']['not_empty'] ?></div>
         <form method="post" action="installer.php">
@@ -54,7 +56,7 @@ require 'header.inc.php'; /*Header comune*/
             </fieldset>
         </form>
         <?php
-    }?>
+    } */ ?>
     <!-- Link di ritorno alla homepage -->
     <div class="link_back">
         <a href="index.php">
