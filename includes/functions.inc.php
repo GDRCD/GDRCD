@@ -63,7 +63,7 @@ function gdrcd_close_connection($db)
  *  affected: ritorna il numero di record toccati dall'ultima query (INSERT, UPDATE, DELETE o SELECT). In questo caso $sql non viene considerato
  * @return un booleano in caso di esecuzione di query non SELECT e modalità 'query'. Altrimenti ritorna come specificato nella descrizione di $mode
  */
-function gdrcd_query($sql, $mode = 'query')
+function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
 {
     $db_link = gdrcd_connect();
 
@@ -71,19 +71,44 @@ function gdrcd_query($sql, $mode = 'query')
         case 'query':
             switch (strtoupper(substr(trim($sql), 0, 6))) {
                 case 'SELECT':
-                    $result = mysqli_query($db_link, $sql) or die(gdrcd_mysql_error($sql));
+                    $result = mysqli_query($db_link, $sql);
+                    if($result === false){
+                        if($throwOnError){
+                            throw new Exception("Query DB Fallita: " . $sql . "\n\n" . mysqli_error($db_link));
+                        }
+                        else{
+                            die(gdrcd_mysql_error($sql));
+                        }
+                    }
                     $row = mysqli_fetch_array($result, MYSQLI_BOTH);
                     mysqli_free_result($result);
 
                     return $row;
                     break;
                 default:
-                    return mysqli_query($db_link, $sql) or die(gdrcd_mysql_error($sql));
+                    $result = mysqli_query($db_link, $sql);
+                    if($result === false){
+                        if($throwOnError){
+                            throw new Exception("Query DB Fallita: " . $sql . "\n\n" . mysqli_error($db_link));
+                        }
+                        else{
+                            die(gdrcd_mysql_error($sql));
+                        }
+                    }
+                    return $result;
                     break;
             }
 
         case 'result':
-            $result = mysqli_query($db_link, $sql) or die(gdrcd_mysql_error($sql));
+            $result = mysqli_query($db_link, $sql);
+            if($result === false){
+                if($throwOnError){
+                    throw new Exception("Query DB Fallita: " . $sql . "\n\n" . mysqli_error($db_link));
+                }
+                else{
+                    die(gdrcd_mysql_error($sql));
+                }
+            }
 
             return $result;
             break;
