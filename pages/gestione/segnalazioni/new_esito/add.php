@@ -15,6 +15,7 @@ if ($_POST['op']=='add') {
         if (isset($_POST['id_ab'])===FALSE) { $ab = 0;} else { $ab = gdrcd_filter('num',$_POST['id_ab']); }
         if (isset($_POST['dice_face'])===FALSE) { $facce = 0;} else { $facce=gdrcd_filter('num',$_POST['dice_face']);}
         if (isset($_POST['dice_num'])===FALSE) { $num = 0;} else {  $num= gdrcd_filter('num',$_POST['dice_num']);}
+        if (isset($_POST['mod'])===FALSE) { $mod = 0;} else {  $mod= gdrcd_filter('num',$_POST['mod']);}
 
         #Tiro il numero di dadi secondo le indicazioni
         if ($num>0 || $facce>0){
@@ -42,15 +43,18 @@ if ($_POST['op']=='add') {
 
         /*Eseguo l'inserimento del singolo esito*/
         gdrcd_query("INSERT INTO esiti (titolo, pg, autore, contenuto, noteoff, id_ab, chat, CD_1, CD_2, 
-                   CD_3, CD_4, id_blocco, master, dice_face, dice_num, dice_results,letto_master) 
+                   CD_3, CD_4, CD1_value, CD2_value, CD3_value, CD4_value, id_blocco, master, dice_face, dice_num, dice_results,modificatore,letto_master) 
                    VALUES 
                           ('".gdrcd_filter('in',$_POST['titolo'])."',
                    '".gdrcd_filter('in', $load_blocco['pg'])."','".gdrcd_filter('in', $_SESSION['login'])."',
                    '".gdrcd_filter('in', $_POST['contenuto'])."','".$note."', ".$ab.", ".$chat.", 
                    '".gdrcd_filter('in', $_POST['CD_1'])."', '".gdrcd_filter('in', $_POST['CD_2'])."', 
-                   '".gdrcd_filter('in', $_POST['CD_3'])."', '".gdrcd_filter('in', $_POST['CD_4'])."', 
+                   '".gdrcd_filter('in', $_POST['CD_3'])."', '".gdrcd_filter('in', $_POST['CD_4'])."',
+                   ".gdrcd_filter('num', $_POST['CD1_value']).", ".gdrcd_filter('num', $_POST['CD2_value']).",
+                   ".gdrcd_filter('num', $_POST['CD3_value']).",".gdrcd_filter('num', $_POST['CD4_value']).",
                    ".$_POST['id'].", '".$master."', ".gdrcd_filter('num', $facce).",
-                   ".gdrcd_filter('num', $num).", '".gdrcd_filter('in', $dice_res)."', 1 )");
+                   ".gdrcd_filter('num', $num).", '".gdrcd_filter('in', $dice_res)."', 
+                   '".gdrcd_filter('in', $mod)."', 1 )");
 
         #Aggiorno il master se non presente
         if ($load_blocco['master']=='0' && $_SESSION['permessi']>=ESITI_PERM && $load_blocco['pg']!==$_SESSION['login']) {

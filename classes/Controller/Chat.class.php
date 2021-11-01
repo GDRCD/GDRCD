@@ -1163,4 +1163,82 @@ class Chat extends BaseClass
         DB::query("INSERT INTO chat(stanza,mittente,destinatario,tipo,testo)
                             VALUE('{$this->luogo}','{$this->me}','','C','{$html}')");
     }
+
+    /******* INVIO ESITO *******/
+
+    /**
+     * @fn esito
+     * @note Funzione di invio esito in chat
+     * @param array $post
+     * @return array
+     */
+    public function esito($post)
+    {
+        if ($this->chatAccess()) {
+
+            $id = Filters::int($post['id']);
+
+            #Recupero l'id della richiesta esito
+            $esito =DB::query("SELECT id_ab, CD_1, CD_2, CD_3, CD_4, CD1_value, CD2_value, CD3_value,CD4_value FROM esiti WHERE id='{$id}' 
+                AND pg = '{$this->me}' AND sent = 0 LIMIT 1", 'result');
+            $num =DB::query($esito, 'num_rows');
+            $es_f =DB::query($esito, 'fetch');
+
+            $es = Filters::int($es_f['id_ab']);
+
+            if ($num > 0) {
+                # Inizializzo le variabili necessarie
+                $abi_nome = '';
+                $abi_dice = '';
+                $car = '';
+
+                # Estraggo i dati dell'abilita' scelta
+                $abi_roll = $this->rollAbility($es);
+
+                # Filtro i dati ricevuti
+                $abi_dice = Filters::int($abi_roll['abi_dice']);
+                $abi_nome = Filters::in($abi_roll['nome']);
+                $car = Filters::int($abi_roll['car']);
+
+                # Lancio il dado
+                $dice = $this->rollDice();
+
+                #totale
+                $result = Filters::int($dice) + $abi_dice + $car;
+
+                #Verifico la CD
+                if ($result < Filters::int($es_f['CD1_value'])) {
+                    $resp = 'Non noti niente di particolare';
+                } else if ($result < Filters::int($es_f['CD2_value']) || Filters::int($es_f['CD2_value']) == 0) {
+                    $resp = Filters::out($es_f['CD_1']);
+                } else if ($result < Filters::int($es_f['CD3_value']) || Filters::int($es_f['CD3_value']) == 0) {
+                    $resp = Filters::out($es_f['CD_2']);
+                } else if ($result < Filters::int($es_f['CD4_value']) || Filters::int($es_f['CD4_value']) == 0) {
+                    $resp = Filters::out($es_f['CD_3']);
+                } else if ($result >= Filters::int($es_f['CD4_value']) && Filters::int($es_f['CD2_value']) > 0) {
+                    $resp = Filters::out($es_f['CD_4']);
+                }
+
+                $testo = 'Tiro: '.$abi_nome.', risultato totale: '.$result.' | '.$resp;
+
+                # Salvo l'azione in DB
+               DB::query("INSERT INTO chat(stanza, mittente,destinatario,tipo,testo)
+								  VALUE('{$this->luogo}', 'Esiti','{$this->me}','S','{$testo}')");
+
+                #Aggiorno il sistema esiti e chiudo l'esito
+               DB::query("UPDATE esiti SET sent=1 WHERE pg='{$this->me}' AND id='{$id}' AND sent = 0 LIMIT 1");
+
+                # Ritorno il risultato dell'invio ed eventuale messaggio di errore
+                return ['response' => true, 'error' => ''];
+
+            } else {
+                $error = 'Non hai accesso all\'esito selezionato.';
+
+                # Ritorno il risultato dell'invio ed eventuale messaggio di errore
+                return ['response' => false, 'error' => $error];
+            }
+        }
+    }
+
+
 }

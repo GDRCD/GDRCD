@@ -106,7 +106,7 @@ const MOON = true;
 const ESITI = true;
 
 //Attiva o disattiva l'invio degli esiti in chat (default: false) -- Funzionalità in sviluppo
-const ESITI_CHAT = false;
+const ESITI_CHAT = true;
 
 //Attiva o disattiva i tiri via esito (default: true)
 const TIRI_ESITO = true;

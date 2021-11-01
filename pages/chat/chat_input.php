@@ -85,6 +85,15 @@ if (!isset($chat)) {
 
         </div>
     </form>
+    <div class="chat_dice chat_internal_box">
+        <button name="reg_role"
+                onclick="modalWindow('reg_role', 'Registra giocata', 'popup.php?page=chat_pannelli_index&pannello=segnalazione_role')">
+            Registra role
+        </button>
+        <button name="esiti" onclick="modalWindow('esiti', 'Esiti in chat', 'popup.php?page=chat_pannelli_index&pannello=esiti_chat')">
+            Esiti
+        </button>
+    </div>
 
 </div>
 
