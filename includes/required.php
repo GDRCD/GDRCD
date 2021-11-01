@@ -29,9 +29,6 @@ Router::startClasses();
 # Inserisco il resto delle configurazioni
 require_once(dirname(__FILE__) . '/../config.inc.php');
 
-require_once dirname(__FILE__).'/DbMigrationEngine.class.php';
-require_once dirname(__FILE__).'/DbMigration.class.php';
-
 # Se ho selezionato un tema, sovrascrivo quello di default
 if(!empty($_SESSION['theme']) and array_key_exists($_SESSION['theme'], $PARAMETERS['themes']['available'])){
     $PARAMETERS['themes']['current_theme'] = $_SESSION['theme'];

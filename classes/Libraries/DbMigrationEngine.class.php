@@ -3,7 +3,7 @@
 /**
  * Implementa le funzioni di migrazione automatica dello schema del database da una versione all'altra
  */
-class DbMigrationEngine
+class DbMigrationEngine extends BaseClass
 {
     const MIGRATIONS_FOLDER = __DIR__ . '/../db_versions/';
     
