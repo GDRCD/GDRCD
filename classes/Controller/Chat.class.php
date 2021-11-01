@@ -28,10 +28,12 @@ class Chat extends BaseClass
         $chat_dice_base,
         $chat_skill_buyed,
         $chat_equip_bonus,
-        $chat_equip_equipped;
+        $chat_equip_equipped,
+        $chat_esiti;
 
     public
         $chat_notify;
+
 
 
 
@@ -99,6 +101,9 @@ class Chat extends BaseClass
 
         # Mostrare in chat solo gli equipaggiamenti indossati?
         $this->chat_equip_equipped = Functions::get_constant('CHAT_EQUIP_EQUIPPED');
+
+        # Attivare gli esiti in chat?
+        $this->chat_esiti = Functions::get_constant('ESITI_CHAT');
     }
 
     public function controllaChat($post)
@@ -1186,7 +1191,7 @@ class Chat extends BaseClass
 
             $es = Filters::int($es_f['id_ab']);
 
-            if ($num > 0) {
+            if ($num > 0 && $this->chat_esiti) {
                 # Inizializzo le variabili necessarie
                 $abi_nome = '';
                 $abi_dice = '';

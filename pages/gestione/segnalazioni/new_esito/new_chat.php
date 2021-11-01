@@ -1,7 +1,7 @@
 <?php
 $blocco = gdrcd_query("SELECT pg, master, titolo FROM blocco_esiti WHERE id='".gdrcd_filter('num',$_GET['blocco'])."' 
     LIMIT 1 ");
-if ($_SESSION['permessi']>=ESITI_PERM && ESITI_CHAT && $blocco['pg']!==$_SESSION['login']){
+if ($perm && $esiti_chat && $blocco['pg']!==$_SESSION['login']){
     if ($_GET['op']=='newchat') { ?>
 
         <div class="page_title">

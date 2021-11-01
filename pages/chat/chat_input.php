@@ -9,6 +9,9 @@ if (!isset($chat)) {
     $chat->resetClass();
 }
 
+$esiti_chat = Functions::get_constant('ESITI_CHAT');
+$esiti= Functions::get_constant('ESITI_ENABLE');
+
 ?>
 
 <div class="chat_bottom">
@@ -90,9 +93,12 @@ if (!isset($chat)) {
                 onclick="modalWindow('reg_role', 'Registra giocata', 'popup.php?page=chat_pannelli_index&pannello=segnalazione_role')">
             Registra role
         </button>
-        <button name="esiti" onclick="modalWindow('esiti', 'Esiti in chat', 'popup.php?page=chat_pannelli_index&pannello=esiti_chat')">
-            Esiti
-        </button>
+        <?php
+        if ($esiti_chat && $esiti) { ?>
+            <button name="esiti" onclick="modalWindow('esiti', 'Esiti in chat', 'popup.php?page=chat_pannelli_index&pannello=esiti_chat')">
+                Esiti
+            </button>
+        <?php } ?>
     </div>
 
 </div>
