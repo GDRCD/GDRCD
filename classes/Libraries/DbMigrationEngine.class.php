@@ -297,7 +297,7 @@ class DbMigrationEngine extends BaseClass
      * @return null|array
      * @throws Exception
      */
-    private static function getLastAppliedMigration()
+    public static function getLastAppliedMigration()
     {
         return gdrcd_query("SELECT * FROM _gdrcd_db_versions ORDER BY migration_id DESC LIMIT 1");
     }

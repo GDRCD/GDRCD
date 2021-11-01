@@ -681,6 +681,7 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
     ('MANAGE_ABILITY', 'Permesso gestione abilità'),
     ('MANAGE_ABILITY_EXTRA', 'Permesso gestione abilità dati extra'),
     ('MANAGE_ABILITY_REQUIREMENT', 'Permesso gestione requisiti abilità '),
+    ('MANAGE_DB_MIGRATIONS', 'Permesso gestione versioni del database'),
     ('MANAGE_LOCATIONS', 'Permesso gestione luoghi'),
     ('MANAGE_MAPS', 'Permesso gestione mappe'),
     ('MANAGE_AMBIENT','Gestione ambientazione'),
