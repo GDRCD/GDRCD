@@ -39,7 +39,18 @@ class Gestione extends BaseClass{
         return $html;
     }
 
+
     /*** COSTANTI */
+
+    /**
+     * @fn constantsPermission
+     * @note Permessi per la gestione delle costanti
+     * @return bool
+     */
+    public function constantsPermission(): bool
+    {
+        return (Permissions::permission('MANAGE_CONSTANTS'));
+    }
 
     /**
      * @fn costantList
@@ -89,49 +100,50 @@ class Gestione extends BaseClass{
      */
     public final function updateConstants(array $post): string
     {
+        if($this->constantsPermission()) {
 
+            $const_list = DB::query("SELECT * FROM config WHERE editable=1 ORDER BY label", 'result');
+            $empty_const = [];
 
-        $const_list = DB::query("SELECT * FROM config WHERE editable=1 ORDER BY label",'result');
-        $empty_const = [];
-
-
-        foreach ($const_list as $const){
-            if(($post[$const['const_name']] == '') && ($const['type'] != 'bool')){
-                $empty_const[] = $const['const_name'];
-            }
-        }
-
-        if(empty($empty_const)){
 
             foreach ($const_list as $const) {
-                $type = Filters::out($const['type']);
-                $const_name = Filters::out($const['const_name']);
-                $val = Filters::in($post[$const_name]);
+                if (($post[$const['const_name']] == '') && ($const['type'] != 'bool')) {
+                    $empty_const[] = $const['const_name'];
+                }
+            }
 
-                $save_resp = $this->saveConstant($const_name,$type,$val);
+            if (empty($empty_const)) {
 
-                if(!$save_resp){
-                    $empty_const[] = $const_name;
+                foreach ($const_list as $const) {
+                    $type = Filters::out($const['type']);
+                    $const_name = Filters::out($const['const_name']);
+                    $val = Filters::in($post[$const_name]);
+
+                    $save_resp = $this->saveConstant($const_name, $type, $val);
+
+                    if (!$save_resp) {
+                        $empty_const[] = $const_name;
+                    }
+
+
+                }
+
+                if (!empty($empty_const)) {
+                    $resp = $this->errorConstant($empty_const, 'save');
+                } else {
+                    $resp = 'Costanti aggiornate correttamente.';
                 }
 
 
+            } else {
+                $resp = $this->errorConstant($empty_const, 'empty');
             }
 
-            if(!empty($empty_const)){
-                $resp = $this->errorConstant($empty_const,'save');
-            }
-            else{
-                $resp = 'Costanti aggiornate correttamente.';
-            }
-
-
+            return $resp;
         }
         else{
-            $resp = $this->errorConstant($empty_const,'empty');
+            return '';
         }
-
-        return $resp;
-
     }
 
     /**

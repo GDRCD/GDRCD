@@ -4,10 +4,16 @@ require(__DIR__ . '/../../../includes/required.php');
 
 $gestione = Gestione::getInstance();
 
-switch ($_POST['action']) {
-    case 'save_constants':
-        $resp = $gestione->updateConstants($_POST);
-        break;
+if(!$gestione->constantsPermission()){
+    die('Permesso negato.');
+}
+
+if(isset($_POST['action'])) {
+    switch ($_POST['action']) {
+        case 'save_constants':
+            $resp = $gestione->updateConstants($_POST);
+            break;
+    }
 }
 
 ?>

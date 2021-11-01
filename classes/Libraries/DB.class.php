@@ -16,7 +16,7 @@ class DB extends BaseClass
             $db_pass = $GLOBALS['PARAMETERS']['database']['password'];
             $db_name = $GLOBALS['PARAMETERS']['database']['database_name'];
             $db_host = $GLOBALS['PARAMETERS']['database']['url'];
-            $db_error = $GLOBALS['MESSAGE']['error']['db_not_found'];
+            $db_error = isset($GLOBALS['MESSAGE']['error']['db_not_found']) ? $GLOBALS['MESSAGE']['error']['db_not_found'] : 'Errore nel database';
 
             #$db = mysql_connect($db_host, $db_user, $db_pass)or die(gdrcd_mysql_error());
             #mysql_select_db($db_name)or die(gdrcd_mysql_error($db_error));
@@ -78,6 +78,7 @@ class DB extends BaseClass
 
             case 'fetch':
                 return mysqli_fetch_array($sql);
+
             case 'assoc':
                 return mysqli_fetch_array($sql, MYSQLI_ASSOC);
 
