@@ -336,15 +336,12 @@ INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,
     ('CHAT_SAVE_LINK',1,'Chat Salvataggio','Salva chat in link','Salva chat in modalità link?','bool',1),
     ('CHAT_SAVE_DOWNLOAD',1,'Chat Salvataggio','Salva chat download','Salva chat con download?','bool',1),
     ('QUEST_ENABLED',1,'Quest','Attivazione Quest migliorate','Gestione quest migliorata, attiva?','bool',1),
-    ('QUEST_PERM',2,'Quest','Permessi quest','Permesso minimo per registrazione/modifica delle quest','permission',1),
     ('QUEST_VIEW',2,'Quest','Permessi visual quest','Permesso minimo per visualizzazione delle quest','permission',1),
-    ('QUEST_VIEW_OTHER',1,'Quest','Visual quest altri','Possibilità per un pg abilitato a registrare quest, di poter visualizzare (non modificare) le quest altrui','bool',1),
     ('QUEST_SUPER_PERMISSION',3,'Quest','Permessi speciali','Permesso minimo per modificare qualsiasi parte del pacchetto','int',1),
     ('QUEST_NOTIFY',0,'Quest','Notifiche quest','Definisce la possibilità di inviare messaggi automatici di avviso agli utenti che partecipano ad una quest','bool',1),
     ('TRAME_ENABLED',1,'Trame','Attivazione trame','Sistema trame attivo?','bool',1),
-    ('TRAME_PERM',2,'Trame','Permessi Trame','Permesso minimo per registrazione/modifica delle trame','permission',1),
-    ('TRAME_VIEW',2,'Trame','Permessi visual trame','Permesso minimo per visualizzazione delle trame','permission',1),
-    ('TRAME_VIEW_OTHER',1,'Trame','Visual trame altri','Possibilità per un pg abilitato a registrare trame, di poter visualizzare (non modificare) le trame altrui','bool',1);
+    ('QUEST_RESULTS_FOR_PAGE',15,'Quest','Risultati per pagina','Numero risultati per pagina nella gestione delle quest.','int',1);
+
 
 -- --------------------------------------------------------
 
@@ -673,7 +670,11 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
     ('MANAGE_OBJECTS', 'Permesso per la gestione degli oggetti'),
     ('MANAGE_REPORTS', 'Permesso per la gestione delle giocate segnalate'),
     ('MANAGE_OUTCOMES', 'Permesso per la gestione degli esiti in chat'),
-    ('MANAGE_QUESTS', 'Permesso per la gestione delle quest');
+    ('MANAGE_QUESTS', 'Permesso per la gestione delle quest'),
+    ('MANAGE_QUESTS_OTHER', 'Permesso per la gestione delle quest altrui'),
+    ('MANAGE_TRAME_VIEW','Permesso per la visualizzazione delle trame'),
+    ('MANAGE_TRAME','Permesso per la modifica delle trame');
+
 
 
 -- --------------------------------------------------------

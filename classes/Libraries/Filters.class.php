@@ -147,4 +147,20 @@ class Filters extends BaseClass
     {
         return self::gdrcd_filter('get', $val);
     }
+
+    /**
+     * @fn date
+     * @note Funzione di rendering delle date in base al formato
+     * @param string $val
+     * @param string $format
+     * @return string
+     */
+    public static function date(string $val, string $format): string
+    {
+        if(!empty($val)) {
+            return date($format, strtotime($val));
+        }
+
+        return '';
+    }
 }
