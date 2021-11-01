@@ -20,14 +20,14 @@ if ($_SESSION['permessi']<Functions::get_constant('TRAME_VIEW') && Functions::ge
 
     if (Functions::get_constant('TRAME_VIEW_OTHER') || $_SESSION['permessi']>=Functions::get_constant('QUEST_SUPER_PERMISSION')) {
     //Conteggio record totali
-    $record_globale = gdrcd_query("SELECT COUNT(*) FROM trama");
+    $record_globale = gdrcd_query("SELECT COUNT(*) FROM quest_trama");
     //Lettura record
-    $result = gdrcd_query("SELECT * FROM trama ORDER BY data DESC LIMIT " . $pagebegin . ", " . $pageend . "", 'result');
+    $result = gdrcd_query("SELECT * FROM quest_trama ORDER BY data DESC LIMIT " . $pagebegin . ", " . $pageend . "", 'result');
     } else {
     //Conteggio record totali
-    $record_globale = gdrcd_query("SELECT COUNT(*) FROM trama WHERE autore = '".gdrcd_filter('in',$_SESSION['login'])."' ");
+    $record_globale = gdrcd_query("SELECT COUNT(*) FROM quest_trama WHERE autore = '".gdrcd_filter('in',$_SESSION['login'])."' ");
     //Lettura record
-    $result = gdrcd_query("SELECT * FROM trama WHERE autore = '".gdrcd_filter('in',$_SESSION['login'])."' 
+    $result = gdrcd_query("SELECT * FROM quest_trama WHERE autore = '".gdrcd_filter('in',$_SESSION['login'])."' 
     ORDER BY data DESC LIMIT " . $pagebegin . ", " . $pageend . "", 'result');
     }
     $totaleresults = $record_globale['COUNT(*)'];

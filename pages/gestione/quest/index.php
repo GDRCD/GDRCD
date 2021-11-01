@@ -80,7 +80,7 @@ if ($numresults>0){ ?>
                         </div>
                     </td>
                     <?php if ($_SESSION['permessi'] >= Functions::get_constant('TRAME_VIEW')){
-                        $quer="SELECT * FROM trama WHERE id = '".$row['trama']."' ";
+                        $quer="SELECT * FROM quest_trama WHERE id = '".$row['trama']."' ";
                         $res=gdrcd_query($quer, 'result');
                         $rec=gdrcd_query($res, 'fetch');
                     echo '<td class="casella_elemento"><div class="elementi_elenco">';

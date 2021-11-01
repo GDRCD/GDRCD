@@ -46,8 +46,8 @@ if ($_POST['op']=='insert_quest') {
 
             }
 
-            #inserisco il record in clgpgquest
-            gdrcd_query("INSERT INTO clgpgquest (id_quest, nome, commento, autore, nome_pg, px_assegnati) 
+            #inserisco il record in personaggio_quest
+            gdrcd_query("INSERT INTO personaggio_quest (id_quest, nome, commento, autore, nome_pg, px_assegnati) 
                 VALUES 
                     (".$rec_id['id'].",'".gdrcd_filter('in',$_POST['titolo'])."', '".gdrcd_filter('in',$_POST['comm'.$a.''])."', 
                     '".gdrcd_filter('in', $_SESSION['login'])."', '".gdrcd_filter('in',$_POST['part'.$a.''])."', 

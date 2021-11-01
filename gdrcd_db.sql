@@ -474,7 +474,8 @@ INSERT INTO `menu` (`menu_name`, `section`, `name`, `page`, `permission`) VALUES
   ('Gestione', 'Gestione', 'Manutenzione', 'gestione_manutenzione', 'MANAGE_MANUTENTIONS'),
   ('Gestione', 'Oggetti', 'Gestione Oggetti', 'gestione_oggetti', 'MANAGE_OBJECTS'),
   ('Gestione', 'Chat', 'Giocate Segnalate', 'gestione_segnalazioni', 'MANAGE_REPORTS'),
-  ('Gestione', 'Chat', 'Esiti in chat', 'gestione_esiti', 'MANAGE_OUTCOMES');
+  ('Gestione', 'Chat', 'Esiti in chat', 'gestione_esiti', 'MANAGE_OUTCOMES'),
+  ('Gestione', 'Quest', 'Gestione Quest', 'gestione_quest', 'MANAGE_QUESTS');
 
 -- --------------------------------------------------------
 
@@ -671,7 +672,8 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
     ('MANAGE_MANUTENTIONS', 'Permesso per la gestione della manutenzione del db'),
     ('MANAGE_OBJECTS', 'Permesso per la gestione degli oggetti'),
     ('MANAGE_REPORTS', 'Permesso per la gestione delle giocate segnalate'),
-    ('MANAGE_OUTCOMES', 'Permesso per la gestione degli esiti in chat');
+    ('MANAGE_OUTCOMES', 'Permesso per la gestione degli esiti in chat'),
+    ('MANAGE_QUESTS', 'Permesso per la gestione delle quest');
 
 
 -- --------------------------------------------------------
@@ -811,6 +813,60 @@ CREATE TABLE IF NOT EXISTS `personaggio` (
 INSERT INTO `personaggio` (`id`,`nome`, `cognome`, `pass`, `ultimo_cambiopass`, `data_iscrizione`, `email`, `permessi`, `ultima_mappa`, `ultimo_luogo`, `esilio`, `data_esilio`, `motivo_esilio`, `autore_esilio`, `sesso`, `id_razza`, `descrizione`, `affetti`, `stato`, `online_status`, `disponibile`, `url_img`, `url_img_chat`, `url_media`, `blocca_media`, `esperienza`, `car0`, `car1`, `car2`, `car3`, `car4`, `car5`, `salute`, `salute_max`, `data_ultima_gilda`, `soldi`, `banca`, `ultimo_stipendio`, `last_ip`, `is_invisible`, `ultimo_refresh`, `ora_entrata`, `ora_uscita`, `posizione`) VALUES
 (1,'Super', 'User', '$P$BcH1cP941XHOf0X61wVWWjzXqcCi2a/', NULL, '2011-06-04 00:47:48', '$P$BNZYtz9JOQE.O4Tv7qZyl3SzIoZzzR.', 5, 1, -1, '2009-01-01', '2009-01-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 7, 8, 6, 5, 6, 5, 100, 100, '2009-01-01 00:00:00', 300, 50000, '2009-01-01', '127.0.0.1', 0, '2021-10-08 00:28:13', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1),
 (2,'Test', 'Di FunzionaliÃ ', '$P$BUoa19QUuXsgIDlhGC3chR/3Q7hoRy0', NULL, '2011-06-04 00:47:48', '$P$Bd1amPCKkOF9GdgYsibZ96U92D5CtR0', 0, 1, -1, '2009-01-01', '2009-01-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 7, 8, 6, 5, 6, 5, 100, 100, '2009-01-01 00:00:00', 50, 50, '2009-01-01', '127.0.0.1', 0, '2009-01-01 00:00:00', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `personaggio_quest`
+--
+
+CREATE TABLE personaggio_quest  (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `id_quest` int NOT NULL,
+    `nome` varchar(255) NOT NULL,
+    `data` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `commento` text NOT NULL,
+    `nome_pg` varchar(255) NOT NULL,
+    `px_assegnati` int NOT NULL,
+    `autore` varchar(255) NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `quest`
+--
+
+CREATE TABLE IF NOT EXISTS  quest  (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `titolo` text NOT NULL,
+    `partecipanti` text NOT NULL,
+    `descrizione` text NOT NULL,
+    `trama` int NOT NULL DEFAULT '0',
+    `data` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `autore` varchar(255) NOT NULL,
+    `ultima_modifica` varchar(255) DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `quest_trama`
+--
+
+CREATE TABLE IF NOT EXISTS  quest_trama  (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `titolo` varchar(255) NOT NULL,
+    `descrizione` text NOT NULL,
+    `data` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `autore` varchar(255) NULL,
+    `ultima_modifica` varchar(255) DEFAULT NULL,
+    `stato` int(11) NOT NULL DEFAULT '0',
+    `quests` text DEFAULT NULL,
+     PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 

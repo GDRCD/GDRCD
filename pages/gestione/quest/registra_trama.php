@@ -6,7 +6,7 @@ if ((gdrcd_filter('get',$_POST['op']=='edit_trama')) ||
     /*Se è stata richiesta una modifica*/
     if ($_POST['op']=='edit_trama'){
         /*Carico il record da modificare*/
-        $loaded_record=gdrcd_query("SELECT * FROM trama WHERE id=".gdrcd_filter('num',$_POST['id_record'])." LIMIT 1 ");
+        $loaded_record=gdrcd_query("SELECT * FROM quest_trama WHERE id=".gdrcd_filter('num',$_POST['id_record'])." LIMIT 1 ");
         /*Cambio l'operazione in modifica*/
         $operation='edit';
 

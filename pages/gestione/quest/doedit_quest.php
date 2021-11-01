@@ -26,7 +26,7 @@ if ($_POST['op']=='doedit_quest'){
                 if ($_POST['part'.$a.'']!=='') {
 
                     #Recupero i pg coinvolti
-                    $pg="SELECT * FROM clgpgquest WHERE id_quest = ".gdrcd_filter('num',$_POST['id_record'])." 
+                    $pg="SELECT * FROM personaggio_quest WHERE id_quest = ".gdrcd_filter('num',$_POST['id_record'])." 
                     AND nome_pg= '".gdrcd_filter('in',$_POST['part'.$a.''])."' ";
                     $res_pg=gdrcd_query($pg, 'result');
                     $rec_pg=gdrcd_query($res_pg, 'fetch');
@@ -51,8 +51,8 @@ if ($_POST['op']=='doedit_quest'){
                                         ('" . gdrcd_filter('in', $_POST['part' . $a . '']) . "', '" . $_SESSION['login'] . "', NOW(), 
                                         " . PX . ", '(" . gdrcd_filter('num', $newpx) . ' px) ' . gdrcd_filter('in', $cause) . "')");
                             }
-                                #Modifico il record in clgpgquest
-                                gdrcd_query("UPDATE clgpgquest SET nome = '" . gdrcd_filter('in', $_POST['titolo']) . "', 
+                                #Modifico il record in personaggio_quest
+                                gdrcd_query("UPDATE personaggio_quest SET nome = '" . gdrcd_filter('in', $_POST['titolo']) . "', 
                                     autore = '" . gdrcd_filter('in', $_SESSION['login']) . "', 
                                     commento = '" . gdrcd_filter('in', $_POST['comm' . $a . '']) . "', 
                                     px_assegnati = " . gdrcd_filter('num', $_POST['px' . $a . '']) . " 
@@ -72,8 +72,8 @@ if ($_POST['op']=='doedit_quest'){
                         }
                     } else {
 
-                        #inserisco il record in clgpgquest
-                        gdrcd_query("INSERT INTO clgpgquest (id_quest, nome, commento, autore, nome_pg, px_assegnati) VALUES 
+                        #inserisco il record in personaggio_quest
+                        gdrcd_query("INSERT INTO personaggio_quest (id_quest, nome, commento, autore, nome_pg, px_assegnati) VALUES 
                                 (".$rec_id['id'].",'".gdrcd_filter('in',$_POST['titolo'])."', '".gdrcd_filter('in',$_POST['comm'.$a.''])."',
                                  '".gdrcd_filter('in', $_SESSION['login'])."', '".gdrcd_filter('in',$_POST['part'.$a.''])."', 
                                  ".gdrcd_filter('num',$_POST['px'.$a.''])."  )");

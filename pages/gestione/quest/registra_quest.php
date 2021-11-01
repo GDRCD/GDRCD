@@ -48,7 +48,7 @@
 		  <div class='form_label'>
             Trama di riferimento
           </div>
-        <?php $query1="SELECT * FROM trama ";
+        <?php $query1="SELECT * FROM quest_trama ";
 			$result1=gdrcd_query($query1, 'result');
 		?>		  
 			<div class='form_field' >
@@ -66,7 +66,7 @@
 		$i=0; 
 		for ($i=0; $i<10; $i++) {
 		$a = $i+1; 
-		$pgs="SELECT * FROM clgpgquest WHERE id_quest=".gdrcd_filter('num',$_POST['id_record'])." AND nome_pg= '".$parts[$i]."' ";
+		$pgs="SELECT * FROM personaggio_quest WHERE id_quest=".gdrcd_filter('num',$_POST['id_record'])." AND nome_pg= '".$parts[$i]."' ";
 		$res_pg=gdrcd_query($pgs, 'result');
 			$rec_pg=gdrcd_query($res_pg, 'fetch');
 		?>

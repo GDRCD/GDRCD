@@ -21,7 +21,7 @@ if ($_POST['op']=='delete_quest'){
             if ($parts[$i]!=='') {
 
                 #Recupero i pg coinvolti
-                $pg="SELECT * FROM clgpgquest WHERE id_quest = ".gdrcd_filter('num',$_POST['id_record'])." 
+                $pg="SELECT * FROM personaggio_quest WHERE id_quest = ".gdrcd_filter('num',$_POST['id_record'])." 
                     AND nome_pg= '".gdrcd_filter('in',$parts[$i])."' ";
                 $res_pg=gdrcd_query($pg, 'result');
                 $rec_pg=gdrcd_query($res_pg, 'fetch');
@@ -30,8 +30,8 @@ if ($_POST['op']=='delete_quest'){
 
 
                 if ($numresults>0) {
-                    #Elimino il record in clgpgquest
-                    gdrcd_query("DELETE FROM clgpgquest
+                    #Elimino il record in personaggio_quest
+                    gdrcd_query("DELETE FROM personaggio_quest
                         WHERE id_quest = ".gdrcd_filter('num',$_POST['id_record'])." 
                         AND nome_pg = '".gdrcd_filter('in',$parts[$i])."' ");
 

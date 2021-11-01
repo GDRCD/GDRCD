@@ -150,7 +150,7 @@
             <?php }
             } else if ($_POST['op']=='quest' && ($_SESSION['permessi'] >=Functions::get_constant('QUEST_VIEW')  || $_REQUEST['pg']==$_SESSION['login'])) {
 
-                $query="SELECT * FROM clgpgquest WHERE nome_pg = '".gdrcd_filter('in',$_REQUEST['pg'])."' 
+                $query="SELECT * FROM personaggio_quest WHERE nome_pg = '".gdrcd_filter('in',$_REQUEST['pg'])."' 
                 ORDER BY data DESC LIMIT ".$num_logs."";
                 $result=gdrcd_query($query, 'result');
                 ?>
