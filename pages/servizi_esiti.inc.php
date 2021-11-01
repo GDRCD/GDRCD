@@ -8,6 +8,7 @@
 
     <?php
     $esiti = Functions::get_constant('ESITI_ENABLE');
+    $esiti_tiri = Functions::get_constant('ESITI_TIRI');
     if ($esiti) {
         ?>
         <!-- Box principale -->
@@ -62,7 +63,7 @@
                         </div>
 
                         <div class="fate_title">Titolo: <b><?php echo $row['titolo']; ?></b>
-                            <?php if ($row['dice_face'] > 0 && $row['dice_num'] > 0 && TIRI_ESITO) { ?>
+                            <?php if ($row['dice_face'] > 0 && $row['dice_num'] > 0 && $esiti_tiri) { ?>
                                 <br> Risultato tiro di <?php echo $row['dice_num'] . 'd' . $row['dice_face']; ?>:
                                 <b><?php echo $row['dice_results'] ?></b>
                             <?php } ?>

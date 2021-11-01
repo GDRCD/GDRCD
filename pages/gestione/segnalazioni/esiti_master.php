@@ -3,6 +3,7 @@ $esiti_chat = Functions::get_constant('ESITI_CHAT');
 $esiti= Functions::get_constant('ESITI_ENABLE');
 $perm= Permissions::permission('MANAGE_ESITI');
 $perm_all= Permissions::permission('MANAGE_ALL_ESITI');
+$esiti_tiri = Functions::get_constant('ESITI_TIRI');
 
 if ($perm && $esiti) {
     ?>
@@ -89,7 +90,7 @@ if ($perm && $esiti) {
                          (Chat: '.$chat['nome'].' | Skill: '.gdrcd_filter('out',$abilita['nome']).')';
                     }?>
                     <br>
-                    <?php if ($row['dice_face']>0 && $row['dice_num']>0 && TIRI_ESITO) { ?>
+                    <?php if ($row['dice_face']>0 && $row['dice_num']>0 && $esiti_tiri) { ?>
                     Risultato tiro di <?php echo $row['dice_num'].'d'.$row['dice_face'];?>: <b><?php echo $row['dice_results'] ?></b>
                     <?php } ?>
                 </div>

@@ -57,7 +57,7 @@ if ($_POST['op']=='add') {
                    '".gdrcd_filter('in', $mod)."', 1 )");
 
         #Aggiorno il master se non presente
-        if ($load_blocco['master']=='0' && $_SESSION['permessi']>=ESITI_PERM && $load_blocco['pg']!==$_SESSION['login']) {
+        if ($load_blocco['master']=='0' && Permissions::permission('MANAGE_ESITI') && $load_blocco['pg']!==$_SESSION['login']) {
             gdrcd_query("UPDATE blocco_esiti SET master = '".gdrcd_filter('in',$_SESSION['login'])."' 
 					WHERE id = ".gdrcd_filter('num', $_POST['id'] )." ");
         }

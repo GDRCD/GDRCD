@@ -98,24 +98,6 @@ const PERMESSI_DIARIO = MODERATOR;
 //Attiva le fasi lunari
 const MOON = true;
 
-/**
- * Impostazioni esiti
- */
-
-//Attiva o disattiva il pacchetto intero (default: true)
-const ESITI = true;
-
-//Attiva o disattiva l'invio degli esiti in chat (default: false) -- Funzionalità in sviluppo
-const ESITI_CHAT = true;
-
-//Attiva o disattiva i tiri via esito (default: true)
-const TIRI_ESITO = true;
-
-//definisce quali permessi hanno accesso alla pagina di gestione degli esiti (default: gamemaster)
-const ESITI_PERM = GAMEMASTER;
-
-//definisce quali permessi hanno accesso alla visione di tutti gli esiti (default: moderator)
-const FULL_PERM = MODERATOR;
 
 /*Vettori globali dei parametri*/
 $PARAMETER = array();

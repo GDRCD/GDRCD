@@ -34,7 +34,7 @@ if ($_GET['op']=='new') {
             Descrivere dettagliatamente quel che il personaggio può conoscere o scoprire, secondo la coerenza del caso,
             in maniera narrativa (come fareste in chat).
         </div>
-        <? if (TIRI_ESITO) { ?>
+        <? if (Functions::get_constant('ESITI_TIRI');) { ?>
             <div class='form_label'>
                 Tira dei dadi
             </div>
