@@ -4,16 +4,17 @@ require 'header.inc.php'; /*Header comune*/
 ?>
 <div class="pagina_ambientazione">
     <?php
-
-    if (DbMigrationEngine::dbNeedsUpdate()) {
-        if (!empty($_POST['do_update'])) {
-            try {
-                DbMigrationEngine::updateDbSchema();
-                echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['homepage']['installer']['done']) . '</div>';
-            } catch (Exception $e) {
-                echo '<div class="warning">' . gdrcd_filter('out', $e->getMessage()) . '</div>';
-            }
+    
+    if (DbMigrationEngine::dbNeedsUpdate() and !empty($_POST['do_update'])) {
+        try {
+            DbMigrationEngine::updateDbSchema();
+            echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['homepage']['installer']['done']) . '</div>';
+        } catch (Exception $e) {
+            echo '<div class="warning">' . gdrcd_filter('out', $e->getMessage()) . '</div>';
         }
+    }
+    
+    if (DbMigrationEngine::dbNeedsUpdate()) {
         ?>
         <form method="post" action="installer.php">
             <h2><?= $MESSAGE['homepage']['installer']['install_title'] ?></h2>
