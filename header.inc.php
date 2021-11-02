@@ -57,6 +57,11 @@ if(($PARAMETERS['mode']['user_bbcode'] == 'ON' && $PARAMETERS['settings']['user_
     <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/forum.css" type="text/css" />
     <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/presenti.css" type="text/css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+
+    <script src="/plugins/Ajax.js"></script>
+    <script src="/plugins/Form.js"></script>
+    <script src="/plugins/Menu.js"></script>
+
     <?php
     /** * Il controllo individua se l'header non è impiegato per il main */
     if( ! isset($check_for_update)) {
