@@ -12,7 +12,7 @@ class ConfigTable extends DbMigration
      */
     public function up()
     {
-        gdrcd_query("CREATE TABLE IF NOT EXISTS `config` (
+        DB::query("CREATE TABLE IF NOT EXISTS `config` (
   `id` int NOT NULL AUTO_INCREMENT,
   `const_name` varchar(255) NOT NULL,
   `val` varchar(255) NOT NULL,
@@ -24,7 +24,7 @@ class ConfigTable extends DbMigration
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
         
-        gdrcd_query("INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,`editable`) VALUES
+        DB::query("INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,`editable`) VALUES
     ('ABI_PUBLIC',1,'Abilita','Abilità pubbliche','Le abilità sono pubbliche?','bool',1),
     ('ABI_LEVEL_CAP',5,'Abilita','Level cap Abilità','Livello massimo abilità','int',1),
     ('DEFAULT_PX_PER_LVL',10,'Abilita','Costo default Abilità','Moltiplicatore costo abilità, se non specificato','int',1),
@@ -57,6 +57,6 @@ class ConfigTable extends DbMigration
      */
     public function down()
     {
-        gdrcd_query("DROP TABLE IF EXISTS `config`");
+        DB::query("DROP TABLE IF EXISTS `config`");
     }
 }

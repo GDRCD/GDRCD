@@ -12,14 +12,14 @@ class Permissions extends DbMigration
      */
     public function up()
     {
-        gdrcd_query("CREATE TABLE `permessi_custom` (
+        DB::query("CREATE TABLE `permessi_custom` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `permission_name` varchar(255) NOT NULL,
-    `description` text NOT NULL
+    `description` text NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
     
-        gdrcd_query("INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
+        DB::query("INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
     ('LOG_CHAT', 'Permesso visualizzazione log chat'),
     ('LOG_EVENTI', 'Permesso visualizzazione log evento'),
     ('LOG_MESSAGGI', 'Permesso visualizzazione log messaggi'),
@@ -41,7 +41,7 @@ class Permissions extends DbMigration
     ('MANAGE_REPORTS', 'Permesso per la gestione delle giocate segnalate'),
     ('MANAGE_OUTCOMES', 'Permesso per la gestione degli esiti in chat');");
     
-        gdrcd_query("CREATE TABLE `permessi_group` (
+        DB::query("CREATE TABLE `permessi_group` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `group_name` varchar(255) NOT NULL,
     `description` text NOT NULL,
@@ -49,13 +49,13 @@ class Permissions extends DbMigration
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
     
-        gdrcd_query("INSERT INTO `permessi_group` (`id`, `group_name`, `description`, `superuser`) VALUES
+        DB::query("INSERT INTO `permessi_group` (`id`, `group_name`, `description`, `superuser`) VALUES
     (1, 'MASTER', 'Gruppo permessi master', 0),
     (2, 'MODERATOR', 'Gruppo permessi moderatore', 0),
     (3, 'SUPERUSER', 'Gruppo Permessi superuser', 1),
     (4, 'USER', 'Permessi gruppo user', 0);");
     
-        gdrcd_query("CREATE TABLE `permessi_group_assignment` (
+        DB::query("CREATE TABLE `permessi_group_assignment` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `group_id` int(11) NOT NULL,
     `permission` int(11) NOT NULL,
@@ -63,17 +63,17 @@ class Permissions extends DbMigration
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
         
-        gdrcd_query("CREATE TABLE `permessi_group_personaggio` (
+        DB::query("CREATE TABLE `permessi_group_personaggio` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `group_id` int(11) NOT NULL,
     `personaggio` varchar(255) NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
     
-        gdrcd_query("INSERT INTO `permessi_group_personaggio` (`id`, `group_id`, `personaggio`) VALUES
+        DB::query("INSERT INTO `permessi_group_personaggio` (`id`, `group_id`, `personaggio`) VALUES
     (1, 3, 1);");
         
-        gdrcd_query("CREATE TABLE `permessi_personaggio` (
+        DB::query("CREATE TABLE `permessi_personaggio` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `personaggio` varchar(255) NOT NULL,
     `permission` int(11) NOT NULL,
@@ -87,11 +87,11 @@ class Permissions extends DbMigration
      */
     public function down()
     {
-        gdrcd_query("DROP TABLE permessi_custom");
-        gdrcd_query("DROP TABLE permessi_group");
-        gdrcd_query("DROP TABLE permessi_group_assignment");
-        gdrcd_query("DROP TABLE permessi_group_personaggio");
-        gdrcd_query("DROP TABLE permessi_personaggio");
+        DB::query("DROP TABLE permessi_custom");
+        DB::query("DROP TABLE permessi_group");
+        DB::query("DROP TABLE permessi_group_assignment");
+        DB::query("DROP TABLE permessi_group_personaggio");
+        DB::query("DROP TABLE permessi_personaggio");
         
     }
 }

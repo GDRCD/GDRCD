@@ -13,7 +13,7 @@ class AddMenuTable extends DbMigration
      */
     public function up()
     {
-        gdrcd_query("CREATE TABLE `menu` (
+        DB::query("CREATE TABLE `menu` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `menu_name` varchar(255) NOT NULL,
     `section` varchar(255) NOT NULL,
@@ -23,7 +23,7 @@ class AddMenuTable extends DbMigration
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
         
-        gdrcd_query("INSERT INTO `menu` (`menu_name`, `section`, `name`, `page`, `permission`) VALUES
+        DB::query("INSERT INTO `menu` (`menu_name`, `section`, `name`, `page`, `permission`) VALUES
   ('Gestione', 'Log', 'Log Chat', 'log_chat', 'LOG_CHAT'),
   ('Gestione', 'Log', 'Log Eventi', 'log_eventi', 'LOG_EVENTI'),
   ('Gestione', 'Log', 'Log Messaggi', 'log_messaggi', 'LOG_MESSAGGI'),
@@ -51,6 +51,6 @@ class AddMenuTable extends DbMigration
      */
     public function down()
     {
-        gdrcd_query("DROP TABLE menu");
+        DB::query("DROP TABLE menu");
     }
 }

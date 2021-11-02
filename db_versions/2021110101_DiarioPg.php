@@ -15,7 +15,7 @@ class DiarioPg extends DbMigration
      */
     public function up()
     {
-        gdrcd_query("CREATE TABLE IF NOT EXISTS `diario` (
+        DB::query("CREATE TABLE IF NOT EXISTS `diario` (
   `id` int NOT NULL AUTO_INCREMENT,
   `personaggio` varchar(20) DEFAULT NULL,
   `data` date NOT NULL,
@@ -33,6 +33,6 @@ class DiarioPg extends DbMigration
      */
     public function down()
     {
-        gdrcd_query("DROP TABLE IF EXISTS `diario`");
+        DB::query("DROP TABLE IF EXISTS `diario`");
     }
 }

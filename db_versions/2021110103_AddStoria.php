@@ -12,7 +12,7 @@ class AddStoria extends DbMigration
      */
     public function up()
     {
-        gdrcd_query("ALTER TABLE personaggio
+        DB::query("ALTER TABLE personaggio
 ADD COLUMN storia text");
     }
     
@@ -21,7 +21,7 @@ ADD COLUMN storia text");
      */
     public function down()
     {
-        gdrcd_query("ALTER TABLE personaggio
+        DB::query("ALTER TABLE personaggio
 DROP COLUMN storia");
     }
 }

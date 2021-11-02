@@ -12,7 +12,7 @@ class ImprovedAbilities extends DbMigration
      */
     public function up()
     {
-        gdrcd_query("CREATE TABLE IF NOT EXISTS `abilita_extra` (
+        DB::query("CREATE TABLE IF NOT EXISTS `abilita_extra` (
   `id` int NOT NULL AUTO_INCREMENT,
   `abilita` int NOT NULL,
   `grado` int NOT NULL,
@@ -21,7 +21,7 @@ class ImprovedAbilities extends DbMigration
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;");
         
-        gdrcd_query("CREATE TABLE IF NOT EXISTS `abilita_requisiti` (
+        DB::query("CREATE TABLE IF NOT EXISTS `abilita_requisiti` (
   `id` int NOT NULL AUTO_INCREMENT,
   `abilita` int NOT NULL,
   `grado` int NOT NULL,
@@ -37,8 +37,8 @@ class ImprovedAbilities extends DbMigration
      */
     public function down()
     {
-        gdrcd_query("DROP TABLE abilita_extra");
+        DB::query("DROP TABLE abilita_extra");
         
-        gdrcd_query("DROP TABLE abilita_requisiti");
+        DB::query("DROP TABLE abilita_requisiti");
     }
 }

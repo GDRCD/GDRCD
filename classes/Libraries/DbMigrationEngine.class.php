@@ -5,7 +5,7 @@
  */
 class DbMigrationEngine extends BaseClass
 {
-    const MIGRATIONS_FOLDER = __DIR__ . '/../db_versions/';
+    const MIGRATIONS_FOLDER = __DIR__ . '/../../db_versions/';
     
     /**
      * @fn updateDbSchema
@@ -30,7 +30,7 @@ class DbMigrationEngine extends BaseClass
         
         $applied = 0;
         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);//Necessario per le transazioni
-        $connection = gdrcd_connect();
+        $connection = DB::connect();
         foreach ($migrationsToApply as $m) {
             try {
                 $connection->begin_transaction();
@@ -217,7 +217,7 @@ class DbMigrationEngine extends BaseClass
     private static function getTablesCountInDb() {
         global $PARAMETERS;
         
-        $count = gdrcd_query("SELECT COUNT(*) AS number FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '"
+        $count = DB::query("SELECT COUNT(*) AS number FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '"
                                     .$PARAMETERS['database']['database_name']."'");
         
         return (int)$count['number'];
@@ -229,7 +229,7 @@ class DbMigrationEngine extends BaseClass
      */
     private static function createVersioningTable()
     {
-        gdrcd_query("
+        DB::query("
         create table if not exists _gdrcd_db_versions
 (
 	migration_id varchar(250) NOT NULL,
@@ -248,7 +248,7 @@ class DbMigrationEngine extends BaseClass
      */
     private static function trackAppliedMigration($migration_id)
     {
-        gdrcd_query("INSERT INTO _gdrcd_db_versions (migration_id,applied_on) VALUE ('" . gdrcd_filter_in($migration_id) . "', NOW())");
+        DB::query("INSERT INTO _gdrcd_db_versions (migration_id,applied_on) VALUE ('" . Filters::in($migration_id) . "', NOW())");
     }
     
     /**
@@ -258,7 +258,7 @@ class DbMigrationEngine extends BaseClass
      */
     private static function untrackAppliedMigration($migration_id)
     {
-        gdrcd_query("DELETE FROM _gdrcd_db_versions WHERE migration_id = '" . gdrcd_filter_in($migration_id) ."'");
+        DB::query("DELETE FROM _gdrcd_db_versions WHERE migration_id = '" . Filters::in($migration_id) ."'");
     }
     
     /**
@@ -270,8 +270,7 @@ class DbMigrationEngine extends BaseClass
      */
     private static function isMigrationAlreadyApplied($migration_id)
     {
-        $result = gdrcd_query("SELECT COUNT() AS N FROM _gdrcd_db_versions WHERE migration_id = '" . gdrcd_filter_in
-                     ($migration_id) . "'");
+        $result = DB::query("SELECT COUNT() AS N FROM _gdrcd_db_versions WHERE migration_id = '" . Filters::in($migration_id) . "'");
         return $result['N'] > 0;
     }
     
@@ -282,9 +281,9 @@ class DbMigrationEngine extends BaseClass
      */
     private static function getAllAppliedMigrations()
     {
-        $result = gdrcd_query("SELECT * FROM _gdrcd_db_versions ORDER BY migration_id", 'result');
+        $result = DB::query("SELECT * FROM _gdrcd_db_versions ORDER BY migration_id", 'result');
         $all = [];
-        while($row = gdrcd_query($result, 'assoc')){
+        while($row = DB::query($result, 'assoc')){
             $all[] = $row;
         }
         
@@ -299,7 +298,7 @@ class DbMigrationEngine extends BaseClass
      */
     public static function getLastAppliedMigration()
     {
-        return gdrcd_query("SELECT * FROM _gdrcd_db_versions ORDER BY migration_id DESC LIMIT 1");
+        return DB::query("SELECT * FROM _gdrcd_db_versions ORDER BY migration_id DESC LIMIT 1");
     }
     
 }

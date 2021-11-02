@@ -9,23 +9,20 @@ class AddPersonaggioId extends DbMigration
     
     public function up()
     {
-        gdrcd_query("ALTER TABLE personaggio
-ADD COLUMN `id` int(11) NOT NULL AUTO_INCREMENT");
-    
-        gdrcd_query("ALTER TABLE personaggio
-    DROP PRIMARY KEY,
-    ADD PRIMARY KEY (`id`);");
+        DB::query("ALTER TABLE personaggio
+DROP PRIMARY KEY,
+ADD COLUMN `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY");
         
         //TODO aggiungere un indice UNIQUE su name?
     }
     
     public function down()
     {
-        gdrcd_query("ALTER TABLE personaggio
+        DB::query("ALTER TABLE personaggio
     DROP PRIMARY KEY,
     ADD PRIMARY KEY (`nome`);");
         
-        gdrcd_query("ALTER TABLE personaggio
+        DB::query("ALTER TABLE personaggio
 DROP COLUMN `id`");
     
     }
