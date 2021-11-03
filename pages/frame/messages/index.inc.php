@@ -133,4 +133,5 @@ if($PARAMETERS['mode']['check_messages'] === 'ON') {
 
     <div class="box_messages"><?=isset($cntMessagesFrame) ? $cntMessagesFrame : '';?></div>
 
-<?php include('../../../footer.inc.php'); /*Footer comune*/
+<?php
+//include('../../../footer.inc.php'); /*Footer comune*/
