@@ -706,6 +706,19 @@ $PARAMETERS['user']['stats']['text'] = 'Statistiche del sito';
 $PARAMETERS['user']['stats']['url'] = 'main.php?page=user_stats&links=yes';
 $PARAMETERS['user']['stats']['access_level'] = USER;
 
+/** Pannello gestione */
+if (REG_ROLE && SEND_GM)
+{
+    $PARAMETERS['administration']['send_GM']['text'] = 'Giocate segnalate';
+    $PARAMETERS['administration']['send_GM']['url'] = 'main.php?page=gestione_segnalazioni&segn=roles_gm';
+    $PARAMETERS['administration']['send_GM']['access_level'] = ROLE_PERM;
+}
+if (ESITI)
+{
+    $PARAMETERS['administration']['esiti']['text'] = 'Pannello esiti Master';
+    $PARAMETERS['administration']['esiti']['url'] = 'main.php?page=gestione_segnalazioni&segn=esiti_master';
+    $PARAMETERS['administration']['esiti']['access_level'] = ESITI_PERM;
+}
 
 /* HELP: Elenco delle voci dei menu' dei servizi e di gestione. E' sconsigliato operare modifiche. Le opzioni sono disponibili solo agli account con il livello d'accesso specificato o superiore.
 Livelli di accesso utente:
