@@ -89,7 +89,13 @@ class Quest extends BaseClass
 
     /*** CONTROLS ***/
 
-    public function questExist($id)
+    /**
+     * @fn questExist
+     * @note Controlla l'esistenza di una quest
+     * @param int $id
+     * @return bool
+     */
+    public function questExist($id): bool
     {
         $data = DB::query("SELECT COUNT(id) AS tot FROM quest WHERE id='{$id}' LIMIT 1");
         return ($data['tot'] > 0);
@@ -196,7 +202,13 @@ class Quest extends BaseClass
 
     /*** SELECT LISTS */
 
-    public function getTrameList($selected = 0)
+    /**
+     * @fn getTrameList
+     * @note Estrae la lista select delle trame esistenti
+     * @param int $selected
+     * @return string
+     */
+    public function getTrameList(int $selected = 0): string
     {
 
         $html = '';
@@ -221,7 +233,7 @@ class Quest extends BaseClass
      * @note Estrae tutte le quest che si possono leggere
      * @param int $start
      * @param int $end
-     * @return bool|int|mixed|string
+     * @return mixed
      */
     public function getAllQuests(int $start, int $end)
     {
@@ -324,7 +336,12 @@ class Quest extends BaseClass
         return implode(',', $array);
     }
 
-    public function createMemberInput()
+    /**
+     * @fn createMemberInput
+     * @note Creazione degli input di inserimento pg
+     * @return array
+     */
+    public function createMemberInput(): array
     {
         $html = '';
 
@@ -351,7 +368,13 @@ class Quest extends BaseClass
 
     /*** INSERT QUEST */
 
-    public function insertQuest(array $post)
+    /**
+     * @fn insertQuest
+     * @note Inserimento di una nuova quest
+     * @param array $post
+     * @return array
+     */
+    public function insertQuest(array $post): array
     {
 
         $resp = ['response' => false, 'mex' => 'Errore sconosciuto, contattare lo staff.'];
@@ -364,20 +387,18 @@ class Quest extends BaseClass
             $trama = Filters::int($post['trama']);
             $partecipanti = $post['new_part'];
 
-            gdrcd_debug($partecipanti);
-
             DB::query("INSERT INTO quest(titolo, partecipanti, descrizione, trama, data, autore) 
                     VALUES('{$titolo}','','{$descr}','{$trama}',NOW(),'{$me}')");
 
             $last_quest = DB::query("SELECT max(id) AS id FROM quest WHERE 1 LIMIT 1");
             $quest_id = Filters::int($last_quest['id']);
-            $data_exp = $this->assignExp($partecipanti,$titolo,$quest_id);
+            $data_exp = $this->assignExp($partecipanti, $titolo, $quest_id);
             $assigned = Filters::in($data_exp['assigned']);
 
 
             DB::query("UPDATE quest SET partecipanti = '{$assigned}' WHERE id= {$quest_id}");
 
-            return ['response'=>true,'Quest creata con successo'];
+            return ['response' => true, 'Quest creata con successo'];
 
         } else {
             $resp = ['response' => false, 'mex' => 'Permessi negati.'];
@@ -387,15 +408,21 @@ class Quest extends BaseClass
         return $resp;
     }
 
-    private function assignExp($partecipanti,$titolo,$quest_id)
+    /**
+     * @fn assignExp
+     * @note Assegna exp a nuovi partecipanti
+     * @param array $partecipanti
+     * @param string $titolo
+     * @param int $quest_id
+     * @return array
+     */
+    private function assignExp(array $partecipanti, string $titolo, int $quest_id): array
     {
 
         $assigned = [];
         $me = Functions::getInstance()->getMyId();
         $quest_id = Filters::int($quest_id);
         $titolo = Filters::in($titolo);
-
-        gdrcd_debug($partecipanti);
 
         foreach ($partecipanti['pg'] as $index => $id_pg) {
 
@@ -420,11 +447,11 @@ class Quest extends BaseClass
                     DB::query("INSERT INTO messaggi (mittente, destinatario,oggetto, testo) VALUES ('Resoconti Quest','{$pg_name}','{$notify_title}','{$notify_text}')");
                 }
 
-                array_push($assigned,$id_pg);
+                array_push($assigned, $id_pg);
             }
         }
 
-        return ['assigned'=>implode(',',$assigned)];
+        return ['assigned' => implode(',', $assigned)];
 
 
     }
@@ -454,7 +481,7 @@ class Quest extends BaseClass
 
                 # Assegno l'esperienza
                 $this->updateQuestExp($post);
-                $this->assignExp($partecipanti_new,$titolo,$quest);
+                $this->assignExp($partecipanti_new, $titolo, $quest);
 
                 $partecipanti_id = $this->getIdsForMembers($partecipanti);
 
@@ -484,7 +511,13 @@ class Quest extends BaseClass
 
     }
 
-    public function getIdsForMembers($partecipanti): string
+    /**
+     * @fn getIdsForMembers
+     * @note Estrae gli id dei partecipanti
+     * @param array $partecipanti
+     * @return string
+     */
+    public function getIdsForMembers(array $partecipanti): string
     {
         $array = [];
 
@@ -495,7 +528,13 @@ class Quest extends BaseClass
         return implode(',', $array);
     }
 
-    private function updateQuestExp($post)
+    /**
+     * @fn updateQuestExp
+     * @note Update dell'exp per chi ha gia' avuto un'assegnazione per quella questa
+     * @param array $post
+     * @return void
+     */
+    private function updateQuestExp(array $post): void
     {
 
         $quest = Filters::int($post['quest']);
@@ -582,6 +621,12 @@ class Quest extends BaseClass
 
     /*** DELETE QUEST ***/
 
+    /**
+     * @fn deleteQuest
+     * @note Eliminazione di una quest
+     * @param array $post
+     * @return array
+     */
     public function deleteQuest(array $post): array
     {
 
@@ -609,7 +654,13 @@ class Quest extends BaseClass
         return $resp;
     }
 
-    private function deleteQuestExp(array $data)
+    /**
+     * @fn deleteQuestExp
+     * @note Elimina le assegnazioni di exp per la quest
+     * @param array $data
+     * @return void
+     */
+    private function deleteQuestExp(array $data): void
     {
 
         $quest_id = Filters::int($data['id']);

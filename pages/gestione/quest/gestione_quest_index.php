@@ -16,7 +16,7 @@ $quest = Quest::getInstance();
         </div>
         <!-- Corpo della pagina -->
         <div class="page_body">
-            <?php require(__DIR__ . '/' . $quest->loadManagementPage($_GET['op'])); ?>
+            <?php require(__DIR__ . '/' . $quest->loadManagementQuestPage($_GET['op'])); ?>
         </div><!-- pagina -->
     <?php } else { ?>
 
