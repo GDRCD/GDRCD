@@ -824,10 +824,9 @@ INSERT INTO `personaggio` (`id`,`nome`, `cognome`, `pass`, `ultimo_cambiopass`, 
 CREATE TABLE personaggio_quest  (
     `id` int NOT NULL AUTO_INCREMENT,
     `id_quest` int NOT NULL,
-    `nome` varchar(255) NOT NULL,
-    `data` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `data` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `commento` text NOT NULL,
-    `nome_pg` varchar(255) NOT NULL,
+    `personaggio` int NOT NULL,
     `px_assegnati` int NOT NULL,
     `autore` varchar(255) NOT NULL,
     PRIMARY KEY (`id`)
@@ -847,6 +846,7 @@ CREATE TABLE IF NOT EXISTS  quest  (
     `trama` int NOT NULL DEFAULT '0',
     `data` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `autore` varchar(255) NOT NULL,
+    `autore_modifica` varchar(255) DEFAULT NULL,
     `ultima_modifica` varchar(255) DEFAULT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
@@ -863,7 +863,8 @@ CREATE TABLE IF NOT EXISTS  quest_trama  (
     `descrizione` text NOT NULL,
     `data` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `autore` varchar(255) NULL,
-    `ultima_modifica` varchar(255) DEFAULT NULL,
+    `autore_modifica` varchar(255) DEFAULT NULL,
+    `ultima_modifica` DATETIME DEFAULT NULL,
     `stato` int(11) NOT NULL DEFAULT '0',
     `quests` text DEFAULT NULL,
      PRIMARY KEY (`id`)

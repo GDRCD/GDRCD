@@ -7,16 +7,16 @@ $quest = Quest::getInstance();
 ?>
 
 
-<div class="pagina_gestione gestione_quest">
+<div class="gestione_pagina gestione_quest">
     <?php if ($quest->questEnabled() && $quest->manageQuestPermission()) {
         ?>
         <!-- Titolo della pagina -->
-        <div class="gestione_form_title">
+        <div class="form_title">
             <h2>Gestione quest</h2>
         </div>
         <!-- Corpo della pagina -->
         <div class="page_body">
-            <?php require(__DIR__ . '/' . $quest->loadManagementPage($_REQUEST['op'])); ?>
+            <?php require(__DIR__ . '/' . $quest->loadManagementPage($_GET['op'])); ?>
         </div><!-- pagina -->
     <?php } else { ?>
 

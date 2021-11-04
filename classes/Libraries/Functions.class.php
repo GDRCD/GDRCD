@@ -74,4 +74,27 @@ class Functions extends BaseClass
     {
         return $this->me_id;
     }
+
+    /**
+     * @fn getPgList
+     * @note Crea la select dei personaggi in land
+     * @return string
+     */
+    public static function getPgList(int $selected = 0): string
+    {
+
+        $html = '';
+        $selected = Filters::int($selected);
+        $data = DB::query("SELECT id,nome FROM personaggio WHERE 1",'result');
+
+        foreach ($data as $row){
+            $id = Filters::int($row['id']);
+            $nome = Filters::out($row['nome']);
+            $sel = ($selected == $id) ? 'selected' : '';
+
+            $html .= "<option value='{$id}' {$sel}>{$nome}</option>";
+        }
+
+        return $html;
+    }
 }

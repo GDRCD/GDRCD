@@ -647,8 +647,13 @@ div.innertube {
     display: inline-block;
     vertical-align: top;
 }
-.trama_line{
-    margin-top: 5px;
-    padding: 5px;
-    background: #969696;
+
+/** GESTIONE QUEST **/
+
+.quest_list .td{
+    width: 150px;
+}
+
+.quest_insert_form #new_member{
+    margin: 20px auto;
 }
