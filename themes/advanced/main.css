@@ -524,7 +524,8 @@ div.innertube {
     width: 100%;
 }
 
-.form_container .form .form_title{
+.form_container .form .form_title,
+.general_title{
     font-size: 15px;
     font-weight: bold;
     border: solid black;
@@ -574,13 +575,26 @@ div.innertube {
     width: 100%;
 }
 
+.fake-table .header{
+    border-radius: 5px 5px 0 0;
+}
+
+.fake-table .footer{
+    border-radius: 0 0 5px 5px;
+}
+
 .fake-table .footer,
 .fake-table .header{
     background: #23272a !important;
-    border-radius: 5px 5px 0 0;
     color: #ccc !important;
     font-weight: bold;
     letter-spacing: 0.5px;
+}
+
+
+.fake-table .footer a,
+.fake-table .header a{
+    color: #ccc !important;
 }
 
 

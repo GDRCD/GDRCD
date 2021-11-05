@@ -7,16 +7,16 @@ $quest = Quest::getInstance();
 ?>
 
 
-<div class="gestione_pagina gestione_quest">
-    <?php if ($quest->questEnabled() && $quest->manageQuestPermission()) {
+<div class="gestione_pagina gestione_trame">
+    <?php if ($quest->trameEnabled() && $quest->viewTramePermission()) {
         ?>
         <!-- Titolo della pagina -->
         <div class="general_title">
-            Gestione quest
+            Gestione trame
         </div>
         <!-- Corpo della pagina -->
         <div class="page_body">
-            <?php require(__DIR__ . '/' . $quest->loadManagementQuestPage(Filters::out($_GET['op']))); ?>
+            <?php require(__DIR__ . '/' . $quest->loadManagementTramePage(Filters::out($_GET['op']))); ?>
         </div><!-- pagina -->
     <?php } else { ?>
 

@@ -4,17 +4,13 @@ require_once(__DIR__ . '/../../../includes/required.php');
 
 $quest = Quest::getInstance();
 
-//Determinazione pagina (paginazione)
 $pagebegin = (int)$_REQUEST['offset'] * $PARAMETERS['settings']['records_per_page'];
 $pageend = $PARAMETERS['settings']['records_per_page'];
 
 # Lista delle quest visibili per questa pagina
-$quests = $quest->getAllQuests($pagebegin, $pageend);
-
-?>
+$trame = $quest->getAllTrame($pagebegin, $pageend); ?>
 
 
-<!-- Elenco dei record paginato -->
 <div class="fake-table quest_list">
     <!-- Intestazione tabella -->
     <div class="tr header">
@@ -28,13 +24,11 @@ $quests = $quest->getAllQuests($pagebegin, $pageend);
             Autore
         </div>
         <div class="td">
-            Partecipanti
+            Numero quest
         </div>
-        <?php if ($quest->viewTramePermission()) { ?>
-            <div class="td">
-                Trama
-            </div>
-        <?php } ?>
+        <div class="td">
+            Stato
+        </div>
         <div class="td">
             Autore modifica
         </div>
@@ -46,49 +40,54 @@ $quests = $quest->getAllQuests($pagebegin, $pageend);
         </div>
     </div>
 
+    <?php
 
-    <?php foreach ($quests as $row) { ?>
+    foreach ($trame as $trama) {
+
+        ?>
+
         <div class="tr">
             <div class="td">
-                <?= Filters::date($row['data'], 'd/m/Y'); ?>
+                <?= Filters::date($trama['data'], 'd/m/Y'); ?>
             </div>
             <div class="td">
-                <?= Filters::out($row['titolo']); ?>
+                <?= Filters::out($trama['titolo']); ?>
             </div>
             <div class="td">
-                <?= Personaggio::nameFromId(Filters::int($row['autore'])); ?>
+                <?= Personaggio::nameFromId(Filters::int($trama['autore'])); ?>
             </div>
             <div class="td">
-                <?= $quest->getPartecipantsNames($row['partecipanti']); ?>
-            </div>
-            <?php if ($quest->viewTramePermission()) {
-                $data = $quest->getTrama(Filters::int($row['trama'])); ?>
-                <div class="td">
-                    <?= (!empty($data['titolo'])) ? Filters::out($data['titolo']) : 'Nessuna'; ?>
-                </div>
-            <?php } ?>
-            <div class="td">
-                <?= (!empty($row['autore_modifica'])) ? Filters::out($row['autore_modifica']) : ''; ?>
+                <?= $quest->getTrameQuestNums(Filters::int($trama['id'])); ?>
             </div>
             <div class="td">
-                <?= (!empty($row['ultima_modifica'])) ? Filters::date($row['ultima_modifica'], 'd/m/Y') : ''; ?>
+                <?= $quest->getTramaStatusText(Filters::int($trama['stato'])); ?>
+            </div>
+            <div class="td">
+                <?= (!empty($trama['autore_modifica'])) ? Filters::out($trama['autore_modifica']) : ''; ?>
+            </div>
+            <div class="td">
+                <?= (!empty($trama['ultima_modifica'])) ? Filters::date($trama['ultima_modifica'], 'd/m/Y') : ''; ?>
             </div>
 
             <div class="td"><!-- Iconcine dei controlli -->
-                <a href="/main.php?page=gestione_quest&op=edit_quest&id_record=<?= Filters::int($row['id']); ?>">
+                <a href="/main.php?page=gestione_trame&op=edit_trama&id_record=<?= Filters::int($trama['id']); ?>">
                     <i class="fas fa-edit"></i>
                 </a>
-                <a href="/main.php?page=gestione_quest&op=delete_quest&id_record=<?= Filters::int($row['id']); ?>">
+                <a href="/main.php?page=gestione_trame&op=delete_trama&id_record=<?= Filters::int($trama['id']); ?>">
                     <i class="fas fa-eraser"></i>
                 </a>
             </div>
         </div>
+
     <?php } ?>
 
     <div class="tr footer">
-        <a href="main.php?page=gestione_quest&op=insert_quest">
-            Registra nuova quest
+
+        <?php if ($quest->manageTramePermission()) { ?>
+        <a href="main.php?page=gestione_trame&op=insert_trama">
+            Registra nuova trama
         </a> |
+        <?php } ?>
         <a href="main.php?page=gestione">
             Indietro
         </a>
@@ -98,5 +97,7 @@ $quests = $quest->getAllQuests($pagebegin, $pageend);
 
 <!-- Paginatore elenco -->
 <div class="pager">
-    <?= $quest->getQuestsPageNumbers(Filters::int($_REQUEST['offset'])); ?>
+    <?= $quest->getTramePageNumbers(Filters::int($_REQUEST['offset'])); ?>
 </div>
+
+
