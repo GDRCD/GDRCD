@@ -60,6 +60,35 @@ INSERT INTO `abilita` (`id_abilita`, `nome`, `car`, `descrizione`, `id_razza`) V
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `abilita_extra`
+--
+
+CREATE TABLE IF NOT EXISTS `abilita_extra` (
+                                               `id` int NOT NULL AUTO_INCREMENT,
+                                               `abilita` int NOT NULL,
+                                               `grado` int NOT NULL,
+                                               `descrizione` text NOT NULL,
+                                               `costo` int NOT NULL,
+                                               PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `abilita_requisiti`
+--
+
+CREATE TABLE IF NOT EXISTS `abilita_requisiti` (
+                                                   `id` int NOT NULL AUTO_INCREMENT,
+                                                   `abilita` int NOT NULL,
+                                                   `grado` int NOT NULL,
+                                                   `tipo` int NOT NULL,
+                                                   `id_riferimento` int NOT NULL,
+                                                   `liv_riferimento` int NOT NULL,
+                                                   PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
 -- Struttura della tabella `ambientazione`
 --
 
@@ -210,13 +239,14 @@ CREATE TABLE IF NOT EXISTS `clgpersonaggiomostrine` (
 --
 
 CREATE TABLE IF NOT EXISTS `clgpersonaggiooggetto` (
+  `id` INT NOT NULL AUTO_INCREMENT,
   `nome` varchar(255) NOT NULL DEFAULT '',
   `id_oggetto` int NOT NULL DEFAULT '0',
   `numero` int DEFAULT '1',
   `cariche` int NOT NULL DEFAULT '-1',
   `commento` varchar(255) DEFAULT NULL,
   `posizione` int NOT NULL DEFAULT '0',
-  PRIMARY KEY (`nome`,`id_oggetto`)
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
