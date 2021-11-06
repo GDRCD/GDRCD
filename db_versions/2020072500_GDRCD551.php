@@ -5,11 +5,6 @@
  */
 class GDRCD551 extends DbMigration
 {
-    public function __construct()
-    {
-        parent::__construct();
-    }
-    
     /**
      * @inheritDoc
      */
