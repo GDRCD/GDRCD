@@ -2,6 +2,8 @@
 
 /**
  * Classe base per implementare le migration del DB
+ * Ogni classe che estende questa classe dovrebbe essere posizionata nella cartella /db_versions
+ * Ogni classe figlia deve seguire la naming convention per il file in cui è definita: YYYYMMDDHH_NomeClasse.php
  */
 abstract class DbMigration
 {

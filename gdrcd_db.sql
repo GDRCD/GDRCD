@@ -497,6 +497,7 @@ INSERT INTO `menu` (`menu_name`, `section`, `name`, `page`, `permission`) VALUES
   ('Gestione', 'Bacheche', 'Gestione Bacheche', 'gestione_bacheche', 'MANAGE_FORUMS'),
   ('Gestione', 'Gilde', 'Gestione Gilde e Ruoli', 'gestione_gilde', 'MANAGE_GUILDS'),
   ('Gestione', 'Gestione', 'Gestione Costanti', 'gestione_costanti', 'MANAGE_CONSTANTS'),
+  ('Gestione', 'Gestione', 'Gestione Versioni Database', 'gestione_db_migrations', 'MANAGE_DB_MIGRATIONS'),
   ('Gestione', 'Permessi', 'Gestione Permessi', 'gestione_permessi', 'MANAGE_PERMISSIONS'),
   ('Gestione', 'Gestione', 'Manutenzione', 'gestione_manutenzione', 'MANAGE_MANUTENTIONS'),
   ('Gestione', 'Oggetti', 'Gestione Oggetti', 'gestione_oggetti', 'MANAGE_OBJECTS'),
@@ -688,6 +689,7 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
     ('MANAGE_ABILITY', 'Permesso gestione abilità'),
     ('MANAGE_ABILITY_EXTRA', 'Permesso gestione abilità dati extra'),
     ('MANAGE_ABILITY_REQUIREMENT', 'Permesso gestione requisiti abilità '),
+    ('MANAGE_DB_MIGRATIONS', 'Permesso gestione versioni del database'),
     ('MANAGE_LOCATIONS', 'Permesso gestione luoghi'),
     ('MANAGE_MAPS', 'Permesso gestione mappe'),
     ('MANAGE_AMBIENT','Gestione ambientazione'),
@@ -1024,7 +1026,16 @@ CREATE TABLE IF NOT EXISTS _gdrcd_db_versions (
 
 INSERT INTO _gdrcd_db_versions (migration_id,applied_on) VALUES
   ('2020072500', NOW()),
-  ('2021103018',NOW());
+  ('2021103018',NOW()),
+  ('2021110101',NOW()),
+  ('2021110102',NOW()),
+  ('2021110103',NOW()),
+  ('2021110104',NOW()),
+  ('2021110105',NOW()),
+  ('2021110106',NOW()),
+  ('2021110107',NOW()),
+  ('2021110108',NOW()),
+  ('2021110109',NOW());
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
