@@ -33,9 +33,9 @@ if(isset($_POST['action'])) {
         </div>
     <?php } ?>
 
-    <div class="gestione_form_container">
+    <div class="form_container">
 
-        <form method="post" class="gestione_form">
+        <form method="post" class="form">
 
             <?= $gestione->constantList(); ?>
 

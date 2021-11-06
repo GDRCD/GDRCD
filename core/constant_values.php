@@ -117,6 +117,7 @@ const ESITI_PERM = GAMEMASTER;
 //definisce quali permessi hanno accesso alla visione di tutti gli esiti (default: moderator)
 const FULL_PERM = MODERATOR;
 
+
 /*Vettori globali dei parametri*/
 $PARAMETER = array();
 $MESSAGES = array();

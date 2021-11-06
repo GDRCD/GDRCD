@@ -515,22 +515,17 @@ div.innertube {
     text-align: left;
 }
 
-.gestione_pagina .gestione_form_container,
-.servizi_pagina .servizi_form_container,
 .form_container{
     width: 90%;
     margin: 5px auto;
 }
 
-.gestione_pagina .gestione_form_container .gestione_form,
-.servizi_pagina .servizi_form_container .servizi_form,
 .form_container .form{
     width: 100%;
 }
 
-.gestione_pagina .gestione_form_container .gestione_form_title,
-.servizi_pagina .servizi_form_container .servizi_form_title,
-.form_container .form .form_title{
+.form_container .form .form_title,
+.general_title{
     font-size: 15px;
     font-weight: bold;
     border: solid black;
@@ -540,28 +535,30 @@ div.innertube {
     clear: both;
 }
 
+.form_container .form .form_subtitle{
+    font-size: 13px;
+    font-weight: bold;
+    margin: 10px 0;
+    padding: 5px 0;
+    clear: both;
+}
 
-.gestione_pagina .gestione_form .single_input,
-.servizi_pagina .servizi_form .single_input
 .form_container .form .single_input{
     width: 100%;
     margin: 5px;
 }
 
-.gestione_pagina .gestione_form .single_input .label,
-.servizi_pagina .servizi_form .single_input .label,
 .form_container .form .single_input .label{
     font-size: 13px;
     font-weight: bold;
 }
 
-.gestione_pagina .gestione_form .single_input input textarea select,
-.servizi_pagina .servizi_form .single_input input textarea select,
 .form_container .form .single_input input,
 .form_container .form .single_input textarea,
 .form_container .form .single_input select{
     margin: 0 !important;
     max-width: 500px;
+    border: 1px solid grey;
 }
 
 .single_input.w-33{
@@ -574,20 +571,79 @@ div.innertube {
 /*** FAKE-TABLE ***/
 
 .fake-table{
-    margin: 5px 0;
+    margin: 10px 0;
+    width: 100%;
 }
+
+.fake-table .header{
+    border-radius: 5px 5px 0 0;
+}
+
+.fake-table .footer{
+    border-radius: 0 0 5px 5px;
+}
+
+.fake-table .footer,
+.fake-table .header{
+    background: #23272a !important;
+    color: #ccc !important;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+
+.fake-table .footer a,
+.fake-table .header a{
+    color: #ccc !important;
+}
+
 
 .fake-table .tr{
     width: 100%;
     height: auto;
-    margin: 5px 0;
     padding: 5px;
     box-sizing: border-box;
+    background: #7289da;
+    color: #23272a;
+    border: solid black;
+    border-width: 0 1px 1px 1px;
+}
+
+.fake-table .tr:nth-child(2){
+    border-top:none;
 }
 
 .fake-table .tr .td{
     display: inline-block;
     vertical-align: top;
+    border-right: 1px solid #4d5259;
+    min-height: 15px;
+}
+
+.fake-table .tr .td img,
+.fake-table .tr .td input[type="image"]{
+    width: 25px;
+    height: 25px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.fake-table .tr .td button,
+.fake-table .tr .td a{
+    color: #ccc;
+    text-decoration: none;
+    background: none;
+    border:none;
+    cursor: pointer;
+}
+
+.fake-table .tr .td button:hover,
+.fake-table .tr .td a:hover{
+    color: #fff;
+}
+
+.fake-table .tr .td:last-child{
+    border-right: none;
 }
 
 .fake-table .table-subtitle{
@@ -599,4 +655,19 @@ div.innertube {
 .fake-table .table-text{
     margin:5px 0;
     text-align: left;
+}
+
+.fake-table .sub_cell{
+    display: inline-block;
+    vertical-align: top;
+}
+
+/** GESTIONE QUEST **/
+
+.quest_list .td{
+    width: 150px;
+}
+
+.quest_insert_form #new_member{
+    margin: 20px auto;
 }
