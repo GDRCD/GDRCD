@@ -705,7 +705,9 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
     ('MANAGE_QUESTS_OTHER', 'Permesso per la gestione delle quest altrui'),
     ('MANAGE_TRAME_VIEW','Permesso per la visualizzazione delle trame'),
     ('MANAGE_TRAME','Permesso per la modifica delle trame'),
-    ('MANAGE_TRAME_OTHER','Permesso per la modifica delle trame degli altri');
+    ('MANAGE_TRAME_OTHER','Permesso per la modifica delle trame degli altri'),
+    ('SCHEDA_EXP_VIEW','Permesso per la visualizzazione della pagina esperienza in scheda'),
+    ('SCHEDA_EXP_MANAGE','Permesso per la visualizzazione della pagina esperienza in scheda');
 
 
 

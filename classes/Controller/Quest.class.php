@@ -13,7 +13,8 @@ class Quest extends BaseClass
         $trame_enabled,
         $result_for_page,
         $notify_enabled,
-        $px_code = PX;
+        $px_code = PX,
+        $num_log_scheda = 10;
 
     /**
      * @fn __construct
@@ -210,6 +211,23 @@ class Quest extends BaseClass
         return Permissions::permission('MANAGE_TRAME');
     }
 
+    /**
+     * @fn viewExpPermission
+     * @note Controllo permessi per visualizzazione esperienza scheda
+     * @return bool
+     */
+    public function viewExpPermission():bool{
+        return Permissions::permission('SCHEDA_EXP_VIEW');
+    }
+
+    /**
+     * @fn manageExpPermission
+     * @note Controllo permessi per singola assegnazione esperienza scheda
+     * @return bool
+     */
+    public function manageExpPermission():bool{
+        return Permissions::permission('SCHEDA_EXP_MANAGE');
+    }
 
     /*** ROUTING **/
 
@@ -339,6 +357,74 @@ class Quest extends BaseClass
         return $html;
     }
 
+    /*** SCHEDA PX ***/
+
+    /**
+     * @fn renderPgExpLog
+     * @note Lista degli ultimi log di tipo esperienza
+     * #TODO Non prende i nuovi log del sistema quest, in quanto nelle quest viene passato l'id (1) e qui riceve un nome dalla scheda (Super)
+     * @param $pg
+     * @return string
+     */
+    public function renderPgExpLog($pg): string
+    {
+        $pg = Filters::in($pg);
+
+        $html = '';
+
+        $list = DB::query("SELECT * FROM log WHERE codice_evento='{$this->px_code}' AND nome_interessato='{$pg}' ORDER BY data_evento DESC LIMIT {$this->num_log_scheda}",'result');
+
+        foreach ($list as $row){
+            $descr = Filters::out($row['descrizione_evento']);
+            $data = Filters::date($row['data_evento'],'d/m/Y');
+            $autore = Personaggio::nameFromId($row['autore']);
+
+            $html .= "<div class='tr'>";
+            $html .= "<div class='td causale'>{$descr}</div>";
+            $html .= "<div class='td autore'>{$autore}</div>";
+            $html .= "<div class='td data'>{$data}</div>";
+            $html .= "</div>";
+        }
+
+        return $html;
+    }
+
+    /**
+     * @fn assignSingleExp
+     * @note Assegnazione singola exp
+     * #TODO Sostituire il nome con l'id quando avverra' il cambio della scheda
+     * @param array $post
+     * @return array
+     */
+    public function assignSingleExp(array $post): array
+    {
+
+        if($this->manageExpPermission()){
+
+            $pg = Filters::in($post['pg']);
+            $causale = Filters::in($post['causale']);
+            $px = Filters::int($post['px']);
+
+            if(!empty($causale) && ($px != 0) && !empty($pg)){
+
+                DB::query("UPDATE personaggio SET esperienza = esperienza + '{$px}' WHERE nome='{$pg}' LIMIT 1");
+
+                DB::query("INSERT INTO log(nome_interessato, autore, data_evento, codice_evento, descrizione_evento)
+                                VALUES('{$pg}','{$this->me_id}',NOW(),'{$this->px_code}','({$px}px) {$causale}') ");
+
+                $resp = ['response'=>true,'mex'=>'Esperienza modificata con successo.'];
+            }
+            else{
+                $resp = ['response'=>false,'mex'=>'Compila tutti i campi.'];
+            }
+
+        }
+        else{
+            $resp = ['response'=>false,'mex'=>'Permessi Negati.'];
+        }
+
+        return $resp;
+    }
 
     /*** TRAME LISTA PAGE **/
 
