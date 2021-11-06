@@ -11,9 +11,9 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT = @@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS = @@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION = @@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
 
 --
@@ -64,12 +64,12 @@ INSERT INTO `abilita` (`id_abilita`, `nome`, `car`, `descrizione`, `id_razza`) V
 --
 
 CREATE TABLE IF NOT EXISTS `abilita_extra` (
-    `id` int NOT NULL AUTO_INCREMENT,
-     `abilita` int NOT NULL,
-     `grado` int NOT NULL,
-     `descrizione` text NOT NULL,
-     `costo` int NOT NULL,
-     PRIMARY KEY (`id`)
+  `id` int NOT NULL AUTO_INCREMENT,
+  `abilita` int NOT NULL,
+  `grado` int NOT NULL,
+  `descrizione` text NOT NULL,
+  `costo` int NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -79,13 +79,13 @@ CREATE TABLE IF NOT EXISTS `abilita_extra` (
 --
 
 CREATE TABLE IF NOT EXISTS `abilita_requisiti` (
-    `id` int NOT NULL AUTO_INCREMENT,
-    `abilita` int NOT NULL,
-    `grado` int NOT NULL,
-    `tipo` int NOT NULL,
-    `id_riferimento` int NOT NULL,
-    `liv_riferimento` int NOT NULL,
-    PRIMARY KEY (`id`)
+  `id` int NOT NULL AUTO_INCREMENT,
+  `abilita` int NOT NULL,
+  `grado` int NOT NULL,
+  `tipo` int NOT NULL,
+  `id_riferimento` int NOT NULL,
+  `liv_riferimento` int NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -856,14 +856,14 @@ INSERT INTO `personaggio` (`id`,`nome`, `cognome`, `pass`, `ultimo_cambiopass`, 
 --
 
 CREATE TABLE personaggio_quest  (
-    `id` int NOT NULL AUTO_INCREMENT,
-    `id_quest` int NOT NULL,
-    `data` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `commento` text NOT NULL,
-    `personaggio` int NOT NULL,
-    `px_assegnati` int NOT NULL,
-    `autore` varchar(255) NOT NULL,
-    PRIMARY KEY (`id`)
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_quest` int NOT NULL,
+  `data` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `commento` TEXT NOT NULL,
+  `personaggio` int NOT NULL,
+  `px_assegnati` int NOT NULL,
+  `autore` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -873,16 +873,16 @@ CREATE TABLE personaggio_quest  (
 --
 
 CREATE TABLE IF NOT EXISTS  quest  (
-    `id` int NOT NULL AUTO_INCREMENT,
-    `titolo` text NOT NULL,
-    `partecipanti` text NOT NULL,
-    `descrizione` text NOT NULL,
-    `trama` int NOT NULL DEFAULT '0',
-    `data` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `autore` varchar(255) NOT NULL,
-    `autore_modifica` varchar(255) DEFAULT NULL,
-    `ultima_modifica` varchar(255) DEFAULT NULL,
-    PRIMARY KEY (`id`)
+  `id` int NOT NULL AUTO_INCREMENT,
+  `titolo` text NOT NULL,
+  `partecipanti` text NOT NULL,
+  `descrizione` text NOT NULL,
+  `trama` int NOT NULL DEFAULT '0',
+  `data` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `autore` varchar(255) NOT NULL,
+  `autore_modifica` varchar(255) DEFAULT NULL,
+  `ultima_modifica` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -892,16 +892,16 @@ CREATE TABLE IF NOT EXISTS  quest  (
 --
 
 CREATE TABLE IF NOT EXISTS  quest_trama  (
-    `id` int NOT NULL AUTO_INCREMENT,
-    `titolo` varchar(255) NOT NULL,
-    `descrizione` text NOT NULL,
-    `data` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `autore` varchar(255) NULL,
-    `autore_modifica` varchar(255) DEFAULT NULL,
-    `ultima_modifica` DATETIME DEFAULT NULL,
-    `stato` int(11) NOT NULL DEFAULT '0',
-    `quests` text DEFAULT NULL,
-     PRIMARY KEY (`id`)
+  `id` int NOT NULL AUTO_INCREMENT,
+  `titolo` varchar(255) NOT NULL,
+  `descrizione` text NOT NULL,
+  `data` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `autore` varchar(255) NULL,
+  `autore_modifica` varchar(255) DEFAULT NULL,
+  `ultima_modifica` DATETIME DEFAULT NULL,
+  `stato` int(11) NOT NULL DEFAULT '0',
+  `quests` text DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
