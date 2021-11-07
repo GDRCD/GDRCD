@@ -13,7 +13,6 @@ class Condizioni extends BaseClass
     public function __construct()
     {
         parent::__construct();
-
         $this->array_vento = array("Assente", "Brezza", "Brezza intensa", "Vento Forte", "Burrasca");
     }
 
@@ -38,8 +37,6 @@ class Condizioni extends BaseClass
     public function getAll()
     {
         return DB::query("SELECT id, nome, vento, img FROM meteo_condizioni", 'result');
-
-
     }
 
     /**
@@ -49,10 +46,7 @@ class Condizioni extends BaseClass
      */
     public function getOne($id)
     {
-
-
         return DB::query("SELECT id, nome, vento, img FROM meteo_condizioni WHERE id='{$id}'", 'query');
-
     }
 
     /**
@@ -61,7 +55,7 @@ class Condizioni extends BaseClass
      */
     public function new(string $nome, $vento,$img)
     {
-        gdrcd_query("INSERT INTO meteo_condizioni (nome,vento,img )  VALUES
+        DB::query("INSERT INTO meteo_condizioni (nome,vento,img )  VALUES
         ('{$nome}', '{$vento}' , '{$img}') ");
     }
 
@@ -71,8 +65,8 @@ class Condizioni extends BaseClass
      */
     public function edit(string $nome, $vento, $id, $img)
     {
-        $id = gdrcd_filter('num', $id);
-        gdrcd_query("UPDATE  meteo_condizioni 
+        $id = Filters::int( $id);
+        DB::query("UPDATE  meteo_condizioni 
                 SET nome = '{$nome}',vento='{$vento}', img='{$img}' WHERE id='{$id}'");
     }
 
@@ -82,8 +76,8 @@ class Condizioni extends BaseClass
      */
     public function delete(int $id)
     {
-        $id = gdrcd_filter('num', $id);
-        gdrcd_query("DELETE FROM meteo_condizioni WHERE id='{$id}'");
+        $id = Filters::int(  $id);
+        DB::query("DELETE FROM meteo_condizioni WHERE id='{$id}'");
     }
     /**
      * @fn selectVento

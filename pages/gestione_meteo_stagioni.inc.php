@@ -1,15 +1,12 @@
-<div class="pagina_scheda_diario">
-    <?php
-    require_once(__DIR__ . '/../includes/required.php');
-    require_once(__DIR__ . '/meteo/stagioni/stagioni.class.php');
+ <?php
+$class =Stagioni::getInstance();
 
-    $class = new Stagioni();
+$op = Filters::out($_REQUEST['op']);
 
-    $op = gdrcd_filter('out', $_REQUEST['op']);
-    ?>
+?>
     <!-- Titolo della pagina -->
     <div class="page_title">
-        <h2><?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['meteo_season']['page_name']); ?></h2>
+        <h2><?php echo Filters::out( $MESSAGE['interface']['administration']['meteo_season']['page_name']); ?></h2>
     </div>
     <!-- Box principale -->
     <div class="page_body">
@@ -17,7 +14,8 @@
             <?php
             if ($class->Visibility()) {
             # Richieste Post
-            switch (gdrcd_filter_get($_POST['op'])) {
+            switch (Filters::out($_POST['op'])) {
+
                 case 'view': //Lettura pagina
                     include('meteo/stagioni/view.inc.php');
                     break;
@@ -46,3 +44,10 @@
 }
 ?>
 </div>
+ <script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
+ <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet"/>
+ <script>
+     $(".chosen-select").chosen({
+         no_results_text: "Inserire delle opzioni"
+     })
+ </script>

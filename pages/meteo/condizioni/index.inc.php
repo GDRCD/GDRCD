@@ -21,7 +21,7 @@
 
     <?php
     $all=Condizioni::getAll();
-    while($row = gdrcd_query($all, 'fetch')){
+    while($row =         DB::query($all, 'fetch')){
     ?>
 
 

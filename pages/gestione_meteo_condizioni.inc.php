@@ -1,11 +1,6 @@
-<div class="pagina_scheda_diario">
-    <?php
-
-
+     <?php
 $class =Condizioni::getInstance();
-
 $op = Filters::out($_REQUEST['op']);
-
 ?>
     <!-- Titolo della pagina -->
     <div class="page_title">
