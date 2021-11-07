@@ -11,11 +11,20 @@ $handleDBConnection = gdrcd_connect();
 # Controllo del login
 if(!empty($_SESSION['login'])){
     $me = gdrcd_filter('in',$_SESSION['login']);
-    $check = gdrcd_query("SELECT count(nome) as TOT FROM personaggio WHERE ora_entrata > ora_uscita AND nome='{$me}' LIMIT 1");
 
-    if($check['TOT'] == 0){
+    $table_check = gdrcd_query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'personaggio';");
+
+    if(!empty($table_check)) {
+
+        $check = gdrcd_query("SELECT count(nome) as TOT FROM personaggio WHERE ora_entrata > ora_uscita AND nome='{$me}' LIMIT 1");
+
+        if ($check['TOT'] == 0) {
+            session_destroy();
+            die('Non sei collegato con nessun pg.');
+        }
+    }
+    else{
         session_destroy();
-        die('Non sei collegato con nessun pg.');
     }
 
 }
