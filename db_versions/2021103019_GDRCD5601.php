@@ -1,6 +1,6 @@
 <?php
 
-class GDRCD56_fix1 extends DbMigration
+class GDRCD5601 extends DbMigration
 {
     /**
      * @inheritDoc
