@@ -12,7 +12,7 @@ $handleDBConnection = gdrcd_connect();
 if(!empty($_SESSION['login'])){
     $me = gdrcd_filter('in',$_SESSION['login']);
 
-    $table_check = gdrcd_query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'personaggio';");
+    $table_check = gdrcd_query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{$PARAMETERS['database']['database_name']}' AND TABLE_NAME = 'personaggio';");
 
     if(!empty($table_check)) {
 
