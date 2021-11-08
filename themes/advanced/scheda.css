@@ -475,3 +475,16 @@ div.pagina_scheda_oggetti form {
     border-right: none;
 }
 
+/*** ESPERIENZA ***/
+
+.pagina_scheda_esperienza .exp_log_table .tr .causale{
+    width: 50%;
+}
+
+.pagina_scheda_esperienza .exp_log_table .tr .autore{
+    width: 25%;
+}
+
+.pagina_scheda_esperienza .exp_log_table .tr .data{
+    width: 20%;
+}

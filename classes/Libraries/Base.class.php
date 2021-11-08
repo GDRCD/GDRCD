@@ -30,7 +30,7 @@ abstract class BaseClass
     /**
      * @fn getInstance
      * @note Self Instance for static recall (BaseClass::__construct();)
-     * @return mixed
+     * @return static
      */
     public static function getInstance()
     {

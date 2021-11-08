@@ -36,4 +36,3 @@ if(!empty($_SESSION['theme']) and array_key_exists($_SESSION['theme'], $PARAMETE
 
 require_once(dirname(__FILE__) . '/../vocabulary/' . $PARAMETERS['languages']['set'] . '.vocabulary.php');
 
-

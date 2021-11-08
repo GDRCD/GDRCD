@@ -53,11 +53,11 @@ if (isset($_POST['action'])) {
     </div>
 
     <!-- CREA -->
-    <div id="CreaAbiRequisito" class="gestione_form_container">
+    <div id="CreaAbiRequisito" class="form_container">
 
-        <div class="gestione_form_title">Crea Requisito Abilita</div>
+        <div class="form_title">Crea Requisito Abilita</div>
 
-        <form method="POST" id="CreaAbiRequisitoForm" class="gestione_form">
+        <form method="POST" id="CreaAbiRequisitoForm" class="form">
 
 
             <!-- ABILITA -->
@@ -135,12 +135,12 @@ if (isset($_POST['action'])) {
     </div>
 
     <!-- MODIFICA -->
-    <div id="ModAbiRequisito" class="gestione_form_container">
+    <div id="ModAbiRequisito" class="form_container">
 
-        <div class="gestione_form_title">Modifica Requisito Abilita</div>
+        <div class="form_title">Modifica Requisito Abilita</div>
 
 
-        <form method="POST" id="ModAbiRequisitoForm" class="gestione_form">
+        <form method="POST" id="ModAbiRequisitoForm" class="form">
 
             <!-- LISTA REQUISITI -->
             <div class="single_input">
@@ -225,11 +225,11 @@ if (isset($_POST['action'])) {
     </div>
 
     <!-- ELIMiNA -->
-    <div id="EliminaAbiRequisito" class="gestione_form_container">
+    <div id="EliminaAbiRequisito" class="form_container">
 
-        <div class="gestione_form_title">Elimina Requisito Abilita</div>
+        <div class="form_title">Elimina Requisito Abilita</div>
 
-        <form method="POST" id="EliminaAbiRequisitoForm" class="gestione_form">
+        <form method="POST" id="EliminaAbiRequisitoForm" class="form">
 
             <!-- LISTA REQUISITI -->
             <div class="single_input">

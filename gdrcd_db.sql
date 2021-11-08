@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Ott 07, 2021 alle 15:22
+-- Generation Time: Ott 08, 2021 alle 00:28
 -- Versione del server: 8.0.21
 -- PHP Version: 5.6.40
 
@@ -89,8 +89,6 @@ CREATE TABLE IF NOT EXISTS `abilita_requisiti` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
-
---
 -- Struttura della tabella `ambientazione`
 --
 
@@ -189,7 +187,7 @@ CREATE TABLE IF NOT EXISTS `blocco_esiti` (
   `master` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0',
   `closed` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -338,7 +336,7 @@ CREATE TABLE IF NOT EXISTS `config` (
   `type` varchar(255) DEFAULT 'String',
   `editable` tinyint(1) DEFAULT 1,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
 INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,`editable`) VALUES
@@ -366,10 +364,17 @@ INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,
     ('CHAT_SAVE',1,'Chat Salvataggio','Salva chat','Salva chat attivo?','bool',1),
     ('CHAT_PVT_SAVE',1,'Chat Salvataggio','Salva chat pvt','Salva chat attivo in pvt?','bool',1),
     ('CHAT_SAVE_LINK',1,'Chat Salvataggio','Salva chat in link','Salva chat in modalità link?','bool',1),
-    ('CHAT_SAVE_DOWNLOAD',1,'Chat Salvataggio','Salva chat download','Salva chat con download?','bool',1);
+    ('CHAT_SAVE_DOWNLOAD',1,'Chat Salvataggio','Salva chat download','Salva chat con download?','bool',1),
     ('ESITI_ENABLE',1,'Esiti','Attiva esiti','Abilitare la funzione esiti?','bool',1),
-    ('ESITI_CHAT',1,'Esiti','Attiva esiti in chat','Abilitare la funzione di lancio degli esiti in chat?','bool',1);
-    ('ESITI_TIRI',1,'Esiti','Lancio di dadi negli esiti','Abilitare la possibilità di lanciare dadi all''interno del pannello esiti?','bool',1);
+    ('ESITI_CHAT',1,'Esiti','Attiva esiti in chat','Abilitare la funzione di lancio degli esiti in chat?','bool',1),
+    ('ESITI_TIRI',1,'Esiti','Lancio di dadi negli esiti','Abilitare la possibilità di lanciare dadi all''interno del pannello esiti?','bool',1),
+    ('QUEST_ENABLED',1,'Quest','Attivazione Quest migliorate','Gestione quest migliorata, attiva?','bool',1),
+    ('QUEST_VIEW',2,'Quest','Permessi visual quest','Permesso minimo per visualizzazione delle quest','permission',1),
+    ('QUEST_SUPER_PERMISSION',3,'Quest','Permessi speciali','Permesso minimo per modificare qualsiasi parte del pacchetto','int',1),
+    ('QUEST_NOTIFY',0,'Quest','Notifiche quest','Definisce la possibilità di inviare messaggi automatici di avviso agli utenti che partecipano ad una quest','bool',1),
+    ('TRAME_ENABLED',1,'Trame','Attivazione trame','Sistema trame attivo?','bool',1),
+    ('QUEST_RESULTS_FOR_PAGE',15,'Quest','Risultati per pagina','Numero risultati per pagina nella gestione delle quest.','int',1);
+
 -- --------------------------------------------------------
 
 --
@@ -395,33 +400,33 @@ CREATE TABLE IF NOT EXISTS `diario` (
 --
 
 CREATE TABLE IF NOT EXISTS `esiti` (
-   `id` int(11) NOT NULL AUTO_INCREMENT,
-   `sent` int(11) NOT NULL DEFAULT '0',
-   `titolo` varchar(255) CHARACTER SET utf8 NOT NULL,
-   `data` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-   `chat` int(11) NOT NULL DEFAULT '0',
-   `autore` varchar(255) CHARACTER SET utf8 NOT NULL,
-   `contenuto` mediumtext CHARACTER SET utf8,
-   `noteoff` text CHARACTER SET utf8,
-    `master` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-     `pg` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-     `id_blocco` int(11) NOT NULL,
-     `id_ab` int(11) DEFAULT '0',
-     `CD_1` text CHARACTER SET utf8,
-     `CD_2` text CHARACTER SET utf8,
-     `CD_3` text CHARACTER SET utf8,
-     `CD_4` text CHARACTER SET utf8,
-     `CD1_value` int(4) NOT NULL DEFAULT '0',
-     `CD2_value` int(4) NOT NULL DEFAULT '0',
-     `CD3_value` int(4) NOT NULL DEFAULT '0',
-     `CD4_value` int(4) NOT NULL DEFAULT '0',
-     `letto_master` int(11) NOT NULL DEFAULT '0',
-     `letto_pg` int(11) NOT NULL DEFAULT '0',
-     `dice_face` int(11) NOT NULL DEFAULT '0',
-     `dice_num` int(11) NOT NULL DEFAULT '0',
-     `dice_results` varchar(255) DEFAULT NULL,
-     `modificatore` int(4) NOT NULL DEFAULT '0',
-      PRIMARY KEY (`id`)
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `sent` int(11) NOT NULL DEFAULT '0',
+  `titolo` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `data` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `chat` int(11) NOT NULL DEFAULT '0',
+  `autore` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `contenuto` mediumtext CHARACTER SET utf8,
+  `noteoff` text CHARACTER SET utf8,
+  `master` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `pg` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `id_blocco` int(11) NOT NULL,
+  `id_ab` int(11) DEFAULT '0',
+  `CD_1` text CHARACTER SET utf8,
+  `CD_2` text CHARACTER SET utf8,
+  `CD_3` text CHARACTER SET utf8,
+  `CD_4` text CHARACTER SET utf8,
+  `CD1_value` int(4) NOT NULL DEFAULT '0',
+  `CD2_value` int(4) NOT NULL DEFAULT '0',
+  `CD3_value` int(4) NOT NULL DEFAULT '0',
+  `CD4_value` int(4) NOT NULL DEFAULT '0',
+  `letto_master` int(11) NOT NULL DEFAULT '0',
+  `letto_pg` int(11) NOT NULL DEFAULT '0',
+  `dice_face` int(11) NOT NULL DEFAULT '0',
+  `dice_num` int(11) NOT NULL DEFAULT '0',
+  `dice_results` varchar(255) DEFAULT NULL,
+  `modificatore` int(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -499,10 +504,14 @@ INSERT INTO `menu` (`menu_name`, `section`, `name`, `page`, `permission`) VALUES
   ('Gestione', 'Bacheche', 'Gestione Bacheche', 'gestione_bacheche', 'MANAGE_FORUMS'),
   ('Gestione', 'Gilde', 'Gestione Gilde e Ruoli', 'gestione_gilde', 'MANAGE_GUILDS'),
   ('Gestione', 'Gestione', 'Gestione Costanti', 'gestione_costanti', 'MANAGE_CONSTANTS'),
+  ('Gestione', 'Gestione', 'Gestione Versioni Database', 'gestione_db_migrations', 'MANAGE_DB_MIGRATIONS'),
   ('Gestione', 'Permessi', 'Gestione Permessi', 'gestione_permessi', 'MANAGE_PERMISSIONS'),
   ('Gestione', 'Gestione', 'Manutenzione', 'gestione_manutenzione', 'MANAGE_MANUTENTIONS'),
   ('Gestione', 'Oggetti', 'Gestione Oggetti', 'gestione_oggetti', 'MANAGE_OBJECTS'),
   ('Gestione', 'Chat', 'Giocate Segnalate', 'gestione_segnalazioni', 'MANAGE_REPORTS'),
+  ('Gestione', 'Chat', 'Esiti in chat', 'gestione_esiti', 'MANAGE_OUTCOMES'),
+  ('Gestione', 'Quest', 'Gestione Quest', 'gestione_quest', 'MANAGE_QUESTS'),
+  ('Gestione', 'Quest', 'Gestione Trame', 'gestione_trame', 'MANAGE_TRAME_VIEW'),
   ('Gestione', 'Esiti', 'Esiti', 'gestione_esiti', 'MANAGE_ESITI');
 
 -- --------------------------------------------------------
@@ -688,6 +697,7 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
     ('MANAGE_ABILITY', 'Permesso gestione abilità'),
     ('MANAGE_ABILITY_EXTRA', 'Permesso gestione abilità dati extra'),
     ('MANAGE_ABILITY_REQUIREMENT', 'Permesso gestione requisiti abilità '),
+    ('MANAGE_DB_MIGRATIONS', 'Permesso gestione versioni del database'),
     ('MANAGE_LOCATIONS', 'Permesso gestione luoghi'),
     ('MANAGE_MAPS', 'Permesso gestione mappe'),
     ('MANAGE_AMBIENT','Gestione ambientazione'),
@@ -700,8 +710,16 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
     ('MANAGE_MANUTENTIONS', 'Permesso per la gestione della manutenzione del db'),
     ('MANAGE_OBJECTS', 'Permesso per la gestione degli oggetti'),
     ('MANAGE_REPORTS', 'Permesso per la gestione delle giocate segnalate'),
-    ('MANAGE_ESITI', 'Permesso per la gestione base degli esiti');
-    ('MANAGE_ALL_ESITI', 'Permesso per la visione/modifica di qualsiasi tipo di esito');
+    ('MANAGE_ESITI', 'Permesso per la gestione base degli esiti'),
+    ('MANAGE_ALL_ESITI', 'Permesso per la visione/modifica di qualsiasi tipo di esito'),
+    ('MANAGE_OUTCOMES', 'Permesso per la gestione degli esiti in chat'),
+    ('MANAGE_QUESTS', 'Permesso per la gestione delle quest'),
+    ('MANAGE_QUESTS_OTHER', 'Permesso per la gestione delle quest altrui'),
+    ('MANAGE_TRAME_VIEW','Permesso per la visualizzazione delle trame'),
+    ('MANAGE_TRAME','Permesso per la modifica delle trame'),
+    ('MANAGE_TRAME_OTHER','Permesso per la modifica delle trame degli altri'),
+    ('SCHEDA_EXP_VIEW','Permesso per la visualizzazione della pagina esperienza in scheda'),
+    ('SCHEDA_EXP_MANAGE','Permesso per la visualizzazione della pagina esperienza in scheda');
 
 
 -- --------------------------------------------------------
@@ -845,6 +863,61 @@ INSERT INTO `personaggio` (`id`,`nome`, `cognome`, `pass`, `ultimo_cambiopass`, 
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `personaggio_quest`
+--
+
+CREATE TABLE personaggio_quest  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_quest` int NOT NULL,
+  `data` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `commento` TEXT NOT NULL,
+  `personaggio` int NOT NULL,
+  `px_assegnati` int NOT NULL,
+  `autore` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `quest`
+--
+
+CREATE TABLE IF NOT EXISTS  quest  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `titolo` text NOT NULL,
+  `partecipanti` text NOT NULL,
+  `descrizione` text NOT NULL,
+  `trama` int NOT NULL DEFAULT '0',
+  `data` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `autore` varchar(255) NOT NULL,
+  `autore_modifica` varchar(255) DEFAULT NULL,
+  `ultima_modifica` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `quest_trama`
+--
+
+CREATE TABLE IF NOT EXISTS  quest_trama  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `titolo` varchar(255) NOT NULL,
+  `descrizione` text NOT NULL,
+  `data` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `autore` varchar(255) NULL,
+  `autore_modifica` varchar(255) DEFAULT NULL,
+  `ultima_modifica` DATETIME DEFAULT NULL,
+  `stato` int(11) NOT NULL DEFAULT '0',
+  `quests` text DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `razza`
 --
 
@@ -931,7 +1004,7 @@ CREATE TABLE IF NOT EXISTS `segnalazione_role` (
   `tags` text CHARACTER SET utf8 COLLATE utf8_general_ci,
   `quest` text CHARACTER SET utf8 COLLATE utf8_general_ci,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -946,7 +1019,32 @@ CREATE TABLE IF NOT EXISTS `send_GM` (
   `role_reg` int NOT NULL,
   `note` text CHARACTER SET utf8 COLLATE utf8_general_ci,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `_gdrcd_db_versions`
+--
+
+CREATE TABLE IF NOT EXISTS _gdrcd_db_versions (
+  `migration_id` varchar(255) NOT NULL,
+  `applied_on` DATETIME NOT NULL ,
+  PRIMARY KEY (`migration_id`)
+);
+
+INSERT INTO _gdrcd_db_versions (migration_id,applied_on) VALUES
+  ('2020072500', NOW()),
+  ('2021103018',NOW()),
+  ('2021110101',NOW()),
+  ('2021110102',NOW()),
+  ('2021110103',NOW()),
+  ('2021110104',NOW()),
+  ('2021110105',NOW()),
+  ('2021110106',NOW()),
+  ('2021110107',NOW()),
+  ('2021110108',NOW()),
+  ('2021110109',NOW());
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

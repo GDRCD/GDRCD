@@ -1,4 +1,4 @@
-function Ajax(path,data,success,type = 'get'){
+function Ajax(path,data,success,type = 'POST'){
     $.ajax({
         url: path,
         type: type,

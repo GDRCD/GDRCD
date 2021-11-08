@@ -100,6 +100,17 @@ class DB extends BaseClass
     }
 
     /**
+     * @fn rowsNumber
+     * @note Ritorna il numero di risultati dell'array estratto dal db
+     * @param array|object $array
+     * @return int
+     */
+    public static function rowsNumber($array): int
+    {
+        return count($array);
+    }
+
+    /**
      * @fn statement
      * @note Statement delle query
      * @param $sql

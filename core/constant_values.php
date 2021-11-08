@@ -99,6 +99,7 @@ const PERMESSI_DIARIO = MODERATOR;
 const MOON = true;
 
 
+
 /*Vettori globali dei parametri*/
 $PARAMETER = array();
 $MESSAGES = array();

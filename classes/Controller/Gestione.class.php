@@ -67,7 +67,7 @@ class Gestione extends BaseClass{
             $section = Filters::out($category['section']);
 
             $html .= "<div class='single_section'>";
-            $html .= "<div class='gestione_form_title'>{$section}</div>";
+            $html .= "<div class='form_title'>{$section}</div>";
             $html .= "<div class='box_input'>";
 
             $const_list = DB::query("SELECT const_name,label,val,type,description FROM config WHERE section='{$section}' AND editable=1 ORDER BY label",'result');
