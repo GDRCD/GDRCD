@@ -97,4 +97,27 @@ class Functions extends BaseClass
 
         return $html;
     }
+
+    /**
+     * @fn redirect
+     * @note Funzione di redirect della pagina
+     * @param string $url
+     * @param int|bool $tempo
+     * @return void
+     */
+    public static function redirect(string $url, $tempo = false):void
+    {
+        if (!headers_sent() && $tempo == false) {
+            header('Location:' . $url);
+        } elseif (!headers_sent() && $tempo != false) {
+            header('Refresh:' . $tempo . ';' . $url);
+        } else {
+            if ($tempo == false) {
+                $tempo = 0;
+            }
+            echo "<meta http-equiv=\"refresh\" content=\"" . $tempo . ";" . $url . "\">";
+        }
+
+        exit();
+    }
 }

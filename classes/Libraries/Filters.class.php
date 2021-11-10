@@ -149,6 +149,17 @@ class Filters extends BaseClass
     }
 
     /**
+     * @fn text
+     * @note Filtro per testi
+     * @param mixed $val
+     * @return string
+     */
+    public static function text($val): string
+    {
+        return nl2br(trim(self::gdrcd_filter('out', $val)));
+    }
+
+    /**
      * @fn date
      * @note Funzione di rendering delle date in base al formato
      * @param string $val
@@ -157,7 +168,7 @@ class Filters extends BaseClass
      */
     public static function date(string $val, string $format): string
     {
-        if(!empty($val)) {
+        if (!empty($val)) {
             return date($format, strtotime($val));
         }
 

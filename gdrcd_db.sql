@@ -174,24 +174,6 @@ CREATE TABLE IF NOT EXISTS `blacklist` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `blocco_esiti`
---
-
-CREATE TABLE IF NOT EXISTS `blocco_esiti` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `titolo` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `data` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `autore` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `pg` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `id_min` int DEFAULT NULL,
-  `master` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0',
-  `closed` int NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Struttura della tabella `chat`
 --
 
@@ -400,22 +382,52 @@ CREATE TABLE IF NOT EXISTS `diario` (
 --
 
 CREATE TABLE IF NOT EXISTS `esiti` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `sent` int(11) NOT NULL DEFAULT '0',
-  `titolo` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `autore` varchar(255) COLLATE utf8_general_ci NOT NULL,
+  `titolo` text COLLATE utf8_general_ci NOT NULL,
   `data` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `master` varchar(255) COLLATE utf8_general_ci NOT NULL DEFAULT '0',
+  `closed` int NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `esiti_personaggio`
+--
+
+CREATE TABLE IF NOT EXISTS `esiti_personaggio` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `personaggio` int NOT NULL,
+  `esito` int NOT NULL,
+  `assegnato_il` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `assegnato_da` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `esiti_risposte`
+--
+
+CREATE TABLE IF NOT EXISTS `esiti_risposte` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `esito` int(11) NOT NULL,
+  `autore` varchar(255) NOT NULL,
   `chat` int(11) NOT NULL DEFAULT '0',
-  `autore` varchar(255) CHARACTER SET utf8 NOT NULL,
-  `contenuto` mediumtext CHARACTER SET utf8,
-  `noteoff` text CHARACTER SET utf8,
-  `master` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `pg` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `id_blocco` int(11) NOT NULL,
+  `contenuto` mediumtext NOT NULL,
+  `data` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `master` varchar(255) DEFAULT NULL,
+  `noteoff` text DEFAULT NULL,
+  `sent` int(11) NOT NULL DEFAULT '0',
   `id_ab` int(11) DEFAULT '0',
-  `CD_1` text CHARACTER SET utf8,
-  `CD_2` text CHARACTER SET utf8,
-  `CD_3` text CHARACTER SET utf8,
-  `CD_4` text CHARACTER SET utf8,
+  `CD_1` text DEFAULT NULL,
+  `CD_2` text DEFAULT NULL,
+  `CD_3` text DEFAULT NULL,
+  `CD_4` text DEFAULT NULL,
   `CD1_value` int(4) NOT NULL DEFAULT '0',
   `CD2_value` int(4) NOT NULL DEFAULT '0',
   `CD3_value` int(4) NOT NULL DEFAULT '0',
