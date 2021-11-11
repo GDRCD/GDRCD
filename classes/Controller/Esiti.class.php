@@ -65,6 +65,37 @@ class Esiti extends BaseClass
         return $page;
     }
 
+    /**
+     * @fn loadServicePageEsiti
+     * @note Routing delle pagine di servizi
+     * @param string $op
+     * @return string
+     */
+    public function loadServicePageEsiti(string $op): string
+    {
+        $op = Filters::out($op);
+
+        switch ($op) {
+            default:
+                $page = 'esiti_list.php';
+                break;
+
+            case 'new':
+                $page = 'esiti_new.php';
+                break;
+
+            case 'read':
+                $page = 'esiti_read.php';
+                break;
+
+            case 'close':
+                $page = 'esiti_close.php';
+                break;
+        }
+
+        return $page;
+    }
+
     /*** GETTER */
 
     /**
@@ -190,6 +221,19 @@ class Esiti extends BaseClass
     }
 
     /**
+     * @fn getAllEsitoPlayer
+     * @note Ottiene la lista degli esiti per il pg selezionato
+     * @param int $pg
+     * @param string $val
+     * @param string $order
+     * @return bool|int|mixed|string
+     */
+    public function getAllEsitoPlayer(int $pg,string $val = 'esiti.*', string $order = '')
+    {
+        return DB::query("SELECT {$val} FROM esiti LEFT JOIN esiti_personaggio ON (esiti.id = esiti_personaggio.esito) WHERE esiti_personaggio.personaggio = '{$pg}' {$order}", 'result');
+    }
+
+    /**
      * @fn getEsito
      * @note Ottiene i dati di un esito
      * @param int $id
@@ -282,21 +326,35 @@ class Esiti extends BaseClass
         return ($data['tot'] > 0);
     }
 
+    /**
+     * @fn getEsitoRead
+     * @note Ottiene i dati di una lettura di un esito
+     * @param int $id
+     * @param int $pg
+     * @return bool
+     */
+    public function esitoReaded(int $id, int $pg)
+    {
+        $data = DB::query("SELECT count(id) AS tot FROM esiti_letture WHERE esito = {$id} AND personaggio='{$pg}'");
+
+        return ($data['tot'] > 0);
+    }
+
     /*** ESITI INDEX ***/
 
     /**
      * @fn haveNewResponse
      * @note Controlla se un esito ha nuove risposte
      * @param int $id
-     * @return bool
+     * @return int
      */
-    public function haveNewResponse(int $id): bool
+    public function haveNewResponse(int $id): int
     {
-        $new = DB::query("SELECT count(id) as tot FROM esiti_risposte 
-                    WHERE esito = {$id}
-                    AND letto_master = 0 ");
+        $new = DB::query("SELECT count(esiti_risposte.id) as tot FROM esiti_risposte 
+                    LEFT JOIN esiti_letture ON (esiti_letture.esito = esiti_risposte.id AND esiti_letture.personaggio = '{$this->me_id}')
+                    WHERE esiti_risposte.esito = {$id} AND esiti_letture.id IS NULL");
 
-        return ($new['tot'] > 0);
+        return Filters::int($new['tot']);
     }
 
     /**
@@ -304,18 +362,45 @@ class Esiti extends BaseClass
      * @note Render html della lista degli esiti
      * @return string
      */
-    public function esitiList(): string
+    public function esitiListPLayer(): string
     {
-        $html = '';
+        $list = $this->getAllEsitoPlayer($this->me_id,'esiti.*', 'ORDER BY closed ASC');
+        return $this->renderEsitiList($list,'servizi');
+    }
+
+    /**
+     * @fn esitiListManagement
+     * @note Render html della lista degli esiti
+     * @return string
+     */
+    public function esitiListManagement(): string
+    {
         $list = $this->getAllEsito('*', 'ORDER BY closed ASC');
+        return $this->renderEsitiList($list,'gestione');
+    }
+
+    /**
+     * @fn renderEsitiList
+     * @note Render html lista esiti
+     * @param object $list
+     * @param string $page
+     * @return string
+     */
+    public function renderEsitiList(object $list, string $page): string
+    {
+
+        $html = '';
+
+        $path = ($page == 'servizi') ? 'servizi_esiti' : 'gestione_esiti';
 
         foreach ($list as $row) {
 
             $id = Filters::int($row['id']);
             $author = Filters::in($row['autore']);
             $totale_esiti = $this->getEsitoAnswesNum($id);
-            $new_response = ($this->haveNewResponse($id)) ? '- Nuovo messaggio' : '';
+            $new_response = $this->haveNewResponse($id);
             $closed = ($row['closed']) ? 'closed' : '';
+
 
             if ($row['master'] != 0) {
                 $master = 'Presa in carico';
@@ -335,12 +420,12 @@ class Esiti extends BaseClass
             $html .= "<div class='td'>";
 
             if ($this->esitoViewPermission($id)) {
-                $html .= "<a href='/main.php?page=gestione_esiti&op=read&id_record={$id}' title='Leggi'><i class='fas fa-eye'></i></a>";
+                $html .= "<a href='/main.php?page={$path}&op=read&id_record={$id}' title='Leggi'><i class='fas fa-eye'></i></a>";
             }
 
-            if ($this->esitoClosePermission($id)) {
+            if ($this->esitoClosePermission($id) && ($page == 'gestione')) {
 
-                $html .= " <a href='/main.php?page=gestione_esiti&op=close&id_record={$id}' title='Chiudi'><i class='far fa-times-circle'></i></a>";
+                $html .= " <a href='/main.php?page={$path}&op=close&id_record={$id}' title='Chiudi'><i class='far fa-times-circle'></i></a>";
             }
 
             $html .= "</div>";
@@ -400,15 +485,11 @@ class Esiti extends BaseClass
             $list = $this->getEsitoAnswers($id);
 
             $id = Filters::int($id);
-            $data = $this->getEsito($id, 'master');
-            $master = Filters::int($data['master']);
-
-            if ($master == $this->me_id) {
-                $this->readAnswersMaster($id);
-            }
-
 
             foreach ($list as $answer) {
+
+                $this->readAnswer($answer['id']);
+
                 $autore = Filters::int($answer['autore']);
                 $mine = ($autore == $this->me_id) ? 'mine' : 'other';
                 $dice_face = Filters::int($answer['dice_face']);
@@ -443,9 +524,11 @@ class Esiti extends BaseClass
      * @param int $id
      * @return void
      */
-    public function readAnswersMaster(int $id): void
+    public function readAnswer(int $id): void
     {
-        DB::query("UPDATE esiti_risposte SET letto_master=1 WHERE esito='{$id}' AND letto_master = 0");
+        if(!$this->esitoReaded($id,$this->me_id)){
+            DB::query("INSERT INTO esiti_letture(esito, personaggio) VALUES('{$id}','{$this->me_id}')");
+        }
     }
 
     /**

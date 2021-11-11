@@ -1,8 +1,9 @@
 <?php
 
-require_once(__DIR__ . '/../../../includes/required.php');
+require_once(__DIR__ . '/../../includes/required.php');
 
 $esiti = Esiti::getInstance();
+
 ?>
 
 <div class="gestione_incipit">
@@ -19,12 +20,12 @@ $esiti = Esiti::getInstance();
         <div class="td">Nuove risposte</div>
         <div class="td">Controlli</div>
     </div>
-    <?= $esiti->esitiListManagement(); ?>
+    <?= $esiti->esitiListPlayer(); ?>
     <div class="tr footer">
-        <a class="but_newd" href='main.php?page=gestione_esiti&op=new'>
+        <a class="but_newd" href='main.php?page=servizi_esiti&op=new'>
             Nuovo esito
         </a> |
-        <a href="/main.php?page=gestione">Indietro</a>
+        <a href="/main.php?page=uffici">Indietro</a>
     </div>
 </div>
 

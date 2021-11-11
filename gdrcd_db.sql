@@ -432,8 +432,6 @@ CREATE TABLE IF NOT EXISTS `esiti_risposte` (
   `CD2_value` int(4) NOT NULL DEFAULT '0',
   `CD3_value` int(4) NOT NULL DEFAULT '0',
   `CD4_value` int(4) NOT NULL DEFAULT '0',
-  `letto_master` int(11) NOT NULL DEFAULT '0',
-  `letto_pg` int(11) NOT NULL DEFAULT '0',
   `dice_face` int(11) NOT NULL DEFAULT '0',
   `dice_num` int(11) NOT NULL DEFAULT '0',
   `dice_results` varchar(255) DEFAULT NULL,
