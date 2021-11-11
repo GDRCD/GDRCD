@@ -35,8 +35,6 @@ class Chat extends BaseClass
         $chat_notify;
 
 
-
-
     /**** BASE ****/
 
     /**
@@ -304,7 +302,7 @@ class Chat extends BaseClass
     {
 
         # Se l'ultima azione non e' 0 e quindi non sono appena entrato in chat
-        $extra_query=  ($this->last_action > 0) ? " AND chat.id > '{$this->last_action}' " : '';
+        $extra_query = ($this->last_action > 0) ? " AND chat.id > '{$this->last_action}' " : '';
 
         # Estraggo le azioni n base alle condizioni indicate
         return DB::query("SELECT personaggio.nome,personaggio.url_img_chat,personaggio.sesso,chat.*
@@ -1110,6 +1108,25 @@ class Chat extends BaseClass
     }
 
     /**
+     * @fn rollCustomDice
+     * @note Funzione che si occupa del lancio di dadi diversi da quelli base
+     * @return int
+     */
+    private function rollCustomDice($num, $face)
+    {
+        # Lancio il dado
+        $total = 0;
+        $diced = 0;
+
+        while ($diced < $num) {
+            $total += rand(1, $face);
+            $diced++;
+        }
+
+        return Filters::int($total);
+    }
+
+    /**
      * @fn saveDice
      * @note Funzione che si occupa di creare il testo e salvarlo in db
      * @param array $array
@@ -1156,7 +1173,7 @@ class Chat extends BaseClass
         }
 
         # Aggiungo il valore del dado al testo
-        if($this->chat_dice) {
+        if ($this->chat_dice) {
             $html .= "Dado: {$dice},";
             $total += $dice;
         }
@@ -1169,81 +1186,100 @@ class Chat extends BaseClass
                             VALUE('{$this->luogo}','{$this->me}','','C','{$html}')");
     }
 
-    /******* INVIO ESITO *******/
+    /*******  ESITI *******/
 
     /**
-     * @fn esito
-     * @note Funzione di invio esito in chat
+     * @fn rollEsito
+     * @note Utilizzo di un esito in chat
      * @param array $post
      * @return array
      */
-    public function esito($post)
+    public function rollEsito(array $post): array
     {
+
         if ($this->chatAccess()) {
 
+            $esiti = Esiti::getInstance();
+
             $id = Filters::int($post['id']);
+            $data = $esiti->getAnswer($id);
+            $dice_face = Filters::int($data['dice_face']);
+            $dice_num = Filters::int($data['dice_num']);
 
-            #Recupero l'id della richiesta esito
-            $esito =DB::query("SELECT id_ab, CD_1, CD_2, CD_3, CD_4, CD1_value, CD2_value, CD3_value,CD4_value FROM esiti WHERE id='{$id}' 
-                AND pg = '{$this->me}' AND sent = 0 LIMIT 1", 'result');
-            $num =DB::query($esito, 'num_rows');
-            $es_f =DB::query($esito, 'fetch');
+            $abi_roll = $this->rollAbility(Filters::int($data['abilita']));
 
-            $es = Filters::int($es_f['id_ab']);
+            # Filtro i dati ricevuti
+            $abi_dice = Filters::int($abi_roll['abi_dice']);
+            $abi_nome = Filters::in($abi_roll['nome']);
+            $car = Filters::int($abi_roll['car']);
 
-            if ($num > 0 && $this->chat_esiti) {
-                # Inizializzo le variabili necessarie
-                $abi_nome = '';
-                $abi_dice = '';
-                $car = '';
+            $dice = $this->rollCustomDice($dice_num, $dice_face);
+            $result = ($dice + $abi_dice + $car);
 
-                # Estraggo i dati dell'abilita' scelta
-                $abi_roll = $this->rollAbility($es);
+            $testo = 'Tiro: ' . $abi_nome . ', risultato totale: ' . $result . ' |';
 
-                # Filtro i dati ricevuti
-                $abi_dice = Filters::int($abi_roll['abi_dice']);
-                $abi_nome = Filters::in($abi_roll['nome']);
-                $car = Filters::int($abi_roll['car']);
+            DB::query("INSERT INTO chat(stanza, mittente,destinatario,tipo,testo)
+								  VALUE('{$this->luogo}', 'Esiti','{$this->me}','C','{$testo}')");
 
-                # Lancio il dado
-                $dice = $this->rollDice();
+            DB::query("INSERT INTO esiti_risultati(esito,personaggio,risultato) VALUES('{$id}','{$this->me_id}','{$result}')");
 
-                #totale
-                $result = Filters::int($dice) + $abi_dice + $car;
+            return ['response' => true, 'error' => ''];
+        } else {
+            $error = 'Non hai accesso all\'esito selezionato.';
 
-                #Verifico la CD
-                if ($result < Filters::int($es_f['CD1_value'])) {
-                    $resp = 'Non noti niente di particolare';
-                } else if ($result < Filters::int($es_f['CD2_value']) || Filters::int($es_f['CD2_value']) == 0) {
-                    $resp = Filters::out($es_f['CD_1']);
-                } else if ($result < Filters::int($es_f['CD3_value']) || Filters::int($es_f['CD3_value']) == 0) {
-                    $resp = Filters::out($es_f['CD_2']);
-                } else if ($result < Filters::int($es_f['CD4_value']) || Filters::int($es_f['CD4_value']) == 0) {
-                    $resp = Filters::out($es_f['CD_3']);
-                } else if ($result >= Filters::int($es_f['CD4_value']) && Filters::int($es_f['CD2_value']) > 0) {
-                    $resp = Filters::out($es_f['CD_4']);
-                }
-
-                $testo = 'Tiro: '.$abi_nome.', risultato totale: '.$result.' | '.$resp;
-
-                # Salvo l'azione in DB
-               DB::query("INSERT INTO chat(stanza, mittente,destinatario,tipo,testo)
-								  VALUE('{$this->luogo}', 'Esiti','{$this->me}','S','{$testo}')");
-
-                #Aggiorno il sistema esiti e chiudo l'esito
-               DB::query("UPDATE esiti SET sent=1 WHERE pg='{$this->me}' AND id='{$id}' AND sent = 0 LIMIT 1");
-
-                # Ritorno il risultato dell'invio ed eventuale messaggio di errore
-                return ['response' => true, 'error' => ''];
-
-            } else {
-                $error = 'Non hai accesso all\'esito selezionato.';
-
-                # Ritorno il risultato dell'invio ed eventuale messaggio di errore
-                return ['response' => false, 'error' => $error];
-            }
+            # Ritorno il risultato dell'invio ed eventuale messaggio di errore
+            return ['response' => false, 'error' => $error];
         }
+
     }
 
+    /**
+     * @fn esitiChatList
+     * @note Render list esiti in chat per il pg loggato
+     * @return string
+     */
+    public function esitiChatList(): string
+    {
+        $html = '';
+        $esiti = Esiti::getInstance();
+        $abilita = Abilita::getInstance();
+
+        if ($esiti->esitiEnabled() && $esiti->esitiTiriEnabled()) {
+            $luogo = $this->luogo;
+
+            $list = DB::query("SELECT esiti_risposte.* , esiti.titolo
+                    FROM esiti 
+                    LEFT JOIN esiti_risposte ON (esiti.id = esiti_risposte.esito)
+                    LEFT JOIN esiti_personaggio ON (esiti.id = esiti_personaggio.esito)
+                    LEFT JOIN esiti_risultati ON (esiti_risultati.esito = esiti_risposte.id AND esiti_risultati.personaggio = '{$this->me_id}')
+                    WHERE esiti_risposte.chat = '{$luogo}' 
+                    AND esiti_personaggio.id IS NOT NULL
+                    AND esiti_risultati.id IS NULL
+                    AND esiti.closed = 0
+                    ORDER BY esiti_risposte.data DESC", 'result');
+
+            foreach ($list as $row) {
+
+                $id = Filters::int($row['id']);
+                $abi_data = $abilita->getAbilita(Filters::int($row['abilita']), 'nome');
+
+                $html .= "<div class='tr'>";
+                $html .= "<div class='td'>" . Filters::out($row['titolo']) . "</div>";
+                $html .= "<div class='td'>" . Filters::date($row['data'], 'd/M/Y') . "</div>";
+                $html .= "<div class='td'>" . Filters::int($row['dice_num']) . " dadi da " . Filters::int($row['dice_face']) . "</div>";
+                $html .= "<div class='td'>" . Filters::text($abi_data['nome']) . "</div>";
+                $html .= "<div class='td'>
+                            <form method='POST' class='chat_form_ajax'>
+                                <input type='hidden' name='action' value='send_esito'>
+                                <input type='hidden' name='id' value='{$id}'>
+                                <button type='submit'><i class='fas fa-dice'></i></button>
+                            </form>
+                         </div>";
+                $html .= "</div>";
+            }
+        }
+
+        return $html;
+    }
 
 }

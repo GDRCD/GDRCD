@@ -475,7 +475,8 @@ div.innertube {
  * SERVIZI
  */
 .gestione_pagina .gestione_incipit,
-.servizi_pagina .servizi_incipit {
+.servizi_pagina .servizi_incipit,
+.general_incipit{
     background: grey;
     padding: 10px;
     color:black;
@@ -486,31 +487,36 @@ div.innertube {
 }
 
 .gestione_pagina .gestione_incipit .title,
-.servizi_pagina .servizi_incipit .title {
+.servizi_pagina .servizi_incipit .title,
+.general_incipit .title {
     font-size: 18px;
     font-weight: bold;
 }
 
 .gestione_pagina .gestione_incipit .subtitle_gst,
-.servizi_pagina .servizi_incipit .subtitle_gst {
+.servizi_pagina .servizi_incipit .subtitle_gst,
+.general_incipit .subtitle_gst {
     font-size: 15px;
     font-weight: bold;
 }
 
 .gestione_pagina .gestione_incipit .highlight,
-.servizi_pagina .servizi_incipit .highlight {
+.servizi_pagina .servizi_incipit .highlight,
+.general_incipit .highlight {
     font-weight: bold;
     color: rgb(177, 71, 71);
 }
 
 .gestione_pagina .gestione_incipit ul,
-.servizi_pagina .servizi_incipit ul {
+.servizi_pagina .servizi_incipit ul,
+.general_incipit ul{
     width: 80%;
     margin:0 auto;
 }
 
 .gestione_pagina .gestione_incipit ul li,
-.servizi_pagina .servizi_incipit ul li {
+.servizi_pagina .servizi_incipit ul li,
+.general_incipit ul li{
     padding: 5px 0;
     text-align: left;
 }
@@ -538,6 +544,7 @@ div.innertube {
     margin: 10px 0;
     padding: 5px 0;
     clear: both;
+    text-align: center;
 }
 
 .form_container .form .form_subtitle{
@@ -584,6 +591,7 @@ div.innertube {
 .fake-table{
     margin: 10px 0;
     width: 100%;
+    text-align: center;
 }
 
 .fake-table .header{

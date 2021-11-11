@@ -236,7 +236,7 @@ class Esiti extends BaseClass
      */
     public function getAllEsitoPlayer(int $pg, string $val = 'esiti.*', string $order = '')
     {
-        return DB::query("SELECT {$val} FROM esiti LEFT JOIN esiti_personaggio ON (esiti.id = esiti_personaggio.esito) WHERE esiti_personaggio.personaggio = '{$pg}' {$order}", 'result');
+        return DB::query("SELECT {$val} FROM esiti LEFT JOIN esiti_personaggio ON (esiti.id = esiti_personaggio.esito) WHERE esiti_personaggio.personaggio = '{$pg}' AND esiti.closed = 0 {$order}", 'result');
     }
 
     /**
@@ -252,17 +252,30 @@ class Esiti extends BaseClass
     }
 
     /**
-     * @fn getEsitoAnswers
+     * @fn getAnswer
+     * @note Ottiene i dati di una risposta singola degli esiti
+     * @param int $id
+     * @param string $val
+     * @return bool|int|mixed|string
+     */
+    public function getAnswer(int $id, string $val = '*')
+    {
+        return DB::query("SELECT {$val} FROM esiti_risposte WHERE id='{$id}' LIMIT 1");
+    }
+
+    /**
+     * @fn getEsitoAllAnswers
      * @note Ottiene i dati di una risposta ad un esito
      * @param int $id
      * @param string $val
      * @param string $dir
      * @return bool|int|mixed|string
      */
-    public function getEsitoAnswers(int $id, string $val = '*', string $dir = 'ASC')
+    public function getEsitoAllAnswers(int $id, string $val = '*', string $dir = 'ASC')
     {
         return DB::query("SELECT {$val} FROM esiti_risposte WHERE esito = {$id} ORDER BY data {$dir}", 'result');
     }
+
 
     /**
      * @fn getEsitoAnswers
@@ -273,7 +286,7 @@ class Esiti extends BaseClass
     public function getEsitoAnswesNum(int $id): int
     {
         $data = DB::query("SELECT count(id) as tot FROM esiti_risposte 
-                WHERE esito = {$id} ORDER BY master, data DESC");
+                WHERE esito = {$id}");
 
         return Filters::int($data['tot']);
     }
@@ -529,7 +542,7 @@ class Esiti extends BaseClass
 
         if ($this->esitoViewPermission($id)) {
 
-            $list = $this->getEsitoAnswers($id);
+            $list = $this->getEsitoAllAnswers($id);
 
             foreach ($list as $answer) {
 
