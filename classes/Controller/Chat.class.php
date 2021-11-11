@@ -1216,10 +1216,15 @@ class Chat extends BaseClass
             $dice = $this->rollCustomDice($dice_num, $dice_face);
             $result = ($dice + $abi_dice + $car);
 
-            $testo = 'Tiro: ' . $abi_nome . ', risultato totale: ' . $result . ' |';
+            $testo = 'Tiro: ' . $abi_nome . ', risultato totale: ' . $result . ' ';
+            $testo_sussurro = 'Hai scoperto che...';
+
 
             DB::query("INSERT INTO chat(stanza, mittente,destinatario,tipo,testo)
 								  VALUE('{$this->luogo}', 'Esiti','{$this->me}','C','{$testo}')");
+
+            DB::query("INSERT INTO chat(stanza, mittente,destinatario,tipo,testo)
+								  VALUE('{$this->luogo}', 'Esiti','{$this->me}','S','{$testo_sussurro}')");
 
             DB::query("INSERT INTO esiti_risultati(esito,personaggio,risultato) VALUES('{$id}','{$this->me_id}','{$result}')");
 
