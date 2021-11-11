@@ -873,6 +873,22 @@ div.innertube {
     font-size: 13px;
 }
 
+.esiti_pagina .answer_box .answer_list .single_answer .dice_result{
+    text-align: center;
+    background: black;
+    width: 100%;
+    color: #7289da;
+    border-bottom:1px solid #ccc;
+    padding: 3px 0;
+    font-size: 13px;
+}
+
+
+.esiti_pagina .answer_box .answer_list .single_answer .dice_result:hover{
+    color: #b6bed9;
+    cursor: pointer;
+}
+
 .esiti_pagina .answer_box .answer_list .single_answer .sub_text{
     text-align: center;
     background: black;

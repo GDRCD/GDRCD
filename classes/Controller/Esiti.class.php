@@ -517,7 +517,7 @@ class Esiti extends BaseClass
                 $html .= " <a href='/main.php?page={$path}&op=members&id_record={$id}' title='Gestisci membri'><i class='fas fa-users'></i></a>";
             }
 
-            if($this->esitiManageAll()){
+            if($this->esitiManageAll()  && ($page == 'gestione')){
                 $html .= " <a href='/main.php?page={$path}&op=master&id_record={$id}' title='Assegna Master'><i class='fas fa-user-tag'></i></a>";
             }
 
@@ -651,7 +651,7 @@ class Esiti extends BaseClass
                         $res_text = Filters::text($result['testo']);
                         $res_num = Filters::int($result['risultato']);
 
-                        $html .= "<div class='dice_result'> {$pg_name} : <span title='{$res_text}'>{$res_num}</span> </div>";
+                        $html .= "<div class='dice_result' title='{$res_text}'> {$pg_name} : <span>{$res_num}</span> </div>";
                     }
 
 
