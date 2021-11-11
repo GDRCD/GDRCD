@@ -73,6 +73,12 @@ switch ($op) {
                     <?=$chat->chatList();?>
                 </select>
             </div>
+
+            <div class="cd_box">
+
+            </div>
+
+            <div id="cd_add"><button type="button">Aggiungi cd</button> </div>
         <?php } ?>
 
         <div class="form_info">
@@ -88,6 +94,8 @@ switch ($op) {
         </div>
 
     </form>
+
+    <script src="pages/gestione/esiti/JS/esiti_new.js"></script>
 
     <div class="link_back"><a href="/main.php?page=gestione_esiti">Indietro</a></div>
 </div>

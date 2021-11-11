@@ -62,6 +62,13 @@ if ($esiti->esitoViewPermission($id_record) && $esiti->esitoExist($id_record)) {
                             <?=$chat->chatList();?>
                         </select>
                     </div>
+
+                    <div class="cd_box">
+
+                    </div>
+
+                    <div id="cd_add"><button type="button">Aggiungi cd</button> </div>
+
                 <?php } ?>
 
                 <div class="single_input">

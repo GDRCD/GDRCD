@@ -366,6 +366,19 @@ class Esiti extends BaseClass
         return Filters::int($data['id']);
     }
 
+
+    /**
+     * @fn getLastAnswerId
+     * @note Ottiene l'ultimo id inserito nella tabella esiti
+     * @return int
+     */
+    public function getLastAnswerId(): int
+    {
+        $data = DB::query("SELECT max(id) as id FROM esiti_risposte WHERE 1 ORDER BY id DESC LIMIT 1");
+
+        return Filters::int($data['id']);
+    }
+
     /**
      * @fn getPlayerEsito
      * @note Ottiene i dati di un pg rispetto ad un esito
@@ -522,6 +535,7 @@ class Esiti extends BaseClass
         $chat = new Chat();
         $id = Filters::int($post['id']);
         $data = $this->getAnswer($id);
+        $id_answer = Filters::int($data['id']);
         $dice_face = Filters::int($data['dice_face']);
         $dice_num = Filters::int($data['dice_num']);
         $luogo = Personaggio::getPgLocation($this->me_id);
@@ -537,7 +551,7 @@ class Esiti extends BaseClass
         $result = ($dice + $abi_dice + $car);
 
         $testo = 'Tiro: ' . $abi_nome . ', risultato totale: ' . $result . ' ';
-        $testo_sussurro = Filters::in($this->esitoResultText($id, $result));
+        $testo_sussurro = Filters::in($this->esitoResultText($id_answer, $result));
 
         DB::query("INSERT INTO chat(stanza, mittente,destinatario,tipo,testo)
 								  VALUE('{$luogo}', 'Esiti','{$this->me}','C','{$testo}')");
@@ -545,7 +559,7 @@ class Esiti extends BaseClass
         DB::query("INSERT INTO chat(stanza, mittente,destinatario,tipo,testo)
 								  VALUE('{$luogo}', 'Esiti','{$this->me}','S','{$testo_sussurro}')");
 
-        DB::query("INSERT INTO esiti_risposte_risultati(esito,personaggio,risultato,testo) VALUES('{$id}','{$this->me_id}','{$result}','{$testo_sussurro}')");
+        DB::query("INSERT INTO esiti_risposte_risultati(esito,personaggio,risultato,testo) VALUES('{$id_answer}','{$this->me_id}','{$result}','{$testo_sussurro}')");
 
         return ['response' => true, 'error' => ''];
     }
@@ -559,7 +573,6 @@ class Esiti extends BaseClass
      */
     public function esitoResultText(int $id, int $result): string
     {
-
         $html = ' Hai scoperto: ';
         $list = $this->getPassedEsitoCD($id, $result);
 
@@ -686,6 +699,34 @@ class Esiti extends BaseClass
         return $html;
     }
 
+    /**
+     * @fn htmlCDAdd
+     * @note Aggiunge un input alla pagina per aggiungere una cd
+     * @return array
+     */
+    public function htmlCDAdd(): array
+    {
+        $html = '';
+
+        $html .= "<div class='single_cd'>";
+
+        $html .= "<div class='single_input'>";
+        $html .= "<div class='label'>CD</div>";
+        $html .= "<input type='number' name='add_cd[cd][]'>";
+        $html .= "</div>";
+
+        $html .= "<div class='single_input'>";
+        $html .= "<div class='label'>Testo</div>";
+        $html .= "<textarea name='add_cd[text][]'></textarea>";
+        $html .= "</div>";
+
+        $html .= "</div>";
+
+
+        return ['InputHtml'=>$html];
+
+    }
+
     /*** NEW ESITO ***/
 
     /**
@@ -712,6 +753,9 @@ class Esiti extends BaseClass
 
             DB::query("INSERT INTO esiti_risposte(esito, autore, contenuto,dice_face,dice_num,abilita,chat )
                         VALUES('{$last_id}','{$this->me_id}','{$ms}','{$dice_face}','{$dice_num}','{$abilita}','{$chat}')  ");
+
+            $last_answer = $this->getLastAnswerId();
+            $this->addCD($last_answer,$post['add_cd']);
 
             return ['response' => true, 'mex' => 'Esito creato con successo.'];
         } else {
@@ -847,8 +891,6 @@ class Esiti extends BaseClass
 
         $id = Filters::int($post['id_record']);
 
-        $id = Filters::int($id);
-
         if ($this->esitoAnswerPermission($id) && !$this->esitoClosed($id)) {
 
             $perm_dadi = ($this->esitiTiriEnabled() && ($this->esitiManage() || $this->esitiManageAll()));
@@ -862,6 +904,9 @@ class Esiti extends BaseClass
             DB::query("INSERT INTO esiti_risposte(esito, autore, contenuto,dice_face,dice_num,abilita,chat )
                         VALUES('{$id}','{$this->me_id}','{$contenuto}','{$dice_face}','{$dice_num}','{$abilita}','{$chat}')  ");
 
+            $last_id = $this->getLastAnswerId();
+            $this->addCD($last_id,$post['add_cd']);
+
             $resp = ['response' => true, 'mex' => 'Risposta aggiunta correttamente.'];
 
         } else {
@@ -869,6 +914,29 @@ class Esiti extends BaseClass
         }
 
         return $resp;
+    }
+
+    /**
+     * @fn addCD
+     * @note Aggiunge delle cd per una risposta
+     * @param int $id
+     * @param array $cds
+     * @return void
+     */
+    public function addCD(int $id, array $cds):void{
+
+        $id = Filters::int($id);
+
+        foreach ($cds['cd'] as $index => $cd){
+
+            $cd = Filters::int($cd);
+            $testo = Filters::in($cds['text'][$index]);
+
+            if($cd > 0) {
+                DB::query("INSERT INTO esiti_risposte_cd(esito, cd, testo) VALUES('{$id}','{$cd}','{$testo}')");
+            }
+        }
+
     }
 
     /*** MEMBERS LIST ***/
