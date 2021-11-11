@@ -74,24 +74,27 @@ class Permissions extends BaseClass
      * @note Controlla se il personaggio loggato ha il permesso specificato, il controllo viene effettuato:
      * - Nei permessi di gruppo
      * - Nei permessi specifici del pg
+     * - Se e' un superuser , ogni controllo e' true
      * @param string $permission
+     * @param int $pg
      * @return bool
      */
-    public static function permission(string $permission):bool
+    public static function permission(string $permission, int $pg = 0): bool
     {
         # EDIT_CONSTANTS
         $permission = Filters::out($permission);
 
         if (self::permissionExist($permission)) {
 
+            $pg_id = ($pg == 0) ? Functions::getInstance()->getMyId() : $pg;
+
             # Estraggo i gruppi del pg collegato
-            $pg = Functions::getInstance()->getMyId();
-            $perm_groups = self::getInstance()->extractPermissionGroups($pg);
+            $perm_groups = self::getInstance()->extractPermissionGroups($pg_id);
             $perm_id = self::getInstance()->permissionId($permission);
 
             return (
                 self::getInstance()->permissionInGroups($perm_groups, $perm_id) ||
-                self::getInstance()->permissionExistInCharacter($pg,$perm_id) ||
+                self::getInstance()->permissionExistInCharacter($pg_id, $perm_id) ||
                 self::getInstance()->isSuperUser($perm_groups)
             );
 
@@ -132,7 +135,8 @@ class Permissions extends BaseClass
      * @param $groups
      * @return bool
      */
-    private function isSuperUser($groups){
+    private function isSuperUser($groups)
+    {
 
         $resp = false;
         foreach ($groups as $group) {
@@ -140,12 +144,43 @@ class Permissions extends BaseClass
 
             $data = DB::query("SELECT superuser FROM permessi_group WHERE id='{$group_id}' LIMIT 1");
 
-            if(Filters::int($data['superuser'])){
+            if (Filters::int($data['superuser'])) {
                 $resp = true;
                 break;
             }
         }
 
         return $resp;
+    }
+
+    /**
+     * @fn getPgListPermissions
+     * @note Estrae tutti i personaggi che sono compresi nei permessi indicati, che siano di gruppo, persona o superuser
+     * @param array $permissions
+     * @return array
+     */
+    public static function getPgListPermissions(array $permissions): array
+    {
+
+        $pg_list = Functions::getAllPgs();
+        $pg_array = [];
+
+        foreach ($pg_list as $pg) {
+            $pg_id = Filters::int($pg['id']);
+
+            if (!in_array($pg_id, $pg_array)) {
+                foreach ($permissions as $permission) {
+
+                    $permission = Filters::in($permission);
+
+                    if (self::permission($permission, $pg_id)) {
+                        array_push($pg_array, $pg_id);
+                    }
+                }
+            }
+        }
+
+        return $pg_array;
+
     }
 }

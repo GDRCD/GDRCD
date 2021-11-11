@@ -1,5 +1,11 @@
 <?php
-if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
+$esiti_chat = Functions::get_constant('ESITI_CHAT');
+$esiti= Functions::get_constant('ESITI_ENABLE');
+$perm= Permissions::permission('MANAGE_ESITI');
+$perm_all= Permissions::permission('MANAGE_ALL_ESITI');
+$esiti_tiri = Functions::get_constant('ESITI_TIRI');
+
+if ($perm && $esiti) {
     ?>
     <div class="page_title">
         <h2>Gestione esiti</h2>
@@ -16,7 +22,7 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
     # Lista di tutti i blocchi di esiti
      if ($_POST['op']=='list') {
         $id = gdrcd_filter('num', $_POST['id']);
-        if ($_SESSION['permessi'] < FULL_PERM) {
+        if ($perm_all) {
             $query = gdrcd_query("SELECT * FROM blocco_esiti WHERE id = " . $id . " 
             AND (master = '0' || master ='" . gdrcd_filter('in', $_SESSION['login']) . "') 
             ORDER BY id ", 'result');
@@ -34,7 +40,7 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
         ?>
         <div class="fate_frame">
             <div class="titolo_box">
-                <h2 style="margin-top:3px;">
+                <h2>
                     <b><? echo $tit;?> - <? echo $pg;?></b>
                     <a class="link_new"
                        href='main.php?page=gestione_segnalazioni&segn=newesito&op=edit&id=<? echo gdrcd_filter('num',$blocco['id']);?>'
@@ -60,7 +66,7 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
                             Invia un nuovo esito
                     </a>
                     <?
-                    if (ESITI_CHAT){
+                    if ($esiti_chat){
                     ?>
                         | <a class="link_new"
                              href='main.php?page=gestione_segnalazioni&segn=esito_index&op=newchat&blocco=<? echo gdrcd_filter('num',$blocco['id']);?>'
@@ -84,7 +90,7 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
                          (Chat: '.$chat['nome'].' | Skill: '.gdrcd_filter('out',$abilita['nome']).')';
                     }?>
                     <br>
-                    <?php if ($row['dice_face']>0 && $row['dice_num']>0 && TIRI_ESITO) { ?>
+                    <?php if ($row['dice_face']>0 && $row['dice_num']>0 && $esiti_tiri) { ?>
                     Risultato tiro di <?php echo $row['dice_num'].'d'.$row['dice_face'];?>: <b><?php echo $row['dice_results'] ?></b>
                     <?php } ?>
                 </div>
@@ -114,7 +120,7 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
     $record_globale = gdrcd_query("SELECT COUNT(*) FROM blocco_esiti ");
     $totaleresults = $record_globale['COUNT(*)'];
 
-    if ($_SESSION['permessi'] < FULL_PERM) {    #seleziono la lista di esiti sulla base dei permessi
+    if ($perm_all) {    #seleziono la lista di esiti sulla base dei permessi
         $query = "SELECT * FROM blocco_esiti WHERE (master = '0' || master ='" . gdrcd_filter('in', $_SESSION['login']) . "') 
           ORDER BY closed, data DESC, pg LIMIT " . $pagebegin . ", " . $PARAMETERS['settings']['posts_per_page'] . "";
     } else {

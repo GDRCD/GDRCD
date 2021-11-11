@@ -1,7 +1,7 @@
 <?php
 $blocco = gdrcd_query("SELECT pg, master, titolo FROM blocco_esiti WHERE id='".gdrcd_filter('num',$_GET['blocco'])."' 
     LIMIT 1 ");
-if ($_SESSION['permessi']>=ESITI_PERM && ESITI_CHAT && $blocco['pg']!==$_SESSION['login']){
+if ($perm && $esiti_chat && $blocco['pg']!==$_SESSION['login']){
     if ($_GET['op']=='newchat') { ?>
 
         <div class="page_title">
@@ -53,6 +53,16 @@ if ($_SESSION['permessi']>=ESITI_PERM && ESITI_CHAT && $blocco['pg']!==$_SESSION
                 <input name="mod" value=""/>
             </div>
 
+            <div class='info'>
+                Utilizzo CD: lasciare vuoto il campo del valore se non si intende impostare CD successive.
+                Se la prima CD è lasciata vuota o impostata su 0, gli esiti restituiranno una riuscita automatica.
+            </div>
+            <div class='form_label'>
+                Valore della prima CD
+            </div>
+            <div class="form_field">
+                <input name="CD1_value" value=""/>
+            </div>
             <div class='form_label'>
                 Esito dato dal superamento della prima CD
             </div>
@@ -61,6 +71,12 @@ if ($_SESSION['permessi']>=ESITI_PERM && ESITI_CHAT && $blocco['pg']!==$_SESSION
             </div>
 
             <div class='form_label'>
+                Valore della seconda CD
+            </div>
+            <div class="form_field">
+                <input name="CD2_value" value=""/>
+            </div>
+            <div class='form_label'>
                 Esito dato dal superamento della seconda CD
             </div>
             <div class='form_field'>
@@ -68,12 +84,24 @@ if ($_SESSION['permessi']>=ESITI_PERM && ESITI_CHAT && $blocco['pg']!==$_SESSION
             </div>
 
             <div class='form_label'>
+                Valore della terza CD
+            </div>
+            <div class="form_field">
+                <input name="CD3_value" value=""/>
+            </div>
+            <div class='form_label'>
                 Esito dato dal superamento della terza CD
             </div>
             <div class='form_field'>
                 <textarea name="CD_3"></textarea>
             </div>
 
+            <div class='form_label'>
+                Valore della quarta CD
+            </div>
+            <div class="form_field">
+                <input name="CD4_value" value=""/>
+            </div>
             <div class='form_label'>
                 Esito dato dal superamento della quarta CD
             </div>

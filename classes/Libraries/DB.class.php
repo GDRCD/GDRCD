@@ -107,7 +107,15 @@ class DB extends BaseClass
      */
     public static function rowsNumber($array): int
     {
-        return count($array);
+        if(gettype($array) == 'object' ){
+            return self::query($array,'num_rows');
+        }
+        else if(gettype($array) == 'array') {
+            return count($array);
+        }
+        else{
+            return 0;
+        }
     }
 
     /**

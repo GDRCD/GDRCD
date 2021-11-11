@@ -174,24 +174,6 @@ CREATE TABLE IF NOT EXISTS `blacklist` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `blocco_esiti`
---
-
-CREATE TABLE IF NOT EXISTS `blocco_esiti` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `titolo` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `data` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `autore` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `pg` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `id_min` int DEFAULT NULL,
-  `master` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0',
-  `closed` int NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Struttura della tabella `chat`
 --
 
@@ -365,13 +347,16 @@ INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,
     ('CHAT_PVT_SAVE',1,'Chat Salvataggio','Salva chat pvt','Salva chat attivo in pvt?','bool',1),
     ('CHAT_SAVE_LINK',1,'Chat Salvataggio','Salva chat in link','Salva chat in modalità link?','bool',1),
     ('CHAT_SAVE_DOWNLOAD',1,'Chat Salvataggio','Salva chat download','Salva chat con download?','bool',1),
+    ('ESITI_ENABLE',1,'Esiti','Attiva esiti','Abilitare la funzione esiti?','bool',1),
+    ('ESITI_CHAT',1,'Esiti','Attiva esiti in chat','Abilitare la funzione di lancio degli esiti in chat?','bool',1),
+    ('ESITI_TIRI',1,'Esiti','Lancio di dadi negli esiti','Abilitare la possibilità di lanciare dadi all''interno del pannello esiti?','bool',1),
+    ('ESITI_FROM_PLAYER',1,'Esiti','Esiti dai player','Abilitare richiesta esiti da parte dei player?','bool',1),
     ('QUEST_ENABLED',1,'Quest','Attivazione Quest migliorate','Gestione quest migliorata, attiva?','bool',1),
     ('QUEST_VIEW',2,'Quest','Permessi visual quest','Permesso minimo per visualizzazione delle quest','permission',1),
     ('QUEST_SUPER_PERMISSION',3,'Quest','Permessi speciali','Permesso minimo per modificare qualsiasi parte del pacchetto','int',1),
     ('QUEST_NOTIFY',0,'Quest','Notifiche quest','Definisce la possibilità di inviare messaggi automatici di avviso agli utenti che partecipano ad una quest','bool',1),
     ('TRAME_ENABLED',1,'Trame','Attivazione trame','Sistema trame attivo?','bool',1),
     ('QUEST_RESULTS_FOR_PAGE',15,'Quest','Risultati per pagina','Numero risultati per pagina nella gestione delle quest.','int',1);
-
 
 -- --------------------------------------------------------
 
@@ -399,28 +384,96 @@ CREATE TABLE IF NOT EXISTS `diario` (
 
 CREATE TABLE IF NOT EXISTS `esiti` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `sent` int NOT NULL DEFAULT '0',
-  `titolo` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `autore` varchar(255) COLLATE utf8_general_ci NOT NULL,
+  `titolo` text COLLATE utf8_general_ci NOT NULL,
   `data` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `chat` int NOT NULL DEFAULT '0',
-  `autore` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `contenuto` mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci,
-  `noteoff` text CHARACTER SET utf8 COLLATE utf8_general_ci,
-  `master` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `pg` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `id_blocco` int NOT NULL,
-  `id_ab` int DEFAULT '0',
-  `CD_1` text CHARACTER SET utf8 COLLATE utf8_general_ci,
-  `CD_2` text CHARACTER SET utf8 COLLATE utf8_general_ci,
-  `CD_3` text CHARACTER SET utf8 COLLATE utf8_general_ci,
-  `CD_4` text CHARACTER SET utf8 COLLATE utf8_general_ci,
-  `letto_master` int NOT NULL DEFAULT '0',
-  `letto_pg` int NOT NULL DEFAULT '0',
-  `dice_face` int NOT NULL DEFAULT '0',
-  `dice_num` int NOT NULL DEFAULT '0',
-  `dice_results` varchar(255) DEFAULT NULL,
+  `master` varchar(255) COLLATE utf8_general_ci NOT NULL DEFAULT '0',
+  `closed` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `esiti_personaggio`
+--
+
+CREATE TABLE IF NOT EXISTS `esiti_personaggio` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `personaggio` int NOT NULL,
+  `esito` int NOT NULL,
+  `assegnato_il` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `assegnato_da` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `esiti_risposte`
+--
+
+CREATE TABLE IF NOT EXISTS `esiti_risposte` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `esito` int NOT NULL,
+  `autore` varchar(255) NOT NULL,
+  `chat` int NOT NULL DEFAULT '0',
+  `contenuto` mediumtext NOT NULL,
+  `data` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `sent` int NOT NULL DEFAULT '0',
+  `abilita` int DEFAULT '0',
+  `dice_face` int NOT NULL DEFAULT '0',
+  `dice_num` int NOT NULL DEFAULT '0',
+  `modificatore` int(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `esiti_risposte_cd`
+--
+
+CREATE TABLE IF NOT EXISTS `esiti_risposte_cd` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `esito` int NOT NULL,
+  `cd` int NOT NULL,
+  `testo` text DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `esiti_risposte_letture`
+--
+
+CREATE TABLE IF NOT EXISTS `esiti_risposte_letture` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `esito` int NOT NULL,
+    `personaggio` int NOT NULL,
+    `letto_il` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `esiti_risposte_risultati`
+--
+
+CREATE TABLE IF NOT EXISTS `esiti_risposte_risultati` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `personaggio` int NOT NULL,
+    `esito` int NOT NULL,
+    `risultato` int NOT NULL,
+    `testo` text DEFAULT NULL,
+    `lanciato_il` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -469,7 +522,7 @@ CREATE TABLE IF NOT EXISTS `log` (
 --
 
 CREATE TABLE `menu` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `id` int NOT NULL AUTO_INCREMENT,
     `menu_name` varchar(255) NOT NULL,
     `section` varchar(255) NOT NULL,
     `name` varchar(255) NOT NULL,
@@ -504,7 +557,8 @@ INSERT INTO `menu` (`menu_name`, `section`, `name`, `page`, `permission`) VALUES
   ('Gestione', 'Chat', 'Giocate Segnalate', 'gestione_segnalazioni', 'MANAGE_REPORTS'),
   ('Gestione', 'Chat', 'Esiti in chat', 'gestione_esiti', 'MANAGE_OUTCOMES'),
   ('Gestione', 'Quest', 'Gestione Quest', 'gestione_quest', 'MANAGE_QUESTS'),
-  ('Gestione', 'Quest', 'Gestione Trame', 'gestione_trame', 'MANAGE_TRAME_VIEW');
+  ('Gestione', 'Quest', 'Gestione Trame', 'gestione_trame', 'MANAGE_TRAME_VIEW'),
+  ('Gestione', 'Esiti', 'Esiti', 'gestione_esiti', 'MANAGE_ESITI');
 
 -- --------------------------------------------------------
 
@@ -672,7 +726,7 @@ INSERT INTO `oggetto` (`id_oggetto`, `tipo`, `nome`, `creatore`, `data_inserimen
 --
 
 CREATE TABLE `permessi_custom` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `id` int NOT NULL AUTO_INCREMENT,
     `permission_name` varchar(255) NOT NULL,
     `description` text NOT NULL,
     PRIMARY KEY (`id`)
@@ -702,6 +756,8 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
     ('MANAGE_MANUTENTIONS', 'Permesso per la gestione della manutenzione del db'),
     ('MANAGE_OBJECTS', 'Permesso per la gestione degli oggetti'),
     ('MANAGE_REPORTS', 'Permesso per la gestione delle giocate segnalate'),
+    ('MANAGE_ESITI', 'Permesso per la gestione base degli esiti'),
+    ('MANAGE_ALL_ESITI', 'Permesso per la visione/modifica di qualsiasi tipo di esito'),
     ('MANAGE_OUTCOMES', 'Permesso per la gestione degli esiti in chat'),
     ('MANAGE_QUESTS', 'Permesso per la gestione delle quest'),
     ('MANAGE_QUESTS_OTHER', 'Permesso per la gestione delle quest altrui'),
@@ -712,7 +768,6 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
     ('SCHEDA_EXP_MANAGE','Permesso per la visualizzazione della pagina esperienza in scheda');
 
 
-
 -- --------------------------------------------------------
 
 --
@@ -720,7 +775,7 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
 --
 
 CREATE TABLE `permessi_group` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `id` int NOT NULL AUTO_INCREMENT,
     `group_name` varchar(255) NOT NULL,
     `description` text NOT NULL,
     `superuser` tinyint(1) NOT NULL DEFAULT '0',
@@ -744,9 +799,9 @@ INSERT INTO `permessi_group` (`id`, `group_name`, `description`, `superuser`) VA
 --
 
 CREATE TABLE `permessi_group_assignment` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `group_id` int(11) NOT NULL,
-    `permission` int(11) NOT NULL,
+    `id` int NOT NULL AUTO_INCREMENT,
+    `group_id` int NOT NULL,
+    `permission` int NOT NULL,
     `assigned_by` varchar(255) NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -758,8 +813,8 @@ CREATE TABLE `permessi_group_assignment` (
 --
 
 CREATE TABLE `permessi_group_personaggio` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `group_id` int(11) NOT NULL,
+    `id` int NOT NULL AUTO_INCREMENT,
+    `group_id` int NOT NULL,
     `personaggio` varchar(255) NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -778,9 +833,9 @@ INSERT INTO `permessi_group_personaggio` (`id`, `group_id`, `personaggio`) VALUE
 --
 
 CREATE TABLE `permessi_personaggio` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `id` int NOT NULL AUTO_INCREMENT,
     `personaggio` varchar(255) NOT NULL,
-    `permission` int(11) NOT NULL,
+    `permission` int NOT NULL,
     `assigned_by` varchar(255) NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -792,7 +847,7 @@ CREATE TABLE `permessi_personaggio` (
 --
 
 CREATE TABLE IF NOT EXISTS `personaggio` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int NOT NULL AUTO_INCREMENT,
   `nome` varchar(255) NOT NULL DEFAULT '',
   `cognome` varchar(255) NOT NULL DEFAULT '-',
   `pass` varchar(255) NOT NULL DEFAULT '',
@@ -901,7 +956,7 @@ CREATE TABLE IF NOT EXISTS  quest_trama  (
   `autore` varchar(255) NULL,
   `autore_modifica` varchar(255) DEFAULT NULL,
   `ultima_modifica` DATETIME DEFAULT NULL,
-  `stato` int(11) NOT NULL DEFAULT '0',
+  `stato` int NOT NULL DEFAULT '0',
   `quests` text DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;

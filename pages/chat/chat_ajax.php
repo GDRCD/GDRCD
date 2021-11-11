@@ -16,6 +16,11 @@ switch ($action) {
         echo json_encode($chat->roll($_POST));
         break;
 
+    # Controlla che la chat sia quella dichiarata
+    case 'send_esito':
+        echo json_encode($chat->rollEsito($_POST));
+        break;
+
     # Aggiornamento chat
     case 'aggiorna_chat':
         echo json_encode(['list' => $chat->printChat()]);

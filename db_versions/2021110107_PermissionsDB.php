@@ -1,6 +1,6 @@
 <?php
 
-class Permissions extends DbMigration
+class PermissionsDB extends DbMigration
 {
     public function __construct()
     {

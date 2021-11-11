@@ -475,7 +475,8 @@ div.innertube {
  * SERVIZI
  */
 .gestione_pagina .gestione_incipit,
-.servizi_pagina .servizi_incipit {
+.servizi_pagina .servizi_incipit,
+.general_incipit{
     background: grey;
     padding: 10px;
     color:black;
@@ -486,31 +487,36 @@ div.innertube {
 }
 
 .gestione_pagina .gestione_incipit .title,
-.servizi_pagina .servizi_incipit .title {
+.servizi_pagina .servizi_incipit .title,
+.general_incipit .title {
     font-size: 18px;
     font-weight: bold;
 }
 
 .gestione_pagina .gestione_incipit .subtitle_gst,
-.servizi_pagina .servizi_incipit .subtitle_gst {
+.servizi_pagina .servizi_incipit .subtitle_gst,
+.general_incipit .subtitle_gst {
     font-size: 15px;
     font-weight: bold;
 }
 
 .gestione_pagina .gestione_incipit .highlight,
-.servizi_pagina .servizi_incipit .highlight {
+.servizi_pagina .servizi_incipit .highlight,
+.general_incipit .highlight {
     font-weight: bold;
     color: rgb(177, 71, 71);
 }
 
 .gestione_pagina .gestione_incipit ul,
-.servizi_pagina .servizi_incipit ul {
+.servizi_pagina .servizi_incipit ul,
+.general_incipit ul{
     width: 80%;
     margin:0 auto;
 }
 
 .gestione_pagina .gestione_incipit ul li,
-.servizi_pagina .servizi_incipit ul li {
+.servizi_pagina .servizi_incipit ul li,
+.general_incipit ul li{
     padding: 5px 0;
     text-align: left;
 }
@@ -524,6 +530,11 @@ div.innertube {
     width: 100%;
 }
 
+.form_container .form_info{
+    font-size: 12px;
+    font-style: italic;
+}
+
 .form_container .form .form_title,
 .general_title{
     font-size: 15px;
@@ -533,6 +544,7 @@ div.innertube {
     margin: 10px 0;
     padding: 5px 0;
     clear: both;
+    text-align: center;
 }
 
 .form_container .form .form_subtitle{
@@ -567,12 +579,19 @@ div.innertube {
     vertical-align: top;
 }
 
+.single_input.w-25{
+    width: 25% !important;
+    display: inline-block;
+    vertical-align: top;
+}
+
 
 /*** FAKE-TABLE ***/
 
 .fake-table{
     margin: 10px 0;
     width: 100%;
+    text-align: center;
 }
 
 .fake-table .header{
@@ -670,4 +689,243 @@ div.innertube {
 
 .quest_insert_form #new_member{
     margin: 20px auto;
+}
+
+/*** GESTIONE ESITI ***/
+
+.gestione_esiti .esiti_list .header .td{
+    width: 145px;
+}
+
+.gestione_esiti .esiti_list .td{
+    width: 150px;
+}
+
+.gestione_esiti .esiti_list .closed{
+    background: #435595;
+}
+
+.gestione_esiti .esiti_list .closed .td{
+    border-color: black !important;
+}
+
+.gestione_esiti .esiti_members{
+    width: 400px;
+    margin:0 auto;
+}
+
+.gestione_esiti .answer_box{
+    width: 100%;
+    border:1px solid black;
+}
+
+.gestione_esiti .answer_box .titolo_box{
+    font-size: 18px;
+    font-weight: bold;
+    background: #4d5259;
+    margin: 0 0 5px 0;
+    border-bottom: 1px solid black;
+    padding: 2px 0;
+    color: #ccc;
+}
+
+.gestione_esiti .answer_box .answer_list{
+    width: 100%;
+    margin: 5px 0;
+    padding: 5px;
+    box-sizing: border-box;
+    border-bottom:1px solid black;
+    height: 450px;
+    overflow: auto;
+}
+
+.gestione_esiti .answer_box .answer_list .single_answer{
+    width: 52%;
+    border:1px solid black;
+    border-radius: 5px;
+    clear: both;
+    margin: 3px 0;
+    text-align: left;
+}
+
+.gestione_esiti .answer_box .answer_list .single_answer.mine{
+    float: left;
+    background: #4d5259;
+    color: #ccc;
+}
+
+.gestione_esiti .answer_box .answer_list .single_answer.other{
+    float: right;
+    background: #7289da;
+}
+
+.gestione_esiti .answer_box .answer_list .single_answer .text{
+    padding: 5px;
+    box-sizing: border-box;
+    font-size: 13px;
+}
+
+.gestione_esiti .answer_box .answer_list .single_answer .dice{
+    text-align: center;
+    background: black;
+    width: 100%;
+    color: #ce5a6a;
+    border-bottom:1px solid #ccc;
+    padding: 3px 0;
+    font-size: 13px;
+}
+
+.gestione_esiti .answer_box .answer_list .single_answer .dice a{
+    color: #d98692;
+    text-decoration: none;
+    font-weight: normal;
+}
+
+.gestione_esiti .answer_box .answer_list .single_answer .dice a:hover{
+    color: #ccc;
+}
+
+.gestione_esiti .answer_box .answer_list .single_answer .dice_result{
+    text-align: center;
+    background: black;
+    width: 100%;
+    color: #7289da;
+    border-bottom:1px solid #ccc;
+    padding: 3px 0;
+    font-size: 13px;
+}
+
+.gestione_esiti .answer_box .answer_list .single_answer .dice_result:hover{
+    color: #b6bed9;
+    cursor: pointer;
+}
+
+.gestione_esiti .answer_box .answer_list .single_answer .dice_result .internal_text{
+    display: none;
+}
+
+.gestione_esiti .answer_box .answer_list .single_answer .sub_text{
+    text-align: center;
+    background: black;
+    width: 100%;
+    color: #ccc;
+    font-size: 10px;
+    padding: 3px 0;
+}
+
+/*** SERVIZI ESITI ***/
+
+.esiti_pagina .esiti_list .header .td{
+    width: 145px;
+}
+
+.esiti_pagina .esiti_list .td{
+    width: 150px;
+}
+
+.esiti_pagina .esiti_list .closed{
+    background: #435595;
+}
+
+.esiti_pagina .esiti_list .closed .td{
+    border-color: black !important;
+}
+
+.esiti_pagina .answer_box{
+    width: 100%;
+    border:1px solid black;
+}
+
+.esiti_pagina .answer_box .titolo_box{
+    font-size: 18px;
+    font-weight: bold;
+    background: #4d5259;
+    margin: 0 0 5px 0;
+    border-bottom: 1px solid black;
+    padding: 2px 0;
+    color: #ccc;
+}
+
+.esiti_pagina .answer_box .answer_list{
+    width: 100%;
+    margin: 5px 0;
+    padding: 5px;
+    box-sizing: border-box;
+    border-bottom:1px solid black;
+    height: 450px;
+    overflow: auto;
+}
+
+.esiti_pagina .answer_box .answer_list .single_answer{
+    width: 52%;
+    border:1px solid black;
+    border-radius: 5px;
+    clear: both;
+    margin: 3px 0;
+    text-align: left;
+}
+
+.esiti_pagina .answer_box .answer_list .single_answer.mine{
+    float: left;
+    background: #4d5259;
+    color: #ccc;
+}
+
+.esiti_pagina .answer_box .answer_list .single_answer.other{
+    float: right;
+    background: #7289da;
+}
+
+.esiti_pagina .answer_box .answer_list .single_answer .text{
+    padding: 5px;
+    box-sizing: border-box;
+    font-size: 13px;
+}
+
+.esiti_pagina .answer_box .answer_list .single_answer .dice{
+    text-align: center;
+    background: black;
+    width: 100%;
+    color: #ce5a6a;
+    border-bottom:1px solid #ccc;
+    padding: 3px 0;
+    font-size: 13px;
+}
+
+.esiti_pagina .answer_box .answer_list .single_answer .dice a{
+    color: #d98692;
+    text-decoration: none;
+    font-weight: normal;
+}
+
+.esiti_pagina .answer_box .answer_list .single_answer .dice a:hover{
+    color: #ccc;
+}
+
+.esiti_pagina .answer_box .answer_list .single_answer .dice_result{
+    text-align: center;
+    background: black;
+    width: 100%;
+    color: #7289da;
+    border-bottom:1px solid #ccc;
+    padding: 3px 0;
+    font-size: 13px;
+}
+
+.esiti_pagina .answer_box .answer_list .single_answer .dice_result:hover{
+    color: #b6bed9;
+    cursor: pointer;
+}
+
+.esiti_pagina .answer_box .answer_list .single_answer .dice_result .internal_text{
+    display: none;
+}
+
+.esiti_pagina .answer_box .answer_list .single_answer .sub_text{
+    text-align: center;
+    background: black;
+    width: 100%;
+    color: #ccc;
+    font-size: 10px;
+    padding: 3px 0;
 }

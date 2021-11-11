@@ -43,6 +43,19 @@ class Abilita extends BaseClass
         $this->abi_extra = Functions::get_constant('ABI_EXTRA');
     }
 
+    /*** TABLE HELPER */
+
+    /**
+     * @fn getAbilita
+     * @note Ottiene i dati di un'abilita'
+     * @param int $id
+     * @param string $val
+     * @return bool|int|mixed|string
+     */
+    public function getAbilita(int $id, string $val = '*'){
+        return DB::query("SELECT {$val} FROM abilita WHERE id_abilita = '{$id}' LIMIT 1");
+    }
+
     /**** CONTROLS ****/
 
     /**

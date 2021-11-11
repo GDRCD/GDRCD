@@ -28,11 +28,11 @@ class Chat extends BaseClass
         $chat_dice_base,
         $chat_skill_buyed,
         $chat_equip_bonus,
-        $chat_equip_equipped;
+        $chat_equip_equipped,
+        $chat_esiti;
 
     public
         $chat_notify;
-
 
 
     /**** BASE ****/
@@ -45,6 +45,17 @@ class Chat extends BaseClass
     {
         parent::__construct();
         $this->resetClass();
+    }
+
+    /**
+     * @fn getChatData
+     * @note Estrae i dati di una chat
+     * @param int $id
+     * @param string $val
+     * @return bool|int|mixed|string
+     */
+    public function getChatData(int $id,string $val ='*'){
+        return DB::query("SELECT {$val} FROM mappa WHERE id='{$id}' LIMIT 1");
     }
 
     /**
@@ -99,6 +110,9 @@ class Chat extends BaseClass
 
         # Mostrare in chat solo gli equipaggiamenti indossati?
         $this->chat_equip_equipped = Functions::get_constant('CHAT_EQUIP_EQUIPPED');
+
+        # Attivare gli esiti in chat?
+        $this->chat_esiti = Functions::get_constant('ESITI_CHAT');
     }
 
     public function controllaChat($post)
@@ -299,7 +313,7 @@ class Chat extends BaseClass
     {
 
         # Se l'ultima azione non e' 0 e quindi non sono appena entrato in chat
-        $extra_query=  ($this->last_action > 0) ? " AND chat.id > '{$this->last_action}' " : '';
+        $extra_query = ($this->last_action > 0) ? " AND chat.id > '{$this->last_action}' " : '';
 
         # Estraggo le azioni n base alle condizioni indicate
         return DB::query("SELECT personaggio.nome,personaggio.url_img_chat,personaggio.sesso,chat.*
@@ -863,7 +877,7 @@ class Chat extends BaseClass
         return $html;
     }
 
-    /********** OGGETTI ********/
+    /********** LISTE ********/
 
     /**
      * @fn objectsList
@@ -891,6 +905,30 @@ class Chat extends BaseClass
         foreach ($objects as $object) {
             $id = Filters::int($object['id']);
             $nome = Filters::out($object['nome']);
+
+            $html .= "<option value='{$id}'>{$nome}</option>";
+        }
+
+        # Ritorno le option per la select
+        return $html;
+    }
+
+    /**
+     * @fn chatList
+     * @note Crea la lista delle chat
+     * @return string
+     */
+    public function chatList()
+    {
+        $html = '';
+
+        # Estraggo gli oggetti secondo i parametri
+        $chats = DB::query("SELECT * FROM mappa WHERE privata = 0 ORDER BY nome", 'result');
+
+        # Per ogni oggetto creo una option per la select
+        foreach ($chats as $chat) {
+            $id = Filters::int($chat['id']);
+            $nome = Filters::out($chat['nome']);
 
             $html .= "<option value='{$id}'>{$nome}</option>";
         }
@@ -999,7 +1037,7 @@ class Chat extends BaseClass
      * @param int $id
      * @return array
      */
-    private function rollAbility($id)
+    public function rollAbility($id)
     {
         # Filtro le variabili necessarie
         $id = Filters::int($id);
@@ -1105,6 +1143,25 @@ class Chat extends BaseClass
     }
 
     /**
+     * @fn rollCustomDice
+     * @note Funzione che si occupa del lancio di dadi diversi da quelli base
+     * @return int
+     */
+    public function rollCustomDice($num, $face)
+    {
+        # Lancio il dado
+        $total = 0;
+        $diced = 0;
+
+        while ($diced < $num) {
+            $total += rand(1, $face);
+            $diced++;
+        }
+
+        return Filters::int($total);
+    }
+
+    /**
      * @fn saveDice
      * @note Funzione che si occupa di creare il testo e salvarlo in db
      * @param array $array
@@ -1151,7 +1208,7 @@ class Chat extends BaseClass
         }
 
         # Aggiungo il valore del dado al testo
-        if($this->chat_dice) {
+        if ($this->chat_dice) {
             $html .= "Dado: {$dice},";
             $total += $dice;
         }
@@ -1163,4 +1220,33 @@ class Chat extends BaseClass
         DB::query("INSERT INTO chat(stanza,mittente,destinatario,tipo,testo)
                             VALUE('{$this->luogo}','{$this->me}','','C','{$html}')");
     }
+
+    /*******  ESITI *******/
+
+    /**
+     * @fn rollEsito
+     * @note Utilizzo di un esito in chat
+     * @param array $post
+     * @return array
+     */
+    public function rollEsito(array $post): array
+    {
+
+        if ($this->chatAccess()) {
+
+
+            $esiti = Esiti::getInstance();
+            $esiti->rollEsito($post);
+
+            return ['response' => true, 'error' => ''];
+        } else {
+            $error = 'Non hai accesso all\'esito selezionato.';
+
+            # Ritorno il risultato dell'invio ed eventuale messaggio di errore
+            return ['response' => false, 'error' => $error];
+        }
+
+    }
+
+
 }
