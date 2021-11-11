@@ -775,6 +775,16 @@ div.innertube {
     font-size: 13px;
 }
 
+.gestione_esiti .answer_box .answer_list .single_answer .dice a{
+    color: #d98692;
+    text-decoration: none;
+    font-weight: normal;
+}
+
+.gestione_esiti .answer_box .answer_list .single_answer .dice a:hover{
+    color: #ccc;
+}
+
 .gestione_esiti .answer_box .answer_list .single_answer .dice_result{
     text-align: center;
     background: black;
@@ -880,6 +890,16 @@ div.innertube {
     border-bottom:1px solid #ccc;
     padding: 3px 0;
     font-size: 13px;
+}
+
+.esiti_pagina .answer_box .answer_list .single_answer .dice a{
+    color: #d98692;
+    text-decoration: none;
+    font-weight: normal;
+}
+
+.esiti_pagina .answer_box .answer_list .single_answer .dice a:hover{
+    color: #ccc;
 }
 
 .esiti_pagina .answer_box .answer_list .single_answer .dice_result{

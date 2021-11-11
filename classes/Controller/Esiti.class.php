@@ -479,7 +479,7 @@ class Esiti extends BaseClass
             $list = DB::query("SELECT esiti_risposte.* , esiti.titolo
                     FROM esiti 
                     LEFT JOIN esiti_risposte ON (esiti.id = esiti_risposte.esito)
-                    LEFT JOIN esiti_personaggio ON (esiti.id = esiti_personaggio.esito)
+                    LEFT JOIN esiti_personaggio ON (esiti.id = esiti_personaggio.esito AND esiti_personaggio.personaggio = '{$this->me_id}')
                     LEFT JOIN esiti_risposte_risultati ON (esiti_risposte_risultati.esito = esiti_risposte.id AND esiti_risposte_risultati.personaggio = '{$this->me_id}')
                     WHERE esiti_risposte.chat = '{$luogo}' 
                     AND esiti_personaggio.id IS NOT NULL
@@ -510,7 +510,6 @@ class Esiti extends BaseClass
 
         return $html;
     }
-
 
     /**
      * @fn rollEsito
@@ -786,8 +785,12 @@ class Esiti extends BaseClass
                     $abi_data = $abi->getAbilita($id_abi, 'nome');
                     $abi_name = Filters::out($abi_data['nome']);
 
+                    $chat = new Chat();
+                    $chat_id = Filters::int($answer['chat']);
+                    $chat_name = $chat->getChatData($chat_id,'nome')['nome'];
+
                     $html .= "<div class='dice'>";
-                    $html .= "<span> Sono richiesti {$dice_num} dadi da {$dice_face} su {$abi_name}. </span>";
+                    $html .= "<span> Sono richiesti {$dice_num} dadi da {$dice_face} su {$abi_name} in chat: <a href='/main.php?dir={$chat_id}'>{$chat_name}</a> . </span>";
                     $html .= "</div>";
 
                     $results = $this->getAnswerResults($id_answer);

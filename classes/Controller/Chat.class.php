@@ -48,6 +48,17 @@ class Chat extends BaseClass
     }
 
     /**
+     * @fn getChatData
+     * @note Estrae i dati di una chat
+     * @param int $id
+     * @param string $val
+     * @return bool|int|mixed|string
+     */
+    public function getChatData(int $id,string $val ='*'){
+        return DB::query("SELECT {$val} FROM mappa WHERE id='{$id}' LIMIT 1");
+    }
+
+    /**
      * @fn resetClass
      * @note Funzione per il reset delle variabili necessarie
      * @return void
