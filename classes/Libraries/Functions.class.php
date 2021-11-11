@@ -85,9 +85,9 @@ class Functions extends BaseClass
 
         $html = '';
         $selected = Filters::int($selected);
-        $data = DB::query("SELECT id,nome FROM personaggio WHERE 1",'result');
+        $data = DB::query("SELECT id,nome FROM personaggio WHERE 1 ORDER BY nome", 'result');
 
-        foreach ($data as $row){
+        foreach ($data as $row) {
             $id = Filters::int($row['id']);
             $nome = Filters::out($row['nome']);
             $sel = ($selected == $id) ? 'selected' : '';
@@ -99,13 +99,23 @@ class Functions extends BaseClass
     }
 
     /**
+     * @fn getAllPgs
+     * @note Estrae la lista di tutti i pg
+     * @return bool|int|mixed|string
+     */
+    public static function getAllPgs()
+    {
+        return DB::query("SELECT id,nome FROM personaggio WHERE 1 ORDER BY nome", 'result');
+    }
+
+    /**
      * @fn redirect
      * @note Funzione di redirect della pagina
      * @param string $url
      * @param int|bool $tempo
      * @return void
      */
-    public static function redirect(string $url, $tempo = false):void
+    public static function redirect(string $url, $tempo = false): void
     {
         if (!headers_sent() && $tempo == false) {
             header('Location:' . $url);

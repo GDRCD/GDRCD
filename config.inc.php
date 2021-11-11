@@ -18,20 +18,19 @@ error_reporting(E_ERROR | E_PARSE);
  * @author Blancks
  */
 
-if( ! empty($_SESSION['login'])) {
+if (!empty($_SESSION['login'])) {
     /** * Aggiornamento della posizione nella mappa del pg
      * @author Blancks
      */
-    if(isset($_REQUEST['map_id']) && is_numeric($_REQUEST['map_id'])) {
+    if (isset($_REQUEST['map_id']) && is_numeric($_REQUEST['map_id'])) {
         $_SESSION['luogo'] = -1;
         $_SESSION['mappa'] = $_REQUEST['map_id'];
     }
 
-    if(isset($_REQUEST['dir']) && is_numeric($_REQUEST['dir'])) {
+    if (isset($_REQUEST['dir']) && is_numeric($_REQUEST['dir'])) {
         $_SESSION['luogo'] = $_REQUEST['dir'];
     }
 }
-
 
 
 /* HELP: Sostituire le diciture inserite tra le virgolette con i parametri di connessione al Database del proprio dominio. Essi sono forniti al momento della registrazione. Se non si e' in possesso di tali parametri consultare le FAQ della homepage dell'host che fornisce il dominio. Se non le si trovano li contattare lo staff dell'host. */
@@ -258,7 +257,6 @@ $PARAMETERS['settings']['cars_cap'] = 10;//Punteggio massimo per una caratterist
 $PARAMETERS['settings']['cars_sum'] = 40;//Punteggio totale da distribuire tra le caratteristiche in fase di iscrizione.
 $PARAMETERS['settings']['view_logs'] = 10; //Numero di log visualizzato.
 $PARAMETERS['settings']['auto_salary'] = 'OFF'; //ON per attivare l'accredito automatico dello stipendio al primo login
-
 
 
 /** * Abilitazione dell'audio in land
@@ -613,13 +611,11 @@ $PARAMETERS['menu']['profile']['url']="javascript:modalWindow('scheda', 'Scheda 
 $PARAMETERS['menu']['profile']['image_file'] = '';
 $PARAMETERS['menu']['profile']['image_file_onclick'] = '';
 
-if ($_SESSION['permessi'] >= MODERATOR)
-{
-    $PARAMETERS['menu']['backend']['text'] = 'Gestione';
-    $PARAMETERS['menu']['backend']['url'] = 'main.php?page=gestione';
-    $PARAMETERS['menu']['backend']['image_file'] = '';
-    $PARAMETERS['menu']['backend']['image_file_onclick'] = '';
-}
+$PARAMETERS['menu']['backend']['text'] = 'Gestione';
+$PARAMETERS['menu']['backend']['url'] = 'main.php?page=gestione';
+$PARAMETERS['menu']['backend']['image_file'] = '';
+$PARAMETERS['menu']['backend']['image_file_onclick'] = '';
+
 
 $PARAMETERS['menu']['services']['text'] = 'Servizi';
 $PARAMETERS['menu']['services']['url'] = 'main.php?page=uffici';
@@ -661,14 +657,12 @@ $PARAMETERS['office']['guilds']['access_level'] = USER;
 $PARAMETERS['office']['market']['text'] = 'Mercato';
 $PARAMETERS['office']['market']['url'] = 'main.php?page=servizi_mercato';
 $PARAMETERS['office']['market']['access_level'] = USER;
-if (Functions::get_constant('ESITI_ENABLE'))
-{
+if (Functions::get_constant('ESITI_ENABLE')) {
     $PARAMETERS['office']['esiti']['text'] = 'Pannello esiti';
     $PARAMETERS['office']['esiti']['url'] = 'main.php?page=servizi_esiti';
     $PARAMETERS['office']['esiti']['access_level'] = USER;
 }
-if ($PARAMETERS['mode']['privaterooms'] == 'ON')
-{
+if ($PARAMETERS['mode']['privaterooms'] == 'ON') {
     $PARAMETERS['office']['hotel']['text'] = 'Prenotazione stanze';
     $PARAMETERS['office']['hotel']['url'] = 'main.php?page=servizi_prenotazioni';
     $PARAMETERS['office']['hotel']['access_level'] = USER;
@@ -678,8 +672,7 @@ $PARAMETERS['office']['bank']['url'] = 'main.php?page=servizi_banca';
 $PARAMETERS['office']['bank']['access_level'] = USER;
 /* PANNELLO UTENTE */
 $PARAMETERS['user_page_name'] = 'Menù utente';
-if ($PARAMETERS['mode']['skillsystem'] == 'ON')
-{
+if ($PARAMETERS['mode']['skillsystem'] == 'ON') {
     $PARAMETERS['user']['skill_list']['text'] = 'Abilità';
     $PARAMETERS['user']['skill_list']['url'] = 'main.php?page=user_abilita';
     $PARAMETERS['user']['skill_list']['access_level'] = USER;
