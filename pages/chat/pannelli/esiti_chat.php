@@ -24,7 +24,7 @@ if ($esiti->esitiEnabled() && $esiti->esitiTiriEnabled()) {
                 <div class="td">Abilità</div>
                 <div class="td">Controlli</div>
             </div>
-            <?=$chat->esitiChatList();?>
+            <?=$esiti->esitiChatList();?>
         </div>
 
     </div>

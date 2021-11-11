@@ -1026,7 +1026,7 @@ class Chat extends BaseClass
      * @param int $id
      * @return array
      */
-    private function rollAbility($id)
+    public function rollAbility($id)
     {
         # Filtro le variabili necessarie
         $id = Filters::int($id);
@@ -1136,7 +1136,7 @@ class Chat extends BaseClass
      * @note Funzione che si occupa del lancio di dadi diversi da quelli base
      * @return int
      */
-    private function rollCustomDice($num, $face)
+    public function rollCustomDice($num, $face)
     {
         # Lancio il dado
         $total = 0;
@@ -1223,34 +1223,9 @@ class Chat extends BaseClass
 
         if ($this->chatAccess()) {
 
+
             $esiti = Esiti::getInstance();
-
-            $id = Filters::int($post['id']);
-            $data = $esiti->getAnswer($id);
-            $dice_face = Filters::int($data['dice_face']);
-            $dice_num = Filters::int($data['dice_num']);
-
-            $abi_roll = $this->rollAbility(Filters::int($data['abilita']));
-
-            # Filtro i dati ricevuti
-            $abi_dice = Filters::int($abi_roll['abi_dice']);
-            $abi_nome = Filters::in($abi_roll['nome']);
-            $car = Filters::int($abi_roll['car']);
-
-            $dice = $this->rollCustomDice($dice_num, $dice_face);
-            $result = ($dice + $abi_dice + $car);
-
-            $testo = 'Tiro: ' . $abi_nome . ', risultato totale: ' . $result . ' ';
-            $testo_sussurro = 'Hai scoperto che...';
-
-
-            DB::query("INSERT INTO chat(stanza, mittente,destinatario,tipo,testo)
-								  VALUE('{$this->luogo}', 'Esiti','{$this->me}','C','{$testo}')");
-
-            DB::query("INSERT INTO chat(stanza, mittente,destinatario,tipo,testo)
-								  VALUE('{$this->luogo}', 'Esiti','{$this->me}','S','{$testo_sussurro}')");
-
-            DB::query("INSERT INTO esiti_risposte_risultati(esito,personaggio,risultato,testo) VALUES('{$id}','{$this->me_id}','{$result}','{$testo_sussurro}')");
+            $esiti->rollEsito($post);
 
             return ['response' => true, 'error' => ''];
         } else {
@@ -1262,53 +1237,5 @@ class Chat extends BaseClass
 
     }
 
-    /**
-     * @fn esitiChatList
-     * @note Render list esiti in chat per il pg loggato
-     * @return string
-     */
-    public function esitiChatList(): string
-    {
-        $html = '';
-        $esiti = Esiti::getInstance();
-        $abilita = Abilita::getInstance();
-
-        if ($esiti->esitiEnabled() && $esiti->esitiTiriEnabled()) {
-            $luogo = $this->luogo;
-
-            $list = DB::query("SELECT esiti_risposte.* , esiti.titolo
-                    FROM esiti 
-                    LEFT JOIN esiti_risposte ON (esiti.id = esiti_risposte.esito)
-                    LEFT JOIN esiti_personaggio ON (esiti.id = esiti_personaggio.esito)
-                    LEFT JOIN esiti_risposte_risultati ON (esiti_risposte_risultati.esito = esiti_risposte.id AND esiti_risposte_risultati.personaggio = '{$this->me_id}')
-                    WHERE esiti_risposte.chat = '{$luogo}' 
-                    AND esiti_personaggio.id IS NOT NULL
-                    AND esiti_risposte_risultati.id IS NULL
-                    AND esiti.closed = 0
-                    ORDER BY esiti_risposte.data DESC", 'result');
-
-            foreach ($list as $row) {
-
-                $id = Filters::int($row['id']);
-                $abi_data = $abilita->getAbilita(Filters::int($row['abilita']), 'nome');
-
-                $html .= "<div class='tr'>";
-                $html .= "<div class='td'>" . Filters::out($row['titolo']) . "</div>";
-                $html .= "<div class='td'>" . Filters::date($row['data'], 'd/M/Y') . "</div>";
-                $html .= "<div class='td'>" . Filters::int($row['dice_num']) . " dadi da " . Filters::int($row['dice_face']) . "</div>";
-                $html .= "<div class='td'>" . Filters::text($abi_data['nome']) . "</div>";
-                $html .= "<div class='td'>
-                            <form method='POST' class='chat_form_ajax'>
-                                <input type='hidden' name='action' value='send_esito'>
-                                <input type='hidden' name='id' value='{$id}'>
-                                <button type='submit'><i class='fas fa-dice'></i></button>
-                            </form>
-                         </div>";
-                $html .= "</div>";
-            }
-        }
-
-        return $html;
-    }
 
 }

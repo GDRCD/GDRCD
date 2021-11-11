@@ -223,6 +223,26 @@ class Esiti extends BaseClass
     }
 
     /**
+     * @fn esitoResultPermission
+     * @note Controlla se si hanno i permessi per chiudere un esito
+     * @param int $id
+     * @return bool
+     */
+    public function esitoResultPermission(int $id): bool
+    {
+        $id = Filters::int($id);
+
+        if ($this->esitiManageAll()) {
+            return true;
+        } else {
+            $data = $this->getEsito($id, 'master');
+            $master = Filters::int($data['master']);
+
+            return ($this->me_id == $master);
+        }
+    }
+
+    /**
      * @fn esitoAddPermission
      * @note Controlla se si hanno i permessi per chiudere un esito
      * @param int $id
@@ -373,6 +393,18 @@ class Esiti extends BaseClass
                                 WHERE esito='{$id}' ORDER BY personaggio.nome", 'result');
     }
 
+    /**
+     * @fn getPassedEsitoCD
+     * @note Estrazione delle cd superate per un esito
+     * @param int $id
+     * @param int $result
+     * @return bool|int|mixed|string
+     */
+    public function getPassedEsitoCD(int $id, int $result)
+    {
+        return DB::query("SELECT * FROM esiti_risposte_cd WHERE esito='{$id}' AND cd <= '{$result}'", 'result');
+    }
+
 
     /*** CONTROLS ***/
 
@@ -427,6 +459,122 @@ class Esiti extends BaseClass
         $data = DB::query("SELECT closed FROM esiti WHERE id = {$id} LIMIT 1");
 
         return Filters::bool($data['closed']);
+    }
+
+    /*** ESITI CHAT */
+
+    /**
+     * @fn esitiChatList
+     * @note Render list esiti in chat per il pg loggato
+     * @return string
+     */
+    public function esitiChatList(): string
+    {
+        $html = '';
+        $abilita = Abilita::getInstance();
+
+        if ($this->esitiEnabled() && $this->esitiTiriEnabled()) {
+            $luogo = Personaggio::getPgLocation($this->me_id);
+
+            $list = DB::query("SELECT esiti_risposte.* , esiti.titolo
+                    FROM esiti 
+                    LEFT JOIN esiti_risposte ON (esiti.id = esiti_risposte.esito)
+                    LEFT JOIN esiti_personaggio ON (esiti.id = esiti_personaggio.esito)
+                    LEFT JOIN esiti_risposte_risultati ON (esiti_risposte_risultati.esito = esiti_risposte.id AND esiti_risposte_risultati.personaggio = '{$this->me_id}')
+                    WHERE esiti_risposte.chat = '{$luogo}' 
+                    AND esiti_personaggio.id IS NOT NULL
+                    AND esiti_risposte_risultati.id IS NULL
+                    AND esiti.closed = 0
+                    ORDER BY esiti_risposte.data DESC", 'result');
+
+            foreach ($list as $row) {
+
+                $id = Filters::int($row['id']);
+                $abi_data = $abilita->getAbilita(Filters::int($row['abilita']), 'nome');
+
+                $html .= "<div class='tr'>";
+                $html .= "<div class='td'>" . Filters::out($row['titolo']) . "</div>";
+                $html .= "<div class='td'>" . Filters::date($row['data'], 'd/M/Y') . "</div>";
+                $html .= "<div class='td'>" . Filters::int($row['dice_num']) . " dadi da " . Filters::int($row['dice_face']) . "</div>";
+                $html .= "<div class='td'>" . Filters::text($abi_data['nome']) . "</div>";
+                $html .= "<div class='td'>
+                            <form method='POST' class='chat_form_ajax'>
+                                <input type='hidden' name='action' value='send_esito'>
+                                <input type='hidden' name='id' value='{$id}'>
+                                <button type='submit'><i class='fas fa-dice'></i></button>
+                            </form>
+                         </div>";
+                $html .= "</div>";
+            }
+        }
+
+        return $html;
+    }
+
+
+    /**
+     * @fn rollEsito
+     * @note Utilizzo di un esito in chat
+     * @param array $post
+     * @return array
+     */
+    public function rollEsito(array $post): array
+    {
+        $chat = new Chat();
+        $id = Filters::int($post['id']);
+        $data = $this->getAnswer($id);
+        $dice_face = Filters::int($data['dice_face']);
+        $dice_num = Filters::int($data['dice_num']);
+        $luogo = Personaggio::getPgLocation($this->me_id);
+
+        $abi_roll = $chat->rollAbility(Filters::int($data['abilita']));
+
+        # Filtro i dati ricevuti
+        $abi_dice = Filters::int($abi_roll['abi_dice']);
+        $abi_nome = Filters::in($abi_roll['nome']);
+        $car = Filters::int($abi_roll['car']);
+
+        $dice = $chat->rollCustomDice($dice_num, $dice_face);
+        $result = ($dice + $abi_dice + $car);
+
+        $testo = 'Tiro: ' . $abi_nome . ', risultato totale: ' . $result . ' ';
+        $testo_sussurro = Filters::in($this->esitoResultText($id, $result));
+
+        DB::query("INSERT INTO chat(stanza, mittente,destinatario,tipo,testo)
+								  VALUE('{$luogo}', 'Esiti','{$this->me}','C','{$testo}')");
+
+        DB::query("INSERT INTO chat(stanza, mittente,destinatario,tipo,testo)
+								  VALUE('{$luogo}', 'Esiti','{$this->me}','S','{$testo_sussurro}')");
+
+        DB::query("INSERT INTO esiti_risposte_risultati(esito,personaggio,risultato,testo) VALUES('{$id}','{$this->me_id}','{$result}','{$testo_sussurro}')");
+
+        return ['response' => true, 'error' => ''];
+    }
+
+    /**
+     * @fn esitoResultText
+     * @note Testo dei risultati trovati dalla prova esito
+     * @param int $id
+     * @param int $result
+     * @return string
+     */
+    public function esitoResultText(int $id, int $result): string
+    {
+
+        $html = ' Hai scoperto: ';
+        $list = $this->getPassedEsitoCD($id, $result);
+
+        if (DB::rowsNumber($list) > 0) {
+            foreach ($list as $cd) {
+                $text = Filters::text($cd['testo']);
+
+                $html .= "  {$text}  |";
+            }
+        } else {
+            $html = 'Non hai scoperto nulla.';
+        }
+
+        return trim($html,'| ');
     }
 
     /*** ESITI INDEX ***/
@@ -517,12 +665,12 @@ class Esiti extends BaseClass
                 $html .= " <a href='/main.php?page={$path}&op=members&id_record={$id}' title='Gestisci membri'><i class='fas fa-users'></i></a>";
             }
 
-            if($this->esitiManageAll()  && ($page == 'gestione')){
+            if ($this->esitiManageAll() && ($page == 'gestione')) {
                 $html .= " <a href='/main.php?page={$path}&op=master&id_record={$id}' title='Assegna Master'><i class='fas fa-user-tag'></i></a>";
             }
 
 
-            if($this->esitiManageAll() && $closed){
+            if ($this->esitiManageAll() && $closed) {
                 $html .= " <a href='/main.php?page={$path}&op=open&id_record={$id}' title='Riapri'><i class='far fa-check-circle'></i></a>";
             }
 
@@ -651,7 +799,9 @@ class Esiti extends BaseClass
                         $res_text = Filters::text($result['testo']);
                         $res_num = Filters::int($result['risultato']);
 
-                        $html .= "<div class='dice_result' title='{$res_text}'> {$pg_name} : <span>{$res_num}</span> </div>";
+                        if($this->esitoResultPermission($id) || ($pg == $this->me_id)) {
+                            $html .= "<div class='dice_result'> {$pg_name} : <span>{$res_num}</span> <div class='internal_text'> {$res_text}</div> </div>";
+                        }
                     }
 
 
@@ -822,7 +972,7 @@ class Esiti extends BaseClass
         $html = '';
         $list = Permissions::getPgListPermissions(['MANAGE_ESITI']);
 
-        foreach ($list as $pg){
+        foreach ($list as $pg) {
             $name = Personaggio::nameFromId($pg);
             $html .= "<option value='{$pg}'>{$name}</option>";
         }
@@ -830,20 +980,21 @@ class Esiti extends BaseClass
         return $html;
     }
 
-    public function setMaster($post){
+    public function setMaster($post)
+    {
 
         $id = Filters::int($post['id']);
 
-        if($this->esitiManageAll()){
+        if ($this->esitiManageAll()) {
 
             $pg = Filters::int($post['personaggio']);
 
             DB::query("UPDATE esiti SET master ='{$pg}' WHERE id='{$id}' LIMIT 1");
 
-            return ['response'=>true,'mex'=>'Master assegnato con successo.'];
+            return ['response' => true, 'mex' => 'Master assegnato con successo.'];
 
-        }else{
-            return ['response'=>false,'mex'=>'Permesso negato'];
+        } else {
+            return ['response' => false, 'mex' => 'Permesso negato'];
         }
 
 

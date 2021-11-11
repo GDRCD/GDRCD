@@ -431,6 +431,22 @@ CREATE TABLE IF NOT EXISTS `esiti_risposte` (
 
 -- --------------------------------------------------------
 
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `esiti_risposte_cd`
+--
+
+CREATE TABLE IF NOT EXISTS `esiti_risposte_cd` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `esito` int NOT NULL,
+  `cd` int NOT NULL,
+  `testo` text DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
 --
 -- Struttura della tabella `esiti_risposte_letture`
 --

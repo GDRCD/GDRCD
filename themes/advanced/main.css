@@ -785,6 +785,15 @@ div.innertube {
     font-size: 13px;
 }
 
+.gestione_esiti .answer_box .answer_list .single_answer .dice_result:hover{
+    color: #b6bed9;
+    cursor: pointer;
+}
+
+.gestione_esiti .answer_box .answer_list .single_answer .dice_result .internal_text{
+    display: none;
+}
+
 .gestione_esiti .answer_box .answer_list .single_answer .sub_text{
     text-align: center;
     background: black;
@@ -883,10 +892,13 @@ div.innertube {
     font-size: 13px;
 }
 
-
 .esiti_pagina .answer_box .answer_list .single_answer .dice_result:hover{
     color: #b6bed9;
     cursor: pointer;
+}
+
+.esiti_pagina .answer_box .answer_list .single_answer .dice_result .internal_text{
+    display: none;
 }
 
 .esiti_pagina .answer_box .answer_list .single_answer .sub_text{

@@ -3,6 +3,18 @@
 
 class Personaggio extends BaseClass{
 
+    /**
+     * @fn getPgLocation
+     * @note Estrae la posizione del pg
+     * @param int $pg
+     * @return int
+     */
+    public static function getPgLocation(int $pg): int
+    {
+        $data = DB::query("SELECT ultimo_luogo FROM personaggio WHERE id='{$pg}' LIMIT 1");
+
+        return Filters::int($data['ultimo_luogo']);
+    }
 
     /**
      * @fn nameFromId

@@ -74,6 +74,8 @@ if ($esiti->esitoViewPermission($id_record) && $esiti->esitoExist($id_record)) {
         </div>
     </div>
 
+    <script src="pages/gestione/esiti/JS/esiti_read.js"></script>
+
 
 <?php } else { ?>
     <div class="warning">Permesso negato.</div>
