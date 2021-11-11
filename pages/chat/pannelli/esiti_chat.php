@@ -10,10 +10,8 @@ if ($esiti->esitiEnabled() && $esiti->esitiTiriEnabled()) {
 
     <div class="pagina_chat">
 
-        <div class="general_incipit">
-            In questa sezione sono elencati tutti gli esiti disponibili per il pg all'interno della presente chat.
-            Gli esiti riportati sono gli esiti che ancora devono essere "scoperti", tramite l'apposito tiro in chat.
-            Una volta ottenuto l'esito, questi spariscono.
+        <div class="general_incipit" style="text-align: center">
+            Di seguito sono elencati tutti gli esiti non ancora lanciati per questa chat.
         </div>
 
         <div class="fake-table esiti_in_chat">
