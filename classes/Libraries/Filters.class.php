@@ -116,6 +116,17 @@ class Filters extends BaseClass
     }
 
     /**
+     * @fn int
+     * @note Filtro di tipo int
+     * @param mixed $val
+     * @return bool
+     */
+    public static function bool($val): bool
+    {
+        return (bool)self::gdrcd_filter('int', $val);
+    }
+
+    /**
      * @fn url
      * @note Filtro di tipo url
      * @param mixed $val
