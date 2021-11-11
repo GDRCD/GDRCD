@@ -415,16 +415,16 @@ CREATE TABLE IF NOT EXISTS `esiti_personaggio` (
 --
 
 CREATE TABLE IF NOT EXISTS `esiti_risposte` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `esito` int(11) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `esito` int NOT NULL,
   `autore` varchar(255) NOT NULL,
-  `chat` int(11) NOT NULL DEFAULT '0',
+  `chat` int NOT NULL DEFAULT '0',
   `contenuto` mediumtext NOT NULL,
   `data` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `sent` int(11) NOT NULL DEFAULT '0',
-  `abilita` int(11) DEFAULT '0',
-  `dice_face` int(11) NOT NULL DEFAULT '0',
-  `dice_num` int(11) NOT NULL DEFAULT '0',
+  `sent` int NOT NULL DEFAULT '0',
+  `abilita` int DEFAULT '0',
+  `dice_face` int NOT NULL DEFAULT '0',
+  `dice_num` int NOT NULL DEFAULT '0',
   `modificatore` int(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
@@ -506,7 +506,7 @@ CREATE TABLE IF NOT EXISTS `log` (
 --
 
 CREATE TABLE `menu` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `id` int NOT NULL AUTO_INCREMENT,
     `menu_name` varchar(255) NOT NULL,
     `section` varchar(255) NOT NULL,
     `name` varchar(255) NOT NULL,
@@ -710,7 +710,7 @@ INSERT INTO `oggetto` (`id_oggetto`, `tipo`, `nome`, `creatore`, `data_inserimen
 --
 
 CREATE TABLE `permessi_custom` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `id` int NOT NULL AUTO_INCREMENT,
     `permission_name` varchar(255) NOT NULL,
     `description` text NOT NULL,
     PRIMARY KEY (`id`)
@@ -759,7 +759,7 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
 --
 
 CREATE TABLE `permessi_group` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `id` int NOT NULL AUTO_INCREMENT,
     `group_name` varchar(255) NOT NULL,
     `description` text NOT NULL,
     `superuser` tinyint(1) NOT NULL DEFAULT '0',
@@ -783,9 +783,9 @@ INSERT INTO `permessi_group` (`id`, `group_name`, `description`, `superuser`) VA
 --
 
 CREATE TABLE `permessi_group_assignment` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `group_id` int(11) NOT NULL,
-    `permission` int(11) NOT NULL,
+    `id` int NOT NULL AUTO_INCREMENT,
+    `group_id` int NOT NULL,
+    `permission` int NOT NULL,
     `assigned_by` varchar(255) NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -797,8 +797,8 @@ CREATE TABLE `permessi_group_assignment` (
 --
 
 CREATE TABLE `permessi_group_personaggio` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `group_id` int(11) NOT NULL,
+    `id` int NOT NULL AUTO_INCREMENT,
+    `group_id` int NOT NULL,
     `personaggio` varchar(255) NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -817,9 +817,9 @@ INSERT INTO `permessi_group_personaggio` (`id`, `group_id`, `personaggio`) VALUE
 --
 
 CREATE TABLE `permessi_personaggio` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `id` int NOT NULL AUTO_INCREMENT,
     `personaggio` varchar(255) NOT NULL,
-    `permission` int(11) NOT NULL,
+    `permission` int NOT NULL,
     `assigned_by` varchar(255) NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -831,7 +831,7 @@ CREATE TABLE `permessi_personaggio` (
 --
 
 CREATE TABLE IF NOT EXISTS `personaggio` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int NOT NULL AUTO_INCREMENT,
   `nome` varchar(255) NOT NULL DEFAULT '',
   `cognome` varchar(255) NOT NULL DEFAULT '-',
   `pass` varchar(255) NOT NULL DEFAULT '',
@@ -940,7 +940,7 @@ CREATE TABLE IF NOT EXISTS  quest_trama  (
   `autore` varchar(255) NULL,
   `autore_modifica` varchar(255) DEFAULT NULL,
   `ultima_modifica` DATETIME DEFAULT NULL,
-  `stato` int(11) NOT NULL DEFAULT '0',
+  `stato` int NOT NULL DEFAULT '0',
   `quests` text DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
