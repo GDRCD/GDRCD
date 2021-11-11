@@ -21,7 +21,7 @@ $esiti = Esiti::getInstance();
     </div>
     <?= $esiti->esitiListManagement(); ?>
     <div class="tr footer">
-        <a class="but_newd" href='main.php?page=gestione_esiti&op=new'>
+        <a href='main.php?page=gestione_esiti&op=new'>
             Nuovo esito
         </a> |
         <a href="/main.php?page=gestione">Indietro</a>

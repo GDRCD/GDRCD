@@ -56,6 +56,18 @@ class Esiti extends BaseClass
             case 'close':
                 $page = 'esiti_close.php';
                 break;
+
+            case 'open':
+                $page = 'esiti_open.php';
+                break;
+
+            case 'members':
+                $page = 'esiti_members.php';
+                break;
+
+            case 'master':
+                $page = 'esiti_master.php';
+                break;
         }
 
         return $page;
@@ -210,6 +222,26 @@ class Esiti extends BaseClass
         }
     }
 
+    /**
+     * @fn esitoAddPermission
+     * @note Controlla se si hanno i permessi per chiudere un esito
+     * @param int $id
+     * @return bool
+     */
+    public function esitoMembersPermission(int $id): bool
+    {
+        $id = Filters::int($id);
+
+        if ($this->esitiManageAll()) {
+            return true;
+        } else {
+            $data = $this->getEsito($id, 'master');
+            $master = Filters::int($data['master']);
+
+            return ($this->me_id == $master);
+        }
+    }
+
     /*** TABLES HELPERS ***/
 
     /**
@@ -272,7 +304,7 @@ class Esiti extends BaseClass
      */
     public function getAnswerResults(int $id, string $val = '*')
     {
-        return DB::query("SELECT {$val} FROM esiti_risultati WHERE esito='{$id}'",'result');
+        return DB::query("SELECT {$val} FROM esiti_risultati WHERE esito='{$id}'", 'result');
     }
 
     /**
@@ -325,6 +357,20 @@ class Esiti extends BaseClass
     public function getPlayerEsito(int $id, int $pg, string $val = '*')
     {
         return DB::query("SELECT {$val} FROM esiti_personaggio WHERE esito='{$id}' AND personaggio='{$pg}' LIMIT 1");
+    }
+
+    /**
+     * @fn getPlayerEsito
+     * @note Ottiene i dati di un pg rispetto ad un esito
+     * @param int $id
+     * @param string $val
+     * @return bool|int|mixed|string
+     */
+    public function getAllPlayerEsito(int $id, string $val = 'esiti_personaggio.*')
+    {
+        return DB::query("SELECT {$val} FROM esiti_personaggio 
+                                LEFT JOIN personaggio ON (personaggio.id = esiti_personaggio.personaggio) 
+                                WHERE esito='{$id}' ORDER BY personaggio.nome", 'result');
     }
 
 
@@ -442,7 +488,8 @@ class Esiti extends BaseClass
             $author = Filters::in($row['autore']);
             $totale_esiti = $this->getEsitoAnswesNum($id);
             $new_response = $this->haveNewResponse($id);
-            $closed = ($row['closed']) ? 'closed' : '';
+            $closed = Filters::bool($row['closed']);
+            $closed_cls = ($closed) ? 'closed' : '';
 
 
             if ($row['master'] != 0) {
@@ -453,7 +500,7 @@ class Esiti extends BaseClass
                 $master = '<u> In attesa di risposta </u>';
             }
 
-            $html .= "<div class='tr {$closed}'>";
+            $html .= "<div class='tr {$closed_cls}'>";
             $html .= "<div class='td'>" . Filters::date($row['data'], 'd/m/Y') . '</div>';
             $html .= "<div class='td'>" . Personaggio::nameFromId($author) . '</div>';
             $html .= "<div class='td'>{$master}</div>";
@@ -466,10 +513,24 @@ class Esiti extends BaseClass
                 $html .= "<a href='/main.php?page={$path}&op=read&id_record={$id}' title='Leggi'><i class='fas fa-eye'></i></a>";
             }
 
-            if ($this->esitoClosePermission($id) && ($page == 'gestione')) {
+            if ($this->esitoMembersPermission($id) && ($page == 'gestione')) {
+                $html .= " <a href='/main.php?page={$path}&op=members&id_record={$id}' title='Gestisci membri'><i class='fas fa-users'></i></a>";
+            }
+
+            if($this->esitiManageAll()){
+                $html .= " <a href='/main.php?page={$path}&op=master&id_record={$id}' title='Assegna Master'><i class='fas fa-user-tag'></i></a>";
+            }
+
+
+            if($this->esitiManageAll() && $closed){
+                $html .= " <a href='/main.php?page={$path}&op=open&id_record={$id}' title='Riapri'><i class='far fa-check-circle'></i></a>";
+            }
+
+            if ($this->esitoClosePermission($id) && ($page == 'gestione') && !$closed) {
 
                 $html .= " <a href='/main.php?page={$path}&op=close&id_record={$id}' title='Chiudi'><i class='far fa-times-circle'></i></a>";
             }
+
 
             $html .= "</div>";
             $html .= "</div>";
@@ -520,7 +581,7 @@ class Esiti extends BaseClass
     public function newEsitoPlayer(array $post): array
     {
 
-        if($this->esitiFromPlayerEnabled()) {
+        if ($this->esitiFromPlayerEnabled()) {
             $titolo = Filters::in($post['titolo']);
             $ms = Filters::in($post['contenuto']);
 
@@ -534,8 +595,8 @@ class Esiti extends BaseClass
                         VALUES('{$this->me_id}','{$last_id}','{$this->me_id}')  ");
 
             return ['response' => true, 'mex' => 'Esito creato con successo.'];
-        } else{
-            return ['response'=>false,'mex'=>'Permesso negato'];
+        } else {
+            return ['response' => false, 'mex' => 'Permesso negato'];
         }
     }
 
@@ -574,7 +635,7 @@ class Esiti extends BaseClass
                 if (($dice_num > 0) && $this->esitiTiriEnabled()) {
 
                     $abi = Abilita::getInstance();
-                    $abi_data = $abi->getAbilita($id_abi,'nome');
+                    $abi_data = $abi->getAbilita($id_abi, 'nome');
                     $abi_name = Filters::out($abi_data['nome']);
 
                     $html .= "<div class='dice'>";
@@ -583,9 +644,9 @@ class Esiti extends BaseClass
 
                     $results = $this->getAnswerResults($id_answer);
 
-                    foreach ($results as $result){
+                    foreach ($results as $result) {
 
-                        $pg= Filters::int($result['personaggio']);
+                        $pg = Filters::int($result['personaggio']);
                         $pg_name = Personaggio::nameFromId($pg);
                         $res_text = Filters::text($result['testo']);
                         $res_num = Filters::int($result['risultato']);
@@ -652,6 +713,161 @@ class Esiti extends BaseClass
 
         } else {
             $resp = ['response' => false, 'mex' => 'Permesso Negato'];
+        }
+
+        return $resp;
+    }
+
+    /*** MEMBERS LIST ***/
+
+    /**
+     * @fn membersList
+     * @note Render html dei membri di un esito
+     * @param int $id
+     * @return string
+     */
+    public function membersList(int $id): string
+    {
+
+        $html = '';
+        $list = $this->getAllPlayerEsito($id);
+
+        foreach ($list as $row) {
+            $id_row = Filters::int($row['id']);
+
+            $html .= "<div class='tr'>";
+            $html .= "<div class='td'>" . Personaggio::nameFromId(Filters::int($row['personaggio'])) . "</div>";
+            $html .= "<div class='td'>";
+
+            $html .= "<form method='POST'>
+                        <input type='hidden' name='op' value='delete_member'>
+                        <input type='hidden' name='id' value='{$id_row}'>
+                        <input type='hidden' name='id_esito' value='{$id}'>
+                        <button type='submit' title='Elimina membro'><i class='fas fa-user-minus'></i></button>
+                        </form>";
+
+            $html .= "</div>";
+            $html .= "</div>";
+
+        }
+
+        return $html;
+    }
+
+    /**
+     * @fn addMember
+     * @note Aggiunge un membro ad un esito
+     * @param array $post
+     * @return array
+     */
+    public function addMember(array $post): array
+    {
+
+        $id = Filters::int($post['id']);
+
+        if ($this->esitoMembersPermission($id)) {
+
+            $pg = Filters::int($post['personaggio']);
+
+            if (!$this->esitoPlayerExist($id, $pg)) {
+
+                DB::query("INSERT INTO esiti_personaggio(esito,personaggio,assegnato_da) VALUE('{$id}','{$pg}','{$this->me_id}')");
+
+                return ['resp' => true, 'mex' => 'Personaggio inserito correttamente.'];
+            } else {
+                return ['resp' => false, 'mex' => 'Personaggio già esistente.'];
+            }
+
+
+        } else {
+            return ['resp' => false, 'mex' => 'Permesso negato'];
+        }
+
+    }
+
+    /**
+     * @fn deleteMember
+     * @note Rimuove un membro da un esito
+     * @param array $post
+     * @return array
+     */
+    public function deleteMember(array $post): array
+    {
+
+        $id = Filters::int($post['id']);
+        $id_esito = Filters::int($post['id_esito']);
+
+        if ($this->esitoMembersPermission($id_esito)) {
+
+            DB::query("DELETE FROM esiti_personaggio WHERE id='{$id}' LIMIT 1");
+
+            return ['resp' => true, 'mex' => 'Personaggio eliminato correttamente.'];
+
+        } else {
+            return ['resp' => false, 'mex' => 'Permesso negato'];
+        }
+
+    }
+
+    /*** MASTER ASSIGN **/
+
+    /**
+     * @fn esitiManagersList
+     * @note Estrae la lista di personaggi che hanno i permessi per gestire gli esiti
+     * @return string
+     */
+    public function esitiManagersList(): string
+    {
+
+        $html = '';
+        $list = Permissions::getPgListPermissions(['MANAGE_ESITI']);
+
+        foreach ($list as $pg){
+            $name = Personaggio::nameFromId($pg);
+            $html .= "<option value='{$pg}'>{$name}</option>";
+        }
+
+        return $html;
+    }
+
+    public function setMaster($post){
+
+        $id = Filters::int($post['id']);
+
+        if($this->esitiManageAll()){
+
+            $pg = Filters::int($post['personaggio']);
+
+            DB::query("UPDATE esiti SET master ='{$pg}' WHERE id='{$id}' LIMIT 1");
+
+            return ['response'=>true,'mex'=>'Master assegnato con successo.'];
+
+        }else{
+            return ['response'=>false,'mex'=>'Permesso negato'];
+        }
+
+
+    }
+
+    /*** RE-OPEN ESITO ***/
+
+    /**
+     * @fn esitoOpen
+     * @note Riapertura di un esito
+     * @param int $id
+     * @return array
+     */
+    public function esitoOpen(int $id): array
+    {
+        $id = Filters::int($id);
+
+        if ($this->esitiManageAll()) {
+
+            DB::query("UPDATE esiti SET closed=0 WHERE id='{$id}' LIMIT 1");
+
+            $resp = ['response' => true, 'mex' => 'Esito riaperto con successo.'];
+        } else {
+            $resp = ['response' => false, 'mex' => 'Permesso negato'];
         }
 
         return $resp;

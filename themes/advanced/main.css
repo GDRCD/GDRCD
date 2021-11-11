@@ -709,6 +709,11 @@ div.innertube {
     border-color: black !important;
 }
 
+.gestione_esiti .esiti_members{
+    width: 400px;
+    margin:0 auto;
+}
+
 .gestione_esiti .answer_box{
     width: 100%;
     border:1px solid black;
