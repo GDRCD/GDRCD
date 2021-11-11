@@ -781,6 +781,14 @@ div.innertube {
     width: 150px;
 }
 
+.esiti_pagina .esiti_list .closed{
+    background: #435595;
+}
+
+.esiti_pagina .esiti_list .closed .td{
+    border-color: black !important;
+}
+
 .esiti_pagina .answer_box{
     width: 100%;
     border:1px solid black;

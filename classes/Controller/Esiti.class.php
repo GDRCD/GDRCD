@@ -6,9 +6,8 @@ class Esiti extends BaseClass
 
     private
         $esiti_enabled,
-        $manage_esiti,
-        $manage_esiti_all,
         $esiti_chat,
+        $esiti_from_player,
         $esiti_tiri;
 
 
@@ -25,11 +24,8 @@ class Esiti extends BaseClass
         # Gli esiti prevedono dei tiri dado?
         $this->esiti_tiri = Functions::get_constant('ESITI_TIRI');
 
-        # Permesso per gestione degli esiti creati
-        $this->manage_esiti = Permissions::permission('MANAGE_ESITI');
-
-        # Permesso per gestione degli esiti generali
-        $this->manage_esiti_all = Permissions::permission('MANAGE_ALL_ESITI');
+        # Gli esiti sono creabili anche dai player?
+        $this->esiti_from_player = Functions::get_constant('ESITI_FROM_PLAYER');
     }
 
     /**** ROUTING ***/
@@ -116,6 +112,16 @@ class Esiti extends BaseClass
     public function esitiTiriEnabled(): bool
     {
         return $this->esiti_tiri;
+    }
+
+    /**
+     * @fn esitiFromPlayerEnabled
+     * @note Controlla se gli esiti sono creabili anche dai player
+     * @return bool
+     */
+    public function esitiFromPlayerEnabled(): bool
+    {
+        return $this->esiti_from_player;
     }
 
     /*** PERMISSIONS */
@@ -228,7 +234,7 @@ class Esiti extends BaseClass
      * @param string $order
      * @return bool|int|mixed|string
      */
-    public function getAllEsitoPlayer(int $pg,string $val = 'esiti.*', string $order = '')
+    public function getAllEsitoPlayer(int $pg, string $val = 'esiti.*', string $order = '')
     {
         return DB::query("SELECT {$val} FROM esiti LEFT JOIN esiti_personaggio ON (esiti.id = esiti_personaggio.esito) WHERE esiti_personaggio.personaggio = '{$pg}' {$order}", 'result');
     }
@@ -340,6 +346,19 @@ class Esiti extends BaseClass
         return ($data['tot'] > 0);
     }
 
+    /**
+     * @fn getEsitoRead
+     * @note Ottiene i dati di una lettura di un esito
+     * @param int $id
+     * @return bool
+     */
+    public function esitoClosed(int $id): bool
+    {
+        $data = DB::query("SELECT closed FROM esiti WHERE id = {$id} LIMIT 1");
+
+        return Filters::bool($data['closed']);
+    }
+
     /*** ESITI INDEX ***/
 
     /**
@@ -364,8 +383,8 @@ class Esiti extends BaseClass
      */
     public function esitiListPLayer(): string
     {
-        $list = $this->getAllEsitoPlayer($this->me_id,'esiti.*', 'ORDER BY closed ASC');
-        return $this->renderEsitiList($list,'servizi');
+        $list = $this->getAllEsitoPlayer($this->me_id, 'esiti.*', 'ORDER BY closed ASC,data ASC');
+        return $this->renderEsitiList($list, 'servizi');
     }
 
     /**
@@ -375,8 +394,8 @@ class Esiti extends BaseClass
      */
     public function esitiListManagement(): string
     {
-        $list = $this->getAllEsito('*', 'ORDER BY closed ASC');
-        return $this->renderEsitiList($list,'gestione');
+        $list = $this->getAllEsito('*', 'ORDER BY closed ASC,data ASC');
+        return $this->renderEsitiList($list, 'gestione');
     }
 
     /**
@@ -467,6 +486,34 @@ class Esiti extends BaseClass
         }
     }
 
+    /**
+     * @fn newEsitoManagement
+     * @note Inserisce un nuovo esito da parte del master
+     * @param array $post
+     * @return array
+     */
+    public function newEsitoPlayer(array $post): array
+    {
+
+        if($this->esitiFromPlayerEnabled()) {
+            $titolo = Filters::in($post['titolo']);
+            $ms = Filters::in($post['contenuto']);
+
+            DB::query("INSERT INTO esiti(titolo, autore) VALUES('{$titolo}','{$this->me_id}')");
+
+            $last_id = $this->getLastEsitoId();
+
+            DB::query("INSERT INTO esiti_risposte(esito, autore, contenuto)
+                        VALUES('{$last_id}','{$this->me_id}','{$ms}')  ");
+            DB::query("INSERT INTO esiti_personaggio(personaggio, esito, assegnato_da)
+                        VALUES('{$this->me_id}','{$last_id}','{$this->me_id}')  ");
+
+            return ['response' => true, 'mex' => 'Esito creato con successo.'];
+        } else{
+            return ['response'=>false,'mex'=>'Permesso negato'];
+        }
+    }
+
     /*** READ ESITO */
 
     /**
@@ -483,8 +530,6 @@ class Esiti extends BaseClass
         if ($this->esitoViewPermission($id)) {
 
             $list = $this->getEsitoAnswers($id);
-
-            $id = Filters::int($id);
 
             foreach ($list as $answer) {
 
@@ -526,7 +571,7 @@ class Esiti extends BaseClass
      */
     public function readAnswer(int $id): void
     {
-        if(!$this->esitoReaded($id,$this->me_id)){
+        if (!$this->esitoReaded($id, $this->me_id)) {
             DB::query("INSERT INTO esiti_letture(esito, personaggio) VALUES('{$id}','{$this->me_id}')");
         }
     }
@@ -543,21 +588,14 @@ class Esiti extends BaseClass
         $id = Filters::int($post['id_record']);
 
         $id = Filters::int($id);
-        $data = $this->getEsito($id, 'master');
-        $master = Filters::int($data['master']);
 
-        if ($master == $this->me_id) {
-            $this->readAnswersMaster($id);
-        }
-
-        if ($this->esitoAnswerPermission($id)) {
+        if ($this->esitoAnswerPermission($id) && !$this->esitoClosed($id)) {
 
             $perm_dadi = ($this->esitiTiriEnabled() && ($this->esitiManage() || $this->esitiManageAll()));
 
             $contenuto = Filters::in($post['contenuto']);
             $dice_num = ($perm_dadi) ? Filters::int($post['dadi_num']) : 0;
             $dice_face = ($perm_dadi) ? Filters::int($post['dadi_face']) : 0;
-
 
             DB::query("INSERT INTO esiti_risposte(esito, autore, contenuto,dice_face,dice_num )
                         VALUES('{$id}','{$this->me_id}','{$contenuto}','{$dice_face}','{$dice_num}')  ");

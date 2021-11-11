@@ -22,9 +22,11 @@ $esiti = Esiti::getInstance();
     </div>
     <?= $esiti->esitiListPlayer(); ?>
     <div class="tr footer">
-        <a class="but_newd" href='main.php?page=servizi_esiti&op=new'>
-            Nuovo esito
-        </a> |
+        <?php if ($esiti->esitiFromPlayerEnabled()) { ?>
+            <a class="but_newd" href='main.php?page=servizi_esiti&op=new'>
+                Nuovo esito
+            </a> |
+        <?php } ?>
         <a href="/main.php?page=uffici">Indietro</a>
     </div>
 </div>

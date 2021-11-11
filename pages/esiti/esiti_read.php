@@ -31,22 +31,23 @@ if ($esiti->esitoViewPermission($id_record) && $esiti->esitoExist($id_record)) {
             <?= $esiti->renderEsitoAnswers($id_record); ?>
             <div style="height: 1px;clear: both"></div>
         </div>
-        <div class="give_answer form_container">
-            <form method="POST" class="form">
+        <?php if (!$esiti->esitoClosed($id_record)) { ?>
+            <div class="give_answer form_container">
+                <form method="POST" class="form">
 
-                <div class="single_input">
-                    <div class="label">Risposta</div>
-                    <textarea name="contenuto" required></textarea>
-                </div>
+                    <div class="single_input">
+                        <div class="label">Risposta</div>
+                        <textarea name="contenuto" required></textarea>
+                    </div>
 
-                <div class="single_input">
-                    <input type="submit" value="invia">
-                    <input type="hidden" name="op" value="answer">
-                    <input type="hidden" name="id_record" value="<?= $id_record; ?>">
-                </div>
-            </form>
-
-        </div>
+                    <div class="single_input">
+                        <input type="submit" value="invia">
+                        <input type="hidden" name="op" value="answer">
+                        <input type="hidden" name="id_record" value="<?= $id_record; ?>">
+                    </div>
+                </form>
+            </div>
+        <?php } ?>
     </div>
 
 
