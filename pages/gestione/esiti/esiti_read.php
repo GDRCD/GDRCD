@@ -3,6 +3,8 @@
 require_once(__DIR__ . '/../../../includes/required.php');
 
 $esiti = Esiti::getInstance();
+$abi = Abilita::getInstance();
+$chat = new Chat();
 $id_record = Filters::int($_GET['id_record']);
 
 $op = Filters::out($_POST['op']);
@@ -40,13 +42,25 @@ if ($esiti->esitoViewPermission($id_record) && $esiti->esitoExist($id_record)) {
                 </div>
 
                 <?php if ($esiti->esitiTiriEnabled()) { ?>
-                    <div class="single_input w-25">
+                    <div class="single_input w-33">
                         <div class="label">Numero dadi</div>
                         <input type="number" name="dadi_num">
                     </div>
-                    <div class="single_input w-25">
+                    <div class="single_input w-33">
                         <div class="label">Numero facce dado</div>
                         <input type="number" name="dadi_face">
+                    </div>
+                    <div class="single_input w-33">
+                        <div class="label">Abilità</div>
+                        <select name="abilita">
+                            <?=$abi->ListaAbilita();?>
+                        </select>
+                    </div>
+                    <div class="single_input w-33">
+                        <div class="label">Chat</div>
+                        <select name="chat">
+                            <?=$chat->chatList();?>
+                        </select>
                     </div>
                 <?php } ?>
 

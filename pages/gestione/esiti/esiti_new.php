@@ -3,6 +3,8 @@
 require_once(__DIR__ . '/../../../includes/required.php');
 
 $esiti = Esiti::getInstance();
+$abi = Abilita::getInstance();
+$chat = new Chat();
 $id_record = Filters::int($_GET['id_record']);
 
 $op = Filters::out($_POST['op']);
@@ -59,15 +61,19 @@ switch ($op) {
                 </div>
                 <input name="dice_face"/>
             </div>
-        <?php } ?>
-
-
-        <div class="single_input">
-            <div class='label'>
-                Note OFF
+            <div class="single_input">
+                <div class="label">Abilità</div>
+                <select name="abilita">
+                    <?=$abi->ListaAbilita();?>
+                </select>
             </div>
-            <input name="note"/>
-        </div>
+            <div class="single_input">
+                <div class="label">Chat</div>
+                <select name="chat">
+                    <?=$chat->chatList();?>
+                </select>
+            </div>
+        <?php } ?>
 
         <div class="form_info">
             Utilizzato solo per brevi chiarimenti

@@ -866,7 +866,7 @@ class Chat extends BaseClass
         return $html;
     }
 
-    /********** OGGETTI ********/
+    /********** LISTE ********/
 
     /**
      * @fn objectsList
@@ -894,6 +894,30 @@ class Chat extends BaseClass
         foreach ($objects as $object) {
             $id = Filters::int($object['id']);
             $nome = Filters::out($object['nome']);
+
+            $html .= "<option value='{$id}'>{$nome}</option>";
+        }
+
+        # Ritorno le option per la select
+        return $html;
+    }
+
+    /**
+     * @fn chatList
+     * @note Crea la lista delle chat
+     * @return string
+     */
+    public function chatList()
+    {
+        $html = '';
+
+        # Estraggo gli oggetti secondo i parametri
+        $chats = DB::query("SELECT * FROM mappa WHERE privata = 0 ORDER BY nome", 'result');
+
+        # Per ogni oggetto creo una option per la select
+        foreach ($chats as $chat) {
+            $id = Filters::int($chat['id']);
+            $nome = Filters::out($chat['nome']);
 
             $html .= "<option value='{$id}'>{$nome}</option>";
         }
@@ -1226,7 +1250,7 @@ class Chat extends BaseClass
             DB::query("INSERT INTO chat(stanza, mittente,destinatario,tipo,testo)
 								  VALUE('{$this->luogo}', 'Esiti','{$this->me}','S','{$testo_sussurro}')");
 
-            DB::query("INSERT INTO esiti_risultati(esito,personaggio,risultato) VALUES('{$id}','{$this->me_id}','{$result}')");
+            DB::query("INSERT INTO esiti_risultati(esito,personaggio,risultato,testo) VALUES('{$id}','{$this->me_id}','{$result}','{$testo_sussurro}')");
 
             return ['response' => true, 'error' => ''];
         } else {

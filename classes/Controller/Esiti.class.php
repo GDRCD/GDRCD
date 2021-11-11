@@ -264,6 +264,18 @@ class Esiti extends BaseClass
     }
 
     /**
+     * @fn getAnswerResults
+     * @note Ottiene la lista dei risultati di una risposta con dadi
+     * @param int $id
+     * @param string $val
+     * @return bool|int|mixed|string
+     */
+    public function getAnswerResults(int $id, string $val = '*')
+    {
+        return DB::query("SELECT {$val} FROM esiti_risultati WHERE esito='{$id}'",'result');
+    }
+
+    /**
      * @fn getEsitoAllAnswers
      * @note Ottiene i dati di una risposta ad un esito
      * @param int $id
@@ -275,7 +287,6 @@ class Esiti extends BaseClass
     {
         return DB::query("SELECT {$val} FROM esiti_risposte WHERE esito = {$id} ORDER BY data {$dir}", 'result');
     }
-
 
     /**
      * @fn getEsitoAnswers
@@ -484,14 +495,15 @@ class Esiti extends BaseClass
             $ms = Filters::in($post['contenuto']);
             $dice_num = Filters::int($post['dice_num']);
             $dice_face = Filters::int($post['dice_face']);
-            $note = Filters::in($post['note']);
+            $abilita = Filters::int($post['abilita']);
+            $chat = Filters::int($post['chat']);
 
             DB::query("INSERT INTO esiti(titolo, autore) VALUES('{$titolo}','{$this->me_id}')");
 
             $last_id = $this->getLastEsitoId();
 
-            DB::query("INSERT INTO esiti_risposte(esito, autore, contenuto, noteoff,dice_face,dice_num )
-                        VALUES('{$last_id}','{$this->me_id}','{$ms}','{$note}','{$dice_face}','{$dice_num}')  ");
+            DB::query("INSERT INTO esiti_risposte(esito, autore, contenuto,dice_face,dice_num,abilita,chat )
+                        VALUES('{$last_id}','{$this->me_id}','{$ms}','{$dice_face}','{$dice_num}','{$abilita}','{$chat}')  ");
 
             return ['response' => true, 'mex' => 'Esito creato con successo.'];
         } else {
@@ -546,21 +558,42 @@ class Esiti extends BaseClass
 
             foreach ($list as $answer) {
 
-                $this->readAnswer($answer['id']);
+                $id_answer = Filters::int($answer['id']);
+                $this->readAnswer($id_answer);
 
                 $autore = Filters::int($answer['autore']);
                 $mine = ($autore == $this->me_id) ? 'mine' : 'other';
                 $dice_face = Filters::int($answer['dice_face']);
                 $dice_num = Filters::int($answer['dice_num']);
+                $id_abi = Filters::int($answer['abilita']);
 
                 $html .= "<div class='single_answer {$mine}'>";
 
                 $html .= "<div class='text'>" . Filters::text($answer['contenuto']) . "</div>";
 
                 if (($dice_num > 0) && $this->esitiTiriEnabled()) {
+
+                    $abi = Abilita::getInstance();
+                    $abi_data = $abi->getAbilita($id_abi,'nome');
+                    $abi_name = Filters::out($abi_data['nome']);
+
                     $html .= "<div class='dice'>";
-                    $html .= "<span> Per questo esito sono richiesti {$dice_num} dadi da {$dice_face}. </span>";
+                    $html .= "<span> Sono richiesti {$dice_num} dadi da {$dice_face} su {$abi_name}. </span>";
                     $html .= "</div>";
+
+                    $results = $this->getAnswerResults($id_answer);
+
+                    foreach ($results as $result){
+
+                        $pg= Filters::int($result['personaggio']);
+                        $pg_name = Personaggio::nameFromId($pg);
+                        $res_text = Filters::text($result['testo']);
+                        $res_num = Filters::int($result['risultato']);
+
+                        $html .= "<div class='dice_result'> {$pg_name} : <span title='{$res_text}'>{$res_num}</span> </div>";
+                    }
+
+
                 }
 
                 $html .= "<div class='sub_text'>";
@@ -609,9 +642,11 @@ class Esiti extends BaseClass
             $contenuto = Filters::in($post['contenuto']);
             $dice_num = ($perm_dadi) ? Filters::int($post['dadi_num']) : 0;
             $dice_face = ($perm_dadi) ? Filters::int($post['dadi_face']) : 0;
+            $abilita = ($perm_dadi) ? Filters::int($post['abilita']) : 0;
+            $chat = ($perm_dadi) ? Filters::int($post['chat']) : 0;
 
-            DB::query("INSERT INTO esiti_risposte(esito, autore, contenuto,dice_face,dice_num )
-                        VALUES('{$id}','{$this->me_id}','{$contenuto}','{$dice_face}','{$dice_num}')  ");
+            DB::query("INSERT INTO esiti_risposte(esito, autore, contenuto,dice_face,dice_num,abilita,chat )
+                        VALUES('{$id}','{$this->me_id}','{$contenuto}','{$dice_face}','{$dice_num}','{$abilita}','{$chat}')  ");
 
             $resp = ['response' => true, 'mex' => 'Risposta aggiunta correttamente.'];
 
