@@ -304,7 +304,7 @@ class Esiti extends BaseClass
      */
     public function getAnswerResults(int $id, string $val = '*')
     {
-        return DB::query("SELECT {$val} FROM esiti_risultati WHERE esito='{$id}'", 'result');
+        return DB::query("SELECT {$val} FROM esiti_risposte_risultati WHERE esito='{$id}'", 'result');
     }
 
     /**
@@ -411,7 +411,7 @@ class Esiti extends BaseClass
      */
     public function esitoReaded(int $id, int $pg)
     {
-        $data = DB::query("SELECT count(id) AS tot FROM esiti_letture WHERE esito = {$id} AND personaggio='{$pg}'");
+        $data = DB::query("SELECT count(id) AS tot FROM esiti_risposte_letture WHERE esito = {$id} AND personaggio='{$pg}'");
 
         return ($data['tot'] > 0);
     }
@@ -440,8 +440,8 @@ class Esiti extends BaseClass
     public function haveNewResponse(int $id): int
     {
         $new = DB::query("SELECT count(esiti_risposte.id) as tot FROM esiti_risposte 
-                    LEFT JOIN esiti_letture ON (esiti_letture.esito = esiti_risposte.id AND esiti_letture.personaggio = '{$this->me_id}')
-                    WHERE esiti_risposte.esito = {$id} AND esiti_letture.id IS NULL");
+                    LEFT JOIN esiti_risposte_letture ON (esiti_risposte_letture.esito = esiti_risposte.id AND esiti_risposte_letture.personaggio = '{$this->me_id}')
+                    WHERE esiti_risposte.esito = {$id} AND esiti_risposte_letture.id IS NULL");
 
         return Filters::int($new['tot']);
     }
@@ -679,7 +679,7 @@ class Esiti extends BaseClass
     public function readAnswer(int $id): void
     {
         if (!$this->esitoReaded($id, $this->me_id)) {
-            DB::query("INSERT INTO esiti_letture(esito, personaggio) VALUES('{$id}','{$this->me_id}')");
+            DB::query("INSERT INTO esiti_risposte_letture(esito, personaggio) VALUES('{$id}','{$this->me_id}')");
         }
     }
 

@@ -1250,7 +1250,7 @@ class Chat extends BaseClass
             DB::query("INSERT INTO chat(stanza, mittente,destinatario,tipo,testo)
 								  VALUE('{$this->luogo}', 'Esiti','{$this->me}','S','{$testo_sussurro}')");
 
-            DB::query("INSERT INTO esiti_risultati(esito,personaggio,risultato,testo) VALUES('{$id}','{$this->me_id}','{$result}','{$testo_sussurro}')");
+            DB::query("INSERT INTO esiti_risposte_risultati(esito,personaggio,risultato,testo) VALUES('{$id}','{$this->me_id}','{$result}','{$testo_sussurro}')");
 
             return ['response' => true, 'error' => ''];
         } else {
@@ -1280,10 +1280,10 @@ class Chat extends BaseClass
                     FROM esiti 
                     LEFT JOIN esiti_risposte ON (esiti.id = esiti_risposte.esito)
                     LEFT JOIN esiti_personaggio ON (esiti.id = esiti_personaggio.esito)
-                    LEFT JOIN esiti_risultati ON (esiti_risultati.esito = esiti_risposte.id AND esiti_risultati.personaggio = '{$this->me_id}')
+                    LEFT JOIN esiti_risposte_risultati ON (esiti_risposte_risultati.esito = esiti_risposte.id AND esiti_risposte_risultati.personaggio = '{$this->me_id}')
                     WHERE esiti_risposte.chat = '{$luogo}' 
                     AND esiti_personaggio.id IS NOT NULL
-                    AND esiti_risultati.id IS NULL
+                    AND esiti_risposte_risultati.id IS NULL
                     AND esiti.closed = 0
                     ORDER BY esiti_risposte.data DESC", 'result');
 

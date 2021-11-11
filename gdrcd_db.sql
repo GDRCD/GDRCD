@@ -422,11 +422,41 @@ CREATE TABLE IF NOT EXISTS `esiti_risposte` (
   `contenuto` mediumtext NOT NULL,
   `data` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `sent` int(11) NOT NULL DEFAULT '0',
-  `id_ab` int(11) DEFAULT '0',
+  `abilita` int(11) DEFAULT '0',
   `dice_face` int(11) NOT NULL DEFAULT '0',
   `dice_num` int(11) NOT NULL DEFAULT '0',
   `modificatore` int(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `esiti_risposte_letture`
+--
+
+CREATE TABLE IF NOT EXISTS `esiti_risposte_letture` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `esito` int NOT NULL,
+    `personaggio` int NOT NULL,
+    `letto_il` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `esiti_risposte_risultati`
+--
+
+CREATE TABLE IF NOT EXISTS `esiti_risposte_risultati` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `personaggio` int NOT NULL,
+    `esito` int NOT NULL,
+    `risultato` int NOT NULL,
+    `testo` text DEFAULT NULL,
+    `lanciato_il` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
