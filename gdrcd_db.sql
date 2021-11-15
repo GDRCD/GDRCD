@@ -356,7 +356,8 @@ INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,
     ('QUEST_SUPER_PERMISSION',3,'Quest','Permessi speciali','Permesso minimo per modificare qualsiasi parte del pacchetto','int',1),
     ('QUEST_NOTIFY',0,'Quest','Notifiche quest','Definisce la possibilità di inviare messaggi automatici di avviso agli utenti che partecipano ad una quest','bool',1),
     ('TRAME_ENABLED',1,'Trame','Attivazione trame','Sistema trame attivo?','bool',1),
-    ('QUEST_RESULTS_FOR_PAGE',15,'Quest','Risultati per pagina','Numero risultati per pagina nella gestione delle quest.','int',1);
+    ('QUEST_RESULTS_FOR_PAGE',15,'Quest','Risultati per pagina','Numero risultati per pagina nella gestione delle quest.','int',1),
+    ('ONLINE_STATUS_ENABLED',15,'Online Status','Stato online avanzato','Stato online avanzato,attivo?','bool',1);
 
 -- --------------------------------------------------------
 
@@ -558,7 +559,8 @@ INSERT INTO `menu` (`menu_name`, `section`, `name`, `page`, `permission`) VALUES
   ('Gestione', 'Chat', 'Esiti in chat', 'gestione_esiti', 'MANAGE_OUTCOMES'),
   ('Gestione', 'Quest', 'Gestione Quest', 'gestione_quest', 'MANAGE_QUESTS'),
   ('Gestione', 'Quest', 'Gestione Trame', 'gestione_trame', 'MANAGE_TRAME_VIEW'),
-  ('Gestione', 'Esiti', 'Esiti', 'gestione_esiti', 'MANAGE_ESITI');
+  ('Gestione', 'Esiti', 'Esiti', 'gestione_esiti', 'MANAGE_ESITI'),
+  ('Gestione', 'Stato Online', 'Gestione stati', 'gestione_stato_online', 'MANAGE_ONLINE_STATUS');
 
 -- --------------------------------------------------------
 
@@ -765,7 +767,9 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
     ('MANAGE_TRAME','Permesso per la modifica delle trame'),
     ('MANAGE_TRAME_OTHER','Permesso per la modifica delle trame degli altri'),
     ('SCHEDA_EXP_VIEW','Permesso per la visualizzazione della pagina esperienza in scheda'),
-    ('SCHEDA_EXP_MANAGE','Permesso per la visualizzazione della pagina esperienza in scheda');
+    ('SCHEDA_EXP_MANAGE','Permesso per la visualizzazione della pagina esperienza in scheda'),
+    ('MANAGE_ONLINE_STATUS','Permesso per la gestione degli status online');
+
 
 
 -- --------------------------------------------------------

@@ -929,3 +929,40 @@ div.innertube {
     font-size: 10px;
     padding: 3px 0;
 }
+
+/** ONLINE STATUS ***/
+
+.floating_box_status{
+    position: absolute;
+    top:20px;
+    right: 20px;
+    width: 200px;
+    background: grey;
+    border:1px solid black;
+    border-radius: 15px;
+    min-height: 150px;
+    z-index: 999;
+    padding: 5px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.floating_box_status .subtitle{
+    margin-top: 5px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.floating_box_status ul{
+    list-style: none;
+    text-align: left;
+    margin-top: 5px;
+}
+
+.floating_box_status ul li {
+
+}
+
+.floating_box_status ul li input{
+    width: 20px;
+}
