@@ -13,6 +13,10 @@
         FROM personaggio LEFT JOIN razza ON personaggio.id_razza=razza.id_razza
         WHERE personaggio.nome = '".gdrcd_filter('in', $_REQUEST['pg'])."'";
     $personaggi = gdrcd_query($query, 'result');
+    $queryC = "SELECT personaggio.*, classe.sing_m, classe.sing_f, classe.id_classe, classe.bonus_car0, classe.bonus_car1, classe.bonus_car2, classe.bonus_car3, classe.bonus_car4, classe.bonus_car5
+        FROM personaggio LEFT JOIN classe ON personaggio.id_classe=classe.id_classe
+        WHERE personaggio.nome = '".gdrcd_filter('in', $_REQUEST['pg'])."'";
+    $personaggiC = gdrcd_query($queryC, 'result');
     //Se il personaggio non esiste
     if(gdrcd_query($personaggi, 'num_rows') == 0) {
         echo '<div class="error">'.gdrcd_filter('out', $MESSAGE['error']['unknown_character_sheet']).'</div>';
@@ -20,6 +24,9 @@
     }
     $personaggio = gdrcd_query($personaggi, 'fetch');
     gdrcd_query($personaggio, 'free');
+    //Might be an other way - (Variabile per visualizzare la classe)
+    $personaggioN = gdrcd_query($personaggiC, 'fetch');
+    gdrcd_query($personaggioN, 'free');
     $bonus_oggetti = gdrcd_query("SELECT SUM(oggetto.bonus_car0) AS BO0, SUM(oggetto.bonus_car1) AS BO1, SUM(oggetto.bonus_car2) AS BO2, SUM(oggetto.bonus_car3) AS BO3, SUM(oggetto.bonus_car4) AS BO4, SUM(oggetto.bonus_car5) AS BO5
             FROM oggetto JOIN clgpersonaggiooggetto ON oggetto.id_oggetto = clgpersonaggiooggetto.id_oggetto
             WHERE clgpersonaggiooggetto.nome = '".gdrcd_filter('in', $_REQUEST['pg'])."' AND clgpersonaggiooggetto.posizione > ".ZAINO."");
@@ -175,6 +182,18 @@
                             echo ($personaggio['sesso'] == 'f') ? gdrcd_filter('out', $personaggio['sing_f']) : gdrcd_filter('out', $personaggio['sing_m']);
                         } else {
                             echo gdrcd_filter('out', $PARAMETERS['names']['race']['sing'].' '.$MESSAGE['interface']['sheet']['profile']['no_race']);
+                        } ?>
+                    </div>
+                </div>
+                <div class="profilo_voce">
+                    <div class="profilo_voce_label">
+                        <?php echo gdrcd_filter('out', $PARAMETERS['names']['class']['sing']); ?>:
+                    </div>
+                    <div class="profilo_voce_valore">
+                        <?php if((empty($personaggioN['sing_f']) == false) || (empty($personaggioN['sing_m']) == false)) {
+                            echo ($personaggioN['sesso'] == 'f') ? gdrcd_filter('out', $personaggioN['sing_f']) : gdrcd_filter('out', $personaggioN['sing_m']);
+                        } else {
+                            echo gdrcd_filter('out', $PARAMETERS['names']['class']['sing'].' '.$MESSAGE['interface']['sheet']['profile']['no_class']);
                         } ?>
                     </div>
                 </div>

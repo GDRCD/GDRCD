@@ -82,6 +82,9 @@ $users = gdrcd_query("SELECT COUNT(nome) AS online FROM personaggio WHERE ora_en
                     <li>
                         <a href="index.php?page=homepage&content=user_razze"><?php echo $MESSAGE['homepage']['races']; ?></a>
                     </li>
+                    <li>
+                        <a href="index.php?page=homepage&content=user_classi"><?php echo $MESSAGE['homepage']['classes']; ?></a>
+                    </li>
                 </ul>
 
                 <div class="side_modules">
