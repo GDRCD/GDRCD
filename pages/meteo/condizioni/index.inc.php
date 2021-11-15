@@ -20,7 +20,7 @@
         <!-- Record -->
 
     <?php
-    $all=Condizioni::getAll();
+    $all=Meteo::getAllCondition();
     while($row =         DB::query($all, 'fetch')){
     ?>
 

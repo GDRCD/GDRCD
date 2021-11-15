@@ -1,5 +1,5 @@
  <?php
-$class =Stagioni::getInstance();
+$class =Meteo::getInstance();
 
 $op = Filters::out($_REQUEST['op']);
 
@@ -31,9 +31,9 @@ $op = Filters::out($_REQUEST['op']);
                 case 'save_edit': // Salvataggio modifiche
                 case 'delete': // Eliminazione
                 case 'save_new': //Inserimento nuova pagina
+                case 'add_condition': //Inserimento condizione
                     include('meteo/stagioni/save.inc.php');
                     break;
-
                 default: //Lista pagine
                     include('meteo/stagioni/index.inc.php');
                     break;
@@ -44,10 +44,3 @@ $op = Filters::out($_REQUEST['op']);
 }
 ?>
 </div>
- <script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
- <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet"/>
- <script>
-     $(".chosen-select").chosen({
-         no_results_text: "Inserire delle opzioni"
-     })
- </script>

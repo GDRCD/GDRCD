@@ -1004,3 +1004,12 @@ INSERT INTO `meteo_stagioni` (`id`, `nome`, `minima`,`massima`, `data_inizio`, `
     (2, 'Inverno',  '-5', '10', '2021-12-21', '07:00:00', '16:00:00'),
     (3, 'Primavera', '10', '21', '2022-03-21', '06:30:00', '18:00:00'),
     (4, 'Estate',  '18', '36', '2022-06-21', '05:30:00', '20:00:00');
+
+CREATE TABLE `meteo_stati_climatici` (
+	`id` INT NOT NULL AUTO_INCREMENT,
+	`stagione` INT NULL,
+	`condizione` INT NULL,
+	`percentuale` INT NULL,
+	PRIMARY KEY (`id`)
+)
+ENGINE=MyISAM  DEFAULT CHARSET=latin1;

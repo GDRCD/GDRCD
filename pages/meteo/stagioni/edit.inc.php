@@ -1,5 +1,5 @@
 <?php
-$condizione=Stagioni::getOne(Filters::out($_POST['id']));
+$condizione=Meteo::getOneSeason(Filters::out($_POST['id']));
 ?>
 <form class="form"
       action="main.php?page=gestione_meteo_stagioni" method="post">
@@ -35,3 +35,52 @@ $condizione=Stagioni::getOne(Filters::out($_POST['id']));
         <input type="hidden" name="id" value="<?php echo Filters::out($condizione['id']); ?>">
     </div>
 </form>
+<hr>
+<form class="form"
+      action="main.php?page=gestione_meteo_stagioni" method="post">
+    <div class="label">Condizione meteo: </div>
+    <select name="condizione" id="condizione" >
+        <?php
+        $all= Meteo::getAllCondition();
+        while ($row = DB::query($all, 'fetch')){
+            echo "<option value='{$row['id']}'>{$row['nome']}</option>";
+        }
+        ?>
+    </select>
+    <div class="label">Percentuale: </div>
+    <input type="number" name="percentuale" id="percentuale">
+    <input type="hidden" name="op" value="add_condition">
+    <input type="hidden" name="id" value="<?php echo Filters::out($condizione['id']); ?>">
+    <input type="submit" name="submit" value="Aggiungi condizione"/>
+</form>
+
+<div class="fake-table">
+    <div class="tr header">
+        <div class="td">
+            <div class="titoli_elenco">Condizione</div>
+        </div>
+        <div class="td">
+            <div class="titoli_elenco">Percentuale</div>
+        </div>
+        <div class="td">
+            <div class="titoli_elenco">Elimina</div>
+        </div>
+
+    </div>
+    <?php
+    $all= Meteo::getAllState(Filters::out($condizione['id']));
+    while ($row = DB::query($all, 'fetch')){
+         echo '<div class="tr">
+                    <div class="td">
+                    
+                    </div>
+                     <div class="td">
+                    
+                    </div>
+                     <div class="td">
+                    
+                    </div>
+                 </div>';
+    }
+    ?>
+</div>

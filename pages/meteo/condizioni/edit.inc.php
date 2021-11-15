@@ -1,5 +1,5 @@
 <?php
-$condizione=Condizioni::getOne(Filters::out($_POST['id']));
+$condizione=Meteo::getOneCondition(Filters::out($_POST['id']));
 ?>
 <form class="form"
       action="main.php?page=gestione_meteo_condizioni" method="post">

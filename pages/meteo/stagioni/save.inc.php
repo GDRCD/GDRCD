@@ -10,7 +10,7 @@ switch ($_POST['op']) {
         $data_inizio =Filters::in( $_POST['data_inizio']);
         $alba= Filters::in($_POST['alba']);
         $tramonto = Filters::in( $_POST['tramonto']);
-        $class->new($nome, $minima, $massima, $data_inizio, $alba, $tramonto);
+        $class->newSeason($nome, $minima, $massima, $data_inizio, $alba, $tramonto);
         break;
         #Modifica condizione
     case 'save_edit':
@@ -20,14 +20,20 @@ switch ($_POST['op']) {
         $data_inizio = Filters::in($_POST['data_inizio']);
         $alba= Filters::in($_POST['alba']);
         $tramonto = Filters::in($_POST['tramonto']);
-        $condizioni = implode(",",Filters::in($_POST['condizioni']));
+
         $id = Filters::in( $_POST['id']);
-        $class->edit($nome, $minima, $massima, $data_inizio, $alba, $tramonto, $id, $condizioni);
+        $class->editSeason($nome, $minima, $massima, $data_inizio, $alba, $tramonto, $id);
         break;
     # Delete condizione
     case 'delete':
         $id=Filters::in( $_POST['id']);
-        $class->delete($id);
+        $class->deleteSeason($id);
+        break;
+    case 'add_condition':
+         $id_stagione= Filters::in($_POST['id']);
+         $id_condizione= Filters::in($_POST['condizione']);
+         $percentuale= Filters::in($_POST['percentuale']);
+        $class->newClimaticState($id_stagione, $id_condizione, $percentuale);
         break;
 
     default:
@@ -40,6 +46,6 @@ echo '<div class="warning">' . Filters::out( $MESSAGE['warning']['done']) . '</d
 ?>
 <!-- Link a piè di pagina -->
 <div class="link_back">
-    <a href="main.php?page=gestione_meteo_stagioni"><?php echo Filters::out(
+    <a href="main.php?page=gestione_meteo_stagioni"  ><?php echo Filters::out(
             $MESSAGE['interface']['user']['link']['back'] ); ?></a>
 </div>

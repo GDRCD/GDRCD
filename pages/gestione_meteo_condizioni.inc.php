@@ -1,5 +1,5 @@
      <?php
-$class =Condizioni::getInstance();
+$class =Meteo::getInstance();
 $op = Filters::out($_REQUEST['op']);
 ?>
     <!-- Titolo della pagina -->

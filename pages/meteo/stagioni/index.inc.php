@@ -29,7 +29,7 @@
         <!-- Record -->
 
     <?php
-    $all=$class->getAll();
+    $all=$class->getAllSeason();
     while($row = DB::query($all, 'fetch')){
     ?>
 
