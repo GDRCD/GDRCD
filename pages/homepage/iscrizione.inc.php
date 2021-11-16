@@ -114,6 +114,29 @@
                                     </a>
                                 </div>
                             <?php } ?>
+                             <!-- classe -->
+                             <div class="form_label">
+                                <?php echo gdrcd_filter('out', $PARAMETERS['names']['class']['sing'] . ' ' . $MESSAGE['register']['fields']['class']); ?>
+                            </div>
+                            <?php $result = gdrcd_query("SELECT id_classe, nome_classe FROM classe WHERE iscrizione=1 ORDER BY nome_classe", 'result'); ?>
+                            <div class="form_field">
+                                <select name="classe">
+                                    <?php while ($row = gdrcd_query($result, 'fetch')) { ?>
+                                        <option value="<?php echo $row['id_classe']; ?>" <?php if (gdrcd_filter('get', $_POST['classe']) == $row['id_classe']) {
+                                            echo 'SELECTED';
+                                        } ?>>
+                                            <?php echo gdrcd_filter('out', $row['nome_classe']); ?>
+                                        </option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            <?php if ($PARAMETERS['mode']['racialinfo'] == 'ON') { ?>
+                                <div class="form_info">
+                                    <a href="index.php?page=user_classi" target="_new">
+                                        <?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['class_info']); ?>
+                                    </a>
+                                </div>
+                            <?php } ?>
                             <!-- Caratteristiche -->
                             <div class="form_label">
                                 <?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['stats']); ?>
@@ -275,6 +298,15 @@
                         echo '<div class="error">Razza non disponibile all\'iscrizione.</div>';
                     }
 
+                    $class_id = gdrcd_filter('num', $_POST['classe']);
+
+                    $class_data = gdrcd_query("SELECT iscrizione FROM classe WHERE id_classe='{$class_id}' LIMIT 1");
+                    $class_iscr = gdrcd_filter('num', $class_data['iscrizione']);
+                    if (!$class_iscr) {
+                        $ok = false;
+                        echo '<div class="error">classe non disponibile all\'iscrizione.</div>';
+                    }
+
                     if ($ok == false) { ?>
                         <div class="form_gioco">
                             <form action="<?php echo $_SERVER['SCRIPT_NAME'] . '?' . $_SERVER['QUERY_STRING']; ?>"
@@ -291,6 +323,8 @@
                                            value="<?php echo gdrcd_filter('out', $_POST['genere']) ?>"/>
                                     <input type="hidden" name="razza"
                                            value="<?php echo gdrcd_filter('num', $_POST['razza']) ?>"/>
+                                    <input type="hidden" name="classe"
+                                           value="<?php echo gdrcd_filter('num', $_POST['classe']) ?>"/>
                                     <input type="hidden" name="car0"
                                            value="<?php echo gdrcd_filter('num', $_POST['car0']) ?>"/>
                                     <input type="hidden" name="car1"
@@ -312,6 +346,10 @@
                         $r_gen = ($_POST['genere'] == 'm') ? 'm' : 'f';
 
                         $razza = gdrcd_query("SELECT sing_" . gdrcd_filter('in', $r_gen) . " AS nome_razza FROM razza WHERE id_razza = " . (0 + gdrcd_filter('num', $_POST['razza'])) . " LIMIT 1");
+
+                        $c_gen = ($_POST['genere'] == 'm') ? 'm' : 'f';
+
+                        $classe = gdrcd_query("SELECT sing_" . gdrcd_filter('in', $r_gen) . " AS nome_classe FROM classe WHERE id_classe = " . (0 + gdrcd_filter('num', $_POST['classe'])) . " LIMIT 1");
                         ?>
                         <div class="elenco_gioco">
                             <table>
@@ -352,6 +390,13 @@
                                     <td class='casella_elemento'>
                                         <div class='elementi_elenco'>
                                             <?php echo gdrcd_filter('out', $razza['nome_razza']) . '&nbsp;' ?>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class='casella_elemento'>
+                                        <div class='elementi_elenco'>
+                                            <?php echo gdrcd_filter('out', $classe['nome_classe']) . '&nbsp;' ?>
                                         </div>
                                     </td>
                                 </tr>
@@ -414,6 +459,8 @@
                                            value="<?php echo gdrcd_filter('out', $_POST['genere']) ?>"/>
                                     <input type="hidden" name="razza"
                                            value="<?php echo gdrcd_filter('num', $_POST['razza']) ?>"/>
+                                    <input type="hidden" name="classe"
+                                           value="<?php echo gdrcd_filter('num', $_POST['classe']) ?>"/>
                                     <input type="hidden" name="car0"
                                            value="<?php echo gdrcd_filter('num', $_POST['car0']) ?>"/>
                                     <input type="hidden" name="car1"
@@ -444,6 +491,8 @@
                                            value="<?php echo gdrcd_filter('out', $_POST['genere']) ?>"/>
                                     <input type="hidden" name="razza"
                                            value="<?php echo gdrcd_filter('num', $_POST['razza']) ?>"/>
+                                    <input type="hidden" name="classe"
+                                           value="<?php echo gdrcd_filter('num', $_POST['classe']) ?>"/>      
                                     <input type="hidden" name="car0"
                                            value="<?php echo gdrcd_filter('num', $_POST['car0']) ?>"/>
                                     <input type="hidden" name="car1"
@@ -540,8 +589,8 @@
 
                     if ($ok) {
                             $pass = gdrcd_genera_pass();
-                            gdrcd_query("INSERT INTO personaggio (nome, cognome, pass, data_iscrizione, email, sesso, id_razza, car0, car1, car2, car3, car4, car5, salute, salute_max, soldi, esperienza $lastpasschange_field) 
-                            VALUES ('" . gdrcd_safe_name($_POST['nome']) . "', '" . gdrcd_safe_name($_POST['cognome']) . "', '" . gdrcd_encript($pass) . "', NOW(), '" . gdrcd_encript($email) . "', '" . gdrcd_filter('in', $_POST['genere']) . "', " . gdrcd_filter('num', $_POST['razza']) . ", " . gdrcd_filter('num', $_POST['car0']) . ", " . gdrcd_filter('num', $_POST['car1']) . ", " . gdrcd_filter('num', $_POST['car2']) . ", " . gdrcd_filter('num', $_POST['car3']) . ", " . gdrcd_filter('num', $_POST['car4']) . ", " . gdrcd_filter('num', $_POST['car5']) . ", " . gdrcd_filter('num', $PARAMETERS['settings']['max_hp']) . ", " . gdrcd_filter('num', $PARAMETERS['settings']['max_hp']) . ", " . gdrcd_filter('num', $PARAMETERS['settings']['first_money']) . ", " . gdrcd_filter('num', $PARAMETERS['settings']['first_px']) . " $lastpasschange_value)");
+                            gdrcd_query("INSERT INTO personaggio (nome, cognome, pass, data_iscrizione, email, sesso, id_razza, id_classe, car0, car1, car2, car3, car4, car5, salute, salute_max, soldi, esperienza $lastpasschange_field) 
+                            VALUES ('" . gdrcd_safe_name($_POST['nome']) . "', '" . gdrcd_safe_name($_POST['cognome']) . "', '" . gdrcd_encript($pass) . "', NOW(), '" . gdrcd_encript($email) . "', '" . gdrcd_filter('in', $_POST['genere']) . "', " . gdrcd_filter('num', $_POST['razza']) . ", " . gdrcd_filter('num', $_POST['classe']) . ", " . gdrcd_filter('num', $_POST['car0']) . ", " . gdrcd_filter('num', $_POST['car1']) . ", " . gdrcd_filter('num', $_POST['car2']) . ", " . gdrcd_filter('num', $_POST['car3']) . ", " . gdrcd_filter('num', $_POST['car4']) . ", " . gdrcd_filter('num', $_POST['car5']) . ", " . gdrcd_filter('num', $PARAMETERS['settings']['max_hp']) . ", " . gdrcd_filter('num', $PARAMETERS['settings']['max_hp']) . ", " . gdrcd_filter('num', $PARAMETERS['settings']['first_money']) . ", " . gdrcd_filter('num', $PARAMETERS['settings']['first_px']) . " $lastpasschange_value)");
 
                             if ($PARAMETERS['mode']['emailconfirmation'] == 'ON') {
                                 echo '<div class="page_title"><h2>' . gdrcd_filter('out', $MESSAGE['register']['welcome']['message']['ok']) . '</h2></div>';

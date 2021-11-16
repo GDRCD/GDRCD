@@ -207,7 +207,9 @@ $PARAMETERS['names']['guild_name']['members'] = 'Affiliati'; //componenti della 
 $PARAMETERS['names']['guild_name']['type'] = 'Allineamento'; //nome del tipo gilda nel gioco (singolare)
 $PARAMETERS['names']['race']['sing'] = 'Razza'; //nome delle razze nel gioco (singolare)
 $PARAMETERS['names']['race']['plur'] = 'Razze'; //nome delle razze nel gioco (plurale)
-$PARAMETERS['names']['race']['lead'] = 'Caporazza'; //nome del capo razza nel gioco (plurale)
+$PARAMETERS['names']['class']['sing'] = 'Classe'; //nome delle classi nel gioco (singolare)
+$PARAMETERS['names']['class']['plur'] = 'Classi'; //nome delle classi nel gioco (plurale)
+$PARAMETERS['names']['class']['lead'] = 'Capoclasse'; //nome del capo razza nel gioco (plurale)
 $PARAMETERS['names']['master']['sing'] = 'Master'; //titolo degli arbitri (singolare)
 $PARAMETERS['names']['master']['plur'] = 'Master'; //titolo degli arbitri (plurale)
 $PARAMETERS['names']['moderators']['sing'] = 'Admin'; //titolo dei moderatori (singolare)
@@ -473,6 +475,9 @@ $PARAMETERS['mode']['emailconfirmation'] = 'ON';
 $PARAMETERS['mode']['racialinfo'] = 'ON';
 //ON: In fase di iscrizione e' presente un link alla descrizione della razza.
 //OFF: In fase di iscrizione non è presente un link alla descrizione della razza (Se il gioco non prevede razze e la funzione razza è utilizzata in altro modo, come professione, nazionalità o altro scegliere OFF).
+$PARAMETERS['mode']['classinfo'] = 'ON';
+//ON: In fase di iscrizione e' presente un link alla descrizione della classe.
+//OFF: In fase di iscrizione non è presente un link alla descrizione della classe (Se il gioco non prevede razze e la funzione classe è utilizzata in altro modo, come professione, nazionalità o altro scegliere OFF).
 $PARAMETERS['mode']['chaticons'] = 'ON';
 //ON: In chat sono visualizzate le icone relative a sesso e razza del pg.
 //OFF: In chat non sono visualizzate le icone relative a sesso, razza e gilda del pg.
@@ -692,6 +697,9 @@ $PARAMETERS['user']['delete']['access_level'] = SUPERUSER;
 $PARAMETERS['user']['races']['text'] = 'Elenco razze';
 $PARAMETERS['user']['races']['url'] = 'main.php?page=user_razze';
 $PARAMETERS['user']['races']['access_level'] = USER;
+$PARAMETERS['user']['classes']['text'] = 'Elenco classi';
+$PARAMETERS['user']['classes']['url'] = 'main.php?page=user_classi';
+$PARAMETERS['user']['classes']['access_level'] = USER;
 $PARAMETERS['user']['rules']['text'] = 'Regolamento';
 $PARAMETERS['user']['rules']['url'] = 'main.php?page=user_regolamento';
 $PARAMETERS['user']['rules']['access_level'] = USER;

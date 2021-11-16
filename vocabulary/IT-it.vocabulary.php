@@ -23,6 +23,7 @@ $MESSAGE['homepage']['registration'] = 'Iscrizione';
 $MESSAGE['homepage']['storyline'] = 'Ambientazione';
 $MESSAGE['homepage']['rules'] = 'Regolamento';
 $MESSAGE['homepage']['races'] = 'Razze Di Gioco';
+$MESSAGE['homepage']['classes'] = 'Classi Di Gioco';
 $MESSAGE['homepage']['info']['webm'] = 'Responsabile legale';
 $MESSAGE['homepage']['info']['dbadmin'] = 'Amministratore del Database';
 $MESSAGE['homepage']['info']['email'] = 'Contatti';
@@ -61,6 +62,8 @@ $MESSAGE['register']['fields']['gender_m'] = 'Uomo';
 $MESSAGE['register']['fields']['gender_f'] = 'Donna';
 $MESSAGE['register']['fields']['race'] = 'del personaggio';
 $MESSAGE['register']['fields']['race_info'] = 'Visualizza le descrizioni...';
+$MESSAGE['register']['fields']['class'] = 'del personaggio';
+$MESSAGE['register']['fields']['class_info'] = 'Visualizza le descrizioni...';
 $MESSAGE['register']['fields']['stats'] = 'Caratteristiche';
 $MESSAGE['register']['fields']['stats_info'] = 'La somma dei punteggi deve essere';
 $MESSAGE['register']['summary'] = 'Riepilogo';
@@ -143,6 +146,7 @@ $MESSAGE['interface']['sheet']['box_title']['background'] = 'Carattere e storia 
 $MESSAGE['interface']['sheet']['box_title']['relationships'] = 'Affetti';
 $MESSAGE['interface']['sheet']['profile']['role'] = 'Incarico utente';
 $MESSAGE['interface']['sheet']['profile']['no_race'] = 'sconosciuta';
+$MESSAGE['interface']['sheet']['profile']['no_class'] = 'sconosciuta';
 $MESSAGE['interface']['sheet']['profile']['occupation'] = 'Occupazione';
 $MESSAGE['interface']['sheet']['profile']['experience'] = 'Esperienza';
 $MESSAGE['interface']['sheet']['profile']['status'] = 'Status';
@@ -379,6 +383,7 @@ $MESSAGE['interface']['pg_list']['search']['img'] = 'Avatar Chat';
 $MESSAGE['interface']['pg_list']['search']['personaggio'] = 'Personaggio';
 $MESSAGE['interface']['pg_list']['search']['sesso'] = 'Sesso';
 $MESSAGE['interface']['pg_list']['search']['razza'] = 'Razza';
+$MESSAGE['interface']['pg_list']['search']['classe'] = 'Classe';
 $MESSAGE['interface']['pg_list']['search']['limit'] = 'Limite personaggio estratti. Inserire 0 per ottenerli tutti.';
 $MESSAGE['interface']['pg_list']['search']['submit'] = 'Cerca';
 /*Elenco abilita*/
@@ -539,6 +544,29 @@ $MESSAGE['interface']['administration']['races']['visible'] = 'Visibile';
 $MESSAGE['interface']['administration']['races']['avalaible'] = 'Iscrizione';
 $MESSAGE['interface']['administration']['races']['link']['back'] = 'Torna all\'elenco';
 $MESSAGE['interface']['administration']['races']['link']['new'] = 'Crea una nuova ' . strtolower($PARAMETERS['names']['race']['sing']) . '';
+
+/*Classi*/
+$MESSAGE['interface']['administration']['classes']['page_name'] = 'Gestione ' . strtolower($PARAMETERS['names']['class']['plur']);
+$MESSAGE['interface']['administration']['classes']['name'] = 'Nome plurale';
+$MESSAGE['interface']['administration']['classes']['name_sm'] = 'Singolare maschile';
+$MESSAGE['interface']['administration']['classes']['name_sf'] = 'Singolare femminile';
+$MESSAGE['interface']['administration']['classes']['is_visible'] = 'Visibile all\'iscrizione';
+$MESSAGE['interface']['administration']['classes']['is_visible_info'] = 'La ' . strtolower($PARAMETERS['names']['class']['sing']) . ' sarà visibile al momento dell\'iscrizione anche qualora non sia selezionabile.';
+$MESSAGE['interface']['administration']['classes']['is_avalaible'] = 'Disponibile all\'iscrizione';
+$MESSAGE['interface']['administration']['classes']['is_avalaible_info'] = 'Se selezionata, la classe è liberamente disponibile per la creazione del personaggio.';
+$MESSAGE['interface']['administration']['classes']['bonus'] = 'Bonus raziale';
+$MESSAGE['interface']['administration']['classes']['image'] = 'Immagine';
+$MESSAGE['interface']['administration']['classes']['infos'] = 'Descrizione e caratterizzazione';
+$MESSAGE['interface']['administration']['classes']['icon'] = 'Icona chat';
+$MESSAGE['interface']['administration']['classes']['site'] = 'Sito esterno';
+$MESSAGE['interface']['administration']['classes']['submit']['edit'] = "Modifica";
+$MESSAGE['interface']['administration']['classes']['submit']['undo'] = "Annulla";
+$MESSAGE['interface']['administration']['classes']['submit']['insert'] = "Crea";
+$MESSAGE['interface']['administration']['classes']['visible'] = 'Visibile';
+$MESSAGE['interface']['administration']['classes']['avalaible'] = 'Iscrizione';
+$MESSAGE['interface']['administration']['classes']['link']['back'] = 'Torna all\'elenco';
+$MESSAGE['interface']['administration']['classes']['link']['new'] = 'Crea una nuova ' . strtolower($PARAMETERS['names']['class']['sing']) . '';
+
 /*Gilde*/
 $MESSAGE['interface']['administration']['guilds']['page_name'] = 'Gestione ' . strtolower($PARAMETERS['names']['guild_name']['plur']) . ' e ruoli';
 $MESSAGE['interface']['administration']['guilds']['link']['jobs'] = 'Gestici i lavori indipentendi';
@@ -672,6 +700,9 @@ $MESSAGE['interface']['user']['name']['change_to'] = 'Cambia a...';
 /*Elenco razze*/
 $MESSAGE['interface']['user']['races']['page_name'] = 'Elenco';
 $MESSAGE['interface']['user']['races']['bonus'] = 'Bonus';
+/*Elenco classi*/
+$MESSAGE['interface']['user']['classes']['page_name'] = 'Elenco';
+$MESSAGE['interface']['user']['classes']['bonus'] = 'Bonus';
 /*Comune*/
 $MESSAGE['interface']['user']['link']['back'] = 'Indietro...';
 /*Statistiche*/
