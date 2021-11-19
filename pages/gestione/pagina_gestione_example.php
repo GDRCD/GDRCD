@@ -2,24 +2,24 @@
 
 require_once(__DIR__.'/../../includes/required.php'); # Inserisco il required se non presente, per futuro spostamento in modale/ajax
 
-$example = Example::getInstance(); # Inizializzo classe
+$cls = Example::getInstance(); # Inizializzo classe
 
-if($example->managePermission()){ # Metodo di controllo per accesso alla pagina di gestione
+if($cls->managePermission()){ # Metodo di controllo per accesso alla pagina di gestione
 
 
     if(isset($_POST['op'])){ # Se ho richiesto un'operazione
         switch ($_POST['op']){ # In base al tipo di operazione eseguo insert/edit/delete/altro
             case 'op_insert':
-                $resp = $example->insertOp($_POST);
+                $resp = $cls->insertOp($_POST);
                 break;
             case 'op_edit':
-                $resp = $example->editOp($_POST);
+                $resp = $cls->editOp($_POST);
                 break;
             case 'op_delete':
-                $resp = $example->deleteOp($_POST);
+                $resp = $cls->deleteOp($_POST);
                 break;
             case 'op_other':
-                $resp = $example->altroOp($_POST);
+                $resp = $cls->altroOp($_POST);
                 break;
         }
     }
