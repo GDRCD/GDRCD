@@ -560,7 +560,8 @@ INSERT INTO `menu` (`menu_name`, `section`, `name`, `page`, `permission`) VALUES
   ('Gestione', 'Quest', 'Gestione Quest', 'gestione_quest', 'MANAGE_QUESTS'),
   ('Gestione', 'Quest', 'Gestione Trame', 'gestione_trame', 'MANAGE_TRAME_VIEW'),
   ('Gestione', 'Esiti', 'Esiti', 'gestione_esiti', 'MANAGE_ESITI'),
-  ('Gestione', 'Stato Online', 'Gestione stati', 'gestione_stato_online', 'MANAGE_ONLINE_STATUS');
+  ('Gestione', 'Stato Online', 'Gestione stati', 'gestione_stato_online', 'MANAGE_ONLINE_STATUS'),
+  ('Gestione', 'Stato Online', 'Gestione tipi stati', 'gestione_tipo_stato_online', 'MANAGE_ONLINE_STATUS');
 
 -- --------------------------------------------------------
 
@@ -724,6 +725,41 @@ INSERT INTO `oggetto` (`id_oggetto`, `tipo`, `nome`, `creatore`, `data_inserimen
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `online_status`
+--
+
+CREATE TABLE `online_status` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `type` varchar(255) NOT NULL,
+    `text` varchar(255) NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `online_status_type`
+--
+
+CREATE TABLE `online_status_type` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `label` varchar(255) NOT NULL,
+    `request` varchar(255) NOT NULL,
+    `active` tinyint(1) DEFAULT 1,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Dump dei dati per la tabella `oggetto`
+--
+
+INSERT INTO `online_status_type`(`label`,`request`) VALUES
+('action_time','Tempo online?'),
+('online_time','Tempo azione medio?');
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `permessi_custom`
 --
 
@@ -872,6 +908,7 @@ CREATE TABLE IF NOT EXISTS `personaggio` (
   `storia` text,
   `stato` varchar(255) DEFAULT 'nessuna',
   `online_status` varchar(255) DEFAULT NULL,
+  `online_last_refresh` DATETIME DEFAULT NULL,
   `disponibile` tinyint(1) NOT NULL DEFAULT '1',
   `url_img` varchar(255) DEFAULT 'imgs/avatars/empty.png',
   `url_img_chat` varchar(255) NOT NULL DEFAULT ' ',
@@ -909,6 +946,20 @@ CREATE TABLE IF NOT EXISTS `personaggio` (
 INSERT INTO `personaggio` (`id`,`nome`, `cognome`, `pass`, `ultimo_cambiopass`, `data_iscrizione`, `email`, `permessi`, `ultima_mappa`, `ultimo_luogo`, `esilio`, `data_esilio`, `motivo_esilio`, `autore_esilio`, `sesso`, `id_razza`, `descrizione`, `affetti`, `stato`, `online_status`, `disponibile`, `url_img`, `url_img_chat`, `url_media`, `blocca_media`, `esperienza`, `car0`, `car1`, `car2`, `car3`, `car4`, `car5`, `salute`, `salute_max`, `data_ultima_gilda`, `soldi`, `banca`, `ultimo_stipendio`, `last_ip`, `is_invisible`, `ultimo_refresh`, `ora_entrata`, `ora_uscita`, `posizione`) VALUES
 (1,'Super', 'User', '$P$BcH1cP941XHOf0X61wVWWjzXqcCi2a/', NULL, '2011-06-04 00:47:48', '$P$BNZYtz9JOQE.O4Tv7qZyl3SzIoZzzR.', 5, 1, -1, '2009-01-01', '2009-01-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 7, 8, 6, 5, 6, 5, 100, 100, '2009-01-01 00:00:00', 300, 50000, '2009-01-01', '127.0.0.1', 0, '2021-10-08 00:28:13', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1),
 (2,'Test', 'Di FunzionaliÃ ', '$P$BUoa19QUuXsgIDlhGC3chR/3Q7hoRy0', NULL, '2011-06-04 00:47:48', '$P$Bd1amPCKkOF9GdgYsibZ96U92D5CtR0', 0, 1, -1, '2009-01-01', '2009-01-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 7, 8, 6, 5, 6, 5, 100, 100, '2009-01-01 00:00:00', 50, 50, '2009-01-01', '127.0.0.1', 0, '2009-01-01 00:00:00', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `personaggio_quest`
+--
+
+CREATE TABLE `personaggio_online_status` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `personaggio` varchar(255) NOT NULL,
+    `type` int NOT NULL,
+    `value` varchar(255) NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 

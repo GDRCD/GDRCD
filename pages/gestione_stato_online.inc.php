@@ -1,1 +1,1 @@
-<?php require_once(__DIR__.'/gestione/online_status/gestione_status_index.php'); ?>
+<?php require_once(__DIR__ . '/gestione/online_status/gestione_status.php'); ?>

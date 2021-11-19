@@ -495,7 +495,7 @@ div.innertube {
 
 .gestione_pagina .gestione_incipit .subtitle_gst,
 .servizi_pagina .servizi_incipit .subtitle_gst,
-.general_incipit .subtitle_gst {
+.general_incipit .subtitle {
     font-size: 15px;
     font-weight: bold;
 }
