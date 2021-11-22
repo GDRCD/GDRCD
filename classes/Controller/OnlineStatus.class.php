@@ -48,7 +48,7 @@ class OnlineStatus extends BaseClass{
     }
 
     public function getStatysByType($type,$val = '*'){
-        return DB::query("SELECT {$val} FROM online_status WHERE type='{$type}'",'result');
+        return DB::query("SELECT {$val} FROM online_status WHERE type='{$type}' ORDER by text",'result');
     }
 
     /**

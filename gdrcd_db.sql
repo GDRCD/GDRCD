@@ -754,8 +754,8 @@ CREATE TABLE `online_status_type` (
 --
 
 INSERT INTO `online_status_type`(`label`,`request`) VALUES
-('action_time','Tempo online?'),
-('online_time','Tempo azione medio?');
+('Tempo Login','Tempo online?'),
+('Tempo Azione','Tempo azione medio?');
 
 -- --------------------------------------------------------
 
