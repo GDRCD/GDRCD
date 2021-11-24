@@ -4,9 +4,13 @@ require_once(__DIR__.'/../../includes/required.php');
 
 $online = OnlineStatus::getInstance();
 
+$cls = ($online->refreshOnLogin()) ? 'minimized' : '';
+
 ?>
 
-<div class="floating_box_status">
+<div class="floating_box_status <?=$cls;?>">
+    <div class="change-dimension">X</div>
+
     <form id="online_time_form">
         <?=$online->renderOnlineStatusOptions();?>
         <input type="submit" value="Seleziona">

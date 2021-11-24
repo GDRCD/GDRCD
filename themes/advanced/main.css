@@ -947,6 +947,32 @@ div.innertube {
     text-align: center;
 }
 
+.floating_box_status.minimized{
+    width: 20px !important;
+    height: 20px !important;
+    overflow: hidden;
+    min-height: 0;
+}
+
+
+.floating_box_status.minimized > *{
+    display: none;
+}
+
+.floating_box_status .change-dimension{
+    display: block !important;
+    cursor: pointer;
+    background: white;
+    color: black;
+    border-radius: 100%;
+    position: absolute;
+    right: -1px;
+    top: -1px;
+    height: 20px;
+    width: 20px;
+    line-height: 20px;
+}
+
 .floating_box_status .subtitle{
     margin-top: 5px;
     font-size: 13px;
