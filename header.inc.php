@@ -121,8 +121,8 @@ if ((($table == 0) && isset($dont_check) && !$dont_check) && isset($check_for_up
     exit();
 }
 
-if(Functions::get_constant('ONLINE_STATUS_ENABLED')) {
-    $online_status = OnlineStatus::getInstance();
+$online_status = OnlineStatus::getInstance();
+if($online_status->isEnabled()) {
 
     if ($online_status->onlineStatusNeedRefresh()) {
         require_once(__DIR__ . '/pages/online_status/choose_status.php');

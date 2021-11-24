@@ -1,3 +1,11 @@
+<?php
+
+require_once(__DIR__.'/../includes/required.php');
+$status = OnlineStatus::getInstance();
+
+?>
+
+
 <!-- Box presenti-->
 <div class="pagina_presenti_estesa">
     <div class="page_title">
@@ -96,8 +104,8 @@
                 }//else
             }//else
 
-            if(Functions::get_constant('ONLINE_STATUS_ENABLED')){
-                echo OnlineStatus::getPgStatusOnlinePresenti($id_pg);
+            if($status->isEnabled()){
+                echo $status->renderStatusOnline($id_pg);
             }
 
 

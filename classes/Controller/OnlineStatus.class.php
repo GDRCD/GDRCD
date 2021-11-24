@@ -3,6 +3,31 @@
 
 class OnlineStatus extends BaseClass{
 
+    /**
+     * @var mixed
+     * @var mixed
+     */
+    private $enabled,
+        $login_refresh;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->enabled = Functions::get_constant('ONLINE_STATUS_ENABLED');
+        $this->login_refresh = Functions::get_constant('ONLINE_STATUS_LOGIN_REFRESH');
+    }
+
+    /*** GETTERS */
+
+    public function isEnabled(){
+        return $this->enabled;
+    }
+
+    public function refreshOnLogin(){
+        return $this->login_refresh;
+    }
+
+
     /*** CONTROLS ***/
 
     /**
@@ -72,8 +97,9 @@ class OnlineStatus extends BaseClass{
         return DB::query("SELECT {$val} FROM online_status_type WHERE id='{$id}' LIMIT 1");
     }
 
-    public function getPgStatus($pg,$type,$val = '*'){
-        return DB::query("SELECT {$val} FROM personaggio_online_status WHERE personaggio='{$pg}' AND type='{$type}' LIMIT 1");
+    public function getPgStatus($pg,$type,$last_refresh = '',$val = '*'){
+        $last_refresh = (!empty($last_refresh)) ? " AND last_refresh >= '{$last_refresh}' " : '';
+        return DB::query("SELECT {$val} FROM personaggio_online_status WHERE personaggio='{$pg}' AND type='{$type}' {$last_refresh} LIMIT 1");
     }
 
     /*** AJAX ***/
@@ -206,6 +232,39 @@ class OnlineStatus extends BaseClass{
 
     }
 
+    /**
+     * @fn renderStatusOnline
+     * @note Visualizza le risposte nello status online
+     * @param $pg
+     * @return string
+     */
+    public function renderStatusOnline($pg){
+        $html = '';
+        $pg = Filters::int($pg);
+        $pg_data = Personaggio::getPgData($pg,'ora_entrata');
+        $last_login = ($this->refreshOnLogin()) ? Filters::out($pg_data['ora_entrata']) : '';
+        $types = $this->getStatusTypes();
+
+
+        foreach ($types as $type){
+            $type_id = Filters::int($type['id']);
+            $type_label = Filters::out($type['label']);
+
+            $list = $this->getPgStatus($pg,$type_id,$last_login,'value');
+            if(!empty($list['value'])) {
+                $status_data = $this->getStatus(Filters::int($list['value']), 'text');
+                $status_text = Filters::out($status_data['text']);
+            }
+            else{
+                $status_text = 'Non definito';
+            }
+
+            $html .= " <span>{$type_label} : {$status_text}</span> | ";
+        }
+
+        return $html;
+    }
+
     /*** FUNCTIONS ***/
 
     /**
@@ -216,7 +275,7 @@ class OnlineStatus extends BaseClass{
      */
     public function setOnlineStatus(array $post): array
     {
-        if(Functions::get_constant('ONLINE_STATUS_ENABLED')){
+        if($this->isEnabled()){
 
             $online_status = $post['online_status'];
 
@@ -229,7 +288,7 @@ class OnlineStatus extends BaseClass{
                 $contr = $this->getPgStatus($this->me_id,$type);
 
                 if(isset($contr['id'])){
-                    DB::query("UPDATE personaggio_online_status SET value='{$value}' WHERE personaggio='{$this->me_id}' AND type='{$type}' LIMIT 1");
+                    DB::query("UPDATE personaggio_online_status SET value='{$value}',last_refresh=NOW() WHERE personaggio='{$this->me_id}' AND type='{$type}' LIMIT 1");
                 } else {
                     DB::query("INSERT INTO personaggio_online_status(personaggio, type, value) VALUES('{$this->me_id}','{$type}','{$value}') ");
                 }
