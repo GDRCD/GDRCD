@@ -3,6 +3,8 @@
 
 class Personaggio extends BaseClass{
 
+    /*** TABLES HELPER ***/
+
     /**
      * @fn getPgLocation
      * @note Estrae la posizione del pg
@@ -17,18 +19,18 @@ class Personaggio extends BaseClass{
     }
 
     /**
-     * @fn nameFromId
-     * @note Estrae il nome del pg dall'id
-     * @var int $id
-     * @return string
+     * @fn getPgData
+     * @note Ottiene i dati di un pg
+     * @param int $pg
+     * @param string $val
+     * @return bool|int|mixed|string
      */
-    public static function nameFromId(int $id):string
-    {
-        $id = Filters::int($id);
-        $data = DB::query("SELECT nome FROM personaggio WHERE id='{$id}' LIMIT 1");
-
-        return Filters::out($data['nome']);
+    public static function getPgData(int $pg, string $val ='*'){
+        return DB::query("SELECT {$val} FROM personaggio WHERE id='{$pg}' LIMIT 1");
     }
+
+
+    /**** CONTROLS ****/
 
     /**
      * @fn pgExist
@@ -36,7 +38,8 @@ class Personaggio extends BaseClass{
      * @param int $id
      * @return bool
      */
-    public static function pgExist($id){
+    public static function pgExist(int $id): bool
+    {
         $data = DB::query("SELECT count(id) AS tot FROM personaggio WHERE id='{$id}' LIMIT 1");
         return ($data['tot'] > 0);
     }
@@ -48,12 +51,30 @@ class Personaggio extends BaseClass{
      * @param int $pg
      * @return bool
      */
-    public static function isMyPg($pg){
+    public static function isMyPg(int $pg): bool
+    {
 
         $pg = Filters::in($pg);
         $me = Functions::getInstance()->getMyId();
         $me_name = Functions::getInstance()->getMe();
 
         return ( ($pg == $me) || ($pg == $me_name) );
+    }
+
+
+    /*** FUNCTIONS  ***/
+
+    /**
+     * @fn nameFromId
+     * @note Estrae il nome del pg dall'id
+     * @var int $id
+     * @return string
+     */
+    public static function nameFromId(int $id):string
+    {
+        $id = Filters::int($id);
+        $data = DB::query("SELECT nome FROM personaggio WHERE id='{$id}' LIMIT 1");
+
+        return Filters::out($data['nome']);
     }
 }
