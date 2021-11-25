@@ -281,31 +281,6 @@ INSERT INTO `codtipogilda` (`descrizione`, `cod_tipo`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `codtipooggetto`
---
-
-CREATE TABLE IF NOT EXISTS `codtipooggetto` (
-  `cod_tipo` int NOT NULL AUTO_INCREMENT,
-  `descrizione` text NOT NULL,
-  PRIMARY KEY (`cod_tipo`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
---
--- Dump dei dati per la tabella `codtipooggetto`
---
-
-INSERT INTO `codtipooggetto` (`cod_tipo`, `descrizione`) VALUES
-(1, 'Animale'),
-(2, 'Vestito'),
-(3, 'Fiore - Pianta'),
-(4, 'Gioiello'),
-(5, 'Arma'),
-(6, 'Attrezzo'),
-(0, 'Vario');
-
--- --------------------------------------------------------
-
---
 -- Struttura della tabella `config`
 --
 CREATE TABLE IF NOT EXISTS `config` (
@@ -555,14 +530,15 @@ INSERT INTO `menu` (`menu_name`, `section`, `name`, `page`, `permission`) VALUES
   ('Gestione', 'Gestione', 'Gestione Versioni Database', 'gestione_db_migrations', 'MANAGE_DB_MIGRATIONS'),
   ('Gestione', 'Permessi', 'Gestione Permessi', 'gestione_permessi', 'MANAGE_PERMISSIONS'),
   ('Gestione', 'Gestione', 'Manutenzione', 'gestione_manutenzione', 'MANAGE_MANUTENTIONS'),
-  ('Gestione', 'Oggetti', 'Gestione Oggetti', 'gestione_oggetti', 'MANAGE_OBJECTS'),
   ('Gestione', 'Chat', 'Giocate Segnalate', 'gestione_segnalazioni', 'MANAGE_REPORTS'),
   ('Gestione', 'Chat', 'Esiti in chat', 'gestione_esiti', 'MANAGE_OUTCOMES'),
   ('Gestione', 'Quest', 'Gestione Quest', 'gestione_quest', 'MANAGE_QUESTS'),
   ('Gestione', 'Quest', 'Gestione Trame', 'gestione_trame', 'MANAGE_TRAME_VIEW'),
   ('Gestione', 'Esiti', 'Esiti', 'gestione_esiti', 'MANAGE_ESITI'),
   ('Gestione', 'Stato Online', 'Gestione stati', 'gestione_stato_online', 'MANAGE_ONLINE_STATUS'),
-  ('Gestione', 'Stato Online', 'Gestione tipi stati', 'gestione_tipo_stato_online', 'MANAGE_ONLINE_STATUS');
+  ('Gestione', 'Stato Online', 'Gestione tipi stati', 'gestione_tipo_stato_online', 'MANAGE_ONLINE_STATUS'),
+  ('Gestione', 'Oggetti', 'Gestione oggetti', 'gestione_oggetti', 'MANAGE_OBJECTS'),
+  ('Gestione', 'Oggetti', 'Gestione tipi oggetto', 'gestione_oggetti_tipo', 'MANAGE_OBJECTS_TYPES');
 
 -- --------------------------------------------------------
 
@@ -694,34 +670,44 @@ CREATE TABLE IF NOT EXISTS `messaggioaraldo` (
 --
 
 CREATE TABLE IF NOT EXISTS `oggetto` (
-  `id_oggetto` int NOT NULL AUTO_INCREMENT,
+  `id` int NOT NULL AUTO_INCREMENT,
   `tipo` int NOT NULL DEFAULT '0',
-  `nome` varchar(255) NOT NULL DEFAULT 'Sconosciuto',
-  `creatore` varchar(255) NOT NULL DEFAULT 'System Op',
-  `data_inserimento` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `descrizione` varchar(255) NOT NULL DEFAULT 'Nessuna',
-  `ubicabile` int NOT NULL DEFAULT '0',
+  `nome` varchar(255) NOT NULL,
+  `descrizione` text DEFAULT NULL,
+  `immagine` varchar(255) DEFAULT NULL,
+  `indossabile` int NOT NULL DEFAULT '0',
   `costo` int NOT NULL DEFAULT '0',
-  `difesa` int NOT NULL DEFAULT '0',
-  `attacco` int NOT NULL DEFAULT '0',
   `cariche` varchar(255) NOT NULL DEFAULT '0',
-  `bonus_car0` int NOT NULL DEFAULT '0',
-  `bonus_car1` int NOT NULL DEFAULT '0',
-  `bonus_car2` int NOT NULL DEFAULT '0',
-  `bonus_car3` int NOT NULL DEFAULT '0',
-  `bonus_car4` int NOT NULL DEFAULT '0',
-  `bonus_car5` int NOT NULL DEFAULT '0',
-  `urlimg` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id_oggetto`),
-  KEY `Tipo` (`tipo`)
+  `creatore_da` varchar(255) NOT NULL DEFAULT 'System',
+  `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `oggetto_tipo`
+--
+
+CREATE TABLE IF NOT EXISTS `oggetto_tipo` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `nome` varchar(255) NOT NULL,
+    `descrizione` text DEFAULT NULL,
+    PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 --
--- Dump dei dati per la tabella `oggetto`
+-- Dump dei dati per la tabella `oggetto_tipo`
 --
 
-INSERT INTO `oggetto` (`id_oggetto`, `tipo`, `nome`, `creatore`, `data_inserimento`, `descrizione`, `ubicabile`, `costo`, `difesa`, `attacco`, `cariche`, `bonus_car0`, `bonus_car1`, `bonus_car2`, `bonus_car3`, `bonus_car4`, `bonus_car5`, `urlimg`) VALUES
-(1, 6, 'Scopa', 'Super', '2009-12-20 14:29:33', 'Una comune scopa di saggina.', 0, 10, 0, 0, '0', 0, 0, 0, 0, 0, 0, 'standard_oggetto.png');
+INSERT INTO `oggetto_tipo` (`nome`) VALUES
+    ('Animale'),
+    ('Vestito'),
+    ('Piante'),
+    ('Gioiello'),
+    ('Arma'),
+    ('Attrezzo'),
+    ('Vario');
 
 -- --------------------------------------------------------
 
@@ -805,6 +791,8 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
     ('MANAGE_TRAME_OTHER','Permesso per la modifica delle trame degli altri'),
     ('SCHEDA_EXP_VIEW','Permesso per la visualizzazione della pagina esperienza in scheda'),
     ('SCHEDA_EXP_MANAGE','Permesso per la visualizzazione della pagina esperienza in scheda'),
+    ('MANAGE_OBJECTS','Permesso per la gestione degli oggetti'),
+    ('MANAGE_OBJECTS_TYPES','Permesso per la gestione delle tipologie di oggetti'),
     ('MANAGE_ONLINE_STATUS','Permesso per la gestione degli status online');
 
 
@@ -947,6 +935,22 @@ CREATE TABLE IF NOT EXISTS `personaggio` (
 INSERT INTO `personaggio` (`id`,`nome`, `cognome`, `pass`, `ultimo_cambiopass`, `data_iscrizione`, `email`, `permessi`, `ultima_mappa`, `ultimo_luogo`, `esilio`, `data_esilio`, `motivo_esilio`, `autore_esilio`, `sesso`, `id_razza`, `descrizione`, `affetti`, `stato`, `online_status`, `disponibile`, `url_img`, `url_img_chat`, `url_media`, `blocca_media`, `esperienza`, `car0`, `car1`, `car2`, `car3`, `car4`, `car5`, `salute`, `salute_max`, `data_ultima_gilda`, `soldi`, `banca`, `ultimo_stipendio`, `last_ip`, `is_invisible`, `ultimo_refresh`, `ora_entrata`, `ora_uscita`, `posizione`) VALUES
 (1,'Super', 'User', '$P$BcH1cP941XHOf0X61wVWWjzXqcCi2a/', NULL, '2011-06-04 00:47:48', '$P$BNZYtz9JOQE.O4Tv7qZyl3SzIoZzzR.', 5, 1, -1, '2009-01-01', '2009-01-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 7, 8, 6, 5, 6, 5, 100, 100, '2009-01-01 00:00:00', 300, 50000, '2009-01-01', '127.0.0.1', 0, '2021-10-08 00:28:13', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1),
 (2,'Test', 'Di FunzionaliÃ ', '$P$BUoa19QUuXsgIDlhGC3chR/3Q7hoRy0', NULL, '2011-06-04 00:47:48', '$P$Bd1amPCKkOF9GdgYsibZ96U92D5CtR0', 0, 1, -1, '2009-01-01', '2009-01-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 7, 8, 6, 5, 6, 5, 100, 100, '2009-01-01 00:00:00', 50, 50, '2009-01-01', '127.0.0.1', 0, '2009-01-01 00:00:00', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `personaggio_oggetto`
+--
+
+CREATE TABLE `personaggio_oggetto` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `personaggio` int NOT NULL,
+    `oggetto` int NOT NULL,
+    `cariche` int DEFAULT 0,
+    `commento` text DEFAULT NULL,
+    `indossato` int DEFAULT 0,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
