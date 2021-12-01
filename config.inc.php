@@ -294,9 +294,15 @@ $PARAMETERS['settings']['audiotype']['.wav'] = 'audio/x-wav';
  * il file DEVE trovarsi nella cartella sounds
  * il file DEVE essere in uno dei formati concessi per l'uso
  * per non usare file audio per le nuove missive, semplicemente lasciare vuoto il campo
+ *
+ * AudioController
+ * è possibile inserire suoni diversi per le varie tipologia di notifica
+ * nel caso si volesse introdurre una nuova tipologia di notifica, è sufficiente aggiungere un nuovo parametro in coda
+ * e impostargli come nome 'audio_new_LABELNOTIFICA', dove LABELNOTIFICA corrisponde a quello passato in AudioController
  * @author Blancks
  */
-$PARAMETERS['settings']['audio_new_messagges'] = 'beep.wav';
+$PARAMETERS['settings']['audio_new_messages'] = 'beep.wav';
+$PARAMETERS['settings']['audio_new_chat'] = 'beep.wav';
 
 
 /**    * Dadi che compaiono nella tendina, solo se i dadi sono abilitati!

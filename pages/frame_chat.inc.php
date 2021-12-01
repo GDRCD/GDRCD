@@ -8,13 +8,9 @@ $info = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprieta
     <div class="page_title"><h2><?php echo $info['nome']; ?></h2></div>
     <div class="page_body">
         <?php
-        if($PARAMETERS['mode']['allow_new_chat_audio'] === 'ON') {
-            echo '<div style="height:0;">
-            <audio id="sound_player_chat">
-                <source src="/sounds/'.$PARAMETERS['settings']['audio_new_messagges'].'" type="audio/wav">
-            </audio>
-        </div>';
-        }
+        // Costruisco il controllore audio
+        echo AudioController::build('chat');
+
         //e' una stanza privata?
         if($info['privata'] == 1) {
             $allowance = false;

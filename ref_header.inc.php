@@ -290,7 +290,8 @@ if((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) 
          */
         $add_chat .= '<div class="chat_row_'.$row['tipo'].'">';
 
-        $alert_new_msg = ($PARAMETERS['mode']['allow_new_chat_audio'] == 'ON' && $row['mittente'] != $_SESSION['login']) ? 1 : null;
+        // identifico se l'ultimo messaggio è dell'utente o meno
+        $isLastMessageFromUser = ($row['mittente'] == $_SESSION['login']);
 
         switch($row['tipo']) {
             case 'A':
@@ -373,6 +374,13 @@ if((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) 
         }
     }
     gdrcd_query($query, 'free');
+
+    // Prevedo la notifica in caso di nuovi messaggi
+    if($_SESSION['last_message'] > 0 && (isset($isLastMessageFromUser) && !$isLastMessageFromUser) && (isset($add_chat) && $add_chat != '')){
+        $playAudioController = AudioController::play('chat', TRUE);;
+    }
+
+        // Aggiorno ultimo messaggio visualizzato
     $_SESSION['last_message'] = $last_message;
 }// Fine (gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) === false)
 /******************************************************************************************/
@@ -421,9 +429,8 @@ if(gdrcd_filter('get', $_REQUEST['chat']) == 'yes') {
     }//if
     echo '}</script>';
 }
-if ($PARAMETERS['mode']['allow_audio'] == 'ON' && $_SESSION['blocca_media'] != 1 && $add_chat != '' && isset($alert_new_msg) && $alert_new_msg == 1) { ?>
-<script type="text/javascript">
-    var mediaElementChat = parent.document.getElementById("sound_player_chat");
-    mediaElementChat.play();
-</script>
-<?php } ?>
+
+// Gestisco l'avviso
+if (!empty($playAudioController)) {
+    echo $playAudioController;
+}
