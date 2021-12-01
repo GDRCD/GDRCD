@@ -199,4 +199,4 @@ Files aggiornato e revisionato da Salvatore Rotondo.
 
 Files aggiornato e revisionato successivamente da Breaker.
 
-Files aggiornato e revisionato successivamente da gianni10049 e kasui92 per la versione 5.6.
+Files aggiornato e revisionato successivamente da gianni10049 e kasui92 per la versione 5.6 e successive correzioni.
