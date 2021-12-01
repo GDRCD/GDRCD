@@ -10,7 +10,7 @@ class GDRCD5601 extends DbMigration
         gdrcd_query("CREATE TABLE IF NOT EXISTS diario (
             id int NOT NULL AUTO_INCREMENT,
             personaggio varchar(255) DEFAULT NULL,
-            data date NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            data datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
             data_inserimento datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
             data_modifica datetime DEFAULT NULL DEFAULT CURRENT_TIMESTAMP,
             visibile varchar(255) NOT NULL DEFAULT 1,
