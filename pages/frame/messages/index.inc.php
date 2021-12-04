@@ -80,7 +80,6 @@ if($PARAMETERS['mode']['check_messages'] === 'ON') {
     }
     // NUOVI MESSAGGI
     else {
-
         // Determino se costruire una immagine
         if(empty($PARAMETERS['names']['private_message']['image_file_new']) === false) {
             $textMessages = '<img src="../../../themes/'.$PARAMETERS['themes']['current_theme'].'/imgs/menu/'.$PARAMETERS['names']['private_message']['image_file_new'].'" alt="'.gdrcd_filter('out', $PARAMETERS['names']['private_message']['plur']).'" title="'.gdrcd_filter('out', $PARAMETERS['names']['private_message']['plur']).'" />';
@@ -99,18 +98,8 @@ if($PARAMETERS['mode']['check_messages'] === 'ON') {
             $cntMessagesFrame .= '<script type="text/javascript">parent.blink_title("('.$MESSAGE['interface']['forums']['topic']['new_posts']['sing'].')" '.$PARAMETERS['info']['site_name'].');</script>';
         }
 
-
-        if($PARAMETERS['mode']['allow_audio'] == 'ON' && $_SESSION['blocca_media'] != 1 && ! empty($PARAMETERS['settings']['audio_new_messagges'])) {
-            $ext = explode('.', $PARAMETERS['settings']['audio_new_messagges']);
-
-            if(isset($PARAMETERS['settings']['audiotype']['.'.strtolower(end($ext))])) {
-                $cntMessagesFrame .= '
-                    <audio autoplay preload="none">
-                        <source src="../../../sounds/'.$PARAMETERS['settings']['audio_new_messagges'].'" type="'.$PARAMETERS['settings']['audiotype']['.'.strtolower(end($ext))].'">
-                        Your browser does not support the audio element.
-                    </audio>';
-            }
-        }
+        // Avvio notifica sonora
+        $cntMessagesFrame .= AudioController::play('messages');
     }
 }
 ?>
@@ -126,11 +115,7 @@ if($PARAMETERS['mode']['check_messages'] === 'ON') {
     <title>Messaggi</title>
 </head>
 <body class="transparent_body">
-    <script type="text/javascript">
-        var mediaElementChat = parent.document.getElementById("sound_player_chat");
-        mediaElementChat.play();
-    </script>
-
+    <?=AudioController::build('messages');?>
     <div class="box_messages"><?=isset($cntMessagesFrame) ? $cntMessagesFrame : '';?></div>
 
 <?php include('../../../footer.inc.php'); /*Footer comune*/

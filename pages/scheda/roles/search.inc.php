@@ -24,11 +24,11 @@ $totale = gdrcd_query($total, 'num_rows');
 </div>
 
 <? $year = gdrcd_query("SELECT YEAR(data_inizio) as year FROM segnalazione_role 
-    WHERE mittente = '" . gdrcd_filter('in', $pg) . "' GROUP BY YEAR(data_inizio) ORDER BY data_inizio DESC", "result");
+    WHERE mittente = '" . gdrcd_filter('in', $pg) . "' GROUP BY YEAR(data_inizio) ORDER BY YEAR(data_inizio) DESC", "result");
 while ($ry = gdrcd_query($year, 'fetch')) {
     echo '<div class="page_title" ><h2 style="font-family: Aileron;">' . $ry['year'] . '</h2></div>';
     $month = gdrcd_query("SELECT MONTH(data_inizio) as month FROM segnalazione_role 
-    WHERE mittente = '" . gdrcd_filter('in', $pg) . "' GROUP BY MONTH(data_inizio) ORDER BY data_inizio DESC", "result");
+    WHERE mittente = '" . gdrcd_filter('in', $pg) . "' GROUP BY MONTH(data_inizio) ORDER BY  MONTH(data_inizio)  DESC", "result");
     while ($rm = gdrcd_query($month, 'fetch')) {
         if ($rm['month'] == 1) {
             $mese = 'Gennaio';

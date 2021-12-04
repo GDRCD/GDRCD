@@ -68,7 +68,7 @@ if (($_REQUEST['pg'] == $_SESSION['login']) || ($_SESSION['permessi'] >= ROLE_PE
 
 $year = gdrcd_query("SELECT YEAR(data_inizio) as year FROM segnalazione_role 
     WHERE mittente = '" . gdrcd_filter('in', $pg) . "' GROUP BY YEAR(data_inizio) 
-    ORDER BY data_inizio DESC", "result");
+    ORDER BY YEAR(data_inizio)  DESC", "result");
 
 #PULSANTI SELEZIONE ANNO
 
@@ -91,7 +91,7 @@ echo '<div class="container_months">';
 echo '<div class="page_title" ><h2>' . $yearchosen . '</h2></div>';
 $month = gdrcd_query("SELECT MONTH(data_inizio) as month FROM segnalazione_role 
     WHERE mittente = '" . gdrcd_filter('in', $pg) . "' AND YEAR(data_inizio) = '" . gdrcd_filter('num', $yearchosen) . "'
-    GROUP BY MONTH(data_inizio) ORDER BY data_inizio DESC", "result");
+    GROUP BY MONTH(data_inizio) ORDER BY MONTH(data_inizio) DESC", "result");
 while ($rm = gdrcd_query($month, 'fetch')) {
     if ($rm['month'] == 1) {
         $mese = 'Gennaio';
