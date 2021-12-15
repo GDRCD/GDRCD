@@ -34,6 +34,10 @@ $op = Filters::out($_REQUEST['op']);
                 case 'add_condition': //Inserimento condizione
                     include('meteo/stagioni/save.inc.php');
                     break;
+                case 'delete_condition': //Inserimento condizione
+                    include('meteo/stagioni/save.inc.php');
+                    break;
+
                 default: //Lista pagine
                     include('meteo/stagioni/index.inc.php');
                     break;

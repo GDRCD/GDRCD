@@ -41,12 +41,18 @@ $condizione=Meteo::getOneSeason(Filters::out($_POST['id']));
     <div class="label">Condizione meteo: </div>
     <select name="condizione" id="condizione" >
         <?php
-        $all= Meteo::getAllCondition();
+        $all= Meteo::diffselectState(Filters::out($condizione['id']));
+
         while ($row = DB::query($all, 'fetch')){
             echo "<option value='{$row['id']}'>{$row['nome']}</option>";
         }
         ?>
     </select>
+
+    <?php
+
+
+    ?>
     <div class="label">Percentuale: </div>
     <input type="number" name="percentuale" id="percentuale">
     <input type="hidden" name="op" value="add_condition">
@@ -68,19 +74,32 @@ $condizione=Meteo::getOneSeason(Filters::out($_POST['id']));
 
     </div>
     <?php
+
+
     $all= Meteo::getAllState(Filters::out($condizione['id']));
     while ($row = DB::query($all, 'fetch')){
-         echo '<div class="tr">
-                    <div class="td">
-                    
+
+         echo "<div class='tr'>
+                    <div class='td'>
+                    {$row['nome']}
                     </div>
-                     <div class="td">
-                    
+                     <div class='td'>
+                    {$row['percentuale']}%
                     </div>
-                     <div class="td">
-                    
-                    </div>
-                 </div>';
+                     <div class='td'>";
+         ?>
+                     <!-- Elimina -->
+                    <form action="main.php?page=gestione_meteo_stagioni"  method="post">
+                        <input hidden value="delete_condition" name="op">
+
+                        <button type="submit" name="id" onClick='return confirmSubmit()'
+                                value="<?php echo Filters::out( $row['id']); ?>" class="btn-link">
+                                [<?php echo Filters::out( $MESSAGE['interface']['forums']['link']['delete']); ?>]
+                        </button>
+                    </form>
+                </div>
+            </div>
+   <?php
     }
     ?>
 </div>

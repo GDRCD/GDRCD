@@ -35,7 +35,10 @@ switch ($_POST['op']) {
          $percentuale= Filters::in($_POST['percentuale']);
         $class->newClimaticState($id_stagione, $id_condizione, $percentuale);
         break;
-
+    case 'delete_condition':
+        $id=Filters::in($_POST['id']);
+        $class->deleteClimaticState($id);
+        break;
     default:
         die('Operazione non riconosciuta.');
 }

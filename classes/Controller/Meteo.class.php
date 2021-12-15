@@ -166,7 +166,16 @@ class Meteo extends BaseClass
         ('{$id_stagione}', '{$id_condizione}' , '{$percentuale}') ");
     }
     public function  getAllState($stagione){
-        return DB::query("SELECT * FROM meteo_stati_climatici where stagione='{$stagione}'", 'result');
+        return DB::query("SELECT nome, percentuale, meteo_stati_climatici.id FROM meteo_stati_climatici LEFT JOIN meteo_condizioni on condizione=meteo_condizioni.id where stagione='{$stagione}'", 'result');
+    }
+
+    public function diffselectState($stagione)
+    {
+        return DB::query("SELECT meteo_condizioni.id, nome, vento, img FROM meteo_condizioni WHERE id NOT IN (SELECT condizione FROM meteo_stati_climatici WHERE stagione= {$stagione})", 'result');
+    }
+    public function  deleteClimaticState($id){
+        $id = Filters::int(  $id);
+        DB::query("DELETE FROM meteo_stati_climatici WHERE id='{$id}'");
     }
 
 }

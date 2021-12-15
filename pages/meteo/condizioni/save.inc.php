@@ -23,6 +23,7 @@ switch (Filters::out($_POST['op'])) {
         $class->deleteCondition($id);
         break;
 
+
     default:
         die('Operazione non riconosciuta.');
 }
