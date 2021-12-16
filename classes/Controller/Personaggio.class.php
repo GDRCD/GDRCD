@@ -3,7 +3,7 @@
 
 class Personaggio extends BaseClass{
 
-    /*** TABLES HELPER ***/
+    /*** PERSONAGGIO TABLES HELPER ***/
 
     /**
      * @fn getPgLocation
@@ -27,6 +27,30 @@ class Personaggio extends BaseClass{
      */
     public static function getPgData(int $pg, string $val ='*'){
         return DB::query("SELECT {$val} FROM personaggio WHERE id='{$pg}' LIMIT 1");
+    }
+
+    /*** OGGETTI TABLES HELPERT ***/
+
+    /**
+     * @fn getCharAllObjects
+     * @note Estrae tutti gli oggetti di un personaggio
+     * @param int $pg
+     * @param string $val
+     * @return bool|int|mixed|string
+     */
+    private function getCharAllObjects(int $pg, string $val = 'oggetto.*'){
+        return DB::query("SELECT {$val} FROM personaggio_oggetto LEFT JOIN oggetto ON(oggetto.id_oggetto = personaggio_oggetto.oggetto) WHERE personaggio_oggetto.personaggio='{$pg}' ORDER BY oggetto.nome ",'result');
+    }
+
+    /**
+     * @fn getCharSingleObject
+     * @note Estrae un oggetto dalla tabella personaggio_oggetto
+     * @param int $id
+     * @param string $val
+     * @return bool|int|mixed|string
+     */
+    private function getCharSingleObject(int $id, string $val = '*'){
+        return DB::query("SELECT {$val} FROM personaggio_oggetto LEFT JOIN oggetto ON(oggetto.id_oggetto = personaggio_oggetto.oggetto) WHERE personaggio_oggetto.personaggio='{$pg}' AND personaggio_oggetto.id='{$id}' ORDER BY oggetto.nome ",'result');
     }
 
 
