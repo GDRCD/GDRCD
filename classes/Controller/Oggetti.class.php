@@ -21,7 +21,7 @@ class Oggetti extends BaseClass
      * @param string $val
      * @return bool|int|mixed|string
      */
-    private function getObject(int $id, string $val = '*')
+    public function getObject(int $id, string $val = '*')
     {
         return DB::query("SELECT {$val} FROM oggetto WHERE id='{$id}' LIMIT 1");
     }
@@ -58,7 +58,7 @@ class Oggetti extends BaseClass
      * @param string $val
      * @return bool|int|mixed|string
      */
-    private function getObjectType(int $id, string $val = '*')
+    public function getObjectType(int $id, string $val = '*')
     {
         return DB::query("SELECT {$val} FROM oggetto_tipo WHERE id='{$id}' LIMIT 1");
     }

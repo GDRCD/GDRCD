@@ -101,4 +101,33 @@ class Personaggio extends BaseClass{
 
         return Filters::out($data['nome']);
     }
+
+    /**
+     * @fn updatePgData
+     * @note Update pg data
+     * @param int $id
+     * @param string $set
+     * @return void
+     */
+    public static function updatePgData(int $id, string $set):void
+    {
+        DB::query("UPDATE personaggio SET {$set} WHERE id='{$id}' LIMIT 1");
+    }
+
+    /** OGGETTI */
+
+    /**
+     * @fn addObject
+     * @note Add a NEW object to a pg
+     * @param int $obj
+     * @param int $pg
+     * @return void
+     */
+    public static function addObject(int $obj, int $pg):void
+    {
+        $obj_data = Oggetti::getInstance()->getObject($obj,'cariche');
+        $cariche = Filters::int($obj_data['cariche']);
+
+        DB::query("INSERT INTO personaggio_oggetto(personaggio, oggetto, cariche) VALUES('{$pg}','{$obj}','{$cariche}') ");
+    }
 }

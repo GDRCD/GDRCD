@@ -608,18 +608,6 @@ INSERT INTO `mappa_click` (`id_click`, `nome`, `immagine`, `posizione`, `mobile`
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `mercato`
---
-
-CREATE TABLE IF NOT EXISTS `mercato` (
-  `id_oggetto` int NOT NULL,
-  `numero` int DEFAULT '0',
-  PRIMARY KEY (`id_oggetto`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Struttura della tabella `messaggi`
 --
 
@@ -683,6 +671,33 @@ CREATE TABLE IF NOT EXISTS `oggetto` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `oggetto_mercato`
+--
+
+CREATE TABLE IF NOT EXISTS `mercato` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `oggetto` int NOT NULL,
+    `negozio` int NOT NULL,
+    `quantity` int NOT NULL DEFAULT '0',
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `mercato_negozi`
+--
+
+CREATE TABLE IF NOT EXISTS `mercato_negozi` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `nome` varchar(255) NOT NULL,
+    `descrizione` TEXT,
+    `immagine` varchar(255),
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 -- --------------------------------------------------------
 
 --
