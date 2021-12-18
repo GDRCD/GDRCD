@@ -87,12 +87,6 @@ if($cls->permissionManageObjects()){ # Metodo di controllo per accesso alla pagi
                 <input type="checkbox" name="indossabile">
             </div>
 
-            <!-- Costo -->
-            <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
-                <div class="label">Costo</div>
-                <input type="number" name="costo">
-            </div>
-
             <!-- Cariche -->
             <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
                 <div class="label">Cariche</div>
@@ -152,12 +146,6 @@ if($cls->permissionManageObjects()){ # Metodo di controllo per accesso alla pagi
             <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
                 <div class="label">Indossabile</div>
                 <input type="checkbox" name="indossabile">
-            </div>
-
-            <!-- Costo -->
-            <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
-                <div class="label">Costo</div>
-                <input type="number" name="costo">
             </div>
 
             <!-- Cariche -->

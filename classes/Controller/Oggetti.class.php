@@ -144,7 +144,6 @@ class Oggetti extends BaseClass
                 'descrizione' => Filters::out($data['descrizione']),
                 'immagine' => Filters::out($data['immagine']),
                 'indossabile' => (bool)Filters::int($data['indossabile']),
-                'costo' => Filters::int($data['costo']),
                 'cariche' => Filters::int($data['cariche'])
             ];
         }
@@ -236,13 +235,12 @@ class Oggetti extends BaseClass
             $descrizione = Filters::in($post['descrizione']);
             $immagine = Filters::in($post['immagine']);
             $indossabile = Filters::checkbox($post['indossabile']);
-            $costo = Filters::int($post['costo']);
             $cariche = Filters::int($post['cariche']);
             $creato_da = Filters::int($this->me_id);
 
 
-            DB::query("INSERT INTO oggetto(tipo, nome, descrizione, immagine, indossabile, costo, cariche,creatore_da) 
-                            VALUES('{$tipo}','{$nome}','{$descrizione}','{$immagine}','{$indossabile}','{$costo}','{$cariche}','{$creato_da}')");
+            DB::query("INSERT INTO oggetto(tipo, nome, descrizione, immagine, indossabile, cariche,creatore_da) 
+                            VALUES('{$tipo}','{$nome}','{$descrizione}','{$immagine}','{$indossabile}','{$cariche}','{$creato_da}')");
 
             $resp = ['response' => true, 'mex' => 'Oggetto inserito correttamente.'];
         } else {
@@ -269,12 +267,11 @@ class Oggetti extends BaseClass
             $descrizione = Filters::in($post['descrizione']);
             $immagine = Filters::in($post['immagine']);
             $indossabile = Filters::checkbox($post['indossabile']);
-            $costo = Filters::int($post['costo']);
             $cariche = Filters::int($post['cariche']);
 
             DB::query("UPDATE oggetto 
                             SET tipo='{$tipo}',nome='{$nome}',descrizione='{$descrizione}',immagine='{$immagine}',
-                                indossabile='{$indossabile}',costo='{$costo}',cariche='{$cariche}'
+                                indossabile='{$indossabile}',cariche='{$cariche}'
                             WHERE id='{$id}' LIMIT 1");
 
             $resp = ['response' => true, 'mex' => 'Oggetto modificato correttamente.'];

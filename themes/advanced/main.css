@@ -845,7 +845,7 @@ div.innertube {
     height: 100%;
 }
 
-.shops_page .single_shop .shop_name{
+.shops_page .single_shop .shop_name a{
     color: #ccc;
     font-size: 15px;
 }

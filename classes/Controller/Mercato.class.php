@@ -35,6 +35,28 @@ class Mercato extends BaseClass
         return $page;
     }
 
+    /*** PERMISSIONS ***/
+
+    /**
+     * @fn manageMercatoPermission
+     * @note Controllo se se ho i permessi per gestire il mercato
+     * @return bool
+     */
+    public function manageShopObjectsPermission(): bool
+    {
+        return Permissions::permission('MANAGE_SHOPS_OBJECTS');
+    }
+
+    /**
+     * @fn manageShopPermission
+     * @note Controllo se se ho i permessi per gestire un negozio
+     * @return bool
+     */
+    public function manageShopPermission(): bool
+    {
+        return Permissions::permission('MANAGE_SHOPS');
+    }
+
     /*** MERCATO TABLE HELPERS ***/
 
     /**
@@ -56,7 +78,7 @@ class Mercato extends BaseClass
      * @param string $val
      * @return bool|int|mixed|string
      */
-    public function getAllShopObjects(int $shop, string $val = 'oggetto.*,mercato.id,mercato.oggetto,mercato.quantity')
+    public function getAllShopObjects(int $shop, string $val = 'oggetto.*,mercato.*')
     {
         return DB::query("SELECT {$val} 
                 FROM mercato 
@@ -100,6 +122,26 @@ class Mercato extends BaseClass
     public function getShop(int $shop, string $val = '*')
     {
         return DB::query("SELECT {$val} FROM mercato_negozi WHERE id='{$shop}' LIMIT 1");
+    }
+
+    /*** AJAX ***/
+
+    /**
+     * @fn ajaxGetShop
+     * @note Ajax data for shop
+     * @param array $post
+     * @return array
+     */
+    public function ajaxGetShop(array $post):array
+    {
+        if($this->manageShopPermission()){
+            $shop =Filters::int($post['shop']);
+
+            return $this->getShop($shop);
+        }
+        else{
+            return [];
+        }
     }
 
     /*** MERCATO TABLE CONTROLS ***/
@@ -178,6 +220,7 @@ class Mercato extends BaseClass
             $html .= "<div class='shop_name'>
                         <a href='/main.php?page=servizi_mercato&op=objects&shop={$id}'>{$nome}</a>
                       </div>";
+            $html .= "</div>";
         }
 
         return $html;
@@ -200,10 +243,9 @@ class Mercato extends BaseClass
 
         if ($obj_class->existObject($object) && $this->existObject($object, $shop)) {
 
-            $obj_data = $obj_class->getObject($object);
             $mercato_data = $this->getObject($object, $shop);
 
-            $costo = Filters::int($obj_data['costo']);
+            $costo = Filters::int($mercato_data['costo']);
             $quantita = Filters::Int($mercato_data['quantity']);
 
             if ($quantita > 0) {
@@ -222,7 +264,7 @@ class Mercato extends BaseClass
                 }
 
                 Personaggio::updatePgData($this->me_id, "{$cell}={$cell}-{$costo}");
-                Personaggio::addObject($object,$this->me_id);
+                Personaggio::addObject($object, $this->me_id);
 
                 if ($quantita > 1) {
                     DB::query("UPDATE mercato SET quantity = quantity - 1 WHERE oggetto='{$object}' LIMIT 1");
@@ -241,4 +283,196 @@ class Mercato extends BaseClass
     }
 
 
+    /*** MANAGEMENT ****/
+
+    /**
+     * @fn insertShopObj
+     * @note Inserisce un nuovo oggetto in un negozio
+     * @param array $post
+     * @return array
+     */
+    public function insertShopObj(array $post): array
+    {
+
+        if ($this->manageShopObjectsPermission()) {
+
+            $shop = Filters::int($post['negozio']);
+            $obj = Filters::int($post['oggetto']);
+            $quantity = Filters::int($post['quantity']);
+            $costo = Filters::int($post['costo']);
+
+            if (!$this->existObject($obj, $shop)) {
+
+                DB::query("INSERT INTO mercato(oggetto, negozio, quantity,costo) 
+                            VALUES ('{$obj}','{$shop}','{$quantity}','{$costo}')");
+
+                $resp = ['response' => true, 'mex' => 'Oggetto inserito correttamente in negozio.'];
+            } else {
+
+                $resp = ['response' => false, 'mex' => 'Oggetto già presente in negozio. Procedere alla modifica o alla sua eliminazione.'];
+            }
+
+        } else {
+
+            $resp = ['response' => false, 'mex' => 'Permesso negato.'];
+        }
+
+        return $resp;
+
+    }
+
+    /**
+     * @fn editShopObj
+     * @note Modifica un oggetto in un negozio
+     * @param array $post
+     * @return array
+     */
+    public function editShopObj(array $post): array
+    {
+
+        if ($this->manageShopObjectsPermission()) {
+
+            $shop = Filters::int($post['negozio']);
+            $obj = Filters::int($post['oggetto']);
+            $quantity = Filters::int($post['quantity']);
+            $costo = Filters::int($post['costo']);
+
+            if ($this->existObject($obj, $shop)) {
+
+                DB::query("UPDATE mercato SET quantity='{$quantity}',costo='{$costo}' WHERE oggetto='{$obj}' AND negozio='{$shop}' LIMIT 1");
+
+                $resp = ['response' => true, 'mex' => 'Oggetto modificato correttamente.'];
+            } else {
+
+                $resp = ['response' => false, 'mex' => 'Oggetto non presente in negozio. Procedere al suo inserimento.'];
+            }
+
+        } else {
+
+            $resp = ['response' => false, 'mex' => 'Permesso negato.'];
+        }
+
+        return $resp;
+
+    }
+
+    /**
+     * @fn deleteShopObj
+     * @note Elimina un oggetto in un negozio
+     * @param array $post
+     * @return array
+     */
+    public function deleteShopObj(array $post): array
+    {
+
+        if ($this->manageShopObjectsPermission()) {
+
+            $shop = Filters::int($post['negozio']);
+            $obj = Filters::int($post['oggetto']);
+
+            if ($this->existObject($obj, $shop)) {
+
+                DB::query("DELETE FROM mercato WHERE oggetto='{$obj}' AND negozio='{$shop}'");
+
+                $resp = ['response' => true, 'mex' => 'Oggetto eliminato correttamente.'];
+            } else {
+                $resp = ['response' => false, 'mex' => 'Oggetto non presente in negozio. Procedere al suo inserimento.'];
+            }
+        } else {
+            $resp = ['response' => false, 'mex' => 'Permesso negato.'];
+        }
+
+        return $resp;
+    }
+
+    /**
+     * @fn insertShop
+     * @note Inserisce un nuovo negozio
+     * @param array $post
+     * @return array
+     */
+    public function insertShop(array $post): array
+    {
+
+        if ($this->manageShopPermission()) {
+
+            $nome = Filters::in($post['nome']);
+            $descr = Filters::in($post['descrizione']);
+            $img = Filters::in($post['immagine']);
+
+            DB::query("INSERT INTO mercato_negozi(nome, descrizione, immagine) 
+                            VALUES ('{$nome}','{$descr}','{$img}')");
+
+            $resp = ['response' => true, 'mex' => 'Negozio creato correttamente.'];
+        } else {
+
+            $resp = ['response' => false, 'mex' => 'Permesso negato.'];
+        }
+
+        return $resp;
+
+    }
+
+    /**
+     * @fn editShop
+     * @note Modifica un negozio
+     * @param array $post
+     * @return array
+     */
+    public function editShop(array $post): array
+    {
+
+        if ($this->manageShopPermission()) {
+
+            $shop = Filters::int($post['id']);
+            $nome = Filters::in($post['nome']);
+            $descr = Filters::in($post['descrizione']);
+            $img = Filters::in($post['immagine']);
+
+            if ($this->existShop($shop)) {
+
+                DB::query("UPDATE mercato_negozi SET nome='{$nome}',descrizione='{$descr}',immagine='{$img}' WHERE id='{$shop}' LIMIT 1");
+
+                $resp = ['response' => true, 'mex' => 'Negozio modificato correttamente.'];
+            } else {
+
+                $resp = ['response' => false, 'mex' => 'Negozio non esistente.'];
+            }
+
+        } else {
+
+            $resp = ['response' => false, 'mex' => 'Permesso negato.'];
+        }
+
+        return $resp;
+
+    }
+
+    /**
+     * @fn deleteShop
+     * @note Elimina un negozio
+     * @param array $post
+     * @return array
+     */
+    public function deleteShop(array $post): array
+    {
+
+        if ($this->manageShopPermission()) {
+
+            $shop = Filters::int($post['id']);
+
+            if ($this->existShop($shop)) {
+
+                DB::query("DELETE FROM mercato_negozi WHERE id='{$shop}'");
+
+                $resp = ['response' => true, 'mex' => 'Negozio eliminato correttamente.'];
+            } else {
+                $resp = ['response' => false, 'mex' => 'Negozio inesistente.'];
+            }
+        } else {
+            $resp = ['response' => false, 'mex' => 'Permesso negato.'];
+        }
+
+        return $resp;
+    }
 }
