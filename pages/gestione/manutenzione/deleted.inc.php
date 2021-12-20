@@ -1,7 +1,5 @@
 <?php
 /*Eseguo l'aggiornamento*/
-gdrcd_query("DELETE FROM clgpersonaggiooggetto WHERE nome IN (SELECT nome FROM personaggio WHERE permessi = -1)");
-gdrcd_query("OPTIMIZE TABLE clgpersonaggiooggetto");
 
 gdrcd_query("DELETE FROM clgpersonaggioabilita WHERE nome IN (SELECT nome FROM personaggio WHERE permessi = -1)");
 gdrcd_query("OPTIMIZE TABLE clgpersonaggioabilita");

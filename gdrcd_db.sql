@@ -217,23 +217,6 @@ CREATE TABLE IF NOT EXISTS `clgpersonaggiomostrine` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `clgpersonaggiooggetto`
---
-
-CREATE TABLE IF NOT EXISTS `clgpersonaggiooggetto` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `nome` varchar(255) NOT NULL DEFAULT '',
-  `id_oggetto` int NOT NULL DEFAULT '0',
-  `numero` int DEFAULT '1',
-  `cariche` int NOT NULL DEFAULT '-1',
-  `commento` varchar(255) DEFAULT NULL,
-  `posizione` int NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Struttura della tabella `clgpersonaggioruolo`
 --
 
