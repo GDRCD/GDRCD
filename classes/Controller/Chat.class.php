@@ -754,6 +754,70 @@ class Chat extends BaseClass
                               VALUE('{$this->luogo}','test','{$this->me}','{$tag}','{$tipo}','{$testo}')");
     }
 
+    /*** TABLE HELPERS ***/
+
+    /**
+     * @fn getPgAllObjects
+     * @note Estrae tutti gli oggetti di un personaggio
+     * @param int $pg
+     * @param bool $only_equipped
+     * @return bool|int|mixed|string
+     */
+    public static function getPgAllObjects(int $pg, bool $only_equipped, $val = 'personaggio_oggetto.*,oggetto.*'){
+
+        $pg = Filters::int($pg);
+
+        $extra_query = ($only_equipped) ? ' AND personaggio_oggetto.indossato != 0 AND oggetto.indossabile = 1 ' : '';
+
+        return DB::query("SELECT {$val}
+                                        FROM personaggio_oggetto 
+                                        LEFT JOIN oggetto 
+                                        ON (personaggio_oggetto.oggetto = oggetto.id)                         
+                                        WHERE personaggio_oggetto.personaggio ='{$pg}' {$extra_query}
+                                        ", 'result');
+    }
+
+
+    /**
+     * @fn calcAllObjsBonus
+     * @note Calcola i bonus statistiche dell'oggetto
+     * @param int $pg
+     * @param int $car
+     * @param array $excluded
+     * @return int
+     */
+    public static function calcAllObjsBonus(int $pg, int $car, array $excluded = []): int
+    {
+
+        //#TODO Adattare con le stat oggetto
+
+        $extra_query = '';
+        $total_bonus = 0;
+
+        if(!empty($excluded)){
+            $implode = implode(',',$excluded);
+            $extra_query = " AND personaggio_oggetto.id NOT IN ({$excluded})";
+        }
+
+        # Estraggo i bonus di tutti gli oggetti equipaggiati
+        $objects = DB::query("SELECT oggetto.bonus_car{$car},personaggio_oggetto.id
+                                        FROM personaggio_oggetto 
+                                        LEFT JOIN oggetto 
+                                        ON (personaggio_oggetto.oggetto = oggetto.id)
+                                         
+                                        WHERE personaggio_oggetto.personaggio ='{$pg}' {$extra_query}
+                                        AND personaggio_oggetto.indossato > 0 AND oggetto.indossabile = 1
+
+                                        ", 'result');
+
+        # Per ogni oggetto equipaggiato
+        foreach ($objects as $object) {
+            # Aggiungo il suo bonus al totale
+            $total_bonus += Filters::int($object["bonus_car{$car}"]);
+        }
+
+        return $total_bonus;
+    }
 
     /******** ABILITA CHAT *******/
 
@@ -877,6 +941,8 @@ class Chat extends BaseClass
         return $html;
     }
 
+
+
     /********** LISTE ********/
 
     /**
@@ -890,7 +956,7 @@ class Chat extends BaseClass
         $obj_class = Oggetti::getInstance();
 
         # Estraggo gli oggetti posseduti
-        $objects = Personaggio::getPgAllObjects($this->me_id,$this->chat_equip_equipped,'personaggio_oggetto.id,oggetto.id AS obj_id,oggetto.nome');
+        $objects = $this->getPgAllObjects($this->me_id,$this->chat_equip_equipped,'personaggio_oggetto.id,oggetto.id AS obj_id,oggetto.nome');
 
         # Per ogni oggetto creo una option per la select
         foreach ($objects as $object) {
@@ -930,6 +996,7 @@ class Chat extends BaseClass
         # Ritorno le option per la select
         return $html;
     }
+
 
 
     /**** LANCIO DADI ****/
@@ -1068,7 +1135,7 @@ class Chat extends BaseClass
         $obj = Filters::int($obj);
 
         # Inizializzo il totale
-        $total_bonus = ($this->chat_equip_bonus) ? Personaggio::calcAllObjsBonus($this->me_id,$car,[$obj]) : 0;
+        $total_bonus = ($this->chat_equip_bonus) ? $this->calcAllObjsBonus($this->me_id,$car,[$obj]) : 0;
 
         # Seleziono la caratteristica interessata e ritorno il suo valore
         #TODO Adattare statistiche personaggio

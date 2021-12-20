@@ -74,6 +74,31 @@ class Oggetti extends BaseClass
         return DB::query("SELECT {$val} FROM oggetto_tipo WHERE 1 ORDER BY nome", 'result');
     }
 
+    /*** OGGETTO_POSIZIONE TABLE HELPERS ***/
+
+    /**
+     * @fn getObjectPosition
+     * @note Estrae i dati di una posizione oggetto
+     * @param int $id
+     * @param string $val
+     * @return bool|int|mixed|string
+     */
+    public function getObjectPosition(int $id, string $val = '*')
+    {
+        return DB::query("SELECT {$val} FROM oggetto_posizioni WHERE id='{$id}' LIMIT 1");
+    }
+
+    /**
+     * @fn getAllObjectPositions
+     * @note Estrae tutte le posizioni di oggetto
+     * @param string $val
+     * @return bool|int|mixed|string
+     */
+    public function getAllObjectPositions(string $val = '*')
+    {
+        return DB::query("SELECT {$val} FROM oggetto_posizioni WHERE 1 ORDER BY nome", 'result');
+    }
+
     /*** TABLES CONTROLS ***/
 
     /**
@@ -170,7 +195,6 @@ class Oggetti extends BaseClass
         }
     }
 
-
     /*** LISTS ***/
 
     /**
@@ -216,6 +240,51 @@ class Oggetti extends BaseClass
 
         return $html;
     }
+
+    /** FUNCTIONS */
+
+    /**
+     * @fn addObjectToPg
+     * @note Add a NEW object to a pg
+     * @param int $obj
+     * @param int $pg
+     * @return void
+     */
+    public static function addObjectToPg(int $obj, int $pg):void
+    {
+        $obj_data = Oggetti::getInstance()->getObject($obj,'cariche');
+        $cariche = Filters::int($obj_data['cariche']);
+
+        DB::query("INSERT INTO personaggio_oggetto(personaggio, oggetto, cariche) VALUES('{$pg}','{$obj}','{$cariche}') ");
+    }
+
+
+    /*** RENDER */
+
+    /**
+     * @fn renderObjects
+     * @note Renderizzazione oggetti da una lista di oggetti
+     * @param object $objs
+     * @return string
+     */
+    public static function renderObjects(object $objs): string
+    {
+
+        $html = '';
+
+        foreach ($objs as $obj){
+            $img = '/themes/advanced/imgs/items/' . Filters::out($obj['immagine']);
+            $nome = Filters::out($obj['nome']);
+
+            $html .= "<div class='single_object' title='{$nome}'>";
+            $html .= "<div class='img'><img src='{$img}'></div>";
+            $html .= "<div class='name'>{$nome}</div>";
+            $html .= "</div>";
+        }
+
+        return $html;
+    }
+
 
     /*** MANAGEMENT FUNCTIONS - OBJECTS **/
 

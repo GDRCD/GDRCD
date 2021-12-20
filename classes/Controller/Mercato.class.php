@@ -264,7 +264,7 @@ class Mercato extends BaseClass
                 }
 
                 Personaggio::updatePgData($this->me_id, "{$cell}={$cell}-{$costo}");
-                Personaggio::addObject($object, $this->me_id);
+                Oggetti::addObjectToPg($object, $this->me_id);
 
                 if ($quantita > 1) {
                     DB::query("UPDATE mercato SET quantity = quantity - 1 WHERE oggetto='{$object}' LIMIT 1");
