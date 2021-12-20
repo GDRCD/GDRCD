@@ -165,9 +165,10 @@ class Oggetti extends BaseClass
      * @param array $post
      * @return array|void
      */
-    public function ajaxObjectData(array $post){
+    public function ajaxObjectData(array $post)
+    {
 
-        if($this->permissionManageObjects()){
+        if ($this->permissionManageObjects()) {
 
             $id = Filters::int($post['id']);
 
@@ -190,9 +191,10 @@ class Oggetti extends BaseClass
      * @param array $post
      * @return array|void
      */
-    public function ajaxObjectTypeData(array $post){
+    public function ajaxObjectTypeData(array $post)
+    {
 
-        if($this->permissionManageObjectsType()){
+        if ($this->permissionManageObjectsType()) {
 
             $id = Filters::int($post['id']);
 
@@ -211,9 +213,10 @@ class Oggetti extends BaseClass
      * @param array $post
      * @return array|void
      */
-    public function ajaxObjectPositionData(array $post){
+    public function ajaxObjectPositionData(array $post)
+    {
 
-        if($this->permissionManageObjectsType()){
+        if ($this->permissionManageObjectsType()) {
 
             $id = Filters::int($post['id']);
 
@@ -240,7 +243,7 @@ class Oggetti extends BaseClass
         $html = '';
         $list = $this->getAllObjectTypes('id,nome');
 
-        foreach ($list as $row){
+        foreach ($list as $row) {
             $id = Filters::int($row['id']);
             $nome = Filters::in($row['nome']);
             $sel = ($selected == $id) ? 'selected' : '';
@@ -262,7 +265,7 @@ class Oggetti extends BaseClass
         $html = '';
         $list = $this->getAllObjectPositions('id,nome');
 
-        foreach ($list as $row){
+        foreach ($list as $row) {
             $id = Filters::int($row['id']);
             $nome = Filters::in($row['nome']);
             $sel = ($selected == $id) ? 'selected' : '';
@@ -284,7 +287,7 @@ class Oggetti extends BaseClass
         $html = '';
         $list = $this->getAllObjects('id,nome');
 
-        foreach ($list as $row){
+        foreach ($list as $row) {
             $id = Filters::int($row['id']);
             $nome = Filters::in($row['nome']);
             $sel = ($selected == $id) ? 'selected' : '';
@@ -304,12 +307,24 @@ class Oggetti extends BaseClass
      * @param int $pg
      * @return void
      */
-    public static function addObjectToPg(int $obj, int $pg):void
+    public static function addObjectToPg(int $obj, int $pg): void
     {
-        $obj_data = Oggetti::getInstance()->getObject($obj,'cariche');
+        $obj_data = Oggetti::getInstance()->getObject($obj, 'cariche');
         $cariche = Filters::int($obj_data['cariche']);
 
         DB::query("INSERT INTO personaggio_oggetto(personaggio, oggetto, cariche) VALUES('{$pg}','{$obj}','{$cariche}') ");
+    }
+
+    /**
+     * @fn removeObjectFromPg
+     * @note Add a NEW object to a pg
+     * @param int $obj
+     * @param int $pg
+     * @return void
+     */
+    public function removeObjectFromPg(int $obj, int $pg): void
+    {
+        DB::query("DELETE FROM personaggio_oggetto WHERE id='{$obj}' AND personaggio='{$pg}' ");
     }
 
 
@@ -321,19 +336,27 @@ class Oggetti extends BaseClass
      * @param object $objs
      * @return string
      */
-    public static function renderObjects(object $objs): string
+    public static function renderObjects(object $objs, $link = ''): string
     {
-
         $html = '';
+        $obj_class = Oggetti::getInstance();
 
-        foreach ($objs as $obj){
+        foreach ($objs as $obj) {
+            $id = Filters::int($obj['id']);
+            $obj_id = Filters::int($obj['oggetto']);
             $img = '/themes/advanced/imgs/items/' . Filters::out($obj['immagine']);
             $nome = Filters::out($obj['nome']);
 
-            $html .= "<div class='single_object' title='{$nome}'>";
-            $html .= "<div class='img'><img src='{$img}'></div>";
-            $html .= "<div class='name'>{$nome}</div>";
-            $html .= "</div>";
+            if ($obj_class->existObject($obj_id)) {
+                $html .= "<div class='single_object' title='{$nome}'>";
+                $html .= "<div class='img'><img src='{$img}'></div>";
+                if (empty($link)) {
+                    $html .= "<div class='name'>{$nome}</div>";
+                } else {
+                    $html .= "<div class='name'><a href='{$link}{$id}'>{$nome}</a></div>";
+                }
+                $html .= "</div>";
+            }
         }
 
         return $html;

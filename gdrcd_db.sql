@@ -333,7 +333,8 @@ INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,
     ('TRAME_ENABLED',1,'Trame','Attivazione trame','Sistema trame attivo?','bool',1),
     ('QUEST_RESULTS_FOR_PAGE',15,'Quest','Risultati per pagina','Numero risultati per pagina nella gestione delle quest.','int',1),
     ('ONLINE_STATUS_ENABLED',1,'Online Status','Stato online avanzato','Stato online avanzato,attivo?','bool',1),
-    ('ONLINE_STATUS_LOGIN_REFRESH',1,'Online Status','Reselect al login','Login oscura ultima scelta dai presenti?','bool',1);
+    ('ONLINE_STATUS_LOGIN_REFRESH',1,'Online Status','Reselect al login','Login oscura ultima scelta dai presenti?','bool',1),
+    ('SCHEDA_OBJECTS_PUBLIC',1,'Scheda Oggetti','Scheda Oggetti pubblica','Pagina inventario pubblica?','bool',1);
 
 -- --------------------------------------------------------
 
@@ -830,7 +831,10 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
     ('MANAGE_OBJECTS_POSITIONS','Permesso per la gestione delle posizioni oggetti'),
     ('MANAGE_ONLINE_STATUS','Permesso per la gestione degli status online'),
     ('MANAGE_SHOPS','Permesso per la gestione degli status online'),
-    ('MANAGE_SHOPS_OBJECTS','Permesso per la gestione degli status online');
+    ('MANAGE_SHOPS_OBJECTS','Permesso per la gestione degli status online'),
+    ('VIEW_SCHEDA_OBJECTS','Permesso per la visualizzazione oggetti in schede altrui'),
+    ('EQUIP_SCHEDA_OBJECTS','Permesso per l equipaggiamento oggetti in schede altrui'),
+    ('REMOVE_SCHEDA_OBJECTS','Permesso per la rimozione oggetti in schede altrui');
 
 
 
