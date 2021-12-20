@@ -13,7 +13,7 @@ class Menu extends BaseClass{
         $html = '<div class="menu_box">';
         $page = Filters::in($menu);
 
-        $menu_category = DB::query("SELECT section FROM menu WHERE menu_name='{$menu}' GROUP BY section",'result');
+        $menu_category = DB::query("SELECT section FROM menu WHERE menu_name='{$menu}' GROUP BY section ORDER BY section",'result');
 
         foreach ($menu_category as $section) {
             $section_name = Filters::out($section['section']);

@@ -343,65 +343,6 @@ div.omino_bianco_ring img {
 div.pagina_scheda_equip {
 }
 
-div.pagina_scheda_oggetti {
-}
-
-div.pagina_scheda_oggetti td.casella_elemento,
-div.pagina_scheda_equip td.casella_elemento {
-    font-size: 12px;
-
-    padding: 3px;
-}
-
-div.pagina_scheda_oggetti div.inventario_img img,
-div.pagina_scheda_equip div.inventario_img img {
-    height: 120px;
-    width: 120px;
-}
-
-div.pagina_scheda_oggetti div.inventario_img,
-div.pagina_scheda_equip div.inventario_img {
-    width: 122px;
-}
-
-div.pagina_oggetti_equip div.inventario_nome,
-div.pagina_scheda_equip div.inventario_nome {
-    width: 122px;
-}
-
-div.pagina_scheda_oggetti div.inventario_quantita,
-div.pagina_scheda_equip div.inventario_quantita {
-    width: 122px;
-}
-
-div.pagina_scheda_oggetti div.inventario_nome,
-div.pagina_scheda_equip div.inventario_nome {
-    font-size: 12px;
-    text-transform: uppercase;
-}
-
-div.pagina_scheda_oggetti div.form_label,
-div.pagina_scheda_equip div.form_label {
-    font-size: 12px;
-    margin: 0;
-}
-
-div.pagina_scheda_oggetti input,
-div.pagina_scheda_equip input {
-    font-size: 12px;
-    margin: 0;
-}
-
-div.inventario_riga_proprieta {
-    width: 80px;
-}
-
-div.pagina_scheda_equip form,
-div.pagina_scheda_oggetti form {
-    text-align: center;
-    margin: 0 0 4px 0;
-}
-
 .skill_incr.active,
 .skill_decr.active {
     visibility:visible;
@@ -487,4 +428,143 @@ div.pagina_scheda_oggetti form {
 
 .pagina_scheda_esperienza .exp_log_table .tr .data{
     width: 20%;
+}
+
+/**** OGGETTI ****/
+
+.pagina_scheda_oggetti {
+    width: 100%;
+}
+
+.pagina_scheda_oggetti .dummy{
+    width: auto;
+    height: 100px;
+    display: none;
+}
+
+.pagina_scheda_oggetti .dummy img{
+    height: 100%;
+}
+
+.pagina_scheda_oggetti .objects_box{
+    width: 80%;
+    height: 200px;
+    overflow: auto;
+    background-color: #23272a;
+    border:1px solid black;
+    border-radius: 3px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+
+.pagina_scheda_oggetti .objects_box .single_object {
+    width: 100px;
+    height: 110px;
+    display: inline-block;
+    vertical-align: top;
+    border: 1px solid black;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #7289da;
+    margin: 5px 3px;
+}
+
+
+.pagina_scheda_oggetti .objects_box .single_object .img{
+    height: 100px;
+    width: 100px;
+}
+
+.pagina_scheda_oggetti .objects_box .single_object img{
+    width: 100%;
+    height: 100%;
+}
+
+.pagina_scheda_oggetti .objects_box .single_object .name{
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: center;
+}
+
+
+.pagina_scheda_oggetti .single_object{
+    width: 98%;
+    height: 232px;
+    margin: 5px auto;
+    border-radius: 5px;
+    background-color: #4d5259;
+    border:1px solid black;
+    max-width: 800px;
+    color: #ccc;
+}
+
+.pagina_scheda_oggetti .single_object .object_img{
+    width: 220px;
+    height: 220px;
+    margin: 5px;
+    border:1px solid black;
+    display: inline-block;
+    vertical-align: top;
+}
+
+
+.pagina_scheda_oggetti .single_object .object_img img{
+    width: 100%;
+    height: 100%;
+}
+
+.pagina_scheda_oggetti .single_object .object_data{
+    width: calc(100% - 250px);
+    display: inline-block;
+    vertical-align: top;
+    border:1px solid black;
+    background-color: #23272a;
+    height: 220px;
+    margin: 5px;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+
+.pagina_scheda_oggetti .single_object .object_data .object_name{
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.pagina_scheda_oggetti .single_object .object_data .object_descr{
+    height: 90px;
+    overflow: auto;
+    border:1px solid #ccc;
+    padding: 5px;
+    box-sizing: border-box;
+    width: 98%;
+    margin:5px auto;
+    border-radius: 5px;
+}
+
+
+.pagina_scheda_oggetti .single_object .object_data .object_info{
+    text-align: left;
+    font-size: 13px;
+    padding-left: 5px;
+    box-sizing: border-box;
+}
+
+.pagina_scheda_oggetti .single_object .object_data .object_commands{
+    text-align: right;
+    padding: 0 5px;
+    box-sizing: border-box;
+}
+
+
+.pagina_scheda_oggetti .single_object .object_data .object_commands button{
+    background-color: #7289da;
+    color: white;
+    border:1px solid black;
+    padding: 0 10px;
+    cursor: pointer;
 }

@@ -185,4 +185,15 @@ class Filters extends BaseClass
 
         return '';
     }
+
+    /**
+     * @fn checkbox
+     * @note Filtro di tipo checkbox per inserimento in db
+     * @param string $val
+     * @return int
+     */
+    public static function checkbox($val): int
+    {
+        return !empty($val) ? 1 : 0;
+    }
 }

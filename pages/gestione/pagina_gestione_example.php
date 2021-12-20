@@ -50,7 +50,7 @@ if($cls->managePermission()){ # Metodo di controllo per accesso alla pagina di g
             <div class="warning"><?=$resp['mex'];?></div>
 
         <?php
-            Functions::redirect('/main.php?page=pagina_gestione_example'); # Redirect alla stessa pagina, per evitare il re-submit di un form
+            Functions::redirect('/main.php?page=pagina_gestione_example',3); # Redirect alla stessa pagina, per evitare il re-submit di un form
         } ?>
 
         <!-- INSERT -->
