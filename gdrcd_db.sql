@@ -539,6 +539,7 @@ INSERT INTO `menu` (`menu_name`, `section`, `name`, `page`, `permission`) VALUES
   ('Gestione', 'Stato Online', 'Gestione tipi stati', 'gestione_tipo_stato_online', 'MANAGE_ONLINE_STATUS'),
   ('Gestione', 'Oggetti', 'Gestione oggetti', 'gestione_oggetti', 'MANAGE_OBJECTS'),
   ('Gestione', 'Oggetti', 'Gestione tipi oggetto', 'gestione_oggetti_tipo', 'MANAGE_OBJECTS_TYPES'),
+  ('Gestione', 'Oggetti', 'Gestione posizioni oggetto', 'gestione_oggetti_posizioni', 'MANAGE_OBJECTS_POSITIONS'),
   ('Gestione', 'Mercato', 'Gestione Oggetti Mercato', 'gestione_mercato_oggetti', 'MANAGE_SHOPS_OBJECTS'),
   ('Gestione', 'Mercato', 'Gestione Negozi Mercato', 'gestione_mercato_negozi', 'MANAGE_SHOPS');
 
@@ -656,26 +657,7 @@ CREATE TABLE IF NOT EXISTS `messaggioaraldo` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `oggetto`
---
-
-CREATE TABLE IF NOT EXISTS `oggetto` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `tipo` int NOT NULL DEFAULT '0',
-  `nome` varchar(255) NOT NULL,
-  `descrizione` text DEFAULT NULL,
-  `immagine` varchar(255) DEFAULT NULL,
-  `indossabile` int NOT NULL DEFAULT '0',
-  `cariche` varchar(255) NOT NULL DEFAULT '0',
-  `creatore_da` varchar(255) NOT NULL DEFAULT 'System',
-  `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `oggetto_mercato`
+-- Struttura della tabella `mercato`
 --
 
 CREATE TABLE IF NOT EXISTS `mercato` (
@@ -700,6 +682,41 @@ CREATE TABLE IF NOT EXISTS `mercato_negozi` (
     `immagine` varchar(255),
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `oggetto`
+--
+
+CREATE TABLE IF NOT EXISTS `oggetto` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `tipo` int NOT NULL DEFAULT '0',
+    `nome` varchar(255) NOT NULL,
+    `descrizione` text DEFAULT NULL,
+    `immagine` varchar(255) DEFAULT NULL,
+    `indossabile` int NOT NULL DEFAULT '0',
+    `posizione` int NOT NULL DEFAULT '0',
+    `cariche` varchar(255) NOT NULL DEFAULT '0',
+    `creatore_da` varchar(255) NOT NULL DEFAULT 'System',
+    `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `oggetto`
+--
+
+CREATE TABLE IF NOT EXISTS `oggetto_posizioni` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `nome` varchar(255) NOT NULL,
+    `immagine` text DEFAULT NULL,
+    `numero` int DEFAULT '1',
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
 -- --------------------------------------------------------
 
 --
@@ -810,6 +827,7 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
     ('SCHEDA_EXP_MANAGE','Permesso per la visualizzazione della pagina esperienza in scheda'),
     ('MANAGE_OBJECTS','Permesso per la gestione degli oggetti'),
     ('MANAGE_OBJECTS_TYPES','Permesso per la gestione delle tipologie di oggetti'),
+    ('MANAGE_OBJECTS_POSITIONS','Permesso per la gestione delle posizioni oggetti'),
     ('MANAGE_ONLINE_STATUS','Permesso per la gestione degli status online'),
     ('MANAGE_SHOPS','Permesso per la gestione degli status online'),
     ('MANAGE_SHOPS_OBJECTS','Permesso per la gestione degli status online');

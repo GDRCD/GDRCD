@@ -147,6 +147,16 @@ class Oggetti extends BaseClass
         return Permissions::permission('MANAGE_OBJECTS_TYPES');
     }
 
+    /**
+     * @fn permissionManageObjectsPositions
+     * @note Controlla se si hanno i permessi per la gestione delle posizioni oggetto
+     * @return bool
+     */
+    public function permissionManageObjectsPositions(): bool
+    {
+        return Permissions::permission('MANAGE_OBJECTS_POSITIONS');
+    }
+
     /*** AJAX ***/
 
     /**
@@ -195,6 +205,28 @@ class Oggetti extends BaseClass
         }
     }
 
+    /**
+     * @fn ajaxObjectPositionData
+     * @note Estrae i dati di una posizione oggetto alla modifica
+     * @param array $post
+     * @return array|void
+     */
+    public function ajaxObjectPositionData(array $post){
+
+        if($this->permissionManageObjectsType()){
+
+            $id = Filters::int($post['id']);
+
+            $data = $this->getObjectPosition($id);
+
+            return [
+                'nome' => Filters::out($data['nome']),
+                'immagine' => Filters::out($data['immagine']),
+                'numero' => Filters::out($data['numero'])
+            ];
+        }
+    }
+
     /*** LISTS ***/
 
     /**
@@ -207,6 +239,28 @@ class Oggetti extends BaseClass
     {
         $html = '';
         $list = $this->getAllObjectTypes('id,nome');
+
+        foreach ($list as $row){
+            $id = Filters::int($row['id']);
+            $nome = Filters::in($row['nome']);
+            $sel = ($selected == $id) ? 'selected' : '';
+
+            $html .= "<option value='{$id}' {$sel}>{$nome}</option>";
+        }
+
+        return $html;
+    }
+
+    /**
+     * @fn listObjectPositions
+     * @note Crea le select delle posizioni oggetto
+     * @param int $selected
+     * @return string
+     */
+    public function listObjectPositions(int $selected = 0): string
+    {
+        $html = '';
+        $list = $this->getAllObjectPositions('id,nome');
 
         foreach ($list as $row){
             $id = Filters::int($row['id']);
@@ -241,7 +295,7 @@ class Oggetti extends BaseClass
         return $html;
     }
 
-    /** FUNCTIONS */
+    /*** FUNCTIONS */
 
     /**
      * @fn addObjectToPg
@@ -444,6 +498,85 @@ class Oggetti extends BaseClass
             DB::query("DELETE FROM oggetto_tipo WHERE id='{$id}'");
 
             $resp = ['response' => true, 'mex' => 'Tipo Oggetto eliminato correttamente.'];
+        } else {
+            $resp = ['response' => false, 'mex' => 'Permesso negato.'];
+        }
+
+        return $resp;
+    }
+
+    /*** MANAGEMENT FUNCTIONS - OBJECT POSITIONS **/
+
+    /**
+     * @fn insertObjectPosition
+     * @note Inserimento posizione oggetto
+     * @param array $post
+     * @return array
+     */
+    public function insertObjectPosition(array $post): array
+    {
+
+        if ($this->permissionManageObjectsPositions()) {
+
+            $nome = Filters::in($post['nome']);
+            $img = Filters::in($post['immagine']);
+            $numero = Filters::int($post['numero']);
+
+            DB::query("INSERT INTO oggetto_posizioni( nome, immagine,numero) 
+                            VALUES('{$nome}','{$img}','{$numero}')");
+
+            $resp = ['response' => true, 'mex' => 'Posizione Oggetto inserita correttamente.'];
+        } else {
+            $resp = ['response' => false, 'mex' => 'Permesso negato.'];
+        }
+
+        return $resp;
+    }
+
+    /**
+     * @fn editObjectPosition
+     * @note Modifica posizione oggetto
+     * @param array $post
+     * @return array
+     */
+    public function editObjectPosition(array $post): array
+    {
+
+        if ($this->permissionManageObjectsPositions()) {
+
+            $id = Filters::int($post['id']);
+            $nome = Filters::in($post['nome']);
+            $img = Filters::in($post['immagine']);
+            $numero = Filters::int($post['numero']);
+
+            DB::query("UPDATE oggetto_posizioni 
+                            SET nome='{$nome}',immagine='{$img}',numero='{$numero}'
+                            WHERE id='{$id}' LIMIT 1");
+
+            $resp = ['response' => true, 'mex' => 'Posizione Oggetto modificata correttamente.'];
+        } else {
+            $resp = ['response' => false, 'mex' => 'Permesso negato.'];
+        }
+
+        return $resp;
+    }
+
+    /**
+     * @fn deleteObjectPosition
+     * @note Eliminazione posizione oggetto
+     * @param array $post
+     * @return array
+     */
+    public function deleteObjectPosition(array $post): array
+    {
+
+        if ($this->permissionManageObjectsPositions()) {
+
+            $id = Filters::int($post['id']);
+
+            DB::query("DELETE FROM oggetto_posizioni WHERE id='{$id}'");
+
+            $resp = ['response' => true, 'mex' => 'Posizione Oggetto eliminata correttamente.'];
         } else {
             $resp = ['response' => false, 'mex' => 'Permesso negato.'];
         }
