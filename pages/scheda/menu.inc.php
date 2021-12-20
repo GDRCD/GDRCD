@@ -38,13 +38,8 @@ $abi_public = $abi_class->AbiVisibility($pg);
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['experience']); ?>
     </a>
 
-    <!-- OGGETTI -->
-    <a href="main.php?page=scheda_oggetti&pg=<?php echo Filters::url( $_REQUEST['pg']); ?>&id_pg=<?=$id_pg;?>">
-        <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['inventory']); ?>
-    </a>
-
     <!-- INVENTARIO -->
-    <a href="main.php?page=scheda_equip&pg=<?php echo Filters::url( $_REQUEST['pg']); ?>&id_pg=<?=$id_pg;?>">
+    <a href="main.php?page=scheda_oggetti&pg=<?php echo Filters::url( $_REQUEST['pg']); ?>&id_pg=<?=$id_pg;?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['equipment']); ?>
     </a>
 

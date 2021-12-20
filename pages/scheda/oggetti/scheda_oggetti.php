@@ -37,10 +37,10 @@ if ($scheda_class->available($id_pg)) {
                 <div class="warning"><?= $resp['mex']; ?></div>
 
                 <div class="link_back">
-                    <a href="/main.php?page=scheda_equip&pg=<?= $pg_name; ?>&id_pg=<?= $id_pg; ?>&id_obj=<?= $id_obj; ?>">Indietro</a>
+                    <a href="/main.php?page=scheda_oggetti&pg=<?= $pg_name; ?>&id_pg=<?= $id_pg; ?>&id_obj=<?= $id_obj; ?>">Indietro</a>
                 </div>
 
-                <?php Functions::redirect("/main.php?page=scheda_equip&pg={$pg_name}&id_pg={$id_pg}&id_obj={$id_obj}", 3); ?>
+                <?php Functions::redirect("/main.php?page=scheda_oggetti&pg={$pg_name}&id_pg={$id_pg}&id_obj={$id_obj}", 3); ?>
 
             <?php } ?>
 

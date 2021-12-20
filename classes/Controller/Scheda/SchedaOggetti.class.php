@@ -1,5 +1,10 @@
 <?php
 
+/*** TODO - MANCANTI:
+- Funzione cedi oggetti
+- Funzione commenta oggetto
+***/
+
 class SchedaOggetti extends Scheda
 {
 
@@ -161,7 +166,7 @@ class SchedaOggetti extends Scheda
             $objs = $this->getPgObjectsByPosition($pg, $position_id, $position_limit, 'personaggio_oggetto.id,personaggio_oggetto.oggetto,oggetto.immagine,oggetto.nome');
             $obj_num = DB::rowsNumber($objs);
 
-            $html .= Oggetti::renderObjects($objs, "main.php?page=scheda_equip&pg={$pg_name}&id_pg={$pg}&id_obj=");
+            $html .= Oggetti::renderObjects($objs, "main.php?page=scheda_oggetti&pg={$pg_name}&id_pg={$pg}&id_obj=");
 
             while ($obj_num < $position_limit) {
                 $html .= "<div class='single_object'  title='Empty'>";
@@ -189,7 +194,7 @@ class SchedaOggetti extends Scheda
         $pg = Filters::int($pg);
         $pg_name = Personaggio::nameFromId($pg);
         $objs = $this->getAllPgObjectsByEquipped($pg, false, 'personaggio_oggetto.id,personaggio_oggetto.oggetto,oggetto.nome,oggetto.immagine');
-        return Oggetti::renderObjects($objs, "main.php?page=scheda_equip&pg={$pg_name}&id_pg={$pg}&id_obj=");
+        return Oggetti::renderObjects($objs, "main.php?page=scheda_oggetti&pg={$pg_name}&id_pg={$pg}&id_obj=");
     }
 
     /**
