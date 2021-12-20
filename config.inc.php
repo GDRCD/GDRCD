@@ -603,8 +603,9 @@ $PARAMETERS['menu']['map']['url'] = 'main.php?page=mappaclick&map_id=' . $_SESSI
 $PARAMETERS['menu']['map']['image_file'] = '';
 $PARAMETERS['menu']['map']['image_file_onclick'] = '';
 
+
 $PARAMETERS['menu']['profile']['text'] = 'Scheda';
-$PARAMETERS['menu']['profile']['url'] = 'main.php?page=scheda&pg=' . $_SESSION['login'];
+$PARAMETERS['menu']['profile']['url'] = 'main.php?page=scheda&pg='.$_SESSION['login'].'&id_pg='.Functions::getInstance()->getMyId();
 /*Esempio di link nel caso si volesse aprire come scheda modale
 $PARAMETERS['menu']['profile']['url']="javascript:modalWindow('scheda', 'Scheda di ". $_SESSION['login'] ."', 'popup.php?page=scheda&pg=". $_SESSION['login'] ."');";
 */

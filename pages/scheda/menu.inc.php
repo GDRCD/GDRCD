@@ -3,6 +3,7 @@
 $pg = Filters::out($_REQUEST['pg']);
 $me = Filters::out($_SESSION['login']);
 $perm = Filters::out($_SESSION['permessi']);
+$id_pg = Filters::int($_REQUEST['id_pg']);
 
 # Se la classe esiste, utilizza il controllo dato dalla classe, altrimenti utilizza quello di default
 $abi_class = Abilita::getInstance();
@@ -14,49 +15,49 @@ $abi_public = $abi_class->AbiVisibility($pg);
 
     <!-- ABILITA -->
 <?php if ($abi_public) { ?>
-    <a href="main.php?page=scheda_skill&pg=<?= $pg ?>">
+    <a href="main.php?page=scheda_skill&pg=<?= $pg ?>&id_pg=<?=$id_pg;?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['skill']); ?>
     </a>
 <?php } ?>
 
 
     <!-- Descrizione e Storia separate dalla pagina principale della scheda -->
-    <a href="main.php?page=scheda_descrizione&pg=<?php echo $_SESSION['login']; ?>">
+    <a href="main.php?page=scheda_descrizione&pg=<?php echo $_SESSION['login']; ?>&id_pg=<?=$id_pg;?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['detail']); ?>
     </a>
-    <a href="main.php?page=scheda_storia&pg=<?php echo $_SESSION['login']; ?>">
+    <a href="main.php?page=scheda_storia&pg=<?php echo $_SESSION['login']; ?>&id_pg=<?=$id_pg;?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['background']); ?>
     </a>
     <!-- TRASFERIMENTI -->
-    <a href="main.php?page=scheda_trans&pg=<?php echo Filters::url( $_REQUEST['pg']); ?>">
+    <a href="main.php?page=scheda_trans&pg=<?php echo Filters::url( $_REQUEST['pg']); ?>&id_pg=<?=$id_pg;?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['transictions']); ?>
     </a>
 
     <!-- ESPERIENZA -->
-    <a href="main.php?page=scheda_px&pg=<?php echo Filters::url( $_REQUEST['pg']); ?>">
+    <a href="main.php?page=scheda_px&pg=<?php echo Filters::url( $_REQUEST['pg']); ?>&id_pg=<?=$id_pg;?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['experience']); ?>
     </a>
 
     <!-- OGGETTI -->
-    <a href="main.php?page=scheda_oggetti&pg=<?php echo Filters::url( $_REQUEST['pg']); ?>">
+    <a href="main.php?page=scheda_oggetti&pg=<?php echo Filters::url( $_REQUEST['pg']); ?>&id_pg=<?=$id_pg;?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['inventory']); ?>
     </a>
 
     <!-- INVENTARIO -->
-    <a href="main.php?page=scheda_equip&pg=<?php echo Filters::url( $_REQUEST['pg']); ?>">
+    <a href="main.php?page=scheda_equip&pg=<?php echo Filters::url( $_REQUEST['pg']); ?>&id_pg=<?=$id_pg;?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['equipment']); ?>
     </a>
 
     <!-- DIARIO -->
 <?php if (defined('PG_DIARY_ENABLED') and PG_DIARY_ENABLED) { ?>
-    <a href="main.php?page=scheda_diario&pg=<?php echo Filters::url( $_REQUEST['pg']); ?>">
+    <a href="main.php?page=scheda_diario&pg=<?php echo Filters::url( $_REQUEST['pg']); ?>&id_pg=<?=$id_pg;?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['diary']); ?>
     </a>
 <?php } ?>
 
     <!-- ROLES -->
 <?php if (($_SESSION['permessi'] >= ROLE_PERM || $_REQUEST['pg'] == $_SESSION['login']) && REG_ROLE) { ?>
-    <a href="main.php?page=scheda_roles&pg=<?php echo Filters::url( $_REQUEST['pg']); ?>">
+    <a href="main.php?page=scheda_roles&pg=<?php echo Filters::url( $_REQUEST['pg']); ?>&id_pg=<?=$id_pg;?>">
         Giocate registrate
     </a>
 <?php } ?>
@@ -65,22 +66,22 @@ $abi_public = $abi_class->AbiVisibility($pg);
 <?php if ($_SESSION['permessi'] >= MODERATOR) { ?>
 
     <!-- LOG -->
-    <a href="main.php?page=scheda_log&pg=<?php echo Filters::url( $_REQUEST['pg']); ?>">
+    <a href="main.php?page=scheda_log&pg=<?php echo Filters::url( $_REQUEST['pg']); ?>&id_pg=<?=$id_pg;?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['log']); ?>
     </a>
 
     <!-- AMMINISTRA -->
-    <a href="main.php?page=scheda_gst&pg=<?php echo Filters::url( $_REQUEST['pg']); ?>">
+    <a href="main.php?page=scheda_gst&pg=<?php echo Filters::url( $_REQUEST['pg']); ?>&id_pg=<?=$id_pg;?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['gst']); ?>
     </a>
-    <a href="main.php?page=scheda_log&pg=<?= $pg; ?>">
+    <a href="main.php?page=scheda_log&pg=<?= $pg; ?>&id_pg=<?=$id_pg;?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['log']); ?>
     </a>
 <?php } ?>
 
     <!-- MODIFICA -->
 <?php if (($_REQUEST['pg'] == $_SESSION['login']) || ($_SESSION['permessi'] >= GUILDMODERATOR)) { ?>
-    <a href="main.php?page=scheda_modifica&pg=<?php echo Filters::url( $_REQUEST['pg']); ?>">
+    <a href="main.php?page=scheda_modifica&pg=<?php echo Filters::url( $_REQUEST['pg']); ?>&id_pg=<?=$id_pg;?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['update']); ?>
     </a>
 <?php } ?>
