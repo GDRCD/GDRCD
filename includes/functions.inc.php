@@ -503,6 +503,9 @@ function gdrcd_load_modules($page, $params = [])
     // Costruisco i parametri del modulo
     $MODULE = $params;
 
+    // Sostituisco i __ con i /
+    $page = gdrcd_pages_format($page);
+
     try {
         // Controllo la tipologia di informazione passata (file o page) e poi determino il percorso del modulo
         $modulePath = is_file($page) ? $page : gdrcd_pages_path($page);
