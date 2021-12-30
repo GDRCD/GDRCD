@@ -81,6 +81,11 @@ if($cls->permissionManageStatistics()){ # Metodo di controllo per accesso alla p
             </div>
 
             <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
+                <div class="label">Disponibile ad iscrizione</div>
+                <input type="checkbox" name="iscrizione">
+            </div>
+
+            <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
                 <div class="label">Valore Minimo</div>
                 <input type="number" name="min_val">
             </div>
@@ -120,6 +125,11 @@ if($cls->permissionManageStatistics()){ # Metodo di controllo per accesso alla p
                 <input type="number" name="max_val">
             </div>
 
+            <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
+                <div class="label">Disponibile ad iscrizione</div>
+                <input type="checkbox" name="iscrizione">
+            </div>
+            
             <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
                 <div class="label">Valore Minimo</div>
                 <input type="number" name="min_val">

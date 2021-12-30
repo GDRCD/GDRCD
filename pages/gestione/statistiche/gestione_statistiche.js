@@ -18,6 +18,7 @@ $(function(){
             form.find('textarea[name="descr"]').val(datas.descrizione);
             form.find('input[name="max_val"]').val(datas.max_val);
             form.find('input[name="min_val"]').val(datas.min_val);
+            form.find('input[name="iscrizione"]').prop("checked",datas.iscrizione);
         }
 
     }

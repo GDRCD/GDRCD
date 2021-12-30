@@ -1184,6 +1184,7 @@ CREATE TABLE IF NOT EXISTS `statistiche` (
   `max_val` int NOT NULL,
   `min_val` int NOT NULL,
   `descrizione` text DEFAULT NULL,
+  `iscrizione` bool DEFAULT 0,
   `creato_da` int DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;

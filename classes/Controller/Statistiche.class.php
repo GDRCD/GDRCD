@@ -60,7 +60,8 @@ class Statistiche extends BaseClass{
                 'nome' => Filters::out($data['nome']),
                 'descrizione' => Filters::out($data['descrizione']),
                 'max_val' => Filters::int($data['max_val']),
-                'min_val' => Filters::int($data['min_val'])
+                'min_val' => Filters::int($data['min_val']),
+                'iscrizione' => Filters::int($data['iscrizione']),
             ];
         }
     }
@@ -133,11 +134,12 @@ class Statistiche extends BaseClass{
             $descrizione = Filters::in($post['descr']);
             $max = Filters::int($post['max_val']);
             $min = Filters::int($post['min_val']);
+            $iscr = Filters::checkbox($post['iscrizione']);
             $creato_da = Filters::int($this->me_id);
 
 
-            DB::query("INSERT INTO statistiche(nome, max_val, min_val, descrizione,creato_da) 
-                            VALUES('{$nome}','{$max}','{$min}','{$descrizione}','{$creato_da}')");
+            DB::query("INSERT INTO statistiche(nome, max_val, min_val, descrizione,iscrizione,creato_da) 
+                            VALUES('{$nome}','{$max}','{$min}','{$descrizione}','{$iscr}','{$creato_da}')");
 
             $resp = ['response' => true, 'mex' => 'Statistica inserita correttamente.'];
         } else {
@@ -163,11 +165,12 @@ class Statistiche extends BaseClass{
             $descrizione = Filters::in($post['descr']);
             $max = Filters::int($post['max_val']);
             $min = Filters::int($post['min_val']);
+            $iscr = Filters::checkbox($post['iscrizione']);
             $creato_da = Filters::int($this->me_id);
 
             DB::query("UPDATE statistiche 
                             SET nome='{$nome}',descrizione='{$descrizione}',max_val='{$max}',
-                                min_val='{$min}',creato_da='{$creato_da}'
+                                min_val='{$min}',creato_da='{$creato_da}',iscrizione='{$iscr}'
                             WHERE id='{$id}' LIMIT 1");
 
             $resp = ['response' => true, 'mex' => 'Statistica modificata correttamente.'];
