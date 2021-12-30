@@ -904,8 +904,10 @@ class Esiti extends BaseClass
             DB::query("INSERT INTO esiti_risposte(esito, autore, contenuto,dice_face,dice_num,abilita,chat )
                         VALUES('{$id}','{$this->me_id}','{$contenuto}','{$dice_face}','{$dice_num}','{$abilita}','{$chat}')  ");
 
-            $last_id = $this->getLastAnswerId();
-            $this->addCD($last_id,$post['add_cd']);
+            if(!empty($post['add_cd'])) {
+                $last_id = $this->getLastAnswerId();
+                $this->addCD($last_id, $post['add_cd']);
+            }
 
             $resp = ['response' => true, 'mex' => 'Risposta aggiunta correttamente.'];
 
@@ -923,7 +925,7 @@ class Esiti extends BaseClass
      * @param array $cds
      * @return void
      */
-    public function addCD(int $id, array $cds):void{
+    public function addCD(int $id, array $cds = []):void{
 
         $id = Filters::int($id);
 
