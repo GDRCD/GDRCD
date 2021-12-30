@@ -8,30 +8,25 @@
 class SchedaOggetti extends Scheda
 {
 
-    /**** FUNCTIONS ****/
+    /**** CONTROLS ****/
 
+    /**
+     * @fn isPublic
+     * @note Controlla se la scheda oggetti e' pubblica
+     * @return mixed
+     */
     public function isPublic(){
         return Functions::get_constant('SCHEDA_OBJECTS_PUBLIC');
     }
 
-    public function isAccessible(int $id_pg){
-        return ($this->isPublic() || $this->permissionViewObjects() || Personaggio::isMyPg($id_pg));
-    }
-
-    /*** CONTROLS ***/
-
     /**
-     * @fn isPgObject
-     * @note Controlla se l'oggetto (personaggio_oggetto.id) e' di proprieta' del personaggio
-     * @param int $obj
-     * @param int $pg
+     * @fn isAccesible
+     * @note La scheda oggetti e' accessibile
+     * @param int $id_pg
      * @return bool
      */
-    public function isPgObject(int $obj,int $pg): bool
-    {
-        $data = $this->getPgObject($obj, 'personaggio_oggetto.personaggio');
-        $personaggio = Filters::int($data['personaggio']);
-        return ($pg === $personaggio);
+    public function isAccessible(int $id_pg){
+        return ($this->isPublic() || $this->permissionViewObjects() || Personaggio::isMyPg($id_pg));
     }
 
     /*** PERMESSI ***/
@@ -66,76 +61,61 @@ class SchedaOggetti extends Scheda
         return Permissions::permission('VIEW_SCHEDA_OBJECTS');
     }
 
-
-    /*** TABLE HELPERS ***/
+    /*** FUNCTIONS ***/
 
     /**
-     * @fn getPgObjectsByPosition
-     * @note Estrae gli oggetti equipaggiati per quella parte del corpo
-     * @param int $id_pg
-     * @param int $position
-     * @param int $limit
-     * @param string $val
-     * @return bool|int|mixed|string
+     * @fn equipObj
+     * @note Funzione di equipaggiamento e rimozione di un oggetto del personaggio
+     * @param array $post
+     * @return array
      */
-    public function getPgObjectsByPosition(int $id_pg, int $position, int $limit = 1, string $val = '*')
-    {
+    public function equipObj(array $post):array{
 
-        return DB::query("SELECT {$val}
-                                FROM personaggio_oggetto 
-                                LEFT JOIN oggetto ON (oggetto.id = personaggio_oggetto.oggetto)
-                                WHERE personaggio_oggetto.indossato = 1 
-                                  AND oggetto.posizione = '{$position}'
-                                  AND personaggio_oggetto.personaggio = '{$id_pg}'
-                                LIMIT {$limit}", 'result');
+        $id_obj = Filters::int($post['object']);
+        $id_pg = Filters::int($post['pg']);
+        $obj_class = Oggetti::getInstance();
+
+        if(PersonaggioOggetti::isPgObject($id_obj,$id_pg)){
+
+            $obj_data = PersonaggioOggetti::getPgObject($id_obj);
+            $indossato = Filters::int($obj_data['indossato']);
+            $obj_position = Filters::int($obj_data['posizione']);
+            $position_data = $obj_class->getObjectPosition($obj_position);
+
+            if(!$indossato) {
+                $max_number = Filters::int($position_data['numero']);
+                $equipped = PersonaggioOggetti::getPgObjectsByPosition($id_pg,$obj_position,$max_number);
+                $equipped_number = DB::rowsNumber($equipped);
+
+                if($equipped_number >= $max_number){
+                    return ['response' =>false,'mex'=>'Numero massimo di oggetti equipaggiati raggiunto.'];
+                }
+            }
+
+            DB::query("UPDATE personaggio_oggetto SET indossato = !indossato WHERE id='{$id_obj}' AND personaggio='{$id_pg}' LIMIT 1");
+
+            return ['response'=>true,'mex'=>'Operazione effettuata con successo.'];
+
+        }
+        else{
+            return ['response'=>false,'mex'=>'Permesso negato.'];
+        }
 
     }
 
-    /**
-     * @fn getAllPgObjectsByEquipped
-     * @note Estrae tutti gli oggetti di un personaggio in base all'indossato
-     * @param int $id_pg
-     * @param int $equipped
-     * @param string $val
-     * @return bool|int|mixed|string
-     */
-    public function getAllPgObjectsByEquipped(int $id_pg, int $equipped, string $val = '*')
-    {
-        return DB::query("SELECT {$val}
-                                FROM personaggio_oggetto 
-                                LEFT JOIN oggetto ON (oggetto.id = personaggio_oggetto.oggetto)
-                                WHERE personaggio_oggetto.indossato = '{$equipped}'
-                                  AND personaggio_oggetto.personaggio = '{$id_pg}'", 'result');
-    }
+    public function removeObj(array $post):array {
 
-    /**
-     * @fn getAllPgObjectsByEquipped
-     * @note Estrae tutti gli oggetti di un personaggio
-     * @param int $id_pg
-     * @param string $val
-     * @return bool|int|mixed|string
-     */
-    public function getAllPgObjects(int $id_pg, string $val = '*')
-    {
-        return DB::query("SELECT {$val}
-                                FROM personaggio_oggetto 
-                                LEFT JOIN oggetto ON (oggetto.id = personaggio_oggetto.oggetto)
-                                  AND personaggio_oggetto.personaggio = '{$id_pg}'", 'result');
-    }
+        $id_obj = Filters::int($post['object']);
+        $id_pg = Filters::int($post['pg']);
 
-    /**
-     * @fn getPgObject
-     * @note Estrae i dati di un oggetto di un personaggio
-     * @param int $id
-     * @param string $val
-     * @return bool|int|mixed|string
-     */
-    public function getPgObject(int $id, string $val = 'oggetto.*,personaggio_oggetto.*')
-    {
-        return DB::query("SELECT {$val}
-                                FROM personaggio_oggetto 
-                                LEFT JOIN oggetto ON (oggetto.id = personaggio_oggetto.oggetto)
-                                  WHERE personaggio_oggetto.id = '{$id}' LIMIT 1");
+        if(PersonaggioOggetti::isPgObject($id_obj,$id_pg)){
+            Oggetti::removeObjectFromPg($id_obj,$id_pg);
+
+            return ['response'=>true,'mex'=>'Oggetto rimosso correttamente.'];
+        }else{
+            return ['response'=>false,'mex'=>'Permesso negato'];
+        }
+
     }
 
     /*** RENDERING **/
@@ -163,10 +143,10 @@ class SchedaOggetti extends Scheda
             $position_img = Filters::out($position['immagine']);
             $position_limit = Filters::int($position['numero']);
 
-            $objs = $this->getPgObjectsByPosition($pg, $position_id, $position_limit, 'personaggio_oggetto.id,personaggio_oggetto.oggetto,oggetto.immagine,oggetto.nome');
+            $objs = PersonaggioOggetti::getPgObjectsByPosition($pg, $position_id, $position_limit, 'personaggio_oggetto.id,personaggio_oggetto.oggetto,oggetto.immagine,oggetto.nome');
             $obj_num = DB::rowsNumber($objs);
 
-            $html .= Oggetti::renderObjects($objs, "main.php?page=scheda_oggetti&pg={$pg_name}&id_pg={$pg}&id_obj=");
+            $html .= $this->renderObjects($objs, "main.php?page=scheda_oggetti&pg={$pg_name}&id_pg={$pg}&id_obj=");
 
             while ($obj_num < $position_limit) {
                 $html .= "<div class='single_object'  title='Empty'>";
@@ -193,8 +173,8 @@ class SchedaOggetti extends Scheda
     {
         $pg = Filters::int($pg);
         $pg_name = Personaggio::nameFromId($pg);
-        $objs = $this->getAllPgObjectsByEquipped($pg, false, 'personaggio_oggetto.id,personaggio_oggetto.oggetto,oggetto.nome,oggetto.immagine');
-        return Oggetti::renderObjects($objs, "main.php?page=scheda_oggetti&pg={$pg_name}&id_pg={$pg}&id_obj=");
+        $objs = PersonaggioOggetti::getAllPgObjectsByEquipped($pg, false, 'personaggio_oggetto.id,personaggio_oggetto.oggetto,oggetto.nome,oggetto.immagine');
+        return $this->renderObjects($objs, "main.php?page=scheda_oggetti&pg={$pg_name}&id_pg={$pg}&id_obj=");
     }
 
     /**
@@ -209,71 +189,45 @@ class SchedaOggetti extends Scheda
 
         $html = '';
         $obj_class = Oggetti::getInstance();
-        $obj_data = $this->getPgObject($obj,'oggetto.*,personaggio_oggetto.*,personaggio_oggetto.cariche AS cariche_obj');
+        $obj_data = PersonaggioOggetti::getPgObject($obj,'oggetto.*,personaggio_oggetto.*,personaggio_oggetto.cariche AS cariche_obj');
         $object = Filters::int($obj_data['oggetto']);
 
 
-        if ($obj_class->existObject($object) && $this->isPgObject($obj, $pg)) {
+        if ($obj_class->existObject($object) && PersonaggioOggetti::isPgObject($obj, $pg)) {
             return $obj_data;
         }
 
     }
 
-    /**** FUNCTIONS ****/
-
     /**
-     * @fn equipObj
-     * @note Funzione di equipaggiamento e rimozione di un oggetto del personaggio
-     * @param array $post
-     * @return array
+     * @fn renderObjects
+     * @note Renderizzazione oggetti da una lista di oggetti
+     * @param object $objs
+     * @return string
      */
-    public function equipObj(array $post):array{
-
-        $id_obj = Filters::int($post['object']);
-        $id_pg = Filters::int($post['pg']);
+    public static function renderObjects(object $objs, $link = ''): string
+    {
+        $html = '';
         $obj_class = Oggetti::getInstance();
 
-        if($this->isPgObject($id_obj,$id_pg)){
+        foreach ($objs as $obj) {
+            $id = Filters::int($obj['id']);
+            $obj_id = Filters::int($obj['oggetto']);
+            $img = '/themes/advanced/imgs/items/' . Filters::out($obj['immagine']);
+            $nome = Filters::out($obj['nome']);
 
-            $obj_data = $this->getPgObject($id_obj);
-            $indossato = Filters::int($obj_data['indossato']);
-            $obj_position = Filters::int($obj_data['posizione']);
-            $position_data = $obj_class->getObjectPosition($obj_position);
-
-            if(!$indossato) {
-                $max_number = Filters::int($position_data['numero']);
-                $equipped = $this->getPgObjectsByPosition($id_pg,$obj_position,$max_number);
-                $equipped_number = DB::rowsNumber($equipped);
-
-                if($equipped_number >= $max_number){
-                    return ['response' =>false,'mex'=>'Numero massimo di oggetti equipaggiati raggiunto.'];
+            if ($obj_class->existObject($obj_id)) {
+                $html .= "<div class='single_object' title='{$nome}'>";
+                $html .= "<div class='img'><img src='{$img}'></div>";
+                if (empty($link)) {
+                    $html .= "<div class='name'>{$nome}</div>";
+                } else {
+                    $html .= "<div class='name'><a href='{$link}{$id}'>{$nome}</a></div>";
                 }
+                $html .= "</div>";
             }
-
-            DB::query("UPDATE personaggio_oggetto SET indossato = !indossato WHERE id='{$id_obj}' AND personaggio='{$id_pg}' LIMIT 1");
-
-            return ['response'=>true,'mex'=>'Operazione effettuata con successo.'];
-
-        }
-        else{
-            return ['response'=>false,'mex'=>'Permesso negato.'];
         }
 
-    }
-
-    public function removeObj(array $post):array {
-
-        $id_obj = Filters::int($post['object']);
-        $id_pg = Filters::int($post['pg']);
-        $obj_class = Oggetti::getInstance();
-
-        if($this->isPgObject($id_obj,$id_pg)){
-            $obj_class->removeObjectFromPg($id_obj,$id_pg);
-
-            return ['response'=>true,'mex'=>'Oggetto rimosso correttamente.'];
-        }else{
-            return ['response'=>false,'mex'=>'Permesso negato'];
-        }
-
+        return $html;
     }
 }

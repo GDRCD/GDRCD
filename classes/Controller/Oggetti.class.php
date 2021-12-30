@@ -322,46 +322,10 @@ class Oggetti extends BaseClass
      * @param int $pg
      * @return void
      */
-    public function removeObjectFromPg(int $obj, int $pg): void
+    public static function removeObjectFromPg(int $obj, int $pg): void
     {
         DB::query("DELETE FROM personaggio_oggetto WHERE id='{$obj}' AND personaggio='{$pg}' ");
     }
-
-
-    /*** RENDER */
-
-    /**
-     * @fn renderObjects
-     * @note Renderizzazione oggetti da una lista di oggetti
-     * @param object $objs
-     * @return string
-     */
-    public static function renderObjects(object $objs, $link = ''): string
-    {
-        $html = '';
-        $obj_class = Oggetti::getInstance();
-
-        foreach ($objs as $obj) {
-            $id = Filters::int($obj['id']);
-            $obj_id = Filters::int($obj['oggetto']);
-            $img = '/themes/advanced/imgs/items/' . Filters::out($obj['immagine']);
-            $nome = Filters::out($obj['nome']);
-
-            if ($obj_class->existObject($obj_id)) {
-                $html .= "<div class='single_object' title='{$nome}'>";
-                $html .= "<div class='img'><img src='{$img}'></div>";
-                if (empty($link)) {
-                    $html .= "<div class='name'>{$nome}</div>";
-                } else {
-                    $html .= "<div class='name'><a href='{$link}{$id}'>{$nome}</a></div>";
-                }
-                $html .= "</div>";
-            }
-        }
-
-        return $html;
-    }
-
 
     /*** MANAGEMENT FUNCTIONS - OBJECTS **/
 
