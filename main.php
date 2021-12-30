@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**    * Fix Require al posto di include
  * Require blocca l'esecuzione dello script se il file è assente
  * dal momento che il file in questione è fondamentale è buona norma applicarlo
