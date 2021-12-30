@@ -317,7 +317,8 @@ INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,
     ('QUEST_RESULTS_FOR_PAGE',15,'Quest','Risultati per pagina','Numero risultati per pagina nella gestione delle quest.','int',1),
     ('ONLINE_STATUS_ENABLED',1,'Online Status','Stato online avanzato','Stato online avanzato,attivo?','bool',1),
     ('ONLINE_STATUS_LOGIN_REFRESH',1,'Online Status','Reselect al login','Login oscura ultima scelta dai presenti?','bool',1),
-    ('SCHEDA_OBJECTS_PUBLIC',1,'Scheda Oggetti','Scheda Oggetti pubblica','Pagina inventario pubblica?','bool',1);
+    ('SCHEDA_OBJECTS_PUBLIC',1,'Scheda Oggetti','Scheda Oggetti pubblica','Pagina inventario pubblica?','bool',1),
+    ('SCHEDA_STATS_PUBLIC',1,'Scheda Oggetti','Scheda Statistiche pubblica','Pagina statistica pubblica?','bool',1);
 
 -- --------------------------------------------------------
 
@@ -525,7 +526,8 @@ INSERT INTO `menu` (`menu_name`, `section`, `name`, `page`, `permission`) VALUES
   ('Gestione', 'Oggetti', 'Gestione tipi oggetto', 'gestione_oggetti_tipo', 'MANAGE_OBJECTS_TYPES'),
   ('Gestione', 'Oggetti', 'Gestione posizioni oggetto', 'gestione_oggetti_posizioni', 'MANAGE_OBJECTS_POSITIONS'),
   ('Gestione', 'Mercato', 'Gestione Oggetti Mercato', 'gestione_mercato_oggetti', 'MANAGE_SHOPS_OBJECTS'),
-  ('Gestione', 'Mercato', 'Gestione Negozi Mercato', 'gestione_mercato_negozi', 'MANAGE_SHOPS');
+  ('Gestione', 'Mercato', 'Gestione Negozi Mercato', 'gestione_mercato_negozi', 'MANAGE_SHOPS'),
+  ('Gestione', 'Statistiche', 'Gestione Statistiche', 'gestione_statistiche', 'MANAGE_STATS');
 
 -- --------------------------------------------------------
 
@@ -797,7 +799,6 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
     ('MANAGE_GUILDS', 'Permesso per la gestione delle gilde'),
     ('MANAGE_PERMISSIONS', 'Permesso per la gestione dei permessi'),
     ('MANAGE_MANUTENTIONS', 'Permesso per la gestione della manutenzione del db'),
-    ('MANAGE_OBJECTS', 'Permesso per la gestione degli oggetti'),
     ('MANAGE_REPORTS', 'Permesso per la gestione delle giocate segnalate'),
     ('MANAGE_ESITI', 'Permesso per la gestione base degli esiti'),
     ('MANAGE_ALL_ESITI', 'Permesso per la visione/modifica di qualsiasi tipo di esito'),
@@ -817,7 +818,12 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
     ('MANAGE_SHOPS_OBJECTS','Permesso per la gestione degli status online'),
     ('VIEW_SCHEDA_OBJECTS','Permesso per la visualizzazione oggetti in schede altrui'),
     ('EQUIP_SCHEDA_OBJECTS','Permesso per l equipaggiamento oggetti in schede altrui'),
-    ('REMOVE_SCHEDA_OBJECTS','Permesso per la rimozione oggetti in schede altrui');
+    ('REMOVE_SCHEDA_OBJECTS','Permesso per la rimozione oggetti in schede altrui'),
+    ('MANAGE_STATS','Permesso per la gestione statistiche'),
+    ('VIEW_SCHEDA_STATS','Permesso per la visualizzazione statistiche in schede altrui'),
+    ('UPGRADE_SCHEDA_STATS','Permesso per l\'aumento statistiche in schede altrui'),
+    ('DOWNGRADE_SCHEDA_STATS','Permesso per la riduzione statistiche in schede altrui');
+
 
 
 
@@ -979,7 +985,7 @@ CREATE TABLE `personaggio_oggetto` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `personaggio_quest`
+-- Struttura della tabella `personaggio_online_status`
 --
 
 CREATE TABLE `personaggio_online_status` (
@@ -1007,6 +1013,20 @@ CREATE TABLE personaggio_quest  (
   `autore` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- ---------------------------------------------
+
+--
+-- Struttura della tabella `personaggio_statistiche`
+--
+
+CREATE TABLE `personaggio_statistiche` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `personaggio` int NOT NULL,
+    `statistica` int NOT NULL,
+    `valore` int DEFAULT 0,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1149,6 +1169,22 @@ CREATE TABLE IF NOT EXISTS `send_GM` (
   `autore` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `role_reg` int NOT NULL,
   `note` text CHARACTER SET utf8 COLLATE utf8_general_ci,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `statistiche`
+--
+
+CREATE TABLE IF NOT EXISTS `statistiche` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nome` varchar(255) NOT NULL,
+  `max_val` int NOT NULL,
+  `min_val` int NOT NULL,
+  `descrizione` text DEFAULT NULL,
+  `creato_da` int DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
