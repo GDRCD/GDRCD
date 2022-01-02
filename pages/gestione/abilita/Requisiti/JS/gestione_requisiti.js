@@ -20,7 +20,7 @@ $(function(){
                        $('#ModAbiRequisitoForm select[name="abi"]').val(datas.Abi);
                        $('#ModAbiRequisitoForm select[name="grado"]').val(datas.Grado);
                        $('#ModAbiRequisitoForm select[name="tipo"]').val(datas.Tipo);
-                       $('#ModAbiRequisitoForm select[name="liv_req"]').val(datas.LivRif);
+                       $('#ModAbiRequisitoForm input[name="liv_req"]').val(datas.LivRif);
 
                        if(datas.Tipo == 1) {
                            $('#ModAbiRequisitoForm select[name="id_req"] optgroup[label="Abilita"] option[value="'+datas.IdRif+'"]').attr('selected',true);
@@ -34,7 +34,7 @@ $(function(){
                        $('#ModAbiRequisitoForm select[name="grado"]').val('');
                        $('#ModAbiRequisitoForm select[name="tipo"]').val('');
                        $('#ModAbiRequisitoForm select[name="id_req"]').val('');
-                       $('#ModAbiRequisitoForm select[name="liv_req"]').val('');
+                       $('#ModAbiRequisitoForm input[name="liv_req"]').val('');
                    }
 
 

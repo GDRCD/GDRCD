@@ -35,7 +35,7 @@ class Statistiche extends BaseClass{
      */
     public function getStats(string $val = '*')
     {
-        return DB::query("SELECT {$val} FROM statistiche WHERE 1",'result');
+        return DB::query("SELECT {$val} FROM statistiche WHERE 1 ORDER BY nome",'result');
     }
 
     /*** AJAX ***/

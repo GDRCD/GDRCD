@@ -1,6 +1,7 @@
 <?php
 
 $abiReq = Abilita::getInstance();
+$stat_cls = Statistiche::getInstance();
 
 if (isset($_POST['action'])) {
 
@@ -99,18 +100,7 @@ if (isset($_POST['action'])) {
                         <?= $abiReq->ListaAbilita(); ?>
                     </optgroup>
                     <optgroup label="Caratteristiche">
-                        <option value="0">
-                            <?php echo Filters::out($PARAMETERS['names']['stats']['car0']); ?></option>
-                        <option value="1">
-                            <?php echo Filters::out($PARAMETERS['names']['stats']['car1']); ?></option>
-                        <option value="2">
-                            <?php echo Filters::out($PARAMETERS['names']['stats']['car2']); ?></option>
-                        <option value="3">
-                            <?php echo Filters::out($PARAMETERS['names']['stats']['car3']); ?></option>
-                        <option value="4">
-                            <?php echo Filters::out($PARAMETERS['names']['stats']['car4']); ?></option>
-                        <option value="5">
-                            <?php echo Filters::out($PARAMETERS['names']['stats']['car5']); ?></option>
+                        <?=$stat_cls->listStats();?>
                     </optgroup>
                 </select>
             </div>
@@ -118,12 +108,7 @@ if (isset($_POST['action'])) {
             <!-- LIVELLO REQUISITO -->
             <div class="single_input">
                 <div class="label">Livello requisito</div>
-                <select name="liv_req" required>
-                    <option value=""></option>
-                    <?php for ($i = 1; $i <= Functions::get_constant('ABI_LEVEL_CAP'); $i++) { ?>
-                        <option value="<?= $i; ?>"><?= $i; ?></option>
-                    <?php } ?>
-                </select>
+                <input type="number" name="liv_req" required>
             </div>
 
             <input type="hidden" name="action" value="CreaAbiRequisito" required><br>
@@ -190,18 +175,7 @@ if (isset($_POST['action'])) {
                         <?= $abiReq->ListaAbilita(); ?>
                     </optgroup>
                     <optgroup label="Caratteristiche">
-                        <option value="0">
-                            <?php echo Filters::out($PARAMETERS['names']['stats']['car0']); ?></option>
-                        <option value="1">
-                            <?php echo Filters::out($PARAMETERS['names']['stats']['car1']); ?></option>
-                        <option value="2">
-                            <?php echo Filters::out($PARAMETERS['names']['stats']['car2']); ?></option>
-                        <option value="3">
-                            <?php echo Filters::out($PARAMETERS['names']['stats']['car3']); ?></option>
-                        <option value="4">
-                            <?php echo Filters::out($PARAMETERS['names']['stats']['car4']); ?></option>
-                        <option value="5">
-                            <?php echo Filters::out($PARAMETERS['names']['stats']['car5']); ?></option>
+                        <?=$stat_cls->listStats();?>
                     </optgroup>
                 </select>
             </div>
@@ -209,12 +183,7 @@ if (isset($_POST['action'])) {
             <!-- LIVELLO REQUISITO -->
             <div class="single_input">
                 <div class="label">Livello requisito</div>
-                <select name="liv_req" required>
-                    <option value=""></option>
-                    <?php for ($i = 1; $i <= Functions::get_constant('ABI_LEVEL_CAP'); $i++) { ?>
-                        <option value="<?= $i; ?>"><?= $i; ?></option>
-                    <?php } ?>
-                </select>
+                <input type="number" name="liv_req" required>
             </div>
 
             <input type="hidden" name="action" value="ModAbiRequisito" required><br>
