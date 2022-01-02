@@ -74,6 +74,7 @@ if (($PARAMETERS['mode']['user_bbcode'] == 'ON' && $PARAMETERS['settings']['user
         <script src="/plugins/Ajax.js"></script>
         <script src="/plugins/Form.js"></script>
         <script src="/plugins/Menu.js"></script>
+        <script src="/plugins/FakeTable.js"></script>
 
         <?php
         /** * Il controllo individua se l'header non è impiegato per il main */
