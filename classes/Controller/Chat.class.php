@@ -850,16 +850,16 @@ class Chat extends BaseClass
     {
         # Se devono essere estratte solo le abilita' gia' acquistate, ne aggiungo la clausola
         if ($this->chat_skill_buyed) {
-            $extra_query = ' AND clgpersonaggioabilita.grado > 0 ';
+            $extra_query = ' AND personaggio_abilita.grado > 0 ';
         }
 
         # Estraggo le abilita secondo i parametri
         $abilita = DB::query("
-                            SELECT abilita.nome,abilita.id_abilita,clgpersonaggioabilita.grado 
+                            SELECT abilita.nome,abilita.id_abilita,personaggio_abilita.grado 
                             FROM abilita 
                             
-                            LEFT JOIN clgpersonaggioabilita 
-                            ON (clgpersonaggioabilita.id_abilita = abilita.id_abilita)
+                            LEFT JOIN personaggio_abilita 
+                            ON (personaggio_abilita.abilita = abilita.id_abilita)
                             
                             WHERE abilita.id_razza = -1 {$extra_query} ORDER BY abilita.nome
                             ", 'result');
@@ -889,16 +889,16 @@ class Chat extends BaseClass
 
         # Se devono essere estratte solo le abilita' gia' acquistate, ne aggiungo la clausola
         if ($this->chat_skill_buyed) {
-            $extra_query = ' AND clgpersonaggioabilita.grado > 0 ';
+            $extra_query = ' AND personaggio_abilita.grado > 0 ';
         }
 
         # Estraggo le abilita secondo i parametri
         $abilita = DB::query("
-                            SELECT abilita.nome,abilita.id_abilita,clgpersonaggioabilita.grado 
+                            SELECT abilita.nome,abilita.id_abilita,personaggio_abilita.grado 
                             FROM abilita 
                             
-                            LEFT JOIN clgpersonaggioabilita 
-                            ON (clgpersonaggioabilita.id_abilita = abilita.id_abilita)
+                            LEFT JOIN personaggio_abilita 
+                            ON (personaggio_abilita.abilita = abilita.id_abilita)
                             
                             WHERE abilita.id_razza = {$race} {$extra_query} ORDER BY abilita.nome
                             ", 'result');
@@ -1015,6 +1015,7 @@ class Chat extends BaseClass
             $abi_dice = '';
             $car_dice = '';
             $car_bonus = '';
+            $car_name = '';
             $obj_nome = '';
             $obj_dice = '';
 
@@ -1036,7 +1037,7 @@ class Chat extends BaseClass
                 # Se non ho selezionato nessuna caratteristica utilizzo quella base dell'abilita'
                 if ($car === '') {
                     # Imposto la stat dell'abilita' come caratteristica richiesta in caso di utilizzo oggetti
-                    $car = Filters::int($abi_roll['car']);
+                    $car_name = Filters::int($abi_roll['car']);
                 }
             }
 
@@ -1049,6 +1050,7 @@ class Chat extends BaseClass
 
                 # Setto il valore della caratteristica
                 $car_dice = Filters::int($car_roll['car_dice']);
+                $car_name = Filters::out($car_roll['car_name']);
 
                 # Se devo aggiungere anche il valore dell'equipaggiamento alla stat
                 if ($this->chat_equip_bonus) {
@@ -1077,8 +1079,8 @@ class Chat extends BaseClass
                 'dice' => $dice,
                 'abi_dice' => $abi_dice,
                 'abi_nome' => $abi_nome,
-                'car' => $car,
                 'car_dice' => $car_dice,
+                'car_name' => $car_name,
                 'obj_nome' => $obj_nome,
                 'obj_dice' => $obj_dice,
                 'car_bonus' => $car_bonus
@@ -1104,16 +1106,18 @@ class Chat extends BaseClass
         $id = Filters::int($id);
 
         # Estraggo i dati relativi l'abilita'
-        $abi_data = DB::query("SELECT clgpersonaggioabilita.grado, abilita.car,abilita.nome
+        $abi_data = DB::query("SELECT personaggio_abilita.grado, abilita.car,abilita.nome
                                     FROM abilita 
     
-                                    LEFT JOIN clgpersonaggioabilita
-                                    ON (clgpersonaggioabilita.nome='{$this->me}' AND clgpersonaggioabilita.id_abilita='{$id}')
+                                    LEFT JOIN personaggio_abilita
+                                    ON (personaggio_abilita.personaggio='{$this->me}' AND personaggio_abilita.abilita='{$id}')
 
                                     WHERE abilita.id_abilita ='{$id}' LIMIT 1 ");
 
         # Filtro i dati necessari
-        $car = Filters::int($abi_data['car']);
+        $stat_class= Statistiche::getInstance();
+        $stat_data = $stat_class->getStat(Filters::int($abi_data['car']));
+        $car = Filters::in($stat_data['nome']);
         $abi_dice = Filters::int($abi_data['abi_dice']);
         $nome = Filters::in($abi_data['nome']);
 
@@ -1138,11 +1142,10 @@ class Chat extends BaseClass
         $total_bonus = ($this->chat_equip_bonus) ? $this->calcAllObjsBonus($this->me_id,$car,[$obj]) : 0;
 
         # Seleziono la caratteristica interessata e ritorno il suo valore
-        #TODO Adattare statistiche personaggio
-        $query = DB::query("SELECT personaggio.car{$car} FROM personaggio WHERE nome='{$this->me}' LIMIT 1");
+        $stat_data_pg = PersonaggioStats::getPgStat($car,$this->me_id,'statistiche.nome,personaggio_statistiche.valore');
 
         # Ritorno un array contenente i vari valori
-        return ['car_dice' => Filters::int($query["car{$car}"]), 'car_bonus' => $total_bonus];
+        return ['car_dice' => Filters::int($stat_data_pg["valore"]), 'car_bonus' => 0,'car_name'=>Filters::out($stat_data_pg['nome'])];
     }
 
     /**
@@ -1214,8 +1217,8 @@ class Chat extends BaseClass
         $dice = Filters::in($array['dice']);
         $abi_nome = Filters::in($array['abi_nome']);
         $abi_dice = Filters::in($array['abi_dice']);
-        $car = Filters::int($array['car']);
         $car_dice = Filters::in($array['car_dice']);
+        $car_name = Filters::in($array['car_name']);
         $car_bonus = Filters::in($array['car_bonus']);
         $obj_nome = Filters::in($array['obj_nome']);
         $obj_dice = Filters::in($array['obj_dice']);
@@ -1232,7 +1235,7 @@ class Chat extends BaseClass
 
         # Se ho lanciato una caratteristica ne aggiungo il testo
         if ($car_dice != '') {
-            $html .= "{$this->parameters['names']['stats']['car'.$car]} {$car_dice},";
+            $html .= "{$car_name} {$car_dice},";
             $total += $car_dice;
         }
 
