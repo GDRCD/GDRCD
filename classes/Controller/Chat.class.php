@@ -779,6 +779,7 @@ class Chat extends BaseClass
 
 
     /**
+     * # TODO Modificare con nuovo sistema oggetti
      * @fn calcAllObjsBonus
      * @note Calcola i bonus statistiche dell'oggetto
      * @param int $pg
@@ -1145,7 +1146,7 @@ class Chat extends BaseClass
         $stat_data_pg = PersonaggioStats::getPgStat($car,$this->me_id,'statistiche.nome,personaggio_statistiche.valore');
 
         # Ritorno un array contenente i vari valori
-        return ['car_dice' => Filters::int($stat_data_pg["valore"]), 'car_bonus' => 0,'car_name'=>Filters::out($stat_data_pg['nome'])];
+        return ['car_dice' => Filters::int($stat_data_pg["valore"]), 'car_bonus' => $total_bonus,'car_name'=>Filters::out($stat_data_pg['nome'])];
     }
 
     /**
