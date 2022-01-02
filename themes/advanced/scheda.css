@@ -457,7 +457,6 @@ div.pagina_scheda_equip {
     text-align: left;
 }
 
-
 .pagina_scheda_oggetti .objects_box .single_object {
     width: 100px;
     height: 110px;
@@ -469,7 +468,6 @@ div.pagina_scheda_equip {
     background-color: #7289da;
     margin: 5px 3px;
 }
-
 
 .pagina_scheda_oggetti .objects_box .single_object .img{
     height: 100px;
@@ -488,7 +486,6 @@ div.pagina_scheda_equip {
     text-overflow: ellipsis;
     text-align: center;
 }
-
 
 .pagina_scheda_oggetti .single_object{
     width: 98%;
@@ -510,7 +507,6 @@ div.pagina_scheda_equip {
     vertical-align: top;
 }
 
-
 .pagina_scheda_oggetti .single_object .object_img img{
     width: 100%;
     height: 100%;
@@ -527,7 +523,6 @@ div.pagina_scheda_equip {
     padding: 5px;
     box-sizing: border-box;
 }
-
 
 .pagina_scheda_oggetti .single_object .object_data .object_name{
     text-align: center;
@@ -546,7 +541,6 @@ div.pagina_scheda_equip {
     border-radius: 5px;
 }
 
-
 .pagina_scheda_oggetti .single_object .object_data .object_info{
     text-align: left;
     font-size: 13px;
@@ -560,11 +554,37 @@ div.pagina_scheda_equip {
     box-sizing: border-box;
 }
 
-
 .pagina_scheda_oggetti .single_object .object_data .object_commands button{
     background-color: #7289da;
     color: white;
     border:1px solid black;
     padding: 0 10px;
     cursor: pointer;
+}
+
+/**** STATS ****/
+
+.pagina_scheda_stats .stats_list{
+    margin-top: 15px;
+}
+
+.pagina_scheda_stats .fake-table {
+    width: 90%;
+    margin: 0 auto;
+}
+
+.pagina_scheda_stats .fake-table .tr{
+}
+
+.pagina_scheda_stats .fake-table .tr:first-child{
+    border-width: 1px 0;
+}
+
+.pagina_scheda_stats .fake-table .tr .td {
+    width: 30%;
+}
+
+.pagina_scheda_stats .hidden_text .table-text{
+    max-height: 300px;
+    overflow: auto;
 }

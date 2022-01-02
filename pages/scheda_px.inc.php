@@ -4,8 +4,9 @@ require_once(__DIR__ . '/../includes/required.php');
 
 $quest = Quest::getInstance();
 $pg = Filters::out($_GET['pg']);
+$id_pg = Filters::out($_GET['id_pg']);
 
-if (Personaggio::isMyPg($pg) || $quest->viewExpPermission()) {
+if (Personaggio::isMyPg($id_pg) || $quest->viewExpPermission()) {
 
     switch ($_POST['op']) {
         case 'assegna_px':

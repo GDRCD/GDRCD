@@ -74,7 +74,7 @@ class Statistiche extends BaseClass{
      * @param int $id
      * @return bool
      */
-    public function existStat(int $id): bool
+    public static function existStat(int $id): bool
     {
         $data = DB::query("SELECT * FROM statistiche WHERE id='{$id}' LIMIT 1");
         return (DB::rowsNumber($data) > 0);

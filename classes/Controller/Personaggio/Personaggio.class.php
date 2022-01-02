@@ -71,7 +71,6 @@ class Personaggio extends BaseClass{
     /**
      * @fn isMyPg
      * @note Controlla se e' il proprio pg
-     * # TODO togliere il combaciare del nome quando passera' tutto tramite id
      * @param int $pg
      * @return bool
      */
@@ -80,9 +79,8 @@ class Personaggio extends BaseClass{
 
         $pg = Filters::in($pg);
         $me = Functions::getInstance()->getMyId();
-        $me_name = Functions::getInstance()->getMe();
 
-        return ( ($pg == $me) || ($pg == $me_name) );
+        return ($pg == $me);
     }
 
 
