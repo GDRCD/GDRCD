@@ -20,6 +20,9 @@ $abi_public = $abi_class->AbiVisibility($pg);
     </a>
 <?php } ?>
 
+    <a href="main.php?page=scheda_stats&pg=<?= $pg ?>&id_pg=<?=$id_pg;?>">
+        <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['stats']); ?>
+    </a>
 
     <!-- Descrizione e Storia separate dalla pagina principale della scheda -->
     <a href="main.php?page=scheda_descrizione&pg=<?php echo $_SESSION['login']; ?>&id_pg=<?=$id_pg;?>">

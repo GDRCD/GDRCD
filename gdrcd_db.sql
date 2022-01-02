@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `abilita` (
   `nome` varchar(255) NOT NULL,
   `car` tinyint(1) NOT NULL DEFAULT '0',
   `descrizione` text NOT NULL,
-  `id_razza` int NOT NULL DEFAULT '0',
+  `id_razza` int DEFAULT NULL,
   PRIMARY KEY (`id_abilita`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
@@ -39,23 +39,9 @@ CREATE TABLE IF NOT EXISTS `abilita` (
 -- Dump dei dati per la tabella `abilita`
 --
 
-INSERT INTO `abilita` (`id_abilita`, `nome`, `car`, `descrizione`, `id_razza`) VALUES
-(18, 'Resistenza', 1, 'Il personaggio Ã¨ in grado di sopportare il dolore ed il disagio e sopporta minime dosi di agenti tossici nel proprio organismo. ', -1),
-(17, 'Sopravvivenza', 4, 'Il personaggio Ã¨ in grado di procurarsi cibo e riparo all''aperto, con mezzi minimi.', -1),
-(4, 'Atletica', 2, 'Il personaggio Ã¨ ben allenato ed Ã¨ in grado di saltare efficacemente, arrampicarsi, nuotare, schivare e compiere, genericamente, movimenti fisicamente impegnativi.', -1),
-(5, 'Cercare', 5, 'Il personaggio Ã¨ rapido ed efficace nel perquisire un ambiente in cerca di qualcosa.', -1),
-(6, 'Conoscenza', 3, 'Il personaggio ha accumulato cultura ed esperienze, e potrebbe avere maggiori informazioni sulla situazione in cui si trova. A fronte di una prova di conoscenza il master dovrebbe fornire informazioni al giocatore via sussurro.', -1),
-(7, 'Percepire intenzioni', 4, 'Il personaggio Ã¨ abile nel determinare, durante una conversazione o un interazione, se il suo interlocutore stia mentendo, sia ostile o sia ben disposto.', -1),
-(8, 'Cavalcare', 2, 'Il personaggio Ã¨ in grado di cavalcare animali addestrati a tale scopo.', -1),
-(9, 'Addestrare animali', 4, 'Il personaggio comprende gli atteggiamenti e le reazioni degli animali ed Ã¨ in grado di interagire con loro, addomesticarli ed addestrarli.', -1),
-(10, 'Armi bianche', 0, 'Il personaggio Ã¨ addestrato al combattimento con armi bianche, scudi e protezioni.', -1),
-(11, 'Armi da tiro', 5, 'Il personaggio Ã¨ addestrato all''uso di armi da diro o da lancio.', -1),
-(12, 'Lotta', 0, 'Il personaggio Ã¨ addestrato al combattimento senza armi.', -1),
-(13, 'Competenze tecniche', 3, 'Il personaggio Ã¨ in grado di realizzare e riparare strumenti tecnologici. Il tipo ed il numero di tecnologie in cui Ã¨ competente dovrebbe essere specificato nel background e proporzionale al punteggio di intelligenza.', -1),
-(14, 'Mezzi di trasporto', 5, 'Il personaggio Ã¨ in grado di governare o pilotare specifici mezzi di trasporto. L''elenco dei mezzi dovrebbe essere riportato nel background e proporzionale al punteggio di intelligenza.', -1),
-(15, 'Pronto soccorso', 3, 'Il personaggio Ã¨ in grado di eseguire interventi d''emergenza su individui feriti o la cui salute sia in qualche modo minacciata.', -1),
-(16, 'FurtivitÃ ', 2, 'Il personaggio Ã¨ in grado di muoversi ed agire senza dare nell''occhio, e di scassinare serrature.', -1),
-(19, 'VolontÃ ', 4, 'Il personaggio Ã¨ fortemente determinato e difficilmente si lascia persuadere o dissuadere.', -1);
+INSERT INTO `abilita` (`nome`, `car`, `descrizione`, `id_razza`) VALUES
+('Resistenza', 4, 'Il personaggio Ã¨ in grado di sopportare il dolore ed il disagio e sopporta minime dosi di agenti tossici nel proprio organismo. ', -1),
+('Sopravvivenza', 4, 'Il personaggio Ã¨ in grado di procurarsi cibo e riparo all''aperto, con mezzi minimi.', -1);
 
 -- --------------------------------------------------------
 
@@ -193,18 +179,6 @@ CREATE TABLE IF NOT EXISTS `chat` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `clgpersonaggioabilita`
---
-
-CREATE TABLE IF NOT EXISTS `clgpersonaggioabilita` (
-  `nome` varchar(255) NOT NULL,
-  `id_abilita` int NOT NULL,
-  `grado` int NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Struttura della tabella `clgpersonaggiomostrine`
 --
 
@@ -317,7 +291,8 @@ INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,
     ('QUEST_RESULTS_FOR_PAGE',15,'Quest','Risultati per pagina','Numero risultati per pagina nella gestione delle quest.','int',1),
     ('ONLINE_STATUS_ENABLED',1,'Online Status','Stato online avanzato','Stato online avanzato,attivo?','bool',1),
     ('ONLINE_STATUS_LOGIN_REFRESH',1,'Online Status','Reselect al login','Login oscura ultima scelta dai presenti?','bool',1),
-    ('SCHEDA_OBJECTS_PUBLIC',1,'Scheda Oggetti','Scheda Oggetti pubblica','Pagina inventario pubblica?','bool',1);
+    ('SCHEDA_OBJECTS_PUBLIC',1,'Scheda Oggetti','Scheda Oggetti pubblica','Pagina inventario pubblica?','bool',1),
+    ('SCHEDA_STATS_PUBLIC',1,'Scheda Oggetti','Scheda Statistiche pubblica','Pagina statistica pubblica?','bool',1);
 
 -- --------------------------------------------------------
 
@@ -525,7 +500,8 @@ INSERT INTO `menu` (`menu_name`, `section`, `name`, `page`, `permission`) VALUES
   ('Gestione', 'Oggetti', 'Gestione tipi oggetto', 'gestione_oggetti_tipo', 'MANAGE_OBJECTS_TYPES'),
   ('Gestione', 'Oggetti', 'Gestione posizioni oggetto', 'gestione_oggetti_posizioni', 'MANAGE_OBJECTS_POSITIONS'),
   ('Gestione', 'Mercato', 'Gestione Oggetti Mercato', 'gestione_mercato_oggetti', 'MANAGE_SHOPS_OBJECTS'),
-  ('Gestione', 'Mercato', 'Gestione Negozi Mercato', 'gestione_mercato_negozi', 'MANAGE_SHOPS');
+  ('Gestione', 'Mercato', 'Gestione Negozi Mercato', 'gestione_mercato_negozi', 'MANAGE_SHOPS'),
+  ('Gestione', 'Statistiche', 'Gestione Statistiche', 'gestione_statistiche', 'MANAGE_STATS');
 
 -- --------------------------------------------------------
 
@@ -797,7 +773,6 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
     ('MANAGE_GUILDS', 'Permesso per la gestione delle gilde'),
     ('MANAGE_PERMISSIONS', 'Permesso per la gestione dei permessi'),
     ('MANAGE_MANUTENTIONS', 'Permesso per la gestione della manutenzione del db'),
-    ('MANAGE_OBJECTS', 'Permesso per la gestione degli oggetti'),
     ('MANAGE_REPORTS', 'Permesso per la gestione delle giocate segnalate'),
     ('MANAGE_ESITI', 'Permesso per la gestione base degli esiti'),
     ('MANAGE_ALL_ESITI', 'Permesso per la visione/modifica di qualsiasi tipo di esito'),
@@ -817,7 +792,12 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
     ('MANAGE_SHOPS_OBJECTS','Permesso per la gestione degli status online'),
     ('VIEW_SCHEDA_OBJECTS','Permesso per la visualizzazione oggetti in schede altrui'),
     ('EQUIP_SCHEDA_OBJECTS','Permesso per l equipaggiamento oggetti in schede altrui'),
-    ('REMOVE_SCHEDA_OBJECTS','Permesso per la rimozione oggetti in schede altrui');
+    ('REMOVE_SCHEDA_OBJECTS','Permesso per la rimozione oggetti in schede altrui'),
+    ('MANAGE_STATS','Permesso per la gestione statistiche'),
+    ('VIEW_SCHEDA_STATS','Permesso per la visualizzazione statistiche in schede altrui'),
+    ('UPGRADE_SCHEDA_STATS','Permesso per l\'aumento statistiche in schede altrui'),
+    ('DOWNGRADE_SCHEDA_STATS','Permesso per la riduzione statistiche in schede altrui');
+
 
 
 
@@ -963,6 +943,20 @@ INSERT INTO `personaggio` (`id`,`nome`, `cognome`, `pass`, `ultimo_cambiopass`, 
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `personaggio_abilita`
+--
+
+CREATE TABLE IF NOT EXISTS `personaggio_abilita` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `personaggio` int NOT NULL,
+    `abilita` int NOT NULL,
+    `grado` int NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `personaggio_oggetto`
 --
 
@@ -979,7 +973,7 @@ CREATE TABLE `personaggio_oggetto` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `personaggio_quest`
+-- Struttura della tabella `personaggio_online_status`
 --
 
 CREATE TABLE `personaggio_online_status` (
@@ -1007,6 +1001,20 @@ CREATE TABLE personaggio_quest  (
   `autore` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- ---------------------------------------------
+
+--
+-- Struttura della tabella `personaggio_statistiche`
+--
+
+CREATE TABLE `personaggio_statistiche` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `personaggio` int NOT NULL,
+    `statistica` int NOT NULL,
+    `valore` int DEFAULT 0,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1149,6 +1157,23 @@ CREATE TABLE IF NOT EXISTS `send_GM` (
   `autore` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `role_reg` int NOT NULL,
   `note` text CHARACTER SET utf8 COLLATE utf8_general_ci,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `statistiche`
+--
+
+CREATE TABLE IF NOT EXISTS `statistiche` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nome` varchar(255) NOT NULL,
+  `max_val` int NOT NULL,
+  `min_val` int NOT NULL,
+  `descrizione` text DEFAULT NULL,
+  `iscrizione` bool DEFAULT 0,
+  `creato_da` int DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 

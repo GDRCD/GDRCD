@@ -12,6 +12,8 @@ if (!isset($chat)) {
 $esiti_chat = Functions::get_constant('ESITI_CHAT');
 $esiti= Functions::get_constant('ESITI_ENABLE');
 
+$stat_class = Statistiche::getInstance();
+
 ?>
 
 <div class="chat_bottom">
@@ -65,12 +67,7 @@ $esiti= Functions::get_constant('ESITI_ENABLE');
             <div class="input_container small">
                 <select name="caratteristica">
                     <option value="">Caratteristica</option>
-                    <option value="0"><?= Filters::out($PARAMETERS['names']['stats']['car0']);?></option>
-                    <option value="1"><?= Filters::out($PARAMETERS['names']['stats']['car1']);?></option>
-                    <option value="2"><?= Filters::out($PARAMETERS['names']['stats']['car2']);?></option>
-                    <option value="3"><?= Filters::out($PARAMETERS['names']['stats']['car3']);?></option>
-                    <option value="4"><?= Filters::out($PARAMETERS['names']['stats']['car4']);?></option>
-                    <option value="5"><?= Filters::out($PARAMETERS['names']['stats']['car5']);?></option>
+                    <?= $stat_class->listStats();?>
                 </select>
             </div>
 

@@ -102,7 +102,7 @@ class Abilita extends BaseClass
 
         if ($this->requirementActive()) {
 
-            $pg = Filters::out($pg);
+            $pg = Filters::int($pg);
             $abi = Filters::int($abi);
             $grado = Filters::int($grado);
 
@@ -116,12 +116,12 @@ class Abilita extends BaseClass
 
                 switch ($tipo) {
                     case $this->requisito_abi:
-                        $contr = DB::query("SELECT COUNT(id_abilita) as TOT 
-                                        FROM clgpersonaggioabilita 
+                        $contr = DB::query("SELECT COUNT(id) as TOT 
+                                        FROM personaggio_abilita 
                                         WHERE 
-                                              clgpersonaggioabilita.id_abilita = '{$rif}' 
-                                          AND clgpersonaggioabilita.nome='{$pg}' 
-                                          AND clgpersonaggioabilita.grado >= '{$rif_lvl}' LIMIT 1");
+                                              personaggio_abilita.abilita = '{$rif}' 
+                                          AND personaggio_abilita.personaggio='{$pg}' 
+                                          AND personaggio_abilita.grado >= '{$rif_lvl}' LIMIT 1");
 
                         if ($contr['TOT'] == 0) {
                             $esito = false;
@@ -129,8 +129,8 @@ class Abilita extends BaseClass
 
                         break;
                     case $this->requisito_stat:
-                        $contr = DB::query("SELECT car{$rif} FROM personaggio WHERE nome='{$pg}' LIMIT 1");
-                        $stat = Filters::int($contr['car' . $rif]);
+                        $stat_pg = PersonaggioStats::getPgStat($rif,$pg,'valore');
+                        $stat = Filters::int($stat_pg['valore']);
 
                         if ($stat < $rif_lvl) {
                             $esito = false;
@@ -216,13 +216,13 @@ class Abilita extends BaseClass
         $pg = Filters::out($pg);
 
         $left = !empty($pg) ?
-            "LEFT JOIN clgpersonaggioabilita ON (abilita.id_abilita = clgpersonaggioabilita.id_abilita AND clgpersonaggioabilita.nome='{$pg}')
-               LEFT JOIN personaggio ON (personaggio.nome='{$pg}')
+            "LEFT JOIN personaggio_abilita ON (abilita.id_abilita = personaggio_abilita.abilita AND personaggio_abilita.personaggio='{$pg}')
+               LEFT JOIN personaggio ON (personaggio.id='{$pg}')
             " :
             '';
 
         $extraVal = !empty($pg) ?
-            ',clgpersonaggioabilita.grado ' :
+            ',personaggio_abilita.grado ' :
             '';
 
         $where = !empty($pg) ?
@@ -268,13 +268,12 @@ class Abilita extends BaseClass
      */
     public function AbilitaPg(string $pg, int $abi = 0)
     {
-        $pg = Filters::out($pg);
-
+        $pg = Filters::int($pg);
         $id = Filters::int($abi);
 
-        $extra = ($id > 0) ? " AND id_abilita='{$id}' LIMIT 1" : '';
+        $extra = ($id > 0) ? " AND abilita='{$id}' LIMIT 1" : '';
 
-        $data = DB::query("SELECT id_abilita, grado FROM clgpersonaggioabilita WHERE nome='{$pg}' {$extra}", 'result');
+        $data = DB::query("SELECT abilita, grado FROM personaggio_abilita WHERE personaggio='{$pg}' {$extra}", 'result');
 
         return ($id > 0) ? DB::query($data, 'fetch') : $data;
     }
@@ -285,10 +284,12 @@ class Abilita extends BaseClass
      * @param string $pg
      * @return int
      */
-    public function ExpPG(string $pg): int
+    public function ExpPG(int $pg): int
     {
-        $pg = Filters::in($pg);
-        $exp = DB::query("SELECT esperienza FROM personaggio WHERE nome='{$pg}' LIMIT 1");
+        $pg = Filters::int($pg);
+        $exp = DB::query("SELECT esperienza FROM personaggio WHERE id='{$pg}' LIMIT 1");
+
+        var_dump($pg);
 
         return Filters::int($exp['esperienza']);
     }
@@ -299,10 +300,10 @@ class Abilita extends BaseClass
      * @param string $pg
      * @return float
      */
-    public function RemainedExp(string $pg): float
+    public function RemainedExp(int $pg): float
     {
         # Filtro dati passati
-        $pg = Filters::in($pg);
+        $pg = Filters::int($pg);
 
         # Estraggo abilita' ed esperienza pg
         $abi_pg = $this->AbilitaPg($pg);
@@ -453,8 +454,12 @@ class Abilita extends BaseClass
 
                         break;
                     case $this->requisito_stat:
-                        $nome = Filters::out($this->parameters['names']['stats']['car' . $rif]);
-                        $data['requirement'] .= " {$nome} {$rif_lvl}, ";
+                        if(Statistiche::existStat($rif)) {
+                            $stat_class = Statistiche::getInstance();
+                            $stat_data = $stat_class->getStat($rif);
+                            $nome = Filters::out($stat_data['nome']);
+                            $data['requirement'] .= " {$nome} {$rif_lvl}, ";
+                        }
                         break;
                 }
             }
@@ -479,11 +484,11 @@ class Abilita extends BaseClass
      */
     public function upgradeSkillPermission(string $pg, int $grado): bool
     {
-        $pg = Filters::in($pg);
+        $pg = Filters::int($pg);
         $grado = Filters::int($grado);
         $new_grado = Filters::int(($grado + 1));
 
-        return ((($this->me == $pg) || ($this->permission >= MODERATOR)) && ($new_grado <= $this->abi_level_cap));
+        return (((Personaggio::isMyPg($pg)) || ($this->permission >= MODERATOR)) && ($new_grado <= $this->abi_level_cap));
     }
 
     /**
@@ -496,16 +501,20 @@ class Abilita extends BaseClass
     public function upgradeskill(int $abi, string $pg): array
     {
         $abi = Filters::int($abi);
-        $pg = Filters::in($pg);
+        $pg = Filters::int($pg);
         $abi_pg = $this->AbilitaPg($pg, $abi);
         $grado = Filters::int($abi_pg['grado']);
 
+
+        var_dump($pg);
         if ($this->upgradeSkillPermission($pg, $grado)) {
 
             $new_grado = Filters::int(($grado + 1));
 
             if ($this->requirementControl($pg, $abi, $new_grado)) {
                 $exp_remained = $this->RemainedExp($pg);
+
+                var_dump($exp_remained);
 
                 if ($this->extraActive()) {
 
@@ -524,9 +533,9 @@ class Abilita extends BaseClass
                 if ($exp_remained >= $costo) {
 
                     if ($grado == 0) {
-                        DB::query("INSERT INTO clgpersonaggioabilita(nome,id_abilita,grado) VALUES('{$pg}','{$abi}','{$new_grado}')");
+                        DB::query("INSERT INTO personaggio_abilita(personaggio,abilita,grado) VALUES('{$pg}','{$abi}','{$new_grado}')");
                     } else {
-                        DB::query("UPDATE clgpersonaggioabilita SET grado='{$new_grado}' WHERE nome='{$pg}' AND id_abilita='{$abi}' LIMIT 1");
+                        DB::query("UPDATE personaggio_abilita SET grado='{$new_grado}' WHERE personaggio='{$pg}' AND abilita='{$abi}' LIMIT 1");
                     }
 
                     return ['response' => true, 'mex' => 'UpOk'];
@@ -563,7 +572,7 @@ class Abilita extends BaseClass
     public function downgradeSkill(int $abi, string $pg): array
     {
         $abi = Filters::int($abi);
-        $pg = Filters::in($pg);
+        $pg = Filters::int($pg);
 
         $abi_data = $this->AbilitaPg($pg, $abi);
         $grado = Filters::int($abi_data['grado']);
@@ -573,9 +582,9 @@ class Abilita extends BaseClass
             $new_grado = ($grado - 1);
 
             if ($new_grado == 0) {
-                DB::query("DELETE FROM clgpersonaggioabilita WHERE nome='{$pg}' AND id_abilita='{$abi}' LIMIT 1");
+                DB::query("DELETE FROM personaggio_abilita WHERE personaggio='{$pg}' AND abilita='{$abi}' LIMIT 1");
             } else {
-                DB::query("UPDATE clgpersonaggioabilita SET grado='{$new_grado}' WHERE nome='{$pg}' AND id_abilita='{$abi}' LIMIT 1");
+                DB::query("UPDATE personaggio_abilita SET grado='{$new_grado}' WHERE personaggio='{$pg}' AND abilita='{$abi}' LIMIT 1");
             }
 
             return ['response' => true, 'mex' => 'downOk'];

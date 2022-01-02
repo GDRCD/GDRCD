@@ -3,22 +3,23 @@
 require_once(__DIR__ . '/../includes/required.php');
 
 $abi_class = Abilita::getInstance();
-
+$stat_class = Statistiche::getInstance();
 $pg = Filters::in($_REQUEST['pg']);
+$id_pg = Filters::in($_REQUEST['id_pg']);
 $op = Filters::out($_REQUEST['op']);
+
+var_dump($id_pg);
 
 if ($abi_class->AbiVisibility($pg)) {
 
     switch ($op) {
         case 'upgradeSkill':
             $id_abilita = Filters::int($_REQUEST['what']);
-            $pg = Filters::in($_REQUEST['pg']);
-            $res = $abi_class->upgradeskill($id_abilita, $pg);
+            $res = $abi_class->upgradeskill($id_abilita, $id_pg);
             break;
         case 'downgradeSkill':
             $id_abilita = Filters::int($_REQUEST['what']);
-            $pg = Filters::in($_REQUEST['pg']);
-            $res = $abi_class->downgradeSkill($id_abilita, $pg);
+            $res = $abi_class->downgradeSkill($id_abilita, $id_pg);
             break;
 
         case 'operationDone':
@@ -31,14 +32,14 @@ if ($abi_class->AbiVisibility($pg)) {
     if (isset($res)) {
         $mex_id = $res['mex']; ?>
 
-        <script>window.location.href = '/main.php?page=scheda_skill&pg=Super&op=operationDone&mex=<?=$mex_id;?>';</script>
+        <script>window.location.href = '/main.php?page=scheda_skill&pg=<?=$pg;?>&id_pg=<?=$id_pg;?>&op=operationDone&mex=<?=$mex_id;?>';</script>
 
         <?php
         die();
     }
 
-    $abi_list = $abi_class->AbilityList($pg);
-    $px_rimasti = $abi_class->RemainedExp($pg);
+    $abi_list = $abi_class->AbilityList($id_pg);
+    $px_rimasti = $abi_class->RemainedExp($id_pg);
     ?>
 
     <div class="pagina_scheda">
@@ -66,11 +67,17 @@ if ($abi_class->AbiVisibility($pg)) {
                 <div class="div_colonne_abilita_scheda">
 
                     <div class="fake-table colonne_abilita_scheda">
+
+                        <div class="header">
+                            <?php echo Filters::out($MESSAGE['interface']['sheet']['box_title']['skills']); ?>
+                        </div>
+
                         <?php foreach ($abi_list as $abi) {
 
                             $id = Filters::int($abi['id_abilita']);
                             $nome = Filters::out($abi['nome']);
-                            $car = Filters::out($PARAMETERS['names']['stats']['car' . Filters::out($abi['car'])]);
+                            $stat_data = $stat_class->getStat($abi['car']);
+                            $stat_name = Filters::out($stat_data['nome']);
                             $grado = Filters::int($abi['grado']);
                             $abi_extra_data = $abi_class->LvlData($id, $grado); ?>
 
@@ -80,19 +87,19 @@ if ($abi_class->AbiVisibility($pg)) {
                                         <?= $nome; ?>
                                     </div>
                                     <div class="abilita_scheda_car td">
-                                        <?= "({$car})"; ?>
+                                        <?= "({$stat_name})"; ?>
                                     </div>
                                     <div class="abilita_scheda_tank td">
                                         <?= $grado; ?>
                                     </div>
                                     <div class="abilita_scheda_sub td">
-                                        <?php if ($abi_class->upgradeSkillPermission($pg, $grado)) { ?>
+                                        <?php if ($abi_class->upgradeSkillPermission($id_pg, $grado)) { ?>
                                             [
-                                            <a href="main.php?page=scheda_skill&pg=<?= $pg; ?>&op=upgradeSkill&what=<?= $id ?>">+</a>]
+                                            <a href="main.php?page=scheda_skill&pg=<?= $pg; ?>&id_pg=<?=$id_pg;?>&op=upgradeSkill&what=<?= $id ?>">+</a>]
                                         <?php } ?>
                                         <?php if ($abi_class->downgradeSkillPermission($grado)) { ?>
                                             [
-                                            <a href="main.php?page=scheda_skill&pg=<?= $pg; ?>&op=downgradeSkill&what=<?= $id ?>">-</a>]
+                                            <a href="main.php?page=scheda_skill&pg=<?= $pg; ?>&id_pg=<?=$id_pg;?>&op=downgradeSkill&what=<?= $id ?>">-</a>]
                                         <?php } ?>
                                     </div>
                                 </div>

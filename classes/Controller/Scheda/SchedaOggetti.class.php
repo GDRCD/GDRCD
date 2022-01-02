@@ -65,7 +65,7 @@ class SchedaOggetti extends Scheda
 
     /**
      * @fn equipObj
-     * @note Funzione di equipaggiamento e rimozione di un oggetto del personaggio
+     * @note Funzione di equipaggiamento di un oggetto del personaggio
      * @param array $post
      * @return array
      */
@@ -103,6 +103,12 @@ class SchedaOggetti extends Scheda
 
     }
 
+    /**
+     * @fn equipObj
+     * @note Funzione di rimozione di un oggetto del personaggio
+     * @param array $post
+     * @return array
+     */
     public function removeObj(array $post):array {
 
         $id_obj = Filters::int($post['object']);
