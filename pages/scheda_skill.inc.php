@@ -67,6 +67,11 @@ if ($abi_class->AbiVisibility($pg)) {
                 <div class="div_colonne_abilita_scheda">
 
                     <div class="fake-table colonne_abilita_scheda">
+
+                        <div class="header">
+                            <?php echo Filters::out($MESSAGE['interface']['sheet']['box_title']['skills']); ?>
+                        </div>
+
                         <?php foreach ($abi_list as $abi) {
 
                             $id = Filters::int($abi['id_abilita']);
