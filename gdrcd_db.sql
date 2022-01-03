@@ -27,19 +27,19 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE IF NOT EXISTS `abilita` (
-  `id_abilita` int NOT NULL AUTO_INCREMENT,
+  `id` int NOT NULL AUTO_INCREMENT,
   `nome` varchar(255) NOT NULL,
-  `car` tinyint(1) NOT NULL DEFAULT '0',
+  `statistica` tinyint(1) NOT NULL DEFAULT '0',
   `descrizione` text NOT NULL,
-  `id_razza` int DEFAULT NULL,
-  PRIMARY KEY (`id_abilita`)
+  `razza` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 --
 -- Dump dei dati per la tabella `abilita`
 --
 
-INSERT INTO `abilita` (`nome`, `car`, `descrizione`, `id_razza`) VALUES
+INSERT INTO `abilita` (`nome`, `statistica`, `descrizione`, `razza`) VALUES
 ('Resistenza', 4, 'Il personaggio Ã¨ in grado di sopportare il dolore ed il disagio e sopporta minime dosi di agenti tossici nel proprio organismo. ', -1),
 ('Sopravvivenza', 4, 'Il personaggio Ã¨ in grado di procurarsi cibo e riparo all''aperto, con mezzi minimi.', -1);
 
@@ -254,7 +254,6 @@ CREATE TABLE IF NOT EXISTS `config` (
 
 
 INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,`editable`) VALUES
-    ('ABI_PUBLIC',1,'Abilita','Abilità pubbliche','Le abilità sono pubbliche?','bool',1),
     ('ABI_LEVEL_CAP',5,'Abilita','Level cap Abilità','Livello massimo abilità','int',1),
     ('DEFAULT_PX_PER_LVL',10,'Abilita','Costo default Abilità','Moltiplicatore costo abilità, se non specificato','int',1),
     ('ABI_REQUIREMENT',1,'Abilita','Requisiti Abilità','Abilitare requisiti abilità?','bool',1),
@@ -292,7 +291,8 @@ INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,
     ('ONLINE_STATUS_ENABLED',1,'Online Status','Stato online avanzato','Stato online avanzato,attivo?','bool',1),
     ('ONLINE_STATUS_LOGIN_REFRESH',1,'Online Status','Reselect al login','Login oscura ultima scelta dai presenti?','bool',1),
     ('SCHEDA_OBJECTS_PUBLIC',1,'Scheda Oggetti','Scheda Oggetti pubblica','Pagina inventario pubblica?','bool',1),
-    ('SCHEDA_STATS_PUBLIC',1,'Scheda Oggetti','Scheda Statistiche pubblica','Pagina statistica pubblica?','bool',1);
+    ('SCHEDA_STATS_PUBLIC',1,'Scheda Oggetti','Scheda Statistiche pubblica','Pagina statistica pubblica?','bool',1),
+    ('SCHEDA_ABI_PUBLIC',1,'Scheda Abilita','Scheda Abilita pubblica','Pagina abilita pubblica?','bool',1);
 
 -- --------------------------------------------------------
 
@@ -796,7 +796,10 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
     ('MANAGE_STATS','Permesso per la gestione statistiche'),
     ('VIEW_SCHEDA_STATS','Permesso per la visualizzazione statistiche in schede altrui'),
     ('UPGRADE_SCHEDA_STATS','Permesso per l\'aumento statistiche in schede altrui'),
-    ('DOWNGRADE_SCHEDA_STATS','Permesso per la riduzione statistiche in schede altrui');
+    ('DOWNGRADE_SCHEDA_STATS','Permesso per la riduzione statistiche in schede altrui'),
+    ('UPGRADE_SCHEDA_ABI','Permesso per aumento abilita in schede altrui'),
+    ('DOWNGRADE_SCHEDA_ABI','Permesso per la diminuzione abilita in schede altrui'),
+    ('VIEW_SCHEDA_ABI','Permesso per la visualizzazione abilita in schede altrui');
 
 
 

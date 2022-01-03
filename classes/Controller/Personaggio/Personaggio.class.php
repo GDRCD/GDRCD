@@ -29,6 +29,7 @@ class Personaggio extends BaseClass{
         return DB::query("SELECT {$val} FROM personaggio WHERE id='{$pg}' LIMIT 1");
     }
 
+
     /*** OGGETTI TABLES HELPERT ***/
 
     /**

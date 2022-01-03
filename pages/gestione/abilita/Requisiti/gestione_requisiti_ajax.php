@@ -2,11 +2,11 @@
 
 require(__DIR__ . '/../../../../includes/required.php');
 
-$abiReq = Abilita::getInstance();
+$abiReq = AbilitaRequisiti::getInstance();
 
 switch ($_POST['action']) {
-    case 'DatiAbiRequisito':
-        echo json_encode($abiReq->DatiAbiRequisito($_POST));
+    case 'get_requirement_data':
+        echo json_encode($abiReq->ajaxReqData($_POST));
         break;
 }
 

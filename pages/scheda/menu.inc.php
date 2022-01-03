@@ -5,20 +5,15 @@ $me = Filters::out($_SESSION['login']);
 $perm = Filters::out($_SESSION['permessi']);
 $id_pg = Filters::int($_REQUEST['id_pg']);
 
-# Se la classe esiste, utilizza il controllo dato dalla classe, altrimenti utilizza quello di default
-$abi_class = Abilita::getInstance();
-$abi_public = $abi_class->AbiVisibility($pg);
 
 
 /*Visualizza il link modifica se l'utente visualizza la propria scheda o se è almeno un capogilda*/
 ?>
 
     <!-- ABILITA -->
-<?php if ($abi_public) { ?>
     <a href="main.php?page=scheda_skill&pg=<?= $pg ?>&id_pg=<?=$id_pg;?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['skill']); ?>
     </a>
-<?php } ?>
 
     <a href="main.php?page=scheda_stats&pg=<?= $pg ?>&id_pg=<?=$id_pg;?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['stats']); ?>
