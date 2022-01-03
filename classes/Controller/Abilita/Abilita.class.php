@@ -64,6 +64,17 @@ class Abilita extends BaseClass
         return DB::query("SELECT {$val} FROM abilita WHERE 1 ORDER BY nome", 'result');
     }
 
+    /**
+     * @fn getAllAbilitaByRace
+     * @note Estrae la lista abilita da razza
+     * @param string $pg
+     * @return bool|int
+     */
+    public function getAllAbilitaByRace(int $race,string $val = 'abilita.*')
+    {
+        return DB::query("SELECT {$val} FROM abilita WHERE razza='{$race}' ORDER BY nome", 'result');
+    }
+
     /**** CONTROLS ****/
 
     /**

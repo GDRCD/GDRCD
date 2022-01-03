@@ -13,7 +13,7 @@ class Chat extends BaseClass
      *          ed evitando possibili imbrogli
      * @var int $luogo
      */
-    private
+    protected
         $luogo,
         $last_action,
         $chat_time,
@@ -54,7 +54,8 @@ class Chat extends BaseClass
      * @param string $val
      * @return bool|int|mixed|string
      */
-    public function getChatData(int $id,string $val ='*'){
+    public function getChatData(int $id, string $val = '*')
+    {
         return DB::query("SELECT {$val} FROM mappa WHERE id='{$id}' LIMIT 1");
     }
 
@@ -763,7 +764,8 @@ class Chat extends BaseClass
      * @param bool $only_equipped
      * @return bool|int|mixed|string
      */
-    public static function getPgAllObjects(int $pg, bool $only_equipped, $val = 'personaggio_oggetto.*,oggetto.*'){
+    public static function getPgAllObjects(int $pg, bool $only_equipped, $val = 'personaggio_oggetto.*,oggetto.*')
+    {
 
         $pg = Filters::int($pg);
 
@@ -795,8 +797,8 @@ class Chat extends BaseClass
         $extra_query = '';
         $total_bonus = 0;
 
-        if(!empty($excluded)){
-            $implode = implode(',',$excluded);
+        if (!empty($excluded)) {
+            $implode = implode(',', $excluded);
             $extra_query = " AND personaggio_oggetto.id NOT IN ({$excluded})";
         }
 
@@ -820,130 +822,6 @@ class Chat extends BaseClass
         return $total_bonus;
     }
 
-    /******** ABILITA CHAT *******/
-
-    /**
-     * @fn abilityList
-     * @note Genera la lista delle abilita'
-     * @return string
-     */
-    public function abilityList()
-    {
-        # Estraggo le abilita' generiche
-        $ids = $this->allAbility();
-
-        # Estraggo le abilita' di razza
-        $ids = $this->raceAbility($ids);
-
-        # Metto in ordine la lista per nome e ne creo le option per la select
-        $html = $this->getList($ids);
-
-        # Ritorno la lista formattata
-        return $html;
-    }
-
-    /**
-     * @fn allAbility
-     * @note Estrae id e nome delle abilita' generali che non dipendono dalla razza
-     * @return array
-     */
-    private function allAbility()
-    {
-        # Se devono essere estratte solo le abilita' gia' acquistate, ne aggiungo la clausola
-        if ($this->chat_skill_buyed) {
-            $extra_query = ' AND personaggio_abilita.grado > 0 ';
-        }
-
-        # Estraggo le abilita secondo i parametri
-        $abilita = DB::query("
-                            SELECT abilita.nome,abilita.id_abilita,personaggio_abilita.grado 
-                            FROM abilita 
-                            
-                            LEFT JOIN personaggio_abilita 
-                            ON (personaggio_abilita.abilita = abilita.id_abilita)
-                            
-                            WHERE abilita.id_razza = -1 {$extra_query} ORDER BY abilita.nome
-                            ", 'result');
-
-        # Per ogni abilita' aggiungo il suo id all'array globale
-        foreach ($abilita as $abi) {
-            $id_abilita = Filters::int($abi['id_abilita']);
-            $nome_abilita = Filters::out($abi['nome']);
-
-            $ids[$id_abilita] = $nome_abilita;
-        }
-
-        # Ritorno l'insieme di id
-        return $ids;
-    }
-
-    /**
-     * @fn raceAbility
-     * @note aggiunge le abilita' relative alla razza
-     * @param array $ids
-     * @return array
-     */
-    private function raceAbility($ids)
-    {
-        # Estaggo la razza del pg
-        $race = DB::query("SELECT id_razza FROM personaggio WHERE nome='{$this->me}' LIMIT 1")['id_razza'];
-
-        # Se devono essere estratte solo le abilita' gia' acquistate, ne aggiungo la clausola
-        if ($this->chat_skill_buyed) {
-            $extra_query = ' AND personaggio_abilita.grado > 0 ';
-        }
-
-        # Estraggo le abilita secondo i parametri
-        $abilita = DB::query("
-                            SELECT abilita.nome,abilita.id_abilita,personaggio_abilita.grado 
-                            FROM abilita 
-                            
-                            LEFT JOIN personaggio_abilita 
-                            ON (personaggio_abilita.abilita = abilita.id_abilita)
-                            
-                            WHERE abilita.id_razza = {$race} {$extra_query} ORDER BY abilita.nome
-                            ", 'result');
-
-        # Per ogni abilita' aggiungo il suo id all'array globale
-        foreach ($abilita as $abi) {
-            $id_abilita = Filters::int($abi['id_abilita']);
-            $nome_abilita = Filters::out($abi['nome']);
-
-            $ids[$id_abilita] = $nome_abilita;
-        }
-
-        # Ritorno l'insieme di id
-        return $ids;
-    }
-
-    /**
-     * @fn getList
-     * @note Trasforma le coppie id/abilita' nelle option necessarie
-     * @param array $ids
-     * @return string
-     */
-    private function getList($ids)
-    {
-        # Inizializzo le variabili necessarie
-        $html = '';
-
-        # Riordino gli id in base al nome
-        asort($ids, SORT_ASC);
-
-        # Per ogni id creo una option per la select
-        foreach ($ids as $index => $value) {
-            $id = Filters::int($index);
-            $nome = Filters::out($value);
-
-            $html .= "<option value='{$id}'>{$nome}</option>";
-        }
-
-        # Ritorno le option per la select
-        return $html;
-    }
-
-
-
     /********** LISTE ********/
 
     /**
@@ -957,7 +835,7 @@ class Chat extends BaseClass
         $obj_class = Oggetti::getInstance();
 
         # Estraggo gli oggetti posseduti
-        $objects = $this->getPgAllObjects($this->me_id,$this->chat_equip_equipped,'personaggio_oggetto.id,oggetto.id AS obj_id,oggetto.nome');
+        $objects = $this->getPgAllObjects($this->me_id, $this->chat_equip_equipped, 'personaggio_oggetto.id,oggetto.id AS obj_id,oggetto.nome');
 
         # Per ogni oggetto creo una option per la select
         foreach ($objects as $object) {
@@ -965,7 +843,7 @@ class Chat extends BaseClass
             $id_obj = Filters::int($object['obj_id']);
             $nome = Filters::out($object['nome']);
 
-            if($obj_class->existObject($id_obj)) {
+            if ($obj_class->existObject($id_obj)) {
                 $html .= "<option value='{$id}'>{$nome}</option>";
             }
         }
@@ -998,8 +876,6 @@ class Chat extends BaseClass
         return $html;
     }
 
-
-
     /**** LANCIO DADI ****/
 
     /**
@@ -1022,7 +898,7 @@ class Chat extends BaseClass
 
             # Filtro le variabili necessarie
             $abi = Filters::int($post['abilita']);
-            $car = Filters::in($post['caratteristica']);
+            $car = Filters::int($post['caratteristica']);
             $obj = Filters::int($post['oggetto']);
 
             # Se ho selezionato l'abilita'
@@ -1033,18 +909,19 @@ class Chat extends BaseClass
 
                 # Filtro i dati ricevuti
                 $abi_dice = Filters::int($abi_roll['abi_dice']);
-                $abi_nome = Filters::in($abi_roll['nome']);
+                $abi_nome = Filters::in($abi_roll['abi_nome']);
 
                 # Se non ho selezionato nessuna caratteristica utilizzo quella base dell'abilita'
-                if ($car === '') {
+                if ($car == 0) {
                     # Imposto la stat dell'abilita' come caratteristica richiesta in caso di utilizzo oggetti
-                    $car_name = Filters::int($abi_roll['car']);
+                    $car_name = Filters::out($abi_roll['car_name']);
+                    $car = Filters::int($abi_roll['car']);
                 }
             }
 
 
             # Se ho selezionato una caratteristica (abbinata o meno ad un'abilita')
-            if ($car !== '') {
+            if ($car != 0) {
 
                 # Estraggo i dati riguardo la statistica
                 $car_roll = $this->rollCar($car, $obj);
@@ -1062,7 +939,7 @@ class Chat extends BaseClass
             }
 
             # Se ho selezionato l'utilizzo di un oggetto e di una tra abilita' o stat
-            if (($obj != 0) && ($car !== '')) {
+            if (($obj != 0) && ($car != 0)) {
 
                 # Estraggo i dati dell'oggetto
                 $obj_roll = $this->rollObj($obj, $car);
@@ -1105,25 +982,25 @@ class Chat extends BaseClass
     {
         # Filtro le variabili necessarie
         $id = Filters::int($id);
+        $pg_class = PersonaggioAbilita::getInstance();
+        $abi_class = Abilita::getInstance();
 
         # Estraggo i dati relativi l'abilita'
-        $abi_data = DB::query("SELECT personaggio_abilita.grado, abilita.car,abilita.nome
-                                    FROM abilita 
-    
-                                    LEFT JOIN personaggio_abilita
-                                    ON (personaggio_abilita.personaggio='{$this->me}' AND personaggio_abilita.abilita='{$id}')
+        $abi_data_pg = $pg_class->getPgAbility($id, $this->me_id, 'personaggio_abilita.grado,abilita.nome,abilita.statistica');
+        $stat = Filters::int($abi_data_pg['statistica']);
 
-                                    WHERE abilita.id_abilita ='{$id}' LIMIT 1 ");
+        # $Dati Stat
+        $stat_class = Statistiche::getInstance();
+        $stat_data = $stat_class->getStat($stat, 'nome');
+        $stat_name = Filters::in($stat_data['nome']);
 
-        # Filtro i dati necessari
-        $stat_class= Statistiche::getInstance();
-        $stat_data = $stat_class->getStat(Filters::int($abi_data['car']));
-        $car = Filters::in($stat_data['nome']);
-        $abi_dice = Filters::int($abi_data['abi_dice']);
+        # Dati Abi
+        $abi_data = $abi_class->getAbilita($id, 'nome');
+        $abi_dice = !empty($abi_data_pg['grado']) ? Filters::int($abi_data_pg['grado']) : 0;
         $nome = Filters::in($abi_data['nome']);
 
         # Ritorno i dati necessari
-        return ['nome' => $nome, 'abi_dice' => $abi_dice, 'car' => $car];
+        return ['abi_nome' => $nome, 'abi_dice' => $abi_dice, 'car_name' => $stat_name, 'car' => $stat];
     }
 
     /**
@@ -1138,15 +1015,24 @@ class Chat extends BaseClass
         # Filtro i dati passati
         $car = Filters::int($car);
         $obj = Filters::int($obj);
+        $stat_class = Statistiche::getInstance();
 
         # Inizializzo il totale
-        $total_bonus = ($this->chat_equip_bonus) ? $this->calcAllObjsBonus($this->me_id,$car,[$obj]) : 0;
+        $total_bonus = ($this->chat_equip_bonus) ? $this->calcAllObjsBonus($this->me_id, $car, [$obj]) : 0;
 
         # Seleziono la caratteristica interessata e ritorno il suo valore
-        $stat_data_pg = PersonaggioStats::getPgStat($car,$this->me_id,'statistiche.nome,personaggio_statistiche.valore');
+        $stat_data_pg = PersonaggioStats::getPgStat($car, $this->me_id, 'personaggio_statistiche.valore');
+        $stat_val = !empty($stat_data_pg['valore']) ? Filters::int($stat_data_pg['valore']) : 0;
+
+        $stat_data = $stat_class->getStat($car);
+        $stat_name = Filters::in($stat_data['nome']);
 
         # Ritorno un array contenente i vari valori
-        return ['car_dice' => Filters::int($stat_data_pg["valore"]), 'car_bonus' => $total_bonus,'car_name'=>Filters::out($stat_data_pg['nome'])];
+        return [
+            'car_dice' => $stat_val,
+            'car_bonus' => $total_bonus,
+            'car_name' => $stat_name
+        ];
     }
 
     /**
@@ -1234,11 +1120,9 @@ class Chat extends BaseClass
             $total += $abi_dice;
         }
 
-        # Se ho lanciato una caratteristica ne aggiungo il testo
-        if ($car_dice != '') {
-            $html .= "{$car_name} {$car_dice},";
-            $total += $car_dice;
-        }
+        # Aggiungo la caratteristica
+        $html .= "{$car_name} {$car_dice},";
+        $total += $car_dice;
 
         # Se ho selezionato la possibilita' di aggiungere i bonus equipaggiamento al totale della stat
         if ($car_bonus !== '') {

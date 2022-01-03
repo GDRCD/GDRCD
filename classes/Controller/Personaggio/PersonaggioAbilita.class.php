@@ -40,11 +40,43 @@ class PersonaggioAbilita extends Personaggio
      * @param string $val
      * @return bool|int|mixed|string
      */
-    public function getPgAbility($id, $pg, $val = 'abilita.*,personaggio_abilita.*')
+    public function getPgAbility(int $id, int $pg, string $val = 'abilita.*,personaggio_abilita.*')
     {
         return DB::query("SELECT {$val} FROM personaggio_abilita 
                                 LEFT JOIN abilita ON (personaggio_abilita.abilita = abilita.id)
                                 WHERE personaggio='{$pg}' AND abilita ='{$id}' LIMIT 1");
+    }
+
+    /**
+     * @fn getPgGenericAbility
+     * @note Ottiene le generiche abilita' del personaggio
+     * @param int $pg
+     * @param string $val
+     * @return bool|int|mixed|string
+     */
+    public function getPgGenericAbility(int $pg, string $val = 'abilita.*,personaggio_abilita.*')
+    {
+        return DB::query("SELECT {$val} FROM personaggio_abilita 
+                                LEFT JOIN abilita ON (personaggio_abilita.abilita = abilita.id)
+                                WHERE personaggio_abilita.personaggio='{$pg}' AND abilita.razza = '-1'",'result');
+    }
+
+    /**
+     * @fn getPgRaceAbility
+     * @note Ottiene le abilita' razziali del personaggio
+     * @param int $pg
+     * @param string $val
+     * @return bool|int|mixed|string
+     */
+    public function getPgRaceAbility(int $pg, string $val = 'abilita.*,personaggio_abilita.*')
+    {
+        # Estaggo la razza del pg
+        $pg_data = Personaggio::getPgData($this->me_id,'id_razza');
+        $race = Filters::int($pg_data['id_razza']);
+
+        return DB::query("SELECT {$val} FROM personaggio_abilita 
+                                LEFT JOIN abilita ON (personaggio_abilita.abilita = abilita.id)
+                                WHERE personaggio_abilita.personaggio='{$pg}' AND abilita.razza = '{$race}'",'result');
     }
 
     /*** PERMISSION */
