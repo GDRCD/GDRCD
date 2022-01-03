@@ -13,6 +13,7 @@ $esiti_chat = Functions::get_constant('ESITI_CHAT');
 $esiti= Functions::get_constant('ESITI_ENABLE');
 
 $stat_class = Statistiche::getInstance();
+$chat_abi_class = ChatAbilita::getInstance();
 
 ?>
 
@@ -60,7 +61,7 @@ $stat_class = Statistiche::getInstance();
             <div class="input_container small">
                 <select name="abilita">
                     <option value="">Abilita</option>
-                    <?=$chat->abilityList();?>
+                    <?=$chat_abi_class->renderChatAbilita();?>
                 </select>
             </div>
 
