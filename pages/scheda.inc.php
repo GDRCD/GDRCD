@@ -97,7 +97,7 @@
                     </div>
                 <?php } ?>
                 <div class="ritratto_invia_messaggio"><!-- Link invia messaggio -->
-                    <a href="main.php?page=messages_center&op=create&reply_dest=<?php echo gdrcd_filter('url', $personaggio['nome']); ?>"
+                    <a href="main.php?page=messages_center&op=create&destinatario=<?=gdrcd_filter('url', $personaggio['nome']); ?>"
                        class="link_invia_messaggio">
                         <?php if(empty($PARAMETERS['names']['private_message']['image_file']) === false) { ?>
                             <img src="<?php echo $PARAMETERS['names']['private_message']['image_file']; ?>"
