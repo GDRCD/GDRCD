@@ -46,8 +46,6 @@ $px_rimasti = $pg_abi_class->RemainedExp($id_pg);
                         $pg_abi_data = $pg_abi_class->getPgAbility($id,$id_pg,'grado');
                         $grado = Filters::int($pg_abi_data['grado']);
 
-                        var_dump($grado);
-
                         $abi_extra_data = $scheda_class->LvlData($id, $grado); ?>
 
                         <div class="tr">

@@ -156,7 +156,7 @@ class Quest extends BaseClass
         return ($data['tot'] > 0);
     }
 
-    /*** CONFIGURAZIONI */
+    /*** GETTERS */
 
     /**
      * @fn questEnabled

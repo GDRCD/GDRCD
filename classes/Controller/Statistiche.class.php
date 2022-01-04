@@ -40,7 +40,6 @@ class Statistiche extends BaseClass{
 
     /*** AJAX ***/
 
-
     /**
      * @fn ajaxStatData
      * @note Estrae i dati di una statistica alla modifica
@@ -115,7 +114,6 @@ class Statistiche extends BaseClass{
 
         return $html;
     }
-
 
     /*** MANAGEMENT FUNCTIONS - STATISTIC **/
 
