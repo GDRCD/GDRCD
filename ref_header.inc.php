@@ -127,7 +127,7 @@ if((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) 
         if($PARAMETERS['mode']['exp_by_chat'] == 'ON') {
             $msg_length = strlen($chat_message);
             $char_needed = gdrcd_filter('num', $PARAMETERS['settings']['exp_by_chat']['number']);
-            $exp_bonus = ($PARAMETERS['settings']['exp_by_chat']['value'] = '0') ? $msg_length / $char_needed : gdrcd_filter_num($PARAMETERS['settings']['exp_by_chat']['value']);
+            $exp_bonus = ($PARAMETERS['settings']['exp_by_chat']['value'] == '0') ? $msg_length / $char_needed : gdrcd_filter_num($PARAMETERS['settings']['exp_by_chat']['value']);
         }
 
         if($type < "5") {
