@@ -8,7 +8,7 @@
             <?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['multiple']['info']); ?>
         </div>
         <div class='form_field'>
-            <input type="text" list="personaggi" name="destinatario" placeholder="Nome del personaggio" value="<?php echo gdrcd_filter('get', $_POST['destinatario']); ?>" required />
+            <input type="text" list="personaggi" name="destinatario" placeholder="Nome del personaggio" value="<?=gdrcd_filter('get', ($_POST['destinatario'] ?: $_GET['destinatario']));?>" required />
         </div>
         <?php
             // Costruisco la lista dei Personaggio da cui attingere per il datalist
