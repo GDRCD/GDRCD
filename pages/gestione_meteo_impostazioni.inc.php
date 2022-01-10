@@ -17,8 +17,6 @@ switch (Filters::out($_POST['op'])) {
 
     default: //Lista pagine
 
-
-
         break;
 }
 /*
@@ -58,6 +56,16 @@ switch (Filters::out($_POST['op'])) {
         <option value="0" <?php echo (Functions::get_constant('WEATHER_TYPE')==0)  ? "selected" : 0; ?>>Web Api</option>
     </select>
 </div>
+<?php if (Functions::get_constant('WEATHER_TYPE')==1){?>
+
+    <!--Time -->
+    <div class="single_input">
+        <div class="label">Tempo di aggiornamento del meteo</div>
+       <input type="number" name="weather_time" value="<?php echo Functions::get_constant('WEATHER_UPDATE');?>">
+    </div>
+    <?php
+}
+    ?>
 
 
 

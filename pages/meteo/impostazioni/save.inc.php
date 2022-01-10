@@ -10,7 +10,8 @@ switch (Filters::out($_POST['op'])) {
         $citta = Filters::in( $_POST['webapi_city']);
         $icone = Filters::in( $_POST['webapi_icon']);
         $formato=Filters::in( $_POST['webapi_format']);
-        $class->saveSetting($luna, $vento,$tipo,$api,$citta,$icone,$formato);
+        $time=Filters::in( $_POST['weather_time']);
+        $class->saveSetting($luna, $vento,$tipo,$api,$citta,$icone,$formato, $time);
         break;
     default:
         die('Operazione non riconosciuta.');

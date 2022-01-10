@@ -57,58 +57,22 @@
                 <?php echo strftime('%d') . '/' . strftime('%m') . '/' . (strftime('%Y') + $PARAMETERS['date']['offset']); ?>
             </div>
         <?php
-
-
-           $moon= (Functions::get_constant('WEATHER_MOON')==1)  ? $class->lunar_phase() : 0;
             if (Functions::get_constant('WEATHER_MOON')) {
+                $moon= $class->lunar_phase();
                 echo '<img title="' . $moon['title'] . '"  src="themes/' . gdrcd_filter('out', $PARAMETERS['themes']['current_theme']) . '/imgs/luna/' . $moon['phase'] . '.png">';
             }
-
-
             switch (Functions::get_constant('WEATHER_TYPE')){
                 case 1: //stagioni
-                    $data1=date("Y-m-d H:i");
-                    $data2=Functions::get_constant('WEATHER_LAST_DATE');
-                    if(($class->dateDifference($data2,$data1 ,  '%h') >4)|| (Functions::get_constant('WEATHER_LAST_DATE')=="")) {
-                        $data = date("Y-m-d");
-                        $stagione = DB::query("SELECT * FROM meteo_stagioni WHERE data_inizio <'{$data}' AND DATA_fine > '{$data}'", 'query');
-                        $condizioni = $class->getAllState($stagione['id']);
-                        $rand = rand(0, 100);
-                        while ($row = DB::query($condizioni, 'fetch')) {
-                            if (($rand >= $row['percentuale'])) {
-                                $condizione = $row['condizione'];
-                            }
-                        }
-                        $condizione = $class->getOneCondition($condizione);
-                        $img = "<img src='" . $condizione['img'] . "' title='" . $condizione['nome'] . " ' >";
-                        $vento = explode(",", $condizione['vento']);
-                        shuffle($vento);
-                        $wind = (Functions::get_constant('WEATHER_WIND') == 1) ? " - " . $vento[0] : '';
-                        $temp = rand($stagione['minima'], $stagione['massima']);
-                        $temp = Filters::int($temp) . "&deg;C";
-                        $meteo= Filters::in($img . " " .$temp . " " .$wind);
-                        $class->saveWeather($meteo);
-                    }
 
-                        break;
+                    echo$class->meteoSeason();
+                    if (Functions::get_constant('WEATHER_WIND')) echo " - " . Functions::get_constant('WEATHER_LAST_WIND');
+                    break;
+
                     default: //webapi
-                        $api = $class->getWebApiWeather();
-                        $wind = (Functions::get_constant('WEATHER_WIND') == 1) ? " - " . $class->wind($api['wind']['speed']) : '';
-                        $url = (Functions::get_constant('WEATHER_WEBAPI_ICON') == 0) ? "http://openweathermap.org/img/wn/" : "imgs/meteo/";
-                        $estensione = (Functions::get_constant('WEATHER_WEBAPI_ICON') == 0) ? "png" : Functions::get_constant('WEATHER_WEBAPI_FORMAT');
-                        $img = "<img src='" . $url . "" . $api['weather'][0]['icon'] . "." . $estensione . "' title='" . $api['weather'][0]['description'] . " ' >";
-                        $temp = Filters::int($api['main']['temp']) . "&deg;C";
-                        echo $img . " " .$temp . " " .$wind;
-
-
-
+                        echo $class->meteoWebApi();
                     break;
             }
-
-
-            echo Functions::get_constant('WEATHER_LAST');
-
- } else {
+        } else {
             echo '<div class="error">' . gdrcd_filter('out', $MESSAGE['error']['location_doesnt_exist']) . '</div>';
         } ?>
     </div>

@@ -366,8 +366,18 @@ INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,
     ('CHAT_SAVE',1,'Chat Salvataggio','Salva chat','Salva chat attivo?','bool',1),
     ('CHAT_PVT_SAVE',1,'Chat Salvataggio','Salva chat pvt','Salva chat attivo in pvt?','bool',1),
     ('CHAT_SAVE_LINK',1,'Chat Salvataggio','Salva chat in link','Salva chat in modalità link?','bool',1),
-    ('CHAT_SAVE_DOWNLOAD',1,'Chat Salvataggio','Salva chat download','Salva chat con download?','bool',1);
-
+    ('CHAT_SAVE_DOWNLOAD',1,'Chat Salvataggio','Salva chat download','Salva chat con download?','bool',1),
+    ('WEATHER_MOON',1,'Fasi Lunari','Meteo Impostazioni','Abilita o disabilita le fasi lunari','bool',1),
+    ('WEATHER_TYPE',1,'Tipo di meteo','Meteo Impostazioni','Meteo stagioni o meteo Web api','bool',1)
+    ('WEATHER_WIND',1,'Vento','Meteo Impostazioni','Abilita o disabilita il vento','bool',1),
+    ('WEATHER_WEBAPI',0,'Web api meteo','Meteo Impostazioni','Web Api di OpenWeather','String',1),
+    ('WEATHER_WEBAPI_CITY',0,'Web api città','Meteo Impostazioni','Città di cui avere il meteo','String',1),
+    ('WEATHER_WEBAPI_ICON',0,'Web api icone','Meteo Impostazioni','Icone di default o personalizzate','bool',1),
+    ('WEATHER_LAST_DATE',0,'Aggiornamento Meteo','Meteo Impostazioni','Data ultimo aggiornamento meteo','String',1),
+    ('WEATHER_WEBAPI_FORMAT','png','Web api formato icone','Meteo Impostazioni','Estensione delle icone','String',1),
+    ('WEATHER_LAST',0,'Ultimo Meteo','Meteo Impostazioni','Ultimo meteo registrato','String',1),
+    ('WEATHER_LAST_WIND',0,'Vento attuale','Meteo Impostazioni','Ultimo vento registrato','String',1),
+    ('WEATHER_UPDATE',4,'Tempo di aggiornamento','Meteo Impostazioni','Dopo quante ore si prevede il cambio meteo con le stagioni','int',1);
 -- --------------------------------------------------------
 
 --
@@ -498,6 +508,8 @@ INSERT INTO `menu` (`menu_name`, `section`, `name`, `page`, `permission`) VALUES
   ('Gestione', 'Chat', 'Giocate Segnalate', 'gestione_segnalazioni', 'MANAGE_REPORTS'),
   ('Gestione', 'Meteo', 'Gestione condizioni', 'gestione_meteo_condizioni', 'MANAGE_WEATHER'),
   ('Gestione', 'Meteo', 'Gestione stagioni', 'gestione_meteo_stagioni', 'MANAGE_WEATHER'),
+  ('Gestione', 'Meteo', 'Gestione Impostazioni', 'gestione_impostazioni', 'MANAGE_WEATHER'),
+
   ('Gestione', 'Chat', 'Esiti in chat', 'gestione_esiti', 'MANAGE_OUTCOMES');
 
 -- --------------------------------------------------------
@@ -991,7 +1003,8 @@ CREATE TABLE `meteo_stagioni` (
     `nome` VARCHAR(255) NULL DEFAULT NULL,
     `minima` INT NULL,
     `massima` INT NULL,
-     `data_inizio` DATE NULL DEFAULT NULL,
+     `data_inizio` DATE NULL DEFAULT NULL,'
+    '`data_fine` DATE NULL DEFAULT NULL,
      `alba` TIME NULL DEFAULT NULL,
      `tramonto` TIME NULL DEFAULT NULL,
      PRIMARY KEY (`id`)
@@ -1000,10 +1013,10 @@ CREATE TABLE `meteo_stagioni` (
 -- Dati default per le stagioni
 --
 INSERT INTO `meteo_stagioni` (`id`, `nome`, `minima`,`massima`, `data_inizio`, `alba`,   `tramonto`) VALUES
-    (1, 'Autunno', '8', '18', '2021-09-23', '06:45:00', '19:00:00'),
-    (2, 'Inverno',  '-5', '10', '2021-12-21', '07:00:00', '16:00:00'),
-    (3, 'Primavera', '10', '21', '2022-03-21', '06:30:00', '18:00:00'),
-    (4, 'Estate',  '18', '36', '2022-06-21', '05:30:00', '20:00:00');
+    (1, 'Autunno', '8', '18', '2021-09-23', '2021-12-22','06:45:00', '19:00:00'),
+    (2, 'Inverno',  '-5', '10', '2021-12-21', '2022-03-20','07:00:00', '16:00:00'),
+    (3, 'Primavera', '10', '21', '2022-03-21', '2022-06-20','06:30:00', '18:00:00'),
+    (4, 'Estate',  '18', '36', '2022-06-21', '2022-09-22','05:30:00', '20:00:00');
 
 CREATE TABLE `meteo_stati_climatici` (
 	`id` INT NOT NULL AUTO_INCREMENT,

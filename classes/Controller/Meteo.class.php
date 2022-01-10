@@ -33,7 +33,7 @@ class Meteo extends BaseClass
 
     /**
      * @fn getAll
-     * @note Estrae lista delle stagione
+     * @note Estrae lista delle stagioni
      * @return array
      */
     public function getAllSeason()
@@ -157,7 +157,10 @@ class Meteo extends BaseClass
         }
         return $option;
     }
-
+    /**
+     * @fn
+     * @note Inserisce una condizione climatica per la stagione
+     */
     public function  newClimaticState($id_stagione, $id_condizione, $percentuale){
         $id_stagione = Filters::int($id_stagione);
         $id_condizione = Filters::int($id_condizione);
@@ -165,18 +168,33 @@ class Meteo extends BaseClass
         DB::query("INSERT INTO meteo_stati_climatici (stagione,condizione,percentuale )  VALUES
         ('{$id_stagione}', '{$id_condizione}' , '{$percentuale}') ");
     }
+    /**
+     * @fn
+     * @note Select di tutte le condizioni climatiche per quella stagione
+     */
     public function  getAllState($stagione){
         return DB::query("SELECT nome, percentuale, meteo_stati_climatici.id, condizione FROM meteo_stati_climatici LEFT JOIN meteo_condizioni on condizione=meteo_condizioni.id where stagione='{$stagione}' order by percentuale", 'result');
     }
-
+    /**
+     * @fn
+     * @note Select degli stati climatici non presenti nella stagione
+     */
     public function diffselectState($stagione)
     {
         return DB::query("SELECT meteo_condizioni.id, nome, vento, img FROM meteo_condizioni WHERE id NOT IN (SELECT condizione FROM meteo_stati_climatici WHERE stagione= {$stagione} )", 'result');
     }
+    /**
+     * @fn
+     * @note Delete di uno stato climatico per una stagione
+     */
     public function  deleteClimaticState($id){
         $id = Filters::int(  $id);
         DB::query("DELETE FROM meteo_stati_climatici WHERE id='{$id}'");
     }
+    /**
+     * @fn
+     * @note Chiamata webapi per recuperare il meteo di una città passando l'api key e la città
+     */
     public  function getWebApiWeather(){
         $city=Functions::get_constant('WEATHER_WEBAPI_CITY');
         $api=Functions::get_constant('WEATHER_WEBAPI');
@@ -198,8 +216,11 @@ class Meteo extends BaseClass
         curl_close($curl);
         return ($result);
     }
-    public function saveSetting($luna, $vento,$tipo,$api,$citta,$icone,$formato){
-
+    /**
+     * @fn
+     * @note Salvataggio della pagina impostazioni
+     */
+    public function saveSetting($luna, $vento,$tipo,$api,$citta,$icone,$formato, $time){
         DB::query("UPDATE   config SET val = '{$luna}' WHERE const_name='WEATHER_MOON'");
         DB::query("UPDATE   config SET val = '{$vento}' WHERE const_name='WEATHER_WIND'");
         DB::query("UPDATE   config SET val = '{$tipo}' WHERE const_name='WEATHER_TYPE'");
@@ -207,20 +228,23 @@ class Meteo extends BaseClass
         DB::query("UPDATE   config SET val = '{$citta}' WHERE const_name='WEATHER_WEBAPI_CITY'");
         DB::query("UPDATE   config SET val = '{$icone}' WHERE const_name='WEATHER_WEBAPI_ICON'");
         DB::query("UPDATE   config SET val = '{$formato}' WHERE const_name='WEATHER_WEBAPI_FORMAT'");
+        DB::query("UPDATE   config SET val = '{$time}' WHERE const_name='WEATHER_UPDATE'");
     }
+    /**
+     * @fn
+     * @note Fasi lunari
+     */
     public function lunar_phase()
     {
         # Inizializzo dati necessari
         $year = date('Y');
         $month = date('n');
         $days = date('j');
-
         # Se e' prima di aprile sottraggo un anno
         if ($month < 4) {
             $year = $year - 1;
             $month = $month + 12;
         }
-
         # Eseguo calcoli astronomici
         $days_y = 365.25 * $year;
         $days_m = 30.42 * $month;
@@ -229,8 +253,6 @@ class Meteo extends BaseClass
         $phase = intval($plenilunio);
         $plenilunio = $plenilunio - $phase;
         $phase = round($plenilunio * 8 + 0.5);
-
-        # ...
         if ($phase == 8) {
             $phase = 0;
         }
@@ -240,6 +262,10 @@ class Meteo extends BaseClass
         # Estraggo e ritorno la fase calcolata
         return array('phase' => $phase_array[$phase], 'title' => $phase_title[$phase]);
     }
+    /**
+     * @fn
+     * @note Velocità del vento
+     */
     public function wind($speed){
         $velocita =
             // "switch" comparison for $count
@@ -250,20 +276,71 @@ class Meteo extends BaseClass
                         'Molto forte'));
         return $velocita;
     }
-    public function saveWeather($meteo){
-        $data= date("Y-m-d H:i");
+    /**
+     * @fn
+     * @note Salvataggio del meteo per la stagione
+     */
+    public function saveWeather($meteo, $wind)
+    {
+        $data = date("Y-m-d H:i");
         DB::query("UPDATE   config SET val = '{$meteo}' WHERE const_name='WEATHER_LAST'");
         DB::query("UPDATE   config SET val = '{$data}' WHERE const_name='WEATHER_LAST_DATE'");
+        DB::query("UPDATE   config SET val = '{$wind}' WHERE const_name='WEATHER_LAST_WIND'");
     }
+    /**
+     * @fn
+     * @note Calcolo differenza di ore fra la data/ora attuale e quella salvata del meteo
+     */
     public function  dateDifference($date_1 , $date_2 , $differenceFormat = '%a' )
-                    {
-                        $datetime1 = date_create($date_1);
-                        $datetime2 = date_create($date_2);
-
-                        $interval = date_diff($datetime1, $datetime2);
-
-                        return $interval->format($differenceFormat);
-
-                    }
+    {
+        $datetime1 = date_create($date_1);
+        $datetime2 = date_create($date_2);
+        $interval = date_diff($datetime1, $datetime2);
+        return $interval->format($differenceFormat);
+    }
+    /**
+     * @fn
+     * @note Restituisce il meteo dalle webapi
+     */
+    public function meteoWebApi(){
+        $api = $this->getWebApiWeather();
+        $wind = (Functions::get_constant('WEATHER_WIND') == 1) ? " - " . $this->wind($api['wind']['speed']) : '';
+        $url = (Functions::get_constant('WEATHER_WEBAPI_ICON') == 0) ? "http://openweathermap.org/img/wn/" : "imgs/meteo/";
+        $estensione = (Functions::get_constant('WEATHER_WEBAPI_ICON') == 0) ? "png" : Functions::get_constant('WEATHER_WEBAPI_FORMAT');
+        $img = "<img src='" . $url . "" . $api['weather'][0]['icon'] . "." . $estensione . "' title='" . $api['weather'][0]['description'] . " ' >";
+        $temp = Filters::int($api['main']['temp']) . "&deg;C";
+        return $img . " " .$temp . " " .$wind;
+    }
+    /**
+     * @fn
+     * @note Restituisce il meteo dalla stagione
+     */
+    public function meteoSeason()
+    {
+        $data1=date("Y-m-d H:i");
+        $data2=Functions::get_constant('WEATHER_LAST_DATE');
+        $time=Functions::get_constant('WEATHER_UPDATE');
+        if(($this->dateDifference($data2,$data1 ,  '%h') >$time)|| (Functions::get_constant('WEATHER_LAST_DATE')=="")) {
+            $data = date("Y-m-d");
+            $stagione = DB::query("SELECT * FROM meteo_stagioni WHERE data_inizio <'{$data}' AND DATA_fine > '{$data}'", 'query');
+            $condizioni = $this->getAllState($stagione['id']);
+            $rand = rand(0, 100);
+            while ($row = DB::query($condizioni, 'fetch')) {
+                if (($rand >= $row['percentuale'])) {
+                    $condizione = $row['condizione'];
+                }
+            }
+            $condizione = $this->getOneCondition($condizione);
+            $img = "<img src='" . $condizione['img'] . "' title='" . $condizione['nome'] . " ' >";
+            $vento = explode(",", $condizione['vento']);
+            shuffle($vento);
+            $wind = (Functions::get_constant('WEATHER_WIND') == 1) ? $vento[0] : '';
+            $temp = rand($stagione['minima'], $stagione['massima']);
+            $temp = Filters::int($temp) . "&deg;C";
+            $meteo= Filters::in($img . " " .$temp);
+            $this->saveWeather($meteo, $wind);
+        }
+        return Functions::get_constant('WEATHER_LAST');
+    }
 
 }
