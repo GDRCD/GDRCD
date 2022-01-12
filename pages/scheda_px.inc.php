@@ -36,13 +36,11 @@
     {
         if ((is_numeric($_POST['px']) === true) && ($_SESSION['permessi'] >= GAMEMASTER))
         {
-            gdrcd_query("UPDATE personaggio SET esperienza = esperienza + " . gdrcd_filter('num',
-                    $_POST['px']) . " WHERE nome = '" . gdrcd_filter('in', $_REQUEST['pg']) . "' LIMIT 1 ");
+            gdrcd_query("UPDATE personaggio SET esperienza = esperienza + " . gdrcd_filter('in', $_POST['px']) . " WHERE nome = '" . gdrcd_filter('in', $_REQUEST['pg']) . "' LIMIT 1 ");
 
             /*Registro l'operazione*/
-            gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES ('" . gdrcd_filter('in',
-                    $_REQUEST['pg']) . "', '" . $_SESSION['login'] . "', NOW(), " . PX . ", '(" . gdrcd_filter('num',
-                    $_POST['px']) . ' px) ' . gdrcd_filter('in', $_POST['causale']) . "')");
+            gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) 
+                                VALUES ('" . gdrcd_filter('in', $_REQUEST['pg']) . "', '" . $_SESSION['login'] . "', NOW(), " . PX . ", '(" . gdrcd_filter('in',$_POST['px']) . ' px) ' . gdrcd_filter('in', $_POST['causale']) . "')");
             echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['warning']['done']) . '</div>';
         } else
         {

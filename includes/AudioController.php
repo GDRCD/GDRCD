@@ -58,7 +58,7 @@ class AudioController {
         if(empty($label)) return NULL;
 
         // Nel caso in cui siano disattivati i suoni, forzo il loro spegnimento
-        if(!self::isSoundAllowed() && $_SESSION['blocca_media'] == 1 ) {
+        if(!self::isSoundAllowed($label) && $_SESSION['blocca_media'] == 1 ) {
             return NULL;
         }
 
