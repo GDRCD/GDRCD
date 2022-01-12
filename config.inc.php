@@ -54,7 +54,7 @@ $PARAMETERS['info']['webmaster_name'] = 'Webmaster'; //nome e cognome del respon
 $PARAMETERS['info']['webmaster_email'] = 'webmaster@gdrhost.it'; //email ufficiale del webmaster (è visibile in homepage)
 $PARAMETERS['info']['homepage_name'] = 'Homepage'; //nome con il quale si indica la prima pagina visualizzata
 $PARAMETERS['info']['dbadmin_name'] = 'Admin DB';
-$PARAMETERS['info']['GDRCD'] = '5.6.0.1'; //nome del gioco
+$PARAMETERS['info']['GDRCD'] = '5.6.0.2'; //nome del gioco
 
 /* HELP: I parametri di questa voce compaiono come informazioni sulla homepage. */
 
