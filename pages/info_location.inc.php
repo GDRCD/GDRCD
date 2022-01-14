@@ -1,6 +1,9 @@
 <div class="pagina_info_location">
     <?php /* HELP: Il box delle informazioni carica l'immagine del luogo corrente, lo stato e la descrizione. Genera, inoltre, il meteo */
     $class =Meteo::getInstance();
+    $perm = Permissions::getInstance();
+
+    $id= Functions::getPgId($_SESSION['login']);
     $result = gdrcd_query("SELECT mappa.nome, mappa.descrizione, mappa.stato, mappa.immagine, mappa.stanza_apparente, mappa.scadenza, mappa_click.meteo FROM  mappa_click LEFT JOIN mappa ON mappa_click.id_click = mappa.id_mappa WHERE id = " . $_SESSION['luogo'], 'result');
     $record_exists = gdrcd_query($result, 'num_rows');
     $record = gdrcd_query($result, 'fetch');
@@ -64,14 +67,36 @@
             switch (Functions::get_constant('WEATHER_TYPE')){
                 case 1: //stagioni
 
-                    echo$class->meteoSeason();
-                    if (Functions::get_constant('WEATHER_WIND')) echo " - " . Functions::get_constant('WEATHER_LAST_WIND');
+
+                   // echo $class->meteoSeason();
+                 //   if (Functions::get_constant('WEATHER_WIND')) echo " - " . Functions::get_constant('WEATHER_LAST_WIND');
                     break;
 
                     default: //webapi
-                        echo $class->meteoWebApi();
+                        if (!empty($class->checkMeteoChat($_REQUEST['dir']) ) ){//Controllo se è presente un meteo per la città
+                            $meteo= ($class->checkMeteoChat(($_REQUEST['dir'] )));
+                            echo $class->meteoWebApiChat($meteo['citta']);
+                        }
+                        else if (!empty($class->checkMeteoMappa($_GET['map_id']) ) ){//meteo della mappa
+                               $meteo= ($class->checkMeteoMappa(($_GET['map_id'] )));
+                               echo $class->meteoWebApiChat($meteo['citta']);
+                        }
+                        else if (!empty($class->checkMeteoMappaChat($_REQUEST['dir']) ) ){//"meteo della chat preso in base alla mappa di appartenenza"
+                               $meteo= $class->checkMeteoMappaChat($_REQUEST['dir']) ;
+                               echo $class->meteoWebApiChat($meteo['citta']);
+                        }else
+                        {
+                            echo $class->meteoWebApi();
+
+                        }
                     break;
             }
+          if($perm->permission('MANAGE_WEATHER') && ($_REQUEST['dir'] )){?>
+              <p><a href="javascript:modalWindow('meteo', 'Modifica Meteo Chat', 'popup.php?page=meteo_chat&dir=<?=$_REQUEST['dir']?>')">Modifica Meteo</a></p>
+         <?php
+          }
+
+
         } else {
             echo '<div class="error">' . gdrcd_filter('out', $MESSAGE['error']['location_doesnt_exist']) . '</div>';
         } ?>

@@ -12,6 +12,7 @@ $op = Filters::out($_REQUEST['op']);
 
 switch (Filters::out($_POST['op'])) {
     case 'save': // Salvataggio modifiche
+
         include('meteo/impostazioni/save.inc.php');
         break;
 

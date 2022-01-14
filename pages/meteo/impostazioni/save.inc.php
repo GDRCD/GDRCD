@@ -13,6 +13,14 @@ switch (Filters::out($_POST['op'])) {
         $time=Filters::in( $_POST['weather_time']);
         $class->saveSetting($luna, $vento,$tipo,$api,$citta,$icone,$formato, $time);
         break;
+    case 'save_chat':
+        $vento = Filters::in( $_POST['vento']);
+        $temperatura = Filters::in( $_POST['temperatura']);
+        $condizione = Filters::in( $_POST['condizione']);
+        $citta = Filters::in( $_POST['webapi_city']);
+        $id = Filters::in( $_REQUEST['dir']);
+        $class->saveChat($vento, $temperatura, $condizione,$citta , $id);
+        break;
     default:
         die('Operazione non riconosciuta.');
 }

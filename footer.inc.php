@@ -3,6 +3,7 @@
 <script type="text/javascript" src="includes/corefunctions.js"></script>
 <!--<script type="text/javascript" src="includes/gdrcdskills.js"></script>-->
 <script type="text/javascript" src="includes/modal.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.3.4/sweetalert2.min.js" integrity="sha512-GDiDlK2vvO6nYcNorLUit0DSRvcfd7Vc0VRg7e3PuZcsTwQrJQKp5hf8bCaad+BNoBq7YMH6QwWLPQO3Xln0og==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <?php
 /** * Abilitazione tooltip

@@ -185,6 +185,28 @@ class Meteo extends BaseClass
     }
     /**
      * @fn
+     * @note Select degli stati climatici non presenti nella stagione
+     */
+    public function diffselectSeason($array)
+    {
+        $option="";
+        foreach ($array as $v){
+            $option .= "<option selected>{$v}</option>";
+        }
+        $stagioni=$this->getAllSeason();
+        var_dump($stagioni);
+        foreach ($stagioni as $item) {
+            $option .= "<option >{$item['nome']}</option>";
+
+        }
+
+       // $diff=array_diff($this->array_vento, $array);
+        //foreach ($diff as $vento) {
+       //     $option .= "<option>{$vento}</option>";
+      //  }
+        return $option;    }
+    /**
+     * @fn
      * @note Delete di uno stato climatico per una stagione
      */
     public function  deleteClimaticState($id){
@@ -193,10 +215,35 @@ class Meteo extends BaseClass
     }
     /**
      * @fn
-     * @note Chiamata webapi per recuperare il meteo di una città passando l'api key e la città
+     * @note Chiamata webapi per recuperare il meteo di una città passando l'api key e la città di default
      */
     public  function getWebApiWeather(){
         $city=Functions::get_constant('WEATHER_WEBAPI_CITY');
+        $api=Functions::get_constant('WEATHER_WEBAPI');
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'http://api.openweathermap.org/data/2.5/weather?q='.$city.'&appid='.$api.'&units=metric&lang=it',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_SSL_VERIFYPEER => false,
+        ));
+        $response = curl_exec($curl);
+        $result = json_decode($response,true);
+        if (curl_errno($curl)) {
+            echo 'Error:' . curl_error($curl);
+        }
+        curl_close($curl);
+        return ($result);
+    }
+    /**
+     * @fn
+     * @note Chiamata webapi per recuperare il meteo di una città passando l'api key ed una città specifica
+     */
+    public  function getWebApiWeatherChat($city){
+
         $api=Functions::get_constant('WEATHER_WEBAPI');
         $curl = curl_init();
         curl_setopt_array($curl, array(
@@ -287,6 +334,72 @@ class Meteo extends BaseClass
         DB::query("UPDATE   config SET val = '{$data}' WHERE const_name='WEATHER_LAST_DATE'");
         DB::query("UPDATE   config SET val = '{$wind}' WHERE const_name='WEATHER_LAST_WIND'");
     }
+    public function saveChat($vento, $temperatura, $condizione,$citta , $id)
+    {
+
+        switch (Functions::get_constant('WEATHER_TYPE')) {
+            case 1:
+                $condizione = $this->getOneCondition($condizione);
+                $img = "<img src='" . $condizione['img'] . "' title='" . $condizione['nome'] . " ' >";
+                $meteo= Filters::in($img . " " .$temperatura . " " .$vento);
+                $citta='';
+                break;
+            default:
+                $citta= Filters::in($citta);
+                $meteo='';
+               if (empty($citta)){ DB::query("DELETE FROM meteo_chat WHERE id_chat='{$id}'");}else $check="ok";
+                break;
+        }
+
+
+        switch ($check){
+            case "ok":
+                if($this->checkMeteoChat($id)){
+                    DB::query("UPDATE meteo_chat SET meteo = '{$meteo}', citta='{$citta}' WHERE id_chat={$id}");
+                }else{
+                    DB::query("INSERT INTO meteo_chat (citta, meteo, id_chat ) VALUES ('{$citta}',  '{$meteo}', {$id}) ");
+                }
+            default:
+                break;
+
+        }
+
+
+    }
+    public function saveMap($citta, $id)
+    {
+        switch (Functions::get_constant('WEATHER_TYPE')) {
+            case 1:
+                $citta= '';
+                $meteo=Filters::in($citta);;
+                var_dump(($meteo));
+
+                break;
+            default:
+                $citta= Filters::in($citta);
+                $meteo='';
+
+                if (empty($citta)){
+                    DB::query("DELETE FROM meteo_mappa WHERE id_mappa='{$id}'");
+
+                }else {
+                    $check="ok";
+                }
+
+                break;
+        }
+        switch ($check){
+            case "ok":
+                if($this->checkMeteoMappa($id)){
+                    DB::query("UPDATE meteo_mappa SET meteo = '{$meteo}', citta='{$citta}' , stagioni='' WHERE id_mappa={$id}");
+                }else{
+                    DB::query("INSERT INTO meteo_mappa (citta, meteo, id_mappa, stagioni ) VALUES ('{$citta}',  '{$meteo}', {$id}, '') ");
+                }
+            default:
+                break;
+
+        }
+    }
     /**
      * @fn
      * @note Calcolo differenza di ore fra la data/ora attuale e quella salvata del meteo
@@ -311,6 +424,21 @@ class Meteo extends BaseClass
         $temp = Filters::int($api['main']['temp']) . "&deg;C";
         return $img . " " .$temp . " " .$wind;
     }
+
+    /**
+     * @fn
+     * @note Restituisce il meteo dalle webapi di una città per una singola chat
+     */
+    public function meteoWebApiChat($citta){
+        $api = $this->getWebApiWeatherChat($citta);
+        $wind = (Functions::get_constant('WEATHER_WIND') == 1) ? " - " . $this->wind($api['wind']['speed']) : '';
+        $url = (Functions::get_constant('WEATHER_WEBAPI_ICON') == 0) ? "http://openweathermap.org/img/wn/" : "imgs/meteo/";
+        $estensione = (Functions::get_constant('WEATHER_WEBAPI_ICON') == 0) ? "png" : Functions::get_constant('WEATHER_WEBAPI_FORMAT');
+        $img = "<img src='" . $url . "" . $api['weather'][0]['icon'] . "." . $estensione . "' title='" . $api['weather'][0]['description'] . " ' >";
+        $temp = Filters::int($api['main']['temp']) . "&deg;C";
+        return $img . " " .$temp . " " .$wind;
+    }
+
     /**
      * @fn
      * @note Restituisce il meteo dalla stagione
@@ -341,6 +469,19 @@ class Meteo extends BaseClass
             $this->saveWeather($meteo, $wind);
         }
         return Functions::get_constant('WEATHER_LAST');
+    }
+    public function checkMeteoChat($id){
+        $id = Filters::int($id);
+        return DB::query("SELECT * FROM meteo_chat WHERE id_chat='{$id}'", 'query');
+    }
+    public function checkMeteoMappa($id){
+        $id = Filters::int($id);
+        return DB::query("SELECT * FROM meteo_mappa WHERE id_mappa='{$id}'", 'query');
+    }
+    public function checkMeteoMappaChat($id){
+        $id = Filters::int($id);
+        $chat= DB::query("SELECT id_mappa FROM mappa WHERE id='{$id}'", 'query');
+        return DB::query("SELECT *  FROM meteo_mappa WHERE id_mappa='{$chat['id_mappa']}'", 'query');
     }
 
 }
