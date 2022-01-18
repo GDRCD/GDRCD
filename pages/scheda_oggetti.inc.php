@@ -45,27 +45,60 @@
 
 
     /*Rimuovo un oggetto dall'inventario o dallo zaino*/
-    if ((gdrcd_filter('get',
-                $_POST['op']) == "abbandona") && ($_SESSION['login'] == $_REQUEST['pg'])
-    )
-    { /*Rimuovo un oggetto*/
+    if ((gdrcd_filter('get', $_POST['op']) == "abbandona") && ($_SESSION['login'] == $_REQUEST['pg'])) {
+        /*Rimuovo un oggetto*/
         /*Se ne possiedo più di uno ne rimuovo uno solo*/
-        if ($_POST['numero'] <= 1)
-        {
+        if ($_POST['numero'] <= 1) {
             $query = "DELETE FROM clgpersonaggiooggetto WHERE id_oggetto = " . gdrcd_filter('num',
                     $_POST['id_oggetto']) . " AND nome = '" . gdrcd_filter('in', $_REQUEST['pg']) . "' LIMIT 1 ";
-        } else
-        {
+        } else {
             $query = "UPDATE clgpersonaggiooggetto SET numero = numero - 1 WHERE id_oggetto = " . gdrcd_filter('num',
                     $_POST['id_oggetto']) . " AND nome = '" . gdrcd_filter('get', $_REQUEST['pg']) . "' LIMIT 1 ";
         }
         gdrcd_query($query);
 
         echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['items']['warning']['done']);
+    }
 
-    } ?>
+    /*Cedo un oggetto non trasportabile ad un altro personaggio*/
+    if ((gdrcd_filter('get', $_POST['op']) == "cedi") && ($_SESSION['login'] == $_REQUEST['pg'])) {
+        $result_min = gdrcd_query("SELECT id_oggetto FROM clgpersonaggiooggetto WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])."", 'result');
+        // Se si tratta dell'ultimo oggetto a disposizione, allora rimuovo la riga in database
+        if($_POST['numero'] <= 1) {
+            $query = "DELETE FROM clgpersonaggiooggetto WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND nome = '".gdrcd_filter('in', $_REQUEST['pg'])."' LIMIT 1 ";
+        }
+        // Altrimenti diminuisco di uno gli oggetti posseduti
+        else {
+            $query = "UPDATE clgpersonaggiooggetto SET numero = numero - 1 WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND nome = '".gdrcd_filter('in', $_REQUEST['pg'])."' LIMIT 1 ";
+        }
+        // Eseguo la query
+        gdrcd_query($query);
 
+        if(gdrcd_query($result_min, 'num_rows') > 0) {
+            gdrcd_query($result_min, 'free');
+            // Controllo se il personaggio possiede già l oggettp
+            $result_loc = gdrcd_query("SELECT id_oggetto FROM clgpersonaggiooggetto WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND nome = '".gdrcd_filter('in', $_POST['give_item'])."'", 'result');
+            // Se possiede l'oggetto, lo aggiungo a quelli presenti
+            if(gdrcd_query($result_loc, 'num_rows') > 0) {
+                $query = "UPDATE clgpersonaggiooggetto SET numero = numero + 1 WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND nome = '".gdrcd_filter('in', $_POST['give_item'])."'";
+            }
+            else {
+                $query = "INSERT INTO clgpersonaggiooggetto (nome, id_oggetto, cariche, numero) VALUES ('".gdrcd_filter('in', $_POST['give_item'])."',".gdrcd_filter('num', $_POST['id_oggetto']).", ".gdrcd_filter('num', $_POST['cariche']).", 1)";
+            }
+            gdrcd_query($result_loc, 'free');
+            // Eseguo la query
+            gdrcd_query($query);
 
+            /*Registro l'evento*/
+            gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES ('".$_POST['give_item']."', '".$_SESSION['login']."', NOW(), ".BONIFICO.", '".gdrcd_filter('in', $_POST['checosa'])."')");
+
+            echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['warning']['done']).'</div>';
+        } else {
+            echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['warning']['cant_do']).'</div>';
+        }
+    }
+
+    ?>
     <!-- Elenco oggetti nello zaino -->
     <div class="page_title">
         <h2><?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['menu']['inventory']); ?></h2>
@@ -283,6 +316,36 @@
                                                 <input type="hidden"
                                                        value="<?php echo $_REQUEST['pg']; ?>"
                                                        name="pg"/>
+                                            </form>
+                                        <?php } ?>
+                                        <?php if (!$record['ubicabile']) {
+                                            /*Personaggi nella stessa location*/
+                                            if($PARAMETERS['mode']['give_only_if_online'] != 'ON') {
+                                                $query = "SELECT nome FROM personaggio WHERE ultimo_luogo = ".$_SESSION['luogo']." AND ultimo_luogo <> -1 AND nome <> '".$_SESSION['login']."' AND DATE_ADD(ultimo_refresh, INTERVAL 2 MINUTE) > NOW() ORDER BY nome";
+                                            } else {
+                                                $query = "SELECT nome FROM personaggio ORDER BY nome";
+                                            }
+                                            $characters = gdrcd_query($query, 'result');
+
+                                            ?>
+                                            <!-- Cedi oggetto non trasportabile -->
+                                            <form action="main.php?page=scheda_oggetti" method="post">
+                                                <input type="hidden" value="<?php echo gdrcd_filter('out', $_REQUEST['pg']); ?>" name="pg" />
+                                                <input type="hidden" value="<?php echo $record['id_oggetto']; ?>" name="id_oggetto" />
+                                                <input type="hidden" value="<?php echo $record['cariche']; ?>" name="cariche" />
+                                                <input type="hidden" value="<?php echo $record['numero']; ?>" name="numero" />
+                                                <input type="hidden" value="<?php echo gdrcd_filter('out', $record['nome_oggetto']); ?>" name="checosa" />
+                                                <input type="hidden"value="cedi" name="op" />
+                                                <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['items']['list']['give']); ?>" />
+                                                <select name="give_item">
+                                                    <?php while($option = gdrcd_query($characters, 'fetch')) { ?>
+                                                        <option value="<?php echo $option['nome']; ?>">
+                                                            <?php echo gdrcd_filter('out', $option['nome']); ?>
+                                                        </option>
+                                                    <?php }
+                                                    gdrcd_query($characters, 'free');
+                                                    ?>
+                                                </select>
                                             </form>
                                         <?php } ?>
                                     </div>
