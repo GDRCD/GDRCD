@@ -699,7 +699,7 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
     ('MANAGE_MAPS', 'Permesso gestione mappe'),
     ('MANAGE_AMBIENT','Gestione ambientazione'),
     ('MANAGE_RULES','Gestione regolamento'),
-    ('MANAGE_CONSTANTS', 'Permesso per l\'editing delle costanti'),
+    ('MANAGE_CONSTANTS', 'Permesso per l\editing delle costanti'),
     ('MANAGE_RACES', 'Permesso per la gestione delle razze'),
     ('MANAGE_FORUMS', 'Permesso per la gestione delle bacheche'),
     ('MANAGE_GUILDS', 'Permesso per la gestione delle gilde'),
@@ -977,6 +977,32 @@ INSERT INTO _gdrcd_db_versions (migration_id,applied_on) VALUES
 
 
 --
+-- Struttura della tabella `meteo_chat`
+--
+CREATE TABLE IF NOT EXISTS `meteo_chat` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `id_chat` int(11) NOT NULL,
+    `citta` varchar(255) DEFAULT NULL,
+    `meteo` varchar(255) DEFAULT NULL,
+    `vento` varchar(255) DEFAULT NULL,
+    PRIMARY KEY (`id`)
+    ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+
+
+--
+-- Struttura della tabella `meteo_mappa`
+--
+CREATE TABLE IF NOT EXISTS `meteo_mappa` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `id_mappa` int(11) NOT NULL,
+    `citta` varchar(255) DEFAULT NULL,
+    `stagioni` varchar(255) DEFAULT NULL,
+    `meteo` varchar(255) DEFAULT NULL,
+    `vento` varchar(255) DEFAULT NULL,
+    PRIMARY KEY (`id`)
+    ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+--
 -- Struttura della tabella `meteo_condizioni`
 --
 CREATE TABLE IF NOT EXISTS `meteo_condizioni` (
@@ -985,7 +1011,7 @@ CREATE TABLE IF NOT EXISTS `meteo_condizioni` (
     `img` varchar(255) DEFAULT NULL,
     `vento` varchar(255) DEFAULT NULL,
     PRIMARY KEY (`id`)
-    ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+    ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 --
 -- Dati default per meteo_condizioni
 --
@@ -1003,12 +1029,12 @@ CREATE TABLE `meteo_stagioni` (
     `nome` VARCHAR(255) NULL DEFAULT NULL,
     `minima` INT NULL,
     `massima` INT NULL,
-     `data_inizio` DATE NULL DEFAULT NULL,'
-    '`data_fine` DATE NULL DEFAULT NULL,
+     `data_inizio` DATE NULL DEFAULT NULL,
+    `data_fine` DATE NULL DEFAULT NULL,
      `alba` TIME NULL DEFAULT NULL,
      `tramonto` TIME NULL DEFAULT NULL,
      PRIMARY KEY (`id`)
-)ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+)ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 --
 -- Dati default per le stagioni
 --
@@ -1025,4 +1051,4 @@ CREATE TABLE `meteo_stati_climatici` (
 	`percentuale` INT NULL,
 	PRIMARY KEY (`id`)
 )
-ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+ENGINE=MyISAM  DEFAULT CHARSET=utf8;

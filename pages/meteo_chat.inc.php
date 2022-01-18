@@ -21,6 +21,7 @@ if(Permissions::permission('MANAGE_WEATHER') && ($_REQUEST['dir'] )) {
             <div class="single_input">
                 <div class="label">Condizione meteo: </div>
                 <select name="condizione" id="condizione" >
+                    <option value="">----</option>
                     <?php
                     $all= Meteo::getAllCondition();
 
@@ -35,7 +36,8 @@ if(Permissions::permission('MANAGE_WEATHER') && ($_REQUEST['dir'] )) {
             ?>
             <div class="single_input">
             <div class="label"><?php echo Filters::out($MESSAGE['interface']['administration']['meteo_condition']['wind_name']); ?></div>
-            <select  name="vento[]" id="vento">
+            <select  name="vento" id="vento">
+                <option value="">----</option>
                 <?php
                 echo $class->selectVento();
                 ?>

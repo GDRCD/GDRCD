@@ -190,21 +190,19 @@ class Meteo extends BaseClass
     public function diffselectSeason($array)
     {
         $option="";
-        foreach ($array as $v){
-            $option .= "<option selected>{$v}</option>";
-        }
         $stagioni=$this->getAllSeason();
-        var_dump($stagioni);
         foreach ($stagioni as $item) {
-            $option .= "<option >{$item['nome']}</option>";
+            $option.="<div class='form_field'>";
+            if(in_array($item['id'], $array)){
+                $option .= "<input type='checkbox' name='stagioni[]' checked value='{$item['id']}'></div>";
+            }else{
+                $option .= "<input type='checkbox' name='stagioni[]' value='{$item['id']}'></div>";
+            }
 
+           $option.="<div class='form_label'>{$item['nome']}</div>";
         }
-
-       // $diff=array_diff($this->array_vento, $array);
-        //foreach ($diff as $vento) {
-       //     $option .= "<option>{$vento}</option>";
-      //  }
-        return $option;    }
+        return $option;
+}
     /**
      * @fn
      * @note Delete di uno stato climatico per una stagione
@@ -276,6 +274,24 @@ class Meteo extends BaseClass
         DB::query("UPDATE   config SET val = '{$icone}' WHERE const_name='WEATHER_WEBAPI_ICON'");
         DB::query("UPDATE   config SET val = '{$formato}' WHERE const_name='WEATHER_WEBAPI_FORMAT'");
         DB::query("UPDATE   config SET val = '{$time}' WHERE const_name='WEATHER_UPDATE'");
+        switch ($tipo){
+            case '1': // stagioni
+                $chat=DB::query("SELECT * FROM meteo_chat WHERE meteo !=''", "num_rows");
+                $map= DB::query("SELECT * FROM meteo_mappa WHERE meteo !=''", "num_rows");
+                if(!$chat){DB::query("DELETE FROM meteo_chat WHERE meteo=''");}
+                if(!$map){DB::query("DELETE FROM meteo_mappa WHERE meteo=''");}
+                break;
+            default://webapi
+                $chat=DB::query("SELECT * FROM meteo_chat WHERE citta !=''", "num_rows");
+                $map= DB::query("SELECT * FROM meteo_mappa WHERE citta !=''", "num_rows");
+                if(!$chat){DB::query("DELETE FROM meteo_chat WHERE citta=''");}
+                if(!$map){DB::query("DELETE FROM meteo_mappa WHERE citta=''");}
+
+        }
+
+
+
+
     }
     /**
      * @fn
@@ -339,10 +355,12 @@ class Meteo extends BaseClass
 
         switch (Functions::get_constant('WEATHER_TYPE')) {
             case 1:
+                if (empty($condizione)){ DB::query("DELETE FROM meteo_chat WHERE id_chat='{$id}'");}else $check="ok";
                 $condizione = $this->getOneCondition($condizione);
                 $img = "<img src='" . $condizione['img'] . "' title='" . $condizione['nome'] . " ' >";
-                $meteo= Filters::in($img . " " .$temperatura . " " .$vento);
+                $meteo= Filters::in($img . " " .$temperatura. "&deg;C");
                 $citta='';
+
                 break;
             default:
                 $citta= Filters::in($citta);
@@ -350,14 +368,12 @@ class Meteo extends BaseClass
                if (empty($citta)){ DB::query("DELETE FROM meteo_chat WHERE id_chat='{$id}'");}else $check="ok";
                 break;
         }
-
-
         switch ($check){
             case "ok":
                 if($this->checkMeteoChat($id)){
-                    DB::query("UPDATE meteo_chat SET meteo = '{$meteo}', citta='{$citta}' WHERE id_chat={$id}");
+                    DB::query("UPDATE meteo_chat SET meteo = '{$meteo}', citta='{$citta}', vento='{$vento}' WHERE id_chat={$id}");
                 }else{
-                    DB::query("INSERT INTO meteo_chat (citta, meteo, id_chat ) VALUES ('{$citta}',  '{$meteo}', {$id}) ");
+                    DB::query("INSERT INTO meteo_chat (citta, meteo, id_chat, vento ) VALUES ('{$citta}',  '{$meteo}', {$id}, '{$vento}') ");
                 }
             default:
                 break;
@@ -366,38 +382,38 @@ class Meteo extends BaseClass
 
 
     }
-    public function saveMap($citta, $id)
+    public function saveMap($meteo, $id)
     {
         switch (Functions::get_constant('WEATHER_TYPE')) {
             case 1:
+
+                $stagioni=Filters::in($meteo);
                 $citta= '';
-                $meteo=Filters::in($citta);;
-                var_dump(($meteo));
-
-                break;
-            default:
-                $citta= Filters::in($citta);
-                $meteo='';
-
-                if (empty($citta)){
+                if (empty($stagioni)){
                     DB::query("DELETE FROM meteo_mappa WHERE id_mappa='{$id}'");
-
                 }else {
                     $check="ok";
                 }
-
+                break;
+            default:
+                $citta= Filters::in($meteo);
+                $meteo='';
+                if (empty($citta)){
+                    DB::query("DELETE FROM meteo_mappa WHERE id_mappa='{$id}'");
+                }else {
+                    $check="ok";
+                }
                 break;
         }
         switch ($check){
             case "ok":
                 if($this->checkMeteoMappa($id)){
-                    DB::query("UPDATE meteo_mappa SET meteo = '{$meteo}', citta='{$citta}' , stagioni='' WHERE id_mappa={$id}");
+                    DB::query("UPDATE meteo_mappa SET meteo = '{$meteo}', citta='{$citta}' , stagioni='{$stagioni}' WHERE id_mappa={$id}");
                 }else{
-                    DB::query("INSERT INTO meteo_mappa (citta, meteo, id_mappa, stagioni ) VALUES ('{$citta}',  '{$meteo}', {$id}, '') ");
+                    DB::query("INSERT INTO meteo_mappa (citta, meteo, id_mappa, stagioni ) VALUES ('{$citta}',  '{$meteo}', {$id}, '{$stagioni}') ");
                 }
             default:
                 break;
-
         }
     }
     /**
@@ -462,13 +478,53 @@ class Meteo extends BaseClass
             $img = "<img src='" . $condizione['img'] . "' title='" . $condizione['nome'] . " ' >";
             $vento = explode(",", $condizione['vento']);
             shuffle($vento);
-            $wind = (Functions::get_constant('WEATHER_WIND') == 1) ? $vento[0] : '';
+            $wind =  $vento[0];
             $temp = rand($stagione['minima'], $stagione['massima']);
             $temp = Filters::int($temp) . "&deg;C";
             $meteo= Filters::in($img . " " .$temp);
             $this->saveWeather($meteo, $wind);
         }
         return Functions::get_constant('WEATHER_LAST');
+    }
+
+    public function meteoMappaSeason($stagioni, $id)
+    {
+        $data1=date("Y-m-d H:i");
+        $data2=Functions::get_constant('WEATHER_LAST_DATE');
+        $time=Functions::get_constant('WEATHER_UPDATE');
+        if(($this->dateDifference($data2,$data1 ,  '%h') >$time)|| (Functions::get_constant('WEATHER_LAST_DATE')=="")) {
+            $data = date("Y-m-d");
+            $stagione = DB::query(  "SELECT * FROM meteo_stagioni WHERE data_inizio <'{$data}' AND DATA_fine > '{$data}' and id IN ({$stagioni})", 'query');
+            if(empty($stagione)){   echo  "verifica di aver assegnato correttamente le stagioni alla mappa o di aver assicurato il range data inizio e fine nelle stagioni poichè non vi sono stagioni selezionabili per questo periodo dell'anno"; }
+
+            $condizioni = $this->getAllState($stagione['id']);
+            $rand = rand(0, 100);
+            while ($row = DB::query($condizioni, 'fetch')) {
+                if (($rand >= $row['percentuale'])) {
+                    $condizione = $row['condizione'];
+                }
+            }
+            $condizione = $this->getOneCondition($condizione);
+            $img = "<img src='" . $condizione['img'] . "' title='" . $condizione['nome'] . " ' >";
+            $vento = explode(",", $condizione['vento']);
+            shuffle($vento);
+            $wind = (Functions::get_constant('WEATHER_WIND') == 1) ? $vento[0] : '';
+            $temp = rand($stagione['minima'], $stagione['massima']);
+            $temp = Filters::int($temp) . "&deg;C";
+            $meteo= Filters::in($img . " " .$temp);
+            $this->saveWeatherMap($meteo, $wind, $id);
+         }
+
+        return $this->checkMeteoMappa($id);
+
+    }
+
+    public function saveWeatherMap($meteo, $wind, $id)
+    {
+        $data = date("Y-m-d H:i");
+
+        DB::query("UPDATE   config SET val = '{$data}' WHERE const_name='WEATHER_LAST_DATE'");
+        DB::query("UPDATE   meteo_mappa SET vento = '{$wind}', meteo='{$meteo}' WHERE id_mappa='{$id}'");
     }
     public function checkMeteoChat($id){
         $id = Filters::int($id);

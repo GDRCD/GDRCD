@@ -61,13 +61,14 @@
                 switch (Functions::get_constant('WEATHER_TYPE')) {
                     case 1:
 
-                        $stagioni = implode(",",Filters::in($_POST['stagioni']));
-                        var_dump($stagioni);
-                     //  $class->saveMap($stagioni, Filters::in($_POST['id_record']) );
+                        $stagioni = implode(",",($_POST['stagioni']));
+
+                       $class->saveMap($stagioni, Filters::in($_POST['id_record']) );
 
                         break;
                     default:
                         $citta= Filters::in($_POST['webapi_city']);
+                        echo $citta;
                         $class->saveMap($citta, Filters::in($_POST['id_record']) );
 
                         break;
@@ -158,15 +159,13 @@
                                  <div class='form_label'>
                                      Stagioni
                                  </div>
-                                 <div class='form_field'>
 
-                                    <select data-placeholder="" multiple class="chosen-select" name="stagioni[]" id="stagioni">-->
-                                         <?php
-                                         $stagioni= explode(",",  $loaded_record['meteo'] );
-                                         echo $class->diffselectSeason($stagioni);
+
+                                    <?php
+                                         $stagioni= $class->checkMeteoMappa($loaded_record['id_click']); ;
+                                         echo $class->diffselectSeason(explode(",",$stagioni['stagioni']));
                                          ?>
-                                    </select>-->
-                                 </div>
+
                                  <div class='form_info'>
 
                                  </div>
