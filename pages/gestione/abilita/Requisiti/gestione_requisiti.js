@@ -1,30 +1,48 @@
-$(function(){
+$(function () {
 
-    let form = $('.edit-form');
+    let editForm = $('.edit-form');
 
-    form.find('select[name="requisito"]').on('change',function(){
-
-        let id = $(this).val()
-
-        Ajax('/pages/gestione/abilita/Requisiti/gestione_requisiti_ajax.php',{'id':id,'action':'get_requirement_data'},setEditInput)
-
-
+    new Form('.gestione_abilita_requisiti .form').onSubmit({
+        path: '/pages/gestione/abilita/Requisiti/gestione_requisiti_ajax.php',
+        success: updateFormList
     });
 
-    function setEditInput(data){
+    function updateFormList() {
+        Ajax(
+            '/pages/gestione/abilita/Requisiti/gestione_requisiti_ajax.php',
+            {'action': 'get_requirement_list'},
+            function (data) {
 
-        if(data != ''){
+                if (data) {
+                    let datas = JSON.parse(data);
 
-
-            let datas = JSON.parse(data);
-
-            form.find('select[name="abilita"]').val(datas.abilita);
-            form.find('select[name="grado"]').val(datas.grado);
-            form.find('select[name="tipo"]').val(datas.tipo);
-            form.find('select[name="id_rif"]').val(datas.id_rif);
-            form.find('input[name="lvl_rif"]').val(datas.lvl_rif);
-        }
-
+                    $('.gestione_abilita_requisiti .form').find('select[name="requisito"]').html(datas.List)
+                }
+            })
     }
+
+    editForm.find('select[name="requisito"]').on('change', function () {
+        let id = $(this).val()
+        Ajax(
+            '/pages/gestione/abilita/Requisiti/gestione_requisiti_ajax.php',
+            {'id': id, 'action': 'get_requirement_data'},
+            function (data) {
+
+                if (data != '') {
+
+
+                    let datas = JSON.parse(data);
+
+                    editForm.find('select[name="abilita"]').val(datas.abilita);
+                    editForm.find('select[name="grado"]').val(datas.grado);
+                    editForm.find('select[name="tipo"]').val(datas.tipo);
+                    editForm.find('select[name="id_rif"]').val(datas.id_rif);
+                    editForm.find('input[name="lvl_rif"]').val(datas.lvl_rif);
+                }
+
+            }
+        )
+    });
+
 
 });
