@@ -1,16 +1,21 @@
 class Form {
 
-    static swal_alert = true;
-    static form_reset = true;
+    swal_alert = true;
+    form_reset = true;
+    selector = false;
 
-    static async setOptions(options){
+    constructor(selector) {
+        this.selector = selector;
+    }
+
+    setOptions(options){
         this.swal_alert = (options.swal_alert !== undefined) ? options.swal_alert : this.swal_alert;
         this.form_reset = (options.form_reset !== undefined) ? options.form_reset : this.form_reset;
     }
 
-    static async send(options) {
+    onSubmit(options) {
         let cls = this,
-            selector = options.selector;
+            selector = cls.selector;
 
         $(selector).on('submit', async function (e) {
             e.preventDefault();
@@ -46,7 +51,7 @@ class Form {
         });
     }
 
-    static async sendData(form, path, success) {
+    sendData(form, path, success) {
         //*** SEND AJAX FORM
         let data = new FormData(form),
             cls = this;
@@ -88,7 +93,7 @@ class Form {
         });
     }
 
-    static async FormReset(form) {
+    FormReset(form) {
         $(form).find('input[type="file"]').val('');
         $(form).find('input[type="number"]').val('');
         $(form).find('input[type="text"]').val('');
@@ -96,6 +101,5 @@ class Form {
         $(form).find('select').val('');
         $(form).find('textarea').val('');
     }
-
 
 }

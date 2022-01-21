@@ -1,14 +1,18 @@
-$(function(){
-	
-	 ScrollDown();
-	Form('.chat_form_ajax','/pages/chat/chat_ajax.php',invioSuccess);
+$(function () {
 
-    function invioSuccess(data){
-        if(data != '') {
+    ScrollDown();
+
+    new Form('.chat_form_ajax').onSubmit({
+        path: '/pages/chat/chat_ajax.php',
+        success: invioSuccess
+    });
+
+    function invioSuccess(data) {
+        if (data != '') {
 
             let datas = JSON.parse(data);
 
-            if(datas.response == true) {
+            if (datas.response == true) {
                 aggiornaChat();
                 window.location.reload(true);
             }
@@ -16,24 +20,24 @@ $(function(){
         }
     }
 
- function aggiornaChat(){
+    function aggiornaChat() {
 
         $.ajax({
-            url:'/pages/chat/chat_ajax.php',
-            type:'POST',
-            data:{'action':'aggiorna_chat'},
-            success: (function(data){
+            url: '/pages/chat/chat_ajax.php',
+            type: 'POST',
+            data: {'action': 'aggiorna_chat'},
+            success: (function (data) {
 
-                if(data != ''){
+                if (data != '') {
 
                     let datas = JSON.parse(data);
 
-                    if(datas.list != ''){
-                        $('.chat_azioni_box .chat_azioni',top.parent.document).append(datas.list);
+                    if (datas.list != '') {
+                        $('.chat_azioni_box .chat_azioni', top.parent.document).append(datas.list);
                         let audio = top.parent.document.getElementById('chat_audio');
-						ScrollDown();
-						
-                        if(audio != null){
+                        ScrollDown();
+
+                        if (audio != null) {
                             audio.play();
                         }
                     }
@@ -44,10 +48,10 @@ $(function(){
 
     }
 
-function ScrollDown(){
-        let box = $(".chat_azioni",top.parent.document),
+    function ScrollDown() {
+        let box = $(".chat_azioni", top.parent.document),
             height = box[0].scrollHeight;
-        box.animate({ scrollTop: height }, 50);
+        box.animate({scrollTop: height}, 50);
     }
 
     function getUrlVars() {
@@ -84,7 +88,7 @@ function ScrollDown(){
 
     }
 
-    setInterval(function(){
+    setInterval(function () {
         aggiornaChat()
     }, 20000);
 
