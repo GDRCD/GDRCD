@@ -96,9 +96,9 @@ class Gestione extends BaseClass{
      * @fn updateConstants
      * @note Funzione pubblica/contenitore per l'update delle costanti via POST
      * @param array $post
-     * @return string
+     * @return array
      */
-    public final function updateConstants(array $post): string
+    public final function updateConstants(array $post): array
     {
         if($this->constantsPermission()) {
 
@@ -131,7 +131,12 @@ class Gestione extends BaseClass{
                 if (!empty($empty_const)) {
                     $resp = $this->errorConstant($empty_const, 'save');
                 } else {
-                    $resp = 'Costanti aggiornate correttamente.';
+                    $resp = [
+                        'response'=> true,
+                        'swal_title' => 'Operazione riuscita!',
+                        'swal_message'=>'Costanti salvate con successo.',
+                        'swal_type' => 'success'
+                    ];;
                 }
 
 
@@ -142,7 +147,12 @@ class Gestione extends BaseClass{
             return $resp;
         }
         else{
-            return '';
+            return [
+                'response'=> false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message'=>'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
     }
 
@@ -187,25 +197,30 @@ class Gestione extends BaseClass{
      * @note Crea l'errore e la lista delle costanti in errore
      * @param array $consts
      * @param string $type
-     * @return string
+     * @return array
      */
-    private final function errorConstant(array $consts, string $type): string
+    private final function errorConstant(array $consts, string $type): array
     {
 
         switch ($type){
             case 'empty':
-                $resp = 'Le costanti devono essere tutte. Costanti mancanti nel form: <br>';
+                $resp = 'Le costanti devono essere tutte. Costanti mancanti nel form: ';
                 break;
             case 'save':
-                $resp = 'Errore durante l\'update delle costanti: <br>';
+                $resp = 'Errore durante l\'update delle costanti: ';
                 break;
         }
 
         foreach ($consts as $e){
 
-            $resp .= "- {$e} <br>";
+            $resp .= " {$e},";
         }
 
-        return $resp;
+        return [
+            'response'=>true,
+            'swal_title'=>'Operazione fallita!',
+            'swal_message'=>$resp,
+            'swal_type'=>'error'
+        ];
     }
 }
