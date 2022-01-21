@@ -1,62 +1,101 @@
-function Form(selector, path, success = false, swal_alert = true) {
+class Form {
 
-    $(selector).on('submit', function (e) {
-        e.preventDefault();
+    static swal_alert = true;
+    static form_reset = true;
 
-        let main = this;
+    static async setOptions(options){
+        this.swal_alert = (options.swal_alert !== undefined) ? options.swal_alert : this.swal_alert;
+        this.form_reset = (options.form_reset !== undefined) ? options.form_reset : this.form_reset;
+    }
 
-        //*** SWAL CONFIRM
-        Swal.button(
-            'Confermi l\'invio del form?',
-            '',
-            'info',
-            {
-                catch: {
-                    text: "No",
-                    value: false,
-                },
-                confirm: {
-                    text: "Si",
-                    value: true,
-                }
-            },
-            function () {
+    static async send(options) {
+        let cls = this,
+            selector = options.selector;
 
-                //*** SEND AJAX FORM
-                let data = new FormData(main);
+        $(selector).on('submit', async function (e) {
+            e.preventDefault();
 
-                $.ajax({
-                    url: path,
-                    type: "post",
-                    data: data,
-                    contentType: false,
-                    processData: false,
-                    success: function (data) {
+            await cls.setOptions(options);
 
-                        //*** CALLBACK
-                        if (success != false) {
-                            success(data);
+            let path = options.path,
+                success = (options.success) ? options.success : false,
+                form = this,
+                accepted = true;
+
+            //*** SWAL CONFIRM
+            if (cls.swal_alert) {
+                accepted = await Swal.button(
+                    'Confermi l\'invio del form?',
+                    '',
+                    'info',
+                    {
+                        catch: {
+                            text: "No",
+                            value: false,
+                        },
+                        confirm: {
+                            text: "Si",
+                            value: true,
                         }
-
-                        //*** SWAL ALERT
-                        if (swal_alert) {
-
-                            let json = JSON.parse(data);
-
-                            if (json.swal_title) {
-
-                                Swal.fire(
-                                    json.swal_title,
-                                    (json.swal_message) ? json.swal_message : '',
-                                    (json.swal_type) ? json.swal_type : ''
-                                )
-
-                            }
-                        }
-                    }
-                });
+                    });
             }
-        )
 
-    });
+            if (accepted) {
+                await cls.sendData(form, path, success);
+            }
+        });
+    }
+
+    static async sendData(form, path, success) {
+        //*** SEND AJAX FORM
+        let data = new FormData(form),
+            cls = this;
+
+        $.ajax({
+            url: path,
+            type: "post",
+            data: data,
+            contentType: false,
+            processData: false,
+            success: async function (data) {
+
+                //*** CALLBACK
+                if (success != false) {
+                    success(data);
+                }
+
+                //**** RESET
+                if (cls.form_reset) {
+                    await cls.FormReset(form);
+                }
+
+                //*** SWAL ALERT
+                if (cls.swal_alert) {
+
+                    let json = JSON.parse(data);
+
+                    if (json.swal_title) {
+
+                        await Swal.fire(
+                            json.swal_title,
+                            (json.swal_message) ? json.swal_message : '',
+                            (json.swal_type) ? json.swal_type : ''
+                        )
+
+                    }
+                }
+            }
+        });
+    }
+
+    static async FormReset(form) {
+        $(form).find('input[type="file"]').val('');
+        $(form).find('input[type="number"]').val('');
+        $(form).find('input[type="text"]').val('');
+        $(form).find('input[type="checkbox"]').prop('checked', false);
+        $(form).find('select').val('');
+        $(form).find('textarea').val('');
+    }
+
+
 }
