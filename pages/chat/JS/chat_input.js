@@ -5,16 +5,12 @@ $(function () {
 
     function invioSuccess(data) {
         if (data != '') {
-
             let datas = JSON.parse(data);
 
             if (datas.response == true) {
                 aggiornaChat();
                 $('.chat_form_ajax select[name="tipo"]').val('A');
                 $('.chat_form_ajax input[name="testo"]').val('');
-            } 
-            else{
-                alert(datas.error);
             }
         }
     }

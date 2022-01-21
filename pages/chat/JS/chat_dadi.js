@@ -11,11 +11,8 @@ $(function(){
             if(datas.response == true) {
                 aggiornaChat();
                 window.location.reload(true);
-                //$('.chat_form_ajax').trigger('reset');
             }
-            else{
-                alert(datas.error);
-            }
+
         }
     }
 
