@@ -71,9 +71,9 @@ class AbilitaExtra extends Abilita
      * @fn NewAbiExtra
      * @note Aggiunta di una riga nella tabella abilita_extra
      * @param array $post
-     * @return bool
+     * @return array
      */
-    public function NewAbiExtra(array $post): bool
+    public function NewAbiExtra(array $post): array
     {
 
         if ($this->permissionManageAbiExtra()) {
@@ -88,9 +88,19 @@ class AbilitaExtra extends Abilita
                 DB::query("INSERT INTO abilita_extra(abilita,grado,descrizione,costo) VALUES('{$abi}','{$grado}','{$descr}','{$costo}')");
             }
 
-            return true;
+            return [
+                'response'=> true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Dati extra abilità creati.',
+                'swal_type' => 'success'
+            ];
         } else {
-            return false;
+            return [
+                'response'=>false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
     }
 
@@ -98,9 +108,9 @@ class AbilitaExtra extends Abilita
      * @fn ModAbiExtra
      * @note Modifica di una riga nella tabella abilita_extra
      * @param array $post
-     * @return bool
+     * @return array
      */
-    public function ModAbiExtra(array $post): bool
+    public function ModAbiExtra(array $post): array
     {
 
         if ($this->permissionManageAbiExtra()) {
@@ -111,9 +121,19 @@ class AbilitaExtra extends Abilita
 
             DB::query("UPDATE abilita_extra SET abilita='{$abi}',grado='{$grado}',descrizione='{$descr}',costo='{$costo}' WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
 
-            return true;
+            return [
+                'response'=>true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Dati extra abilità modificati.',
+                'swal_type' => 'success'
+            ];
         } else {
-            return false;
+            return [
+                'response'=>false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
     }
 
@@ -121,9 +141,9 @@ class AbilitaExtra extends Abilita
      * @fn DelAbiExtra
      * @note Eliminazione di una riga nella tabella abilita_extra
      * @param array $post
-     * @return bool
+     * @return array
      */
-    public function DelAbiExtra(array $post): bool
+    public function DelAbiExtra(array $post): array
     {
 
         if ($this->permissionManageAbiExtra()) {
@@ -132,9 +152,19 @@ class AbilitaExtra extends Abilita
 
             DB::query("DELETE FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
 
-            return true;
+            return [
+                'response'=>true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Dati extra abilità eliminati.',
+                'swal_type' => 'success'
+            ];
         } else {
-            return false;
+            return [
+                'response'=>false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
     }
 
