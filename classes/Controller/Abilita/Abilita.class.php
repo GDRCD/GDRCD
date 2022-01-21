@@ -110,7 +110,7 @@ class Abilita extends BaseClass
      */
     public function listAbilita($selected = 0): string
     {
-        $html = '';
+        $html = '<option value=""></option>';
         $abis = $this->getAllAbilita();
 
         foreach ($abis as $abi) {

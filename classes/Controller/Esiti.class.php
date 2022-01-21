@@ -754,12 +754,24 @@ class Esiti extends BaseClass
             DB::query("INSERT INTO esiti_risposte(esito, autore, contenuto,dice_face,dice_num,abilita,chat )
                         VALUES('{$last_id}','{$this->me_id}','{$ms}','{$dice_face}','{$dice_num}','{$abilita}','{$chat}')  ");
 
-            $last_answer = $this->getLastAnswerId();
-            $this->addCD($last_answer,$post['add_cd']);
+            if(!empty($post['add_cd'])) {
+                $last_answer = $this->getLastAnswerId();
+                $this->addCD($last_answer, $post['add_cd']);
+            }
 
-            return ['response' => true, 'mex' => 'Esito creato con successo.'];
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Esito creato con successo.',
+                'swal_type'=>'success'
+            ];
         } else {
-            return ['response' => false, 'mex' => 'Permesso negato.'];
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type'=>'error'
+            ];
         }
     }
 
