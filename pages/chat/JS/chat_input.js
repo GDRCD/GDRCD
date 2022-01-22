@@ -5,8 +5,6 @@ $(function () {
     new Form('.chat_form_ajax').onSubmit({
         path: '/pages/chat/chat_ajax.php',
         success: invioSuccess,
-        swal_alert: true, //default true, ma disattivabili se si vuole gestirli nella callback gli alert
-        form_reset: true // default true, ma disattivabile se NOn si vuole resettare il form dopo l'invio
     });
 
     function invioSuccess(data) {

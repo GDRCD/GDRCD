@@ -7,15 +7,6 @@ $id_record = Filters::int($_GET['id_record']);
 
 if ($esiti->esitoMembersPermission($id_record)) {
 
-
-    $op = Filters::out($_POST['op']);
-
-    switch ($op) {
-        case 'change_master':
-            $resp = $esiti->setMaster($_POST);
-            break;
-    }
-
     $data = $esiti->getEsito($id_record);
     $master = Filters::int($data['master']);
 
@@ -33,7 +24,7 @@ if ($esiti->esitoMembersPermission($id_record)) {
         </div>
     <?php } ?>
 
-    <div class="form_container">
+    <div class="form_container change_master_form">
         <form method="POST" class="form">
 
             <div class="form_title">Seleziona il nuovo master.</div>
@@ -47,12 +38,14 @@ if ($esiti->esitoMembersPermission($id_record)) {
             </div>
 
             <div class="single_input">
-                <input type="hidden" name="op" value="change_master">
+                <input type="hidden" name="action" value="change_master">
                 <input type="hidden" name="id" value="<?= $id_record; ?>">
                 <input type="submit" value="Aggiungi">
             </div>
         </form>
     </div>
+
+    <script src="/pages/gestione/esiti/JS/esiti_master.js"></script>
 
 
 <?php } else { ?>

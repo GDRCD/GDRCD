@@ -17,7 +17,7 @@ class Form {
         let cls = this,
             selector = cls.selector;
 
-        $(selector).on('submit', async function (e) {
+        $('body').on('submit',selector, async function (e) {
             e.preventDefault();
 
             await cls.setOptions(options);

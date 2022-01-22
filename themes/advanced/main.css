@@ -715,11 +715,11 @@ div.innertube {
 /*** GESTIONE ESITI ***/
 
 .gestione_esiti .esiti_list .header .td{
-    width: 145px;
+    width: 130px;
 }
 
 .gestione_esiti .esiti_list .td{
-    width: 150px;
+    width: 135px;
 }
 
 .gestione_esiti .esiti_list .closed{
