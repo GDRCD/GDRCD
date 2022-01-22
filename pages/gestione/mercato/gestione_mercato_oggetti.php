@@ -8,21 +8,6 @@ if ($cls->manageShopObjectsPermission()) { # Metodo di controllo per accesso all
 
     $obj_class = Oggetti::getInstance();
 
-    if (isset($_POST['op'])) { # Se ho richiesto un'operazione
-        switch ($_POST['op']) { # In base al tipo di operazione eseguo insert/edit/delete/altro
-            case 'op_insert':
-                $resp = $cls->insertShopObj($_POST);
-                break;
-            case 'op_edit':
-                $resp = $cls->editShopObj($_POST);
-                break;
-            case 'op_delete':
-                $resp = $cls->deleteShopObj($_POST);
-                break;
-        }
-    }
-
-
     ?>
 
     <div class="general_incipit">
@@ -45,7 +30,7 @@ if ($cls->manageShopObjectsPermission()) { # Metodo di controllo per accesso all
     </div>
 
 
-    <div class="form_container">
+    <div class="form_container gestione_negozi_oggetti">
 
         <?php if (isset($resp)) { # Se ho inviato il form e ricevuto una risposta ?>
 
@@ -68,7 +53,6 @@ if ($cls->manageShopObjectsPermission()) { # Metodo di controllo per accesso all
             <div class="single_input">
                 <div class="label">Negozio</div>
                 <select name="negozio" required>
-                    <option value=""></option>
                     <?= $cls->listShops(); ?>
                 </select>
             </div>
@@ -76,7 +60,6 @@ if ($cls->manageShopObjectsPermission()) { # Metodo di controllo per accesso all
             <div class="single_input">
                 <div class="label">Oggetto</div>
                 <select name="oggetto" required>
-                    <option value=""></option>
                     <?= $obj_class->listObjects(); ?>
                 </select>
             </div>
@@ -92,7 +75,7 @@ if ($cls->manageShopObjectsPermission()) { # Metodo di controllo per accesso all
             </div>
 
             <div class="single_input">
-                <input type="hidden" name="op" value="op_insert"> <!-- OP NEEDED -->
+                <input type="hidden" name="action" value="op_insert_shop_obj"> <!-- OP NEEDED -->
                 <input type="submit" value="Invia">
             </div>
 
@@ -106,7 +89,6 @@ if ($cls->manageShopObjectsPermission()) { # Metodo di controllo per accesso all
             <div class="single_input">
                 <div class="label">Negozio</div>
                 <select name="negozio" required>
-                    <option value=""></option>
                     <?= $cls->listShops(); ?>
                 </select>
             </div>
@@ -114,7 +96,6 @@ if ($cls->manageShopObjectsPermission()) { # Metodo di controllo per accesso all
             <div class="single_input">
                 <div class="label">Oggetto</div>
                 <select name="oggetto" required>
-                    <option value=""></option>
                     <?= $obj_class->listObjects(); ?>
                 </select>
             </div>
@@ -130,7 +111,7 @@ if ($cls->manageShopObjectsPermission()) { # Metodo di controllo per accesso all
             </div>
 
             <div class="single_input">
-                <input type="hidden" name="op" value="op_edit"> <!-- OP NEEDED -->
+                <input type="hidden" name="action" value="op_edit_shop_obj"> <!-- OP NEEDED -->
                 <input type="submit" value="Invia">
             </div>
 
@@ -144,7 +125,6 @@ if ($cls->manageShopObjectsPermission()) { # Metodo di controllo per accesso all
             <div class="single_input">
                 <div class="label">Negozio</div>
                 <select name="negozio" required>
-                    <option value=""></option>
                     <?= $cls->listShops(); ?>
                 </select>
             </div>
@@ -152,19 +132,20 @@ if ($cls->manageShopObjectsPermission()) { # Metodo di controllo per accesso all
             <div class="single_input">
                 <div class="label">Oggetto</div>
                 <select name="oggetto" required>
-                    <option value=""></option>
                     <?= $obj_class->listObjects(); ?>
                 </select>
             </div>
 
             <div class="single_input">
-                <input type="hidden" name="op" value="op_delete"> <!-- OP NEEDED -->
+                <input type="hidden" name="action" value="op_delete_shop_obj"> <!-- OP NEEDED -->
                 <input type="submit" value="Invia">
             </div>
 
         </form>
 
     </div>
+
+    <script src="/pages/gestione/mercato/gestione_mercato_oggetti.js"></script>
 
 
 <?php } ?>

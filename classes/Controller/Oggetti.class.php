@@ -284,7 +284,7 @@ class Oggetti extends BaseClass
      */
     public function listObjects(int $selected = 0): string
     {
-        $html = '';
+        $html = '<option value=""></option>';
         $list = $this->getAllObjects('id,nome');
 
         foreach ($list as $row) {

@@ -1,19 +1,40 @@
-$(function(){
+$(function () {
 
     let form = $('.edit-form');
 
-    form.find('select[name="id"]').on('change',function(){
+    new Form('.gestione_negozi .form').onSubmit({
+        path: '/pages/gestione/mercato/gestione_mercato_ajax.php',
+        success: refreshShopLists
+    })
+
+    function refreshShopLists(data) {
+
+        if (data) {
+
+            let datas = JSON.parse(data);
+
+            if (datas.response) {
+
+                $('.gestione_negozi select[name="id"]').html(datas.shop_list)
+
+            }
+
+        }
+
+    }
+
+    form.find('select[name="id"]').on('change', function () {
 
         let id = $(this).val()
 
-        Ajax('/pages/gestione/mercato/gestione_mercato_ajax.php',{'shop':id,'action':'get_shop_data'},setEditInput)
+        Ajax('/pages/gestione/mercato/gestione_mercato_ajax.php', {'shop': id, 'action': 'get_shop_data'}, setEditInput)
 
 
     });
 
-    function setEditInput(data){
+    function setEditInput(data) {
 
-        if(data != ''){
+        if (data != '') {
 
 
             let datas = JSON.parse(data);
