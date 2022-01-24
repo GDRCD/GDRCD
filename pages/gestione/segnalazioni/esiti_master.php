@@ -1,4 +1,7 @@
 <?php
+
+#TODO - Da omologare le sezioni di segnalazione
+
 $esiti_chat = Functions::get_constant('ESITI_CHAT');
 $esiti= Functions::get_constant('ESITI_ENABLE');
 $perm= Permissions::permission('MANAGE_ESITI');
