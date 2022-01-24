@@ -190,7 +190,7 @@ class OnlineStatus extends BaseClass{
      */
     public function renderStatusTypeList(): string
     {
-        $html = '';
+        $html = '<option value=""></option>';
         $types = $this->getStatusTypes();
 
         foreach ($types as $type) {
@@ -212,7 +212,7 @@ class OnlineStatus extends BaseClass{
     public function renderStatusList(): string
     {
 
-        $html = '';
+        $html = '<option value=""></option>';
         $types = $this->getStatusTypes();
 
         foreach ($types as $type) {
@@ -313,8 +313,8 @@ class OnlineStatus extends BaseClass{
         } else {
             return [
                 'response' => false,
-                'swal_title'=> 'Operazione riuscita!',
-                'swal_message' => 'Errore, funzione non disponibile.',
+                'swal_title'=> 'Operazione fallita!',
+                'swal_message' => 'Errore, funzione non abilitata.',
                 'swal_type' => 'error'
             ];
         }
@@ -340,13 +340,22 @@ class OnlineStatus extends BaseClass{
 
             DB::query("INSERT INTO online_status(type, text) VALUES ('{$type}','{$text}')");
 
-            $resp = ['response' => true, 'mex' => 'Stato inserito correttamente.'];
+            return [
+                'response' => true,
+                'swal_title'=> 'Operazione riuscita!',
+                'swal_message' => 'Stato inserito correttamente.',
+                'swal_type' => 'success',
+                'status_list' => $this->renderStatusList()
+            ];
 
         } else {
-            $resp = ['response' => false, 'mex' => 'Permesso negato.'];
+            return [
+                'response' => false,
+                'swal_title'=> 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
-
-        return $resp;
 
     }
 
@@ -367,14 +376,22 @@ class OnlineStatus extends BaseClass{
 
             DB::query("UPDATE online_status SET type='{$type}',text='{$text}' WHERE id='{$id}' LIMIT 1");
 
-            $resp = ['response' => true, 'mex' => 'Stato modificato correttamente.'];
+            return [
+                'response' => true,
+                'swal_title'=> 'Operazione riuscita!',
+                'swal_message' => 'Stato modificato correttamente.',
+                'swal_type' => 'success',
+                'status_list' => $this->renderStatusList()
+            ];
 
         } else {
-            $resp = ['response' => false, 'mex' => 'Permesso negato.'];
+            return [
+                'response' => false,
+                'swal_title'=> 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
-
-        return $resp;
-
     }
 
     /**
@@ -392,14 +409,22 @@ class OnlineStatus extends BaseClass{
 
             DB::query("DELETE FROM online_status WHERE id='{$id}'");
 
-            $resp = ['response' => true, 'mex' => 'Stato eliminato correttamente.'];
+            return [
+                'response' => true,
+                'swal_title'=> 'Operazione riuscita!',
+                'swal_message' => 'Stato eliminato correttamente.',
+                'swal_type' => 'success',
+                'status_list' => $this->renderStatusList()
+            ];
 
         } else {
-            $resp = ['response' => false, 'mex' => 'Permesso negato.'];
+            return [
+                'response' => false,
+                'swal_title'=> 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
-
-        return $resp;
-
     }
 
 
@@ -419,14 +444,21 @@ class OnlineStatus extends BaseClass{
 
             DB::query("INSERT INTO online_status_type(label, request) VALUES ('{$label}','{$request}')");
 
-            $resp = ['response' => true, 'mex' => 'Tipo di stato inserito correttamente.'];
-
+            return [
+                'response' => true,
+                'swal_title'=> 'Operazione riuscita!',
+                'swal_message' => 'Tipo di stato inserito correttamente.',
+                'swal_type' => 'success',
+                'status_list' => $this->renderStatusTypeList()
+            ];
         } else {
-            $resp = ['response' => false, 'mex' => 'Permesso negato.'];
+            return [
+                'response' => false,
+                'swal_title'=> 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
-
-        return $resp;
-
     }
 
     /**
@@ -446,14 +478,21 @@ class OnlineStatus extends BaseClass{
 
             DB::query("UPDATE online_status_type SET label='{$label}',request='{$request}' WHERE id='{$id}' LIMIT 1");
 
-            $resp = ['response' => true, 'mex' => 'Tipo di stato modificato correttamente.'];
-
+            return [
+                'response' => true,
+                'swal_title'=> 'Operazione riuscita!',
+                'swal_message' => 'Tipo di stato modificato correttamente.',
+                'swal_type' => 'success',
+                'status_list' => $this->renderStatusTypeList()
+            ];
         } else {
-            $resp = ['response' => false, 'mex' => 'Permesso negato.'];
+            return [
+                'response' => false,
+                'swal_title'=> 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
-
-        return $resp;
-
     }
 
     /**
@@ -472,13 +511,21 @@ class OnlineStatus extends BaseClass{
             DB::query("DELETE FROM online_status_type WHERE id='{$id}'");
             DB::query("DELETE FROM online_status WHERE type='{$id}'");
 
-            $resp = ['response' => true, 'mex' => 'Tipo di stato eliminato correttamente.'];
+            return [
+                'response' => true,
+                'swal_title'=> 'Operazione riuscita!',
+                'swal_message' => 'Tipo di stato eliminato correttamente.',
+                'swal_type' => 'success',
+                'status_list' => $this->renderStatusTypeList()
+            ];
 
         } else {
-            $resp = ['response' => false, 'mex' => 'Permesso negato.'];
+            return [
+                'response' => false,
+                'swal_title'=> 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
-
-        return $resp;
-
     }
 }
