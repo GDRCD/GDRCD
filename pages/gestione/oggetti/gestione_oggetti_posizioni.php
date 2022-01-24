@@ -5,23 +5,6 @@ require_once(__DIR__ . '/../../../includes/required.php'); # Inserisco il requir
 $cls = Oggetti::getInstance(); # Inizializzo classe
 
 if ($cls->permissionManageObjectsType()) { # Metodo di controllo per accesso alla pagina di gestione
-
-
-    if (isset($_POST['op'])) { # Se ho richiesto un'operazione
-        switch ($_POST['op']) { # In base al tipo di operazione eseguo insert/edit/delete/altro
-            case 'op_insert':
-                $resp = $cls->insertObjectPosition($_POST);
-                break;
-            case 'op_edit':
-                $resp = $cls->editObjectPosition($_POST);
-                break;
-            case 'op_delete':
-                $resp = $cls->deleteObjectPosition($_POST);
-                break;
-        }
-    }
-
-
     ?>
 
     <div class="general_incipit">
@@ -50,21 +33,7 @@ if ($cls->permissionManageObjectsType()) { # Metodo di controllo per accesso all
     </div>
 
 
-    <div class="form_container">
-
-        <?php if (isset($resp)) { # Se ho inviato il form e ricevuto una risposta ?>
-
-            <div class="warning"><?= $resp['mex']; ?></div>
-
-            <div class="link_back">
-                <a href="/main.php?page=gestione_oggetti_posizioni">
-                    Indietro
-                </a>
-            </div>
-
-            <?php
-            Functions::redirect('/main.php?page=gestione_oggetti_posizioni', 3); # Redirect alla stessa pagina, per evitare il re-submit di un form
-        } ?>
+    <div class="form_container gestione_oggetti_posizione">
 
         <!-- INSERT -->
         <form method="POST" class="form">
@@ -91,7 +60,7 @@ if ($cls->permissionManageObjectsType()) { # Metodo di controllo per accesso all
 
 
             <div class="single_input">
-                <input type="hidden" name="op" value="op_insert"> <!-- OP NEEDED -->
+                <input type="hidden" name="action" value="op_insert_object_position"> <!-- OP NEEDED -->
                 <input type="submit" value="Crea">
             </div>
 
@@ -106,7 +75,6 @@ if ($cls->permissionManageObjectsType()) { # Metodo di controllo per accesso all
             <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
                 <div class="label">Posizione</div>
                 <select name="id">
-                    <option value=""></option>
                     <?= $cls->listObjectPositions(); ?>
                 </select>
             </div>
@@ -130,7 +98,7 @@ if ($cls->permissionManageObjectsType()) { # Metodo di controllo per accesso all
             </div>
 
             <div class="single_input">
-                <input type="hidden" name="op" value="op_edit"> <!-- OP NEEDED -->
+                <input type="hidden" name="action" value="op_edit_object_position"> <!-- OP NEEDED -->
                 <input type="submit" value="Modifica">
             </div>
 
@@ -146,13 +114,12 @@ if ($cls->permissionManageObjectsType()) { # Metodo di controllo per accesso all
             <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
                 <div class="label">Posizione</div>
                 <select name="id">
-                    <option value=""></option>
                     <?= $cls->listObjectPositions(); ?>
                 </select>
             </div>
 
             <div class="single_input">
-                <input type="hidden" name="op" value="op_delete"> <!-- OP NEEDED -->
+                <input type="hidden" name="action" value="op_delete_object_position"> <!-- OP NEEDED -->
                 <input type="submit" value="Invia">
             </div>
 
