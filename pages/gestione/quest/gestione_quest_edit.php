@@ -7,14 +7,6 @@ $quest = Quest::getInstance();
 
 if ($quest->manageQuestPermission()) {
 
-    $op = Filters::out($_POST['op']);
-
-    switch ($op) {
-        case 'edit_quest':
-            $resp = $quest->editQuest($_POST);
-            break;
-    }
-
     $quest_id = Filters::int($_GET['id_record']);
 
     if ($quest->questExist($quest_id)) {
@@ -23,10 +15,6 @@ if ($quest->manageQuestPermission()) {
 
         <!-- Form di inserimento/modifica -->
         <div class="panels_box form_container">
-
-            <?php if (isset($resp)) { ?>
-                <div class="warning"><?= $resp['mex']; ?></div>
-            <?php } ?>
 
             <form method="post" class="form quest_edit_form">
 
@@ -76,7 +64,7 @@ if ($quest->manageQuestPermission()) {
                 <div class='single_input'>
                     <input type="hidden" name="quest" value="<?= $quest_id; ?>">
                     <input type="submit" value="<?= Filters::out($MESSAGE['interface']['forms']['modify']); ?>"/>
-                    <input type="hidden" name="op" value="edit_quest">
+                    <input type="hidden" name="action" value="edit_quest">
                 </div>
 
             </form>
