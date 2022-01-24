@@ -346,7 +346,7 @@ class Quest extends BaseClass
     public function trameStatusList(int $selected = 0): string
     {
 
-        $html = '';
+        $html = '<option value=""></option>';
         $selected = Filters::int($selected);
         $array = [0 => 'In Corso', 1 => 'Chiusa'];
 
@@ -393,8 +393,7 @@ class Quest extends BaseClass
 
     /**
      * @fn renderQuestList
-     * @param $bin int
-     * @param $end int
+     * @param int $page
      * @return string
      */
     public function renderQuestList(int $page): string
@@ -500,6 +499,107 @@ class Quest extends BaseClass
                     Registra nuova quest
                 </a> |
                 <a href="main.php?page=gestione">
+                    Indietro
+                </a>
+            </div>';
+
+        return $html;
+    }
+
+    public function renderTrameList(int $page){
+        $html = '';
+
+
+        $pagebegin = (int)$_REQUEST['offset'] * 10;
+        $pageend = 10;
+
+        $trame = $this->getAllTrame($pagebegin, $pageend);
+
+
+        $html.= '<div class="tr header">
+                <div class="td">
+                    Data
+                </div>
+                <div class="td">
+                    Titolo
+                </div>
+                <div class="td">
+                    Autore
+                </div>
+                <div class="td">
+                    Numero quest
+                </div>
+                <div class="td">
+                    Stato
+                </div>
+                <div class="td">
+                    Autore modifica
+                </div>
+                <div class="td">
+                    Ultima modifica
+                </div>
+                <div class="td">
+                    Controlli
+                </div>
+            </div>';
+
+
+        foreach ($trame as $trama) {
+
+            $id = Filters::int($trama['id']);
+            $data =Filters::date($trama['data'], 'd/m/Y');
+            $titolo =Filters::out($trama['titolo']);
+            $autore =Personaggio::nameFromId(Filters::int($trama['autore']));
+            $nums = $this->getTrameQuestNums(Filters::int($trama['id']));
+            $status = $this->getTramaStatusText(Filters::int($trama['stato']));
+            $autore_modifica = (!empty($trama['autore_modifica'])) ? Filters::out($trama['autore_modifica']) : '';
+            $data_modifica = (!empty($trama['ultima_modifica'])) ? Filters::date($trama['ultima_modifica'], 'd/m/Y') : '';
+
+
+            $html .= "<div class='tr'>
+                    <div class='td'>
+                        {$data}
+                    </div>
+                    <div class='td'>
+                        {$titolo}
+                    </div>
+                    <div class='td'>
+                        {$autore}
+                    </div>
+                    <div class='td'>
+                        {$nums}
+                    </div>
+                    <div class='td'>
+                        {$status}
+                    </div>
+                    <div class='td'>
+                        {$autore_modifica}
+                    </div>
+                    <div class='td'>
+                        {$data_modifica}
+                    </div>
+        
+                    <div class='td commands'><!-- Iconcine dei controlli -->
+                        <a href='/main.php?page=gestione_trame&op=edit_trama&id_record={$id}'>
+                            <i class='fas fa-edit'></i>
+                        </a>
+                        <a class ='ajax_link' data-id='{$id}' data-action='delete_trama' data-page='{$page}' href='#'>
+                            <i class='fas fa-eraser'></i>
+                        </a>
+                    </div>
+                </div>";
+        }
+
+
+        $html .= '<div class="tr footer">';
+
+        if ($this->manageTramePermission()) {
+            $html .= '<a href="main.php?page=gestione_trame&op=insert_trama">
+                Registra nuova trama
+            </a> |';
+        }
+
+        $html .= '<a href="main.php?page=gestione">
                     Indietro
                 </a>
             </div>';
@@ -751,10 +851,20 @@ VALUES('{$pg}','{$this->me_id}',NOW(),'{$this->px_code}','({$px}px) {$causale}')
             DB::query("INSERT INTO quest_trama(titolo, descrizione, data, autore, stato)
 VALUES('{$titolo}','{$descr}',NOW(),'{$this->me_id}','{$stato}') ");
 
-            return ['response' => true, 'mex' => 'Trama creata correttamente'];
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Trama creata con successo.',
+                'swal_type' => 'success'
+            ];
 
         } else {
-            $resp = ['response' => false, 'mex' => 'Permessi negati.'];
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
 
 
@@ -775,27 +885,45 @@ VALUES('{$titolo}','{$descr}',NOW(),'{$this->me_id}','{$stato}') ");
                 $status = Filters::int($post['stato']);
 
                 DB::query("UPDATE quest_trama SET titolo='{$titolo}',descrizione='{$descr}',stato='{$status}'
-WHERE id='{$id_trama}' LIMIT 1");
+                    WHERE id='{$id_trama}' LIMIT 1");
 
-                $resp = ['response' => true, 'mex' => 'Trama modificata con successo.'];
+                return [
+                    'response' => true,
+                    'swal_title' => 'Operazione riuscita!',
+                    'swal_message' => 'Trama modificata con successo.',
+                    'swal_type' => 'success'
+                ];
 
             } else {
-                $resp = ['response' => false, 'mex' => 'Trama inesistente.'];
+                return [
+                    'response' => false,
+                    'swal_title' => 'Operazione fallita!',
+                    'swal_message' => 'Trama inesistente.',
+                    'swal_type' => 'error'
+                ];
             }
         } else {
-            $resp = ['response' => false, 'mex' => 'Permesso negato.'];
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
-
-        return $resp;
     }
 
     /*** DELETE TRAME ***/
 
-    public function deleteTrama($post)
+    /**
+     * @fn deleteTrama
+     * @note Elimina una trama
+     * @param $post array
+     * @return array
+     */
+    public function deleteTrama(array $post): array
     {
-
-
-        $id_trama = Filters::int($post['trama']);
+        $id_trama = Filters::int($post['id']);
+        $page = Filters::int($post['page']);
 
         if ($this->manageTramePermission()) {
             if ($this->tramaExist($id_trama)) {
@@ -803,16 +931,30 @@ WHERE id='{$id_trama}' LIMIT 1");
                 DB::query("DELETE FROM quest_trama WHERE id='{$id_trama}' LIMIT 1");
                 DB::query("UPDATE quest SET trama=0 WHERE trama='{$id_trama}'");
 
-                $resp = ['response' => true, 'mex' => 'Trama eliminata con successo'];
+                return [
+                    'response' => true,
+                    'swal_title' => 'Operazione riuscita!',
+                    'swal_message' => 'Trama eliminata con successo.',
+                    'swal_type' => 'success',
+                    'trame_list'=>$this->renderTrameList($page)
+                ];
 
             } else {
-                $resp = ['response' => false, 'mex' => 'Trama inesistente.'];
+                return [
+                    'response' => false,
+                    'swal_title' => 'Operazione fallita!',
+                    'swal_message' => 'Trama inesistente.',
+                    'swal_type' => 'error'
+                ];
             }
         } else {
-            $resp = ['response' => false, 'mex' => 'Permesso negato.'];
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
-
-        return $resp;
     }
 
     /*** INSERT QUEST */

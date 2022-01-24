@@ -705,7 +705,7 @@ div.innertube {
 /** GESTIONE QUEST **/
 
 .quest_list .td{
-    width: 150px;
+    width: calc( (100% / 8) - 10px);
 }
 
 .quest_insert_form #new_member{
