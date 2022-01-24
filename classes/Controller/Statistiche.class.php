@@ -101,7 +101,7 @@ class Statistiche extends BaseClass{
      */
     public function listStats(int $selected = 0): string
     {
-        $html = '';
+        $html = '<option value=""></option>';
         $list = $this->getStats('id,nome');
 
         foreach ($list as $row) {
@@ -139,12 +139,21 @@ class Statistiche extends BaseClass{
             DB::query("INSERT INTO statistiche(nome, max_val, min_val, descrizione,iscrizione,creato_da) 
                             VALUES('{$nome}','{$max}','{$min}','{$descrizione}','{$iscr}','{$creato_da}')");
 
-            $resp = ['response' => true, 'mex' => 'Statistica inserita correttamente.'];
+            return [
+                'response'=> true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message'=>'Statistica inserita correttamente.',
+                'swal_type' => 'success',
+                'stat_list' => $this->listStats()
+            ];
         } else {
-            $resp = ['response' => false, 'mex' => 'Permesso negato.'];
+            return [
+                'response'=> false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message'=>'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
-
-        return $resp;
     }
 
     /**
@@ -171,12 +180,21 @@ class Statistiche extends BaseClass{
                                 min_val='{$min}',creato_da='{$creato_da}',iscrizione='{$iscr}'
                             WHERE id='{$id}' LIMIT 1");
 
-            $resp = ['response' => true, 'mex' => 'Statistica modificata correttamente.'];
+            return [
+            'response'=> true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message'=>'Statistica modificata correttamente.',
+                'swal_type' => 'success',
+                'stat_list' => $this->listStats()
+            ];
         } else {
-            $resp = ['response' => false, 'mex' => 'Permesso negato.'];
+            return [
+                'response'=> false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message'=>'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
-
-        return $resp;
     }
 
     /**
@@ -194,11 +212,20 @@ class Statistiche extends BaseClass{
 
             DB::query("DELETE FROM statistiche WHERE id='{$id}'");
 
-            $resp = ['response' => true, 'mex' => 'Statistica eliminata correttamente.'];
+            return [
+                'response'=> true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message'=>'Statistica eliminata correttamente.',
+                'swal_type' => 'success',
+                'stat_list' => $this->listStats()
+            ];
         } else {
-            $resp = ['response' => false, 'mex' => 'Permesso negato.'];
+            return [
+                'response'=> false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message'=>'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
-
-        return $resp;
     }
 }

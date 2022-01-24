@@ -216,7 +216,7 @@ class Gestione extends BaseClass{
         }
 
         return [
-            'response'=>true,
+            'response'=>false,
             'swal_title'=>'Operazione fallita!',
             'swal_message'=>$resp,
             'swal_type'=>'error'
