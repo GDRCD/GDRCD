@@ -240,7 +240,7 @@ class Oggetti extends BaseClass
      */
     public function listObjectTypes(int $selected = 0): string
     {
-        $html = '';
+        $html = '<option value=""></option>';
         $list = $this->getAllObjectTypes('id,nome');
 
         foreach ($list as $row) {
@@ -262,7 +262,7 @@ class Oggetti extends BaseClass
      */
     public function listObjectPositions(int $selected = 0): string
     {
-        $html = '';
+        $html = '<option value=""></option>';
         $list = $this->getAllObjectPositions('id,nome');
 
         foreach ($list as $row) {
@@ -352,12 +352,21 @@ class Oggetti extends BaseClass
             DB::query("INSERT INTO oggetto(tipo, nome, descrizione, immagine, indossabile, cariche,creatore_da) 
                             VALUES('{$tipo}','{$nome}','{$descrizione}','{$immagine}','{$indossabile}','{$cariche}','{$creato_da}')");
 
-            $resp = ['response' => true, 'mex' => 'Oggetto inserito correttamente.'];
+            return [
+                'response'=> true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message'=>'Oggetto inserito correttamente.',
+                'swal_type' => 'success',
+                'obj_list'=>$this->listObjects()
+            ];
         } else {
-            $resp = ['response' => false, 'mex' => 'Permesso negato.'];
+            return [
+                'response'=> false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message'=>'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
-
-        return $resp;
     }
 
     /**
@@ -384,12 +393,21 @@ class Oggetti extends BaseClass
                                 indossabile='{$indossabile}',cariche='{$cariche}'
                             WHERE id='{$id}' LIMIT 1");
 
-            $resp = ['response' => true, 'mex' => 'Oggetto modificato correttamente.'];
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Oggetto modificato correttamente.',
+                'swal_type' => 'success',
+                'obj_list' => $this->listObjects()
+            ];
         } else {
-            $resp = ['response' => false, 'mex' => 'Permesso negato.'];
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
-
-        return $resp;
     }
 
     /**
@@ -407,12 +425,21 @@ class Oggetti extends BaseClass
 
             DB::query("DELETE FROM oggetto WHERE id='{$id}'");
 
-            $resp = ['response' => true, 'mex' => 'Oggetto eliminato correttamente.'];
+            return [
+                'response'=> true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message'=>'Oggetto eliminato correttamente.',
+                'swal_type' => 'success',
+                'obj_list'=>$this->listObjects()
+            ];
         } else {
-            $resp = ['response' => false, 'mex' => 'Permesso negato.'];
+            return [
+                'response'=> false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message'=>'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
-
-        return $resp;
     }
 
     /*** MANAGEMENT FUNCTIONS - OBJECT TYPES **/
@@ -434,12 +461,21 @@ class Oggetti extends BaseClass
             DB::query("INSERT INTO oggetto_tipo( nome, descrizione) 
                             VALUES('{$nome}','{$descrizione}')");
 
-            $resp = ['response' => true, 'mex' => 'Tipo Oggetto inserito correttamente.'];
+            return [
+                'response'=> true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message'=>'Tipo Oggetto inserito correttamente.',
+                'swal_type' => 'success',
+                'obj_type_list'=>$this->listObjectTypes()
+            ];
         } else {
-            $resp = ['response' => false, 'mex' => 'Permesso negato.'];
+            return [
+                'response'=> false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message'=>'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
-
-        return $resp;
     }
 
     /**
@@ -461,12 +497,21 @@ class Oggetti extends BaseClass
                             SET nome='{$nome}',descrizione='{$descrizione}'
                             WHERE id='{$id}' LIMIT 1");
 
-            $resp = ['response' => true, 'mex' => 'Tipo Oggetto modificato correttamente.'];
+            return [
+                'response'=> true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message'=>'Tipo Oggetto modificato correttamente.',
+                'swal_type' => 'success',
+                'obj_type_list'=>$this->listObjectTypes()
+            ];
         } else {
-            $resp = ['response' => false, 'mex' => 'Permesso negato.'];
+            return [
+                'response'=> false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message'=>'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
-
-        return $resp;
     }
 
     /**
@@ -484,12 +529,21 @@ class Oggetti extends BaseClass
 
             DB::query("DELETE FROM oggetto_tipo WHERE id='{$id}'");
 
-            $resp = ['response' => true, 'mex' => 'Tipo Oggetto eliminato correttamente.'];
+            return [
+                'response'=> true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message'=>'Tipo Oggetto eliminato correttamente.',
+                'swal_type' => 'success',
+                'obj_type_list'=>$this->listObjectTypes()
+            ];
         } else {
-            $resp = ['response' => false, 'mex' => 'Permesso negato.'];
+            return [
+                'response'=> false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message'=>'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
-
-        return $resp;
     }
 
     /*** MANAGEMENT FUNCTIONS - OBJECT POSITIONS **/
@@ -512,12 +566,21 @@ class Oggetti extends BaseClass
             DB::query("INSERT INTO oggetto_posizioni( nome, immagine,numero) 
                             VALUES('{$nome}','{$img}','{$numero}')");
 
-            $resp = ['response' => true, 'mex' => 'Posizione Oggetto inserita correttamente.'];
+            return [
+                'response'=> true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message'=>'Posizione Oggetto inserita correttamente.',
+                'swal_type' => 'success',
+                'obj_position_list'=>$this->listObjectPositions()
+            ];
         } else {
-            $resp = ['response' => false, 'mex' => 'Permesso negato.'];
+            return [
+                'response'=> false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message'=>'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
-
-        return $resp;
     }
 
     /**
@@ -540,12 +603,21 @@ class Oggetti extends BaseClass
                             SET nome='{$nome}',immagine='{$img}',numero='{$numero}'
                             WHERE id='{$id}' LIMIT 1");
 
-            $resp = ['response' => true, 'mex' => 'Posizione Oggetto modificata correttamente.'];
+            return [
+                'response'=> true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message'=>'Posizione Oggetto modificata correttamente.',
+                'swal_type' => 'success',
+                'obj_position_list'=>$this->listObjectPositions()
+            ];
         } else {
-            $resp = ['response' => false, 'mex' => 'Permesso negato.'];
+            return [
+                'response'=> false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message'=>'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
-
-        return $resp;
     }
 
     /**
@@ -563,12 +635,21 @@ class Oggetti extends BaseClass
 
             DB::query("DELETE FROM oggetto_posizioni WHERE id='{$id}'");
 
-            $resp = ['response' => true, 'mex' => 'Posizione Oggetto eliminata correttamente.'];
+            return [
+                'response'=> true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message'=>'Posizione Oggetto eliminata correttamente.',
+                'swal_type' => 'success',
+                'obj_position_list'=>$this->listObjectPositions()
+            ];
         } else {
-            $resp = ['response' => false, 'mex' => 'Permesso negato.'];
+            return [
+                'response'=> false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message'=>'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
-
-        return $resp;
     }
 
 }
