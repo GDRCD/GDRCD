@@ -859,7 +859,7 @@ class Chat extends BaseClass
      */
     public function chatList()
     {
-        $html = '';
+        $html = '<option value=""></option>';
 
         # Estraggo gli oggetti secondo i parametri
         $chats = DB::query("SELECT * FROM mappa WHERE privata = 0 ORDER BY nome", 'result');

@@ -6,22 +6,6 @@ $cls = Oggetti::getInstance(); # Inizializzo classe
 
 if($cls->permissionManageObjects()){ # Metodo di controllo per accesso alla pagina di gestione
 
-
-    if(isset($_POST['op'])){ # Se ho richiesto un'operazione
-        switch ($_POST['op']){ # In base al tipo di operazione eseguo insert/edit/delete/altro
-            case 'op_insert':
-                $resp = $cls->insertObject($_POST);
-                break;
-            case 'op_edit':
-                $resp = $cls->editObject($_POST);
-                break;
-            case 'op_delete':
-                $resp = $cls->deleteObject($_POST);
-                break;
-        }
-    }
-
-
 ?>
 
         <div class="general_incipit">
@@ -39,15 +23,7 @@ if($cls->permissionManageObjects()){ # Metodo di controllo per accesso alla pagi
         </div>
 
 
-    <div class="form_container">
-
-        <?php if(isset($resp)) { # Se ho inviato il form e ricevuto una risposta ?>
-
-            <div class="warning"><?=$resp['mex'];?></div>
-
-        <?php
-            Functions::redirect('/main.php?page=gestione_oggetti',3); # Redirect alla stessa pagina, per evitare il re-submit di un form
-        } ?>
+    <div class="form_container gestione_oggetti">
 
         <!-- INSERT -->
         <form method="POST" class="form">
@@ -58,7 +34,6 @@ if($cls->permissionManageObjects()){ # Metodo di controllo per accesso alla pagi
             <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
                 <div class="label">Tipo</div>
                 <select name="tipo">
-                    <option value=""></option>
                     <?=$cls->listObjectTypes();?>
                 </select>
             </div>
@@ -94,7 +69,7 @@ if($cls->permissionManageObjects()){ # Metodo di controllo per accesso alla pagi
             </div>
 
             <div class="single_input">
-                <input type="hidden" name="op" value="op_insert"> <!-- OP NEEDED -->
+                <input type="hidden" name="action" value="op_insert_object"> <!-- OP NEEDED -->
                 <input type="submit" value="Crea">
             </div>
 
@@ -110,7 +85,6 @@ if($cls->permissionManageObjects()){ # Metodo di controllo per accesso alla pagi
             <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
                 <div class="label">Oggetti</div>
                 <select name="oggetto">
-                    <option value=""></option>
                     <?=$cls->listObjects();?>
                 </select>
             </div>
@@ -119,7 +93,6 @@ if($cls->permissionManageObjects()){ # Metodo di controllo per accesso alla pagi
             <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
                 <div class="label">Tipo</div>
                 <select name="tipo">
-                    <option value=""></option>
                     <?=$cls->listObjectTypes();?>
                 </select>
             </div>
@@ -155,7 +128,7 @@ if($cls->permissionManageObjects()){ # Metodo di controllo per accesso alla pagi
             </div>
 
             <div class="single_input">
-                <input type="hidden" name="op" value="op_edit"> <!-- OP NEEDED -->
+                <input type="hidden" name="action" value="op_edit_object"> <!-- OP NEEDED -->
                 <input type="submit" value="Modifica">
             </div>
 
@@ -170,13 +143,12 @@ if($cls->permissionManageObjects()){ # Metodo di controllo per accesso alla pagi
             <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
                 <div class="label">Oggetti</div>
                 <select name="oggetto">
-                    <option value=""></option>
                     <?=$cls->listObjects();?>
                 </select>
             </div>
 
             <div class="single_input">
-                <input type="hidden" name="op" value="op_delete"> <!-- OP NEEDED -->
+                <input type="hidden" name="action" value="op_delete_object"> <!-- OP NEEDED -->
                 <input type="submit" value="Invia">
             </div>
 
@@ -184,7 +156,7 @@ if($cls->permissionManageObjects()){ # Metodo di controllo per accesso alla pagi
 
     </div>
 
-    <script src="pages/gestione/oggetti/gestione_oggetti.js"></script>
+    <script src="/pages/gestione/oggetti/gestione_oggetti.js"></script>
 
 
 <?php } ?>

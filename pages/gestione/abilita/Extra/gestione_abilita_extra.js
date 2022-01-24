@@ -3,6 +3,10 @@ $(function(){
 
     let form = $('.edit-form');
 
+    new Form('.gestione_abilita_extra .form').onSubmit({
+        path:'/pages/gestione/abilita/Extra/gestione_abilita_ajax.php'
+    });
+
     form.find('#fake-extraction').on('click',function(){
 
         let abi = $('#ModAbiExtraForm select[name="abilita"]').val(),

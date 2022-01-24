@@ -179,7 +179,7 @@ class AbilitaRequisiti extends Abilita
      */
     public function listRequisiti(): string
     {
-        $html = '';
+        $html = '<option value=""></option>';
         $stat_class = Statistiche::getInstance();
 
         $abi_req_abi = $this->getRequisitiByType($this->requisito_abi);
@@ -272,15 +272,25 @@ class AbilitaRequisiti extends Abilita
 
     }
 
+    /**
+     * @fn ajaxReqList
+     * @note Estrae i dati di un requisito abilita
+     * @return array
+     */
+    public function ajaxReqList():array
+    {
+        return ['List'=>$this->listRequisiti()];
+    }
+
     /***** GESTIONE  ****/
 
     /**
      * @fn NewAbiRequisito
      * @note Crea un requisito per abilita'
      * @param array $post
-     * @return bool
+     * @return array
      */
-    public function NewAbiRequisito(array $post): bool
+    public function NewAbiRequisito(array $post): array
     {
         if ($this->permissionManageAbiRequirement()) {
             $abi = Filters::int($post['abilita']);
@@ -291,9 +301,19 @@ class AbilitaRequisiti extends Abilita
 
             DB::query("INSERT INTO abilita_requisiti(abilita,grado,tipo,id_riferimento,liv_riferimento) VALUES('{$abi}','{$grado}','{$tipo}','{$id_rif}','{$lvl_rif}')");
 
-            return true;
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Nuovo requisito abilità creato.',
+                'swal_type' => 'success'
+            ];
         } else {
-            return false;
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
     }
 
@@ -301,9 +321,9 @@ class AbilitaRequisiti extends Abilita
      * @fn ModAbiRequisito
      * @note Modifica un requisito per abilita'
      * @param array $post
-     * @return bool
+     * @return array
      */
-    public function ModAbiRequisito(array $post): bool
+    public function ModAbiRequisito(array $post): array
     {
 
         if ($this->permissionManageAbiRequirement()) {
@@ -316,9 +336,20 @@ class AbilitaRequisiti extends Abilita
 
             DB::query("UPDATE abilita_requisiti SET abilita='{$abi}',grado='{$grado}',tipo='{$tipo}',id_riferimento='{$id_rif}',liv_riferimento='{$lvl_rif}' WHERE id='{$id}' LIMIT 1");
 
-            return true;
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Requisito abilità modificato.',
+                'swal_type' => 'success'
+            ];
         } else {
-            return false;
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
     }
 
@@ -326,18 +357,28 @@ class AbilitaRequisiti extends Abilita
      * @fn DelAbiRequisito
      * @note Elimina un requisito per abilita'
      * @param array $post
-     * @return bool
+     * @return array
      */
-    public function DelAbiRequisito(array $post): bool
+    public function DelAbiRequisito(array $post): array
     {
         if ($this->permissionManageAbiRequirement()) {
 
             $id = Filters::int($post['requisito']);
             DB::query("DELETE FROM abilita_requisiti WHERE id='{$id}' LIMIT 1");
 
-            return true;
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Requisito abilità eliminato.',
+                'swal_type' => 'success'
+            ];
         } else {
-            return false;
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
     }
 }

@@ -586,7 +586,7 @@ class Esiti extends BaseClass
             $html = 'Non hai scoperto nulla.';
         }
 
-        return trim($html,'| ');
+        return trim($html, '| ');
     }
 
     /*** ESITI INDEX ***/
@@ -638,7 +638,15 @@ class Esiti extends BaseClass
     public function renderEsitiList(object $list, string $page): string
     {
 
-        $html = '';
+        $html = '<div class="tr header">
+                    <div class="td">Data</div>
+                    <div class="td">Autore</div>
+                    <div class="td">Stato</div>
+                    <div class="td">Titolo</div>
+                    <div class="td">Numero Esiti</div>
+                    <div class="td">Nuove risposte</div>
+                    <div class="td">Controlli</div>
+                </div>';
 
         $path = ($page == 'servizi') ? 'servizi_esiti' : 'gestione_esiti';
 
@@ -667,7 +675,7 @@ class Esiti extends BaseClass
             $html .= "<div class='td'>" . Filters::out($row['titolo']) . '</div>';
             $html .= "<div class='td'>{$totale_esiti}</div>";
             $html .= "<div class='td'>{$new_response}</div>";
-            $html .= "<div class='td'>";
+            $html .= "<div class='td commands'>";
 
             if ($this->esitoViewPermission($id)) {
                 $html .= "<a href='/main.php?page={$path}&op=read&id_record={$id}' title='Leggi'><i class='fas fa-eye'></i></a>";
@@ -682,19 +690,36 @@ class Esiti extends BaseClass
             }
 
 
-            if ($this->esitiManageAll() && $closed) {
-                $html .= " <a href='/main.php?page={$path}&op=open&id_record={$id}' title='Riapri'><i class='far fa-check-circle'></i></a>";
+            if ($this->esitiManageAll() && $closed && ($page == 'gestione')) {
+                $html .= " <a class='ajax_link' data-id='{$id}' data-action='open' href='#' title='Riapri'><i class='far fa-check-circle'></i></a>";
             }
 
             if ($this->esitoClosePermission($id) && ($page == 'gestione') && !$closed) {
 
-                $html .= " <a href='/main.php?page={$path}&op=close&id_record={$id}' title='Chiudi'><i class='far fa-times-circle'></i></a>";
+                $html .= " <a class='ajax_link' data-id='{$id}' data-action='close' href='#' title='Chiudi'><i class='far fa-times-circle'></i></a>";
             }
 
 
             $html .= "</div>";
             $html .= "</div>";
         }
+
+        $html .= "<div class='tr footer'>";
+        if ($page == 'gestione') {
+            $html .= "<a href = 'main.php?page=gestione_esiti&op=new' >
+                            Nuovo esito
+                        </a > |
+                    <a href = '/main.php?page=gestione' > Indietro</a >";
+        } else {
+            if ($this->esitiFromPlayerEnabled()) {
+                $html .= " <a class='but_newd' href = 'main.php?page=servizi_esiti&op=new' >
+                                Nuovo esito
+                            </a > |";
+            }
+            $html .= " <a href = '/main.php?page=uffici' > Indietro</a > ";
+        }
+
+        $html .= "</div > ";
 
         return $html;
     }
@@ -708,22 +733,22 @@ class Esiti extends BaseClass
     {
         $html = '';
 
-        $html .= "<div class='single_cd'>";
+        $html .= "<div class='single_cd' > ";
 
-        $html .= "<div class='single_input'>";
-        $html .= "<div class='label'>CD</div>";
-        $html .= "<input type='number' name='add_cd[cd][]'>";
-        $html .= "</div>";
+        $html .= "<div class='single_input' > ";
+        $html .= "<div class='label' > CD</div > ";
+        $html .= "<input type = 'number' name = 'add_cd[cd][]' > ";
+        $html .= "</div > ";
 
-        $html .= "<div class='single_input'>";
-        $html .= "<div class='label'>Testo</div>";
-        $html .= "<textarea name='add_cd[text][]'></textarea>";
-        $html .= "</div>";
+        $html .= "<div class='single_input' > ";
+        $html .= "<div class='label' > Testo</div > ";
+        $html .= "<textarea name = 'add_cd[text][]' ></textarea > ";
+        $html .= "</div > ";
 
-        $html .= "</div>";
+        $html .= "</div > ";
 
 
-        return ['InputHtml'=>$html];
+        return ['InputHtml' => $html];
 
     }
 
@@ -747,19 +772,31 @@ class Esiti extends BaseClass
             $abilita = Filters::int($post['abilita']);
             $chat = Filters::int($post['chat']);
 
-            DB::query("INSERT INTO esiti(titolo, autore) VALUES('{$titolo}','{$this->me_id}')");
+            DB::query("INSERT INTO esiti(titolo, autore) VALUES('{$titolo}', '{$this->me_id}')");
 
             $last_id = $this->getLastEsitoId();
 
-            DB::query("INSERT INTO esiti_risposte(esito, autore, contenuto,dice_face,dice_num,abilita,chat )
-                        VALUES('{$last_id}','{$this->me_id}','{$ms}','{$dice_face}','{$dice_num}','{$abilita}','{$chat}')  ");
+            DB::query("INSERT INTO esiti_risposte(esito, autore, contenuto, dice_face, dice_num, abilita, chat)
+                        VALUES('{$last_id}', '{$this->me_id}', '{$ms}', '{$dice_face}', '{$dice_num}', '{$abilita}', '{$chat}')  ");
 
-            $last_answer = $this->getLastAnswerId();
-            $this->addCD($last_answer,$post['add_cd']);
+            if (!empty($post['add_cd'])) {
+                $last_answer = $this->getLastAnswerId();
+                $this->addCD($last_answer, $post['add_cd']);
+            }
 
-            return ['response' => true, 'mex' => 'Esito creato con successo.'];
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Esito creato con successo.',
+                'swal_type' => 'success'
+            ];
         } else {
-            return ['response' => false, 'mex' => 'Permesso negato.'];
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
     }
 
@@ -776,14 +813,14 @@ class Esiti extends BaseClass
             $titolo = Filters::in($post['titolo']);
             $ms = Filters::in($post['contenuto']);
 
-            DB::query("INSERT INTO esiti(titolo, autore) VALUES('{$titolo}','{$this->me_id}')");
+            DB::query("INSERT INTO esiti(titolo, autore) VALUES('{$titolo}', '{$this->me_id}')");
 
             $last_id = $this->getLastEsitoId();
 
             DB::query("INSERT INTO esiti_risposte(esito, autore, contenuto)
-                        VALUES('{$last_id}','{$this->me_id}','{$ms}')  ");
+                        VALUES('{$last_id}', '{$this->me_id}', '{$ms}')  ");
             DB::query("INSERT INTO esiti_personaggio(personaggio, esito, assegnato_da)
-                        VALUES('{$this->me_id}','{$last_id}','{$this->me_id}')  ");
+                        VALUES('{$this->me_id}', '{$last_id}', '{$this->me_id}')  ");
 
             return ['response' => true, 'mex' => 'Esito creato con successo.'];
         } else {
@@ -819,9 +856,9 @@ class Esiti extends BaseClass
                 $dice_num = Filters::int($answer['dice_num']);
                 $id_abi = Filters::int($answer['abilita']);
 
-                $html .= "<div class='single_answer {$mine}'>";
+                $html .= "<div class='single_answer {$mine}' > ";
 
-                $html .= "<div class='text'>" . Filters::text($answer['contenuto']) . "</div>";
+                $html .= "<div class='text' > " . Filters::text($answer['contenuto']) . "</div > ";
 
                 if (($dice_num > 0) && $this->esitiTiriEnabled()) {
 
@@ -831,11 +868,15 @@ class Esiti extends BaseClass
 
                     $chat = new Chat();
                     $chat_id = Filters::int($answer['chat']);
-                    $chat_name = $chat->getChatData($chat_id,'nome')['nome'];
+                    $chat_name = $chat->getChatData($chat_id, 'nome')['nome'];
 
-                    $html .= "<div class='dice'>";
-                    $html .= "<span> Sono richiesti {$dice_num} dadi da {$dice_face} su {$abi_name} in chat: <a href='/main.php?dir={$chat_id}'>{$chat_name}</a> . </span>";
-                    $html .= "</div>";
+                    $html .= "<div class='dice' > ";
+                    $html .= "<span > Sono richiesti {
+                $dice_num} dadi da {
+                $dice_face} su {
+                $abi_name} in chat: <a href = '/main.php?dir={$chat_id}' >{
+                $chat_name}</a > . </span > ";
+                    $html .= "</div > ";
 
                     $results = $this->getAnswerResults($id_answer);
 
@@ -846,20 +887,23 @@ class Esiti extends BaseClass
                         $res_text = Filters::text($result['testo']);
                         $res_num = Filters::int($result['risultato']);
 
-                        if($this->esitoResultPermission($id) || ($pg == $this->me_id)) {
-                            $html .= "<div class='dice_result'> {$pg_name} : <span>{$res_num}</span> <div class='internal_text'> {$res_text}</div> </div>";
+                        if ($this->esitoResultPermission($id) || ($pg == $this->me_id)) {
+                            $html .= "<div class='dice_result' > {
+                $pg_name} : <span >{
+                $res_num}</span > <div class='internal_text' > {
+                $res_text}</div > </div > ";
                         }
                     }
 
 
                 }
 
-                $html .= "<div class='sub_text'>";
-                $html .= "<span class='author'>" . Personaggio::nameFromId($autore) . "</span> - ";
-                $html .= "<span class='date'>" . Filters::date($answer['data'], 'H:i d/m/Y') . "</span>";
-                $html .= "</div>";
+                $html .= "<div class='sub_text' > ";
+                $html .= "<span class='author' > " . Personaggio::nameFromId($autore) . "</span > -";
+                $html .= "<span class='date' > " . Filters::date($answer['data'], 'H:i d/m/Y') . "</span > ";
+                $html .= "</div > ";
 
-                $html .= "</div>";
+                $html .= "</div > ";
 
             }
         }
@@ -876,7 +920,7 @@ class Esiti extends BaseClass
     public function readAnswer(int $id): void
     {
         if (!$this->esitoReaded($id, $this->me_id)) {
-            DB::query("INSERT INTO esiti_risposte_letture(esito, personaggio) VALUES('{$id}','{$this->me_id}')");
+            DB::query("INSERT INTO esiti_risposte_letture(esito, personaggio) VALUES('{$id}', '{$this->me_id}')");
         }
     }
 
@@ -901,21 +945,30 @@ class Esiti extends BaseClass
             $abilita = ($perm_dadi) ? Filters::int($post['abilita']) : 0;
             $chat = ($perm_dadi) ? Filters::int($post['chat']) : 0;
 
-            DB::query("INSERT INTO esiti_risposte(esito, autore, contenuto,dice_face,dice_num,abilita,chat )
-                        VALUES('{$id}','{$this->me_id}','{$contenuto}','{$dice_face}','{$dice_num}','{$abilita}','{$chat}')  ");
+            DB::query("INSERT INTO esiti_risposte(esito, autore, contenuto, dice_face, dice_num, abilita, chat)
+                        VALUES('{$id}', '{$this->me_id}', '{$contenuto}', '{$dice_face}', '{$dice_num}', '{$abilita}', '{$chat}')  ");
 
-            if(!empty($post['add_cd'])) {
+            if (!empty($post['add_cd'])) {
                 $last_id = $this->getLastAnswerId();
                 $this->addCD($last_id, $post['add_cd']);
             }
 
-            $resp = ['response' => true, 'mex' => 'Risposta aggiunta correttamente.'];
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Risposta aggiunta correttamente.',
+                'swal_type' => 'success',
+                'new_view' => $this->renderEsitoAnswers($id)
+            ];
 
         } else {
-            $resp = ['response' => false, 'mex' => 'Permesso Negato'];
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
-
-        return $resp;
     }
 
     /**
@@ -925,17 +978,18 @@ class Esiti extends BaseClass
      * @param array $cds
      * @return void
      */
-    public function addCD(int $id, array $cds = []):void{
+    public function addCD(int $id, array $cds = []): void
+    {
 
         $id = Filters::int($id);
 
-        foreach ($cds['cd'] as $index => $cd){
+        foreach ($cds['cd'] as $index => $cd) {
 
             $cd = Filters::int($cd);
             $testo = Filters::in($cds['text'][$index]);
 
-            if($cd > 0) {
-                DB::query("INSERT INTO esiti_risposte_cd(esito, cd, testo) VALUES('{$id}','{$cd}','{$testo}')");
+            if ($cd > 0) {
+                DB::query("INSERT INTO esiti_risposte_cd(esito, cd, testo) VALUES('{$id}', '{$cd}', '{$testo}')");
             }
         }
 
@@ -952,25 +1006,28 @@ class Esiti extends BaseClass
     public function membersList(int $id): string
     {
 
-        $html = '';
+        $html = '<div class="tr header">
+            <div class="td">Membro</div>
+            <div class="td">Controlli</div>
+        </div>';
         $list = $this->getAllPlayerEsito($id);
 
         foreach ($list as $row) {
             $id_row = Filters::int($row['id']);
 
-            $html .= "<div class='tr'>";
-            $html .= "<div class='td'>" . Personaggio::nameFromId(Filters::int($row['personaggio'])) . "</div>";
-            $html .= "<div class='td'>";
+            $html .= "<div class='tr' > ";
+            $html .= "<div class='td' > " . Personaggio::nameFromId(Filters::int($row['personaggio'])) . "</div > ";
+            $html .= "<div class='td' > ";
 
-            $html .= "<form method='POST'>
-                        <input type='hidden' name='op' value='delete_member'>
-                        <input type='hidden' name='id' value='{$id_row}'>
-                        <input type='hidden' name='id_esito' value='{$id}'>
-                        <button type='submit' title='Elimina membro'><i class='fas fa-user-minus'></i></button>
-                        </form>";
+            $html .= "<form method = 'POST' class='delete_member_form' >
+                        <input type = 'hidden' name = 'action' value = 'delete_member' >
+                        <input type = 'hidden' name = 'id' value = '{$id_row}' >
+                        <input type = 'hidden' name = 'id_esito' value = '{$id}' >
+                        <button type = 'submit' title = 'Elimina membro' ><i class='fas fa-user-minus' ></i ></button >
+                        </form > ";
 
-            $html .= "</div>";
-            $html .= "</div>";
+            $html .= "</div > ";
+            $html .= "</div > ";
 
         }
 
@@ -994,16 +1051,32 @@ class Esiti extends BaseClass
 
             if (!$this->esitoPlayerExist($id, $pg)) {
 
-                DB::query("INSERT INTO esiti_personaggio(esito,personaggio,assegnato_da) VALUE('{$id}','{$pg}','{$this->me_id}')");
+                DB::query("INSERT INTO esiti_personaggio(esito, personaggio, assegnato_da) VALUE('{$id}', '{$pg}', '{$this->me_id}')");
 
-                return ['resp' => true, 'mex' => 'Personaggio inserito correttamente.'];
+                return [
+                    'response' => true,
+                    'swal_title' => 'Operazione riuscita!',
+                    'swal_message' => 'Personaggio inserito correttamente.',
+                    'swal_type' => 'success',
+                    'members_list' => $this->membersList($id)
+                ];
             } else {
-                return ['resp' => false, 'mex' => 'Personaggio già esistente.'];
+                return [
+                    'response' => false,
+                    'swal_title' => 'Operazione fallita!',
+                    'swal_message' => 'Personaggio già esistente.',
+                    'swal_type' => 'error'
+                ];
             }
 
 
         } else {
-            return ['resp' => false, 'mex' => 'Permesso negato'];
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
 
     }
@@ -1022,12 +1095,23 @@ class Esiti extends BaseClass
 
         if ($this->esitoMembersPermission($id_esito)) {
 
-            DB::query("DELETE FROM esiti_personaggio WHERE id='{$id}' LIMIT 1");
+            DB::query("DELETE FROM esiti_personaggio WHERE id = '{$id}' LIMIT 1");
 
-            return ['resp' => true, 'mex' => 'Personaggio eliminato correttamente.'];
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Personaggio rimosso correttamente.',
+                'swal_type' => 'success',
+                'members_list' => $this->membersList($id_esito)
+            ];
 
         } else {
-            return ['resp' => false, 'mex' => 'Permesso negato'];
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
 
     }
@@ -1047,7 +1131,8 @@ class Esiti extends BaseClass
 
         foreach ($list as $pg) {
             $name = Personaggio::nameFromId($pg);
-            $html .= "<option value='{$pg}'>{$name}</option>";
+            $html .= " < option value = '{$pg}' >{
+                $name}</option > ";
         }
 
         return $html;
@@ -1062,12 +1147,23 @@ class Esiti extends BaseClass
 
             $pg = Filters::int($post['personaggio']);
 
-            DB::query("UPDATE esiti SET master ='{$pg}' WHERE id='{$id}' LIMIT 1");
+            DB::query("UPDATE esiti SET master = '{$pg}' WHERE id = '{$id}' LIMIT 1");
 
-            return ['response' => true, 'mex' => 'Master assegnato con successo.'];
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Master assegnato con successo.',
+                'swal_type' => 'success'
+            ];
 
         } else {
-            return ['response' => false, 'mex' => 'Permesso negato'];
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
 
 
@@ -1087,14 +1183,23 @@ class Esiti extends BaseClass
 
         if ($this->esitiManageAll()) {
 
-            DB::query("UPDATE esiti SET closed=0 WHERE id='{$id}' LIMIT 1");
+            DB::query("UPDATE esiti SET closed = 0 WHERE id = '{$id}' LIMIT 1");
 
-            $resp = ['response' => true, 'mex' => 'Esito riaperto con successo.'];
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Esito riaperto con successo.',
+                'swal_type' => 'success',
+                'esiti_list' => $this->esitiListManagement()
+            ];
         } else {
-            $resp = ['response' => false, 'mex' => 'Permesso negato'];
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
-
-        return $resp;
     }
 
     /*** CLOSE ESITO ***/
@@ -1111,13 +1216,22 @@ class Esiti extends BaseClass
 
         if ($this->esitoClosePermission($id)) {
 
-            DB::query("UPDATE esiti SET closed=1 WHERE id='{$id}' LIMIT 1");
+            DB::query("UPDATE esiti SET closed = 1 WHERE id = '{$id}' LIMIT 1");
 
-            $resp = ['response' => true, 'mex' => 'Esito chiuso con successo.'];
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Esito chiuso con successo.',
+                'swal_type' => 'success',
+                'esiti_list' => $this->esitiListManagement()
+            ];
         } else {
-            $resp = ['response' => false, 'mex' => 'Permesso negato'];
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
         }
-
-        return $resp;
     }
 }

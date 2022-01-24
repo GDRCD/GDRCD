@@ -7,14 +7,6 @@ $abi = Abilita::getInstance();
 $chat = new Chat();
 $id_record = Filters::int($_GET['id_record']);
 
-$op = Filters::out($_POST['op']);
-
-switch ($op) {
-    case 'answer':
-        $resp = $esiti->newAnswer($_POST);
-        break;
-}
-
 if ($esiti->esitoViewPermission($id_record) && $esiti->esitoExist($id_record)) {
 
     $esitoData = $esiti->getEsito($id_record, 'titolo');
@@ -53,7 +45,7 @@ if ($esiti->esitoViewPermission($id_record) && $esiti->esitoExist($id_record)) {
                     <div class="single_input w-33">
                         <div class="label">Abilità</div>
                         <select name="abilita">
-                            <?=$abi->ListaAbilita();?>
+                            <?=$abi->listAbilita();?>
                         </select>
                     </div>
                     <div class="single_input w-33">
@@ -73,7 +65,7 @@ if ($esiti->esitoViewPermission($id_record) && $esiti->esitoExist($id_record)) {
 
                 <div class="single_input">
                     <input type="submit" value="invia">
-                    <input type="hidden" name="op" value="answer">
+                    <input type="hidden" name="action" value="answer">
                     <input type="hidden" name="id_record" value="<?= $id_record; ?>">
                 </div>
             </form>

@@ -6,20 +6,8 @@ $quest = Quest::getInstance();
 
 if ($quest->manageQuestPermission()) {
 
-    $op = Filters::out($_POST['op']);
-
-    switch ($op) {
-        case 'insert_quest':
-            $resp = $quest->insertQuest($_POST);
-            break;
-    }
-
     ?>
     <div class="panels_box form_container">
-
-        <?php if (isset($resp)) { ?>
-            <div class="warning"><?= $resp['mex']; ?></div>
-        <?php } ?>
 
         <form method="post" class="form quest_insert_form">
 
@@ -67,7 +55,7 @@ if ($quest->manageQuestPermission()) {
             <!-- bottoni -->
             <div class='single_input'>
                 <input type="submit" value="<?= Filters::out($MESSAGE['interface']['forms']['submit']); ?>"/>
-                <input type="hidden" name="op" value="insert_quest">
+                <input type="hidden" name="action" value="insert_quest">
             </div>
 
         </form>

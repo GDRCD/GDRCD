@@ -9,12 +9,6 @@ $id_record = Filters::int($_GET['id_record']);
 
 $op = Filters::out($_POST['op']);
 
-switch ($op) {
-    case 'new':
-        $resp = $esiti->newEsitoManagement($_POST);
-        break;
-}
-
 ?>
 
 <div class="gestione_incipit">
@@ -64,7 +58,7 @@ switch ($op) {
             <div class="single_input">
                 <div class="label">Abilità</div>
                 <select name="abilita">
-                    <?=$abi->ListaAbilita();?>
+                    <?=$abi->listAbilita();?>
                 </select>
             </div>
             <div class="single_input">
@@ -88,7 +82,7 @@ switch ($op) {
         <!-- bottoni -->
         <div class="single_input">
             <div class='form_submit'>
-                <input type="hidden" name="op" value="new">
+                <input type="hidden" name="action" value="new">
                 <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>"/>
             </div>
         </div>

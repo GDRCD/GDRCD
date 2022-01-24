@@ -2,6 +2,21 @@ $(function(){
 
     let form = $('.edit-form');
 
+    new Form('.gestione_status_type .form').onSubmit({
+        path:'/pages/gestione/online_status/gestione_status_ajax.php',
+        success: refreshLists
+    })
+
+    function refreshLists(data){
+        if(data){
+            let datas = JSON.parse(data);
+
+            if(datas.response){
+                $('.gestione_status_type .form select[name="id"]').html(datas.status_list)
+            }
+        }
+    }
+
     form.find('select[name="id"]').on('change',function(){
 
         let id = $(this).val()

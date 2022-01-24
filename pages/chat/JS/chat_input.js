@@ -1,20 +1,20 @@
 $(function () {
 
     ScrollDown();
-    Form('.chat_form_ajax', '/pages/chat/chat_ajax.php', invioSuccess);
+
+    new Form('.chat_form_ajax').onSubmit({
+        path: '/pages/chat/chat_ajax.php',
+        success: invioSuccess,
+    });
 
     function invioSuccess(data) {
         if (data != '') {
-
             let datas = JSON.parse(data);
 
             if (datas.response == true) {
                 aggiornaChat();
                 $('.chat_form_ajax select[name="tipo"]').val('A');
                 $('.chat_form_ajax input[name="testo"]').val('');
-            } 
-            else{
-                alert(datas.error);
             }
         }
     }

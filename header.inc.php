@@ -67,14 +67,21 @@ if (($PARAMETERS['mode']['user_bbcode'] == 'ON' && $PARAMETERS['settings']['user
               type="text/css"/>
         <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/presenti.css"
               type="text/css"/>
+
+        <!-- JQUERY -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"/>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 
-        <script src="/plugins/Ajax.js"></script>
-        <script src="/plugins/Form.js"></script>
-        <script src="/plugins/Menu.js"></script>
-        <script src="/plugins/FakeTable.js"></script>
+        <!-- SweetAlert v2.11 -->
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+        <!-- CUSTOM PLUGINS -->
+        <script src="plugins/Ajax.js"></script>
+        <script src="plugins/Form.js"></script>
+        <script src="plugins/Menu.js"></script>
+        <script src="plugins/FakeTable.js"></script>
+        <script src="plugins/Swal.js"></script>
 
         <?php
         /** * Il controllo individua se l'header non è impiegato per il main */

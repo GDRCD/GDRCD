@@ -9,15 +9,7 @@ if($cls->permissionManageObjectsType()){ # Metodo di controllo per accesso alla 
 
     if(isset($_POST['op'])){ # Se ho richiesto un'operazione
         switch ($_POST['op']){ # In base al tipo di operazione eseguo insert/edit/delete/altro
-            case 'op_insert':
-                $resp = $cls->insertObjectType($_POST);
-                break;
-            case 'op_edit':
-                $resp = $cls->editObjectType($_POST);
-                break;
-            case 'op_delete':
-                $resp = $cls->deleteObjectType($_POST);
-                break;
+
         }
     }
 
@@ -39,15 +31,7 @@ if($cls->permissionManageObjectsType()){ # Metodo di controllo per accesso alla 
         </div>
 
 
-    <div class="form_container">
-
-        <?php if(isset($resp)) { # Se ho inviato il form e ricevuto una risposta ?>
-
-            <div class="warning"><?=$resp['mex'];?></div>
-
-        <?php
-            Functions::redirect('/main.php?page=gestione_oggetti_tipo',3); # Redirect alla stessa pagina, per evitare il re-submit di un form
-        } ?>
+    <div class="form_container gestione_oggetti_tipo">
 
         <!-- INSERT -->
         <form method="POST" class="form">
@@ -67,7 +51,7 @@ if($cls->permissionManageObjectsType()){ # Metodo di controllo per accesso alla 
             </div>
 
             <div class="single_input">
-                <input type="hidden" name="op" value="op_insert"> <!-- OP NEEDED -->
+                <input type="hidden" name="action" value="op_insert_object_type"> <!-- OP NEEDED -->
                 <input type="submit" value="Crea">
             </div>
 
@@ -82,7 +66,6 @@ if($cls->permissionManageObjectsType()){ # Metodo di controllo per accesso alla 
             <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
                 <div class="label">Tipo</div>
                 <select name="tipo">
-                    <option value=""></option>
                     <?=$cls->listObjectTypes();?>
                 </select>
             </div>
@@ -100,7 +83,7 @@ if($cls->permissionManageObjectsType()){ # Metodo di controllo per accesso alla 
             </div>
 
             <div class="single_input">
-                <input type="hidden" name="op" value="op_edit"> <!-- OP NEEDED -->
+                <input type="hidden" name="action" value="op_edit_object_type"> <!-- OP NEEDED -->
                 <input type="submit" value="Modifica">
             </div>
 
@@ -115,13 +98,12 @@ if($cls->permissionManageObjectsType()){ # Metodo di controllo per accesso alla 
             <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
                 <div class="label">Tipo</div>
                 <select name="tipo">
-                    <option value=""></option>
                     <?=$cls->listObjectTypes();?>
                 </select>
             </div>
 
             <div class="single_input">
-                <input type="hidden" name="op" value="op_delete"> <!-- OP NEEDED -->
+                <input type="hidden" name="action" value="op_delete_object_type"> <!-- OP NEEDED -->
                 <input type="submit" value="Invia">
             </div>
 
@@ -129,7 +111,7 @@ if($cls->permissionManageObjectsType()){ # Metodo di controllo per accesso alla 
 
     </div>
 
-    <script src="pages/gestione/oggetti/gestione_oggetti_tipo.js"></script>
+    <script src="/pages/gestione/oggetti/gestione_oggetti_tipo.js"></script>
 
 
 <?php } ?>

@@ -2,6 +2,20 @@ $(function(){
 
     let form = $('.edit-form');
 
+    new Form('.gestione_statistiche .form').onSubmit({
+        path:'/pages/gestione/statistiche/gestione_statistiche_ajax.php',
+        success: refreshList
+    })
+
+    function refreshList(data){
+        if(data){
+            let datas = JSON.parse(data);
+            if(datas.response){
+                $('.gestione_statistiche .form select[name="stat"]').html(datas.stat_list)
+            }
+        }
+    }
+
     form.find('select[name="stat"]').on('change',function(){
         let id = $(this).val();
         Ajax('/pages/gestione/statistiche/gestione_statistiche_ajax.php',{'id':id,'action':'get_stat_data'},setEditInput);

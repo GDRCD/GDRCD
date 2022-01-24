@@ -7,28 +7,18 @@ $quest = Quest::getInstance();
 
 if ($quest->manageTramePermission()) {
 
-    $op = Filters::out($_POST['op']);
-
-    switch ($op) {
-        case 'edit_trama':
-            $resp = $quest->editTrama($_POST);
-            break;
-    }
-
     $id_trama = Filters::int($_GET['id_record']);
 
     if ($quest->tramaExist($id_trama)) {
+
         $trama_data = $quest->getTrama($id_trama);
 
         ?>
 
         <!-- Form di inserimento/modifica -->
-        <div class="panels_box form_container">
-            <form action="main.php?page=gestione_trame&op=edit_trama&id_record=<?=$id_trama;?>" method="post" class="form">
+        <div class="panels_box form_container quest_edit_form">
+            <form method="post" class="form">
 
-                <?php if (isset($resp)) { ?>
-                    <div class="warning"><?= $resp['mex']; ?></div>
-                <?php } ?>
 
                 <div class="form_title">
                     Modifica trama
@@ -62,12 +52,16 @@ if ($quest->manageTramePermission()) {
                 <!-- bottoni -->
                 <div class='single_input'>
                     <input type="submit" value="<?= Filters::out($MESSAGE['interface']['forms']['submit']); ?>"/>
-                    <input type="hidden" name="op" value="edit_trama">
+                    <input type="hidden" name="action" value="edit_trama">
                     <input type="hidden" name="trama" value="<?= Filters::int($id_trama); ?>">
                 </div>
 
             </form>
         </div>
+
+
+        <script src="/pages/gestione/trame/JS/gestione_trame_edit.js"></script>
+
     <?php } else { ?>
         <div class="warning">Trama inesistente</div>
     <?php }

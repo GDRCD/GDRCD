@@ -5,23 +5,6 @@ require_once(__DIR__.'/../../../includes/required.php'); # Inserisco il required
 $cls = Statistiche::getInstance(); # Inizializzo classe
 
 if($cls->permissionManageStatistics()){ # Metodo di controllo per accesso alla pagina di gestione
-
-
-    if(isset($_POST['op'])){ # Se ho richiesto un'operazione
-        switch ($_POST['op']){ # In base al tipo di operazione eseguo insert/edit/delete/altro
-            case 'op_insert':
-                $resp = $cls->insertStat($_POST);
-                break;
-            case 'op_edit':
-                $resp = $cls->editStat($_POST);
-                break;
-            case 'op_delete':
-                $resp = $cls->deleteStat($_POST);
-                break;
-        }
-    }
-
-
 ?>
 
         <div class="general_incipit">
@@ -49,16 +32,7 @@ if($cls->permissionManageStatistics()){ # Metodo di controllo per accesso alla p
         </div>
 
 
-    <div class="form_container">
-
-        <?php if(isset($resp)) { # Se ho inviato il form e ricevuto una risposta ?>
-
-            <div class="warning"><?=$resp['mex'];?></div>
-            <a href="/main.php?page=gestione_statistiche">Indietro</a>
-
-        <?php
-            Functions::redirect('/main.php?page=gestione_statistiche',3); # Redirect alla stessa pagina, per evitare il re-submit di un form
-        } ?>
+    <div class="form_container gestione_statistiche">
 
         <!-- INSERT -->
         <form method="POST" class="form">
@@ -91,7 +65,7 @@ if($cls->permissionManageStatistics()){ # Metodo di controllo per accesso alla p
             </div>
 
             <div class="single_input">
-                <input type="hidden" name="op" value="op_insert"> <!-- OP NEEDED -->
+                <input type="hidden" name="action" value="op_insert_stat"> <!-- OP NEEDED -->
                 <input type="submit" value="Crea">
             </div>
 
@@ -105,7 +79,6 @@ if($cls->permissionManageStatistics()){ # Metodo di controllo per accesso alla p
             <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
                 <div class="label">Statistica</div>
                 <select name="stat">
-                    <option value=""></option>
                     <?=$cls->listStats();?>
                 </select>
             </div>
@@ -136,7 +109,7 @@ if($cls->permissionManageStatistics()){ # Metodo di controllo per accesso alla p
             </div>
 
             <div class="single_input">
-                <input type="hidden" name="op" value="op_edit"> <!-- OP NEEDED -->
+                <input type="hidden" name="action" value="op_edit_stat"> <!-- OP NEEDED -->
                 <input type="submit" value="Modifica">
             </div>
 
@@ -150,13 +123,12 @@ if($cls->permissionManageStatistics()){ # Metodo di controllo per accesso alla p
             <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
                 <div class="label">Statistica</div>
                 <select name="stat">
-                    <option value=""></option>
                     <?=$cls->listStats();?>
                 </select>
             </div>
 
             <div class="single_input">
-                <input type="hidden" name="op" value="op_delete"> <!-- OP NEEDED -->
+                <input type="hidden" name="action" value="op_delete_stat"> <!-- OP NEEDED -->
                 <input type="submit" value="Elimina">
             </div>
 

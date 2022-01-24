@@ -6,22 +6,11 @@ require_once(__DIR__ . '/../../../includes/required.php');
 $quest = Quest::getInstance();
 
 if ($quest->manageTramePermission()) {
-
-    $op = Filters::out($_POST['op']);
-
-    switch ($op) {
-        case 'insert_trama':
-            $resp = $quest->insertTrama($_POST);
-            break;
-    } ?>
+    ?>
 
     <!-- Form di inserimento/modifica -->
-    <div class="panels_box form_container">
-        <form action="main.php?page=gestione_trame&op=insert_trama" method="post" class="form">
-
-            <?php if (isset($resp)) { ?>
-                <div class="warning"><?= $resp['mex']; ?></div>
-            <?php } ?>
+    <div class="panels_box form_container quest_insert_form ">
+        <form method="post" class="form">
 
             <div class="form_title">
                 Inserisci trama
@@ -31,7 +20,7 @@ if ($quest->manageTramePermission()) {
                 <div class='label'>
                     Titolo
                 </div>
-                <input name="titolo"/>
+                <input type="text" name="titolo"/>
             </div>
 
             <div class="single_input">
@@ -55,14 +44,17 @@ if ($quest->manageTramePermission()) {
             <!-- bottoni -->
             <div class='single_input'>
                 <input type="submit" value="<?= Filters::out($MESSAGE['interface']['forms']['submit']); ?>"/>
-                <input type="hidden" name="op" value="insert_trama">
+                <input type="hidden" name="action" value="insert_trama">
             </div>
 
         </form>
     </div>
+
+    <script src="/pages/gestione/trame/JS/gestione_trame_insert.js"></script>
+
 <?php } else { ?>
-    <div class="warning">Permesso negato.</div>
-<?php }//if ?>
+    <div class="warning">Permesso negato</div>
+<?php } ?>
 
 <!-- Link di ritorno alla visualizzazione di base -->
 <div class="link_back">

@@ -3,30 +3,10 @@
 $abiReq = AbilitaRequisiti::getInstance();
 $stat_cls = Statistiche::getInstance();
 
-if (isset($_POST['action'])) {
-
-    switch ($_POST['action']) {
-        case 'op_insert':
-            $abiReq->NewAbiRequisito($_POST);
-            echo "<div class='warning'>Requisito abilita' creato con successo.</div>";
-            break;
-
-        case 'op_edit':
-            $abiReq->ModAbiRequisito($_POST);
-            echo "<div class='warning'>Requisito abilita' modificato con successo.</div>";
-            break;
-
-        case 'op_delete':
-            $abiReq->DelAbiRequisito($_POST);
-            echo "<div class='warning'>Requisito abilita' eliminato con successo.</div>";
-            break;
-    }
-}
-
 ?>
 
 
-<div class="gestione_pagina">
+<div class="gestione_pagina gestione_abilita_requisiti">
 
     <!-- INCIPIT -->
     <div class="gestione_incipit">
@@ -130,7 +110,6 @@ if (isset($_POST['action'])) {
             <div class="single_input">
                 <div class="label">Seleziona Requisito</div>
                 <select name="requisito" required>
-                    <option value=""></option>
                     <?= $abiReq->listRequisiti(); ?>
                 </select>
             </div>
@@ -202,7 +181,6 @@ if (isset($_POST['action'])) {
             <div class="single_input">
                 <div class="label">Seleziona Requisito</div>
                 <select name="requisito" required>
-                    <option value=""></option>
                     <?= $abiReq->listRequisiti(); ?>
                 </select>
             </div>

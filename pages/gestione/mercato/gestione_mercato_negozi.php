@@ -8,15 +8,7 @@ if ($cls->manageShopPermission()) { # Metodo di controllo per accesso alla pagin
 
     if (isset($_POST['op'])) { # Se ho richiesto un'operazione
         switch ($_POST['op']) { # In base al tipo di operazione eseguo insert/edit/delete/altro
-            case 'op_insert':
-                $resp = $cls->insertShop($_POST);
-                break;
-            case 'op_edit':
-                $resp = $cls->editShop($_POST);
-                break;
-            case 'op_delete':
-                $resp = $cls->deleteShop($_POST);
-                break;
+
         }
     }
 
@@ -42,7 +34,7 @@ if ($cls->manageShopPermission()) { # Metodo di controllo per accesso alla pagin
     </div>
 
 
-    <div class="form_container">
+    <div class="form_container gestione_negozi">
 
         <?php if (isset($resp)) { # Se ho inviato il form e ricevuto una risposta ?>
 
@@ -79,7 +71,7 @@ if ($cls->manageShopPermission()) { # Metodo di controllo per accesso alla pagin
 
 
             <div class="single_input">
-                <input type="hidden" name="op" value="op_insert"> <!-- OP NEEDED -->
+                <input type="hidden" name="action" value="op_insert_shop"> <!-- OP NEEDED -->
                 <input type="submit" value="Invia">
             </div>
 
@@ -93,7 +85,6 @@ if ($cls->manageShopPermission()) { # Metodo di controllo per accesso alla pagin
             <div class="single_input">
                 <div class="label">Negozio</div>
                 <select name="id" required>
-                    <option value=""></option>
                     <?=$cls->listShops();?>
                 </select>
             </div>
@@ -114,7 +105,7 @@ if ($cls->manageShopPermission()) { # Metodo di controllo per accesso alla pagin
             </div>
 
             <div class="single_input">
-                <input type="hidden" name="op" value="op_edit"> <!-- OP NEEDED -->
+                <input type="hidden" name="action" value="op_edit_shop"> <!-- OP NEEDED -->
                 <input type="submit" value="Invia">
             </div>
 
@@ -128,13 +119,12 @@ if ($cls->manageShopPermission()) { # Metodo di controllo per accesso alla pagin
             <div class="single_input">
                 <div class="label">Negozio</div>
                 <select name="id" required>
-                    <option value=""></option>
                     <?= $cls->listShops(); ?>
                 </select>
             </div>
 
             <div class="single_input">
-                <input type="hidden" name="op" value="op_delete"> <!-- OP NEEDED -->
+                <input type="hidden" name="action" value="op_delete_shop"> <!-- OP NEEDED -->
                 <input type="submit" value="Invia">
             </div>
 
