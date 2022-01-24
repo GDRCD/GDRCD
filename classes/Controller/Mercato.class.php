@@ -329,9 +329,6 @@ class Mercato extends BaseClass
                 'swal_type' => 'error'
             ];
         }
-
-        return $resp;
-
     }
 
     /**
@@ -378,9 +375,6 @@ class Mercato extends BaseClass
                 'swal_type' => 'error'
             ];
         }
-
-        return $resp;
-
     }
 
     /**

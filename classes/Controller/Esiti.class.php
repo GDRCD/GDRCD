@@ -936,7 +936,7 @@ class Esiti extends BaseClass
                 $this->addCD($last_id, $post['add_cd']);
             }
 
-            $resp = [
+            return [
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Risposta aggiunta correttamente.',
@@ -945,15 +945,13 @@ class Esiti extends BaseClass
             ];
 
         } else {
-            $resp = [
+            return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
                 'swal_type'=>'error'
             ];
         }
-
-        return $resp;
     }
 
     /**

@@ -129,22 +129,21 @@ class Gestione extends BaseClass{
                 }
 
                 if (!empty($empty_const)) {
-                    $resp = $this->errorConstant($empty_const, 'save');
+                    return $this->errorConstant($empty_const, 'save');
                 } else {
-                    $resp = [
+                    return [
                         'response'=> true,
                         'swal_title' => 'Operazione riuscita!',
                         'swal_message'=>'Costanti salvate con successo.',
                         'swal_type' => 'success'
-                    ];;
+                    ];
                 }
 
 
             } else {
-                $resp = $this->errorConstant($empty_const, 'empty');
+                return $this->errorConstant($empty_const, 'empty');
             }
 
-            return $resp;
         }
         else{
             return [
