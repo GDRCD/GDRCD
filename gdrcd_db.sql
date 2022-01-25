@@ -293,7 +293,12 @@ INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,
     ('ONLINE_STATUS_LOGIN_REFRESH',1,'Online Status','Reselect al login','Login oscura ultima scelta dai presenti?','bool',1),
     ('SCHEDA_OBJECTS_PUBLIC',1,'Scheda Oggetti','Scheda Oggetti pubblica','Pagina inventario pubblica?','bool',1),
     ('SCHEDA_STATS_PUBLIC',1,'Scheda Oggetti','Scheda Statistiche pubblica','Pagina statistica pubblica?','bool',1),
-    ('SCHEDA_ABI_PUBLIC',1,'Scheda Abilita','Scheda Abilita pubblica','Pagina abilita pubblica?','bool',1);
+    ('SCHEDA_ABI_PUBLIC',1,'Scheda Abilita','Scheda Abilita pubblica','Pagina abilita pubblica?','bool',1),
+    ('GATHERING_ENABLE',	1,	'Attiva Gathering',	'Gathering',	'Attiva la possibilità di trovare oggetti in chat?',	'bool',	1),
+        ('GATHERING_NUM_AZIONI', 1,	'Valore massimo di azioni',	'Gathering',	'Numero massimo di azioni da spendere nelle ricerche',	'int',1),
+        ('GATHERING_RAND', 	0, 'Numero random di azioni a disposizione',	'Gathering',	'Rendi random il numero di azioni giornaliere?',	'bool',	1),
+        ('GATHERING_TIME',12,	'Orario di reset delle azioni (0 - 23)',	'Gathering'	,'A che ora vuoi resettare le azioni di ricerca?',	'int',1),
+        ('GATHERING_TYPE',0,	'Attiva ricerca automatica','Gathering',	'Vuoti attivare il Gathering manuale o automatico?',	'bool',1);
 
 -- --------------------------------------------------------
 
@@ -502,7 +507,10 @@ INSERT INTO `menu` (`menu_name`, `section`, `name`, `page`, `permission`) VALUES
   ('Gestione', 'Oggetti', 'Gestione posizioni oggetto', 'gestione_oggetti_posizioni', 'MANAGE_OBJECTS_POSITIONS'),
   ('Gestione', 'Mercato', 'Gestione Oggetti Mercato', 'gestione_mercato_oggetti', 'MANAGE_SHOPS_OBJECTS'),
   ('Gestione', 'Mercato', 'Gestione Negozi Mercato', 'gestione_mercato_negozi', 'MANAGE_SHOPS'),
-  ('Gestione', 'Statistiche', 'Gestione Statistiche', 'gestione_statistiche', 'MANAGE_STATS');
+  ('Gestione', 'Statistiche', 'Gestione Statistiche', 'gestione_statistiche', 'MANAGE_STATS'),
+  ('Gestione'	,'Gathering',	'Gestione Ricerca',	'gestione_gathering',	'MANAGE_GATHERING'),
+  ('Gestione',	'Gathering',	'Gestione Oggetti ricerca',	'gestione_gathering_item',	'MANAGE_GATHERING'),
+  ('Gestione',	'Gathering',	'Gestione Categoria oggetti ricerca',	'gestione_gathering_category',	'MANAGE_GATHERING') ;
 
 -- --------------------------------------------------------
 
@@ -800,7 +808,8 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
     ('DOWNGRADE_SCHEDA_STATS','Permesso per la riduzione statistiche in schede altrui'),
     ('UPGRADE_SCHEDA_ABI','Permesso per aumento abilita in schede altrui'),
     ('DOWNGRADE_SCHEDA_ABI','Permesso per la diminuzione abilita in schede altrui'),
-    ('VIEW_SCHEDA_ABI','Permesso per la visualizzazione abilita in schede altrui');
+    ('VIEW_SCHEDA_ABI','Permesso per la visualizzazione abilita in schede altrui'),
+    ('MANAGE_GATHERING', 'Permesso per la gestione del gathering');
 
 
 
