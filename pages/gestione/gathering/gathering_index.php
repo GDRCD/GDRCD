@@ -6,7 +6,7 @@ $gathering = Gathering::getInstance();
 
 ?>
 
-<div class="gestione_pagina gestione_esiti">
+<div class="gestione_pagina gestione_gathering">
     <?php  if ($gathering->gatheringEnabled()&& ($gathering->gatheringManage() )) { ?>
 
         <!-- Titolo della pagina -->
