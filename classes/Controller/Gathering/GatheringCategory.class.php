@@ -21,19 +21,19 @@ class GatheringCategory extends Gathering
 
         switch ($op) {
             default:
-                $page = 'gatheting_cat_list.php';
+                $page = 'gathering_cat_list.php';
                 break;
 
-            case 'new':
-                $page = 'gatheting_cat_new.php';
+            case 'new_cat':
+                $page = 'gathering_cat_new.php';
                 break;
 
-            case 'edit':
-                $page = 'gatheting_cat_edit.php';
+            case 'edit_cat':
+                $page = 'gathering_cat_edit.php';
                 break;
 
             case 'delete':
-                $page = 'gatheting_cat_delete.php';
+                $page = 'gathering_cat_delete.php';
                 break;
 
         }
@@ -102,11 +102,11 @@ class GatheringCategory extends Gathering
             $html .= "<div class='td commands'>";
 
             if ($this->gatheringManage()) {
-                $html .= "<a href='/main.php?page={$path}&op=edit&id_record={$id}' title='Modifica'><i class='fas fa-edit'></i></a>";
+                $html .= "<a href='/main.php?page={$path}&op=edit_cat&id_record={$id}' title='Modifica'><i class='fas fa-edit'></i></a>";
             }
 
             if ($this->gatheringManage()) {
-                $html .= " <a class='ajax_link' data-id='{$id}' data-action='delete' href='#' title='Elimina'><i class='far fa-trash'></i></a>";
+                $html .= " <a class='ajax_link' data-id='{$id}' data-action='delete_cat' href='#' title='Elimina'><i class='far fa-trash'></i></a>";
             }
 
 
@@ -116,7 +116,7 @@ class GatheringCategory extends Gathering
 
         $html .= "<div class='tr footer'>";
 
-            $html .= "<a href = 'main.php?page=gestione_gathering&op=new' >
+            $html .= "<a href = 'main.php?page=gestione_gathering_category&op=new_cat' >
                             Nuova Categoria
                         </a > |
                     <a href = '/main.php?page=gestione' > Indietro</a >";
@@ -163,6 +163,39 @@ class GatheringCategory extends Gathering
             ];
         }
 
+    }
+    /*** NEW CATEGORY ***/
+
+    /**
+     * @fn newGatheringCat
+     * @note Inserisce una nuova categoria
+     * @param array $post
+     * @return array
+     */
+    public function newGatheringCat(array $post): array
+    {
+
+        if ($this->gatheringManage()) {
+
+            $nome = Filters::in($post['nome']);
+            $descrizione = Filters::in($post['descrizione']);
+
+            DB::query("INSERT INTO gathering_cat(nome, descrizione) VALUES('{$nome}', '{$descrizione}')");
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Categoria creata con successo.',
+                'swal_type' => 'success'
+            ];
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
+        }
     }
 
 

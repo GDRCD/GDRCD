@@ -1191,6 +1191,17 @@ CREATE TABLE IF NOT EXISTS `statistiche` (
 
 -- --------------------------------------------------------
 
+
+
+CREATE TABLE `gathering_cat` (
+	`id` INT NOT NULL AUTO_INCREMENT,
+	`nome` VARCHAR(255) NULL DEFAULT NULL,
+	`descrizione` VARCHAR(255) NULL DEFAULT NULL,
+	PRIMARY KEY (`id`)
+)ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+
+
 --
 -- Struttura della tabella `_gdrcd_db_versions`
 --
@@ -1217,3 +1228,5 @@ INSERT INTO _gdrcd_db_versions (migration_id,applied_on) VALUES
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+
