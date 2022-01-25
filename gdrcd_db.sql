@@ -294,11 +294,11 @@ INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,
     ('SCHEDA_OBJECTS_PUBLIC',1,'Scheda Oggetti','Scheda Oggetti pubblica','Pagina inventario pubblica?','bool',1),
     ('SCHEDA_STATS_PUBLIC',1,'Scheda Oggetti','Scheda Statistiche pubblica','Pagina statistica pubblica?','bool',1),
     ('SCHEDA_ABI_PUBLIC',1,'Scheda Abilita','Scheda Abilita pubblica','Pagina abilita pubblica?','bool',1),
-    ('GATHERING_ENABLE',	1,	'Attiva Gathering',	'Gathering',	'Attiva la possibilità di trovare oggetti in chat?',	'bool',	1),
-        ('GATHERING_NUM_AZIONI', 1,	'Valore massimo di azioni',	'Gathering',	'Numero massimo di azioni da spendere nelle ricerche',	'int',1),
-        ('GATHERING_RAND', 	0, 'Numero random di azioni a disposizione',	'Gathering',	'Rendi random il numero di azioni giornaliere?',	'bool',	1),
-        ('GATHERING_TIME',12,	'Orario di reset delle azioni (0 - 23)',	'Gathering'	,'A che ora vuoi resettare le azioni di ricerca?',	'int',1),
-        ('GATHERING_TYPE',0,	'Attiva ricerca automatica','Gathering',	'Vuoti attivare il Gathering manuale o automatico?',	'bool',1);
+    ('GATHERING_ENABLE',	1,	'Gathering','Attiva Gathering',	 'Attiva la possibilità di trovare oggetti in chat?',	'bool',	1),
+    ('GATHERING_NUM_AZIONI', 1,	'Gathering','Valore massimo di azioni', 	'Numero massimo di azioni da spendere nelle ricerche',	'int',1),
+    ('GATHERING_RAND', 	0, 'Gathering','Numero random di azioni a disposizione', 'Rendi random il numero di azioni giornaliere?',	'bool',	1),
+    ('GATHERING_TIME',12,	'Gathering','Orario di reset delle azioni (0 - 23)', 'A che ora vuoi resettare le azioni di ricerca?',	'int',1),
+    ('GATHERING_TYPE',0,'Gathering', 'Attiva ricerca automatica','Vuoti attivare il Gathering manuale o automatico?',	'bool',1);
 
 -- --------------------------------------------------------
 

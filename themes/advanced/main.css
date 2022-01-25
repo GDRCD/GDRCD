@@ -834,6 +834,16 @@ div.innertube {
     padding: 3px 0;
 }
 
+/*** GESTIONE GATHERING ***/
+
+.gestione_gathering .gathering_list .header .td{
+    width: 130px;
+}
+
+.gestione_gathering .gathering_list .td{
+    width: 135px;
+}
+
 
 /**** MERCATO ***/
 
