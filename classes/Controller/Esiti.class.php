@@ -624,8 +624,12 @@ class Esiti extends BaseClass
      */
     public function esitiListManagement(): string
     {
+        $template = Template::getInstance()->startTemplate();
         $list = $this->getAllEsito('*', 'ORDER BY closed ASC,data ASC');
-        return $this->renderEsitiList($list, 'gestione');
+        return $template->renderTable(
+            'gestione/esiti/list',
+            $this->renderEsitiList($list, 'gestione')
+        );
     }
 
     /**
@@ -633,34 +637,19 @@ class Esiti extends BaseClass
      * @note Render html lista esiti
      * @param object $list
      * @param string $page
-     * @return string
+     * @return array
      */
-    public function renderEsitiList(object $list, string $page): string
+    public function renderEsitiList(object $list, string $page): array
     {
-
-        $html = '<div class="tr header">
-                    <div class="td">Data</div>
-                    <div class="td">Autore</div>
-                    <div class="td">Stato</div>
-                    <div class="td">Titolo</div>
-                    <div class="td">Numero Esiti</div>
-                    <div class="td">Nuove risposte</div>
-                    <div class="td">Controlli</div>
-                </div>';
-
+        $row_data = [];
         $path = ($page == 'servizi') ? 'servizi_esiti' : 'gestione_esiti';
+        $backlink = ($page == 'servizi') ? 'uffici' : 'gestione';
 
         foreach ($list as $row) {
 
             $id = Filters::int($row['id']);
-            $author = Filters::in($row['autore']);
-            $totale_esiti = $this->getEsitoAnswesNum($id);
-            $new_response = $this->haveNewResponse($id);
-            $closed = Filters::bool($row['closed']);
-            $closed_cls = ($closed) ? 'closed' : '';
 
-
-            if ($row['master'] != 0) {
+            if (Filters::int($row['master']) != 0) {
                 $master = 'Presa in carico';
             } elseif ($row['closed']) {
                 $master = 'Chiuso';
@@ -668,60 +657,49 @@ class Esiti extends BaseClass
                 $master = '<u> In attesa di risposta </u>';
             }
 
-            $html .= "<div class='tr {$closed_cls}'>";
-            $html .= "<div class='td'>" . Filters::date($row['data'], 'd/m/Y') . '</div>';
-            $html .= "<div class='td'>" . Personaggio::nameFromId($author) . '</div>';
-            $html .= "<div class='td'>{$master}</div>";
-            $html .= "<div class='td'>" . Filters::out($row['titolo']) . '</div>';
-            $html .= "<div class='td'>{$totale_esiti}</div>";
-            $html .= "<div class='td'>{$new_response}</div>";
-            $html .= "<div class='td commands'>";
+            $array = [
+                'id' => $id,
+                'author'=> Personaggio::nameFromId(Filters::in($row['autore'])),
+                'totale_esiti'=> $this->getEsitoAnswesNum($id),
+                'new_response'=>$this->haveNewResponse($id),
+                'closed' =>Filters::int($row['closed']),
+                'closed_cls'=>Filters::bool($row['closed']) ? 'closed' : '',
+                'date'=>Filters::date($row['data'], 'd/m/Y'),
+                'titolo'=>Filters::out($row['titolo']),
+                'master' => $master,
+                'esito_view_permission'=> $this->esitoViewPermission($id),
+                'esito_membri_permission' => $this->esitoMembersPermission($id),
+                'esito_manage' => $this->esitiManageAll(),
+                'esiti_close_permission' => $this->esitoClosePermission($id),
+                'esiti_from_player_enabled' => $this->esitiFromPlayerEnabled()
+            ];
 
-            if ($this->esitoViewPermission($id)) {
-                $html .= "<a href='/main.php?page={$path}&op=read&id_record={$id}' title='Leggi'><i class='fas fa-eye'></i></a>";
-            }
-
-            if ($this->esitoMembersPermission($id) && ($page == 'gestione')) {
-                $html .= " <a href='/main.php?page={$path}&op=members&id_record={$id}' title='Gestisci membri'><i class='fas fa-users'></i></a>";
-            }
-
-            if ($this->esitiManageAll() && ($page == 'gestione')) {
-                $html .= " <a href='/main.php?page={$path}&op=master&id_record={$id}' title='Assegna Master'><i class='fas fa-user-tag'></i></a>";
-            }
-
-
-            if ($this->esitiManageAll() && $closed && ($page == 'gestione')) {
-                $html .= " <a class='ajax_link' data-id='{$id}' data-action='open' href='#' title='Riapri'><i class='far fa-check-circle'></i></a>";
-            }
-
-            if ($this->esitoClosePermission($id) && ($page == 'gestione') && !$closed) {
-
-                $html .= " <a class='ajax_link' data-id='{$id}' data-action='close' href='#' title='Chiudi'><i class='far fa-times-circle'></i></a>";
-            }
-
-
-            $html .= "</div>";
-            $html .= "</div>";
+            $row_data[] = $array;
         }
 
-        $html .= "<div class='tr footer'>";
-        if ($page == 'gestione') {
-            $html .= "<a href = 'main.php?page=gestione_esiti&op=new' >
-                            Nuovo esito
-                        </a > |
-                    <a href = '/main.php?page=gestione' > Indietro</a >";
-        } else {
-            if ($this->esitiFromPlayerEnabled()) {
-                $html .= " <a class='but_newd' href = 'main.php?page=servizi_esiti&op=new' >
-                                Nuovo esito
-                            </a > |";
-            }
-            $html .= " <a href = '/main.php?page=uffici' > Indietro</a > ";
-        }
-
-        $html .= "</div > ";
-
-        return $html;
+        $cells = [
+            'Data',
+            'Autore',
+            'Stato',
+            'Titolo',
+            'Numero Esiti',
+            'Nuove risposte',
+            'Controlli'
+        ];
+        $links = [
+            ['href' => "/main.php?page={$path}&op=new", 'text' => 'Nuovo esito'],
+            ['href' => "/main.php?page={$backlink}", 'text' => 'Indietro']
+        ];
+        $footer_text = 'Testo di prova footer';
+        return [
+                'body' => 'gestione/esiti/list',
+                'body_rows'=> $row_data,
+                'cells' => $cells,
+                'links' => $links,
+                'path'=>$path,
+                'page'=>$page,
+                'footer_text' => $footer_text
+            ];
     }
 
     /**

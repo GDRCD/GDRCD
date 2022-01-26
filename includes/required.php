@@ -15,6 +15,9 @@ if(file_exists(dirname(__FILE__).'/../core/db_overrides.php')){
     include_once dirname(__FILE__).'/../core/db_overrides.php';
 }
 
+# Include del template engine
+require_once(dirname(__FILE__) . '/../plugins/smarty/libs/Smarty.class.php');
+
 # Inizializzo le classi fondamentali
 require_once(dirname(__FILE__) . '/../classes/Libraries/Base.class.php');
 require_once(dirname(__FILE__) . '/../classes/Libraries/Routing.class.php');
