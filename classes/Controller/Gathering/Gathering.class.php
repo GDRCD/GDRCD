@@ -77,6 +77,20 @@ class Gathering extends BaseClass
 
         return DB::query("SELECT * FROM gathering_cat WHERE id ='{$id}'");
     }
+    /*** GET ONE ITEM ***/
+
+    /**
+     * @fn getoneGatheringItem
+     * @note Get di una categoria
+     * @param array $post
+     * @return array
+     */
+    public function getoneGatheringItem(int $id)
+    {
+        $id = Filters::in($id);
+
+        return DB::query("SELECT * FROM gathering_item WHERE id ='{$id}'");
+    }
 
 
 

@@ -31,11 +31,6 @@ class GatheringItem extends Gathering
             case 'edit_item':
                 $page = 'gathering_item_edit.php';
                 break;
-
-            case 'delete_item':
-                $page = 'gathering_item_delete.php';
-                break;
-
         }
 
         return $page;
@@ -137,7 +132,7 @@ class GatheringItem extends Gathering
 
         return $html;
     }
-    /*** NEW ITEM ***/
+    /*** ITEM ***/
 
     /**
      * @fn newGatheringItem
@@ -181,4 +176,80 @@ class GatheringItem extends Gathering
             ];
         }
     }
+    /**
+     * @fn deleteGatheringCat
+     * @note Rimuove una categoria
+     * @param array $post
+     * @return array
+     */
+    public function deleteGatheringItem(int $id)
+    {
+
+        $id = Filters::int($id);
+
+
+        if ($this->gatheringManage()) {
+
+            DB::query("DELETE FROM gathering_item WHERE id = '{$id}' LIMIT 1");
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Oggetto rimosso correttamente.',
+                'swal_type' => 'success',
+                'gathering_list' => $this->GatheringItemList()
+
+            ];
+
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
+        }
+
+    }
+    /**
+     * @fn editGatheringCat
+     * @note Modifica una  categoria
+     * @param array $post
+     * @return array
+     */
+    public function editGatheringItem(array $post): array
+    {
+
+        if ($this->gatheringManage()) {
+            $id = Filters::in($post['id']);
+            $nome = Filters::in($post['nome']);
+            $descrizione = Filters::in($post['descrizione']);
+            $immagine= Filters::in($post['immagine']);
+            $quantita=Filters::in($post['quantita']);
+            $categoria=Filters::int($post['categoria']);
+
+            if ($this->gatheringRarity()) {
+                $quantita=Filters::in($post['quantita']);
+                DB::query("UPDATE gathering_item SET nome= '{$nome}' , descrizione= '{$descrizione}',categoria ={$categoria},immagine='{$immagine}', quantita= {$quantita} WHERE id={$id}");
+
+            }else{
+                DB::query("UPDATE gathering_item SET nome= '{$nome}' , descrizione= '{$descrizione}',categoria ={$categoria},immagine='{$immagine}' WHERE id={$id}");
+
+            }
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Categoria modificata con successo.',
+                'swal_type' => 'success'
+            ];
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
+        }
+    }
+
 }

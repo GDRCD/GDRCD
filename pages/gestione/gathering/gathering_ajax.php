@@ -19,6 +19,11 @@ switch ($_POST['action']) {
     case 'new_item':
         echo json_encode($gathering_item->newGatheringItem($_POST));
         break;
+    case 'delete_item':
+        echo json_encode($gathering_item->deleteGatheringItem($_POST['id']));
+        break;
+    case 'edit_item':
+        echo json_encode($gathering_item->editGatheringItem($_POST));
 
 
 

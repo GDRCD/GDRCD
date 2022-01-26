@@ -11,7 +11,7 @@ $cat=$gathering_cat->getoneGatheringCat($_GET['id']);
 
 
 <div class="gestione_incipit">
-    Creazione nuova categoria oggetto.
+    Modifca categoria oggetto.
 </div>
 <div class="form_container">
 
