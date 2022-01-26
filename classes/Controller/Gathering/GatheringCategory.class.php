@@ -31,11 +31,7 @@ class GatheringCategory extends Gathering
             case 'edit_cat':
                 $page = 'gathering_cat_edit.php';
                 break;
-
-            case 'delete':
-                $page = 'gathering_cat_delete.php';
                 break;
-
         }
 
         return $page;
@@ -241,7 +237,7 @@ class GatheringCategory extends Gathering
      */
     public function listGatheringCat($selected = 0): string
     {
-        $html = '<option value=""></option>';
+        $html = '<option value="0"></option>';
         $abis = $this->getAllGatheringCat();
 
         foreach ($abis as $abi) {
