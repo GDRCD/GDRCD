@@ -27,7 +27,8 @@ Specifiche:
 class Gathering extends BaseClass
 {
     private
-        $gathering_enabled;
+        $gathering_enabled,
+        $gathering_rarity;
 
 
     public function __construct()
@@ -36,6 +37,7 @@ class Gathering extends BaseClass
 
         # Gli esiti sono attivi in chat?
         $this->gathering_enabled = Functions::get_constant('GATHERING_ENABLE');
+        $this->gathering_rarity = Functions::get_constant('GATHERING_RARITY');
 
     }
 
@@ -44,6 +46,10 @@ class Gathering extends BaseClass
     public function gatheringEnabled(): bool
     {
         return $this->gathering_enabled;
+    }
+    public function gatheringRarity(): bool
+    {
+        return $this->gathering_rarity;
     }
 
     /*** PERMISSIONS */
@@ -56,6 +62,20 @@ class Gathering extends BaseClass
     public function gatheringManage(): bool
     {
         return Permissions::permission('MANAGE_GATHERING');
+    }
+    /*** GET ONE CATEGORY ***/
+
+    /**
+     * @fn getoneGatheringCat
+     * @note Get di una categoria
+     * @param array $post
+     * @return array
+     */
+    public function getoneGatheringCat(int $id)
+    {
+        $id = Filters::in($id);
+
+        return DB::query("SELECT * FROM gathering_cat WHERE id ='{$id}'");
     }
 
 
