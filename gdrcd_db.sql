@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Ott 07, 2021 alle 15:22
+-- Generation Time: Ott 08, 2021 alle 00:28
 -- Versione del server: 8.0.21
 -- PHP Version: 5.6.40
 
@@ -27,35 +27,21 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE IF NOT EXISTS `abilita` (
-  `id_abilita` int NOT NULL AUTO_INCREMENT,
+  `id` int NOT NULL AUTO_INCREMENT,
   `nome` varchar(255) NOT NULL,
-  `car` tinyint(1) NOT NULL DEFAULT '0',
+  `statistica` tinyint(1) NOT NULL DEFAULT '0',
   `descrizione` text NOT NULL,
-  `id_razza` int NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_abilita`)
+  `razza` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 --
 -- Dump dei dati per la tabella `abilita`
 --
 
-INSERT INTO `abilita` (`id_abilita`, `nome`, `car`, `descrizione`, `id_razza`) VALUES
-(18, 'Resistenza', 1, 'Il personaggio Ã¨ in grado di sopportare il dolore ed il disagio e sopporta minime dosi di agenti tossici nel proprio organismo. ', -1),
-(17, 'Sopravvivenza', 4, 'Il personaggio Ã¨ in grado di procurarsi cibo e riparo all''aperto, con mezzi minimi.', -1),
-(4, 'Atletica', 2, 'Il personaggio Ã¨ ben allenato ed Ã¨ in grado di saltare efficacemente, arrampicarsi, nuotare, schivare e compiere, genericamente, movimenti fisicamente impegnativi.', -1),
-(5, 'Cercare', 5, 'Il personaggio Ã¨ rapido ed efficace nel perquisire un ambiente in cerca di qualcosa.', -1),
-(6, 'Conoscenza', 3, 'Il personaggio ha accumulato cultura ed esperienze, e potrebbe avere maggiori informazioni sulla situazione in cui si trova. A fronte di una prova di conoscenza il master dovrebbe fornire informazioni al giocatore via sussurro.', -1),
-(7, 'Percepire intenzioni', 4, 'Il personaggio Ã¨ abile nel determinare, durante una conversazione o un interazione, se il suo interlocutore stia mentendo, sia ostile o sia ben disposto.', -1),
-(8, 'Cavalcare', 2, 'Il personaggio Ã¨ in grado di cavalcare animali addestrati a tale scopo.', -1),
-(9, 'Addestrare animali', 4, 'Il personaggio comprende gli atteggiamenti e le reazioni degli animali ed Ã¨ in grado di interagire con loro, addomesticarli ed addestrarli.', -1),
-(10, 'Armi bianche', 0, 'Il personaggio Ã¨ addestrato al combattimento con armi bianche, scudi e protezioni.', -1),
-(11, 'Armi da tiro', 5, 'Il personaggio Ã¨ addestrato all''uso di armi da diro o da lancio.', -1),
-(12, 'Lotta', 0, 'Il personaggio Ã¨ addestrato al combattimento senza armi.', -1),
-(13, 'Competenze tecniche', 3, 'Il personaggio Ã¨ in grado di realizzare e riparare strumenti tecnologici. Il tipo ed il numero di tecnologie in cui Ã¨ competente dovrebbe essere specificato nel background e proporzionale al punteggio di intelligenza.', -1),
-(14, 'Mezzi di trasporto', 5, 'Il personaggio Ã¨ in grado di governare o pilotare specifici mezzi di trasporto. L''elenco dei mezzi dovrebbe essere riportato nel background e proporzionale al punteggio di intelligenza.', -1),
-(15, 'Pronto soccorso', 3, 'Il personaggio Ã¨ in grado di eseguire interventi d''emergenza su individui feriti o la cui salute sia in qualche modo minacciata.', -1),
-(16, 'FurtivitÃ ', 2, 'Il personaggio Ã¨ in grado di muoversi ed agire senza dare nell''occhio, e di scassinare serrature.', -1),
-(19, 'VolontÃ ', 4, 'Il personaggio Ã¨ fortemente determinato e difficilmente si lascia persuadere o dissuadere.', -1);
+INSERT INTO `abilita` (`nome`, `statistica`, `descrizione`, `razza`) VALUES
+('Resistenza', 4, 'Il personaggio Ã¨ in grado di sopportare il dolore ed il disagio e sopporta minime dosi di agenti tossici nel proprio organismo. ', -1),
+('Sopravvivenza', 4, 'Il personaggio Ã¨ in grado di procurarsi cibo e riparo all''aperto, con mezzi minimi.', -1);
 
 -- --------------------------------------------------------
 
@@ -89,8 +75,6 @@ CREATE TABLE IF NOT EXISTS `abilita_requisiti` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
-
---
 -- Struttura della tabella `ambientazione`
 --
 
@@ -176,24 +160,6 @@ CREATE TABLE IF NOT EXISTS `blacklist` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `blocco_esiti`
---
-
-CREATE TABLE IF NOT EXISTS `blocco_esiti` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `titolo` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `data` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `autore` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `pg` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `id_min` int DEFAULT NULL,
-  `master` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0',
-  `closed` int NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Struttura della tabella `chat`
 --
 
@@ -213,18 +179,6 @@ CREATE TABLE IF NOT EXISTS `chat` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `clgpersonaggioabilita`
---
-
-CREATE TABLE IF NOT EXISTS `clgpersonaggioabilita` (
-  `nome` varchar(255) NOT NULL,
-  `id_abilita` int NOT NULL,
-  `grado` int NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Struttura della tabella `clgpersonaggiomostrine`
 --
 
@@ -232,23 +186,6 @@ CREATE TABLE IF NOT EXISTS `clgpersonaggiomostrine` (
   `id_mostrina` varchar(255) NOT NULL DEFAULT '',
   `nome` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id_mostrina`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `clgpersonaggiooggetto`
---
-
-CREATE TABLE IF NOT EXISTS `clgpersonaggiooggetto` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `nome` varchar(255) NOT NULL DEFAULT '',
-  `id_oggetto` int NOT NULL DEFAULT '0',
-  `numero` int DEFAULT '1',
-  `cariche` int NOT NULL DEFAULT '-1',
-  `commento` varchar(255) DEFAULT NULL,
-  `posizione` int NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -301,31 +238,6 @@ INSERT INTO `codtipogilda` (`descrizione`, `cod_tipo`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `codtipooggetto`
---
-
-CREATE TABLE IF NOT EXISTS `codtipooggetto` (
-  `cod_tipo` int NOT NULL AUTO_INCREMENT,
-  `descrizione` text NOT NULL,
-  PRIMARY KEY (`cod_tipo`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
---
--- Dump dei dati per la tabella `codtipooggetto`
---
-
-INSERT INTO `codtipooggetto` (`cod_tipo`, `descrizione`) VALUES
-(1, 'Animale'),
-(2, 'Vestito'),
-(3, 'Fiore - Pianta'),
-(4, 'Gioiello'),
-(5, 'Arma'),
-(6, 'Attrezzo'),
-(0, 'Vario');
-
--- --------------------------------------------------------
-
---
 -- Struttura della tabella `config`
 --
 CREATE TABLE IF NOT EXISTS `config` (
@@ -342,7 +254,6 @@ CREATE TABLE IF NOT EXISTS `config` (
 
 
 INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,`editable`) VALUES
-    ('ABI_PUBLIC',1,'Abilita','Abilità pubbliche','Le abilità sono pubbliche?','bool',1),
     ('ABI_LEVEL_CAP',5,'Abilita','Level cap Abilità','Livello massimo abilità','int',1),
     ('DEFAULT_PX_PER_LVL',10,'Abilita','Costo default Abilità','Moltiplicatore costo abilità, se non specificato','int',1),
     ('ABI_REQUIREMENT',1,'Abilita','Requisiti Abilità','Abilitare requisiti abilità?','bool',1),
@@ -368,7 +279,7 @@ INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,
     ('CHAT_SAVE_LINK',1,'Chat Salvataggio','Salva chat in link','Salva chat in modalità link?','bool',1),
     ('CHAT_SAVE_DOWNLOAD',1,'Chat Salvataggio','Salva chat download','Salva chat con download?','bool',1),
     ('WEATHER_MOON',1,'Fasi Lunari','Meteo Impostazioni','Abilita o disabilita le fasi lunari','bool',1),
-    ('WEATHER_TYPE',1,'Tipo di meteo','Meteo Impostazioni','Meteo stagioni o meteo Web api','bool',1)
+    ('WEATHER_TYPE',1,'Tipo di meteo','Meteo Impostazioni','Meteo stagioni o meteo Web api','bool',1),
     ('WEATHER_WIND',1,'Vento','Meteo Impostazioni','Abilita o disabilita il vento','bool',1),
     ('WEATHER_WEBAPI',0,'Web api meteo','Meteo Impostazioni','Web Api di OpenWeather','String',1),
     ('WEATHER_WEBAPI_CITY',0,'Web api città','Meteo Impostazioni','Città di cui avere il meteo','String',1),
@@ -377,7 +288,23 @@ INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,
     ('WEATHER_WEBAPI_FORMAT','png','Web api formato icone','Meteo Impostazioni','Estensione delle icone','String',1),
     ('WEATHER_LAST',0,'Ultimo Meteo','Meteo Impostazioni','Ultimo meteo registrato','String',1),
     ('WEATHER_LAST_WIND',0,'Vento attuale','Meteo Impostazioni','Ultimo vento registrato','String',1),
-    ('WEATHER_UPDATE',4,'Tempo di aggiornamento','Meteo Impostazioni','Dopo quante ore si prevede il cambio meteo con le stagioni','int',1);
+    ('WEATHER_UPDATE',4,'Tempo di aggiornamento','Meteo Impostazioni','Dopo quante ore si prevede il cambio meteo con le stagioni','int',1),
+    ('ESITI_ENABLE',1,'Esiti','Attiva esiti','Abilitare la funzione esiti?','bool',1),
+    ('ESITI_CHAT',1,'Esiti','Attiva esiti in chat','Abilitare la funzione di lancio degli esiti in chat?','bool',1),
+    ('ESITI_TIRI',1,'Esiti','Lancio di dadi negli esiti','Abilitare la possibilità di lanciare dadi all''interno del pannello esiti?','bool',1),
+    ('ESITI_FROM_PLAYER',1,'Esiti','Esiti dai player','Abilitare richiesta esiti da parte dei player?','bool',1),
+    ('QUEST_ENABLED',1,'Quest','Attivazione Quest migliorate','Gestione quest migliorata, attiva?','bool',1),
+    ('QUEST_VIEW',2,'Quest','Permessi visual quest','Permesso minimo per visualizzazione delle quest','permission',1),
+    ('QUEST_SUPER_PERMISSION',3,'Quest','Permessi speciali','Permesso minimo per modificare qualsiasi parte del pacchetto','int',1),
+    ('QUEST_NOTIFY',0,'Quest','Notifiche quest','Definisce la possibilità di inviare messaggi automatici di avviso agli utenti che partecipano ad una quest','bool',1),
+    ('TRAME_ENABLED',1,'Trame','Attivazione trame','Sistema trame attivo?','bool',1),
+    ('QUEST_RESULTS_FOR_PAGE',15,'Quest','Risultati per pagina','Numero risultati per pagina nella gestione delle quest.','int',1),
+    ('ONLINE_STATUS_ENABLED',1,'Online Status','Stato online avanzato','Stato online avanzato,attivo?','bool',1),
+    ('ONLINE_STATUS_LOGIN_REFRESH',1,'Online Status','Reselect al login','Login oscura ultima scelta dai presenti?','bool',1),
+    ('SCHEDA_OBJECTS_PUBLIC',1,'Scheda Oggetti','Scheda Oggetti pubblica','Pagina inventario pubblica?','bool',1),
+    ('SCHEDA_STATS_PUBLIC',1,'Scheda Oggetti','Scheda Statistiche pubblica','Pagina statistica pubblica?','bool',1),
+    ('SCHEDA_ABI_PUBLIC',1,'Scheda Abilita','Scheda Abilita pubblica','Pagina abilita pubblica?','bool',1);
+
 -- --------------------------------------------------------
 
 --
@@ -404,28 +331,96 @@ CREATE TABLE IF NOT EXISTS `diario` (
 
 CREATE TABLE IF NOT EXISTS `esiti` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `sent` int NOT NULL DEFAULT '0',
-  `titolo` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `autore` varchar(255) COLLATE utf8_general_ci NOT NULL,
+  `titolo` text COLLATE utf8_general_ci NOT NULL,
   `data` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `chat` int NOT NULL DEFAULT '0',
-  `autore` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `contenuto` mediumtext CHARACTER SET utf8 COLLATE utf8_general_ci,
-  `noteoff` text CHARACTER SET utf8 COLLATE utf8_general_ci,
-  `master` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `pg` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `id_blocco` int NOT NULL,
-  `id_ab` int DEFAULT '0',
-  `CD_1` text CHARACTER SET utf8 COLLATE utf8_general_ci,
-  `CD_2` text CHARACTER SET utf8 COLLATE utf8_general_ci,
-  `CD_3` text CHARACTER SET utf8 COLLATE utf8_general_ci,
-  `CD_4` text CHARACTER SET utf8 COLLATE utf8_general_ci,
-  `letto_master` int NOT NULL DEFAULT '0',
-  `letto_pg` int NOT NULL DEFAULT '0',
-  `dice_face` int NOT NULL DEFAULT '0',
-  `dice_num` int NOT NULL DEFAULT '0',
-  `dice_results` varchar(255) DEFAULT NULL,
+  `master` varchar(255) COLLATE utf8_general_ci NOT NULL DEFAULT '0',
+  `closed` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `esiti_personaggio`
+--
+
+CREATE TABLE IF NOT EXISTS `esiti_personaggio` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `personaggio` int NOT NULL,
+  `esito` int NOT NULL,
+  `assegnato_il` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `assegnato_da` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `esiti_risposte`
+--
+
+CREATE TABLE IF NOT EXISTS `esiti_risposte` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `esito` int NOT NULL,
+  `autore` varchar(255) NOT NULL,
+  `chat` int NOT NULL DEFAULT '0',
+  `contenuto` mediumtext NOT NULL,
+  `data` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `sent` int NOT NULL DEFAULT '0',
+  `abilita` int DEFAULT '0',
+  `dice_face` int NOT NULL DEFAULT '0',
+  `dice_num` int NOT NULL DEFAULT '0',
+  `modificatore` int(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `esiti_risposte_cd`
+--
+
+CREATE TABLE IF NOT EXISTS `esiti_risposte_cd` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `esito` int NOT NULL,
+  `cd` int NOT NULL,
+  `testo` text DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `esiti_risposte_letture`
+--
+
+CREATE TABLE IF NOT EXISTS `esiti_risposte_letture` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `esito` int NOT NULL,
+    `personaggio` int NOT NULL,
+    `letto_il` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `esiti_risposte_risultati`
+--
+
+CREATE TABLE IF NOT EXISTS `esiti_risposte_risultati` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `personaggio` int NOT NULL,
+    `esito` int NOT NULL,
+    `risultato` int NOT NULL,
+    `testo` text DEFAULT NULL,
+    `lanciato_il` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -474,7 +469,7 @@ CREATE TABLE IF NOT EXISTS `log` (
 --
 
 CREATE TABLE `menu` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `id` int NOT NULL AUTO_INCREMENT,
     `menu_name` varchar(255) NOT NULL,
     `section` varchar(255) NOT NULL,
     `name` varchar(255) NOT NULL,
@@ -502,15 +497,26 @@ INSERT INTO `menu` (`menu_name`, `section`, `name`, `page`, `permission`) VALUES
   ('Gestione', 'Bacheche', 'Gestione Bacheche', 'gestione_bacheche', 'MANAGE_FORUMS'),
   ('Gestione', 'Gilde', 'Gestione Gilde e Ruoli', 'gestione_gilde', 'MANAGE_GUILDS'),
   ('Gestione', 'Gestione', 'Gestione Costanti', 'gestione_costanti', 'MANAGE_CONSTANTS'),
+  ('Gestione', 'Gestione', 'Gestione Versioni Database', 'gestione_db_migrations', 'MANAGE_DB_MIGRATIONS'),
   ('Gestione', 'Permessi', 'Gestione Permessi', 'gestione_permessi', 'MANAGE_PERMISSIONS'),
   ('Gestione', 'Gestione', 'Manutenzione', 'gestione_manutenzione', 'MANAGE_MANUTENTIONS'),
-  ('Gestione', 'Oggetti', 'Gestione Oggetti', 'gestione_oggetti', 'MANAGE_OBJECTS'),
   ('Gestione', 'Chat', 'Giocate Segnalate', 'gestione_segnalazioni', 'MANAGE_REPORTS'),
   ('Gestione', 'Meteo', 'Gestione condizioni', 'gestione_meteo_condizioni', 'MANAGE_WEATHER'),
   ('Gestione', 'Meteo', 'Gestione stagioni', 'gestione_meteo_stagioni', 'MANAGE_WEATHER'),
   ('Gestione', 'Meteo', 'Gestione Impostazioni', 'gestione_impostazioni', 'MANAGE_WEATHER'),
-
-  ('Gestione', 'Chat', 'Esiti in chat', 'gestione_esiti', 'MANAGE_OUTCOMES');
+  ('Gestione', 'Chat', 'Esiti in chat', 'gestione_esiti', 'MANAGE_OUTCOMES'),
+  ('Gestione', 'Chat', 'Esiti in chat', 'gestione_esiti', 'MANAGE_OUTCOMES'),
+  ('Gestione', 'Quest', 'Gestione Quest', 'gestione_quest', 'MANAGE_QUESTS'),
+  ('Gestione', 'Quest', 'Gestione Trame', 'gestione_trame', 'MANAGE_TRAME_VIEW'),
+  ('Gestione', 'Esiti', 'Esiti', 'gestione_esiti', 'MANAGE_ESITI'),
+  ('Gestione', 'Stato Online', 'Gestione stati', 'gestione_stato_online', 'MANAGE_ONLINE_STATUS'),
+  ('Gestione', 'Stato Online', 'Gestione tipi stati', 'gestione_tipo_stato_online', 'MANAGE_ONLINE_STATUS'),
+  ('Gestione', 'Oggetti', 'Gestione oggetti', 'gestione_oggetti', 'MANAGE_OBJECTS'),
+  ('Gestione', 'Oggetti', 'Gestione tipi oggetto', 'gestione_oggetti_tipo', 'MANAGE_OBJECTS_TYPES'),
+  ('Gestione', 'Oggetti', 'Gestione posizioni oggetto', 'gestione_oggetti_posizioni', 'MANAGE_OBJECTS_POSITIONS'),
+  ('Gestione', 'Mercato', 'Gestione Oggetti Mercato', 'gestione_mercato_oggetti', 'MANAGE_SHOPS_OBJECTS'),
+  ('Gestione', 'Mercato', 'Gestione Negozi Mercato', 'gestione_mercato_negozi', 'MANAGE_SHOPS'),
+  ('Gestione', 'Statistiche', 'Gestione Statistiche', 'gestione_statistiche', 'MANAGE_STATS');
 
 -- --------------------------------------------------------
 
@@ -580,18 +586,6 @@ INSERT INTO `mappa_click` (`id_click`, `nome`, `immagine`, `posizione`, `mobile`
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `mercato`
---
-
-CREATE TABLE IF NOT EXISTS `mercato` (
-  `id_oggetto` int NOT NULL,
-  `numero` int DEFAULT '0',
-  PRIMARY KEY (`id_oggetto`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Struttura della tabella `messaggi`
 --
 
@@ -638,38 +632,126 @@ CREATE TABLE IF NOT EXISTS `messaggioaraldo` (
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `mercato`
+--
+
+CREATE TABLE IF NOT EXISTS `mercato` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `oggetto` int NOT NULL,
+    `negozio` int NOT NULL,
+    `costo` int NOT NULL,
+    `quantity` int NOT NULL DEFAULT '0',
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `mercato_negozi`
+--
+
+CREATE TABLE IF NOT EXISTS `mercato_negozi` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `nome` varchar(255) NOT NULL,
+    `descrizione` TEXT,
+    `immagine` varchar(255),
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `oggetto`
 --
 
 CREATE TABLE IF NOT EXISTS `oggetto` (
-  `id_oggetto` int NOT NULL AUTO_INCREMENT,
-  `tipo` int NOT NULL DEFAULT '0',
-  `nome` varchar(255) NOT NULL DEFAULT 'Sconosciuto',
-  `creatore` varchar(255) NOT NULL DEFAULT 'System Op',
-  `data_inserimento` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `descrizione` varchar(255) NOT NULL DEFAULT 'Nessuna',
-  `ubicabile` int NOT NULL DEFAULT '0',
-  `costo` int NOT NULL DEFAULT '0',
-  `difesa` int NOT NULL DEFAULT '0',
-  `attacco` int NOT NULL DEFAULT '0',
-  `cariche` varchar(255) NOT NULL DEFAULT '0',
-  `bonus_car0` int NOT NULL DEFAULT '0',
-  `bonus_car1` int NOT NULL DEFAULT '0',
-  `bonus_car2` int NOT NULL DEFAULT '0',
-  `bonus_car3` int NOT NULL DEFAULT '0',
-  `bonus_car4` int NOT NULL DEFAULT '0',
-  `bonus_car5` int NOT NULL DEFAULT '0',
-  `urlimg` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id_oggetto`),
-  KEY `Tipo` (`tipo`)
+    `id` int NOT NULL AUTO_INCREMENT,
+    `tipo` int NOT NULL DEFAULT '0',
+    `nome` varchar(255) NOT NULL,
+    `descrizione` text DEFAULT NULL,
+    `immagine` varchar(255) DEFAULT NULL,
+    `indossabile` int NOT NULL DEFAULT '0',
+    `posizione` int NOT NULL DEFAULT '0',
+    `cariche` varchar(255) NOT NULL DEFAULT '0',
+    `creatore_da` varchar(255) NOT NULL DEFAULT 'System',
+    `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `oggetto`
+--
+
+CREATE TABLE IF NOT EXISTS `oggetto_posizioni` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `nome` varchar(255) NOT NULL,
+    `immagine` text DEFAULT NULL,
+    `numero` int DEFAULT '1',
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `oggetto_tipo`
+--
+
+CREATE TABLE IF NOT EXISTS `oggetto_tipo` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `nome` varchar(255) NOT NULL,
+    `descrizione` text DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+--
+-- Dump dei dati per la tabella `oggetto_tipo`
+--
+
+INSERT INTO `oggetto_tipo` (`nome`) VALUES
+    ('Animale'),
+    ('Vestito'),
+    ('Piante'),
+    ('Gioiello'),
+    ('Arma'),
+    ('Attrezzo'),
+    ('Vario');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `online_status`
+--
+
+CREATE TABLE `online_status` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `type` varchar(255) NOT NULL,
+    `text` varchar(255) NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `online_status_type`
+--
+
+CREATE TABLE `online_status_type` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `label` varchar(255) NOT NULL,
+    `request` varchar(255) NOT NULL,
+    `active` tinyint(1) DEFAULT 1,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Dump dei dati per la tabella `oggetto`
 --
 
-INSERT INTO `oggetto` (`id_oggetto`, `tipo`, `nome`, `creatore`, `data_inserimento`, `descrizione`, `ubicabile`, `costo`, `difesa`, `attacco`, `cariche`, `bonus_car0`, `bonus_car1`, `bonus_car2`, `bonus_car3`, `bonus_car4`, `bonus_car5`, `urlimg`) VALUES
-(1, 6, 'Scopa', 'Super', '2009-12-20 14:29:33', 'Una comune scopa di saggina.', 0, 10, 0, 0, '0', 0, 0, 0, 0, 0, 0, 'standard_oggetto.png');
+INSERT INTO `online_status_type`(`label`,`request`) VALUES
+('Tempo Login','Tempo online?'),
+('Tempo Azione','Tempo azione medio?');
 
 -- --------------------------------------------------------
 
@@ -678,7 +760,7 @@ INSERT INTO `oggetto` (`id_oggetto`, `tipo`, `nome`, `creatore`, `data_inserimen
 --
 
 CREATE TABLE `permessi_custom` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `id` int NOT NULL AUTO_INCREMENT,
     `permission_name` varchar(255) NOT NULL,
     `description` text NOT NULL,
     PRIMARY KEY (`id`)
@@ -695,6 +777,7 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
     ('MANAGE_ABILITY', 'Permesso gestione abilità'),
     ('MANAGE_ABILITY_EXTRA', 'Permesso gestione abilità dati extra'),
     ('MANAGE_ABILITY_REQUIREMENT', 'Permesso gestione requisiti abilità '),
+    ('MANAGE_DB_MIGRATIONS', 'Permesso gestione versioni del database'),
     ('MANAGE_LOCATIONS', 'Permesso gestione luoghi'),
     ('MANAGE_MAPS', 'Permesso gestione mappe'),
     ('MANAGE_AMBIENT','Gestione ambientazione'),
@@ -705,10 +788,34 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
     ('MANAGE_GUILDS', 'Permesso per la gestione delle gilde'),
     ('MANAGE_PERMISSIONS', 'Permesso per la gestione dei permessi'),
     ('MANAGE_MANUTENTIONS', 'Permesso per la gestione della manutenzione del db'),
-    ('MANAGE_OBJECTS', 'Permesso per la gestione degli oggetti'),
     ('MANAGE_REPORTS', 'Permesso per la gestione delle giocate segnalate'),
-    ('MANAGE_REPORTS', 'Permesso per la gestione delle giocate segnalate'),
-    ('MANAGE_WEATHER ', 'Permesso per la gestione meteo');
+    ('MANAGE_WEATHER ', 'Permesso per la gestione meteo'),
+    ('MANAGE_ESITI', 'Permesso per la gestione base degli esiti'),
+    ('MANAGE_ALL_ESITI', 'Permesso per la visione/modifica di qualsiasi tipo di esito'),
+    ('MANAGE_OUTCOMES', 'Permesso per la gestione degli esiti in chat'),
+    ('MANAGE_QUESTS', 'Permesso per la gestione delle quest'),
+    ('MANAGE_QUESTS_OTHER', 'Permesso per la gestione delle quest altrui'),
+    ('MANAGE_TRAME_VIEW','Permesso per la visualizzazione delle trame'),
+    ('MANAGE_TRAME','Permesso per la modifica delle trame'),
+    ('MANAGE_TRAME_OTHER','Permesso per la modifica delle trame degli altri'),
+    ('SCHEDA_EXP_VIEW','Permesso per la visualizzazione della pagina esperienza in scheda'),
+    ('SCHEDA_EXP_MANAGE','Permesso per la visualizzazione della pagina esperienza in scheda'),
+    ('MANAGE_OBJECTS','Permesso per la gestione degli oggetti'),
+    ('MANAGE_OBJECTS_TYPES','Permesso per la gestione delle tipologie di oggetti'),
+    ('MANAGE_OBJECTS_POSITIONS','Permesso per la gestione delle posizioni oggetti'),
+    ('MANAGE_ONLINE_STATUS','Permesso per la gestione degli status online'),
+    ('MANAGE_SHOPS','Permesso per la gestione degli status online'),
+    ('MANAGE_SHOPS_OBJECTS','Permesso per la gestione degli status online'),
+    ('VIEW_SCHEDA_OBJECTS','Permesso per la visualizzazione oggetti in schede altrui'),
+    ('EQUIP_SCHEDA_OBJECTS','Permesso per l equipaggiamento oggetti in schede altrui'),
+    ('REMOVE_SCHEDA_OBJECTS','Permesso per la rimozione oggetti in schede altrui'),
+    ('MANAGE_STATS','Permesso per la gestione statistiche'),
+    ('VIEW_SCHEDA_STATS','Permesso per la visualizzazione statistiche in schede altrui'),
+    ('UPGRADE_SCHEDA_STATS','Permesso per l\'aumento statistiche in schede altrui'),
+    ('DOWNGRADE_SCHEDA_STATS','Permesso per la riduzione statistiche in schede altrui'),
+    ('UPGRADE_SCHEDA_ABI','Permesso per aumento abilita in schede altrui'),
+    ('DOWNGRADE_SCHEDA_ABI','Permesso per la diminuzione abilita in schede altrui'),
+    ('VIEW_SCHEDA_ABI','Permesso per la visualizzazione abilita in schede altrui');
 
 
 -- --------------------------------------------------------
@@ -718,7 +825,7 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
 --
 
 CREATE TABLE `permessi_group` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `id` int NOT NULL AUTO_INCREMENT,
     `group_name` varchar(255) NOT NULL,
     `description` text NOT NULL,
     `superuser` tinyint(1) NOT NULL DEFAULT '0',
@@ -742,9 +849,9 @@ INSERT INTO `permessi_group` (`id`, `group_name`, `description`, `superuser`) VA
 --
 
 CREATE TABLE `permessi_group_assignment` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `group_id` int(11) NOT NULL,
-    `permission` int(11) NOT NULL,
+    `id` int NOT NULL AUTO_INCREMENT,
+    `group_id` int NOT NULL,
+    `permission` int NOT NULL,
     `assigned_by` varchar(255) NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -756,8 +863,8 @@ CREATE TABLE `permessi_group_assignment` (
 --
 
 CREATE TABLE `permessi_group_personaggio` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `group_id` int(11) NOT NULL,
+    `id` int NOT NULL AUTO_INCREMENT,
+    `group_id` int NOT NULL,
     `personaggio` varchar(255) NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -776,9 +883,9 @@ INSERT INTO `permessi_group_personaggio` (`id`, `group_id`, `personaggio`) VALUE
 --
 
 CREATE TABLE `permessi_personaggio` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `id` int NOT NULL AUTO_INCREMENT,
     `personaggio` varchar(255) NOT NULL,
-    `permission` int(11) NOT NULL,
+    `permission` int NOT NULL,
     `assigned_by` varchar(255) NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -790,7 +897,7 @@ CREATE TABLE `permessi_personaggio` (
 --
 
 CREATE TABLE IF NOT EXISTS `personaggio` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int NOT NULL AUTO_INCREMENT,
   `nome` varchar(255) NOT NULL DEFAULT '',
   `cognome` varchar(255) NOT NULL DEFAULT '-',
   `pass` varchar(255) NOT NULL DEFAULT '',
@@ -811,6 +918,7 @@ CREATE TABLE IF NOT EXISTS `personaggio` (
   `storia` text,
   `stato` varchar(255) DEFAULT 'nessuna',
   `online_status` varchar(255) DEFAULT NULL,
+  `online_last_refresh` DATETIME DEFAULT NULL,
   `disponibile` tinyint(1) NOT NULL DEFAULT '1',
   `url_img` varchar(255) DEFAULT 'imgs/avatars/empty.png',
   `url_img_chat` varchar(255) NOT NULL DEFAULT ' ',
@@ -848,6 +956,120 @@ CREATE TABLE IF NOT EXISTS `personaggio` (
 INSERT INTO `personaggio` (`id`,`nome`, `cognome`, `pass`, `ultimo_cambiopass`, `data_iscrizione`, `email`, `permessi`, `ultima_mappa`, `ultimo_luogo`, `esilio`, `data_esilio`, `motivo_esilio`, `autore_esilio`, `sesso`, `id_razza`, `descrizione`, `affetti`, `stato`, `online_status`, `disponibile`, `url_img`, `url_img_chat`, `url_media`, `blocca_media`, `esperienza`, `car0`, `car1`, `car2`, `car3`, `car4`, `car5`, `salute`, `salute_max`, `data_ultima_gilda`, `soldi`, `banca`, `ultimo_stipendio`, `last_ip`, `is_invisible`, `ultimo_refresh`, `ora_entrata`, `ora_uscita`, `posizione`) VALUES
 (1,'Super', 'User', '$P$BcH1cP941XHOf0X61wVWWjzXqcCi2a/', NULL, '2011-06-04 00:47:48', '$P$BNZYtz9JOQE.O4Tv7qZyl3SzIoZzzR.', 5, 1, -1, '2009-01-01', '2009-01-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 7, 8, 6, 5, 6, 5, 100, 100, '2009-01-01 00:00:00', 300, 50000, '2009-01-01', '127.0.0.1', 0, '2021-10-08 00:28:13', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1),
 (2,'Test', 'Di FunzionaliÃ ', '$P$BUoa19QUuXsgIDlhGC3chR/3Q7hoRy0', NULL, '2011-06-04 00:47:48', '$P$Bd1amPCKkOF9GdgYsibZ96U92D5CtR0', 0, 1, -1, '2009-01-01', '2009-01-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 7, 8, 6, 5, 6, 5, 100, 100, '2009-01-01 00:00:00', 50, 50, '2009-01-01', '127.0.0.1', 0, '2009-01-01 00:00:00', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `personaggio_abilita`
+--
+
+CREATE TABLE IF NOT EXISTS `personaggio_abilita` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `personaggio` int NOT NULL,
+    `abilita` int NOT NULL,
+    `grado` int NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `personaggio_oggetto`
+--
+
+CREATE TABLE `personaggio_oggetto` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `personaggio` int NOT NULL,
+    `oggetto` int NOT NULL,
+    `cariche` int DEFAULT 0,
+    `commento` text DEFAULT NULL,
+    `indossato` int DEFAULT 0,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `personaggio_online_status`
+--
+
+CREATE TABLE `personaggio_online_status` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `personaggio` varchar(255) NOT NULL,
+    `type` int NOT NULL,
+    `value` varchar(255) NOT NULL,
+    `last_refresh` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `personaggio_quest`
+--
+
+CREATE TABLE personaggio_quest  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_quest` int NOT NULL,
+  `data` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `commento` TEXT NOT NULL,
+  `personaggio` int NOT NULL,
+  `px_assegnati` int NOT NULL,
+  `autore` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- ---------------------------------------------
+
+--
+-- Struttura della tabella `personaggio_statistiche`
+--
+
+CREATE TABLE `personaggio_statistiche` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `personaggio` int NOT NULL,
+    `statistica` int NOT NULL,
+    `valore` int DEFAULT 0,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `quest`
+--
+
+CREATE TABLE IF NOT EXISTS  quest  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `titolo` text NOT NULL,
+  `partecipanti` text NOT NULL,
+  `descrizione` text NOT NULL,
+  `trama` int NOT NULL DEFAULT '0',
+  `data` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `autore` varchar(255) NOT NULL,
+  `autore_modifica` varchar(255) DEFAULT NULL,
+  `ultima_modifica` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `quest_trama`
+--
+
+CREATE TABLE IF NOT EXISTS  quest_trama  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `titolo` varchar(255) NOT NULL,
+  `descrizione` text NOT NULL,
+  `data` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `autore` varchar(255) NULL,
+  `autore_modifica` varchar(255) DEFAULT NULL,
+  `ultima_modifica` DATETIME DEFAULT NULL,
+  `stato` int NOT NULL DEFAULT '0',
+  `quests` text DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -958,6 +1180,23 @@ CREATE TABLE IF NOT EXISTS `send_GM` (
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `statistiche`
+--
+
+CREATE TABLE IF NOT EXISTS `statistiche` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nome` varchar(255) NOT NULL,
+  `max_val` int NOT NULL,
+  `min_val` int NOT NULL,
+  `descrizione` text DEFAULT NULL,
+  `iscrizione` bool DEFAULT 0,
+  `creato_da` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `_gdrcd_db_versions`
 --
 
@@ -969,7 +1208,16 @@ CREATE TABLE IF NOT EXISTS _gdrcd_db_versions (
 
 INSERT INTO _gdrcd_db_versions (migration_id,applied_on) VALUES
   ('2020072500', NOW()),
-  ('2021103018',NOW());
+  ('2021103018',NOW()),
+  ('2021110101',NOW()),
+  ('2021110102',NOW()),
+  ('2021110103',NOW()),
+  ('2021110104',NOW()),
+  ('2021110105',NOW()),
+  ('2021110106',NOW()),
+  ('2021110107',NOW()),
+  ('2021110108',NOW()),
+  ('2021110109',NOW());
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

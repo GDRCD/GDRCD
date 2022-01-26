@@ -1,5 +1,5 @@
 <?php
-if ($_GET['op']=='edit' && ($_SESSION['permessi']>=ESITI_PERM)) {  ?>
+if ($_GET['op']=='edit' && ($perm_all)) {  ?>
     <div class="page_title">
         <h2>Modifica serie di esiti</h2>
     </div>

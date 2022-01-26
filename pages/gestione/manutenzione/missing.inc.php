@@ -1,8 +1,6 @@
 <?php
 if((is_numeric($_POST['mesi']) === true) && ($_POST['mesi'] >= 1) && ($_POST['mesi'] <= 12)) {
     /*Eseguo l'aggiornamento*/
-    gdrcd_query("DELETE FROM clgpersonaggiooggetto WHERE nome IN (SELECT nome FROM personaggio WHERE DATE_SUB(NOW(), INTERVAL ".gdrcd_filter('num', $_POST['mesi'])." MONTH) > ora_entrata)");
-    gdrcd_query("OPTIMIZE TABLE clgpersonaggiooggetto");
 
     gdrcd_query("DELETE FROM clgpersonaggioabilita WHERE nome IN (SELECT nome FROM personaggio WHERE DATE_SUB(NOW(), INTERVAL ".gdrcd_filter('num', $_POST['mesi'])." MONTH) > ora_entrata)");
     gdrcd_query("OPTIMIZE TABLE clgpersonaggioabilita");

@@ -116,6 +116,17 @@ class Filters extends BaseClass
     }
 
     /**
+     * @fn int
+     * @note Filtro di tipo int
+     * @param mixed $val
+     * @return bool
+     */
+    public static function bool($val): bool
+    {
+        return (bool)self::gdrcd_filter('int', $val);
+    }
+
+    /**
      * @fn url
      * @note Filtro di tipo url
      * @param mixed $val
@@ -146,5 +157,43 @@ class Filters extends BaseClass
     public static function get($val)
     {
         return self::gdrcd_filter('get', $val);
+    }
+
+    /**
+     * @fn text
+     * @note Filtro per testi
+     * @param mixed $val
+     * @return string
+     */
+    public static function text($val): string
+    {
+        return nl2br(trim(self::gdrcd_filter('out', $val)));
+    }
+
+    /**
+     * @fn date
+     * @note Funzione di rendering delle date in base al formato
+     * @param string $val
+     * @param string $format
+     * @return string
+     */
+    public static function date(string $val, string $format): string
+    {
+        if (!empty($val)) {
+            return date($format, strtotime($val));
+        }
+
+        return '';
+    }
+
+    /**
+     * @fn checkbox
+     * @note Filtro di tipo checkbox per inserimento in db
+     * @param string $val
+     * @return int
+     */
+    public static function checkbox($val): int
+    {
+        return !empty($val) ? 1 : 0;
     }
 }

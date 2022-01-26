@@ -30,7 +30,7 @@ if (gdrcd_filter('num',$blocco['id'])>0) {
             <textarea name="contenuto"></textarea>
         </div>
 
-        <?php if (TIRI_ESITO) { ?>
+        <?php if (Functions::get_constant('ESITI_TIRI')) { ?>
             <div class='form_label'>
                 Tira dei dadi
             </div>

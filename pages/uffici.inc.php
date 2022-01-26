@@ -5,13 +5,11 @@
     <div class="page_body">
         <?php /* Generazione automatica del menu del gioco */
         foreach($PARAMETERS['office'] as $link_menu) {
-            if((empty($link_menu['url']) === false) && (empty($link_menu['text']) === false) && (isset($link_menu['access_level']) === true) && ($link_menu['access_level'] <= $_SESSION['permessi'])) {
                 echo '<div class="link_menu">';
                 if(empty($link_menu['image_file']) === false) {
                     echo '<img src="themes/'.$PARAMETERS['themes']['current_theme'].'/imgs'.$link_menu['image_file'].'" />';
                 }
                 echo '<a href="'.$link_menu['url'].'">'.gdrcd_filter('out', $link_menu['text']).'</a></div>';
-            }//if
         }//foreach
         ?>
     </div>

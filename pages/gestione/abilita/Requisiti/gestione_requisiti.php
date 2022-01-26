@@ -1,31 +1,12 @@
 <?php
 
-$abiReq = Abilita::getInstance();
-
-if (isset($_POST['action'])) {
-
-    switch ($_POST['action']) {
-        case 'CreaAbiRequisito':
-            $abiReq->NewAbiRequisito($_POST);
-            echo "<div class='warning'>Requisito abilita' creato con successo.</div>";
-            break;
-
-        case 'ModAbiRequisito':
-            $abiReq->ModAbiRequisito($_POST);
-            echo "<div class='warning'>Requisito abilita' modificato con successo.</div>";
-            break;
-
-        case 'EliminaAbiRequisito':
-            $abiReq->DelAbiRequisito($_POST);
-            echo "<div class='warning'>Requisito abilita' eliminato con successo.</div>";
-            break;
-    }
-}
+$abiReq = AbilitaRequisiti::getInstance();
+$stat_cls = Statistiche::getInstance();
 
 ?>
 
 
-<div class="gestione_pagina">
+<div class="gestione_pagina gestione_abilita_requisiti">
 
     <!-- INCIPIT -->
     <div class="gestione_incipit">
@@ -53,19 +34,19 @@ if (isset($_POST['action'])) {
     </div>
 
     <!-- CREA -->
-    <div id="CreaAbiRequisito" class="gestione_form_container">
+    <div id="CreaAbiRequisito" class="form_container">
 
-        <div class="gestione_form_title">Crea Requisito Abilita</div>
+        <div class="form_title">Crea Requisito Abilita</div>
 
-        <form method="POST" id="CreaAbiRequisitoForm" class="gestione_form">
+        <form method="POST" id="CreaAbiRequisitoForm" class="form">
 
 
             <!-- ABILITA -->
             <div class="single_input">
                 <div class="label">Abilita</div>
-                <select name="abi" required>
+                <select name="abilita" required>
                     <option value=""></option>
-                    <?= $abiReq->ListaAbilita(); ?>
+                    <?= $abiReq->listAbilita(); ?>
                 </select>
             </div>
 
@@ -74,7 +55,7 @@ if (isset($_POST['action'])) {
                 <div class="label">Grado</div>
                 <select name="grado" required>
                     <option value=""></option>
-                    <?php for ($i = 1; $i <= Functions::get_constant('ABI_LEVEL_CAP'); $i++) { ?>
+                    <?php for ($i = 1; $i <= $abiReq->abiLevelCap(); $i++) { ?>
                         <option value="<?= $i; ?>"><?= $i; ?></option>
                     <?php } ?>
                 </select>
@@ -85,32 +66,20 @@ if (isset($_POST['action'])) {
                 <div class="label">Tipo di requisito</div>
                 <select name="tipo" required>
                     <option value=""></option>
-                    <option value="<?= Functions::get_constant('REQUISITO_ABI'); ?>">Abilità</option>
-                    <option value="<?= Functions::get_constant('REQUISITO_STAT'); ?>">Statistica</option>
+                    <?=$abiReq->listRequisitiType();?>
                 </select>
             </div>
 
             <!-- ID REQUISITO -->
             <div class="single_input">
                 <div class="label">Requisito</div>
-                <select name="id_req" required>
+                <select name="id_rif" required>
                     <option value=""></option>
                     <optgroup label="Abilita">
-                        <?= $abiReq->ListaAbilita(); ?>
+                        <?= $abiReq->listAbilita(); ?>
                     </optgroup>
                     <optgroup label="Caratteristiche">
-                        <option value="0">
-                            <?php echo Filters::out($PARAMETERS['names']['stats']['car0']); ?></option>
-                        <option value="1">
-                            <?php echo Filters::out($PARAMETERS['names']['stats']['car1']); ?></option>
-                        <option value="2">
-                            <?php echo Filters::out($PARAMETERS['names']['stats']['car2']); ?></option>
-                        <option value="3">
-                            <?php echo Filters::out($PARAMETERS['names']['stats']['car3']); ?></option>
-                        <option value="4">
-                            <?php echo Filters::out($PARAMETERS['names']['stats']['car4']); ?></option>
-                        <option value="5">
-                            <?php echo Filters::out($PARAMETERS['names']['stats']['car5']); ?></option>
+                        <?=$stat_cls->listStats();?>
                     </optgroup>
                 </select>
             </div>
@@ -118,15 +87,10 @@ if (isset($_POST['action'])) {
             <!-- LIVELLO REQUISITO -->
             <div class="single_input">
                 <div class="label">Livello requisito</div>
-                <select name="liv_req" required>
-                    <option value=""></option>
-                    <?php for ($i = 1; $i <= Functions::get_constant('ABI_LEVEL_CAP'); $i++) { ?>
-                        <option value="<?= $i; ?>"><?= $i; ?></option>
-                    <?php } ?>
-                </select>
+                <input type="number" name="lvl_rif" required>
             </div>
 
-            <input type="hidden" name="action" value="CreaAbiRequisito" required><br>
+            <input type="hidden" name="action" value="op_insert" required><br>
 
             <input type="submit" class="InviaTools" value="Crea">
 
@@ -135,28 +99,27 @@ if (isset($_POST['action'])) {
     </div>
 
     <!-- MODIFICA -->
-    <div id="ModAbiRequisito" class="gestione_form_container">
+    <div id="ModAbiRequisito" class="form_container">
 
-        <div class="gestione_form_title">Modifica Requisito Abilita</div>
+        <div class="form_title">Modifica Requisito Abilita</div>
 
 
-        <form method="POST" id="ModAbiRequisitoForm" class="gestione_form">
+        <form method="POST" id="ModAbiRequisitoForm" class="form edit-form">
 
             <!-- LISTA REQUISITI -->
             <div class="single_input">
                 <div class="label">Seleziona Requisito</div>
-                <select name="req_id" required>
-                    <option value=""></option>
-                    <?= $abiReq->ListaRequisiti(); ?>
+                <select name="requisito" required>
+                    <?= $abiReq->listRequisiti(); ?>
                 </select>
             </div>
 
             <!-- ABILITA -->
             <div class="single_input">
                 <div class="label">Abilita</div>
-                <select name="abi" required>
+                <select name="abilita" required>
                     <option value=""></option>
-                    <?= $abiReq->ListaAbilita(); ?>
+                    <?= $abiReq->listAbilita(); ?>
                 </select>
             </div>
 
@@ -165,7 +128,7 @@ if (isset($_POST['action'])) {
                 <div class="label">Grado</div>
                 <select name="grado" required>
                     <option value=""></option>
-                    <?php for ($i = 1; $i <= Functions::get_constant('ABI_LEVEL_CAP'); $i++) { ?>
+                    <?php for ($i = 1; $i <= $abiReq->abiLevelCap(); $i++) { ?>
                         <option value="<?= $i; ?>"><?= $i; ?></option>
                     <?php } ?>
                 </select>
@@ -176,32 +139,20 @@ if (isset($_POST['action'])) {
                 <div class="label">Tipo di requisito</div>
                 <select name="tipo" required>
                     <option value=""></option>
-                    <option value="<?= Functions::get_constant('REQUISITO_ABI'); ?>">Abilità</option>
-                    <option value="<?= Functions::get_constant('REQUISITO_STAT'); ?>">Statistica</option>
+                    <?=$abiReq->listRequisitiType();?>
                 </select>
             </div>
 
             <!-- ID REQUISITO -->
             <div class="single_input">
                 <div class="label">Requisito</div>
-                <select name="id_req" required>
+                <select name="id_rif" required>
                     <option value=""></option>
                     <optgroup label="Abilita">
-                        <?= $abiReq->ListaAbilita(); ?>
+                        <?= $abiReq->listAbilita(); ?>
                     </optgroup>
                     <optgroup label="Caratteristiche">
-                        <option value="0">
-                            <?php echo Filters::out($PARAMETERS['names']['stats']['car0']); ?></option>
-                        <option value="1">
-                            <?php echo Filters::out($PARAMETERS['names']['stats']['car1']); ?></option>
-                        <option value="2">
-                            <?php echo Filters::out($PARAMETERS['names']['stats']['car2']); ?></option>
-                        <option value="3">
-                            <?php echo Filters::out($PARAMETERS['names']['stats']['car3']); ?></option>
-                        <option value="4">
-                            <?php echo Filters::out($PARAMETERS['names']['stats']['car4']); ?></option>
-                        <option value="5">
-                            <?php echo Filters::out($PARAMETERS['names']['stats']['car5']); ?></option>
+                        <?=$stat_cls->listStats();?>
                     </optgroup>
                 </select>
             </div>
@@ -209,15 +160,10 @@ if (isset($_POST['action'])) {
             <!-- LIVELLO REQUISITO -->
             <div class="single_input">
                 <div class="label">Livello requisito</div>
-                <select name="liv_req" required>
-                    <option value=""></option>
-                    <?php for ($i = 1; $i <= Functions::get_constant('ABI_LEVEL_CAP'); $i++) { ?>
-                        <option value="<?= $i; ?>"><?= $i; ?></option>
-                    <?php } ?>
-                </select>
+                <input type="number" name="lvl_rif" required>
             </div>
 
-            <input type="hidden" name="action" value="ModAbiRequisito" required><br>
+            <input type="hidden" name="action" value="op_edit" required><br>
             <input type="submit" class="InviaTools" value="Modifica">
 
         </form>
@@ -225,27 +171,26 @@ if (isset($_POST['action'])) {
     </div>
 
     <!-- ELIMiNA -->
-    <div id="EliminaAbiRequisito" class="gestione_form_container">
+    <div id="EliminaAbiRequisito" class="form_container">
 
-        <div class="gestione_form_title">Elimina Requisito Abilita</div>
+        <div class="form_title">Elimina Requisito Abilita</div>
 
-        <form method="POST" id="EliminaAbiRequisitoForm" class="gestione_form">
+        <form method="POST" id="EliminaAbiRequisitoForm" class="form">
 
             <!-- LISTA REQUISITI -->
             <div class="single_input">
                 <div class="label">Seleziona Requisito</div>
-                <select name="req_id" required>
-                    <option value=""></option>
-                    <?= $abiReq->ListaRequisiti(); ?>
+                <select name="requisito" required>
+                    <?= $abiReq->listRequisiti(); ?>
                 </select>
             </div>
 
-            <input type="hidden" name="action" value="EliminaAbiRequisito"><br>
+            <input type="hidden" name="action" value="op_delete"><br>
             <input type="submit" class="InviaTools" value="Elimina">
         </form>
 
     </div>
 
     <!-- JS per caricamento dati requisiti -->
-    <script src="/pages/gestione/abilita/Requisiti/JS/gestione_requisiti.js"></script>
+    <script src="/pages/gestione/abilita/Requisiti/gestione_requisiti.js"></script>
 </div>

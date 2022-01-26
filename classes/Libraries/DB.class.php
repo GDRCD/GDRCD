@@ -100,6 +100,25 @@ class DB extends BaseClass
     }
 
     /**
+     * @fn rowsNumber
+     * @note Ritorna il numero di risultati dell'array estratto dal db
+     * @param array|object $array
+     * @return int
+     */
+    public static function rowsNumber($array): int
+    {
+        if(gettype($array) == 'object' ){
+            return self::query($array,'num_rows');
+        }
+        else if(gettype($array) == 'array') {
+            return count($array);
+        }
+        else{
+            return 0;
+        }
+    }
+
+    /**
      * @fn statement
      * @note Statement delle query
      * @param $sql

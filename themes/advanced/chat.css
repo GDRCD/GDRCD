@@ -157,6 +157,8 @@ input#message {
 
 /****************************************************************************/
 
+/*** GENERAL CHAT ***/
+
 div.chat_box {
     width: 100%;
     height: 99%;
@@ -179,7 +181,6 @@ div.chat_box .chat_azioni_box{
     width: 40px;
     height: 40px;
 }
-
 
 .chat_box .chat_input_box{
     height: 150px;
@@ -216,4 +217,13 @@ div.chat_box .chat_azioni_box{
 
 .chat_box .chat_input_box .chat_internal_box .input_container.big{
     width: 50%;
+}
+
+/*** ESITI IN CHAT ***/
+.esiti_in_chat .td{
+    width: 150px;
+}
+
+.esiti_in_chat input {
+    margin: 0 !important;
 }

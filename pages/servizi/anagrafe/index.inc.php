@@ -124,11 +124,11 @@ foreach ($genders as $gender) {
 ?>
 
     <!-- CREA FORM -->
-    <div id="FiltriAnagrafe" class="servizi_form_container">
+    <div id="FiltriAnagrafe" class="form_container">
 
-        <div class="servizi_form_title"><?= gdrcd_filter('out', $MESSAGE['interface']['pg_list']['search']['title']); ?></div>
+        <div class="form_title"><?= gdrcd_filter('out', $MESSAGE['interface']['pg_list']['search']['title']); ?></div>
 
-        <form method="POST" id="FiltriAnagrafeForm" class="servizi_form" action="main.php?page=servizi_anagrafe">
+        <form method="POST" id="FiltriAnagrafeForm" class="form" action="main.php?page=servizi_anagrafe">
 
             <!-- NOME -->
             <div class="single_input">

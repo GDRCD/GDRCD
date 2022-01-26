@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 header('Content-Type:text/html; charset=UTF-8');
 
 //Includo i parametri, la configurazione, la lingua e le funzioni
@@ -36,7 +38,7 @@ $content = (!empty($_GET['content'])) ? gdrcd_filter('include', $_GET['content']
 
 
 /**
- * Avvio la costruzione ddei contenuti della pagina
+ * Avvio la costruzione dei contenuti della pagina
  * @author Kasa
  */
 ?>

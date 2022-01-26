@@ -171,5 +171,6 @@ pip-log.txt
 # chat_save
 giocate/
 core/db_overrides.php
+includes/config-overrides.php
 .directory
 .user.ini

@@ -9,6 +9,12 @@ if (!isset($chat)) {
     $chat->resetClass();
 }
 
+$esiti_chat = Functions::get_constant('ESITI_CHAT');
+$esiti= Functions::get_constant('ESITI_ENABLE');
+
+$stat_class = Statistiche::getInstance();
+$chat_abi_class = ChatAbilita::getInstance();
+
 ?>
 
 <div class="chat_bottom">
@@ -55,19 +61,14 @@ if (!isset($chat)) {
             <div class="input_container small">
                 <select name="abilita">
                     <option value="">Abilita</option>
-                    <?=$chat->abilityList();?>
+                    <?=$chat_abi_class->renderChatAbilita();?>
                 </select>
             </div>
 
             <div class="input_container small">
                 <select name="caratteristica">
                     <option value="">Caratteristica</option>
-                    <option value="0"><?= Filters::out($PARAMETERS['names']['stats']['car0']);?></option>
-                    <option value="1"><?= Filters::out($PARAMETERS['names']['stats']['car1']);?></option>
-                    <option value="2"><?= Filters::out($PARAMETERS['names']['stats']['car2']);?></option>
-                    <option value="3"><?= Filters::out($PARAMETERS['names']['stats']['car3']);?></option>
-                    <option value="4"><?= Filters::out($PARAMETERS['names']['stats']['car4']);?></option>
-                    <option value="5"><?= Filters::out($PARAMETERS['names']['stats']['car5']);?></option>
+                    <?= $stat_class->listStats();?>
                 </select>
             </div>
 
@@ -85,6 +86,18 @@ if (!isset($chat)) {
 
         </div>
     </form>
+    <div class="chat_dice chat_internal_box">
+        <button name="reg_role"
+                onclick="modalWindow('reg_role', 'Registra giocata', 'popup.php?page=chat_pannelli_index&pannello=segnalazione_role')">
+            Registra role
+        </button>
+        <?php
+        if ($esiti_chat && $esiti) { ?>
+            <button name="esiti" onclick="modalWindow('esiti', 'Esiti in chat', 'popup.php?page=chat_pannelli_index&pannello=esiti_chat')">
+                Esiti
+            </button>
+        <?php } ?>
+    </div>
 
 </div>
 

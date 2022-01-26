@@ -1,5 +1,11 @@
 <?php
-if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
+
+$esiti_chat = Functions::get_constant('ESITI_CHAT');
+$esiti= Functions::get_constant('ESITI_ENABLE');
+$perm= Permissions::permission('MANAGE_ESITI');
+
+print_r($perm);
+if ($perm && $esiti) {
     /*
     * Richieste POST
     */
