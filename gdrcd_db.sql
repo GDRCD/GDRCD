@@ -297,7 +297,8 @@ INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,
     ('GATHERING_NUM_AZIONI', 1,	'Gathering','Valore massimo di azioni', 	'Numero massimo di azioni da spendere nelle ricerche',	'int',1),
     ('GATHERING_RAND', 	0, 'Gathering','Numero random di azioni a disposizione', 'Rendi random il numero di azioni giornaliere?',	'bool',	1),
     ('GATHERING_TIME',12,	'Gathering','Orario di reset delle azioni (0 - 23)', 'A che ora vuoi resettare le azioni di ricerca?',	'int',1),
-    ('GATHERING_TYPE',0,'Gathering', 'Attiva ricerca automatica','Vuoti attivare il Gathering manuale o automatico?',	'bool',1);
+    ('GATHERING_TYPE',0,'Gathering', 'Attiva ricerca automatica','Vuoti attivare il Gathering manuale o automatico?',	'bool',1),
+    ('GATHERING_RARITY',1, 'Attiva la rarità di un oggetto nelle ricerche', 'Gathering', 'Attiva/disattiva una quantità massima di oggetti ricercabili', 'bool', 1);
 
 -- --------------------------------------------------------
 
@@ -1196,10 +1197,22 @@ CREATE TABLE IF NOT EXISTS `statistiche` (
 CREATE TABLE `gathering_cat` (
 	`id` INT NOT NULL AUTO_INCREMENT,
 	`nome` VARCHAR(255) NULL DEFAULT NULL,
-	`descrizione` VARCHAR(255) NULL DEFAULT NULL,
+	`descrizione` text,
 	PRIMARY KEY (`id`)
 )ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
+CREATE TABLE `gathering_item` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `categoria` INT NULL DEFAULT NULL,
+     `nome` VARCHAR(255) NULL DEFAULT NULL,
+     `descrizione` text,
+     `immagine` VARCHAR(255) NULL DEFAULT NULL,
+      `creato_da` VARCHAR(255) NULL DEFAULT NULL,
+      `creato_il` VARCHAR(255) NULL DEFAULT NULL,
+      `quantita` INT NOT NULL DEFAULT 0,
+      PRIMARY KEY (`id`)
+)
+    ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 
 --

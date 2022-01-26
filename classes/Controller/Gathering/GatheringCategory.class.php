@@ -231,19 +231,27 @@ class GatheringCategory extends Gathering
     }
 
 
-    /*** GET CATEGORY ***/
+
+    /***** LISTS *****/
 
     /**
-     * @fn getoneGatheringCat
-     * @note Get di una categoria
-     * @param array $post
-     * @return array
+     * @fn listGatheringCat
+     * @note Ritorna una serie di option per una select contenente la lista delle categorie
+     * @return string
      */
-    public function getoneGatheringCat(int $id)
+    public function listGatheringCat($selected = 0): string
     {
-        $id = Filters::in($id);
+        $html = '<option value=""></option>';
+        $abis = $this->getAllGatheringCat();
 
-       return DB::query("SELECT * FROM gathering_cat WHERE id ='{$id}'");
+        foreach ($abis as $abi) {
+            $nome = Filters::out($abi['nome']);
+            $id = Filters::int($abi['id']);
+            $sel = ($id == $selected) ? 'selected' : '';
+            $html .= "<option value='{$id}' {$sel}>{$nome}</option>";
+        }
+
+        return $html;
     }
 
 
