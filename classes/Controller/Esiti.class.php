@@ -697,7 +697,7 @@ class Esiti extends BaseClass
                 'cells' => $cells,
                 'links' => $links,
                 'path'=>$path,
-            'page'=>$page,
+                'page'=>$page,
                 'footer_text' => $footer_text
             ];
     }
