@@ -67,8 +67,6 @@ class GatheringCategory extends Gathering
     public function GatheringCatList()
     {
         $list = $this->getAllGatheringCat( '*', 'ORDER BY nome ASC');
-
-
         return $this->renderGatheringCatList($list);
     }
 
@@ -102,7 +100,7 @@ class GatheringCategory extends Gathering
             $html .= "<div class='td commands'>";
 
             if ($this->gatheringManage()) {
-                $html .= "<a href='/main.php?page={$path}&op=edit_cat&id_record={$id}' title='Modifica'><i class='fas fa-edit'></i></a>";
+                $html .= "<a href='/main.php?page=gestione_gathering_category&op=edit_cat&id={$id}' title='Modifica'><i class='fas fa-edit'></i></a>";
             }
 
             if ($this->gatheringManage()) {
@@ -196,6 +194,56 @@ class GatheringCategory extends Gathering
                 'swal_type' => 'error'
             ];
         }
+    }
+
+    /*** EDIT CATEGORY ***/
+
+    /**
+     * @fn editGatheringCat
+     * @note Modifica una  categoria
+     * @param array $post
+     * @return array
+     */
+    public function editGatheringCat(array $post): array
+    {
+
+        if ($this->gatheringManage()) {
+            $id = Filters::in($post['id']);
+            $nome = Filters::in($post['nome']);
+            $descrizione = Filters::in($post['descrizione']);
+
+            DB::query("UPDATE gathering_cat SET nome = '{$nome}', descrizione= '{$descrizione}' WHERE id={$id}");
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Categoria modificata con successo.',
+                'swal_type' => 'success'
+            ];
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
+        }
+    }
+
+
+    /*** GET CATEGORY ***/
+
+    /**
+     * @fn getoneGatheringCat
+     * @note Get di una categoria
+     * @param array $post
+     * @return array
+     */
+    public function getoneGatheringCat(int $id)
+    {
+        $id = Filters::in($id);
+
+       return DB::query("SELECT * FROM gathering_cat WHERE id ='{$id}'");
     }
 
 
