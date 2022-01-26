@@ -661,6 +661,107 @@ CREATE TABLE IF NOT EXISTS `mercato_negozi` (
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `meteo_chat`
+--
+
+CREATE TABLE IF NOT EXISTS `meteo_chat` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `id_chat` int(11) NOT NULL,
+    `citta` varchar(255) DEFAULT NULL,
+    `meteo` varchar(255) DEFAULT NULL,
+    `vento` varchar(255) DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `meteo_mappa`
+--
+
+CREATE TABLE IF NOT EXISTS `meteo_mappa` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `id_mappa` int(11) NOT NULL,
+    `citta` varchar(255) DEFAULT NULL,
+    `stagioni` varchar(255) DEFAULT NULL,
+    `meteo` varchar(255) DEFAULT NULL,
+    `vento` varchar(255) DEFAULT NULL,
+     PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `meteo_condizioni`
+--
+
+CREATE TABLE IF NOT EXISTS `meteo_condizioni` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `nome` varchar(255) DEFAULT NULL,
+    `img` varchar(255) DEFAULT NULL,
+    `vento` varchar(255) DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Dati default per meteo_condizioni
+--
+
+INSERT INTO `meteo_condizioni` (`id`, `nome`, `img`, `vento`) VALUES
+    (1, 'Pioggia', 'imgs/meteo/pioggia.gif', 'Brezza intensa,Vento Forte,Burrasca'),
+    (2, 'Sereno', 'imgs/meteo/sereno.gif', 'Assente,Brezza,Brezza intensa'),
+    (3, 'Temporale', 'imgs/meteo/temporale.gif', 'Brezza intensa,Vento Forte,Burrasca'),
+    (4, 'Neve', 'imgs/meteo/neve.gif', 'Assente,Brezza,Brezza intensa,Vento Forte,Burrasca');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `meteo_stagioni`
+--
+
+CREATE TABLE `meteo_stagioni` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `nome` VARCHAR(255) NULL DEFAULT NULL,
+    `minima` INT NULL,
+    `massima` INT NULL,
+    `data_inizio` DATE NULL DEFAULT NULL,
+    `data_fine` DATE NULL DEFAULT NULL,
+    `alba` TIME NULL DEFAULT NULL,
+    `tramonto` TIME NULL DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Dati default per le stagioni
+--
+
+INSERT INTO `meteo_stagioni` (`id`, `nome`, `minima`,`massima`, `data_inizio`,`data_fine`, `alba`, `tramonto`) VALUES
+    (1, 'Autunno', '8', '18', '2021-09-23', '2021-12-22','06:45:00', '19:00:00'),
+    (2, 'Inverno',  '-5', '10', '2021-12-21', '2022-03-20','07:00:00', '16:00:00'),
+    (3, 'Primavera', '10', '21', '2022-03-21', '2022-06-20','06:30:00', '18:00:00'),
+    (4, 'Estate',  '18', '36', '2022-06-21', '2022-09-22','05:30:00', '20:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `meteo_stati_climatici`
+--
+
+CREATE TABLE `meteo_stati_climatici` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `stagione` INT NULL,
+    `condizione` INT NULL,
+    `percentuale` INT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `oggetto`
 --
 
@@ -1222,81 +1323,3 @@ INSERT INTO _gdrcd_db_versions (migration_id,applied_on) VALUES
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
-
---
--- Struttura della tabella `meteo_chat`
---
-CREATE TABLE IF NOT EXISTS `meteo_chat` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `id_chat` int(11) NOT NULL,
-    `citta` varchar(255) DEFAULT NULL,
-    `meteo` varchar(255) DEFAULT NULL,
-    `vento` varchar(255) DEFAULT NULL,
-    PRIMARY KEY (`id`)
-    ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
-
-
-
---
--- Struttura della tabella `meteo_mappa`
---
-CREATE TABLE IF NOT EXISTS `meteo_mappa` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `id_mappa` int(11) NOT NULL,
-    `citta` varchar(255) DEFAULT NULL,
-    `stagioni` varchar(255) DEFAULT NULL,
-    `meteo` varchar(255) DEFAULT NULL,
-    `vento` varchar(255) DEFAULT NULL,
-    PRIMARY KEY (`id`)
-    ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
---
--- Struttura della tabella `meteo_condizioni`
---
-CREATE TABLE IF NOT EXISTS `meteo_condizioni` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `nome` varchar(255) DEFAULT NULL,
-    `img` varchar(255) DEFAULT NULL,
-    `vento` varchar(255) DEFAULT NULL,
-    PRIMARY KEY (`id`)
-    ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
---
--- Dati default per meteo_condizioni
---
-
-INSERT INTO `meteo_condizioni` (`id`, `nome`, `img`, `vento`) VALUES
-(1, 'Pioggia', 'imgs/meteo/pioggia.gif', 'Brezza intensa,Vento Forte,Burrasca'),
-(2, 'Sereno', 'imgs/meteo/sereno.gif', 'Assente,Brezza,Brezza intensa'),
-(3, 'Temporale', 'imgs/meteo/temporale.gif', 'Brezza intensa,Vento Forte,Burrasca'),
-(4, 'Neve', 'imgs/meteo/neve.gif', 'Assente,Brezza,Brezza intensa,Vento Forte,Burrasca');
---
--- Struttura della tabella `meteo_stagioni`
---
-CREATE TABLE `meteo_stagioni` (
-    `id` INT NOT NULL AUTO_INCREMENT,
-    `nome` VARCHAR(255) NULL DEFAULT NULL,
-    `minima` INT NULL,
-    `massima` INT NULL,
-     `data_inizio` DATE NULL DEFAULT NULL,
-    `data_fine` DATE NULL DEFAULT NULL,
-     `alba` TIME NULL DEFAULT NULL,
-     `tramonto` TIME NULL DEFAULT NULL,
-     PRIMARY KEY (`id`)
-)ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
---
--- Dati default per le stagioni
---
-INSERT INTO `meteo_stagioni` (`id`, `nome`, `minima`,`massima`, `data_inizio`, `alba`,   `tramonto`) VALUES
-    (1, 'Autunno', '8', '18', '2021-09-23', '2021-12-22','06:45:00', '19:00:00'),
-    (2, 'Inverno',  '-5', '10', '2021-12-21', '2022-03-20','07:00:00', '16:00:00'),
-    (3, 'Primavera', '10', '21', '2022-03-21', '2022-06-20','06:30:00', '18:00:00'),
-    (4, 'Estate',  '18', '36', '2022-06-21', '2022-09-22','05:30:00', '20:00:00');
-
-CREATE TABLE `meteo_stati_climatici` (
-	`id` INT NOT NULL AUTO_INCREMENT,
-	`stagione` INT NULL,
-	`condizione` INT NULL,
-	`percentuale` INT NULL,
-	PRIMARY KEY (`id`)
-)
-ENGINE=MyISAM  DEFAULT CHARSET=utf8;

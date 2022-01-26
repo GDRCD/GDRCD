@@ -464,7 +464,7 @@ class Meteo extends BaseClass
         $data1=date("Y-m-d H:i");
         $data2=Functions::get_constant('WEATHER_LAST_DATE');
         $time=Functions::get_constant('WEATHER_UPDATE');
-        if(($this->dateDifference($data2,$data1 ,  '%h') >$time)|| (Functions::get_constant('WEATHER_LAST_DATE')=="")) {
+        if(empty($data2) || ($this->dateDifference($data2,$data1 ,  '%h') >$time) || (Functions::get_constant('WEATHER_LAST_DATE')=="")) {
             $data = date("Y-m-d");
             $stagione = DB::query("SELECT * FROM meteo_stagioni WHERE data_inizio <'{$data}' AND DATA_fine > '{$data}'", 'query');
             $condizioni = $this->getAllState($stagione['id']);
@@ -492,7 +492,7 @@ class Meteo extends BaseClass
         $data1=date("Y-m-d H:i");
         $data2=Functions::get_constant('WEATHER_LAST_DATE');
         $time=Functions::get_constant('WEATHER_UPDATE');
-        if(($this->dateDifference($data2,$data1 ,  '%h') >$time)|| (Functions::get_constant('WEATHER_LAST_DATE')=="")) {
+        if(empty($data2) || ($this->dateDifference($data2,$data1 ,  '%h') >$time)|| (Functions::get_constant('WEATHER_LAST_DATE')=="")) {
             $data = date("Y-m-d");
             $stagione = DB::query(  "SELECT * FROM meteo_stagioni WHERE data_inizio <'{$data}' AND DATA_fine > '{$data}' and id IN ({$stagioni})", 'query');
             if(empty($stagione)){   echo  "verifica di aver assegnato correttamente le stagioni alla mappa o di aver assicurato il range data inizio e fine nelle stagioni poichè non vi sono stagioni selezionabili per questo periodo dell'anno"; }
