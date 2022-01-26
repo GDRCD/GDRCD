@@ -20,24 +20,39 @@ class TemplateSmarty extends Template
             $this->smarty->assign($index, $value);
         }
 
-        if(file_exists($this->smarty->getTemplateDir()[0].$file_name)){
-            $render = $this->smarty->fetch($file_name);
+        if(file_exists($this->smarty->getTemplateDir()[0].$file_name.'.tpl')){
+            $render = $this->smarty->fetch($file_name.'.tpl');
         }
         else{
-            $real_file_name = basename($file_name, '.tpl');
-            $this->renderRaw($real_file_name,$data);
-            return '';
+            $render = $this->renderRaw($file_name.'.php',$data);
         }
 
         return $render;
     }
 
+    public function addValues($container, $values){
+
+        $old_val = $this->smarty->getTemplateVars($container);
+
+
+        if(!is_array($old_val) && !empty($old_val)){
+            $old_val = [$old_val];
+        }
+
+        $old_val[] = $values;
+
+        $this->smarty->assign($container,$old_val);
+    }
+
     public function renderSelect($value_cell,$name_cell,$selected,$data): string
     {
-        $this->smarty->assign('value_cell',$value_cell);
-        $this->smarty->assign('name_cell',$name_cell);
-        $this->smarty->assign('selected_value',$selected);
-        return $this->render('select.tpl',['options'=>$data]);
+        return $this->render('select',['options'=>$data,'value_cell'=>$value_cell,'name_cell'=>$name_cell,'selected_value'=>$selected]);
+    }
+
+    public function renderTable($body_file,$data): string
+    {
+        $this->smarty->assign('body',$body_file);
+        return $this->render('table-content',$data);
     }
 
 }

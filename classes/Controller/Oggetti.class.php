@@ -69,7 +69,7 @@ class Oggetti extends BaseClass
      * @param string $val
      * @return bool|int|mixed|string
      */
-    private function getAllObjectTypes(string $val = '*')
+    public function getAllObjectTypes(string $val = '*')
     {
         return DB::query("SELECT {$val} FROM oggetto_tipo WHERE 1 ORDER BY nome", 'result');
     }
@@ -240,18 +240,8 @@ class Oggetti extends BaseClass
      */
     public function listObjectTypes(int $selected = 0): string
     {
-        $html = '<option value=""></option>';
         $list = $this->getAllObjectTypes('id,nome');
-
-        foreach ($list as $row) {
-            $id = Filters::int($row['id']);
-            $nome = Filters::in($row['nome']);
-            $sel = ($selected == $id) ? 'selected' : '';
-
-            $html .= "<option value='{$id}' {$sel}>{$nome}</option>";
-        }
-
-        return $html;
+        return Template::getInstance()->startTemplate()->renderSelect('id','nome',$selected,$list);
     }
 
     /**
@@ -284,18 +274,8 @@ class Oggetti extends BaseClass
      */
     public function listObjects(int $selected = 0): string
     {
-        $html = '<option value=""></option>';
         $list = $this->getAllObjects('id,nome');
-
-        foreach ($list as $row) {
-            $id = Filters::int($row['id']);
-            $nome = Filters::in($row['nome']);
-            $sel = ($selected == $id) ? 'selected' : '';
-
-            $html .= "<option value='{$id}' {$sel}>{$nome}</option>";
-        }
-
-        return $html;
+        return Template::getInstance()->startTemplate()->renderSelect('id','nome',$selected,$list);
     }
 
     /*** FUNCTIONS */

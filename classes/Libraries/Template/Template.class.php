@@ -39,12 +39,27 @@ class Template extends BaseClass
         return $this->used_class->renderSelect($value_cell, $name_cell, $selected, $data);
     }
 
-    public function renderRaw($file_name, $data)
+    public function renderTable($body_file,$data){
+        return $this->used_class->renderTable($body_file,$data);
+    }
+
+    public function addValues($container,$values){
+        return $this->used_class->addValues($container,$values);
+    }
+
+    protected function renderRaw($file_name, $data)
     {
         $base_dir = __DIR__.'/../../../themes/advanced/view/raw/templates/';
 
-        if(file_exists($base_dir.$file_name.'.php')) {
-            include($base_dir . $file_name.'.php');
+        if(file_exists($base_dir.$file_name)) {
+            // Start output buffering
+            ob_start();
+
+            // Include the template file
+            include($base_dir . $file_name);
+
+            // End buffering and return its contents
+            return ob_get_clean();
         } else{
             die('TEMPLATE_NOT_EXIST');
         }
