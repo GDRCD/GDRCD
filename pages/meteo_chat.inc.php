@@ -23,7 +23,7 @@ if(Permissions::permission('MANAGE_WEATHER') && ($_REQUEST['dir'] )) {
                 <select name="condizione" id="condizione" >
                     <option value="">----</option>
                     <?php
-                    $all= Meteo::getAllCondition();
+                    $all= MeteoCondizioni::getInstance()->getAllCondition();
 
                     while ($row = DB::query($all, 'fetch')){
                         echo "<option value='{$row['id']}'>{$row['nome']}</option>";

@@ -10,7 +10,7 @@ switch ($_POST['op']) {
         $data_inizio =Filters::in( $_POST['data_inizio']);
         $alba= Filters::in($_POST['alba']);
         $tramonto = Filters::in( $_POST['tramonto']);
-        $class->newSeason($nome, $minima, $massima, $data_inizio, $alba, $tramonto);
+        MeteoStagioni::getInstance()->newSeason($nome, $minima, $massima, $data_inizio, $alba, $tramonto);
         break;
         #Modifica condizione
     case 'save_edit':
@@ -22,12 +22,12 @@ switch ($_POST['op']) {
         $tramonto = Filters::in($_POST['tramonto']);
 
         $id = Filters::in( $_POST['id']);
-        $class->editSeason($nome, $minima, $massima, $data_inizio, $alba, $tramonto, $id);
+        MeteoStagioni::getInstance()->editSeason($nome, $minima, $massima, $data_inizio, $alba, $tramonto, $id);
         break;
     # Delete condizione
     case 'delete':
         $id=Filters::in( $_POST['id']);
-        $class->deleteSeason($id);
+        MeteoStagioni::getInstance()->deleteSeason($id);
         break;
     case 'add_condition':
          $id_stagione= Filters::in($_POST['id']);

@@ -12,7 +12,7 @@ $op = Filters::out($_REQUEST['op']);
     <div class="page_body">
         <div class="panels_box">
             <?php
-            if ($class->Visibility()) {
+            if ($class->permissionManageWeather()) {
             # Richieste Post
             switch (Filters::out($_POST['op'])) {
 

@@ -8,15 +8,12 @@
 class Meteo extends BaseClass
 {
     private
-        $weather,
         $array_vento;
+
     public function __construct()
     {
         parent::__construct();
-
-        # Le abilita sono pubbliche?
-        $this->weather = $this->getAllCondition();
-        $this->array_vento = array("Assente", "Brezza", "Brezza intensa", "Vento Forte", "Burrasca");
+        $this->array_vento = array("Assente", "Brezza", "Brezza intensa", "Vento Forte", "Burrasca"); # TODO Spostare in db
     }
 
     /**** CONTROLS ****/
@@ -26,107 +23,12 @@ class Meteo extends BaseClass
      * @note Controlla se si hanno i permessi per guardarla
      * @return bool
      */
-    public function Visibility(): bool
+    public function permissionManageWeather(): bool
     {
-        return ($this->permission > MODERATOR);
+        return Permissions::permission('MANAGE_WEATHER');
     }
 
-    /**
-     * @fn getAll
-     * @note Estrae lista delle stagioni
-     * @return array
-     */
-    public function getAllSeason()
-    {
-        return DB::query("SELECT *  FROM meteo_stagioni", 'result');
-    }
 
-    /**
-     * @fn getOne
-     * @note Estrae una stagione
-     * @return array
-     */
-    public function getOneSeason($id)
-    {
-        $id = Filters::int($id);
-        return DB::query("SELECT * FROM meteo_stagioni WHERE id='{$id}'", 'query');
-    }
-
-    /**
-     * @fn new
-     * @note Inserisce una stagione
-     */
-    public function newSeason(string $nome, $minima,$massima, $data_inizio, $alba, $tramonto)
-    {
-        DB::query("INSERT INTO meteo_stagioni (nome,minima,massima, data_inizio, alba, tramonto )  VALUES
-        ('{$nome}', '{$minima}' , '{$massima}', '{$data_inizio}', '{$alba}', '{$tramonto}') ");
-    }
-
-    /**
-     * @fn edit
-     * @note Aggiorna una stagione
-     */
-    public function editSeason(string $nome, $minima,$massima, $data_inizio, $alba, $tramonto, $id)
-    {
-        $id = Filters::int($id);
-        DB::query("UPDATE  meteo_stagioni 
-                SET nome = '{$nome}',minima='{$minima}', massima='{$massima}', data_inizio='{$data_inizio}', alba='{$alba}', tramonto='{$tramonto}' WHERE id='{$id}'");
-        }
-
-    /**
-     * @fn delete
-     * @note Cancella una stagione
-     */
-    public function deleteSeason(int $id)
-    {
-        $id = Filters::int($id);
-        DB::query("DELETE FROM meteo_stagioni WHERE id='{$id}'");
-    }
-    public function getAllCondition()
-    {
-        return DB::query("SELECT id, nome, vento, img FROM meteo_condizioni", 'result');
-    }
-
-    /**
-     * @fn getOne
-     * @note Estrae una condizione meteo
-     * @return array
-     */
-    public function getOneCondition($id)
-    {
-        return DB::query("SELECT id, nome, vento, img FROM meteo_condizioni WHERE id='{$id}'", 'query');
-    }
-
-    /**
-     * @fn new
-     * @note Inserisce una nuova condizione
-     */
-    public function newCondition(string $nome, $vento,$img)
-    {
-        DB::query("INSERT INTO meteo_condizioni (nome,vento,img )  VALUES
-        ('{$nome}', '{$vento}' , '{$img}') ");
-    }
-
-    /**
-     * @fn edit
-     * @note Aggiorna una condizione meteo
-     */
-    public function editCondition(string $nome, $vento, $id, $img)
-    {
-        $id = Filters::int( $id);
-        DB::query("UPDATE  meteo_condizioni 
-                SET nome = '{$nome}',vento='{$vento}', img='{$img}' WHERE id='{$id}'");
-    }
-
-    /**
-     * @fn delete
-     * @note Cancella una condizione meteo
-     */
-    public function deleteCondition(int $id)
-    {
-        $id = Filters::int(  $id);
-        DB::query("DELETE FROM meteo_condizioni WHERE id='{$id}'");
-    }
     /**
      * @fn selectVento
      * @note Genera gli option per il vento
@@ -190,7 +92,7 @@ class Meteo extends BaseClass
     public function diffselectSeason($array)
     {
         $option="";
-        $stagioni=$this->getAllSeason();
+        $stagioni= MeteoStagioni::getInstance()->getAllSeason();
         foreach ($stagioni as $item) {
             $option.="<div class='form_field'>";
             if(in_array($item['id'], $array)){
@@ -356,7 +258,7 @@ class Meteo extends BaseClass
         switch (Functions::get_constant('WEATHER_TYPE')) {
             case 1:
                 if (empty($condizione)){ DB::query("DELETE FROM meteo_chat WHERE id_chat='{$id}'");}else $check="ok";
-                $condizione = $this->getOneCondition($condizione);
+                $condizione = MeteoCondizioni::getInstance()->getCondition($condizione);
                 $img = "<img src='" . $condizione['img'] . "' title='" . $condizione['nome'] . " ' >";
                 $meteo= Filters::in($img . " " .$temperatura. "&deg;C");
                 $citta='';
@@ -474,7 +376,7 @@ class Meteo extends BaseClass
                     $condizione = $row['condizione'];
                 }
             }
-            $condizione = $this->getOneCondition($condizione);
+            $condizione = MeteoCondizioni::getInstance()->getCondition($condizione);
             $img = "<img src='" . $condizione['img'] . "' title='" . $condizione['nome'] . " ' >";
             $vento = explode(",", $condizione['vento']);
             shuffle($vento);
@@ -504,7 +406,7 @@ class Meteo extends BaseClass
                     $condizione = $row['condizione'];
                 }
             }
-            $condizione = $this->getOneCondition($condizione);
+            $condizione = MeteoCondizioni::getInstance()->getCondition($condizione);
             $img = "<img src='" . $condizione['img'] . "' title='" . $condizione['nome'] . " ' >";
             $vento = explode(",", $condizione['vento']);
             shuffle($vento);

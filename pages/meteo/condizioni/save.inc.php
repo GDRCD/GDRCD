@@ -7,7 +7,7 @@ switch (Filters::out($_POST['op'])) {
         $nome = Filters::in( $_POST['nome']);
         $vento = implode(",",Filters::in($_POST['vento']));
         $img = Filters::in( $_POST['img']);
-        $class->newCondition($nome, $vento,$img);
+        MeteoCondizioni::getInstance()->newCondition($nome, $vento,$img);
         break;
         #Modifica condizione
     case 'save_edit':
@@ -15,12 +15,12 @@ switch (Filters::out($_POST['op'])) {
         $vento = implode(",",$_POST['vento']);
         $id=Filters::in( $_POST['id']);
         $img = Filters::in( $_POST['img']);
-        $class->editCondition($nome, $vento, $id,$img);
+        MeteoCondizioni::getInstance()->editCondition($nome, $vento, $id,$img);
         break;
     # Delete condizione
     case 'delete':
         $id=Filters::in($_POST['id']);
-        $class->deleteCondition($id);
+        MeteoCondizioni::getInstance()->deleteCondition($id);
         break;
 
 

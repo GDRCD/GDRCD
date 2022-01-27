@@ -29,7 +29,7 @@
         <!-- Record -->
 
     <?php
-    $all=$class->getAllSeason();
+    $all=MeteoStagioni::getInstance()->getAllSeason();
     while($row = DB::query($all, 'fetch')){
     ?>
 
