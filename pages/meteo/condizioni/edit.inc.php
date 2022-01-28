@@ -12,7 +12,7 @@ $condizione=MeteoCondizioni::getInstance()->getCondition(Filters::out($_POST['id
         <select data-placeholder="Opzioni per il vento" multiple class="chosen-select" name="vento[]" id="vento">
             <?php
             $vento= explode(",", $condizione[vento]);
-            echo $class->diffselectVento($vento);
+            echo Meteo::getInstance()->diffselectVento($vento);
             ?>
         </select>
     </div>

@@ -42,7 +42,7 @@ $condizione=MeteoStagioni::getInstance()->getSeason(Filters::out($_POST['id']));
     <div class="label">Condizione meteo: </div>
     <select name="condizione" id="condizione" >
         <?php
-        $all= Meteo::diffselectState(Filters::out($condizione['id']));
+        $all= MeteoStati::getInstance()->diffselectState(Filters::out($condizione['id']));
 
         while ($row = DB::query($all, 'fetch')){
             echo "<option value='{$row['id']}'>{$row['nome']}</option>";
@@ -77,7 +77,7 @@ $condizione=MeteoStagioni::getInstance()->getSeason(Filters::out($_POST['id']));
     <?php
 
 
-    $all= Meteo::getAllState(Filters::out($condizione['id']));
+    $all= MeteoStati::getInstance()->getAllState(Filters::out($condizione['id']));
     while ($row = DB::query($all, 'fetch')){
 
          echo "<div class='tr'>

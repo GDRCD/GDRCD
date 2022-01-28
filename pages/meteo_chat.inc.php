@@ -39,7 +39,7 @@ if(Permissions::permission('MANAGE_WEATHER') && ($_REQUEST['dir'] )) {
             <select  name="vento" id="vento">
                 <option value="">----</option>
                 <?php
-                echo $class->selectVento();
+                echo Meteo::getInstance()->listWinds();
                 ?>
             </select>
             </div>
@@ -56,7 +56,7 @@ if(Permissions::permission('MANAGE_WEATHER') && ($_REQUEST['dir'] )) {
             ?>
             <div class="single_input">
                 <div class="label">Città</div>
-                <?php $citta= $class->checkMeteoChat($_REQUEST['dir']);?>
+                <?php $citta= $class->getMeteoChat($_REQUEST['dir']);?>
                 <input type="text" name="webapi_city" value="<?=$citta['citta']?>">
             </div>
 

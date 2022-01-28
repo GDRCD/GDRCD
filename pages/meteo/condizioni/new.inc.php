@@ -8,7 +8,7 @@
         <div class="label"><?php echo Filters::out($MESSAGE['interface']['administration']['meteo_condition']['wind_name']); ?></div>
         <select data-placeholder="Opzioni per il vento" multiple class="chosen-select" name="vento[]" id="vento">
             <?php
-            echo $class->selectVento();
+            echo Meteo::getInstance()->listWinds();
             ?>
         </select>
     </div>

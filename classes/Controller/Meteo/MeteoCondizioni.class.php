@@ -2,7 +2,6 @@
 
 class MeteoCondizioni extends Meteo{
 
-
     /**
      * @fn getAllCondition
      * @note Estrae tutte le condizioni meteo

@@ -67,15 +67,15 @@
 
             switch (Functions::get_constant('WEATHER_TYPE')){
                 case 1: //stagioni
-                    if (!empty($class->checkMeteoChat( $_SESSION['luogo']) ) ){//Controllo se è presente un meteo per la città
-                        $meteo= ($class->checkMeteoChat(( $_SESSION['luogo'] )));
+                    if (!empty($class->getMeteoChat( $_SESSION['luogo']) ) ){//Controllo se è presente un meteo per la città
+                        $meteo= ($class->getMeteoChat(( $_SESSION['luogo'] )));
                         echo $meteo['meteo'];
                         if(Functions::get_constant('WEATHER_WIND') == 1)  echo " - " . $meteo['vento'];
                         //echo "Controllo se è presente un meteo per la città";
                     }
-                    else if (!empty($class->checkMeteoMappa($_SESSION['mappa']) ) ){//meteo della mappa
-                        $meteo= $class->checkMeteoMappa((($_SESSION['mappa'])));
-                        $show= $class->meteoMappaSeason($meteo['stagioni'],$_SESSION['mappa'] );
+                    else if (!empty($class->getMeteoMappa($_SESSION['mappa']) ) ){//meteo della mappa
+                        $meteo= $class->getMeteoMappa((($_SESSION['mappa'])));
+                        $show= MeteoStagioni::getInstance()->meteoMappaSeason($meteo['stagioni'],$_SESSION['mappa'] );
                         echo $show['meteo'];
                         if(Functions::get_constant('WEATHER_WIND') == 1)  echo " - " . $show['vento'];
                        // echo "meteo della mappa";
@@ -83,18 +83,18 @@
                     else
                     {
                        // echo "meteo globale";
-                        echo $class->meteoSeason();
+                        echo MeteoStagioni::getInstance()->meteoSeason();
                         if (Functions::get_constant('WEATHER_WIND')) echo " - " . Functions::get_constant('WEATHER_LAST_WIND');
                     }
                     break;
 
                     default: //webapi
-                        if (!empty($class->checkMeteoChat( $_SESSION['luogo']) ) ){//Controllo se è presente un meteo per la città
-                            $meteo= ($class->checkMeteoChat(( $_SESSION['luogo'] )));
+                        if (!empty($class->getMeteoChat( $_SESSION['luogo']) ) ){//Controllo se è presente un meteo per la città
+                            $meteo= ($class->getMeteoChat(( $_SESSION['luogo'] )));
                             echo $class->meteoWebApiChat($meteo['citta']);
                         }
-                        else if (!empty($class->checkMeteoMappa($_SESSION['mappa']) ) ){//meteo della mappa
-                               $meteo= ($class->checkMeteoMappa(($_SESSION['mappa'] )));
+                        else if (!empty($class->getMeteoMappa($_SESSION['mappa']) ) ){//meteo della mappa
+                               $meteo= ($class->getMeteoMappa(($_SESSION['mappa'] )));
                                echo $class->meteoWebApiChat($meteo['citta']);
                         }
                         else

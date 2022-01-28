@@ -162,8 +162,8 @@
 
 
                                     <?php
-                                         $stagioni= $class->checkMeteoMappa($loaded_record['id_click']); ;
-                                         echo $class->diffselectSeason(explode(",",$stagioni['stagioni']));
+                                         $stagioni= $class->getMeteoMappa($loaded_record['id_click']); ;
+                                         echo MeteoStagioni::getInstance()->diffselectSeason(explode(",",$stagioni['stagioni']));
                                          ?>
 
                                  <div class='form_info'>
@@ -178,7 +178,7 @@
                            Città meteo webapi
                         </div>
                         <div class='form_field'>
-                            <?php $citta= $class->checkMeteoMappa($loaded_record['id_click']); ?>
+                            <?php $citta= $class->getMeteoMappa($loaded_record['id_click']); ?>
                             <input type="text" name="webapi_city" value="<?=$citta['citta']?>">
 
                         </div>
