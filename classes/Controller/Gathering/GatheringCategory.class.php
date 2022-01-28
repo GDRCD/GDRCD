@@ -60,66 +60,64 @@ class GatheringCategory extends Gathering
      * @note Render html della lista delle categorie
      * @return string
      */
-    public function GatheringCatList()
-    {
-        $list = $this->getAllGatheringCat( '*', 'ORDER BY nome ASC');
-        return $this->renderGatheringCatList($list);
-    }
 
+    public function GatheringCatList(): string
+    {
+        $template = Template::getInstance()->startTemplate();
+        $list = $this->getAllGatheringCat( '*', 'ORDER BY nome ASC');
+        return $template->renderTable(
+            'gestione/gathering/category/list',
+            $this->renderGatheringCatList($list, 'gestione')
+        );
+    }
     /**
      * @fn renderGatheringCatList
-     * @note Render html lista esiti
+     * @note Render html lista categorie gathering
      * @param object $list
      * @param string $page
      * @return string
      */
-    public function renderGatheringCatList(object $list)
+    public function renderGatheringCatList(object $list, string $page): array
     {
+            $row_data = [];
+            $path =  'gestione_gathering_category';
+            $backlink = 'gestione';
 
-        $html = '<div class="tr header">
-                    <div class="td">Nome</div>
-                    <div class="td">Descrizione</div>                 
-                    <div class="td">Controlli</div>
-                </div>';
+            foreach ($list as $row) {
 
+                $id = Filters::int($row['id']);
 
-        foreach ($list as $row) {
+                $array = [
+                    'id' => $id,
+                    'nome'=> Filters::in($row['nome']),
+                    'descrizione'=> Filters::in($row['descrizione']),
+                    'gathering_view_permission'=> $this->gatheringManage()
 
-            $id = Filters::int($row['id']);
-            $nome = Filters::in($row['nome']);
-            $descrizione = Filters::in($row['descrizione']);
+                ];
 
-
-            $html .= "<div class='tr'>";
-            $html .= "<div class='td'>" . $nome. '</div>';
-            $html .= "<div class='td'>" . $descrizione. '</div>';
-            $html .= "<div class='td commands'>";
-
-            if ($this->gatheringManage()) {
-                $html .= "<a href='/main.php?page=gestione_gathering_category&op=edit_cat&id={$id}' title='Modifica'><i class='fas fa-edit'></i></a>";
+                $row_data[] = $array;
             }
 
-            if ($this->gatheringManage()) {
-                $html .= " <a class='ajax_link' data-id='{$id}' data-action='delete_cat' href='#' title='Elimina'><i class='far fa-trash'></i></a>";
-            }
+            $cells = [
+                'Nome',
+                'Descrizione',
+                'Controlli'
+            ];
+            $links = [
+                ['href' => "/main.php?page={$path}&op=new_cat", 'text' => 'Nuova Categoria'],
+                ['href' => "/main.php?page={$backlink}", 'text' => 'Indietro']
+            ];
 
+            return [
+                'body' => 'gestione/gathering/category/list',
+                'body_rows'=> $row_data,
+                'cells' => $cells,
+                'links' => $links,
+                'path'=>$path,
+                'page'=>$page
 
-            $html .= "</div>";
-            $html .= "</div>";
+            ];
         }
-
-        $html .= "<div class='tr footer'>";
-
-            $html .= "<a href = 'main.php?page=gestione_gathering_category&op=new_cat' >
-                            Nuova Categoria
-                        </a > |
-                    <a href = '/main.php?page=gestione' > Indietro</a >";
-
-
-        $html .= "</div > ";
-
-        return $html;
-    }
 
 
     /*** GATHERING ***/

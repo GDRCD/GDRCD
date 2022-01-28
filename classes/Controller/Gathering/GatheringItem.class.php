@@ -136,7 +136,7 @@ class GatheringItem extends Gathering
 
     /**
      * @fn newGatheringItem
-     * @note Inserisce una nuova categoria
+     * @note Inserisce una nuovo oggetto
      * @param array $post
      * @return array
      */
