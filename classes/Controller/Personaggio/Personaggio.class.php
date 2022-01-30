@@ -19,6 +19,19 @@ class Personaggio extends BaseClass{
     }
 
     /**
+     * @fn getPgMap
+     * @note Estrae la mappa del pg
+     * @param int $pg
+     * @return int
+     */
+    public static function getPgMap(int $pg): int
+    {
+        $data = DB::query("SELECT ultima_mappa FROM personaggio WHERE id='{$pg}' LIMIT 1");
+
+        return Filters::int($data['ultima_mappa']);
+    }
+
+    /**
      * @fn getPgData
      * @note Ottiene i dati di un pg
      * @param int $pg

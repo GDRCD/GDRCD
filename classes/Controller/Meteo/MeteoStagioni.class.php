@@ -53,8 +53,18 @@ class MeteoStagioni extends Meteo{
             $temp = Filters::int($temp) . "&deg;C";
             $meteo = Filters::in($img . " " . $temp);
             $this->saveWeather($meteo, $wind);
+
+            return [
+                'meteo' => $meteo,
+                'vento'=> $vento
+            ];
         }
-        return Functions::get_constant('WEATHER_LAST');
+        else{
+            return [
+                'meteo'=> Functions::get_constant('WEATHER_LAST'),
+                'vento'=> Functions::get_constant('WEATHER_LAST_WIND'),
+            ];
+        }
     }
 
     public function meteoMappaSeason($stagioni, $id)
@@ -85,10 +95,19 @@ class MeteoStagioni extends Meteo{
             $temp = Filters::int($temp) . "&deg;C";
             $meteo = Filters::in($img . " " . $temp);
             $this->saveWeatherMap($meteo, $wind, $id);
+
+            return [
+                'meteo' => $meteo,
+                'vento' => $vento
+            ];
+        } else{
+            $data = $this->getMeteoMappa($id);
+
+            return [
+                'meteo' => $data['meteo'],
+                'vento' => $data['vento']
+            ];
         }
-
-        return $this->getMeteoMappa($id);
-
     }
 
     /**

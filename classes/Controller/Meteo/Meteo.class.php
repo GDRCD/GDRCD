@@ -8,15 +8,37 @@
 class Meteo extends BaseClass
 {
     private
-        $array_vento;
+        $array_vento,
+        $moon_abilitated,
+        $weather_webapi;
 
     public function __construct()
     {
         parent::__construct();
         $this->array_vento = array("Assente", "Brezza", "Brezza intensa", "Vento Forte", "Burrasca"); # TODO Spostare in db
+        $this->moon_abilitated = Functions::get_constant('WEATHER_MOON');
+        $this->weather_season = Functions::get_constant('WEATHER_SEASON');
+        $this->weather_webapi = Functions::get_constant('WEATHER_WEBAPI');
     }
 
-    /**** CONTROLS ****/
+    /*** CONTROLS ****/
+
+    public function activeMoon()
+    {
+        return $this->moon_abilitated;
+    }
+
+    public function activeSeason()
+    {
+        return $this->weather_season;
+    }
+
+    public function activeWebApi()
+    {
+        return $this->weather_webapi;
+    }
+
+    /**** PERMISSION ****/
 
     /**
      * @fniVisibility
@@ -69,16 +91,77 @@ class Meteo extends BaseClass
 
     /**** FUNCTIONS ****/
 
+    public function createMeteoData()
+    {
+
+        $data = [];
+
+        if ($this->activeMoon()) {
+            $data['moon'] = $this->lunarPhase();
+        }
+
+        if ($this->activeSeason()) {
+            $data['meteo'] = $this->calcSeasonMeteo();
+        } else if ($this->activeWebApi()) {//webapi
+            $data['meteo'] = $this->calcWebApiMeteo();
+        }
+
+        return $data;
+    }
+
+    public function calcSeasonMeteo()
+    {
+
+        $data = [];
+
+        // SE per la chat e' settato un meteo
+        if (!empty($meteo = $this->getMeteoChat(Personaggio::getPgLocation($this->me_id)))) {
+            $data['meteo'] = $meteo['meteo'];
+            if (Functions::get_constant('WEATHER_WIND') == 1) {
+                $data['wind'] = $meteo['vento'];
+            }
+        } // altrimenti se per la mappa della chat e' presente un meteo
+        else if (!empty($meteo = $this->getMeteoMappa(Personaggio::getPgMap($this->me_id)))) {//meteo della mappa
+            $meteo_map = MeteoStagioni::getInstance()->meteoMappaSeason($meteo['stagioni'], $_SESSION['mappa']);
+
+            $data['meteo'] = $meteo_map['meteo'];
+            if (Functions::get_constant('WEATHER_WIND') == 1) {
+                $data['vento'] = $meteo_map['vento'];
+            }
+        } else {
+            // echo "meteo globale";
+            $data = MeteoStagioni::getInstance()->meteoSeason();
+        }
+
+        return $data;
+    }
+
+    public function calcWebApiMeteo()
+    {
+        if (!empty($meteo = $this->getMeteoChat(Personaggio::getPgLocation($this->me_id)))) {//Controllo se è presente un meteo per la città
+            return $this->meteoWebApi($meteo['citta']);
+        } else if (!empty($meteo = $this->getMeteoMappa(Personaggio::getPgMap($this->me_id)))) {//meteo della mappa
+            return $this->meteoWebApi($meteo['citta']);
+        } else {
+            return $this->meteoWebApi();
+        }
+    }
+
+
     /**
      * @fn
      * @note Chiamata webapi per recuperare il meteo di una città passando l'api key e la città di default
      */
-    public function getWebApiWeather()
+    public function getWebApiWeather($city = '')
     {
-        $city = Functions::get_constant('WEATHER_WEBAPI_CITY');
-        $api = Functions::get_constant('WEATHER_WEBAPI');
+        if (empty($city)) {
+            $city = Functions::get_constant('WEATHER_WEBAPI_CITY');
 
-        if(!empty($city) && !empty($api)) {
+        }
+
+        $api = Functions::get_constant('WEATHER_WEBAPIKEY');
+
+        if (!empty($city) && !empty($api)) {
             $curl = curl_init();
             curl_setopt_array($curl, array(
                 CURLOPT_URL => 'http://api.openweathermap.org/data/2.5/weather?q=' . $city . '&appid=' . $api . '&units=metric&lang=it',
@@ -96,67 +179,29 @@ class Meteo extends BaseClass
             }
             curl_close($curl);
             return ($result);
-        }
-        else{
+        } else {
             return [];
         }
     }
 
     /**
      * @fn
-     * @note Restituisce il meteo dalle webapi
-     */
-    public function meteoWebApi()
-    {
-        $api = $this->getWebApiWeather();
-        $wind = (Functions::get_constant('WEATHER_WIND') == 1) ? " - " . $this->wind($api['wind']['speed']) : '';
-        $url = (Functions::get_constant('WEATHER_WEBAPI_ICON') == 0) ? "http://openweathermap.org/img/wn/" : "imgs/meteo/";
-        $estensione = (Functions::get_constant('WEATHER_WEBAPI_ICON') == 0) ? "png" : Functions::get_constant('WEATHER_WEBAPI_FORMAT');
-        $img = "<img src='" . $url . "" . $api['weather'][0]['icon'] . "." . $estensione . "' title='" . $api['weather'][0]['description'] . " ' >";
-        $temp = Filters::int($api['main']['temp']) . "&deg;C";
-        return $img . " " . $temp . " " . $wind;
-    }
-
-    /**
-     * @fn
-     * @note Chiamata webapi per recuperare il meteo di una città passando l'api key ed una città specifica
-     */
-    public function getWebApiWeatherChat($city)
-    {
-
-        $api = Functions::get_constant('WEATHER_WEBAPI');
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://api.openweathermap.org/data/2.5/weather?q=' . $city . '&appid=' . $api . '&units=metric&lang=it',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_SSL_VERIFYPEER => false,
-        ));
-        $response = curl_exec($curl);
-        $result = json_decode($response, true);
-        if (curl_errno($curl)) {
-            echo 'Error:' . curl_error($curl);
-        }
-        curl_close($curl);
-        return ($result);
-    }
-
-    /**
-     * @fn
      * @note Restituisce il meteo dalle webapi di una città per una singola chat
      */
-    public function meteoWebApiChat($citta)
+    public function meteoWebApi($citta = '')
     {
-        $api = $this->getWebApiWeatherChat($citta);
-        $wind = (Functions::get_constant('WEATHER_WIND') == 1) ? " - " . $this->wind($api['wind']['speed']) : '';
-        $url = (Functions::get_constant('WEATHER_WEBAPI_ICON') == 0) ? "http://openweathermap.org/img/wn/" : "imgs/meteo/";
-        $estensione = (Functions::get_constant('WEATHER_WEBAPI_ICON') == 0) ? "png" : Functions::get_constant('WEATHER_WEBAPI_FORMAT');
-        $img = "<img src='" . $url . "" . $api['weather'][0]['icon'] . "." . $estensione . "' title='" . $api['weather'][0]['description'] . " ' >";
-        $temp = Filters::int($api['main']['temp']) . "&deg;C";
-        return $img . " " . $temp . " " . $wind;
+
+        $data = [];
+
+        $api = $this->getWebApiWeather($citta);
+
+        $data['img'] = ((Functions::get_constant('WEATHER_WEBAPI_ICON') == 1) ? "http://openweathermap.org/img/wn/" : "imgs/meteo/");
+        $data['img'] .= $api['weather'][0]['icon'];
+        $data['img'] .= (Functions::get_constant('WEATHER_WEBAPI_ICON') == 0) ? ".png" : Functions::get_constant('WEATHER_WEBAPI_FORMAT');
+        $data['meteo'] = Filters::int($api['main']['temp']);
+        $data['vento'] = (Functions::get_constant('WEATHER_WIND') == 1) ? " - " . $this->wind($api['wind']['speed']) : '';
+
+        return $data;
     }
 
     /**
@@ -345,8 +390,9 @@ class Meteo extends BaseClass
      * @fn
      * @note Fasi lunari
      */
-    public function lunar_phase()
+    public function lunarPhase()
     {
+        $theme = gdrcd_filter('out', $PARAMETERS['themes']['current_theme']);
         # Inizializzo dati necessari
         $year = date('Y');
         $month = date('n');
@@ -371,7 +417,13 @@ class Meteo extends BaseClass
         $phase_array = array('nuova', 'crescente', 'primo-quarto', 'gibbosa-crescente', 'piena', 'gibbosa-calante', 'ultimo-quarto', 'calante');
         $phase_title = array('Nuova', 'Crescente', 'Primo Quarto', 'Gibbosa crescente', 'Piena', 'Gibbosa calante', 'Ultimo quarto', 'Calante');
         # Estraggo e ritorno la fase calcolata
-        return array('phase' => $phase_array[$phase], 'title' => $phase_title[$phase]);
+
+        $img = "themes/{$theme}/imgs/luna/{$phase_array[$phase]}.png";
+
+        return [
+            'Img' => $img,
+            'Title' => $phase_title[$phase]
+        ];
     }
 
 }

@@ -59,50 +59,10 @@
             <div class="meteo_date">
                 <?php echo strftime('%d') . '/' . strftime('%m') . '/' . (strftime('%Y') + $PARAMETERS['date']['offset']); ?>
             </div>
-        <?php
-            if (Functions::get_constant('WEATHER_MOON')) {
-                $moon= $class->lunar_phase();
-                echo '<img title="' . $moon['title'] . '"  src="themes/' . gdrcd_filter('out', $PARAMETERS['themes']['current_theme']) . '/imgs/luna/' . $moon['phase'] . '.png">';
-            }
+        <?php echo Template::getInstance()->startTemplate()->render('meteo/meteo',Meteo::getInstance()->createMeteoData());
 
-            switch (Functions::get_constant('WEATHER_TYPE')){
-                case 1: //stagioni
-                    if (!empty($class->getMeteoChat( $_SESSION['luogo']) ) ){//Controllo se è presente un meteo per la città
-                        $meteo= ($class->getMeteoChat(( $_SESSION['luogo'] )));
-                        echo $meteo['meteo'];
-                        if(Functions::get_constant('WEATHER_WIND') == 1)  echo " - " . $meteo['vento'];
-                        //echo "Controllo se è presente un meteo per la città";
-                    }
-                    else if (!empty($class->getMeteoMappa($_SESSION['mappa']) ) ){//meteo della mappa
-                        $meteo= $class->getMeteoMappa((($_SESSION['mappa'])));
-                        $show= MeteoStagioni::getInstance()->meteoMappaSeason($meteo['stagioni'],$_SESSION['mappa'] );
-                        echo $show['meteo'];
-                        if(Functions::get_constant('WEATHER_WIND') == 1)  echo " - " . $show['vento'];
-                       // echo "meteo della mappa";
-                    }
-                    else
-                    {
-                       // echo "meteo globale";
-                        echo MeteoStagioni::getInstance()->meteoSeason();
-                        if (Functions::get_constant('WEATHER_WIND')) echo " - " . Functions::get_constant('WEATHER_LAST_WIND');
-                    }
-                    break;
 
-                    default: //webapi
-                        if (!empty($class->getMeteoChat( $_SESSION['luogo']) ) ){//Controllo se è presente un meteo per la città
-                            $meteo= ($class->getMeteoChat(( $_SESSION['luogo'] )));
-                            echo $class->meteoWebApiChat($meteo['citta']);
-                        }
-                        else if (!empty($class->getMeteoMappa($_SESSION['mappa']) ) ){//meteo della mappa
-                               $meteo= ($class->getMeteoMappa(($_SESSION['mappa'] )));
-                               echo $class->meteoWebApiChat($meteo['citta']);
-                        }
-                        else
-                        {
-                            echo $class->meteoWebApi();
-                        }
-                    break;
-            }
+
           if($perm->permission('MANAGE_WEATHER') && ($_REQUEST['dir'] )){?>
               <p><a href="javascript:modalWindow('meteo', 'Modifica Meteo Chat', 'popup.php?page=meteo_chat&dir=<?=$_REQUEST['dir']?>')">Modifica Meteo</a></p>
          <?php
