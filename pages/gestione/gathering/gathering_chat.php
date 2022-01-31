@@ -16,7 +16,7 @@ $gathering = Gathering::getInstance();
 
         <!-- Corpo della pagina -->
         <div class="page_body">
-            <?php //require_once(__DIR__ . '/' . $esiti->loadManagementEsitiPage(Filters::out($_GET['op']))); ?>
+            <?php require_once(__DIR__ . '/' . $gathering->loadManagementGatheringPage(Filters::out($_GET['op']))); ?>
         </div>
 
     <?php } else { ?>

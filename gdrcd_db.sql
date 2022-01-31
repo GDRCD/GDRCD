@@ -300,8 +300,8 @@ INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,
     ('GATHERING_TIME',12,	'Gathering','Orario di reset delle azioni (0 - 23)', 'A che ora vuoi resettare le azioni di ricerca?',	'int',1),
     ('GATHERING_TYPE',0,'Gathering', 'Attiva ricerca automatica','Vuoti attivare il Gathering manuale o automatico?',	'bool',1),
     ('GATHERING_RARITY',1, 'Attiva la rarità di un oggetto nelle ricerche', 'Gathering', 'Attiva/disattiva una quantità massima di oggetti ricercabili', 'bool', 1),
-    ('GATHERING_ABILITY',1, 'Lega un''abilità ad una categoria di ricerca', 'Gathering', 'Abilita o disabilita la possibilità di ricerca in base ad una skill definita per la categoria', 'bool', 1)
-    ('GATHERING_ABILITY_ESCLUSIVE',1, 'Abilita/disabilita la necessità di avere una specifica abilità', 'Gathering', 'Abilita/Disabilità l''esclusività ad una specifica skill', 'bool', 1);
+    ('GATHERING_ABILITY',1, 'Lega un''abilità ad una categoria di ricerca', 'Gathering', 'Abilita o disabilita la possibilità di ricerca in base ad una skill definita per la categoria', 'bool', 1),
+    ('GATHERING_ABILITY_ESCLUSIVE',1, 'Specifica la necessità di avere una abilità', 'Gathering', 'Abilita/Disabilità la esclusività ad una specifica skill', 'bool', 1);
 
 -- --------------------------------------------------------
 

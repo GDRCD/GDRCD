@@ -75,6 +75,36 @@ class Gathering extends BaseClass
     {
         return Permissions::permission('MANAGE_GATHERING');
     }
+
+    /**** ROUTING ***/
+
+    /**
+     * @fn loadManagementGatheringItemPage
+     * @note Routing delle pagine di gestione
+     * @param string $op
+     * @return string
+     */
+    public function loadManagementGatheringPage(string $op): string
+    {
+        $op = Filters::out($op);
+
+        switch ($op) {
+            default:
+                $page = 'gathering_chat_list.php';
+                break;
+
+            case 'new':
+                $page = 'gathering_new.php';
+                break;
+
+            case 'edit':
+                $page = 'gathering_edit.php';
+                break;
+        }
+
+        return $page;
+    }
+
     /*** GET ONE CATEGORY ***/
 
     /**
@@ -104,6 +134,39 @@ class Gathering extends BaseClass
         return DB::query("SELECT * FROM gathering_item WHERE id ='{$id}'");
     }
 
+    /*** TABLES HELPERS ***/
+
+    /**
+     * @fn getAllGathering
+     * @note Ottiene la lista degli esiti
+     * @param string $val
+     * @param string $order
+     * @return bool|int|mixed|string
+     */
+    public function getAllGathering(string $val = '*', string $order = '')
+    {
+        $where = ($this->gatheringManage()) ? '1' : "(master = '0' OR master = '{$this->me_id}')";
+
+        return DB::query("SELECT {$val} FROM gathering WHERE {$where} {$order}", 'result');
+    }
+
+    /*** GATHERING INDEX ***/
+
+    /**
+     * @fn GatheringList
+     * @note Render html della lista delle categorie
+     * @return string
+     */
+
+    public function GatheringList(): string
+    {
+        $template = Template::getInstance()->startTemplate();
+        $list = $this->getAllGathering( '*', 'ORDER BY nome ASC');
+        return $template->renderTable(
+            'gestione/gathering/ricerca/list',
+            $this->renderGatheringList($list, 'gestione')
+        );
+    }
 
 
 

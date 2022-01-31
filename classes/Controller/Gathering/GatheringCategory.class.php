@@ -31,7 +31,6 @@ class GatheringCategory extends Gathering
             case 'edit_cat':
                 $page = 'gathering_cat_edit.php';
                 break;
-                break;
         }
 
         return $page;
@@ -171,7 +170,7 @@ class GatheringCategory extends Gathering
 
             $nome = Filters::in($post['nome']);
             $descrizione = Filters::in($post['descrizione']);
-            $abilita = Filters::in($post['abilita']);
+            $abilita= (Filters::int($post['abilita'])) ? Filters::int($post['abilita']) : 0;
 
             DB::query("INSERT INTO gathering_cat(nome, descrizione, abilita) VALUES('{$nome}', '{$descrizione}', '{$abilita}')");
 
@@ -206,7 +205,7 @@ class GatheringCategory extends Gathering
             $id = Filters::in($post['id']);
             $nome = Filters::in($post['nome']);
             $descrizione = Filters::in($post['descrizione']);
-            $abilita = Filters::in($post['abilita']);
+            $abilita= (Filters::int($post['abilita'])) ? Filters::int($post['abilita']) : 0;
 
             DB::query("UPDATE gathering_cat SET nome = '{$nome}', descrizione= '{$descrizione}', abilita='{$abilita}' WHERE id={$id}");
 

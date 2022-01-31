@@ -16,6 +16,7 @@ switch ($_POST['action']) {
         break;
     case 'edit_cat':
         echo json_encode($gathering_cat->editGatheringCat($_POST));
+        break;
     case 'new_item':
         echo json_encode($gathering_item->newGatheringItem($_POST));
         break;
@@ -24,7 +25,7 @@ switch ($_POST['action']) {
         break;
     case 'edit_item':
         echo json_encode($gathering_item->editGatheringItem($_POST));
-
+    break;
 
 
 }

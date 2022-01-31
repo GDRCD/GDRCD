@@ -148,11 +148,10 @@ class GatheringItem extends Gathering
             $nome = Filters::in($post['nome']);
             $descrizione = Filters::in($post['descrizione']);
             $immagine= Filters::in($post['immagine']);
-            $quantita=Filters::in($post['quantita']);
             $creato_il= date("d-m-Y");
             $categoria=Filters::in($post['categoria']);
             if ($this->gatheringRarity()) {
-                $quantita=Filters::in($post['quantita']);
+                $quantita=Filters::int($post['quantita']);
                 DB::query("INSERT INTO gathering_item(nome, descrizione,categoria,immagine, creato_da, creato_il, quantita) VALUES('{$nome}', '{$descrizione}', {$categoria},'{$immagine}', '{$this->me}', '{$creato_il}', {$quantita})");
 
             }else{
