@@ -28,7 +28,9 @@ class Gathering extends BaseClass
 {
     private
         $gathering_enabled,
-        $gathering_rarity;
+        $gathering_rarity,
+        $gathering_ability,
+        $gathering_ability_esclusive;
 
 
     public function __construct()
@@ -38,6 +40,8 @@ class Gathering extends BaseClass
         # Gli esiti sono attivi in chat?
         $this->gathering_enabled = Functions::get_constant('GATHERING_ENABLE');
         $this->gathering_rarity = Functions::get_constant('GATHERING_RARITY');
+        $this->gathering_ability = Functions::get_constant('GATHERING_ABILITY');
+        $this->gathering_ability_esclusive = Functions::get_constant('GATHERING_ABILITY_ESCLUSIVE');
 
     }
 
@@ -50,6 +54,14 @@ class Gathering extends BaseClass
     public function gatheringRarity(): bool
     {
         return $this->gathering_rarity;
+    }
+    public function gatheringAbility(): bool
+    {
+        return $this->gathering_ability;
+    }
+    public function gatheringAbilityEsclusive(): bool
+    {
+        return $this->gathering_ability_esclusive;
     }
 
     /*** PERMISSIONS */

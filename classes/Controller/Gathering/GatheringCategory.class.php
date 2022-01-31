@@ -171,8 +171,9 @@ class GatheringCategory extends Gathering
 
             $nome = Filters::in($post['nome']);
             $descrizione = Filters::in($post['descrizione']);
+            $abilita = Filters::in($post['abilita']);
 
-            DB::query("INSERT INTO gathering_cat(nome, descrizione) VALUES('{$nome}', '{$descrizione}')");
+            DB::query("INSERT INTO gathering_cat(nome, descrizione, abilita) VALUES('{$nome}', '{$descrizione}', '{$abilita}')");
 
             return [
                 'response' => true,
@@ -205,8 +206,9 @@ class GatheringCategory extends Gathering
             $id = Filters::in($post['id']);
             $nome = Filters::in($post['nome']);
             $descrizione = Filters::in($post['descrizione']);
+            $abilita = Filters::in($post['abilita']);
 
-            DB::query("UPDATE gathering_cat SET nome = '{$nome}', descrizione= '{$descrizione}' WHERE id={$id}");
+            DB::query("UPDATE gathering_cat SET nome = '{$nome}', descrizione= '{$descrizione}', abilita='{$abilita}' WHERE id={$id}");
 
             return [
                 'response' => true,

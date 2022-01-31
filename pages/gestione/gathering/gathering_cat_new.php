@@ -3,7 +3,7 @@
 require_once(__DIR__ . '/../../../includes/required.php');
 
 $gathering_cat = GatheringCategory::getInstance();
-
+$abi = Abilita::getInstance();
 
 $op = Filters::out($_GET['op']);
 ?>
@@ -36,6 +36,19 @@ $op = Filters::out($_GET['op']);
             </div>
             <textarea name="descrizione" ></textarea>
         </div>
+
+        <?php
+        if ($gathering_cat->gatheringAbility()) {?>
+        <div class="single_input">
+            <div class="label">Abilità</div>
+            <select name="abilita">
+                <?=$abi->listAbilita();?>
+            </select>
+        </div>
+
+        <?php
+        }
+        ?>
         <!-- bottoni -->
         <div class="single_input">
             <div class='form_submit'>
@@ -43,7 +56,6 @@ $op = Filters::out($_GET['op']);
                 <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>"/>
             </div>
         </div>
-
     </form>
     <script src="pages/gestione/gathering/JS/gathering_cat_new.js"></script>
 
