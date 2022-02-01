@@ -5,6 +5,8 @@ require_once(__DIR__ . '/../../../includes/required.php');
 
 $gathering_cat = GatheringCategory::getInstance();
 $gathering_item = GatheringItem::getInstance();
+$gathering_chat =GatheringChat::getInstance();
+$chat=Chat::getInstance();
 
 
 switch ($_POST['action']) {
@@ -26,6 +28,22 @@ switch ($_POST['action']) {
     case 'edit_item':
         echo json_encode($gathering_item->editGatheringItem($_POST));
     break;
+    case 'get_object_data':
+        $chat_data= $chat->getChatData($_POST['id']);
+         echo json_encode($gathering_chat->ajaxObjectData($chat_data));
+        break;
+    case 'get_object_item':
 
+        echo json_encode($gathering_chat->ajaxObjectItem($_POST));
+        break;
+    case 'new_chat':
+        echo json_encode($gathering_chat->newGatheringChat($_POST));
+        break;
+    case 'delete_all_chat':
+        echo json_encode($gathering_chat->deleteAllGatheringChat($_POST['id']));
+        break;
+    case 'delete_chat_item':
+        echo json_encode($gathering_chat->deleteGatheringChatItem($_POST['id']));
+        break;
 
 }

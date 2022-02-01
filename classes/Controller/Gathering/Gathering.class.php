@@ -150,23 +150,6 @@ class Gathering extends BaseClass
         return DB::query("SELECT {$val} FROM gathering WHERE {$where} {$order}", 'result');
     }
 
-    /*** GATHERING INDEX ***/
-
-    /**
-     * @fn GatheringList
-     * @note Render html della lista delle categorie
-     * @return string
-     */
-
-    public function GatheringList(): string
-    {
-        $template = Template::getInstance()->startTemplate();
-        $list = $this->getAllGathering( '*', 'ORDER BY nome ASC');
-        return $template->renderTable(
-            'gestione/gathering/ricerca/list',
-            $this->renderGatheringList($list, 'gestione')
-        );
-    }
 
 
 

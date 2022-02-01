@@ -2,7 +2,7 @@
 
 require_once(__DIR__ . '/../../../includes/required.php');
 
-$gathering = Gathering::getInstance();
+$gathering = GatheringChat::getInstance();
 
 ?>
 
@@ -16,7 +16,7 @@ $gathering = Gathering::getInstance();
 
         <!-- Corpo della pagina -->
         <div class="page_body">
-            <?php require_once(__DIR__ . '/' . $gathering->loadManagementGatheringPage(Filters::out($_GET['op']))); ?>
+            <?php require_once(__DIR__ . '/' . $gathering->loadManagementGatheringChatPage(Filters::out($_GET['op']))); ?>
         </div>
 
     <?php } else { ?>

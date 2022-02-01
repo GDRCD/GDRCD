@@ -224,17 +224,12 @@ class GatheringItem extends Gathering
             $nome = Filters::in($post['nome']);
             $descrizione = Filters::in($post['descrizione']);
             $immagine= Filters::in($post['immagine']);
-            $quantita=Filters::in($post['quantita']);
+
             $categoria=Filters::int($post['categoria']);
+            $quantita= (Filters::int($post['quantita'])) ? Filters::int($post['quantita']) : 0;
+            DB::query("UPDATE gathering_item SET nome= '{$nome}' , descrizione= '{$descrizione}',categoria ={$categoria},immagine='{$immagine}', quantita= {$quantita} WHERE id={$id}");
 
-            if ($this->gatheringRarity()) {
-                $quantita=Filters::in($post['quantita']);
-                DB::query("UPDATE gathering_item SET nome= '{$nome}' , descrizione= '{$descrizione}',categoria ={$categoria},immagine='{$immagine}', quantita= {$quantita} WHERE id={$id}");
 
-            }else{
-                DB::query("UPDATE gathering_item SET nome= '{$nome}' , descrizione= '{$descrizione}',categoria ={$categoria},immagine='{$immagine}' WHERE id={$id}");
-
-            }
             return [
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
@@ -249,6 +244,27 @@ class GatheringItem extends Gathering
                 'swal_type' => 'error'
             ];
         }
+    }
+    /***** LISTS *****/
+
+    /**
+     * @fn listGatheringCat
+     * @note Ritorna una serie di option per una select contenente la lista delle categorie
+     * @return string
+     */
+    public function listGatheringItem($selected = 0): string
+    {
+        $html = '<option value="0"></option>';
+        $abis = $this->getAllGatheringItem();
+
+        foreach ($abis as $abi) {
+            $nome = Filters::out($abi['nome']);
+            $id = Filters::int($abi['id']);
+            $sel = ($id == $selected) ? 'selected' : '';
+            $html .= "<option value='{$id}' {$sel}>{$nome}</option>";
+        }
+
+        return $html;
     }
 
 }

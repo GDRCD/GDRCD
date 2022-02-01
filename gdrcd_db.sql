@@ -511,7 +511,7 @@ INSERT INTO `menu` (`menu_name`, `section`, `name`, `page`, `permission`) VALUES
   ('Gestione', 'Mercato', 'Gestione Oggetti Mercato', 'gestione_mercato_oggetti', 'MANAGE_SHOPS_OBJECTS'),
   ('Gestione', 'Mercato', 'Gestione Negozi Mercato', 'gestione_mercato_negozi', 'MANAGE_SHOPS'),
   ('Gestione', 'Statistiche', 'Gestione Statistiche', 'gestione_statistiche', 'MANAGE_STATS'),
-  ('Gestione'	,'Gathering',	'Gestione Ricerca',	'gestione_gathering',	'MANAGE_GATHERING'),
+  ('Gestione'	,'Gathering',	'Gestione Ricerca',	'gestione_gathering_chat',	'MANAGE_GATHERING'),
   ('Gestione',	'Gathering',	'Gestione Oggetti ricerca',	'gestione_gathering_item',	'MANAGE_GATHERING'),
   ('Gestione',	'Gathering',	'Gestione Categoria oggetti ricerca',	'gestione_gathering_category',	'MANAGE_GATHERING') ;
 
