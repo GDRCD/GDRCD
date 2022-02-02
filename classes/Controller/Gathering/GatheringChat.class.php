@@ -66,6 +66,18 @@ class GatheringChat extends Gathering
     LEFT JOIN gathering_item ON id_item = gathering_item.id WHERE id_chat={$id}", 'result');
     }
 
+    /**
+     * @fn getOneGatheringChatItem
+     * @note Ottiene delle chat che hanno degli oggetti droppabili
+     * @param string $val
+     * @param string $order
+     * @return bool|int|mixed|string
+     */
+    public function getOneGatheringChatItem($id_chat, $id_item)
+    {
+        return DB::query("SELECT * FROM gathering_chat WHERE id_chat='{$id_chat}' AND id_item='{$id_item}'", 'result');
+    }
+
 
     /*** GATHERING INDEX ***/
 
@@ -209,6 +221,53 @@ class GatheringChat extends Gathering
         ];
     }
 
+    /**
+     * @fn GatheringChatItemList
+     * @note Render html della lista delle combinazioni
+     * @return string
+     */
+
+    public function GatheringChatItemNew($id):string
+    {
+        $template = Template::getInstance()->startTemplate();
+        $list=GatheringItem::getInstance()->listGatheringItem();
+        return $template->renderTable(
+            'gestione/gathering/chat/add_item',
+            $this->renderGatheringChatItemNew($list, 'gestione', $id)
+        );
+    }
+    /**
+     * @fn renderGatheringChatList
+     * @note Render html lista per inserimento nuovo oggetto in chat
+     * @param object $list
+     * @param string $page
+     * @return string
+     */
+    public function renderGatheringChatItemNew( $list, string $page, $id): array
+    {
+        $path =  'gestione_gathering_chat';
+        $cells = [
+            'Oggetto',
+            'Percentuale di drop',
+            'Quantità minima',
+            'Quantità massima',
+            'Livello Abilità',
+            'Controlli'
+        ];
+        return [
+            'body' => 'gestione/gathering/chat/add_item',
+            'body_rows'=> $list,
+            'cells' => $cells,
+            'id_chat'=>$id,
+            'gathering_rarity'=> $this->gatheringRarity(),
+            'gathering_ability'=> $this->gatheringAbility(),
+            'gathering_view_permission'=>$this->gatheringManage(),
+            'path'=>$path,
+            'page'=>$page
+
+        ];
+    }
+
 
     /*** GATHERING ***/
     /**
@@ -219,10 +278,7 @@ class GatheringChat extends Gathering
      */
     public function deleteAllGatheringChat(int $id)
     {
-
         $id = Filters::int($id);
-
-
         if ($this->gatheringManage()) {
 
             DB::query("DELETE FROM gathering_chat WHERE id_chat = '{$id}' LIMIT 1");
@@ -233,9 +289,7 @@ class GatheringChat extends Gathering
                 'swal_message' => 'Combinazione rimossa correttamente.',
                 'swal_type' => 'success',
                 'gathering_list' => $this->GatheringChatList()
-
             ];
-
         } else {
             return [
                 'response' => false,
@@ -244,33 +298,25 @@ class GatheringChat extends Gathering
                 'swal_type' => 'error'
             ];
         }
-
     }
     /**
-     * @fn deleteAllGatheringChat
-     * @note Rimuove una combinazione. Da rivedere in quanto vanno rimossi tutti gli oggetti in una volta
+     * @fn deleteGatheringChatItem
+     * @note Rimuove una combinazione oggetti nella chat
      * @param array $post
      * @return array
      */
     public function deleteGatheringChatItem(int $id)
     {
-
         $id = Filters::int($id);
-
-
         if ($this->gatheringManage()) {
-
             DB::query("DELETE FROM gathering_chat WHERE id = '{$id}' LIMIT 1");
-
             return [
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Combinazione rimossa correttamente.',
                 'swal_type' => 'success',
                 'gathering_list' => $this->GatheringChatList()
-
             ];
-
         } else {
             return [
                 'response' => false,
@@ -279,10 +325,9 @@ class GatheringChat extends Gathering
                 'swal_type' => 'error'
             ];
         }
-
     }
-    /*** NEW CATEGORY ***/
 
+    /*** NEW ***/
     /**
      * @fn newGatheringChat
      * @note Inserisce una nuova categoria
@@ -291,7 +336,6 @@ class GatheringChat extends Gathering
      */
     public function newGatheringChat(array $post): array
     {
-
         if ($this->gatheringManage()) {
             $id_chat= Filters::int($post['chat']);
             $id_item= Filters::int($post['item']);
@@ -301,12 +345,7 @@ class GatheringChat extends Gathering
             $livello_abi=(Filters::int($post['livello_abi'])) ? Filters::int($post['livello_abi']) : 0;
             $drop_rate=(Filters::int($post['drop_rate'])) ? Filters::int($post['drop_rate']) : 0;
             DB::query("UPDATE mappa SET drop_rate = '{$drop_rate}'  WHERE id={$id_chat}");
-
-
-
-
             DB::query("INSERT INTO gathering_chat(id_chat, id_item,percentuale, quantita_min, quantita_max, livello_abi) VALUES('{$id_chat}', '{$id_item}', '{$percentuale}', '{$quantita_min}', '{$quantita_max}', '{$livello_abi}')");
-
             return [
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
@@ -322,30 +361,33 @@ class GatheringChat extends Gathering
             ];
         }
     }
-
-    /*** EDIT CATEGORY ***/
-
     /**
-     * @fn editGatheringChat
-     * @note Modifica una categoria
+     * @fn newGatheringChat
+     * @note Inserisce una nuova categoria
      * @param array $post
      * @return array
      */
-    public function editGatheringChat(array $post): array
+    public function newGatheringChatItem(array $post): array
     {
-
         if ($this->gatheringManage()) {
-            $id = Filters::in($post['id']);
-            $nome = Filters::in($post['nome']);
-            $descrizione = Filters::in($post['descrizione']);
-            $abilita= (Filters::int($post['abilita'])) ? Filters::int($post['abilita']) : 0;
+            $id_chat= Filters::int($post['id_chat']);
+            $id_item= Filters::int($post['item']);
+            $percentuale= Filters::int($post['percentuale']);
+            $quantita_min=(Filters::int($post['quantita_min'])) ? Filters::int($post['quantita_min']) : 0;
+            $quantita_max= (Filters::int($post['quantita_max'])) ? Filters::int($post['quantita_max']) : 0;
+            $livello_abi=(Filters::int($post['livello_abi'])) ? Filters::int($post['livello_abi']) : 0;
 
-            DB::query("UPDATE gathering_chat SET nome = '{$nome}', descrizione= '{$descrizione}', abilita='{$abilita}' WHERE id={$id}");
+            if($this->getOneGatheringChatItem($id_chat, $id_item)){
+                DB::query("UPDATE gathering_chat SET percentuale= '{$percentuale}', quantita_min= '{$quantita_min}', quantita_max= '{$quantita_max}', livello_abi = '{$livello_abi}'  WHERE id_chat={$id_chat} AND id_item={$id_item}");
+            }else{
+               $query="INSERT INTO gathering_chat(id_chat, id_item,percentuale, quantita_min, quantita_max, livello_abi) VALUES('{$id_chat}', '{$id_item}', '{$percentuale}', '{$quantita_min}', '{$quantita_max}', '{$livello_abi}')";
+                DB::query("INSERT INTO gathering_chat(id_chat, id_item,percentuale, quantita_min, quantita_max, livello_abi) VALUES('{$id_chat}', '{$id_item}', '{$percentuale}', '{$quantita_min}', '{$quantita_max}', '{$livello_abi}')");
+            }
 
             return [
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
-                'swal_message' => 'Categoria modificata con successo.',
+                'swal_message' => $query,
                 'swal_type' => 'success'
             ];
         } else {
@@ -357,6 +399,69 @@ class GatheringChat extends Gathering
             ];
         }
     }
+
+
+    /*** EDIT ***/
+    /**
+     * @fn editGatheringChatItem
+     * @note Modifica una categoria
+     * @param array $post
+     * @return array
+     */
+    public function editGatheringChatItem(array $post): array
+    {
+        if ($this->gatheringManage()) {
+            $id = Filters::in($post['id']);
+            $percentuale= Filters::int($post['percentuale']);
+            $quantita_min=(Filters::int($post['quantita_min'])) ? Filters::int($post['quantita_min']) : 0;
+            $quantita_max= (Filters::int($post['quantita_max'])) ? Filters::int($post['quantita_max']) : 0;
+            $livello_abi=(Filters::int($post['livello_abi'])) ? Filters::int($post['livello_abi']) : 0;
+            DB::query("UPDATE gathering_chat SET percentuale = '{$percentuale}', quantita_min= '{$quantita_min}', quantita_max='{$quantita_max}', livello_abi='{$livello_abi}' WHERE id={$id}");
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Combinazione modificata con successo.',
+                'swal_type' => 'success'
+            ];
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
+        }
+    }
+    /**
+     * @fn editGatheringChat
+     * @note Modifica una categoria
+     * @param array $post
+     * @return array
+     */
+    public function editGatheringChat(array $post): array
+    {
+        if ($this->gatheringManage()) {
+            $id_chat = Filters::in($post['id_chat']);
+            $drop_rate= Filters::int($post['drop_rate']);
+
+            DB::query("UPDATE mappa SET drop_rate = '{$drop_rate}' WHERE id={$id_chat}");
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Chat aggiornata con successo.',
+                'swal_type' => 'success'
+            ];
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
+        }
+    }
+
+
     /*** AJAX ***/
 
     /**

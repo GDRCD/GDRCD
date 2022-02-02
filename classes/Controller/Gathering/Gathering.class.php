@@ -36,8 +36,6 @@ class Gathering extends BaseClass
     public function __construct()
     {
         parent::__construct();
-
-        # Gli esiti sono attivi in chat?
         $this->gathering_enabled = Functions::get_constant('GATHERING_ENABLE');
         $this->gathering_rarity = Functions::get_constant('GATHERING_RARITY');
         $this->gathering_ability = Functions::get_constant('GATHERING_ABILITY');

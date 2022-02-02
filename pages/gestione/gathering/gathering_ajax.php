@@ -45,5 +45,14 @@ switch ($_POST['action']) {
     case 'delete_chat_item':
         echo json_encode($gathering_chat->deleteGatheringChatItem($_POST['id']));
         break;
+    case 'edit_chat_item':
+        echo json_encode($gathering_chat->editGatheringChatItem($_POST));
+        break;
+    case 'edit_chat':
+        echo json_encode($gathering_chat->editGatheringChat($_POST));
+        break;
+    case 'new_chat_item':
+        echo json_encode($gathering_chat->newGatheringChatItem($_POST));
+        break;
 
 }
