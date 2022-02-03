@@ -37,7 +37,7 @@ class AudioController {
         if(isset($PARAMETERS['settings']['audiotype']['.'.strtolower(end($ext))])) {
             return
                 '<div style="height:0;">
-                    <audio id="audioController_'.$label.'" preload="none">
+                    <audio id="audioController_'.$label.'" preload="none" controls style="display:none">
                         <source src="../../../sounds/'.$PARAMETERS['settings']['audio_new_'.$label].'" type="'.$PARAMETERS['settings']['audiotype']['.'.strtolower(end($ext))].'">
                         Your browser does not support the audio element.
                     </audio>
