@@ -372,6 +372,7 @@ $MESSAGE['interface']['hotel']['per_hour'] = 'per ogni ora';
 $MESSAGE['interface']['hotel']['no_bucks'] = 'Non hai con te abbastanza denaro.';
 $MESSAGE['interface']['hotel']['back'] = 'Indietro';
 $MESSAGE['interface']['hotel']['ok'] = 'Prenotazione completata';
+$MESSAGE['interface']['hotel']['form']['bookRoom']['title'] = 'Prenota Stanza';
 /*Anagrafe*/
 $MESSAGE['interface']['pg_list']['pg_list'] = 'Anagrafe';
 $MESSAGE['interface']['pg_list']['select'] = 'Visualizza il personaggio';
