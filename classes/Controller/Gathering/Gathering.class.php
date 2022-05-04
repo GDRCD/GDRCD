@@ -30,7 +30,11 @@ class Gathering extends BaseClass
         $gathering_enabled,
         $gathering_rarity,
         $gathering_ability,
-        $gathering_ability_esclusive;
+        $gathering_ability_esclusive,
+        $gathering_type,
+        $gathering_random,
+        $gathering_num_azioni,
+        $gathering_time;
 
 
     public function __construct()
@@ -40,7 +44,10 @@ class Gathering extends BaseClass
         $this->gathering_rarity = Functions::get_constant('GATHERING_RARITY');
         $this->gathering_ability = Functions::get_constant('GATHERING_ABILITY');
         $this->gathering_ability_esclusive = Functions::get_constant('GATHERING_ABILITY_ESCLUSIVE');
-
+        $this->gathering_type = Functions::get_constant('GATHERING_TYPE');
+        $this->gathering_random = Functions::get_constant('GATHERING_RAND');
+        $this->gathering_num_azioni=Functions::get_constant('GATHERING_NUM_AZIONI');
+        $this->gathering_time=Functions::get_constant('GATHERING_TIME');
     }
 
     /*** GETTER */
@@ -60,6 +67,22 @@ class Gathering extends BaseClass
     public function gatheringAbilityEsclusive(): bool
     {
         return $this->gathering_ability_esclusive;
+    }
+    public function gatheringType(): bool
+    {
+        return $this->gathering_type;
+    }
+    public function gatheringRandom(): bool
+    {
+        return $this->gathering_random;
+    }
+    public function gatheringNumAzioni(): bool
+    {
+        return $this->gathering_num_azioni;
+    }
+    public function gatheringTime(): bool
+    {
+        return $this->gathering_time;
     }
 
     /*** PERMISSIONS */
