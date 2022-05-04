@@ -23,6 +23,10 @@ $id_pg = Filters::int($_REQUEST['id_pg']);
     <a href="main.php?page=scheda_descrizione&pg=<?php echo $_SESSION['login']; ?>&id_pg=<?=$id_pg;?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['detail']); ?>
     </a>
+
+    <a href="main.php?page=scheda_contatti&pg=<?php echo $_SESSION['login']; ?>&id_pg=<?=$id_pg;?>">
+        <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['contatti']); ?>
+    </a>
     <a href="main.php?page=scheda_storia&pg=<?php echo $_SESSION['login']; ?>&id_pg=<?=$id_pg;?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['background']); ?>
     </a>

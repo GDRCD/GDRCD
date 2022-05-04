@@ -1182,6 +1182,19 @@ CREATE TABLE IF NOT EXISTS `statistiche` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
+--
+-- Struttura della tabella `contatti`
+--
+CREATE TABLE IF NOT EXISTS `contatti` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `pg` varchar(255) NOT NULL,
+    `contatto` varchar(255) NOT NULL,
+    `alias` varchar(255) NOT NULL,
+    `descrizione` text NOT NULL,
+    PRIMARY KEY (`id`)
+    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+
 
 --
 -- Struttura della tabella `_gdrcd_db_versions`
