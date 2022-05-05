@@ -1185,17 +1185,38 @@ CREATE TABLE IF NOT EXISTS `statistiche` (
 --
 -- Struttura della tabella `contatti`
 --
-CREATE TABLE IF NOT EXISTS `contatti` (
-    `id` int NOT NULL AUTO_INCREMENT,
-    `pg` varchar(255) NOT NULL,
-    `contatto` varchar(255) NOT NULL,
-    `alias` varchar(255) NOT NULL,
-    `descrizione` text NOT NULL,
-    PRIMARY KEY (`id`)
-    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+CREATE TABLE `contatti` (
+        `id` INT(11) NOT NULL AUTO_INCREMENT,
+        `personaggio` INT(11) NOT NULL DEFAULT '0',
+        `contatto` BIGINT(20) NOT NULL DEFAULT '0',
+        `categoria` VARCHAR(255) NOT NULL COLLATE 'utf8_general_ci',
+        `creato_il` DATE NOT NULL,
+        `creato_da` VARCHAR(255) NOT NULL COLLATE 'utf8_general_ci',
+        PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+--
+-- Struttura della tabella `contatti_nota`
+--
+CREATE TABLE `contatti_nota` (
+ `id` INT(11) NOT NULL AUTO_INCREMENT,
+ `id_contatto` INT(11) NOT NULL DEFAULT '0',
+ `nota` TEXT NOT NULL COLLATE 'latin1_swedish_ci',
+ `pubblica` INT(11) NOT NULL DEFAULT '0',
+ `creato_il` DATETIME NOT NULL,
+ `creato_da` VARCHAR(255) NOT NULL DEFAULT '0' COLLATE 'latin1_swedish_ci',
+ PRIMARY KEY (`id`)
+)ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
-
-
+--
+-- Struttura della tabella `contatti_nota`
+--
+CREATE TABLE `contatti_categorie` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(255) NOT NULL DEFAULT '0' COLLATE 'latin1_swedish_ci',
+  `creato_il` DATETIME NOT NULL,
+  `creato_da` VARCHAR(255) NOT NULL DEFAULT '0' COLLATE 'latin1_swedish_ci',
+  PRIMARY KEY (`id`)
+)ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 --
 -- Struttura della tabella `_gdrcd_db_versions`
 --
