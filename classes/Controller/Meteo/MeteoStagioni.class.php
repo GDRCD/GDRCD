@@ -26,15 +26,16 @@ class MeteoStagioni extends Meteo{
     /**** FUNCTIONS ****/
 
     /**
-     * @fn
+     * @fnm eteoSeason
      * @note Restituisce il meteo dalla stagione
+     * @return array
      */
-    public function meteoSeason()
+    public function meteoSeason(): array
     {
         $data1 = date("Y-m-d H:i");
         $data2 = Functions::get_constant('WEATHER_LAST_DATE');
         $time = Functions::get_constant('WEATHER_UPDATE');
-        if (empty($data2) || ($this->dateDifference($data2, $data1, '%h') > $time) || (Functions::get_constant('WEATHER_LAST_DATE') == "")) {
+        if (empty($data2) || (Functions::dateDifference($data2, $data1, '%h') > $time) || (Functions::get_constant('WEATHER_LAST_DATE') == "")) {
             $data = date("Y-m-d");
             $stagione = DB::query("SELECT * FROM meteo_stagioni WHERE data_inizio <'{$data}' AND DATA_fine > '{$data}'", 'query');
             $condizioni = MeteoStati::getInstance()->getAllState($stagione['id']);
@@ -67,12 +68,19 @@ class MeteoStagioni extends Meteo{
         }
     }
 
-    public function meteoMappaSeason($stagioni, $id)
+    /**
+     * @fn meteoMappaSeason
+     * @note Modifica stagione mappa
+     * @param string $stagioni
+     * @param int $id
+     * @return array
+     */
+    public function meteoMappaSeason(string $stagioni, int $id): array
     {
         $data1 = date("Y-m-d H:i");
         $data2 = Functions::get_constant('WEATHER_LAST_DATE');
         $time = Functions::get_constant('WEATHER_UPDATE');
-        if (empty($data2) || ($this->dateDifference($data2, $data1, '%h') > $time) || (Functions::get_constant('WEATHER_LAST_DATE') == "")) {
+        if (empty($data2) || (Functions::dateDifference($data2, $data1, '%h') > $time) || (Functions::get_constant('WEATHER_LAST_DATE') == "")) {
             $data = date("Y-m-d");
             $stagione = DB::query("SELECT * FROM meteo_stagioni WHERE data_inizio <'{$data}' AND DATA_fine > '{$data}' and id IN ({$stagioni})", 'query');
             if (empty($stagione)) {
@@ -111,10 +119,12 @@ class MeteoStagioni extends Meteo{
     }
 
     /**
-     * @fn
+     * @fn diffselectSeason
      * @note Select degli stati climatici non presenti nella stagione
+     * @param array $array
+     * @return string
      */
-    public function diffselectSeason($array)
+    public function diffselectSeason(array $array): string
     {
         $option = "";
         $stagioni = MeteoStagioni::getInstance()->getAllSeason();
@@ -134,33 +144,53 @@ class MeteoStagioni extends Meteo{
     /**** GESTIONE ****/
 
     /**
-     * @fn new
+     * @fn newSeason
      * @note Inserisce una stagione
+     * @param array $post
+     * @return void
      */
-    public function newSeason(string $nome, $minima,$massima, $data_inizio, $alba, $tramonto)
+    public function newSeason(array $post):void
     {
+
+        $nome = Filters::in( $post['nome']);
+        $minima = Filters::in( $post['minima']);
+        $massima = Filters::in($post['massima']);
+        $data_inizio =Filters::in( $post['data_inizio']);
+        $alba= Filters::in($post['alba']);
+        $tramonto = Filters::in( $post['tramonto']);
+
         DB::query("INSERT INTO meteo_stagioni (nome,minima,massima, data_inizio, alba, tramonto )  VALUES
         ('{$nome}', '{$minima}' , '{$massima}', '{$data_inizio}', '{$alba}', '{$tramonto}') ");
     }
 
     /**
-     * @fn edit
+     * @fn editSeason
      * @note Aggiorna una stagione
+     * @param array $post
+     * @return void
      */
-    public function editSeason(string $nome, $minima,$massima, $data_inizio, $alba, $tramonto, $id)
+    public function editSeason(array $post):void
     {
-        $id = Filters::int($id);
+        $nome = Filters::in($post['nome']);
+        $minima = Filters::in( $post['minima']);
+        $massima = Filters::in( $post['massima']);
+        $data_inizio = Filters::in($post['data_inizio']);
+        $alba= Filters::in($post['alba']);
+        $tramonto = Filters::in($post['tramonto']);
+        $id = Filters::in( $post['id']);
         DB::query("UPDATE  meteo_stagioni 
                 SET nome = '{$nome}',minima='{$minima}', massima='{$massima}', data_inizio='{$data_inizio}', alba='{$alba}', tramonto='{$tramonto}' WHERE id='{$id}'");
     }
 
     /**
-     * @fn delete
+     * @fn deleteSeason
      * @note Cancella una stagione
+     * @param array $post
+     * @return void
      */
-    public function deleteSeason(int $id)
+    public function deleteSeason(array $post)
     {
-        $id = Filters::int($id);
+        $id=Filters::in($post['id']);
         DB::query("DELETE FROM meteo_stagioni WHERE id='{$id}'");
     }
 

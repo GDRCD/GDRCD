@@ -4,40 +4,21 @@ switch ($_POST['op']) {
 
     # Creazione Condizione
     case 'save_new':
-        $nome = Filters::in( $_POST['nome']);
-        $minima = Filters::in( $_POST['minima']);
-        $massima = Filters::in($_POST['massima']);
-        $data_inizio =Filters::in( $_POST['data_inizio']);
-        $alba= Filters::in($_POST['alba']);
-        $tramonto = Filters::in( $_POST['tramonto']);
-        MeteoStagioni::getInstance()->newSeason($nome, $minima, $massima, $data_inizio, $alba, $tramonto);
+        MeteoStagioni::getInstance()->newSeason($_POST);
         break;
         #Modifica condizione
     case 'save_edit':
-        $nome = Filters::in($_POST['nome']);
-        $minima = Filters::in( $_POST['minima']);
-        $massima = Filters::in( $_POST['massima']);
-        $data_inizio = Filters::in($_POST['data_inizio']);
-        $alba= Filters::in($_POST['alba']);
-        $tramonto = Filters::in($_POST['tramonto']);
-
-        $id = Filters::in( $_POST['id']);
-        MeteoStagioni::getInstance()->editSeason($nome, $minima, $massima, $data_inizio, $alba, $tramonto, $id);
+        MeteoStagioni::getInstance()->editSeason($_POST);
         break;
     # Delete condizione
     case 'delete':
-        $id=Filters::in( $_POST['id']);
-        MeteoStagioni::getInstance()->deleteSeason($id);
+        MeteoStagioni::getInstance()->deleteSeason($_POST);
         break;
     case 'add_condition':
-         $id_stagione= Filters::in($_POST['id']);
-         $id_condizione= Filters::in($_POST['condizione']);
-         $percentuale= Filters::in($_POST['percentuale']);
-        MeteoStati::getInstance()->newClimaticState($id_stagione, $id_condizione, $percentuale);
+        MeteoStati::getInstance()->newClimaticState($_POST);
         break;
     case 'delete_condition':
-        $id=Filters::in($_POST['id']);
-        MeteoStati::getInstance()->deleteClimaticState($id);
+        MeteoStati::getInstance()->deleteClimaticState($_POST);
         break;
     default:
         die('Operazione non riconosciuta.');

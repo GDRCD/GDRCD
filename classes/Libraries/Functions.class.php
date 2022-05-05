@@ -130,4 +130,20 @@ class Functions extends BaseClass
 
         exit();
     }
+
+    /**
+     * @fn dateDifference
+     * @note Calcolo differenza di ore fra la data/ora attuale e quella scelta
+     * @param string $date_1 @format 'YYYY-MM-DD H:i:s'
+     * @param string $date_2 @format 'YYYY-MM-DD H:i:s'
+     * @param string $format
+     * @return string
+     */
+    public static function dateDifference(string $date_1, string $date_2, string $format = '%a')
+    {
+        $datetime1 = date_create($date_1);
+        $datetime2 = date_create($date_2);
+        $interval = date_diff($datetime1, $datetime2);
+        return $interval->format($format);
+    }
 }
