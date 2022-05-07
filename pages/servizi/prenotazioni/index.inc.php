@@ -28,6 +28,7 @@ if (gdrcd_filter('get', $_POST['action']) == "bookRoom") {
         // Imposto il valore minimo delle ore a 1
         $timeRoom = $timeRoom >= 0 ? $timeRoom : 1;
 
+        // Controllo se il personaggio ha abbastanza soldi
         if($checkPG['soldi'] >= ($timeRoom * $checkRoom['costo'])) {
             /*Opero la prenotazione*/
             gdrcd_query("UPDATE mappa SET proprietario = '".$_SESSION['login']."', invitati='', ora_prenotazione=NOW(), scadenza=DATE_ADD(NOW(), INTERVAL ".gdrcd_filter('get', $_POST['ore'])." HOUR) WHERE id = ".gdrcd_filter('num', $idRoom)." and scadenza < NOW() LIMIT 1");
@@ -50,9 +51,9 @@ $result = gdrcd_query($query, 'result');
 $optionsRooms = [];
 while ($rooms = gdrcd_query($result, 'fetch')) {
     $isSelected = gdrcd_filter('get', $_REQUEST['id']) == $rooms['id'] ? 'selected' : NULL;
-    $isBooked = $rooms['scadenza'] > strftime('%Y-%m-%d %H:%M:%S');
+    $isBooked = strtotime($rooms['scadenza']) > strtotime(date('Y-m-d H:m:s'));
     $optionsRooms[] = $isBooked
-                        ? '<option value="' . $rooms['id'] . '" ' . $isSelected . ' disabled>' . gdrcd_filter('out', $rooms['luogo'].', '.$rooms['nome']).' ('.$rooms['proprietario'].', '.gdrcd_format_time($rooms['scadenza']).') </option>'
+                        ? '<option value="' . $rooms['id'] . '" disabled>' . gdrcd_filter('out', $rooms['luogo'].', '.$rooms['nome']).' ('.$rooms['proprietario'].', '.gdrcd_format_time($rooms['scadenza']).') </option>'
                         : '<option value="' . $rooms['id'] . '" ' . $isSelected . '>' . gdrcd_filter('out', $rooms['luogo'].', '.$rooms['nome']).' ('.$rooms['costo'].' '.strtolower($PARAMETERS['names']['currency']['plur']).' '.$MESSAGE['interface']['hotel']['per_hour'].')</option>';
 }
 
