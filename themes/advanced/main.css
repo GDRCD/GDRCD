@@ -119,7 +119,7 @@ div.innertube h2, div.output h2, div.page_title h2 {
 
 /** * Stile dei contenitori grigi con i bordini arrotondati
 */
-div.pagina_info_location, div.messages, div.forums, div.menu, div.presenti, div.output {
+div.pagina_info_location, div.messages, div.forums, div.menu, div.presenti, div.output, div.gathering {
     margin: 5px auto;
     padding: 10px;
     width: 180px;
@@ -832,6 +832,16 @@ div.innertube {
     color: #ccc;
     font-size: 10px;
     padding: 3px 0;
+}
+
+/*** GESTIONE GATHERING ***/
+
+.gestione_gathering .gathering_list .header .td{
+    width: 130px;
+}
+
+.gestione_gathering .gathering_list .td{
+    width: 135px;
 }
 
 

@@ -293,7 +293,15 @@ INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,
     ('ONLINE_STATUS_LOGIN_REFRESH',1,'Online Status','Reselect al login','Login oscura ultima scelta dai presenti?','bool',1),
     ('SCHEDA_OBJECTS_PUBLIC',1,'Scheda Oggetti','Scheda Oggetti pubblica','Pagina inventario pubblica?','bool',1),
     ('SCHEDA_STATS_PUBLIC',1,'Scheda Oggetti','Scheda Statistiche pubblica','Pagina statistica pubblica?','bool',1),
-    ('SCHEDA_ABI_PUBLIC',1,'Scheda Abilita','Scheda Abilita pubblica','Pagina abilita pubblica?','bool',1);
+    ('SCHEDA_ABI_PUBLIC',1,'Scheda Abilita','Scheda Abilita pubblica','Pagina abilita pubblica?','bool',1),
+    ('GATHERING_ENABLE',	1,	'Gathering','Attiva Gathering',	 'Attiva la possibilità di trovare oggetti in chat?',	'bool',	1),
+    ('GATHERING_NUM_AZIONI', 1,	'Gathering','Valore massimo di azioni', 	'Numero massimo di azioni da spendere nelle ricerche',	'int',1),
+    ('GATHERING_RAND', 	0, 'Gathering','Numero random di azioni a disposizione', 'Rendi random il numero di azioni giornaliere?',	'bool',	1),
+    ('GATHERING_TIME',12,	'Gathering','Orario di reset delle azioni (0 - 23)', 'A che ora vuoi resettare le azioni di ricerca?',	'int',1),
+    ('GATHERING_TYPE',0,'Gathering', 'Attiva ricerca automatica','Vuoti attivare il Gathering manuale o automatico?',	'bool',1),
+    ('GATHERING_RARITY',1, 'Attiva la rarità di un oggetto nelle ricerche', 'Gathering', 'Attiva/disattiva una quantità massima di oggetti ricercabili', 'bool', 1),
+    ('GATHERING_ABILITY',1, 'Lega un''abilità ad una categoria di ricerca', 'Gathering', 'Abilita o disabilita la possibilità di ricerca in base ad una skill definita per la categoria', 'bool', 1),
+    ('GATHERING_ABILITY_ESCLUSIVE',1, 'Specifica la necessità di avere una abilità', 'Gathering', 'Abilita/Disabilità la esclusività ad una specifica skill', 'bool', 1);
 
 -- --------------------------------------------------------
 
@@ -502,7 +510,10 @@ INSERT INTO `menu` (`menu_name`, `section`, `name`, `page`, `permission`) VALUES
   ('Gestione', 'Oggetti', 'Gestione posizioni oggetto', 'gestione_oggetti_posizioni', 'MANAGE_OBJECTS_POSITIONS'),
   ('Gestione', 'Mercato', 'Gestione Oggetti Mercato', 'gestione_mercato_oggetti', 'MANAGE_SHOPS_OBJECTS'),
   ('Gestione', 'Mercato', 'Gestione Negozi Mercato', 'gestione_mercato_negozi', 'MANAGE_SHOPS'),
-  ('Gestione', 'Statistiche', 'Gestione Statistiche', 'gestione_statistiche', 'MANAGE_STATS');
+  ('Gestione', 'Statistiche', 'Gestione Statistiche', 'gestione_statistiche', 'MANAGE_STATS'),
+  ('Gestione'	,'Gathering',	'Gestione Ricerca',	'gestione_gathering_chat',	'MANAGE_GATHERING'),
+  ('Gestione',	'Gathering',	'Gestione Oggetti ricerca',	'gestione_gathering_item',	'MANAGE_GATHERING'),
+  ('Gestione',	'Gathering',	'Gestione Categoria oggetti ricerca',	'gestione_gathering_category',	'MANAGE_GATHERING') ;
 
 -- --------------------------------------------------------
 
@@ -800,7 +811,8 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
     ('DOWNGRADE_SCHEDA_STATS','Permesso per la riduzione statistiche in schede altrui'),
     ('UPGRADE_SCHEDA_ABI','Permesso per aumento abilita in schede altrui'),
     ('DOWNGRADE_SCHEDA_ABI','Permesso per la diminuzione abilita in schede altrui'),
-    ('VIEW_SCHEDA_ABI','Permesso per la visualizzazione abilita in schede altrui');
+    ('VIEW_SCHEDA_ABI','Permesso per la visualizzazione abilita in schede altrui'),
+    ('MANAGE_GATHERING', 'Permesso per la gestione del gathering');
 
 
 
@@ -1183,6 +1195,30 @@ CREATE TABLE IF NOT EXISTS `statistiche` (
 
 -- --------------------------------------------------------
 
+
+
+CREATE TABLE `gathering_cat` (
+	`id` INT NOT NULL AUTO_INCREMENT,
+	`nome` VARCHAR(255) NULL DEFAULT NULL,
+	`descrizione` text,
+    `abilita` INT NULL DEFAULT NULL,
+	PRIMARY KEY (`id`)
+)ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+CREATE TABLE `gathering_item` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `categoria` INT NULL DEFAULT NULL,
+     `nome` VARCHAR(255) NULL DEFAULT NULL,
+     `descrizione` text,
+     `immagine` VARCHAR(255) NULL DEFAULT NULL,
+      `creato_da` VARCHAR(255) NULL DEFAULT NULL,
+      `creato_il` VARCHAR(255) NULL DEFAULT NULL,
+      `quantita` INT NOT NULL DEFAULT 0,
+      PRIMARY KEY (`id`)
+)
+    ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+
 --
 -- Struttura della tabella `_gdrcd_db_versions`
 --
@@ -1209,3 +1245,5 @@ INSERT INTO _gdrcd_db_versions (migration_id,applied_on) VALUES
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+

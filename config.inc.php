@@ -180,6 +180,8 @@ $PARAMETERS['left_column']['box']['link_menu']['class'] = 'menu';
 $PARAMETERS['left_column']['box']['link_menu']['page'] = 'link_menu'; //Menu' del gioco.
 
 /*COLONNA DESTRA*/
+$PARAMETERS['right_column']['box']['frame_gathering']['class'] = 'gathering';
+$PARAMETERS['right_column']['box']['frame_gathering']['page'] = 'frame_gathering'; //Presenti.
 $PARAMETERS['right_column']['box']['frame_presenti']['class'] = 'presenti';
 $PARAMETERS['right_column']['box']['frame_presenti']['page'] = 'frame_presenti'; //Presenti.
 
