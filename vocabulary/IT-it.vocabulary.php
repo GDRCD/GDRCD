@@ -370,6 +370,7 @@ $MESSAGE['interface']['hotel']['room'] = 'Stanza';
 $MESSAGE['interface']['hotel']['hours'] = 'Ore';
 $MESSAGE['interface']['hotel']['per_hour'] = 'per ogni ora';
 $MESSAGE['interface']['hotel']['no_bucks'] = 'Non hai con te abbastanza denaro.';
+$MESSAGE['interface']['hotel']['already_booked_by_user'] = 'Hai già prenotato la stanza!';
 $MESSAGE['interface']['hotel']['back'] = 'Indietro';
 $MESSAGE['interface']['hotel']['ok'] = 'Prenotazione completata';
 $MESSAGE['interface']['hotel']['form']['bookRoom']['title'] = 'Prenota Stanza';

@@ -8,7 +8,7 @@ if (gdrcd_filter('get', $_POST['action']) == "bookRoom") {
     $timeRoom = gdrcd_filter('num', gdrcd_filter('get', $_POST['ore']));
 
     // Preparo un controllo preliminare per assicurarmi l'affitabilità della stanza
-    $checkRoom = gdrcd_query("SELECT costo, privata, scadenza FROM mappa WHERE id = " . gdrcd_filter('num', $idRoom ) . "  LIMIT 1");
+    $checkRoom = gdrcd_query("SELECT costo, privata, scadenza, proprietario FROM mappa WHERE id = " . gdrcd_filter('num', $idRoom ) . "  LIMIT 1");
 
     if(
             $checkRoom['privata'] == 1
@@ -39,7 +39,15 @@ if (gdrcd_filter('get', $_POST['action']) == "bookRoom") {
         }
     }
     else {
-        echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['warning']['cant_do']).'</div>';
+        // Se l'utente è il proprietario della stanza, allora lo segnalo
+        // Forzo questo messaggio per evitare che l'utente veda un messaggio di errore
+        if($checkRoom['proprietario'] == $_SESSION['login']) {
+            echo '<div class="error">'.gdrcd_filter('out', $MESSAGE['interface']['hotel']['already_booked_by_user']).'</div>';
+        }
+        // Altrimenti la stranza è prenotata da un altro utente
+        else {
+            echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['warning']['cant_do']).'</div>';
+        }
     }
  }
 
