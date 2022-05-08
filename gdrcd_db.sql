@@ -279,18 +279,18 @@ INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,
     ('CHAT_PVT_SAVE',1,'Chat Salvataggio','Salva chat pvt','Salva chat attivo in pvt?','bool',1),
     ('CHAT_SAVE_LINK',1,'Chat Salvataggio','Salva chat in link','Salva chat in modalità link?','bool',1),
     ('CHAT_SAVE_DOWNLOAD',1,'Chat Salvataggio','Salva chat download','Salva chat con download?','bool',1),
-    ('WEATHER_MOON',1,'Fasi Lunari','Meteo Impostazioni','Abilita o disabilita le fasi lunari','bool',1),
-    ('WEATHER_SEASON',1,'Tipo di meteo','Meteo Impostazioni','Meteo stagioni o meteo Web api','bool',1),
-    ('WEATHER_WIND',1,'Vento','Meteo Impostazioni','Abilita o disabilita il vento','bool',1),
-    ('WEATHER_WEBAPI',0,'Abilita Meteo Web Api','Meteo Impostazioni','Abilita Web Api di OpenWeather','bool',1),
-    ('WEATHER_WEBAPIKEY',0,'Chiave Web api meteo','Meteo Impostazioni','Web Api di OpenWeather','String',1),
-    ('WEATHER_WEBAPI_CITY',0,'Web api città','Meteo Impostazioni','Città di cui avere il meteo','String',1),
-    ('WEATHER_WEBAPI_ICON',0,'Web api icone','Meteo Impostazioni','Icone di default o personalizzate','bool',1),
-    ('WEATHER_LAST_DATE',0,'Aggiornamento Meteo','Meteo Impostazioni','Data ultimo aggiornamento meteo','String',1),
-    ('WEATHER_WEBAPI_FORMAT','png','Web api formato icone','Meteo Impostazioni','Estensione delle icone','String',1),
-    ('WEATHER_LAST',0,'Ultimo Meteo','Meteo Impostazioni','Ultimo meteo registrato','String',1),
-    ('WEATHER_LAST_WIND',0,'Vento attuale','Meteo Impostazioni','Ultimo vento registrato','String',1),
-    ('WEATHER_UPDATE',4,'Tempo di aggiornamento','Meteo Impostazioni','Dopo quante ore si prevede il cambio meteo con le stagioni','int',1),
+    ('WEATHER_MOON',1,'Meteo','Luna','Abilita o disabilita le fasi lunari','bool',1),
+    ('WEATHER_SEASON',1,'Meteo','Stagionale','Meteo stagioni o meteo Web api','bool',1),
+    ('WEATHER_WIND',1,'Meteo','Vento','Abilita o disabilita il vento','bool',1),
+    ('WEATHER_WEBAPI',0,'Meteo','Web Api','Abilita Web Api di OpenWeather','bool',1),
+    ('WEATHER_WEBAPIKEY','','Meteo','Web Api Key','Web Api di OpenWeather','String',1),
+    ('WEATHER_WEBAPI_CITY','','Meteo','Web Api Citta','Città di cui avere il meteo','String',1),
+    ('WEATHER_WEBAPI_ICON',0,'Meteo','Web Api icone','Icone di default o personalizzate','bool',1),
+    ('WEATHER_LAST_DATE',0,'Meteo','Meteo Impostazioni','Data ultimo aggiornamento meteo','String',0),
+    ('WEATHER_WEBAPI_FORMAT','png','Meteo','Icone estensione','Estensione delle icone','String',1),
+    ('WEATHER_LAST',0,'Meteo','Meteo Impostazioni','Ultimo meteo registrato','String',0),
+    ('WEATHER_LAST_WIND',0,'Meteo','Meteo Impostazioni','Ultimo vento registrato','String',0),
+    ('WEATHER_UPDATE',4,'Meteo','Tempo di aggiornamento','Dopo quante ore si prevede il cambio meteo con le stagioni','int',1),
     ('ESITI_ENABLE',1,'Esiti','Attiva esiti','Abilitare la funzione esiti?','bool',1),
     ('ESITI_CHAT',1,'Esiti','Attiva esiti in chat','Abilitare la funzione di lancio degli esiti in chat?','bool',1),
     ('ESITI_TIRI',1,'Esiti','Lancio di dadi negli esiti','Abilitare la possibilità di lanciare dadi all''interno del pannello esiti?','bool',1),
@@ -503,9 +503,8 @@ INSERT INTO `menu` (`menu_name`, `section`, `name`, `page`, `permission`) VALUES
   ('Gestione', 'Permessi', 'Gestione Permessi', 'gestione_permessi', 'MANAGE_PERMISSIONS'),
   ('Gestione', 'Gestione', 'Manutenzione', 'gestione_manutenzione', 'MANAGE_MANUTENTIONS'),
   ('Gestione', 'Chat', 'Giocate Segnalate', 'gestione_segnalazioni', 'MANAGE_REPORTS'),
-  ('Gestione', 'Meteo', 'Gestione condizioni', 'gestione_meteo_condizioni', 'MANAGE_WEATHER'),
-  ('Gestione', 'Meteo', 'Gestione stagioni', 'gestione_meteo_stagioni', 'MANAGE_WEATHER'),
-  ('Gestione', 'Meteo', 'Gestione Impostazioni', 'gestione_impostazioni', 'MANAGE_WEATHER'),
+  ('Gestione', 'Meteo', 'Gestione condizioni', 'gestione_meteo_condizioni', 'MANAGE_WEATHER_CONDITIONS'),
+  ('Gestione', 'Meteo', 'Gestione stagioni', 'gestione_meteo_stagioni', 'MANAGE_WEATHER_SEASONS'),
   ('Gestione', 'Chat', 'Esiti in chat', 'gestione_esiti', 'MANAGE_OUTCOMES'),
   ('Gestione', 'Chat', 'Esiti in chat', 'gestione_esiti', 'MANAGE_OUTCOMES'),
   ('Gestione', 'Quest', 'Gestione Quest', 'gestione_quest', 'MANAGE_QUESTS'),
@@ -750,14 +749,26 @@ INSERT INTO `meteo_stagioni` (`id`, `nome`, `minima`,`massima`, `data_inizio`,`d
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `meteo_stati_climatici`
+-- Struttura della tabella `meteo_stagioni_condizioni`
 --
 
-CREATE TABLE `meteo_stati_climatici` (
+CREATE TABLE `meteo_stagioni_condizioni` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `stagione` INT NULL,
     `condizione` INT NULL,
     `percentuale` INT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `meteo_venti`
+--
+
+CREATE TABLE `meteo_venti` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `nome` varchar(255) NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
@@ -893,6 +904,8 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
     ('MANAGE_MANUTENTIONS', 'Permesso per la gestione della manutenzione del db'),
     ('MANAGE_REPORTS', 'Permesso per la gestione delle giocate segnalate'),
     ('MANAGE_WEATHER ', 'Permesso per la gestione meteo'),
+    ('MANAGE_WEATHER_SEASONS', 'Permesso per la gestione delle stagioni meteo'),
+    ('MANAGE_WEATHER_CONDITIONS ', 'Permesso per la gestione delle condizioni meteo'),
     ('MANAGE_ESITI', 'Permesso per la gestione base degli esiti'),
     ('MANAGE_ALL_ESITI', 'Permesso per la visione/modifica di qualsiasi tipo di esito'),
     ('MANAGE_OUTCOMES', 'Permesso per la gestione degli esiti in chat'),
@@ -914,7 +927,7 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
     ('REMOVE_SCHEDA_OBJECTS','Permesso per la rimozione oggetti in schede altrui'),
     ('MANAGE_STATS','Permesso per la gestione statistiche'),
     ('VIEW_SCHEDA_STATS','Permesso per la visualizzazione statistiche in schede altrui'),
-    ('UPGRADE_SCHEDA_STATS','Permesso per l\'aumento statistiche in schede altrui'),
+    ('UPGRADE_SCHEDA_STATS','Permesso per laumento statistiche in schede altrui'),
     ('DOWNGRADE_SCHEDA_STATS','Permesso per la riduzione statistiche in schede altrui'),
     ('UPGRADE_SCHEDA_ABI','Permesso per aumento abilita in schede altrui'),
     ('DOWNGRADE_SCHEDA_ABI','Permesso per la diminuzione abilita in schede altrui'),

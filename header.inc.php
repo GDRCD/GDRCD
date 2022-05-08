@@ -69,12 +69,18 @@ if (($PARAMETERS['mode']['user_bbcode'] == 'ON' && $PARAMETERS['settings']['user
               type="text/css"/>
 
         <!-- JQUERY -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"/>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+        <link rel="stylesheet" href="plugins/Jquery/jquery.min.css"/>
+        <script src="plugins/Jquery/jquery.min.js"></script>
+        <script src="plugins/Jquery/jquery-ui.min.js"></script>
+
+        <!-- Chosen 1.8.7 -->
+        <script src="plugins/Chosen/chosen.jquery.min.js"></script>
+        <link rel="stylesheet" href="plugins/Chosen/chosen.min.css"/>
 
         <!-- SweetAlert v2.11 -->
-        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script src="plugins/Swal/swal.min.js"></script>
+        <link rel="stylesheet" href="plugins/Swal/swal.min.css"/>
+
 
         <!-- CUSTOM PLUGINS -->
         <script src="plugins/Ajax.js"></script>
@@ -82,6 +88,7 @@ if (($PARAMETERS['mode']['user_bbcode'] == 'ON' && $PARAMETERS['settings']['user
         <script src="plugins/Menu.js"></script>
         <script src="plugins/FakeTable.js"></script>
         <script src="plugins/Swal.js"></script>
+        <script src="plugins/Chosen.js"></script>
 
         <?php
         /** * Il controllo individua se l'header non è impiegato per il main */

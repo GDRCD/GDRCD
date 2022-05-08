@@ -39,7 +39,7 @@ if(Permissions::permission('MANAGE_WEATHER') && ($_REQUEST['dir'] )) {
             <select  name="vento" id="vento">
                 <option value="">----</option>
                 <?php
-                echo Meteo::getInstance()->listWinds();
+                echo MeteoVenti::getInstance()->listWinds();
                 ?>
             </select>
             </div>

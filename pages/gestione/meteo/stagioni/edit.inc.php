@@ -1,6 +1,7 @@
 <?php
 
 $condizione=MeteoStagioni::getInstance()->getSeason(Filters::out($_POST['id']));
+
 ?>
 <form class="form"
       action="main.php?page=gestione_meteo_stagioni" method="post">

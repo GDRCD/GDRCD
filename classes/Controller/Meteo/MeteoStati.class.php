@@ -9,7 +9,7 @@ class MeteoStati extends Meteo{
      * @return mixed
      */
     public function  getAllState(string $stagione){
-        return DB::query("SELECT nome, percentuale, meteo_stati_climatici.id, condizione FROM meteo_stati_climatici LEFT JOIN meteo_condizioni on condizione=meteo_condizioni.id where stagione='{$stagione}' order by percentuale", 'result');
+        return DB::query("SELECT nome, percentuale, meteo_stagioni_condizioni.id, condizione FROM meteo_stagioni_condizioni LEFT JOIN meteo_condizioni on condizione=meteo_condizioni.id where stagione='{$stagione}' order by percentuale", 'result');
     }
 
     /**
@@ -20,7 +20,7 @@ class MeteoStati extends Meteo{
      */
     public function diffselectState(string $stagione)
     {
-        return DB::query("SELECT meteo_condizioni.id, nome, vento, img FROM meteo_condizioni WHERE id NOT IN (SELECT condizione FROM meteo_stati_climatici WHERE stagione= {$stagione} )", 'result');
+        return DB::query("SELECT meteo_condizioni.id, nome, vento, img FROM meteo_condizioni WHERE id NOT IN (SELECT condizione FROM meteo_stagioni_condizioni WHERE stagione= {$stagione} )", 'result');
     }
 
     /**
@@ -34,7 +34,7 @@ class MeteoStati extends Meteo{
         $id_stagione= Filters::in($post['id']);
         $id_condizione= Filters::in($post['condizione']);
         $percentuale= Filters::in($post['percentuale']);
-        DB::query("INSERT INTO meteo_stati_climatici (stagione,condizione,percentuale )  VALUES
+        DB::query("INSERT INTO meteo_stagioni_condizioni (stagione,condizione,percentuale )  VALUES
         ('{$id_stagione}', '{$id_condizione}' , '{$percentuale}') ");
     }
 
@@ -47,7 +47,7 @@ class MeteoStati extends Meteo{
     public function  deleteClimaticState(array $post):void
     {
         $id=Filters::in($post['id']);
-        DB::query("DELETE FROM meteo_stati_climatici WHERE id='{$id}'");
+        DB::query("DELETE FROM meteo_stagioni_condizioni WHERE id='{$id}'");
     }
 
 }

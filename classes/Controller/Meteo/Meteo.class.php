@@ -19,7 +19,14 @@ class Meteo extends BaseClass
     public function __construct()
     {
         parent::__construct();
-        $this->array_vento = array("Assente", "Brezza", "Brezza intensa", "Vento Forte", "Burrasca"); # TODO Spostare in db
+        $this->array_vento =[
+            ["id"=>'Assente', "nome"=>"Assente"],
+            ["id"=>'Brezza', "nome"=>"Brezza"],
+            ["id"=>'Intensa', "nome"=>"Brezza intensa"],
+            ["id"=>'Forte', "nome"=>"Vento Forte"],
+            ["id"=>'Burrasca', "nome"=>"Burrasca"],
+        ]; # TODO spostare in db
+
         $this->moon_abilitated = Functions::get_constant('WEATHER_MOON');
         $this->weather_season = Functions::get_constant('WEATHER_SEASON');
         $this->weather_webapi = Functions::get_constant('WEATHER_WEBAPI');
@@ -113,19 +120,6 @@ class Meteo extends BaseClass
 
     /*** LISTS ***/
 
-    /**
-     * @fn selectVento
-     * @note Genera gli option per il vento
-     * @return string
-     */
-    public function listWinds(): string
-    {
-        $option = "";
-        foreach ($this->array_vento as $vento) {
-            $option .= "<option>{$vento}</option>";
-        }
-        return $option;
-    }
 
     /**** FUNCTIONS ****/
 
@@ -266,59 +260,6 @@ class Meteo extends BaseClass
 
     /**
      * @fn
-     * @note Salvataggio della pagina impostazioni
-     * @param array $post
-     * @return void
-     */
-    public function saveSetting(array $post):void
-    {
-
-        $luna = Filters::in( $post['moon']);
-        $vento = Filters::in( $post['wind']);
-        $tipo = Filters::in( $post['type']);
-        $api = Filters::in( $post['webapi_key']);
-        $citta = Filters::in( $post['webapi_city']);
-        $icone = Filters::in( $post['webapi_icon']);
-        $formato=Filters::in( $post['webapi_format']);
-        $time=Filters::in( $post['weather_time']);
-
-        DB::query("UPDATE config SET val = '{$luna}' WHERE const_name='WEATHER_MOON'");
-        DB::query("UPDATE config SET val = '{$vento}' WHERE const_name='WEATHER_WIND'");
-        DB::query("UPDATE config SET val = '{$tipo}' WHERE const_name='WEATHER_TYPE'");
-        DB::query("UPDATE config SET val = '{$api}' WHERE const_name='WEATHER_WEBAPI'");
-        DB::query("UPDATE config SET val = '{$citta}' WHERE const_name='WEATHER_WEBAPI_CITY'");
-        DB::query("UPDATE config SET val = '{$icone}' WHERE const_name='WEATHER_WEBAPI_ICON'");
-        DB::query("UPDATE config SET val = '{$formato}' WHERE const_name='WEATHER_WEBAPI_FORMAT'");
-        DB::query("UPDATE config SET val = '{$time}' WHERE const_name='WEATHER_UPDATE'");
-
-        switch ($tipo) {
-            case '1': // stagioni
-                $chat = DB::query("SELECT * FROM meteo_chat WHERE meteo !=''", "num_rows");
-                $map = DB::query("SELECT * FROM meteo_mappa WHERE meteo !=''", "num_rows");
-                if (!$chat) {
-                    DB::query("DELETE FROM meteo_chat WHERE meteo=''");
-                }
-                if (!$map) {
-                    DB::query("DELETE FROM meteo_mappa WHERE meteo=''");
-                }
-                break;
-            default://webapi
-                $chat = DB::query("SELECT * FROM meteo_chat WHERE citta !=''", "num_rows");
-                $map = DB::query("SELECT * FROM meteo_mappa WHERE citta !=''", "num_rows");
-                if (!$chat) {
-                    DB::query("DELETE FROM meteo_chat WHERE citta=''");
-                }
-                if (!$map) {
-                    DB::query("DELETE FROM meteo_mappa WHERE citta=''");
-                }
-
-        }
-
-
-    }
-
-    /**
-     * @fn
      * @note Salvataggio del meteo per la stagione
      * @param string $meteo
      * @param string $wind
@@ -441,24 +382,6 @@ class Meteo extends BaseClass
 
     /*** VENTO ****/
 
-    /**
-     * @fn selectVento
-     * @note Genera gli option per il vento per edit, ritornando gli option selezionati e non
-     * @param array $array
-     * @return string
-     */
-    public function diffselectVento(array $array): string
-    {
-        $option = "";
-        foreach ($array as $v) {
-            $option .= "<option selected>{$v}</option>";
-        }
-        $diff = array_diff($this->array_vento, $array);
-        foreach ($diff as $vento) {
-            $option .= "<option>{$vento}</option>";
-        }
-        return $option;
-    }
 
     /**
      * @fn

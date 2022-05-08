@@ -1,7 +1,7 @@
 class Swal {
 
     static fire(title, message, type) {
-        swal(title,message,type);
+        new swal(title,message,type);
     }
 
     static button(title, message, type, buttons = false) {
@@ -19,7 +19,7 @@ class Swal {
             }
         }
 
-        return swal(title, message, type, {
+        return new swal(title, message, type, {
             buttons: buttons
         }).then(value => {
                 if (!value) throw null;

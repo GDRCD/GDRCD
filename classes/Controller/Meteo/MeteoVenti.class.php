@@ -1,6 +1,6 @@
 <?php
 
-class MeteoCondizioni extends Meteo
+class MeteoVenti extends Meteo
 {
 
 
@@ -11,9 +11,9 @@ class MeteoCondizioni extends Meteo
      * @note Controlla se si hanno i permessi per gestire le condizioni meteo
      * @return bool
      */
-    public function permissionManageWeatherConditions(): bool
+    public function permissionManageWeatherWinds(): bool
     {
-        return Permissions::permission('MANAGE_WEATHER_CONDITIONS');
+        return Permissions::permission('MANAGE_WEATHER_WINDS');
     }
 
 
@@ -25,36 +25,33 @@ class MeteoCondizioni extends Meteo
      * @param string $val
      * @return bool|int|mixed|string
      */
-    public function getAllCondition(string $val = '*')
+    public function getAllWinds(string $val = '*')
     {
-        return DB::query("SELECT {$val} FROM meteo_condizioni", 'result');
+        return DB::query("SELECT {$val} FROM meteo_venti ORDER BY nome", 'result');
     }
-
 
     /**
      * @fn getOne
      * @note Estrae una condizione meteo
      * @return bool|int|mixed|string
      */
-    public function getCondition(int $id, string $val = '*')
+    public function getWind(int $id, string $val = '*')
     {
-        return DB::query("SELECT {$val} FROM meteo_condizioni WHERE id='{$id}' LIMIT 1");
+        return DB::query("SELECT {$val} FROM meteo_venti WHERE id='{$id}' LIMIT 1");
     }
 
-
-    /** LISTS  */
+    /** LIST */
 
     /**
-     * @fn selectConditions
-     * @note Genera gli option per le conditions
+     * @fn selectVento
+     * @note Genera gli option per il vento
      * @return string
      */
-    public function listConditions(): string
+    public function listWinds(): string
     {
-        $conditions = $this->getAllCondition('id,nome');
-        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $conditions);
+        $winds = $this->getAllWinds();
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $winds);
     }
-
 
     /** AJAX */
 
@@ -63,9 +60,9 @@ class MeteoCondizioni extends Meteo
      * @note Estrae la lista di condizioni
      * @return array
      */
-    public function ajaxCondList():array
+    public function ajaxWindList():array
     {
-        return ['List'=>$this->listConditions()];
+        return ['List'=>$this->listWinds()];
     }
 
     /**
@@ -74,23 +71,19 @@ class MeteoCondizioni extends Meteo
      * @param array $post
      * @return array
      */
-    public function ajaxCondData(array $post): array
+    public function ajaxWindData(array $post): array
     {
 
-        if ($this->permissionManageWeatherConditions()) {
+        if ($this->permissionManageWeatherWinds()) {
             $id = Filters::int($post['id']);
 
-            $data = $this->getCondition($id);
+            $data = $this->getWind($id);
 
             $nome = Filters::out($data['nome']);
-            $img = Filters::out($data['img']);
-            $vento = Filters::out($data['vento']);
 
             return [
                 'response' => true,
-                'nome'=>$nome,
-                'img'=>$img,
-                'vento'=>$vento
+                'nome'=>$nome
             ];
 
         }
@@ -104,21 +97,18 @@ class MeteoCondizioni extends Meteo
      * @fn new
      * @note Inserisce una nuova condizione
      */
-    public function NewCondition(array $post)
+    public function NewWind(array $post)
     {
-        if ($this->permissionManageWeather()) {
+        if ($this->permissionManageWeatherWinds()) {
 
             $nome = Filters::in($post['nome']);
-            $vento = Filters::in(implode(",", $post['vento']));
-            $img = Filters::in($post['immagine']);
 
-
-            DB::query("INSERT INTO meteo_condizioni (nome,vento,img )  VALUES ('{$nome}', '{$vento}' , '{$img}') ");
+            DB::query("INSERT INTO meteo_venti (nome)  VALUES ('{$nome}') ");
 
             return [
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
-                'swal_message' => 'Condizione meteo creata.',
+                'swal_message' => 'Vento creato.',
                 'swal_type' => 'success'
             ];
         } else {
@@ -135,22 +125,19 @@ class MeteoCondizioni extends Meteo
      * @fn edit
      * @note Aggiorna una condizione meteo
      */
-    public function ModAbiRequisito(array $post)
+    public function ModWind(array $post)
     {
-        if($this->permissionManageWeather()){
-            $nome = Filters::in( $post['nome']);
-            $vento = implode(",",$post['vento']);
+        if($this->permissionManageWeatherWinds()){
             $id=Filters::in( $post['id']);
-            $img = Filters::in( $post['img']);
+            $nome = Filters::in( $post['nome']);
 
-
-            DB::query("UPDATE  meteo_condizioni 
-                SET nome = '{$nome}',vento='{$vento}', img='{$img}' WHERE id='{$id}'");
+            DB::query("UPDATE  meteo_venti 
+                SET nome = '{$nome}' WHERE id='{$id}'");
 
             return [
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
-                'swal_message' => 'Condizione meteo modificata.',
+                'swal_message' => 'Vento modificato.',
                 'swal_type' => 'success'
             ];
         } else{
@@ -167,9 +154,9 @@ class MeteoCondizioni extends Meteo
      * @fn delete
      * @note Cancella una condizione meteo
      */
-    public function DelCondition(array $post)
+    public function DelWind(array $post)
     {
-        if($this->permissionManageWeather()) {
+        if($this->permissionManageWeatherWinds()) {
 
             $id = Filters::in($post['id']);
 
@@ -178,7 +165,7 @@ class MeteoCondizioni extends Meteo
             return [
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
-                'swal_message' => 'Condizione meteo eliminata.',
+                'swal_message' => 'Vento eliminato.',
                 'swal_type' => 'success'
             ];
         } else{
