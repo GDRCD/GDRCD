@@ -37,7 +37,7 @@ $content = (!empty($_GET['content'])) ? gdrcd_filter('include', $_GET['content']
 
 
 /**
- * Avvio la costruzione ddei contenuti della pagina
+ * Avvio la costruzione dei contenuti della pagina
  * @author Kasa
  */
 ?>
