@@ -3,10 +3,11 @@
 /**
  * Classe base per la gestione delle notifiche audio in GDRCD
  */
-class AudioController {
-
+class AudioController
+{
     /**
-     * Controllo sulla abilitazione dei suoni nelle configurazioni
+     * @fn isSoundAllowed
+     * @note Controllo sulla abilitazione dei suoni nelle configurazioni
      * @return bool
      */
     public static function isSoundAllowed($label) {
@@ -15,7 +16,8 @@ class AudioController {
     }
 
     /**
-     * Costruisco il controllore dei suoni
+     * @fn build
+     * @note Costruisco il controllore dei suoni
      * @param string $label Identificativo del componente audioControllaer
      * @return string
      */
@@ -48,7 +50,8 @@ class AudioController {
     }
 
     /**
-     * Gestisco l'esecuzione o meno dell'audio di notifica
+     * @fn play
+     * @note Gestisco l'esecuzione o meno dell'audio di notifica
      * @param string $label Identificativo del componente audioControllaer
      * @return string
      */
