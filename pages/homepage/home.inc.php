@@ -23,13 +23,13 @@
 </p>
 <p>
     Puoi trovare tutte le informazioni sulle modifiche eseguite sulla repository ufficiale di <a href="https://github.com/GDRCD/GDRCD">GitHub</a>
-    a questo <a href="https://github.com/GDRCD/GDRCD/releases/tag/5.6.0.2">indirizzo</a>.
+    a questo <a href="https://github.com/GDRCD/GDRCD/releases/tag/5.6.0.3">indirizzo</a>.
 </p>
 <p>
     Prima di iniziare a realizzare il tuo sito, hai letto la <a href="license.md">licenza d'uso</a> che accompagna il prodotto? Se non l'hai ancora fatto premurati gentilmente di leggerla.
 </p>
 <p>
-    Troverai le istruzioni su come utilizzare GDRCD 5.6.0.2 nel <a href="ISTRUZIONI.txt">manuale</a> allegato.
+    Troverai le istruzioni su come utilizzare GDRCD 5.6.0.3 nel <a href="ISTRUZIONI.txt">manuale</a> allegato.
 </p>
 <img src="imgs/pelready.png" style="float:left;">
 <p><br /><strong>PEL Ready</strong></p>
