@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Classe base per la gestione delle notifiche audio in GDRCD
+ * @class AudioController
+ * @note Classe base per la gestione delle notifiche audio in GDRCD
  */
 class AudioController
 {
