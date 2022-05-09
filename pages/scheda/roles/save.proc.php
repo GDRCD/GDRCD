@@ -51,7 +51,7 @@ $handleDBConnection = gdrcd_connect();
             <head>
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
             <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-            <link rel="shortcut icon" href="favicon.gif" type="image/gif" />
+            <link rel="shortcut icon" href="imgs/favicon.ico" type="image/gif" />
             <link rel="stylesheet" href="' . $PARAMETERS['info']['site_url'] . '/css/homepage.css" type="text/css" />
             <link rel="stylesheet" href="' . $PARAMETERS['info']['site_url'] . '/themes/' . $PARAMETERS['themes']['current_theme'] . '/main.css" type="text/css" />
             <link rel="stylesheet" href="' . $PARAMETERS['info']['site_url'] . '/themes/' . $PARAMETERS['themes']['current_theme'] . '/chat.css" type="text/css" />
