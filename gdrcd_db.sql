@@ -1202,6 +1202,7 @@ CREATE TABLE `contatti_nota` (
  `id_contatto` INT(11) NOT NULL DEFAULT '0',
  `nota` TEXT NOT NULL COLLATE 'latin1_swedish_ci',
  `pubblica` INT(11) NOT NULL DEFAULT '0',
+ `eliminato` INT(11) NOT NULL DEFAULT '0',
  `creato_il` DATETIME NOT NULL,
  `creato_da` VARCHAR(255) NOT NULL DEFAULT '0' COLLATE 'latin1_swedish_ci',
  PRIMARY KEY (`id`)
