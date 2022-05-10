@@ -36,6 +36,8 @@ class Contacts extends BaseClass
 
         # Solo lo staff puo' assegnare le categorie di contatto, true/false - default false
         $this->con_categories_staff = Functions::get_constant('CONTACT_CATEGORIES_STAFF_ONLY');
+
+
     }
 
     /**** ROUTING ***/
@@ -85,9 +87,9 @@ class Contacts extends BaseClass
      * @note Controlla se si hanno i permessi per gestire i contatti
      * @return bool
      */
-    public function contactManage(): bool
+    public function contactManage($pg): bool
     {
-        return Permissions::permission('MANAGE_CONTACT');
+        return (Personaggio::isMyPg($pg)) || (Permissions::permission('MANAGE_CONTACT'));
     }
 
 
@@ -102,8 +104,6 @@ class Contacts extends BaseClass
      */
     public function getAllContact(string $val = '*', string $pg)
     {
-        $where = ($this->contactManage()) ? '1' : "(master = '0' OR master = '{$this->me_id}')";
-
         return DB::query("SELECT {$val} FROM contatti WHERE personaggio = '{$pg}' ", 'result');
     }
 
@@ -137,19 +137,21 @@ class Contacts extends BaseClass
         $row_data = [];
         $path =  'scheda_contatti';
         $backlink = 'scheda';
+        $pg=Personaggio::nameFromId($id_pg);
         foreach ($list as $row) {
             $id=Filters::in($row['id']);
 
-            $nome = Filters::in($row['nome']);
-            $categoria = Filters::in($row['categoria']);
+            $id_contatto = Filters::in($row['contatto']);
+            $id_categoria = Filters::in($row['categoria']);
+            $categoria=$this->getOneContactCat('nome',$id_categoria);
+
+            $contatto=Personaggio::nameFromId($id_contatto);
 
             $array = [
                 'id'=>$id,
-
-                'nome' => $nome,
-                'categoria'=>$categoria,
-
-                'contatti_view_permission'=> $this->contactManage()
+                'contatto' => $contatto,
+                'categoria'=>$categoria['nome'],
+                'contatti_view_permission'=> $this->contactManage($id_pg)
 
             ];
 
@@ -163,7 +165,7 @@ class Contacts extends BaseClass
             'Controlli'
         ];
         $links = [
-            ['href' => "/main.php?page={$path}&op=new&id_pg={$id_pg}", 'text' => 'Nuovo contatto']
+            ['href' => "/main.php?page={$path}&op=new&id_pg={$id_pg}&pg={$pg}", 'text' => 'Nuovo contatto']
           //  ['href' => "/main.php?page={$backlink}", 'text' => 'Indietro']
         ];
 
@@ -175,6 +177,52 @@ class Contacts extends BaseClass
             'path'=>$path,
             'page'=>$page
 
+        ];
+    }
+    /***** LISTS *****/
+
+    /**
+     * @fn getAllCat
+     * @note Ritorna la lista delle categorie
+     * @return string
+     */
+    public function getAllContactCategorie(){
+        return DB::query("SELECT id, nome FROM contatti_categorie Order by nome", 'result');
+    }
+    public function listContactCategorie($selected = 0)
+    {
+
+        $html = '<option value="0"></option>';
+        $categorie=$this->getAllContactCategorie();
+
+        foreach ($categorie as $categoria) {
+            $nome = Filters::out($categoria['nome']);
+            $id = Filters::int($categoria['id']);
+            $sel = ($id == $selected) ? 'selected' : '';
+            $html .= "<option value='{$id}' {$sel}>{$nome}</option>";
+        }
+
+        return $html;
+    }
+    public function getOneContactCat(string $val = '*', $id)
+    {
+        return DB::query("SELECT {$val} FROM contatti_categorie WHERE id={$id}");
+
+    }
+
+    public function newContatto(array $post): array
+    {
+        $personaggio = Filters::in($post['id_pg']);
+        $contatto = Filters::in($post['contatto']);
+        $creato_il= date("Y-m-d");
+        $creato_da=Filters::in($post['pg']);
+        $categoria=Filters::in($post['categoria']);
+        DB::query("INSERT INTO contatti(personaggio, contatto, categoria, creato_da, creato_il) VALUES('{$personaggio}', '{$contatto}', {$categoria},'{$creato_da}', '{$creato_il}')");
+        return [
+            'response' => true,
+            'swal_title' => 'Operazione riuscita!',
+            'swal_message' => 'Contatto creato con successo.',
+            'swal_type' => 'success'
         ];
     }
 

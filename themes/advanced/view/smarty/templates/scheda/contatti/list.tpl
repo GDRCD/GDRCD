@@ -1,8 +1,8 @@
 {foreach $body_rows as $row}
     <div class='tr'>
 
-        <div class='td'>{{$row.nome}}</div>
-        <div class='td'>{{$row.categoria}}%</div>
+        <div class='td'><a href='/main.php?page={$path}&op=view_contatto&id={$row.id}' title='Modifica'>{{$row.contatto}}</a></div>
+        <div class='td'>{{$row.categoria}}</div>
         <div class='td commands'>
             {if $row.contatti_view_permission}
                 <a href='/main.php?page={$path}&op=edit_contatto&id={$row.id}' title='Modifica'><i class='fas fa-edit'></i></a>
