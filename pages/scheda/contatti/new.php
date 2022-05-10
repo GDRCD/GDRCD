@@ -42,8 +42,8 @@ $op = Filters::out($_GET['op']);
         <div class="single_input">
             <div class='form_submit'>
                 <input type="hidden" name="action" value="new_contatto">
-                <input type="hidden" name="id_pg" value="<?=$id_pg?>">
-                <input type="hidden" name="pg" value="<?=$pg?>">
+                <input type="hidden" id="id_pg" name="id_pg" value="<?=$id_pg?>">
+                <input type="hidden" id="pg" name="pg" value="<?=$pg?>">
                 <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>"/>
             </div>
         </div>

@@ -6,10 +6,12 @@ $(function(){
 
             if(data){
                 let datas = JSON.parse(data);
+                let pg = $('#pg').val(),
+                id_pg= $('#id_pg').val();
 
 
                 if(datas.response){
-                    window.location.href = '/main.php?page=scheda_contatti&pg='+data.pg+'&id_pg='+data.id_pg;
+                    window.location.href = '/main.php?page=scheda_contatti&pg='+pg+'&id_pg='+id_pg;
                 }
             }
 
