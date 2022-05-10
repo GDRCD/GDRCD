@@ -121,7 +121,7 @@ class Contacts extends BaseClass
         $list = $this->getAllContact( 'contatto, categoria, id', $pg);
         return $template->renderTable(
             'scheda/contatti/list',
-            $this->renderContactList($list, 'scheda')
+            $this->renderContactList($list, 'scheda', $pg)
         );
     }
 
@@ -132,7 +132,7 @@ class Contacts extends BaseClass
      * @param string $page
      * @return string
      */
-    public function renderContactList(object $list, string $page): array
+    public function renderContactList(object $list, string $page, $id_pg): array
     {
         $row_data = [];
         $path =  'scheda_contatti';
@@ -163,7 +163,7 @@ class Contacts extends BaseClass
             'Controlli'
         ];
         $links = [
-            ['href' => "/main.php?page={$path}&op=new", 'text' => 'Nuovo contatto']
+            ['href' => "/main.php?page={$path}&op=new&id_pg={$id_pg}", 'text' => 'Nuovo contatto']
           //  ['href' => "/main.php?page={$backlink}", 'text' => 'Indietro']
         ];
 

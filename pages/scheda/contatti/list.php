@@ -3,6 +3,7 @@
 require_once(__DIR__ . '/../../../includes/required.php');
 
 $contatti = Contacts::getInstance();
+$id_pg = Filters::int($_GET['id_pg']);
 ?>
 
 
