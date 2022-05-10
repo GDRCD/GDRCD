@@ -108,7 +108,7 @@ class Personaggio extends BaseClass{
      */
     public static function IdFromName(string $nome):string
     {
-        $id = Filters::int($id);
+        $nome = Filters::in($nome);
         $data = DB::query("SELECT id FROM personaggio WHERE nome='{$nome}' LIMIT 1");
 
         return Filters::out($data['id']);
@@ -124,5 +124,33 @@ class Personaggio extends BaseClass{
     public static function updatePgData(int $id, string $set):void
     {
         DB::query("UPDATE personaggio SET {$set} WHERE id='{$id}' LIMIT 1");
+    }
+
+    /***** LISTS *****/
+
+    /**
+     * @fn listPG
+     * @note Ritorna la lista dei pg registrati escludendo quelli già presenti fra i contatti e l'utente stesso
+     * @return string
+     */
+    function getAllPG(string $val = '*', string $where = '1' , string $order = ''){
+        return DB::query("SELECT {$val} FROM personaggio  WHERE {$where} {$order}", 'result');
+
+    }
+
+    public function listPG($selected = 0 , $pg)
+    {
+
+        $html = '<option value="0"></option>';
+
+
+        foreach ($pg as $personaggi) {
+            $nome = Filters::out($personaggi['nome']);
+            $id = Filters::int($personaggi['id']);
+            $sel = ($id == $selected) ? 'selected' : '';
+            $html .= "<option value='{$id}' {$sel}>{$nome}</option>";
+        }
+
+        return $html;
     }
 }

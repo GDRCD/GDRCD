@@ -5,7 +5,6 @@ require_once(__DIR__ . '/../../../includes/required.php');
 $contatti = Contacts::getInstance();
 $id_pg = Filters::int($_GET['id_pg']);
 
-
 $op = Filters::out($_GET['op']);
 ?>
 <div class="gestione_incipit">
@@ -22,10 +21,12 @@ $op = Filters::out($_GET['op']);
             </div>
             <select name="nome">
                 <?php
-                    echo $contatti->listPG(0,$id_pg);
+                $pg = Personaggio::getAllPG('id, nome', "id!={$id_pg}", 'ORDER BY nome');
+                echo (Personaggio::listPG(0,$pg));
                 ?>
 
             </select>
         </div>
 
 <?php
+
