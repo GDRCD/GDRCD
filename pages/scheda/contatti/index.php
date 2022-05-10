@@ -17,9 +17,11 @@ if ($scheda_con->isAccessible($id_pg)) { ?>
         <?php require_once(__DIR__ . '/../menu.inc.php'); ?>
 
     </div>
-    <div class="fake-table gathering_list">
-        <?= $contatti->ContactList($id_pg); ?>
+    <div class="page_body">
+        <?php require_once(__DIR__ . '/' . $contatti->loadManagementContactPage(Filters::out($_GET['op']))); ?>
     </div>
+
+
 
 <?php }
 ?>

@@ -3,9 +3,7 @@
 $pg = Filters::out($_REQUEST['pg']);
 $me = Filters::out($_SESSION['login']);
 $perm = Filters::out($_SESSION['permessi']);
-$id_pg = Filters::int($_REQUEST['id_pg']);
-
-
+$id_pg=Personaggio::IdFromName($pg);
 
 /*Visualizza il link modifica se l'utente visualizza la propria scheda o se è almeno un capogilda*/
 ?>

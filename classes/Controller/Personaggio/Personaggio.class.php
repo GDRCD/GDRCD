@@ -100,6 +100,19 @@ class Personaggio extends BaseClass{
 
         return Filters::out($data['nome']);
     }
+    /**
+     * @fn IdFromName
+     * @note Estrae il nome del pg dall'id
+     * @var int $id
+     * @return string
+     */
+    public static function IdFromName(string $nome):string
+    {
+        $id = Filters::int($id);
+        $data = DB::query("SELECT id FROM personaggio WHERE nome='{$nome}' LIMIT 1");
+
+        return Filters::out($data['id']);
+    }
 
     /**
      * @fn updatePgData

@@ -41,7 +41,7 @@ class Contacts extends BaseClass
     /**** ROUTING ***/
 
     /**
-     * @fn loadManagementGatheringChatPage
+     * @fn loadManagementContactPage
      * @note Routing delle pagine di gestione
      * @param string $op
      * @return string
@@ -52,7 +52,7 @@ class Contacts extends BaseClass
 
         switch ($op) {
             default:
-                $page = 'index.php';
+                $page = 'list.php';
                 break;
 
             case 'new':
@@ -135,7 +135,7 @@ class Contacts extends BaseClass
     public function renderContactList(object $list, string $page): array
     {
         $row_data = [];
-        $path =  'cheda_contatti';
+        $path =  'scheda_contatti';
         $backlink = 'scheda';
         foreach ($list as $row) {
             $id=Filters::in($row['id']);
@@ -176,6 +176,35 @@ class Contacts extends BaseClass
             'page'=>$page
 
         ];
+    }
+    /***** LISTS *****/
+
+    /**
+     * @fn listPG
+     * @note Ritorna la lista dei pg registrati escludendo quelli già presenti fra i contatti e l'utente stesso
+     * @return string
+     */
+    function getAllPG($id_pg){
+
+        return DB::query("SELECT id, nome FROM personaggio WHERE id != '{$id_pg}' ", 'result');
+
+
+    }
+
+    public function listPG($selected = 0, $id_pg)
+    {
+        echo $id_pg;
+        $html = '<option value="0"></option>';
+        $pg = $this->getAllPG($id_pg);
+
+        foreach ($pg as $personaggi) {
+            $nome = Filters::out($personaggi['nome']);
+            $id = Filters::int($personaggi['id']);
+            $sel = ($id == $selected) ? 'selected' : '';
+            $html .= "<option value='{$id}' {$sel}>{$nome}</option>";
+        }
+
+        return $html;
     }
 
 
