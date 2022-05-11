@@ -67,6 +67,9 @@ class Contacts extends BaseClass
             case 'view':
                 $page = 'view.php';
                 break;
+            case 'new_nota':
+                $page = 'new_nota.php';
+                break;
         }
 
         return $page;
@@ -95,12 +98,11 @@ class Contacts extends BaseClass
         return (Personaggio::isMyPg($pg)) || (Permissions::permission('MANAGE_CONTACT'));
     }
 
-
     /*** TABLES HELPERS ***/
 
     /**
-     * @fn getAllGatheringChat
-     * @note Ottiene delle chat che hanno degli oggetti droppabili
+     * @fn getAllContact
+     * @note query di tutti i contatti di un personaggio
      * @param string $val
      * @param string $order
      * @return bool|int|mixed|string
@@ -154,7 +156,9 @@ class Contacts extends BaseClass
                 'id'=>$id,
                 'contatto' => $contatto,
                 'categoria'=>$categoria['nome'],
-                'contatti_view_permission'=> $this->contactManage($id_pg)
+                'contatti_view_permission'=> $this->contactManage($id_pg),
+                'id_pg'=>$id_pg,
+                'pg'=>$pg
 
             ];
 
@@ -169,7 +173,7 @@ class Contacts extends BaseClass
         ];
         $links = [
           //  ['href' => "/main.php?page={$path}&op=new&id_pg={$id_pg}&pg={$pg}", 'text' => 'Nuovo contatto']
-          //  ['href' => "/main.php?page={$backlink}", 'text' => 'Indietro']
+           // ['href' => "/main.php?page={$backlink}&id_pg={$id_pg}&pg={$pg}", 'text' => 'Indietro']
         ];
 
         return [
@@ -192,6 +196,14 @@ class Contacts extends BaseClass
     public function getAllContactCategorie(){
         return DB::query("SELECT id, nome FROM contatti_categorie Order by nome", 'result');
     }
+
+    /**
+     * @fn listContactCategorie
+     * @note crea le option con le categorie
+     * @param array $post
+     * @return array
+     */
+
     public function listContactCategorie($selected = 0)
     {
 
@@ -207,12 +219,23 @@ class Contacts extends BaseClass
 
         return $html;
     }
+    /**
+     * @fn getOneContactCat
+     * @note estrae una categoria in base all'id
+     * @param array $post
+     * @return array
+     */
     public function getOneContactCat(string $val = '*', $id)
     {
         return DB::query("SELECT {$val} FROM contatti_categorie WHERE id={$id}");
 
     }
-
+    /**
+     * @fn newContatto
+     * @note Inserisce un nuovo contatto
+     * @param array $post
+     * @return array
+     */
     public function newContatto(array $post): array
     {
         $personaggio = Filters::in($post['id_pg']);
@@ -228,32 +251,34 @@ class Contacts extends BaseClass
             'swal_type' => 'success'
         ];
     }
+
+
     /**
      * @fn deleteContatto
-     * @note Rimuove una categoria
+     * @note Rimuove un contatto
      * @param array $post
      * @return array
      */
     public function deleteContatto(int $id)
     {
-
         $id = Filters::int($id);
         $id_pg=DB::query("SELECT personaggio FROM contatti WHERE id = {$id} "); //recupero l'id del personaggio per ricaricare la lista dei contatti
-
-
         DB::query("DELETE FROM contatti WHERE id = '{$id}' LIMIT 1"); //Cancello il contatto
-
         return [
             'response' => true,
             'swal_title' => 'Operazione riuscita!',
             'swal_message' => 'Contatto rimosso correttamente.',
             'swal_type' => 'success',
             'contatti_list' => $this->ContactList($id_pg['personaggio'])
-
         ];
-
-
     }
+
+    /**
+     * @fn contattiPresenti
+     * @note estrai gli ID di tutti i contatti che il pg ha già inserito, ed aggiungendo il proprio serve ad escluderli dal select di aggiunta nuovo contatto
+     * @param array $post
+     * @return array
+     */
     public function contattiPresenti($pg){
         $tot=$this->getAllContact('contatto', $pg);
         $contatti_presenti=$pg.",";
@@ -261,9 +286,12 @@ class Contacts extends BaseClass
             $contatti_presenti.=$con['contatto'].",";
         }
        return rtrim($contatti_presenti, ",");
-
     }
 
+    public function getContact(string $val = '*', string $id)
+    {
+        return DB::query("SELECT {$val} FROM contatti WHERE id = '{$id}' ");
+    }
 
 
 }

@@ -17,9 +17,11 @@ $pg = Filters::in($_GET['pg']);
 <?php
 if($contatti->contactManage($id_pg))
     {?>
-        <div class="tr footer">
-            <a href="/main.php?page=scheda_contatti&op=new&id_pg=<?=$id_pg?>&pg=<?=$pg?>">Nuovo contatto</a>
-        </div>
+<div class="fake-table">
+    <div class="footer">
+        <a href="/main.php?page=scheda_contatti&op=new&id_pg=<?=$id_pg?>&pg=<?=$pg?>">Nuovo contatto</a> | <a href="/main.php?page=scheda&id_pg=<?=$id_pg?>&pg=<?=$pg?>">Torna indietro</a>
+    </div>
+</div>
    <?php
     }
 ?>

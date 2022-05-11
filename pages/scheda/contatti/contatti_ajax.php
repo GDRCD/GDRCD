@@ -1,6 +1,8 @@
 <?php
 require_once(__DIR__ . '/../../../includes/required.php');
 $contatti = Contacts::getInstance();
+$contatti_nota=ContactsNotes::getInstance();
+
 
 
 switch ($_POST['action']) {
@@ -11,4 +13,12 @@ switch ($_POST['action']) {
     case 'delete_contatto':
         echo json_encode($contatti->deleteContatto($_POST['id']));
         break;
+    case 'new_nota':
+        //Aggiunge una nuova nota al contatto
+        echo json_encode($contatti_nota->newNota($_POST));
+        break;
+    case 'delete_nota':
+        echo json_encode($contatti_nota->deleteNota($_POST['id']));
+        break;
+
 }
