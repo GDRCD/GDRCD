@@ -15,17 +15,6 @@ class MeteoStagioni extends Meteo
         return Permissions::permission('MANAGE_WEATHER_SEASONS');
     }
 
-    /**** CONFIG ****/
-
-    /**
-     * @fn activeSeason
-     * @note Controlla se le stagioni sono attive
-     * @return bool
-     */
-    public function activeSeason(): bool
-    {
-        return $this->weather_season;
-    }
 
     /*** TABLE HELPER ***/
 
@@ -57,9 +46,14 @@ class MeteoStagioni extends Meteo
      * @param string $val
      * @return bool|int|mixed|string
      */
-    public function getAllSeasonCondition(int $id,string $val = 'meteo_stagioni_condizioni.*, meteo_condizioni.*')
+    public function getAllSeasonCondition(int $id, string $val = 'meteo_stagioni_condizioni.*, meteo_condizioni.*')
     {
         return DB::query("SELECT {$val} FROM meteo_stagioni_condizioni LEFT JOIN meteo_condizioni ON meteo_stagioni_condizioni.condizione = meteo_condizioni.id WHERE meteo_stagioni_condizioni.stagione='{$id}'", 'result');
+    }
+
+    public function getCurrentSeason(string $val = '*')
+    {
+        return DB::query("SELECT {$val} FROM meteo_stagioni WHERE data_fine > NOW() AND data_inizio < NOW() LIMIT 1");
     }
 
     /**
@@ -67,7 +61,8 @@ class MeteoStagioni extends Meteo
      * @note Lista delle stagioni disponibili
      * @return string
      */
-    public function listSeasons(){
+    public function listSeasons()
+    {
         $stagioni = $this->getAllSeason();
         return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $stagioni);
     }
@@ -224,95 +219,43 @@ class MeteoStagioni extends Meteo
     /**** FUNCTIONS ****/
 
     /**
-     * @fnm meteoSeason
-     * @note Restituisce il meteo dalla stagione
-     * @return array
-     */
-    public function meteoSeason(): array
-    {
-        $data1 = date("Y-m-d H:i");
-        $data2 = Functions::get_constant('WEATHER_LAST_DATE');
-        $time = Functions::get_constant('WEATHER_UPDATE');
-        if (empty($data2) || (Functions::dateDifference($data2, $data1, '%h') > $time) || (Functions::get_constant('WEATHER_LAST_DATE') == "")) {
-            $data = date("Y-m-d");
-            $stagione = DB::query("SELECT * FROM meteo_stagioni WHERE data_inizio <'{$data}' AND DATA_fine > '{$data}'", 'query');
-            $condizioni = MeteoStati::getInstance()->getAllState($stagione['id']);
-            $rand = rand(0, 100);
-            while ($row = DB::query($condizioni, 'fetch')) {
-                if (($rand >= $row['percentuale'])) {
-                    $condizione = $row['condizione'];
-                }
-            }
-            $condizione = (!empty($condizione)) ? MeteoCondizioni::getInstance()->getCondition($condizione) : '';
-            $img = "<img src='" . $condizione['img'] . "' title='" . $condizione['nome'] . " ' >";
-            $vento = explode(",", $condizione['vento']);
-            shuffle($vento);
-            $wind = $vento[0];
-            $temp = rand($stagione['minima'], $stagione['massima']);
-            $temp = Filters::int($temp) . "&deg;C";
-            $meteo = Filters::in($img . " " . $temp);
-            $this->saveWeather($meteo, $wind);
-
-            return [
-                'meteo' => $meteo,
-                'vento' => $vento
-            ];
-        } else {
-            return [
-                'meteo' => Functions::get_constant('WEATHER_LAST'),
-                'vento' => Functions::get_constant('WEATHER_LAST_WIND'),
-            ];
-        }
-    }
-
-    /**
-     * @fn meteoMappaSeason
-     * @note Modifica stagione mappa
-     * @param string $stagioni
+     * @fn setMeteoMap
+     * @note Setta stagione mappa
      * @param int $id
      * @return array
      */
-    public function meteoMappaSeason(string $stagioni, int $id): array
+    public function setMeteoMap(int $id): array
     {
-        $data1 = date("Y-m-d H:i");
-        $data2 = Functions::get_constant('WEATHER_LAST_DATE');
-        $time = Functions::get_constant('WEATHER_UPDATE');
-        if (empty($data2) || (Functions::dateDifference($data2, $data1, '%h') > $time) || (Functions::get_constant('WEATHER_LAST_DATE') == "")) {
-            $data = date("Y-m-d");
-            $stagione = DB::query("SELECT * FROM meteo_stagioni WHERE data_inizio <'{$data}' AND DATA_fine > '{$data}' and id IN ({$stagioni})", 'query');
-            if (empty($stagione)) {
-                echo "verifica di aver assegnato correttamente le stagioni alla mappa o di aver assicurato il range data inizio e fine nelle stagioni poichè non vi sono stagioni selezionabili per questo periodo dell'anno";
-            }
+        $data = $this->getMeteoMappa($id);
 
-            $condizioni = MeteoStati::getInstance()->getAllState($stagione['id']);
-            $rand = rand(0, 100);
-            while ($row = DB::query($condizioni, 'fetch')) {
-                if (($rand >= $row['percentuale'])) {
-                    $condizione = $row['condizione'];
-                }
-            }
-            $condizione = MeteoCondizioni::getInstance()->getCondition($condizione);
-            $img = "<img src='" . $condizione['img'] . "' title='" . $condizione['nome'] . " ' >";
-            $vento = explode(",", $condizione['vento']);
-            shuffle($vento);
-            $wind = (Functions::get_constant('WEATHER_WIND') == 1) ? $vento[0] : '';
-            $temp = rand($stagione['minima'], $stagione['massima']);
-            $temp = Filters::int($temp) . "&deg;C";
-            $meteo = Filters::in($img . " " . $temp);
-            $this->saveWeatherMap($meteo, $wind, $id);
-
-            return [
-                'meteo' => $meteo,
-                'vento' => $vento
-            ];
-        } else {
-            $data = $this->getMeteoMappa($id);
-
-            return [
-                'meteo' => $data['meteo'],
-                'vento' => $data['vento']
-            ];
+        if (empty($data) || $this->weatherNeedRefresh()) {
+            $data = $this->generateWeatherMap($id);
         }
+
+        return [
+            'meteo' => $data['meteo'],
+            'vento' => $data['vento']
+        ];
+    }
+
+    /**
+     * @fn setMeteoChat
+     * @note Modifica stagione mappa
+     * @param int $id
+     * @return array
+     */
+    public function setMeteoChat(int $id): array
+    {
+        $data = $this->getMeteoChat($id);
+
+        if (empty($data) || $this->weatherNeedRefresh()) {
+            $data = $this->generateWeather($id);
+        }
+
+        return [
+            'meteo' => $data['meteo'],
+            'vento' => $data['vento']
+        ];
     }
 
     /**
@@ -418,7 +361,7 @@ class MeteoStagioni extends Meteo
      * @param array $post
      * @return array
      */
-    public function DelSeason(array $post):array
+    public function DelSeason(array $post): array
     {
         if ($this->permissionManageSeasons()) {
 
@@ -430,7 +373,7 @@ class MeteoStagioni extends Meteo
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Stagione eliminata.',
                 'swal_type' => 'success',
-                'stagioni_list'=>$this->esitiListManagement()
+                'stagioni_list' => $this->esitiListManagement()
             ];
         } else {
             return [
@@ -442,9 +385,10 @@ class MeteoStagioni extends Meteo
         }
     }
 
-    public function AssignCondition(array $post):array{
+    public function AssignCondition(array $post): array
+    {
 
-        if($this->permissionManageSeasons()){
+        if ($this->permissionManageSeasons()) {
 
             $id = Filters::int($post['id']);
             $condizione = Filters::int($post['condizione']);
@@ -458,9 +402,9 @@ class MeteoStagioni extends Meteo
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Condizione associata.',
                 'swal_type' => 'success',
-                'stagioni_conditions'=>$this->seasonConditionsManageList($id)
+                'stagioni_conditions' => $this->seasonConditionsManageList($id)
             ];
-        } else{
+        } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
@@ -473,9 +417,10 @@ class MeteoStagioni extends Meteo
     }
 
 
-    public function RemoveCondition(array $post):array{
+    public function RemoveCondition(array $post): array
+    {
 
-        if($this->permissionManageSeasons()){
+        if ($this->permissionManageSeasons()) {
 
             $id = Filters::int($post['id']);
             $condizione = Filters::int($post['condizione']);
@@ -487,9 +432,9 @@ class MeteoStagioni extends Meteo
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Condizione rimossa.',
                 'swal_type' => 'success',
-                'stagioni_conditions'=>$this->seasonConditionsManageList($id)
+                'stagioni_conditions' => $this->seasonConditionsManageList($id)
             ];
-        } else{
+        } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',

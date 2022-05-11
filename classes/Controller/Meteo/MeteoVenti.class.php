@@ -13,7 +13,7 @@ class MeteoVenti extends Meteo
      */
     public function permissionManageWeatherWinds(): bool
     {
-        return Permissions::permission('MANAGE_WEATHER_WINDS');
+        return Permissions::permission('MANAGE_WEATHER');
     }
 
 
@@ -109,7 +109,8 @@ class MeteoVenti extends Meteo
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Vento creato.',
-                'swal_type' => 'success'
+                'swal_type' => 'success',
+                'meteo_venti'=>$this->listWinds()
             ];
         } else {
             return [
@@ -138,7 +139,9 @@ class MeteoVenti extends Meteo
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Vento modificato.',
-                'swal_type' => 'success'
+                'swal_type' => 'success',
+                'meteo_venti'=>$this->listWinds()
+
             ];
         } else{
             return [
@@ -160,13 +163,14 @@ class MeteoVenti extends Meteo
 
             $id = Filters::in($post['id']);
 
-            DB::query("DELETE FROM meteo_condizioni WHERE id='{$id}'");
+            DB::query("DELETE FROM meteo_venti WHERE id='{$id}'");
 
             return [
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Vento eliminato.',
-                'swal_type' => 'success'
+                'swal_type' => 'success',
+                'meteo_venti'=>$this->listWinds()
             ];
         } else{
             return [

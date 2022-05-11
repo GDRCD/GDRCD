@@ -10,7 +10,11 @@ class Meteo extends BaseClass
     private
         $array_vento,
         $moon_abilitated,
+        $weather_wind,
         $weather_webapi;
+    protected $weather_season,
+        $weather_last_date,
+        $weather_update_range;
 
     /**
      * @fn __construct
@@ -19,17 +23,20 @@ class Meteo extends BaseClass
     public function __construct()
     {
         parent::__construct();
-        $this->array_vento =[
-            ["id"=>'Assente', "nome"=>"Assente"],
-            ["id"=>'Brezza', "nome"=>"Brezza"],
-            ["id"=>'Intensa', "nome"=>"Brezza intensa"],
-            ["id"=>'Forte', "nome"=>"Vento Forte"],
-            ["id"=>'Burrasca', "nome"=>"Burrasca"],
+        $this->array_vento = [
+            ["id" => 'Assente', "nome" => "Assente"],
+            ["id" => 'Brezza', "nome" => "Brezza"],
+            ["id" => 'Intensa', "nome" => "Brezza intensa"],
+            ["id" => 'Forte', "nome" => "Vento Forte"],
+            ["id" => 'Burrasca', "nome" => "Burrasca"],
         ]; # TODO spostare in db
 
         $this->moon_abilitated = Functions::get_constant('WEATHER_MOON');
         $this->weather_season = Functions::get_constant('WEATHER_SEASON');
         $this->weather_webapi = Functions::get_constant('WEATHER_WEBAPI');
+        $this->weather_wind = Functions::get_constant('WEATHER_WIND');
+        $this->weather_last_date = Functions::get_constant('WEATHER_LAST_DATE');
+        $this->weather_update_range = Functions::get_constant('WEATHER_UPDATE');
     }
 
     /*** CONTROLS ****/
@@ -39,7 +46,7 @@ class Meteo extends BaseClass
      * @note Controlla se la luna e' attiva
      * @return bool
      */
-    public function activeMoon():bool
+    public function activeMoon(): bool
     {
         return $this->moon_abilitated;
     }
@@ -49,9 +56,19 @@ class Meteo extends BaseClass
      * @note Controlla se le stagioni sono attive
      * @return bool
      */
-    public function activeSeason():bool
+    public function activeSeason(): bool
     {
         return $this->weather_season;
+    }
+
+    /**
+     * @fn activeWind
+     * @note Controlla se il vento e' attivo
+     * @return bool
+     */
+    public function activeWind(): bool
+    {
+        return $this->weather_wind;
     }
 
     /**
@@ -59,9 +76,18 @@ class Meteo extends BaseClass
      * @note Controlla se il meteo viene preso dalle web api
      * @return bool
      */
-    public function activeWebApi():bool
+    public function activeWebApi(): bool
     {
-        return $this->weather_webapi;
+        return true;
+    }
+
+    protected function weatherNeedRefresh(): bool
+    {
+
+        var_dump($this->weather_update_range);
+
+        return empty($this->weather_last_date) ||
+            (Functions::dateDifference($this->weather_last_date, date("Y-m-d H:i"), '%h') > $this->weather_update_range);
     }
 
     /**** PERMISSION ****/
@@ -99,7 +125,7 @@ class Meteo extends BaseClass
     public function getMeteoMappa(int $id)
     {
         $id = Filters::int($id);
-        return DB::query("SELECT * FROM meteo_mappa WHERE id_mappa='{$id}'", 'query');
+        return DB::query("SELECT * FROM meteo_mappa WHERE id_mappa='{$id}'");
     }
 
     /**
@@ -128,7 +154,7 @@ class Meteo extends BaseClass
      * @note Creazione dati per meteo
      * @return array
      */
-    public function createMeteoData():array
+    public function createMeteoData(): array
     {
 
         $data = [];
@@ -137,9 +163,9 @@ class Meteo extends BaseClass
             $data['moon'] = $this->lunarPhase();
         }
 
-        if ($this->activeSeason()) {
+        if (!$this->activeWebApi()) {
             $data['meteo'] = $this->calcSeasonMeteo();
-        } else if ($this->activeWebApi()) {//webapi
+        } else {
             $data['meteo'] = $this->calcWebApiMeteo();
         }
 
@@ -151,31 +177,90 @@ class Meteo extends BaseClass
      * @note Calcola il meteo per una stagione
      * @return array
      */
-    public function calcSeasonMeteo():array
+    public function calcSeasonMeteo(): array
     {
 
         $data = [];
+        $pg_map = Personaggio::getPgMap($this->me_id);
+        $pg_chat = Personaggio::getPgLocation($this->me_id);
+        $meteo_chat = $this->getMeteoChat($pg_chat);
 
-        // SE per la chat specifica e' settato un meteo
-        if (!empty($meteo = $this->getMeteoChat(Personaggio::getPgLocation($this->me_id)))) {
-            $data['meteo'] = $meteo['meteo'];
-            if (Functions::get_constant('WEATHER_WIND') == 1) {
-                $data['wind'] = $meteo['vento'];
-            }
-        } // altrimenti estraggo quello della mappa
-        else if (!empty($meteo = $this->getMeteoMappa(Personaggio::getPgMap($this->me_id)))) {//meteo della mappa
-            $meteo_map = MeteoStagioni::getInstance()->meteoMappaSeason($meteo['stagioni'], $_SESSION['mappa']);
+        // SE per la chat specifica e' settato un meteo o se e' settato per la mappa
+        $meteo_data = !empty($meteo_chat) ? $meteo_chat : $this->getMeteoMappa($pg_map);
 
-            $data['meteo'] = $meteo_map['meteo'];
-            if (Functions::get_constant('WEATHER_WIND') == 1) {
-                $data['wind'] = $meteo_map['vento'];
-            }
-        } // Altrimenti lo creo da quello della stagione
-        else {
-            $data = MeteoStagioni::getInstance()->meteoSeason();
+        // Se non e' settato per nessuna delle due
+        if(empty($meteo_data)) {
+            $meteo_data = MeteoStagioni::getInstance()->setMeteoMap($pg_map);
         }
 
-        return $data;
+        // Trasformo l'id in testo
+        $meteo_data['meteo'] = MeteoCondizioni::getInstance()->getCondition($meteo_data['meteo'])['nome'];
+
+        return $meteo_data;
+    }
+
+
+    public function generateWeatherMap(int $id):array{
+        $stagione = MeteoStagioni::getInstance()->getCurrentSeason();
+        $vento = 0;
+
+        if (empty($stagione)) {
+            die("Verifica di aver assegnato correttamente le stagioni alla mappa o di aver assicurato il range data inizio e fine nelle stagioni poichè non vi sono stagioni selezionabili per questo periodo dell'anno");
+        }
+
+        $meteo = $this->generateCondition($stagione);
+
+        if(empty($meteo)){
+            die('Impossibile derivare una condizione. Assicurarsi che ci sia almeno una condizione per la stagione selezionata e che il totale sia cento.');
+        }
+
+        if($this->activeWind()){
+            $vento = $this->generateWind($meteo);
+        }
+
+        $temp = $this->generateTemp($stagione);
+
+        $this->saveWeatherMap($meteo, $vento, $temp, $id);
+
+        return [
+            'meteo'=>$meteo,
+            'vento'=>$vento,
+            'temp'=>$temp
+        ];
+    }
+
+    public function generateCondition(array $stagione){
+        $stagione_id = Filters::int($stagione['id']);
+        $condizione = false;
+
+        $condizioni = MeteoStagioni::getInstance()->getAllSeasonCondition($stagione_id);
+        shuffle($condizioni);
+
+        $rand = rand(0, 100);
+        $percentage = 0;
+        foreach($condizioni as $condizione){
+            $percentage += Filters::int($condizione['percentuale']);
+
+            if (($rand <= $percentage)) {
+                $condizione = $condizione['id'];
+                break;
+            }
+        }
+
+        return !empty($condizione) ? $condizione : false;
+    }
+
+    public function generateWind(int $id){
+        $condizione = MeteoCondizioni::getInstance()->getCondition($id);
+        $venti = explode(",", $condizione['vento']);
+        shuffle($venti);
+        return $venti[0];
+    }
+
+    public function generateTemp(array $stagione): int
+    {
+        $temp = rand($stagione['minima'], $stagione['massima']);
+        return Filters::int($temp);
     }
 
     /*** FUNCTIONS WEB API ***/
@@ -185,14 +270,24 @@ class Meteo extends BaseClass
      * @note Calcola il meteo dalle web api
      * @return array
      */
-    public function calcWebApiMeteo():array
+    public
+    function calcWebApiMeteo(): array
     {
-        if (!empty($meteo = $this->getMeteoChat(Personaggio::getPgLocation($this->me_id)))) {//Controllo se è presente un meteo per la città
-            return $this->meteoWebApi($meteo['citta']);
-        } else if (!empty($meteo = $this->getMeteoMappa(Personaggio::getPgMap($this->me_id)))) {//meteo della mappa
-            return $this->meteoWebApi($meteo['citta']);
-        } else {
+
+        $data = [];
+        $pg_map = Personaggio::getPgMap($this->me_id);
+        $pg_chat = Personaggio::getPgLocation($this->me_id);
+        $meteo_chat = $this->getMeteoChat($pg_chat);
+        $meteo_map = $this->getMeteoMappa($pg_map);
+
+
+        if(!empty($meteo_chat)){
+            return $this->meteoWebApi($meteo_chat['citta']);
+        } else if(!empty($meteo_map)){
+            return $this->meteoWebApi($meteo_map['citta']);
+        }else{
             return $this->meteoWebApi();
+
         }
     }
 
@@ -202,7 +297,8 @@ class Meteo extends BaseClass
      * @param string $city
      * @return array
      */
-    public function getWebApiWeather(string $city = ''):array
+    public
+    function getWebApiWeather(string $city = ''): array
     {
         if (empty($city)) {
             $city = Functions::get_constant('WEATHER_WEBAPI_CITY');
@@ -239,7 +335,8 @@ class Meteo extends BaseClass
      * @param string $citta
      * @return array
      */
-    public function meteoWebApi(string $citta = ''): array
+    public
+    function meteoWebApi(string $citta = ''): array
     {
 
         $data = [];
@@ -265,7 +362,8 @@ class Meteo extends BaseClass
      * @param string $wind
      * @return void
      */
-    public function saveWeather(string $meteo, string $wind):void
+    public
+    function saveWeather(string $meteo, string $wind): void
     {
         $data = date("Y-m-d H:i");
         DB::query("UPDATE config SET val = '{$meteo}' WHERE const_name='WEATHER_LAST'");
@@ -280,13 +378,14 @@ class Meteo extends BaseClass
      * @param int $id
      * @return void
      */
-    public function saveChat(array $post, int $id):void
+    public
+    function saveChat(array $post, int $id): void
     {
 
-        $vento = Filters::in( $post['vento']);
-        $temperatura = Filters::in( $post['temperatura']);
-        $condizione = Filters::in( $post['condizione']);
-        $citta = Filters::in( $post['webapi_city']);
+        $vento = Filters::in($post['vento']);
+        $temperatura = Filters::in($post['temperatura']);
+        $condizione = Filters::in($post['condizione']);
+        $citta = Filters::in($post['webapi_city']);
 
         switch (Functions::get_constant('WEATHER_TYPE')) {
             case 1:
@@ -329,7 +428,8 @@ class Meteo extends BaseClass
      * @param int $id
      * @return void
      */
-    public function saveMap(string $meteo, int $id):void
+    public
+    function saveMap(string $meteo, int $id): void
     {
         switch (Functions::get_constant('WEATHER_TYPE')) {
             case 1:
@@ -372,12 +472,13 @@ class Meteo extends BaseClass
      * @param int $id
      * @return void
      */
-    public function saveWeatherMap(string $meteo, string $wind, int $id):void
+    public
+    function saveWeatherMap(string $meteo, string $wind, int $temp, int $id): void
     {
         $data = date("Y-m-d H:i");
-
-        DB::query("UPDATE   config SET val = '{$data}' WHERE const_name='WEATHER_LAST_DATE'");
-        DB::query("UPDATE   meteo_mappa SET vento = '{$wind}', meteo='{$meteo}' WHERE id_mappa='{$id}'");
+        DB::query("UPDATE config SET val = '{$data}' WHERE const_name='WEATHER_LAST_DATE'");
+        DB::query("DELETE FROM meteo_mappa WHERE id_mappa='{$id}'");
+        DB::query("INSERT INTO meteo_mappa(vento,meteo,temp,id_mappa) VALUES('{$wind}','{$meteo}','{$temp}','{$id}')");
     }
 
     /*** VENTO ****/
@@ -389,7 +490,8 @@ class Meteo extends BaseClass
      * @param int $speed
      * @return string
      */
-    public function wind(int $speed): string
+    public
+    function wind(int $speed): string
     {
         $velocita =
             // "switch" comparison for $count
@@ -408,7 +510,8 @@ class Meteo extends BaseClass
      * @note Fasi lunari
      * @return array
      */
-    public function lunarPhase(): array
+    public
+    function lunarPhase(): array
     {
         $theme = gdrcd_filter('out', $PARAMETERS['themes']['current_theme']);
         # Inizializzo dati necessari

@@ -505,6 +505,7 @@ INSERT INTO `menu` (`menu_name`, `section`, `name`, `page`, `permission`) VALUES
   ('Gestione', 'Chat', 'Giocate Segnalate', 'gestione_segnalazioni', 'MANAGE_REPORTS'),
   ('Gestione', 'Meteo', 'Gestione condizioni', 'gestione_meteo_condizioni', 'MANAGE_WEATHER_CONDITIONS'),
   ('Gestione', 'Meteo', 'Gestione stagioni', 'gestione_meteo_stagioni', 'MANAGE_WEATHER_SEASONS'),
+  ('Gestione', 'Meteo', 'Gestione venti', 'gestione_meteo_venti', 'MANAGE_WEATHER'),
   ('Gestione', 'Chat', 'Esiti in chat', 'gestione_esiti', 'MANAGE_OUTCOMES'),
   ('Gestione', 'Chat', 'Esiti in chat', 'gestione_esiti', 'MANAGE_OUTCOMES'),
   ('Gestione', 'Quest', 'Gestione Quest', 'gestione_quest', 'MANAGE_QUESTS'),
@@ -671,6 +672,7 @@ CREATE TABLE IF NOT EXISTS `meteo_chat` (
     `citta` varchar(255) DEFAULT NULL,
     `meteo` varchar(255) DEFAULT NULL,
     `vento` varchar(255) DEFAULT NULL,
+    `temp` int DEFAULT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -684,9 +686,9 @@ CREATE TABLE IF NOT EXISTS `meteo_mappa` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `id_mappa` int(11) NOT NULL,
     `citta` varchar(255) DEFAULT NULL,
-    `stagioni` varchar(255) DEFAULT NULL,
     `meteo` varchar(255) DEFAULT NULL,
     `vento` varchar(255) DEFAULT NULL,
+    `temp` int DEFAULT NULL,
      PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

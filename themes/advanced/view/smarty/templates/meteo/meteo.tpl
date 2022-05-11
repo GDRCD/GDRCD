@@ -3,7 +3,7 @@
 {/if}
 {if isset($meteo)}
     <div class="meteo">
-        Temperatura: {{$meteo.meteo}} <br>
-        Vento: {{$meteo.vento}}
+        Meteo: <br>
+        {{$meteo.temp}}C <br> {{$meteo.vento}} <br> {{$meteo.meteo}}
     </div>
 {/if}
