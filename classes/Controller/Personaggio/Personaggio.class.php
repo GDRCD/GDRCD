@@ -141,7 +141,7 @@ class Personaggio extends BaseClass{
     public function listPG($selected = 0 , $pg)
     {
 
-        $html = '<option value="0"></option>';
+        $html = '<option value=""></option>';
 
 
         foreach ($pg as $personaggi) {

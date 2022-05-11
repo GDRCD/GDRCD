@@ -19,9 +19,10 @@ $op = Filters::out($_GET['op']);
             <div class='label'>
                 Nome
             </div>
-            <select name="contatto">
+            <select name="contatto" required>
                 <?php
-                $lista = Personaggio::getAllPG('id, nome', "id!={$id_pg}", 'ORDER BY nome');
+                $contattiPresenti=$contatti->contattiPresenti($id_pg);
+                $lista = Personaggio::getAllPG('id, nome', "id NOT IN ({$contattiPresenti})", 'ORDER BY nome');
                 echo Personaggio::listPG(0,$lista);
                 ?>
 
@@ -49,5 +50,12 @@ $op = Filters::out($_GET['op']);
         </div>
     </form>
 </div>
+
+<?php
+
+
+$lista = Personaggio::getAllPG('id, nome', "id!={$id_pg}", 'ORDER BY nome');
+?>
+
 
 <script src="pages/scheda/contatti/JS/contatti.js"></script>

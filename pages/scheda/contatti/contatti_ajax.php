@@ -8,4 +8,7 @@ switch ($_POST['action']) {
         //Aggiunge un nuovo contatto al PG
         echo json_encode($contatti->newContatto($_POST));
         break;
+    case 'delete_contatto':
+        echo json_encode($contatti->deleteContatto($_POST['id']));
+        break;
 }

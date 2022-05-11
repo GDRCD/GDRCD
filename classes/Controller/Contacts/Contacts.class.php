@@ -64,6 +64,9 @@ class Contacts extends BaseClass
             case 'edit':
                 $page = 'edit.php';
                 break;
+            case 'view':
+                $page = 'view.php';
+                break;
         }
 
         return $page;
@@ -165,7 +168,7 @@ class Contacts extends BaseClass
             'Controlli'
         ];
         $links = [
-            ['href' => "/main.php?page={$path}&op=new&id_pg={$id_pg}&pg={$pg}", 'text' => 'Nuovo contatto']
+          //  ['href' => "/main.php?page={$path}&op=new&id_pg={$id_pg}&pg={$pg}", 'text' => 'Nuovo contatto']
           //  ['href' => "/main.php?page={$backlink}", 'text' => 'Indietro']
         ];
 
@@ -192,7 +195,7 @@ class Contacts extends BaseClass
     public function listContactCategorie($selected = 0)
     {
 
-        $html = '<option value="0"></option>';
+        $html = '<option value=""></option>';
         $categorie=$this->getAllContactCategorie();
 
         foreach ($categorie as $categoria) {
@@ -214,16 +217,51 @@ class Contacts extends BaseClass
     {
         $personaggio = Filters::in($post['id_pg']);
         $contatto = Filters::in($post['contatto']);
-        $creato_il= date("Y-m-d");
-        $creato_da=Filters::in($post['pg']);
+
+        $creato_da=Filters::in($post['id_pg']);
         $categoria=Filters::in($post['categoria']);
-        DB::query("INSERT INTO contatti(personaggio, contatto, categoria, creato_da, creato_il) VALUES('{$personaggio}', '{$contatto}', {$categoria},'{$creato_da}', '{$creato_il}')");
+        DB::query("INSERT INTO contatti(personaggio, contatto, categoria, creato_da, creato_il) VALUES('{$personaggio}', '{$contatto}', {$categoria},'{$creato_da}', NOW())");
         return [
             'response' => true,
             'swal_title' => 'Operazione riuscita!',
             'swal_message' => 'Contatto creato con successo.',
             'swal_type' => 'success'
         ];
+    }
+    /**
+     * @fn deleteContatto
+     * @note Rimuove una categoria
+     * @param array $post
+     * @return array
+     */
+    public function deleteContatto(int $id)
+    {
+
+        $id = Filters::int($id);
+        $id_pg=DB::query("SELECT personaggio FROM contatti WHERE id = {$id} "); //recupero l'id del personaggio per ricaricare la lista dei contatti
+
+
+        DB::query("DELETE FROM contatti WHERE id = '{$id}' LIMIT 1"); //Cancello il contatto
+
+        return [
+            'response' => true,
+            'swal_title' => 'Operazione riuscita!',
+            'swal_message' => 'Contatto rimosso correttamente.',
+            'swal_type' => 'success',
+            'contatti_list' => $this->ContactList($id_pg['personaggio'])
+
+        ];
+
+
+    }
+    public function contattiPresenti($pg){
+        $tot=$this->getAllContact('contatto', $pg);
+        $contatti_presenti=$pg.",";
+        foreach ($tot as $con){
+            $contatti_presenti.=$con['contatto'].",";
+        }
+       return rtrim($contatti_presenti, ",");
+
     }
 
 
