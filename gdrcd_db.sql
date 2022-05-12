@@ -717,11 +717,11 @@ CREATE TABLE IF NOT EXISTS `meteo_condizioni` (
 -- Dati default per meteo_condizioni
 --
 
-INSERT INTO `meteo_condizioni` (`id`, `nome`, `img`, `vento`) VALUES
-    (1, 'Pioggia', 'imgs/meteo/pioggia.gif', 'Brezza intensa,Vento Forte,Burrasca'),
-    (2, 'Sereno', 'imgs/meteo/sereno.gif', 'Assente,Brezza,Brezza intensa'),
-    (3, 'Temporale', 'imgs/meteo/temporale.gif', 'Brezza intensa,Vento Forte,Burrasca'),
-    (4, 'Neve', 'imgs/meteo/neve.gif', 'Assente,Brezza,Brezza intensa,Vento Forte,Burrasca');
+INSERT INTO `meteo_condizioni` (`nome`, `img`, `vento`) VALUES
+    ('Sereno', 'imgs/meteo/sereno.gif', '1,2,3'),
+    ('Temporale', 'imgs/meteo/temporale.gif', '2,3'),
+    ('Neve', 'imgs/meteo/neve.gif', '1,4'),
+    ('Pioggia', 'imgs/meteo/pioggia.gif', '1,3');
 
 -- --------------------------------------------------------
 
@@ -747,11 +747,8 @@ CREATE TABLE `meteo_stagioni` (
 -- Dati default per le stagioni
 --
 
-INSERT INTO `meteo_stagioni` (`id`, `nome`, `minima`,`massima`, `data_inizio`,`data_fine`, `alba`, `tramonto`) VALUES
-    (1, 'Autunno', '8', '18', '2021-09-23', '2021-12-22','06:45:00', '19:00:00'),
-    (2, 'Inverno',  '-5', '10', '2021-12-21', '2022-03-20','07:00:00', '16:00:00'),
-    (3, 'Primavera', '10', '21', '2022-03-21', '2022-06-20','06:30:00', '18:00:00'),
-    (4, 'Estate',  '18', '36', '2022-06-21', '2022-09-22','05:30:00', '20:00:00');
+INSERT INTO `meteo_stagioni` (`nome`, `minima`,`massima`, `data_inizio`,`data_fine`, `alba`, `tramonto`) VALUES
+    ('Autunno', '8', '18', '2000-01-01', '2120-12-22','06:45:00', '19:00:00');
 
 -- --------------------------------------------------------
 
@@ -770,6 +767,18 @@ CREATE TABLE `meteo_stagioni_condizioni` (
 -- --------------------------------------------------------
 
 --
+-- Dati default per le condizioni delle stagioni
+--
+
+INSERT INTO `meteo_stagioni_condizioni` (`stagione`, `condizione`,`percentuale`) VALUES
+    (1,1,25),
+    (1,2,25),
+    (1,3,25),
+    (1,4,25);
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `meteo_venti`
 --
 
@@ -778,6 +787,18 @@ CREATE TABLE `meteo_venti` (
     `nome` varchar(255) NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Dati default per le condizioni delle stagioni
+--
+
+INSERT INTO `meteo_venti` (`nome`) VALUES
+    ('Brezza'),
+    ('Brezza Leggera'),
+    ('Vento forte'),
+    ('Burrasca');
 
 -- --------------------------------------------------------
 

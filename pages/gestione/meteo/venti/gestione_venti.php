@@ -83,6 +83,10 @@ if ($cls->permissionManageWeather()) { # Metodo di controllo per accesso alla pa
 
         </form>
 
+        <div class="link_back">
+            <a href="/main.php?page=gestione">Torna indietro</a>
+        </div>
+
     </div>
 
     <script src="/pages/gestione/meteo/venti/gestione_venti.js"></script>

@@ -480,6 +480,7 @@ $MESSAGE['interface']['administration']['meteo_season']['page_name'] = 'Gestione
 $MESSAGE['interface']['administration']['meteo_season']['min']='Temperatura minima';
 $MESSAGE['interface']['administration']['meteo_season']['max']='Temperatura massima';
 $MESSAGE['interface']['administration']['meteo_season']['date_start']='Data inizio';
+$MESSAGE['interface']['administration']['meteo_season']['date_end']='Data fine';
 $MESSAGE['interface']['administration']['meteo_season']['sunrise']='Alba';
 $MESSAGE['interface']['administration']['meteo_season']['sunset']='Tramonto';
 

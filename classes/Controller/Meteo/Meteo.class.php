@@ -147,7 +147,7 @@ class Meteo extends BaseClass
      */
     public function permissionEditchat(): bool
     {
-       return $this->permissionManageWeather() && $this->activeSeason() && (Personaggio::getPgLocation() > 0);
+        return $this->permissionManageWeather() && $this->activeSeason() && (Personaggio::getPgLocation() > 0);
     }
 
     /**** QUERY ***/
@@ -278,9 +278,9 @@ class Meteo extends BaseClass
     public function generateGlobalWeather(): array
     {
 
-        if(!$this->activeWebApi()){
+        if (!$this->activeWebApi()) {
             $data = $this->generateGlobalWeatherFromSeason();
-        } else{
+        } else {
             $data = $this->generateGlobalWeatherFromApi();
         }
 
@@ -344,7 +344,7 @@ class Meteo extends BaseClass
      */
     public function generateWeatherChat(int $id)
     {
-        if ($this->activeWebApi()) {
+        if (!$this->activeWebApi()) {
             $this->generateWeatherChatFromSeason($id);
         } else {
             $this->generateWeatherChatFromApi($id);
@@ -376,15 +376,15 @@ class Meteo extends BaseClass
             $vento = $this->generateWind($meteo['id']);
         }
 
-
         $temp = $this->generateTemp($stagione);
 
         $this->saveWeatherChat($meteo['condizione'], $vento, $temp, $meteo['img'], $id);
 
         return [
-            'meteo' => $meteo,
+            'meteo' => $meteo['condizione'],
             'vento' => $vento,
-            'temp' => $temp
+            'temp' => $temp,
+            'img' => $meteo['img']
         ];
     }
 
@@ -398,7 +398,7 @@ class Meteo extends BaseClass
     public function generateCondition(array $stagione): array
     {
         $stagione_id = Filters::int($stagione['id']);
-        $condizione = false;
+        $meteo = false;
         $img = false;
         $id = false;
 
@@ -411,16 +411,16 @@ class Meteo extends BaseClass
             $percentage += Filters::int($condizione['percentuale']);
 
             if (($rand <= $percentage)) {
-                $id = $condizione['id'];
-                $condizione = $condizione['nome'];
-                $img = $condizione['img'];
+                $id = Filters::int($condizione['id']);
+                $meteo = Filters::out($condizione['nome']);
+                $img = Filters::out($condizione['img']);
                 break;
             }
         }
 
         return [
             'id' => $id,
-            'condizione' => $condizione,
+            'condizione' => $meteo,
             'img' => $img
         ];
     }
@@ -436,7 +436,9 @@ class Meteo extends BaseClass
         $condizione = MeteoCondizioni::getInstance()->getCondition($id);
         $venti = explode(",", $condizione['vento']);
         shuffle($venti);
-        return $venti[0];
+        $vento = $venti[0];
+        $vento_data = MeteoVenti::getInstance()->getWind($vento);
+        return Filters::out($vento_data['nome']);
     }
 
     /**

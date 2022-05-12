@@ -146,7 +146,7 @@ class MeteoStagioni extends Meteo
         ];
         $links = [
             ['href' => "/main.php?page=gestione_meteo_stagioni&op=new", 'text' => 'Nuova stagione'],
-            ['href' => "/main.php?page=gestione_meteo_stagioni", 'text' => 'Indietro']
+            ['href' => "/main.php?page=gestione", 'text' => 'Indietro']
         ];
         return [
             'body' => 'gestione/meteo/stagioni/list',
@@ -250,10 +250,11 @@ class MeteoStagioni extends Meteo
             $minima = Filters::in($post['minima']);
             $massima = Filters::in($post['massima']);
             $data_inizio = Filters::in($post['data_inizio']);
+            $data_fine = Filters::in($post['data_fine']);
             $alba = Filters::in($post['alba']);
             $tramonto = Filters::in($post['tramonto']);
 
-            DB::query("INSERT INTO meteo_stagioni (nome,minima,massima, data_inizio, alba, tramonto )  VALUES ('{$nome}', '{$minima}' , '{$massima}', '{$data_inizio}', '{$alba}', '{$tramonto}') ");
+            DB::query("INSERT INTO meteo_stagioni (nome,minima,massima, data_inizio,data_fine, alba, tramonto )  VALUES ('{$nome}', '{$minima}' , '{$massima}', '{$data_inizio}', '{$data_fine}', '{$alba}', '{$tramonto}') ");
 
             return [
                 'response' => true,
@@ -286,10 +287,11 @@ class MeteoStagioni extends Meteo
             $minima = Filters::in($post['minima']);
             $massima = Filters::in($post['massima']);
             $data_inizio = Filters::in($post['data_inizio']);
+            $data_fine = Filters::in($post['data_fine']);
             $alba = Filters::in($post['alba']);
             $tramonto = Filters::in($post['tramonto']);
             DB::query("UPDATE  meteo_stagioni 
-                SET nome = '{$nome}',minima='{$minima}', massima='{$massima}', data_inizio='{$data_inizio}', alba='{$alba}', tramonto='{$tramonto}' WHERE id='{$id}'");
+                SET nome = '{$nome}',minima='{$minima}', massima='{$massima}', data_inizio='{$data_inizio}',data_fine='{$data_fine}', alba='{$alba}', tramonto='{$tramonto}' WHERE id='{$id}'");
 
             return [
                 'response' => true,

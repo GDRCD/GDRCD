@@ -27,6 +27,10 @@ $stagione = $stagioni->getSeason($id);
             <input type="date" name="data_inizio" id="data_inizio" class="form_input" value="<?php echo Filters::out($stagione['data_inizio']); ?>">
         </div>
         <div class="single_input">
+            <div class="label"><?php echo Filters::out($MESSAGE['interface']['administration']['meteo_season']['date_end']); ?></div>
+            <input type="date" name="data_fine" id="data_fine" class="form_input" value="<?php echo Filters::out($stagione['data_fine']); ?>">
+        </div>
+        <div class="single_input">
             <div class="label"><?php echo Filters::out($MESSAGE['interface']['administration']['meteo_season']['sunrise']); ?></div>
             <input type="time" name="alba" id="alba" class="form_input" value="<?php echo Filters::out($stagione['alba']); ?>">
         </div>
@@ -42,6 +46,10 @@ $stagione = $stagioni->getSeason($id);
             <input type="hidden" name="id" value="<?php echo Filters::out($stagione['id']); ?>">
         </div>
     </form>
+
+    <div class="link_back">
+        <a href="main.php?page=gestione_meteo_stagioni">Torna indietro</a>
+    </div>
 </div>
 
 <script src="/pages/gestione/meteo/stagioni/gestione_stagioni_edit.js"></script>

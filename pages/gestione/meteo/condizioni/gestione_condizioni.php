@@ -107,6 +107,10 @@ if ($cls->permissionManageWeatherConditions()) { # Metodo di controllo per acces
 
         </form>
 
+
+        <div class="link_back">
+            <a href="/main.php?page=gestione">Torna indietro</a>
+        </div>
     </div>
 
     <script src="/pages/gestione/meteo/condizioni/gestione_condizioni.js"></script>

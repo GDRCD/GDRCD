@@ -1,7 +1,6 @@
 <div class="new_season">
 
 
-
     <form class="form" method="post">
         <div class="single_input">
             <div class="label"><?php echo Filters::out($MESSAGE['interface']['administration']['name_col']); ?></div>
@@ -22,6 +21,10 @@
             <input type="date" name="data_inizio" id="data_inizio" class="form_input">
         </div>
         <div class="single_input">
+            <div class="label"><?php echo Filters::out($MESSAGE['interface']['administration']['meteo_season']['date_end']); ?></div>
+            <input type="date" name="data_fine" id="data_fine" class="form_input">
+        </div>
+        <div class="single_input">
             <div class="label"><?php echo Filters::out($MESSAGE['interface']['administration']['meteo_season']['sunrise']); ?></div>
             <input type="time" name="alba" id="alba" class="form_input">
 
@@ -36,6 +39,11 @@
             <input type="hidden" name="action" value="op_insert">
         </div>
     </form>
+
+    <div class="link_back">
+        <a href="main.php?page=gestione_meteo_stagioni">Torna indietro</a>
+    </div>
+
 </div>
 
 <script src="/pages/gestione/meteo/stagioni/gestione_stagioni_new.js"></script>
