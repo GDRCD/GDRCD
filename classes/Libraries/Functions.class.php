@@ -32,6 +32,31 @@ class Functions extends BaseClass
     }
 
     /**
+     * @fn set_constant
+     * @note Funzione di estrazione delle costanti dal db
+     * @param string $name
+     * @param mixed $val
+     * @return bool|void
+     */
+    public static function set_constant(string $name, $val)
+    {
+
+        $name = gdrcd_filter('in', $name);
+
+        $search = gdrcd_query("SELECT const_name,val FROM config WHERE const_name='{$name}'", 'result');
+        $num = gdrcd_query($search, 'num_rows');
+
+        if ($num == 0) {
+            die("Costante {$name} inesistente nella tabella config.");
+        } else if ($num > 1) {
+            die("Esistono più costanti con il nome '{$name}'. Correggere e riprovare.");
+        } else {
+            DB::query("UPDATE config SET val = '{$val}' WHERE const_name='{$name}'");
+            return true;
+        }
+    }
+
+    /**
      * @fn getPgId
      * @note Estrae l'id del pg dal suo nome
      * @param string $pg
@@ -129,5 +154,21 @@ class Functions extends BaseClass
         }
 
         exit();
+    }
+
+    /**
+     * @fn dateDifference
+     * @note Calcolo differenza di ore fra la data/ora attuale e quella scelta
+     * @param string $date_1 @format 'YYYY-MM-DD H:i:s'
+     * @param string $date_2 @format 'YYYY-MM-DD H:i:s'
+     * @param string $format
+     * @return string
+     */
+    public static function dateDifference(string $date_1, string $date_2, string $format = '%a')
+    {
+        $datetime1 = date_create($date_1);
+        $datetime2 = date_create($date_2);
+        $interval = date_diff($datetime1, $datetime2);
+        return $interval->format($format);
     }
 }

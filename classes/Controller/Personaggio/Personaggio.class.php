@@ -11,11 +11,29 @@ class Personaggio extends BaseClass{
      * @param int $pg
      * @return int
      */
-    public static function getPgLocation(int $pg): int
+    public static function getPgLocation(int $pg = 0): int
     {
+
+        if(empty($pg)){
+            $pg = Functions::getInstance()->getMyId();
+        }
+
         $data = DB::query("SELECT ultimo_luogo FROM personaggio WHERE id='{$pg}' LIMIT 1");
 
         return Filters::int($data['ultimo_luogo']);
+    }
+
+    /**
+     * @fn getPgMap
+     * @note Estrae la mappa del pg
+     * @param int $pg
+     * @return int
+     */
+    public static function getPgMap(int $pg): int
+    {
+        $data = DB::query("SELECT ultima_mappa FROM personaggio WHERE id='{$pg}' LIMIT 1");
+
+        return Filters::int($data['ultima_mappa']);
     }
 
     /**
@@ -28,32 +46,6 @@ class Personaggio extends BaseClass{
     public static function getPgData(int $pg, string $val ='*'){
         return DB::query("SELECT {$val} FROM personaggio WHERE id='{$pg}' LIMIT 1");
     }
-
-
-    /*** OGGETTI TABLES HELPERT ***/
-
-    /**
-     * @fn getCharAllObjects
-     * @note Estrae tutti gli oggetti di un personaggio
-     * @param int $pg
-     * @param string $val
-     * @return bool|int|mixed|string
-     */
-    private function getCharAllObjects(int $pg, string $val = 'oggetto.*'){
-        return DB::query("SELECT {$val} FROM personaggio_oggetto LEFT JOIN oggetto ON(oggetto.id_oggetto = personaggio_oggetto.oggetto) WHERE personaggio_oggetto.personaggio='{$pg}' ORDER BY oggetto.nome ",'result');
-    }
-
-    /**
-     * @fn getCharSingleObject
-     * @note Estrae un oggetto dalla tabella personaggio_oggetto
-     * @param int $id
-     * @param string $val
-     * @return bool|int|mixed|string
-     */
-    private function getCharSingleObject(int $id, string $val = '*'){
-        return DB::query("SELECT {$val} FROM personaggio_oggetto LEFT JOIN oggetto ON(oggetto.id_oggetto = personaggio_oggetto.oggetto) WHERE personaggio_oggetto.personaggio='{$pg}' AND personaggio_oggetto.id='{$id}' ORDER BY oggetto.nome ",'result');
-    }
-
 
     /**** CONTROLS ****/
 

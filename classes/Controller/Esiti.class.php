@@ -487,7 +487,7 @@ class Esiti extends BaseClass
         $abilita = Abilita::getInstance();
 
         if ($this->esitiEnabled() && $this->esitiTiriEnabled()) {
-            $luogo = Personaggio::getPgLocation($this->me_id);
+            $luogo = Personaggio::getPgLocation();
 
             $list = DB::query("SELECT esiti_risposte.* , esiti.titolo
                     FROM esiti 
@@ -538,7 +538,7 @@ class Esiti extends BaseClass
         $id_answer = Filters::int($data['id']);
         $dice_face = Filters::int($data['dice_face']);
         $dice_num = Filters::int($data['dice_num']);
-        $luogo = Personaggio::getPgLocation($this->me_id);
+        $luogo = Personaggio::getPgLocation();
 
         $abi_roll = $chat->rollAbility(Filters::int($data['abilita']));
 

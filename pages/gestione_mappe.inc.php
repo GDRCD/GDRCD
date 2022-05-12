@@ -1,6 +1,7 @@
 <div class="pagina_gestione_mappe">
     <?php /*HELP: */
     /*Controllo permessi utente*/
+
     if($_SESSION['permessi'] < MODERATOR) {
         echo '<div class="error">'.gdrcd_filter('out', $MESSAGE['error']['not_allowed']).'</div>';
     } else { ?>
@@ -55,6 +56,7 @@
                 $immagine = ($_POST['immagine'] == "") ? "standard_mappa.png" : gdrcd_filter('in', $_POST['immagine']);
                 /*Eseguo l'aggiornamento*/
                 gdrcd_query("UPDATE mappa_click SET nome ='".gdrcd_filter('in', $_POST['nome'])."', mobile = ".$is_mobile.", immagine = '".gdrcd_filter('in', $immagine)."', posizione = ".gdrcd_filter('num', $_POST['posizione']).", larghezza = ".gdrcd_filter('num', $_POST['larghezza']).", altezza = ".gdrcd_filter('num', $_POST['altezza'])."  WHERE id_click = ".gdrcd_filter('num', $_POST['id_record'])." LIMIT 1");
+
                 ?>
                 <div class="warning">
                     <?php echo gdrcd_filter('out', $MESSAGE['warning']['modified']); ?>
@@ -129,6 +131,7 @@
                         <div class='form_info'>
                             <?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['maps']['height_info']); ?>
                         </div>
+
                         <!-- bottoni -->
                         <div class='form_submit'>
                             <?php /* Se l'operazione è una modifica stampo i tasti modifica e annulla */
@@ -263,3 +266,11 @@
         </div>
     <?php }//else (controllo permessi utente) ?>
 </div><!--Pagina-->
+
+<script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
+<link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet"/>
+<script>
+    $(".chosen-select").chosen({
+        no_results_text: "Inserire delle opzioni"
+    })
+</script>

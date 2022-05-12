@@ -1,0 +1,1 @@
+<?php require(__DIR__.'/gestione/meteo/stagioni/gestione_stagioni_index.php');?>

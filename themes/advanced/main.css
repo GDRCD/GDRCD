@@ -1128,3 +1128,7 @@ div.innertube {
 .floating_box_status ul li input{
     width: 20px;
 }
+
+#form_meteo_edit{
+    text-align: center;
+}

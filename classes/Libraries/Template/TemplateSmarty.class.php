@@ -4,7 +4,7 @@ class TemplateSmarty extends Template
 {
     private $smarty;
 
-    public function startTemplate(): TemplateSmarty
+    public function startTemplate(): Template
     {
         $this->smarty = new Smarty();
         $this->smarty->setTemplateDir(__DIR__.'/../../../themes/advanced/view/smarty/templates');
