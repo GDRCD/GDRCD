@@ -70,6 +70,9 @@ class Contacts extends BaseClass
             case 'new_nota':
                 $page = 'new_nota.php';
                 break;
+            case 'dettaglio_nota':
+                $page = 'dettaglio_nota.php';
+                break;
         }
 
         return $page;
@@ -90,14 +93,22 @@ class Contacts extends BaseClass
 
     /**
      * @fn contactManage
-     * @note Controlla se si hanno i permessi per gestire i contatti
+     * @note Controlla se si hanno i permessi per gestire i contatti o se sono i propri
      * @return bool
      */
     public function contactManage($pg): bool
     {
         return (Personaggio::isMyPg($pg)) || (Permissions::permission('MANAGE_CONTACT'));
     }
-
+    /**
+     * @fn contactManage
+     * @note Controlla se si hanno i permessi per gestire i contatti
+     * @return bool
+     */
+    public function contactManageManager($pg): bool
+    {
+        return  (Permissions::permission('MANAGE_CONTACT'));
+    }
     /*** TABLES HELPERS ***/
 
     /**
@@ -288,7 +299,7 @@ class Contacts extends BaseClass
        return rtrim($contatti_presenti, ",");
     }
 
-    public function getContact(string $val = '*', string $id)
+    public function getContact(string $val = '*', int $id)
     {
         return DB::query("SELECT {$val} FROM contatti WHERE id = '{$id}' ");
     }

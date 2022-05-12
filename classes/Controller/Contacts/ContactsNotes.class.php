@@ -20,10 +20,10 @@ class ContactsNotes extends Contacts
         $id_contatto = Filters::in($post['id_contatto']);
         $nota = Filters::in($post['nota']);
         $pubblica=Filters::in($post['pubblica']);
-
+        $titolo= Filters::in($post['titolo']);
         $creato_da=Filters::in($post['id_pg']);
 
-        DB::query("INSERT INTO contatti_nota(id_contatto, nota, pubblica, creato_da, creato_il) VALUES('{$id_contatto}', '{$nota}', '{$pubblica}','{$creato_da}', NOW())");
+        DB::query("INSERT INTO contatti_nota(id_contatto,titolo, nota, pubblica, creato_da, creato_il) VALUES('{$id_contatto}', '{$titolo}','{$nota}', '{$pubblica}','{$creato_da}', NOW())");
         return [
             'response' => true,
             'swal_title' => 'Operazione riuscita!',
@@ -39,10 +39,16 @@ class ContactsNotes extends Contacts
      */
     public function getAllNote($id,$id_pg)
     {
-        if($this->contactManage($id_pg)){
+        if($this->contactManage($id_pg))
+        { //se sei proprietario vedi tutte le note pubbliche e non, ma che non sono state eliminate
+            return DB::query("SELECT * FROM contatti_nota WHERE id_contatto={$id} AND eliminato=0", 'result');
+        }
+        else if($this->contactManageManager($id_pg))
+        {//se hai i permessi di controllo sui contatti, puoi visionare tutti le note
             return DB::query("SELECT * FROM contatti_nota WHERE id_contatto={$id}", 'result');
         }else{
-            return DB::query("SELECT * FROM contatti_nota WHERE id_contatto={$id} AND pubblica='si'", 'result');
+            //altrimenti, vedi solo le note pubbliche e che non sono eliminate
+            return DB::query("SELECT * FROM contatti_nota WHERE id_contatto={$id} AND pubblica='si' AND eliminato=0", 'result');
         }
     }
     /**
@@ -68,13 +74,13 @@ class ContactsNotes extends Contacts
         $id_pg=DB::query("SELECT personaggio FROM contatti WHERE id = {$id} "); //recupero l'id del personaggio per ricaricare la lista dei contatti
         $id_contatto=$this->getNota('id_contatto', $id);
 
-        DB::query("DELETE FROM contatti WHERE id = '{$id}' LIMIT 1"); //Cancello il contatto
+        DB::query("UPDATE contatti_nota SET eliminato = '1' WHERE id = '{$id}' LIMIT 1"); //Cancello il contatto
         return [
             'response' => true,
             'swal_title' => 'Operazione riuscita!',
-            'swal_message' => 'Contatto rimosso correttamente.',
+            'swal_message' => 'Nota rimossa correttamente.',
             'swal_type' => 'success',
-            'note_list' => $this->NoteList($id_contatto)
+            'note_list' => $this->NoteList($id_contatto['id_contatto'])
         ];
     }
 
@@ -93,7 +99,7 @@ class ContactsNotes extends Contacts
         $id_pg=$this->getContact('personaggio', $id_contatto);
         $list = $this->getAllNote($id_contatto, $id_pg['personaggio']);
         return $template->renderTable(
-            'scheda/contatti/list_note',
+            'scheda/contatti/note_list',
             $this->renderNoteList($list, 'scheda_contatti', $id_pg['personaggio'])
         );
     }
@@ -115,15 +121,23 @@ class ContactsNotes extends Contacts
 
             $id_contatto = Filters::in($row['contatto']);
             $pubblica=Filters::in($row['pubblica']);
-            $nota=Filters::in($row['nota']);
+            $titolo= Filters::out($row['titolo']);
+            $nota=substr(Filters::out($row['nota']), 0, 10);
+            $creato_il=Filters::date($row['creato_il'],'d/m/Y');
+            $creato_da=Personaggio::nameFromId($row['creato_da']);
+            $pop_up='javascript:modalWindow("note", "Dettaglio nota","popup.php?page=scheda_contatti_nota&id='.$id.'") ';
 
             $array = [
                 'id'=>$id,
+                'titolo'=>$titolo,
                 'nota' => $nota,
                 'pubblica'=>$pubblica,
                 'contatti_view_permission'=> $this->contactManage($id_pg),
                 'id_pg'=>$id_pg,
-                'pg'=>$pg
+                'pg'=>$pg,
+                'creato_il'=> $creato_il,
+                'creato_da'=>$creato_da,
+                'pop_up'=>$pop_up
 
             ];
 
@@ -131,6 +145,7 @@ class ContactsNotes extends Contacts
         }
 
         $cells = [
+            'Titolo',
 
             'Nota',
 

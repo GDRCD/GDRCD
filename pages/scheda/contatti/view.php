@@ -25,32 +25,10 @@ $contatto=Personaggio::getPgData($id_contatto['contatto']);//dati del personaggi
     <?php
     echo  $contatti_note->NoteList($id);
     ?>
-
 </div>
 
-<?php
-        $all_note=$contatti_note->getAllNote($id, $id_pg);
-            foreach ($all_note as $nota){
-                echo "<div class='sub-tr'>". $nota['nota']."</div>";
-                if($contatti->contactManage($id_pg))
-                {?>
-                <div class='sub-tr'>
-                    Creato il: <?=Filters::date($nota['creato_il'],'d/m/Y')?> | Creato da: <?=Personaggio::nameFromId($nota['creato_da'])?> |
-                    <a href='/main.php?page=scheda_contatti&op=edit_nota&id=<?=$id?>&id_pg=<?=$id_pg?>&pg=<?=$pg?>' title='Modifica'><i class='fas fa-edit'></i></a> |
-                    <a class='ajax_link' data-id='<?=$id?>' data-action='delete_nota' href='#' title='Elimina'><i class='far fa-trash'></i></a>
-                </div>
 
-            <?php
-                }
-                echo "<hr>";
-            }
-
-
-        ?>
-        </div>
-    </div>
-
-
+<div class="fake-table">
     <div class="footer">
         <a href="/main.php?page=scheda_contatti&id_pg=<?=$id_pg?>&pg=<?=$pg?>&op=new_nota&id=<?=$id?>">Nuova nota</a> |
         <a href="/main.php?page=scheda_contatti&id_pg=<?=$id_pg?>&pg=<?=$pg?>">Torna indietro</a>

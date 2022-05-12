@@ -293,7 +293,13 @@ INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,
     ('ONLINE_STATUS_LOGIN_REFRESH',1,'Online Status','Reselect al login','Login oscura ultima scelta dai presenti?','bool',1),
     ('SCHEDA_OBJECTS_PUBLIC',1,'Scheda Oggetti','Scheda Oggetti pubblica','Pagina inventario pubblica?','bool',1),
     ('SCHEDA_STATS_PUBLIC',1,'Scheda Oggetti','Scheda Statistiche pubblica','Pagina statistica pubblica?','bool',1),
-    ('SCHEDA_ABI_PUBLIC',1,'Scheda Abilita','Scheda Abilita pubblica','Pagina abilita pubblica?','bool',1);
+    ('SCHEDA_ABI_PUBLIC',1,'Scheda Abilita','Scheda Abilita pubblica','Pagina abilita pubblica?','bool',1),
+     ('CONTACTS_ENABLED', '1', 'Abilita/Disabilita la sezione contatti', 'Contatti', 'Abilita/disabilita i contatti', 'bool', 1),
+ ( 'CONTACT_PUBLIC', 1, 'Abilita/Disabilita la visualizzazione pubblica dei contatti', 'Contatti', 'Abilita/Disabilita la visualizzazione pubblica dei contatti', 'bool', 1),
+ ( 'CONTACT_SECRETS', 0, 'Abilita/Disabilita la scelta di nascondere le note', 'Contatti', 'Abilita/Disabilita la scelta di nascondere le note', 'bool', 1),
+( 'CONTACT_CATEGORIES', 1, 'Abilita/Disabilita le categorie', 'Contatti', 'Abilita/Disabilita le categorie', 'bool', 1),
+ ('CONTACT_CATEGORIES_PUBLIC', 1, 'Se abilitato, tutti vedono le categorie', 'Contatti', 'Se abilitato, tutti vedono le categorie', 'bool', 1),
+ ('CONTACT_CATEGORIES_STAFF_ONLY', 0, 'Se abilitato, solo lo staff può assegnare le categorie di contatto', 'Contatti', 'Se abilitato, solo lo staff può assegnare le categorie di contatto', 'bool', 1);
 
 -- --------------------------------------------------------
 
@@ -1198,13 +1204,14 @@ CREATE TABLE `contatti` (
 -- Struttura della tabella `contatti_nota`
 --
 CREATE TABLE `contatti_nota` (
- `id` INT(11) NOT NULL AUTO_INCREMENT,
- `id_contatto` INT(11) NOT NULL DEFAULT '0',
- `nota` TEXT NOT NULL COLLATE 'latin1_swedish_ci',
- `pubblica` INT(11) NOT NULL DEFAULT '0',
- `eliminato` INT(11) NOT NULL DEFAULT '0',
- `creato_il` DATETIME NOT NULL,
- `creato_da` VARCHAR(255) NOT NULL DEFAULT '0' COLLATE 'latin1_swedish_ci',
+     `id` INT(11) NOT NULL AUTO_INCREMENT,
+     `id_contatto` INT(11) NOT NULL DEFAULT '0',
+     `titolo` VARCHAR(250) NULL DEFAULT NULL COLLATE 'latin1_swedish_ci',
+     `nota` TEXT NOT NULL COLLATE 'latin1_swedish_ci',
+     `pubblica` VARCHAR(50) NULL DEFAULT NULL COLLATE 'latin1_swedish_ci',
+     `eliminato` INT(11) NOT NULL DEFAULT '0',
+     `creato_il` DATETIME NOT NULL,
+     `creato_da` VARCHAR(255) NOT NULL DEFAULT '0' COLLATE 'latin1_swedish_ci',
  PRIMARY KEY (`id`)
 )ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 

@@ -11,6 +11,7 @@ switch ($_POST['action']) {
         echo json_encode($contatti->newContatto($_POST));
         break;
     case 'delete_contatto':
+        //cancella un contatto
         echo json_encode($contatti->deleteContatto($_POST['id']));
         break;
     case 'new_nota':
@@ -18,6 +19,7 @@ switch ($_POST['action']) {
         echo json_encode($contatti_nota->newNota($_POST));
         break;
     case 'delete_nota':
+        //cancella una nota
         echo json_encode($contatti_nota->deleteNota($_POST['id']));
         break;
 

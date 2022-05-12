@@ -24,7 +24,7 @@ $(function(){
             let datas = JSON.parse(data);
 
             if(datas.response){
-                $('.contatti_list').html(datas.contatti_list)
+                $('.note_list').html(datas.note_list)
 
                 Swal.fire(datas.swal_title,datas.swal_message,datas.swal_type)
 

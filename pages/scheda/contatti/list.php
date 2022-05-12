@@ -5,6 +5,7 @@ require_once(__DIR__ . '/../../../includes/required.php');
 $contatti = Contacts::getInstance();
 $id_pg = Filters::int($_GET['id_pg']);
 $pg = Filters::in($_GET['pg']);
+if($contatti->contatcEnables()){
 ?>
 
 
@@ -27,3 +28,6 @@ if($contatti->contactManage($id_pg))
 ?>
 
 <script src="/pages/scheda/contatti/JS/delete_contatti.js"></script>
+<?php
+}
+?>

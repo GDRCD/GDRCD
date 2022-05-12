@@ -26,9 +26,15 @@ $id_contatto= Filters::int($_REQUEST['id']);
         </div>
         <div class="single_input">
             <div class='label'>
+                Titolo nota
+            </div>
+           <input type="text" name="titolo" required>
+        </div>
+        <div class="single_input">
+            <div class='label'>
                 Nota:
             </div>
-             <textarea name="nota"></textarea>
+             <textarea name="nota" required></textarea>
         </div>
 
         <div class="fake-table">
