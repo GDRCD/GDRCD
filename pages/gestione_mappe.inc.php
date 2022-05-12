@@ -1,7 +1,6 @@
 <div class="pagina_gestione_mappe">
     <?php /*HELP: */
     /*Controllo permessi utente*/
-    $class =Meteo::getInstance();
 
     if($_SESSION['permessi'] < MODERATOR) {
         echo '<div class="error">'.gdrcd_filter('out', $MESSAGE['error']['not_allowed']).'</div>';
@@ -57,25 +56,6 @@
                 $immagine = ($_POST['immagine'] == "") ? "standard_mappa.png" : gdrcd_filter('in', $_POST['immagine']);
                 /*Eseguo l'aggiornamento*/
                 gdrcd_query("UPDATE mappa_click SET nome ='".gdrcd_filter('in', $_POST['nome'])."', mobile = ".$is_mobile.", immagine = '".gdrcd_filter('in', $immagine)."', posizione = ".gdrcd_filter('num', $_POST['posizione']).", larghezza = ".gdrcd_filter('num', $_POST['larghezza']).", altezza = ".gdrcd_filter('num', $_POST['altezza'])."  WHERE id_click = ".gdrcd_filter('num', $_POST['id_record'])." LIMIT 1");
-
-                switch (Functions::get_constant('WEATHER_TYPE')) {
-                    case 1:
-
-                        $stagioni = implode(",",($_POST['stagioni']));
-
-                       $class->saveMap($stagioni, Filters::in($_POST['id_record']) );
-
-                        break;
-                    default:
-                        $citta= Filters::in($_POST['webapi_city']);
-                        echo $citta;
-                        $class->saveMap($citta, Filters::in($_POST['id_record']) );
-
-                        break;
-                }
-
-
-
 
                 ?>
                 <div class="warning">
@@ -151,47 +131,6 @@
                         <div class='form_info'>
                             <?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['maps']['height_info']); ?>
                         </div>
-                        <?php
-                         switch (Functions::get_constant('WEATHER_TYPE')){
-                             case 1: //stagioni
-                                 ?>
-
-                                 <div class='form_label'>
-                                     Stagioni
-                                 </div>
-
-
-                                    <?php
-                                         $stagioni= $class->getMeteoMappa($loaded_record['id_click']); ;
-                                         echo MeteoStagioni::getInstance()->diffselectSeason(explode(",",$stagioni['stagioni']));
-                                         ?>
-
-                                 <div class='form_info'>
-
-                                 </div>
-                                 <?php
-                                 break;
-                             default://webapi
-                                 ?>
-
-                        <div class='form_label'>
-                           Città meteo webapi
-                        </div>
-                        <div class='form_field'>
-                            <?php $citta= $class->getMeteoMappa($loaded_record['id_click']); ?>
-                            <input type="text" name="webapi_city" value="<?=$citta['citta']?>">
-
-                        </div>
-                        <div class='form_info'>
-                           Nome della città da utilizzare per la mappa e le relative chat correlate
-                        </div>
-                        <?php
-
-                                 break;
-
-
-                         }?>
-
 
                         <!-- bottoni -->
                         <div class='form_submit'>
