@@ -32,6 +32,31 @@ class Functions extends BaseClass
     }
 
     /**
+     * @fn set_constant
+     * @note Funzione di estrazione delle costanti dal db
+     * @param string $name
+     * @param mixed $val
+     * @return bool|void
+     */
+    public static function set_constant(string $name, $val)
+    {
+
+        $name = gdrcd_filter('in', $name);
+
+        $search = gdrcd_query("SELECT const_name,val FROM config WHERE const_name='{$name}'", 'result');
+        $num = gdrcd_query($search, 'num_rows');
+
+        if ($num == 0) {
+            die("Costante {$name} inesistente nella tabella config.");
+        } else if ($num > 1) {
+            die("Esistono più costanti con il nome '{$name}'. Correggere e riprovare.");
+        } else {
+            DB::query("UPDATE config SET val = '{$val}' WHERE const_name='{$name}'");
+            return true;
+        }
+    }
+
+    /**
      * @fn getPgId
      * @note Estrae l'id del pg dal suo nome
      * @param string $pg

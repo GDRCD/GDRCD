@@ -10,7 +10,7 @@ switch ($_POST['action']) {
         break;
 
     case 'get_conditions_list':
-        echo json_encode($venti->ajaxCondList());
+        echo json_encode($venti->ajaxWindList());
         break;
 
     case 'op_insert':

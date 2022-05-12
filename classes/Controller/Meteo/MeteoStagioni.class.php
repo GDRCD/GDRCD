@@ -15,11 +15,10 @@ class MeteoStagioni extends Meteo
         return Permissions::permission('MANAGE_WEATHER_SEASONS');
     }
 
-
     /*** TABLE HELPER ***/
 
     /**
-     * @fn getAll
+     * @fn getAllSeason
      * @note Estrae lista delle stagioni
      * @return bool|int|mixed|string
      */
@@ -29,7 +28,7 @@ class MeteoStagioni extends Meteo
     }
 
     /**
-     * @fn getOne
+     * @fn getSeason
      * @note Estrae una stagione
      * @return bool|int|mixed|string
      */
@@ -51,20 +50,15 @@ class MeteoStagioni extends Meteo
         return DB::query("SELECT {$val} FROM meteo_stagioni_condizioni LEFT JOIN meteo_condizioni ON meteo_stagioni_condizioni.condizione = meteo_condizioni.id WHERE meteo_stagioni_condizioni.stagione='{$id}'", 'result');
     }
 
+    /**
+     * @fn getCurrentSeason
+     * @note Estrae la stagione corrente
+     * @param string $val
+     * @return bool|int|mixed|string
+     */
     public function getCurrentSeason(string $val = '*')
     {
         return DB::query("SELECT {$val} FROM meteo_stagioni WHERE data_fine > NOW() AND data_inizio < NOW() LIMIT 1");
-    }
-
-    /**
-     * @fn listSeasons
-     * @note Lista delle stagioni disponibili
-     * @return string
-     */
-    public function listSeasons()
-    {
-        $stagioni = $this->getAllSeason();
-        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $stagioni);
     }
 
     /**** RENDER ***/
@@ -165,9 +159,10 @@ class MeteoStagioni extends Meteo
     /**
      * @fn esitiListManagement
      * @note Render lista gestione delle stagioni
+     * @param int $id
      * @return string
      */
-    public function seasonConditionsManageList($id): string
+    public function seasonConditionsManageList(int $id): string
     {
         $template = Template::getInstance()->startTemplate();
         $list = $this->getAllSeasonCondition($id);
@@ -214,49 +209,7 @@ class MeteoStagioni extends Meteo
         ];
     }
 
-
-
     /**** FUNCTIONS ****/
-
-    /**
-     * @fn setMeteoMap
-     * @note Setta stagione mappa
-     * @param int $id
-     * @return array
-     */
-    public function setMeteoMap(int $id): array
-    {
-        $data = $this->getMeteoMappa($id);
-
-        if (empty($data) || $this->weatherNeedRefresh()) {
-            $data = $this->generateWeatherMap($id);
-        }
-
-        return [
-            'meteo' => $data['meteo'],
-            'vento' => $data['vento']
-        ];
-    }
-
-    /**
-     * @fn setMeteoChat
-     * @note Modifica stagione mappa
-     * @param int $id
-     * @return array
-     */
-    public function setMeteoChat(int $id): array
-    {
-        $data = $this->getMeteoChat($id);
-
-        if (empty($data) || $this->weatherNeedRefresh()) {
-            $data = $this->generateWeather($id);
-        }
-
-        return [
-            'meteo' => $data['meteo'],
-            'vento' => $data['vento']
-        ];
-    }
 
     /**
      * @fn diffselectSeason
@@ -373,7 +326,7 @@ class MeteoStagioni extends Meteo
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Stagione eliminata.',
                 'swal_type' => 'success',
-                'stagioni_list' => $this->esitiListManagement()
+                'stagioni_list' => $this->seasonListManagement()
             ];
         } else {
             return [
@@ -385,6 +338,12 @@ class MeteoStagioni extends Meteo
         }
     }
 
+    /**
+     * @fn AssignCondition
+     * @note Assegna una condizione ad una stagione
+     * @param array $post
+     * @return array
+     */
     public function AssignCondition(array $post): array
     {
 
@@ -416,7 +375,12 @@ class MeteoStagioni extends Meteo
 
     }
 
-
+    /**
+     * @fn RemoveCondition
+     * @note Rimuove una condizione da una stagione
+     * @param array $post
+     * @return array
+     */
     public function RemoveCondition(array $post): array
     {
 

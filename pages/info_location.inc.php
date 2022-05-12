@@ -8,6 +8,9 @@
     $record_exists = gdrcd_query($result, 'num_rows');
     $record = gdrcd_query($result, 'fetch');
 
+
+    Meteo::getInstance()->refreshWeather();
+
     /** * Fix: quando non si � in una mappa visualizza il nome della chat
      * Quando si � in una mappa si visualizza il nome della mappa
      * @author Blancks

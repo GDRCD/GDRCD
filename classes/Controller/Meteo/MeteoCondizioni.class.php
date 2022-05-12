@@ -2,8 +2,6 @@
 
 class MeteoCondizioni extends Meteo
 {
-
-
     /*** PERMESSI ****/
 
     /**
@@ -15,7 +13,6 @@ class MeteoCondizioni extends Meteo
     {
         return Permissions::permission('MANAGE_WEATHER_CONDITIONS');
     }
-
 
     /** GETTER */
 
@@ -30,7 +27,6 @@ class MeteoCondizioni extends Meteo
         return DB::query("SELECT {$val} FROM meteo_condizioni", 'result');
     }
 
-
     /**
      * @fn getOne
      * @note Estrae una condizione meteo
@@ -40,7 +36,6 @@ class MeteoCondizioni extends Meteo
     {
         return DB::query("SELECT {$val} FROM meteo_condizioni WHERE id='{$id}' LIMIT 1");
     }
-
 
     /** LISTS  */
 
@@ -54,7 +49,6 @@ class MeteoCondizioni extends Meteo
         $conditions = $this->getAllCondition('id,nome');
         return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $conditions);
     }
-
 
     /** AJAX */
 
@@ -103,8 +97,10 @@ class MeteoCondizioni extends Meteo
     /**
      * @fn new
      * @note Inserisce una nuova condizione
+     * @param array $post
+     * @return array
      */
-    public function NewCondition(array $post)
+    public function NewCondition(array $post): array
     {
         if ($this->permissionManageWeather()) {
 
@@ -134,8 +130,10 @@ class MeteoCondizioni extends Meteo
     /**
      * @fn edit
      * @note Aggiorna una condizione meteo
+     * @param array $post
+     * @return array
      */
-    public function ModAbiRequisito(array $post)
+    public function ModAbiRequisito(array $post): array
     {
         if($this->permissionManageWeather()){
             $nome = Filters::in( $post['nome']);
@@ -166,8 +164,10 @@ class MeteoCondizioni extends Meteo
     /**
      * @fn delete
      * @note Cancella una condizione meteo
+     * @param array $post
+     * @return array
      */
-    public function DelCondition(array $post)
+    public function DelCondition(array $post):array
     {
         if($this->permissionManageWeather()) {
 

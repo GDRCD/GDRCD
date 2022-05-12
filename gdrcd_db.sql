@@ -288,7 +288,9 @@ INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,
     ('WEATHER_WEBAPI_ICON',0,'Meteo','Web Api icone','Icone di default o personalizzate','bool',1),
     ('WEATHER_LAST_DATE',0,'Meteo','Meteo Impostazioni','Data ultimo aggiornamento meteo','String',0),
     ('WEATHER_WEBAPI_FORMAT','png','Meteo','Icone estensione','Estensione delle icone','String',1),
-    ('WEATHER_LAST',0,'Meteo','Meteo Impostazioni','Ultimo meteo registrato','String',0),
+    ('WEATHER_LAST_CONDITION',0,'Meteo','Meteo Impostazioni','Ultime condizioni meteo registrato','String',0),
+    ('WEATHER_LAST_TEMP',0,'Meteo','Meteo Impostazioni','Ultima temperatura registrata','String',0),
+    ('WEATHER_LAST_IMG',0,'Meteo','Meteo Impostazioni','Ultima immagine registrata','String',0),
     ('WEATHER_LAST_WIND',0,'Meteo','Meteo Impostazioni','Ultimo vento registrato','String',0),
     ('WEATHER_UPDATE',4,'Meteo','Tempo di aggiornamento','Dopo quante ore si prevede il cambio meteo con le stagioni','int',1),
     ('ESITI_ENABLE',1,'Esiti','Attiva esiti','Abilitare la funzione esiti?','bool',1),
@@ -533,6 +535,8 @@ CREATE TABLE IF NOT EXISTS `mappa` (
   `stato` varchar(255) NOT NULL DEFAULT '',
   `pagina` varchar(255) DEFAULT 'nulla.php',
   `chat` tinyint(1) NOT NULL DEFAULT '1',
+  `meteo_citta` varchar(255) DEFAULT NULL,
+  `meteo_fisso` varchar(255) DEFAULT NULL,
   `immagine` varchar(255) DEFAULT 'standard_luogo.png',
   `stanza_apparente` varchar(255) DEFAULT NULL,
   `id_mappa` int DEFAULT '0',
@@ -555,9 +559,9 @@ CREATE TABLE IF NOT EXISTS `mappa` (
 -- Dump dei dati per la tabella `mappa`
 --
 
-INSERT INTO `mappa` (`id`, `nome`, `descrizione`, `stato`, `pagina`, `chat`, `immagine`, `stanza_apparente`, `id_mappa`, `link_immagine`, `link_immagine_hover`, `id_mappa_collegata`, `x_cord`, `y_cord`, `invitati`, `privata`, `proprietario`, `ora_prenotazione`, `scadenza`, `costo`) VALUES
-(1, 'Strada', 'Via che congiunge la periferia al centro.', 'Nella norma', '', 1, 'standard_luogo.png', '', 1, '', '', 0, 180, 150, '', 0, 'Nessuno', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 0),
-(2, 'Piazza', 'Piccola piazza con panchine ed una fontana al centro.', 'Nella norma', '', 1, 'standard_luogo.png', '', 1, '', '', 0, 80, 150, '', 0, 'Nessuno', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 0);
+INSERT INTO `mappa` (`id`, `nome`, `descrizione`, `stato`, `pagina`, `chat`,`meteo_citta`,`meteo_fisso`, `immagine`, `stanza_apparente`, `id_mappa`, `link_immagine`, `link_immagine_hover`, `id_mappa_collegata`, `x_cord`, `y_cord`, `invitati`, `privata`, `proprietario`, `ora_prenotazione`, `scadenza`, `costo`) VALUES
+(1, 'Strada', 'Via che congiunge la periferia al centro.', 'Nella norma', '', 1,'New York',0, 'standard_luogo.png', '', 1, '', '', 0, 180, 150, '', 0, 'Nessuno', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 0),
+(2, 'Piazza', 'Piccola piazza con panchine ed una fontana al centro.', 'Nella norma', '', 1,'Miami',0, 'standard_luogo.png', '', 1, '', '', 0, 80, 150, '', 0, 'Nessuno', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 0);
 
 -- --------------------------------------------------------
 
@@ -669,10 +673,11 @@ CREATE TABLE IF NOT EXISTS `mercato_negozi` (
 CREATE TABLE IF NOT EXISTS `meteo_chat` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `id_chat` int(11) NOT NULL,
-    `citta` varchar(255) DEFAULT NULL,
     `meteo` varchar(255) DEFAULT NULL,
     `vento` varchar(255) DEFAULT NULL,
     `temp` int DEFAULT NULL,
+    `img` varchar(255) DEFAULT NULL,
+    `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -685,10 +690,10 @@ CREATE TABLE IF NOT EXISTS `meteo_chat` (
 CREATE TABLE IF NOT EXISTS `meteo_mappa` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `id_mappa` int(11) NOT NULL,
-    `citta` varchar(255) DEFAULT NULL,
     `meteo` varchar(255) DEFAULT NULL,
     `vento` varchar(255) DEFAULT NULL,
     `temp` int DEFAULT NULL,
+    `img` varchar(255) DEFAULT NULL,
      PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

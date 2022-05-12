@@ -7,8 +7,8 @@ class MeteoVenti extends Meteo
     /*** PERMESSI ****/
 
     /**
-     * @fn permissionManageWeatherConditions
-     * @note Controlla se si hanno i permessi per gestire le condizioni meteo
+     * @fn permissionManageWeatherWinds
+     * @note Controlla se si hanno i permessi per gestire i venti
      * @return bool
      */
     public function permissionManageWeatherWinds(): bool
@@ -20,8 +20,8 @@ class MeteoVenti extends Meteo
     /** GETTER */
 
     /**
-     * @fn getAllCondition
-     * @note Estrae tutte le condizioni meteo
+     * @fn getAllWinds
+     * @note Estrae tutti i venti
      * @param string $val
      * @return bool|int|mixed|string
      */
@@ -31,8 +31,8 @@ class MeteoVenti extends Meteo
     }
 
     /**
-     * @fn getOne
-     * @note Estrae una condizione meteo
+     * @fn getWind
+     * @note Estrae un vento
      * @return bool|int|mixed|string
      */
     public function getWind(int $id, string $val = '*')
@@ -56,8 +56,8 @@ class MeteoVenti extends Meteo
     /** AJAX */
 
     /**
-     * @fn ajaxCondList
-     * @note Estrae la lista di condizioni
+     * @fn ajaxWindList
+     * @note Estrae la lista di venti
      * @return array
      */
     public function ajaxWindList():array
@@ -66,8 +66,8 @@ class MeteoVenti extends Meteo
     }
 
     /**
-     * @fn ajaxCondData
-     * @note Estrae la lista di condizioni
+     * @fn ajaxWindData
+     * @note Estrae i dati di un vento
      * @param array $post
      * @return array
      */
@@ -94,10 +94,12 @@ class MeteoVenti extends Meteo
     /** GESTIONE */
 
     /**
-     * @fn new
+     * @fn NewWind
      * @note Inserisce una nuova condizione
+     * @param array $post
+     * @return array
      */
-    public function NewWind(array $post)
+    public function NewWind(array $post): array
     {
         if ($this->permissionManageWeatherWinds()) {
 
@@ -123,10 +125,12 @@ class MeteoVenti extends Meteo
     }
 
     /**
-     * @fn edit
+     * @fn ModWind
      * @note Aggiorna una condizione meteo
+     * @param array $post
+     * @return array
      */
-    public function ModWind(array $post)
+    public function ModWind(array $post): array
     {
         if($this->permissionManageWeatherWinds()){
             $id=Filters::in( $post['id']);
@@ -154,10 +158,12 @@ class MeteoVenti extends Meteo
     }
 
     /**
-     * @fn delete
+     * @fn DelWind
      * @note Cancella una condizione meteo
+     * @param array $post
+     * @return array
      */
-    public function DelWind(array $post)
+    public function DelWind(array $post): array
     {
         if($this->permissionManageWeatherWinds()) {
 
