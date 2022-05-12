@@ -179,7 +179,7 @@ if($_SESSION['login'] != '') {
         <link rel='stylesheet' href='themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/main.css' TYPE='text/css'>
         <link rel='stylesheet' href='themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/homepage.css'
               TYPE='text/css'>
-        <link rel='shortcut icon' href='favicon.ico' />
+        <link rel='shortcut icon' href='imgs/favicon.ico' />
     </head>
     <body>
         <div class="error_box">

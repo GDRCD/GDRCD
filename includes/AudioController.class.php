@@ -1,12 +1,14 @@
 <?php
 
 /**
- * Classe base per la gestione delle notifiche audio in GDRCD
+ * @class AudioController
+ * @note Classe base per la gestione delle notifiche audio in GDRCD
  */
-class AudioController {
-
+class AudioController
+{
     /**
-     * Controllo sulla abilitazione dei suoni nelle configurazioni
+     * @fn isSoundAllowed
+     * @note Controllo sulla abilitazione dei suoni nelle configurazioni
      * @return bool
      */
     public static function isSoundAllowed($label) {
@@ -15,7 +17,8 @@ class AudioController {
     }
 
     /**
-     * Costruisco il controllore dei suoni
+     * @fn build
+     * @note Costruisco il controllore dei suoni
      * @param string $label Identificativo del componente audioControllaer
      * @return string
      */
@@ -37,7 +40,7 @@ class AudioController {
         if(isset($PARAMETERS['settings']['audiotype']['.'.strtolower(end($ext))])) {
             return
                 '<div style="height:0;">
-                    <audio id="audioController_'.$label.'" preload="none">
+                    <audio id="audioController_'.$label.'" preload="none" controls style="display:none">
                         <source src="../../../sounds/'.$PARAMETERS['settings']['audio_new_'.$label].'" type="'.$PARAMETERS['settings']['audiotype']['.'.strtolower(end($ext))].'">
                         Your browser does not support the audio element.
                     </audio>
@@ -48,7 +51,8 @@ class AudioController {
     }
 
     /**
-     * Gestisco l'esecuzione o meno dell'audio di notifica
+     * @fn play
+     * @note Gestisco l'esecuzione o meno dell'audio di notifica
      * @param string $label Identificativo del componente audioControllaer
      * @return string
      */

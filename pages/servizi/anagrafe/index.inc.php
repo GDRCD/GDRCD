@@ -1,7 +1,7 @@
 <?php
 
 // Avvio l'operazione di ricerca nel caso sia stato inviato il form
-if ($_POST['action'] == "searchPersonaggio") {
+if (gdrcd_filter('get', $_POST['action']) == "searchPersonaggio") {
 
     if (!empty($_REQUEST['nome']) || !empty($_REQUEST['genere']) || !empty($_REQUEST['razza'])) {
         // Ottengo i filtri inviati dal FORM
@@ -20,7 +20,6 @@ if ($_POST['action'] == "searchPersonaggio") {
         $limit_val = gdrcd_filter('num', $_REQUEST['limit']);
 
         $limit = (isset($_REQUEST['limit']) && ($_REQUEST['limit'] > 0)) ? " LIMIT {$_REQUEST['limit']} " : '';
-
 
         // Costruisco la query
         $querySearch = "SELECT personaggio.url_img_chat, personaggio.nome, personaggio.cognome, personaggio.sesso, 
@@ -122,8 +121,7 @@ foreach ($genders as $gender) {
 }
 
 ?>
-
-    <!-- CREA FORM -->
+    <!-- INIZIO FILTRI -->
     <div id="FiltriAnagrafe" class="servizi_form_container">
 
         <div class="servizi_form_title"><?= gdrcd_filter('out', $MESSAGE['interface']['pg_list']['search']['title']); ?></div>
@@ -170,7 +168,7 @@ foreach ($genders as $gender) {
 
         </form>
     </div>
-    <!-- FINE CREA-->
+    <!-- FINE FILTRI -->
 
     <!-- RISULTATO -->
 <?php if (isset($tableSearch)) {

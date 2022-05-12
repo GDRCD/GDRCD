@@ -77,12 +77,17 @@ div.chat_row_P span.color2 {
 
 div.chat_row_M {
     margin-top: 3px;
-
     border-width: 2px;
     border-color: green;
     border-style: solid;
     text-align: center;
     color: green;
+}
+
+div.chat_row_M span.color2 {
+    margin-top: 3px;
+    color: #000;
+    font-weight: bolder;
 }
 
 div.chat_row_N {
