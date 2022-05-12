@@ -53,6 +53,18 @@ class MeteoVenti extends Meteo
         return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $winds);
     }
 
+    /**
+     * @fn selectVento
+     * @note Genera gli option per il vento
+     * @param $selected
+     * @return string
+     */
+    public function listWindsByText($selected): string
+    {
+        $winds = $this->getAllWinds();
+        return Template::getInstance()->startTemplate()->renderSelect('nome', 'nome', $selected, $winds);
+    }
+
     /** AJAX */
 
     /**

@@ -105,7 +105,6 @@ class PersonaggioAbilita extends Personaggio
      */
     public function permissionDowngradeAbilita(int $grado): bool
     {
-        var_dump($grado);
         $grado = Filters::int($grado);
         return (Permissions::permission('DOWNGRADE_SCHEDA_ABI') && ($grado > 0));
     }

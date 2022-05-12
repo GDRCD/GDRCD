@@ -50,6 +50,18 @@ class MeteoCondizioni extends Meteo
         return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $conditions);
     }
 
+    /**
+     * @fn selectConditions
+     * @note Genera gli option per le conditions
+     * @param string $selected
+     * @return string
+     */
+    public function listConditionsByText(string $selected): string
+    {
+        $conditions = $this->getAllCondition('nome');
+        return Template::getInstance()->startTemplate()->renderSelect('nome', 'nome', $selected, $conditions);
+    }
+
     /** AJAX */
 
     /**

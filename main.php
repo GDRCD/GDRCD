@@ -19,6 +19,8 @@ $strInnerPage = "";
 if( ! empty($_GET['map_id'])) {
     $_SESSION['mappa'] = (int) $_GET['map_id'];
     gdrcd_query("UPDATE personaggio SET ultima_mappa=".gdrcd_filter('num', $_SESSION['mappa']).", ultimo_luogo=-1 WHERE nome = '".gdrcd_filter('in', $_SESSION['login'])."'");
+} else{
+    gdrcd_query("UPDATE personaggio SET ultima_mappa=-1, ultimo_luogo=-1 WHERE nome = '".gdrcd_filter('in', $_SESSION['login'])."'");
 }
 
 if(isset($_REQUEST['page'])) {

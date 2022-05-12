@@ -7,6 +7,8 @@
     $result = gdrcd_query("SELECT mappa.nome, mappa.descrizione, mappa.stato, mappa.immagine, mappa.stanza_apparente, mappa.scadenza, mappa_click.meteo FROM  mappa_click LEFT JOIN mappa ON mappa_click.id_click = mappa.id_mappa WHERE id = " . $_SESSION['luogo'], 'result');
     $record_exists = gdrcd_query($result, 'num_rows');
     $record = gdrcd_query($result, 'fetch');
+    $chat = Personaggio::getPgLocation();
+
 
 
     Meteo::getInstance()->refreshWeather();
@@ -66,7 +68,7 @@
 
 
 
-          if($perm->permission('MANAGE_WEATHER') && ($_REQUEST['dir'] )){?>
+          if($class->permissionEditchat()){?>
               <p><a href="javascript:modalWindow('meteo', 'Modifica Meteo Chat', 'popup.php?page=meteo_chat&dir=<?=$_REQUEST['dir']?>')">Modifica Meteo</a></p>
          <?php
           }
