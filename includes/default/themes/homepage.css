@@ -16,7 +16,7 @@ body {
     color: #222;
     font-family: Verdana, Sans;
     font-size: 11px;
-    background: url("img/bg.gif") top left repeat;
+    background: url("imgs/bg.gif") top left repeat;
 }
 
 body.transparent_body {
@@ -294,7 +294,7 @@ div#footer p {
 div#main {
     height: 100%;
     width: 100%;
-    background: url("img/bg_header.jpg") repeat-x top left;
+    background: url("imgs/bg_header.jpg") repeat-x top left;
     text-align: center;
 }
 
@@ -325,7 +325,7 @@ div#header .titlecontent {
 */
 div#content {
     padding: 0 60px 10px 60px;
-    background: url("img/body.png") repeat-y left top;
+    background: url("imgs/body.png") repeat-y left top;
 }
 
 /** * Struttura colonna di lato
@@ -348,7 +348,7 @@ div.content_body {
 div#footer {
     height: 68px;
     padding: 8px 59px 0 59px;
-    background: url("img/footer.png") no-repeat top left;
+    background: url("imgs/footer.png") no-repeat top left;
 }
 
 

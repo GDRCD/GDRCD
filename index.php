@@ -5,7 +5,7 @@ declare(strict_types=1);
 header('Content-Type:text/html; charset=UTF-8');
 
 //Includo i parametri, la configurazione, la lingua e le funzioni
-require_once('core/required.php');
+Router::loadRequired();
 
 //Eseguo la connessione al database
 $handleDBConnection = DB::connect();

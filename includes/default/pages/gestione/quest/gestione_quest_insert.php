@@ -1,6 +1,6 @@
 <?php /*Form di inserimento/modifica*/
 
-require_once(__DIR__ . '/../../../core/required.php');
+Router::loadRequired();
 
 $quest = Quest::getInstance();
 

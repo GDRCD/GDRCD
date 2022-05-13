@@ -1,7 +1,7 @@
 <?php
 
 /*Includo i file principali */
-require_once(__DIR__.'/core/required.php');
+Router::loadRequired();
 
 /*Leggo i dati del form di login*/
 $login1 = gdrcd_filter('get', $_POST['login1']);

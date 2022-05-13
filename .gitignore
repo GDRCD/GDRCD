@@ -174,4 +174,4 @@ core/db_overrides.php
 includes/config-overrides.php
 .directory
 .user.ini
-/includes/default/themes/advanced/view/smarty/compiled/
+/includes/default/themes/view/smarty/compiled/

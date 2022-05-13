@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__ . '/../../../core/required.php');
+Router::loadRequired();
 
 $quest = Quest::getInstance();
 $page = Filters::int($_REQUEST['offset']);

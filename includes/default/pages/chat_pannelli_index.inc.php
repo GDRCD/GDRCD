@@ -1,7 +1,6 @@
 <?php
 
-
-require_once(__DIR__ . '/../core/required.php');
+Router::loadRequired();
 
 $pannello = gdrcd_filter('out',$_GET['pannello']);
 ?>

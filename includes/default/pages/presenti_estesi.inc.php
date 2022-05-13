@@ -1,8 +1,7 @@
 <?php
 
-require_once(__DIR__ . '/../core/required.php');
+Router::loadRequired();
 $status = OnlineStatus::getInstance();
-
 ?>
 
 
@@ -16,7 +15,7 @@ $status = OnlineStatus::getInstance();
         /** * Abilitazione tooltip
          * @author Blancks
          */
-        if ($PARAMETERS['mode']['user_online_state'] == 'ON') {
+        if ($GLOBALS['PARAMETERS']['mode']['user_online_state'] == 'ON') {
             echo '<div id="descriptionLoc"></div>';
         }
         //Carico la lista presenti.

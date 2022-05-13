@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__ . '/../../core/required.php');
+Router::loadRequired();
 
 $action = Filters::in($_POST['action']);
 $chat = Chat::getInstance();

@@ -6,11 +6,14 @@ class TemplateSmarty extends Template
 
     public function startTemplate(): Template
     {
+
+        $theme_dir = Router::getThemeDir();
+
         $this->smarty = new Smarty();
-        $this->smarty->setTemplateDir(__DIR__ . '/../../../themes/advanced/view/smarty/templates');
-        $this->smarty->setConfigDir(__DIR__.'/../../../themes/advanced/view/smarty/config');
-        $this->smarty->setCompileDir(__DIR__ . '/../../../themes/advanced/view/smarty/compiled');
-        $this->smarty->setCacheDir(__DIR__.'/../../../themes/advanced/view/smarty/cache');
+        $this->smarty->setTemplateDir($theme_dir.'/view/smarty/templates');
+        $this->smarty->setConfigDir($theme_dir.'/view/smarty/config');
+        $this->smarty->setCompileDir($theme_dir.'/smarty/compiled');
+        $this->smarty->setCacheDir($theme_dir.'/view/smarty/cache');
         return $this;
     }
 

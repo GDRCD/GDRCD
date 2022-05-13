@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__ . '/../../../core/required.php');
+Router::loadRequired();
 
 $scheda_abi = SchedaAbilita::getInstance();
 $id_pg = Filters::int($_GET['id_pg']);

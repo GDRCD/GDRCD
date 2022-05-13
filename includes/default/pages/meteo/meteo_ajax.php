@@ -1,6 +1,6 @@
 <?php
 
-require(__DIR__ . '/../../core/required.php');
+Router::loadRequired();
 
 $meteo = Meteo::getInstance();
 

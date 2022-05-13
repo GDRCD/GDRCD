@@ -7,21 +7,20 @@ require_once(dirname(__FILE__) . '/../core/functions.php');
 # Carico le constanti principali
 require_once(dirname(__FILE__) . '/../core/constant_values.php');
 
-# Carico i dati di configurazione del db
-require_once (dirname(__FILE__)) . '/../core/db_config.php';
-
-# Se esiste un file di overrides di connessione del db, caricalo
+# Se esiste un file di overrides di connessione del db, caricalo, altirmenti carico quello di default
 if(file_exists(dirname(__FILE__).'/../core/db_overrides.php')){
-    include_once dirname(__FILE__) . '/../core/db_overrides.php';
+    require_once dirname(__FILE__) . '/../core/db_overrides.php';
+} else{
+    require_once (dirname(__FILE__)) . '/../core/db_config.php';
 }
 
 # Include del template engine
 require_once(dirname(__FILE__) . '/../plugins/smarty/libs/Smarty.class.php');
 
 # Inizializzo le classi fondamentali
-require_once(dirname(__FILE__) . '/../classes/Libraries/Base.class.php');
-require_once(dirname(__FILE__) . '/../classes/Libraries/Routing.class.php');
-require_once(dirname(__FILE__) . '/../classes/Libraries/DB.class.php');
+require_once(dirname(__FILE__) . '/classes/Libraries/Base.class.php');
+require_once(dirname(__FILE__) . '/classes/Libraries/Routing.class.php');
+require_once(dirname(__FILE__) . '/classes/Libraries/DB.class.php');
 
 # Creo la connessione
 $handleDBConnection = DB::connect();

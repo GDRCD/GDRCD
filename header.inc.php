@@ -3,7 +3,7 @@
 header('Content-Type:text/html; charset=UTF-8');
 
 //Includo i parametri, la configurazione, la lingua e le funzioni
-require_once('core/required.php');
+require(__DIR__.'/core/required.php');
 
 
 # Controllo del login
@@ -51,21 +51,17 @@ if (($PARAMETERS['mode']['user_bbcode'] == 'ON' && $PARAMETERS['settings']['user
         <!-- IE9: mi stai ampiamente rompendo i maroni. -->
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
         <link rel="shortcut icon" href="favicon.png" type="image/png"/>
-        <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['homepage']; ?>/homepage.css"
+        <link rel="stylesheet" href="<?=Router::loadCss('main.css');?>"
               type="text/css"/>
-        <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/main.css"
+        <link rel="stylesheet" href="<?=Router::loadCss('chat.css');?>"
               type="text/css"/>
-        <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/chat.css"
+        <link rel="stylesheet" href="<?=Router::loadCss('scheda.css');?>"
               type="text/css"/>
-        <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/presenti.css"
+        <link rel="stylesheet" href="<?=Router::loadCss('messaggi.css');?>"
               type="text/css"/>
-        <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/scheda.css"
+        <link rel="stylesheet" href="<?=Router::loadCss('forum.css');?>"
               type="text/css"/>
-        <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/messaggi.css"
-              type="text/css"/>
-        <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/forum.css"
-              type="text/css"/>
-        <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/presenti.css"
+        <link rel="stylesheet" href="<?=Router::loadCss('presenti.css');?>"
               type="text/css"/>
 
         <!-- JQUERY -->
@@ -91,25 +87,8 @@ if (($PARAMETERS['mode']['user_bbcode'] == 'ON' && $PARAMETERS['settings']['user
         <script src="plugins/Chosen.js"></script>
 
         <?php
-        /** * Il controllo individua se l'header non è impiegato per il main */
-        if (!isset($check_for_update)) {
-            ?>
-            <link rel="stylesheet"
-                  href="layouts/<?php echo $PARAMETERS['themes']['kind_of_layout'], '_frames.php?css=true'; ?>"
-                  type="text/css"/>
-            <?php
-        }
-        ?>
-        <title>
-            <?php echo $PARAMETERS['info']['site_name']; ?>
-        </title>
-        <?php
-        /** * Refresh fix, crossbrowser
-         * @author Blancks
-         */
-        if (!empty($_GET['ref'])) {
-            //
-        }
+
+
         ?>
     </head>
     <body class="main_body">
@@ -136,11 +115,12 @@ if ((($table == 0) && isset($dont_check) && !$dont_check) && isset($check_for_up
     exit();
 }
 
+
 $online_status = OnlineStatus::getInstance();
 if($online_status->isEnabled()) {
 
     if ($online_status->onlineStatusNeedRefresh()) {
-        require_once(__DIR__ . '/pages/online_status/choose_status.php');
+        Router::loadPages('online_status/choose_status.php');
     }
 }
 

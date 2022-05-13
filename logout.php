@@ -1,7 +1,7 @@
 <?php
 
 //Includio i parametri, la configurazione, la lingua e le funzioni
-require ('core/required.php');
+Router::loadRequired();
 
 //Eseguo la connessione al database
 $handleDBConnection = DB::connect();

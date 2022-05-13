@@ -1,6 +1,10 @@
-<?php require(__DIR__ . '/../../../core/required.php'); /*Header comune*/ ?>
+<?php
 
-<!--<link rel="stylesheet" href="/themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/presenti.css" type="text/css" />-->
+Router::loadRequired(); /*Header comune*/
+
+?>
+
+<!--<link rel="stylesheet" href="/themes/<?php echo $GLOBALS['PARAMETERS']['themes']['current_theme']; ?>/presenti.css" type="text/css" />-->
 <!-- Box presenti-->
 <div class="pagina_presenti">
     <div class="page_title">
@@ -32,16 +36,16 @@
                 $alt_permessi = '';
                 break;
             case GUILDMODERATOR:
-                $alt_permessi = $PARAMETERS['names']['guild_name']['lead'];
+                $alt_permessi = $GLOBALS['PARAMETERS']['names']['guild_name']['lead'];
                 break;
             case GAMEMASTER:
-                $alt_permessi = $PARAMETERS['names']['master']['sing'];
+                $alt_permessi = $GLOBALS['PARAMETERS']['names']['master']['sing'];
                 break;
             case MODERATOR:
-                $alt_permessi = $PARAMETERS['names']['moderators']['sing'];
+                $alt_permessi = $GLOBALS['PARAMETERS']['names']['moderators']['sing'];
                 break;
             case SUPERUSER:
-                $alt_permessi = $PARAMETERS['names']['administrator']['sing'];
+                $alt_permessi = $GLOBALS['PARAMETERS']['names']['administrator']['sing'];
                 break;
         }
         //Livello di accesso del PG (utente, master, admin, superuser)
@@ -63,7 +67,7 @@
         if ($record['icon'] == '') {
             $record['icon'] = 'standard_razza.png';
         }
-        echo '<img class="presenti_ico" src="themes/' . $PARAMETERS['themes']['current_theme'] . '/imgs/races/' . $record['icon'] . '" alt="' . gdrcd_filter('out', $record['sing_' . $record['sesso']]) . '" title="' . gdrcd_filter('out', $record['sing_' . $record['sesso']]) . '" />';
+        echo '<img class="presenti_ico" src="themes/' . $GLOBALS['PARAMETERS']['themes']['current_theme'] . '/imgs/races/' . $record['icon'] . '" alt="' . gdrcd_filter('out', $record['sing_' . $record['sesso']]) . '" title="' . gdrcd_filter('out', $record['sing_' . $record['sesso']]) . '" />';
         //Icona del genere del pg
         echo '<img class="presenti_ico" src="imgs/icons/testamini' . $record['sesso'] . '.png" alt="' . gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]) . '" title="' . gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]) . '" />';
         //Nome pg e link alla sua scheda
@@ -99,16 +103,16 @@
                 $alt_permessi = '';
                 break;
             case GUILDMODERATOR:
-                $alt_permessi = $PARAMETERS['names']['guild_name']['lead'];
+                $alt_permessi = $GLOBALS['PARAMETERS']['names']['guild_name']['lead'];
                 break;
             case GAMEMASTER:
-                $alt_permessi = $PARAMETERS['names']['master']['sing'];
+                $alt_permessi = $GLOBALS['PARAMETERS']['names']['master']['sing'];
                 break;
             case MODERATOR:
-                $alt_permessi = $PARAMETERS['names']['moderators']['sing'];
+                $alt_permessi = $GLOBALS['PARAMETERS']['names']['moderators']['sing'];
                 break;
             case SUPERUSER:
-                $alt_permessi = $PARAMETERS['names']['administrator']['sing'];
+                $alt_permessi = $GLOBALS['PARAMETERS']['names']['administrator']['sing'];
                 break;
         }
         //Livello di accesso del PG (utente, master, admin, superuser)
@@ -130,7 +134,7 @@
         if ($record['icon'] == '') {
             $record['icon'] = 'standard_razza.png';
         }
-        echo '<img class="presenti_ico" src="themes/' . $PARAMETERS['themes']['current_theme'] . '/imgs/races/' . $record['icon'] . '" alt="' . gdrcd_filter('out', $record['sing_' . $record['sesso']]) . '" title="' . gdrcd_filter('out', $record['sing_' . $record['sesso']]) . '" />';
+        echo '<img class="presenti_ico" src="themes/' . $GLOBALS['PARAMETERS']['themes']['current_theme'] . '/imgs/races/' . $record['icon'] . '" alt="' . gdrcd_filter('out', $record['sing_' . $record['sesso']]) . '" title="' . gdrcd_filter('out', $record['sing_' . $record['sesso']]) . '" />';
         //Icona del genere del pg
         echo '<img class="presenti_ico" src="imgs/icons/testamini' . $record['sesso'] . '.png" alt="' . gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]) . '" title="' . gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]) . '" />';
         //Nome pg e link alla sua scheda
@@ -161,7 +165,7 @@
         $luogo_corrente = (empty ($record['stanza_apparente']) === true) ? $record['luogo'] : $record['stanza_apparente'];
 
         if (empty($luogo_corrente) === true) {
-            $luogo_corrente = ($record['mappa'] >= 0) ? $PARAMETERS['names']['maps_location'] : $PARAMETERS['names']['base_location'];
+            $luogo_corrente = ($record['mappa'] >= 0) ? $GLOBALS['PARAMETERS']['names']['maps_location'] : $GLOBALS['PARAMETERS']['names']['base_location'];
         }
         if ($ultimo_luogo_corrente != $luogo_corrente) {
             $ultimo_luogo_corrente = $luogo_corrente;
@@ -177,16 +181,16 @@
                     $alt_permessi = '';
                     break;
                 case GUILDMODERATOR:
-                    $alt_permessi = $PARAMETERS['names']['guild_name']['lead'];
+                    $alt_permessi = $GLOBALS['PARAMETERS']['names']['guild_name']['lead'];
                     break;
                 case GAMEMASTER:
-                    $alt_permessi = $PARAMETERS['names']['master']['sing'];
+                    $alt_permessi = $GLOBALS['PARAMETERS']['names']['master']['sing'];
                     break;
                 case MODERATOR:
-                    $alt_permessi = $PARAMETERS['names']['moderators']['sing'];
+                    $alt_permessi = $GLOBALS['PARAMETERS']['names']['moderators']['sing'];
                     break;
                 case SUPERUSER:
-                    $alt_permessi = $PARAMETERS['names']['administrator']['sing'];
+                    $alt_permessi = $GLOBALS['PARAMETERS']['names']['administrator']['sing'];
                     break;
             }
 
@@ -211,7 +215,7 @@
             if ($record['icon'] == '') {
                 $record['icon'] = 'standard_razza.png';
             }
-            echo '<img class="presenti_ico" src="themes/' . $PARAMETERS['themes']['current_theme'] . '/imgs/races/' . $record['icon'] . '" alt="' . gdrcd_filter('out', $record['sing_' . $record['sesso']]) . '" title="' . gdrcd_filter('out', $record['sing_' . $record['sesso']]) . '" />';
+            echo '<img class="presenti_ico" src="themes/' . $GLOBALS['PARAMETERS']['themes']['current_theme'] . '/imgs/races/' . $record['icon'] . '" alt="' . gdrcd_filter('out', $record['sing_' . $record['sesso']]) . '" title="' . gdrcd_filter('out', $record['sing_' . $record['sesso']]) . '" />';
 
             //Icona del genere del pg
             echo '<img class="presenti_ico" src="imgs/icons/testamini' . $record['sesso'] . '.png" alt="' . gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]) . '" title="' . gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]) . '" />';
@@ -242,10 +246,11 @@
     //numero utenti presenti.
     echo '<div class="link_presenti"><a href="main.php?page=presenti_estesi" target="_top">';
     if ($record['numero'] == 1) {
-        echo '<div class="page_title"><h2>' . $record['numero'] . ' ' . gdrcd_filter('out', $PARAMETERS['names']['users_name']['sing']) . ' ' . gdrcd_filter('out', $MESSAGE['interface']['logged_users']['sing']) . '</h2></div>';
+        echo '<div class="page_title"><h2>' . $record['numero'] . ' ' . gdrcd_filter('out', $GLOBALS['PARAMETERS']['names']['users_name']['sing']) . ' ' . gdrcd_filter('out', $MESSAGE['interface']['logged_users']['sing']) . '</h2></div>';
     } else {
-        echo '<div class="page_title"><h2 class="presenti_title">' . $record['numero'] . ' ' . gdrcd_filter('out', $PARAMETERS['names']['users_name']['plur']) . ' ' . gdrcd_filter('out', $MESSAGE['interface']['logged_users']['plur']) . '</h2></div>';
+        echo '<div class="page_title"><h2 class="presenti_title">' . $record['numero'] . ' ' . gdrcd_filter('out', $GLOBALS['PARAMETERS']['names']['users_name']['plur']) . ' ' . gdrcd_filter('out', $MESSAGE['interface']['logged_users']['plur']) . '</h2></div>';
     }
+
     echo '</a></div>';
     ?>
 </div>

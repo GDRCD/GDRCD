@@ -1,6 +1,6 @@
 <?php
 
-require(__DIR__ . '/../../../core/required.php');
+Router::loadRequired();
 
 $gestione = Gestione::getInstance();
 

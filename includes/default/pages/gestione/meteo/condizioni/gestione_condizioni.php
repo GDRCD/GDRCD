@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__ . '/../../../../core/required.php'); # Inserisco il required se non presente, per futuro spostamento in modale/ajax
+Router::loadRequired(); # Inserisco il required se non presente, per futuro spostamento in modale/ajax
 
 $cls = MeteoCondizioni::getInstance(); # Inizializzo classe
 
