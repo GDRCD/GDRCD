@@ -8,7 +8,7 @@
 /*
  * Includo i Crediti
  */
-require 'includes/credits.inc.php';
+require 'plugins/credits.inc.php';
 
 /*
  * Conteggio utenti online

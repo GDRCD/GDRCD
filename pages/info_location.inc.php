@@ -10,7 +10,6 @@
     $chat = Personaggio::getPgLocation();
 
 
-
     Meteo::getInstance()->refreshWeather();
 
     /** * Fix: quando non si � in una mappa visualizza il nome della chat

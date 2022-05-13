@@ -1,7 +1,7 @@
 <?php
 
 //Includio i parametri, la configurazione, la lingua e le funzioni
-require ('../../../includes/required.php');
+require ('../../../core/required.php');
 
 // Determino il tema selezionato
 if(!empty($_SESSION['theme']) and array_key_exists($_SESSION['theme'], $PARAMETERS['themes']['available'])){

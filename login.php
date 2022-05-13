@@ -1,7 +1,7 @@
 <?php
 
 /*Includo i file principali */
-require_once(__DIR__.'/includes/required.php');
+require_once(__DIR__.'/core/required.php');
 
 /*Leggo i dati del form di login*/
 $login1 = gdrcd_filter('get', $_POST['login1']);

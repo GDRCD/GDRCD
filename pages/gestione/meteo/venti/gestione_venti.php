@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__ . '/../../../../includes/required.php'); # Inserisco il required se non presente, per futuro spostamento in modale/ajax
+require_once(__DIR__ . '/../../../../core/required.php'); # Inserisco il required se non presente, per futuro spostamento in modale/ajax
 
 $cls = MeteoVenti::getInstance(); # Inizializzo classe
 

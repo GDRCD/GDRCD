@@ -1,4 +1,4 @@
-<?php require(__DIR__ . '/../../../includes/required.php'); /*Header comune*/ ?>
+<?php require(__DIR__ . '/../../../core/required.php'); /*Header comune*/ ?>
 
 <!--<link rel="stylesheet" href="/themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/presenti.css" type="text/css" />-->
 <!-- Box presenti-->

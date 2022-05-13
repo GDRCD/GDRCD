@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__ . '/../../../includes/required.php');
+require_once(__DIR__ . '/../../../core/required.php');
 
 $scheda_class = SchedaAbilita::getInstance();
 $abi_class = Abilita::getInstance();

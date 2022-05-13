@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__ . '/../../../includes/required.php');
+require_once(__DIR__ . '/../../../core/required.php');
 
 $stat_class = SchedaStats::getInstance();
 $id_pg = Filters::int($_GET['id_pg']);

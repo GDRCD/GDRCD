@@ -1,7 +1,7 @@
 <?php /*Form di inserimento/modifica*/
 
 
-require_once(__DIR__ . '/../../../includes/required.php');
+require_once(__DIR__ . '/../../../core/required.php');
 
 $quest = Quest::getInstance();
 

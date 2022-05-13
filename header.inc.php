@@ -3,7 +3,7 @@
 header('Content-Type:text/html; charset=UTF-8');
 
 //Includo i parametri, la configurazione, la lingua e le funzioni
-require_once('includes/required.php');
+require_once('core/required.php');
 
 
 # Controllo del login

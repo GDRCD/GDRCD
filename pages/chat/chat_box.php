@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__.'/../../includes/required.php');
+require_once(__DIR__.'/../../core/required.php');
 
 $chat_id = Filters::int($_GET['dir']);
 $_SESSION['last_action_id'] = 0;

@@ -1,6 +1,6 @@
 <?php
 
-require(__DIR__ . '/../../includes/required.php');
+require(__DIR__ . '/../../core/required.php');
 
 $meteo = Meteo::getInstance();
 

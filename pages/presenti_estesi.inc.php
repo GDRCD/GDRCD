@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__.'/../includes/required.php');
+require_once(__DIR__.'/../core/required.php');
 $status = OnlineStatus::getInstance();
 
 ?>
@@ -82,10 +82,9 @@ $status = OnlineStatus::getInstance();
             if ($PARAMETERS['mode']['user_online_state'] == 'ON' && ! empty($record['online_status']) && $record['online_status'] != null) {
                 $record['online_status'] = trim(nl2br(gdrcd_filter('in', $record['online_status'])));
                 $record['online_status'] = strtr($record['online_status'], ["\n\r" => '', "\n" => '', "\r" => '', '"' => '&quot;']);
-                $online_state = 'onmouseover="show_desc(event, \''.$record['online_status'].'\');" onmouseout="hide_desc();""';
             }
             //Stampo il PG
-            echo '<li class="presente"'.$online_state.'>';
+            echo '<li class="presente">';
             //Entrata, uscita PG
             //Controllo da quanto il pg e' loggato
             $activity = gdrcd_check_time($record['ora_entrata']);

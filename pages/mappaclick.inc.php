@@ -102,10 +102,9 @@ if(gdrcd_query($result, 'num_rows') == 0) {
             if( ! empty($row['descrizione'])) {
                 $descrizione = trim(nl2br(gdrcd_filter('in', $row['descrizione'])));
                 $descrizione = strtr($descrizione, ["\n\r" => '', "\n" => '', "\r" => '', '"' => '&quot;']);
-                $fadedesc_link = 'onmouseover="show_desc(event, \''.$descrizione.'\');" onmouseout="hide_desc();"';
             }
         }
-        echo '<a href="main.php?', $qstring_link, '" target="_top"', $fadedesc_link, '>', $label_link, '</a>';
+        echo '<a href="main.php?', $qstring_link, '" target="_top"','>', $label_link, '</a>';
         echo '</div>';
     }//while
     if($echo_bottom === true) {

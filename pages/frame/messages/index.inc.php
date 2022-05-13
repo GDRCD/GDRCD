@@ -1,7 +1,7 @@
 <?php
 
 //Includio i parametri, la configurazione, la lingua e le funzioni
-require ('../../../includes/required.php');
+require ('../../../core/required.php');
 
 // Determino il tema selezionato
 if(!empty($_SESSION['theme']) and array_key_exists($_SESSION['theme'], $PARAMETERS['themes']['available'])){
@@ -73,10 +73,6 @@ if($PARAMETERS['mode']['check_messages'] === 'ON') {
         $linkMessages = '<a href="../../../main.php?page=messages_center&offset=0" target="_top">'.$textMessages.'</a>';
         $cntMessagesFrame = '<div class="messaggio_forum">'.$linkMessages.'</div>';
 
-        // Forzo lo stop della notifica sul title se previsto
-        if($PARAMETERS['mode']['alert_pm_via_pagetitle'] == 'ON') {
-            $cntMessagesFrame .= '<script type="text/javascript">parent.stop_blinking_title();</script>';
-        }
     }
     // NUOVI MESSAGGI
     else {
@@ -93,11 +89,6 @@ if($PARAMETERS['mode']['check_messages'] === 'ON') {
         // Preparo il modulo
         $linkMessages = '<a href="../../../main.php?page=messages_center&offset=0" target="_top">'.$textMessages.'</a>';
         $cntMessagesFrame = '<div class="messaggio_forum_nuovo">'.$linkMessages.'</div>';
-
-        // Avvio notifica sul title
-        if($PARAMETERS['mode']['alert_pm_via_pagetitle'] == 'ON') {
-            $cntMessagesFrame .= '<script type="text/javascript">parent.blink_title("('.$MESSAGE['interface']['forums']['topic']['new_posts']['sing'].')" '.$PARAMETERS['info']['site_name'].');</script>';
-        }
 
 
         if($PARAMETERS['mode']['allow_audio'] == 'ON' && $_SESSION['blocca_media'] != 1 && ! empty($PARAMETERS['settings']['audio_new_messagges'])) {
