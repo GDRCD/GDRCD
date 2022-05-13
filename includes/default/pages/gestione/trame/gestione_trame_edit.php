@@ -60,7 +60,7 @@ if ($quest->manageTramePermission()) {
         </div>
 
 
-        <script src="/includes/default/pagesdes/default/pages/gestione/trame/JS/gestione_trame_edit.js"></script>
+        <script src="<?=Router::getPagesLink('gestione/trame/JS/gestione_trame_edit.js');?>"></script>
 
     <?php } else { ?>
         <div class="warning">Trama inesistente</div>

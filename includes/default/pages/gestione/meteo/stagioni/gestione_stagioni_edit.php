@@ -52,4 +52,4 @@ $stagione = $stagioni->getSeason($id);
     </div>
 </div>
 
-<script src="/includes/default/pagesdes/default/pages/gestione/meteo/stagioni/gestione_stagioni_edit.js"></script>
+<script src="<?=Router::getPagesLink('gestione/meteo/stagioni/gestione_stagioni_edit.js');?>"></script>

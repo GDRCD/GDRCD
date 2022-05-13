@@ -192,5 +192,5 @@ $stat_cls = Statistiche::getInstance();
     </div>
 
     <!-- JS per caricamento dati requisiti -->
-    <script src="/includes/default/pagesdes/default/pages/gestione/abilita/Requisiti/gestione_requisiti.js"></script>
+    <script src="<?=Router::getPagesLink('gestione/abilita/Requisiti/gestione_requisiti.js');?>"></script>
 </div>

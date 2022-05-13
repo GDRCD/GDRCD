@@ -113,7 +113,7 @@ if ($cls->permissionManageWeatherConditions()) { # Metodo di controllo per acces
         </div>
     </div>
 
-    <script src="/includes/default/pagesdes/default/pages/gestione/meteo/condizioni/gestione_condizioni.js"></script>
+    <script src="<?=Router::getPagesLink('gestione/meteo/condizioni/gestione_condizioni.js');?>"></script>
 
 
 <?php } ?>

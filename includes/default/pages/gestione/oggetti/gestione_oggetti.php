@@ -156,7 +156,7 @@ if($cls->permissionManageObjects()){ # Metodo di controllo per accesso alla pagi
 
     </div>
 
-    <script src="/includes/default/pagesdes/default/pages/gestione/oggetti/gestione_oggetti.js"></script>
+    <script src="<?=Router::getPagesLink('gestione/oggetti/gestione_oggetti.js');?>"></script>
 
 
 <?php } ?>

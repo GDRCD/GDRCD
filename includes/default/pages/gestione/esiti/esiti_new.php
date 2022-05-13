@@ -89,7 +89,7 @@ $op = Filters::out($_POST['op']);
 
     </form>
 
-    <script src="pages/gestione/esiti/JS/esiti_new.js"></script>
+    <script src="<?=Router::getPagesLink('gestione/esiti/JS/esiti_new.js');?>"></script>
 
     <div class="link_back"><a href="/main.php?page=gestione_esiti">Indietro</a></div>
 </div>

@@ -43,7 +43,7 @@ if ($gestione->constantsPermission()) {
 
     </div>
 
-    <script src="/includes/default/pagesdes/default/pages/gestione/costanti/gestione_costanti_box.js"></script>
+    <script src="<?=Router::getPagesLink('gestione/costanti/gestione_costanti_box.js');?>"></script>
 <?php } else {?>
 
     <div class="warning">Permesso negato.</div>

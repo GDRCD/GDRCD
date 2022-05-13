@@ -41,4 +41,4 @@ $temp = Filters::in($chat_data['temp']);
     </div>
 </form>
 
-<script src="/includes/default/pagesdes/default/pages/meteo/meteo_edit.js"></script>
+<script src="<?=Router::getPagesLink('meteo/meteo_edit.js');?>"></script>

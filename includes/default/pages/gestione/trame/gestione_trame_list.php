@@ -19,4 +19,4 @@ $page = Filters::int($_REQUEST['offset']);
     <?= $quest->getTramePageNumbers(Filters::int($_REQUEST['offset'])); ?>
 </div>
 
-<script src="/includes/default/pagesdes/default/pages/gestione/trame/JS/gestione_trame_list.js"></script>
+<script src="<?=Router::getPagesLink('gestione/trame/JS/gestione_trame_list.js');?>"></script>

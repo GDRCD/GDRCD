@@ -39,7 +39,7 @@ if ($esiti->esitoMembersPermission($id_record)) {
         </form>
     </div>
 
-    <script src="/includes/default/pagesdes/default/pages/gestione/esiti/JS/esiti_members.js"></script>
+    <script src="<?=Router::getPagesLink('gestione/esiti/JS/esiti_members.js');?>"></script>
 
 <?php } else { ?>
     <div class="warning">Permesso negato.</div>

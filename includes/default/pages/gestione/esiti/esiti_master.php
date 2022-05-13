@@ -45,7 +45,7 @@ if ($esiti->esitoMembersPermission($id_record)) {
         </form>
     </div>
 
-    <script src="/includes/default/pagesdes/default/pages/gestione/esiti/JS/esiti_master.js"></script>
+    <script src="<?=Router::getPagesLink('gestione/esiti/JS/esiti_master.js');?>"></script>
 
 
 <?php } else { ?>

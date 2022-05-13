@@ -50,7 +50,7 @@ if ($quest->manageTramePermission()) {
         </form>
     </div>
 
-    <script src="/includes/default/pagesdes/default/pages/gestione/trame/JS/gestione_trame_insert.js"></script>
+    <script src="<?=Router::getPagesLink('gestione/trame/JS/gestione_trame_insert.js');?>"></script>
 
 <?php } else { ?>
     <div class="warning">Permesso negato</div>

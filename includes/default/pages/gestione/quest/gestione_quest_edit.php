@@ -70,7 +70,7 @@ if ($quest->manageQuestPermission()) {
             </form>
         </div>
 
-        <script src="pages/gestione/quest/JS/gestione_quest_edit.js"></script>
+        <script src="<?=Router::getPagesLink('gestione/quest/JS/gestione_quest_edit.js');?>"></script>
 
         <!-- Link di ritorno alla visualizzazione di base -->
     <?php } else { ?>

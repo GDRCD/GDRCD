@@ -97,7 +97,7 @@ if($cls->manageStatusPermission()){ # Metodo di controllo per accesso alla pagin
 
     </div>
 
-    <script src="pages/gestione/online_status/gestione_status.js"></script>
+    <script src="<?=Router::getPagesLink('gestione/online_status/gestione_status.js');?>"></script>
 
 
 <?php } ?>

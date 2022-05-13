@@ -20,4 +20,4 @@ $cls = ($online->refreshOnLogin()) ? 'minimized' : '';
 
 </div>
 
-<script src="pages/online_status/choose_status.js"></script>
+<script src="<?=Router::getPagesLink('online_status/choose_status.js');?>"></script>

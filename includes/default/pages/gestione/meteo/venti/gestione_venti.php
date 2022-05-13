@@ -89,7 +89,7 @@ if ($cls->permissionManageWeather()) { # Metodo di controllo per accesso alla pa
 
     </div>
 
-    <script src="/includes/default/pagesdes/default/pages/gestione/meteo/venti/gestione_venti.js"></script>
+    <script src="<?=Router::getPagesLink('gestione/meteo/venti/gestione_venti.js');?>"></script>
 
 
 <?php } ?>

@@ -51,17 +51,17 @@ if (($PARAMETERS['mode']['user_bbcode'] == 'ON' && $PARAMETERS['settings']['user
         <!-- IE9: mi stai ampiamente rompendo i maroni. -->
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
         <link rel="shortcut icon" href="favicon.png" type="image/png"/>
-        <link rel="stylesheet" href="<?=Router::loadCss('main.css');?>"
+        <link rel="stylesheet" href="<?=Router::getCssLink('main.css');?>"
               type="text/css"/>
-        <link rel="stylesheet" href="<?=Router::loadCss('chat.css');?>"
+        <link rel="stylesheet" href="<?=Router::getCssLink('chat.css');?>"
               type="text/css"/>
-        <link rel="stylesheet" href="<?=Router::loadCss('scheda.css');?>"
+        <link rel="stylesheet" href="<?=Router::getCssLink('scheda.css');?>"
               type="text/css"/>
-        <link rel="stylesheet" href="<?=Router::loadCss('messaggi.css');?>"
+        <link rel="stylesheet" href="<?=Router::getCssLink('messaggi.css');?>"
               type="text/css"/>
-        <link rel="stylesheet" href="<?=Router::loadCss('forum.css');?>"
+        <link rel="stylesheet" href="<?=Router::getCssLink('forum.css');?>"
               type="text/css"/>
-        <link rel="stylesheet" href="<?=Router::loadCss('presenti.css');?>"
+        <link rel="stylesheet" href="<?=Router::getCssLink('presenti.css');?>"
               type="text/css"/>
 
         <!-- JQUERY -->

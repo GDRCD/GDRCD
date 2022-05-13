@@ -127,7 +127,7 @@ if ($cls->permissionManageObjectsType()) { # Metodo di controllo per accesso all
 
     </div>
 
-    <script src="/includes/default/pagesdes/default/pages/gestione/oggetti/gestione_oggetti_posizioni.js"></script>
+    <script src="<?=Router::getPagesLink('gestione/oggetti/gestione_oggetti_posizioni.js');?>"></script>
 
 
 <?php } ?>

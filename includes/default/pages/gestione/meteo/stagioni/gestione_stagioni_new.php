@@ -46,4 +46,4 @@
 
 </div>
 
-<script src="/includes/default/pagesdes/default/pages/gestione/meteo/stagioni/gestione_stagioni_new.js"></script>
+<script src="<?=Router::getPagesLink('gestione/meteo/stagioni/gestione_stagioni_new.js');?>"></script>

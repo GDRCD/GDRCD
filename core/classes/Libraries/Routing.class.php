@@ -172,6 +172,14 @@ class Router
 
     }
 
+    public static function loadRequired(){
+
+        $root = dirname(__FILE__).'/../../';
+
+        require_once($root.'/required.php');
+    }
+
+
     public static function getPagesLink($page)
     {
         $db_search = DB::query("SELECT redirect FROM pages WHERE page='{$page}' LIMIT 1");
@@ -196,7 +204,7 @@ class Router
 
     }
 
-    public static function loadCss(string $page): string
+    public static function getCssLink(string $page): string
     {
 
         $db_search = DB::query("SELECT redirect FROM pages WHERE page='{$page}' LIMIT 1");
@@ -222,13 +230,6 @@ class Router
         return '';
     }
 
-    public static function loadRequired(){
-
-        $root = dirname(__FILE__).'/../../';
-
-        require_once($root.'/required.php');
-    }
-
     public static function getThemeDir(){
 
         $engine = Functions::get_constant('STANDARD_ENGINE');
@@ -244,6 +245,5 @@ class Router
 
         die('Non esiste una cartella di default per i temi.');
     }
-
 
 }

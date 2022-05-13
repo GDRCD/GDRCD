@@ -101,4 +101,4 @@ $chat_abi_class = ChatAbilita::getInstance();
 
 </div>
 
-<script src="/includes/default/pagesdes/default/pages/chat/JS/chat_input.js"></script>
+<script src="<?=Router::getPagesLink('chat/JS/chat_input.js');?>"></script>

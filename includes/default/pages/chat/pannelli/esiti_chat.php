@@ -27,7 +27,7 @@ if ($esiti->esitiEnabled() && $esiti->esitiTiriEnabled()) {
 
     </div>
 
-    <script src="pages/chat/JS/chat_dadi.js"></script>
+    <script src="<?=Router::getPagesLink('chat/JS/chat_dadi.js');?>"></script>
 
 <?php } else { ?>
     <div class="warning">Permesso negato</div>

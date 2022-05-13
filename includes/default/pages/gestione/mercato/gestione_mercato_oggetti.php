@@ -145,7 +145,7 @@ if ($cls->manageShopObjectsPermission()) { # Metodo di controllo per accesso all
 
     </div>
 
-    <script src="/includes/default/pagesdes/default/pages/gestione/mercato/gestione_mercato_oggetti.js"></script>
+    <script src="/<?=Router::getPagesLink('gestione/mercato/gestione_mercato_oggetti.js§');?>"></script>
 
 
 <?php } ?>

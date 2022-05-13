@@ -61,7 +61,7 @@ if ($quest->manageQuestPermission()) {
         </form>
     </div>
 
-    <script src="pages/gestione/quest/JS/gestione_quest_insert.js"></script>
+    <script src="<?=Router::getPagesLink('gestione/quest/JS/gestione_quest_insert.js');?>"></script>
 
 <?php } ?>
 

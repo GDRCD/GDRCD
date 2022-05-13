@@ -136,7 +136,7 @@ if($cls->permissionManageStatistics()){ # Metodo di controllo per accesso alla p
 
     </div>
 
-    <script src="/includes/default/pagesdes/default/pages/gestione/statistiche/gestione_statistiche.js"></script>
+    <script src="<?=Router::getPagesLink('gestione/statistiche/gestione_statistiche.js');?>"></script>
 
 
 <?php } ?>

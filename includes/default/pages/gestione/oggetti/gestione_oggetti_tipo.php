@@ -111,7 +111,7 @@ if($cls->permissionManageObjectsType()){ # Metodo di controllo per accesso alla 
 
     </div>
 
-    <script src="/includes/default/pagesdes/default/pages/gestione/oggetti/gestione_oggetti_tipo.js"></script>
+    <script src="<?=Router::getPagesLink('gestione/oggetti/gestione_oggetti_tipo.js');?>"></script>
 
 
 <?php } ?>
