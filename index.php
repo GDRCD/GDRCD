@@ -63,6 +63,5 @@ $content = (!empty($_GET['content'])) ? gdrcd_filter('include', $_GET['content']
 // Includo la pagina
 gdrcd_load_modules($page, ['content' => $content]);
 
-require 'footer.inc.php';
 
 DB::disconnect($handleDBConnection);

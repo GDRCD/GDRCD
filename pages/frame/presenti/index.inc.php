@@ -250,4 +250,3 @@
     ?>
 </div>
 <!-- Chiudura finestra del gioco -->
-<?php //include('/footer.inc.php');  /*Footer comune*/ ?>

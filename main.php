@@ -51,4 +51,3 @@ if(gdrcd_controllo_esilio($_SESSION['login']) === true) {
     require('layouts/'.$PARAMETERS['themes']['kind_of_layout'].'_frames.php');
 }
 
-require('footer.inc.php');  /*Footer comune*/

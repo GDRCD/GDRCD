@@ -114,6 +114,5 @@ if($PARAMETERS['mode']['check_forum'] === 'ON') {
 <body class="transparent_body">
     <div class="box_forums"><?=isset($cntForumFrame) ? $cntForumFrame : '';?></div>
 
-<?php //include('../../../footer.inc.php'); /*Footer comune*/
 
 
