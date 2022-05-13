@@ -901,6 +901,19 @@ INSERT INTO `online_status_type`(`label`,`request`) VALUES
 -- Struttura della tabella `permessi_custom`
 --
 
+CREATE TABLE `pages` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `page` varchar(255) NOT NULL,
+    `redirect` text NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `permessi_custom`
+--
+
 CREATE TABLE `permessi_custom` (
     `id` int NOT NULL AUTO_INCREMENT,
     `permission_name` varchar(255) NOT NULL,

@@ -28,6 +28,8 @@ class Router
     }
 
     /**
+     * @fn is_ajax
+     * @note Controlla se la pagina viene richiamata o meno in ajax
      * @return bool
      */
     public static final function is_ajax(): bool
@@ -77,7 +79,15 @@ class Router
 
     }
 
-    private final function dirList($dir, &$results = array()) {
+    /**
+     * @fn dirList
+     * @note Estrae la lista delle directory di una cartella
+     * @param string $dir
+     * @param array $results
+     * @return array
+     */
+    private final function dirList(string $dir, array &$results = array()): array
+    {
         $files = scandir($dir);
 
         foreach ($files as $key => $value) {
@@ -89,6 +99,31 @@ class Router
         }
 
         return $results;
+    }
+
+    public static function loadPages($page){
+
+        $db_search = DB::query("SELECT redirect FROM pages WHERE page='{$page}' LIMIT 1");
+
+        if(!empty($db_search['redirect'])){
+            if(file_exists($db_search['redirect'])){
+                require($db_search['redirect']);
+                return true;
+            }
+        }
+
+        if(file_exists("includes/pages/{$page}")){
+            require("includes/pages/{$page}");
+            return true;
+        }
+
+
+        if(file_exists("pages/{$page}")){
+            require("pages/{$page}");
+            return true;
+        }
+
+        die("Pagina inesistente: {$page}");
     }
 
 
