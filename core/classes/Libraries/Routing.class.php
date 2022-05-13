@@ -148,6 +148,9 @@ class Router
     public static function loadPages($page)
     {
 
+        global $MESSAGE;
+        global $PARAMETERS;
+
         $db_search = DB::query("SELECT redirect FROM pages WHERE page='{$page}' LIMIT 1");
 
         if (!empty($db_search['redirect'])) {

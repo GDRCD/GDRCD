@@ -81,7 +81,7 @@ if ($PARAMETERS['left_column']['activate'] == 'ON') {
                 foreach ($PARAMETERS['left_column']['box'] as $box) {
                     echo '<div class="' . $box['class'] . '">';
 
-                    Router::loadPages($box['page'] . '.inc.php', $box);
+                    Router::loadPages($box['page'] . '.inc.php');
 
                     echo '</div>';
                 }
@@ -109,7 +109,7 @@ if ($PARAMETERS['right_column']['activate'] == 'ON') {
                 foreach ($PARAMETERS['right_column']['box'] as $box) {
                     echo '<div class="' . $box['class'] . '">';
 
-                    Router::loadPages($box['page'] . '.inc.php', $box);
+                    Router::loadPages($box['page'] . '.inc.php');
 
                     echo '</div>';
 
