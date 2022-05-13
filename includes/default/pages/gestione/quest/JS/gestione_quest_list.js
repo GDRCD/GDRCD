@@ -11,7 +11,7 @@ $(function () {
         let button = await Swal.button('Sei sicuro?', 'Vuoi eliminare questa quest?', 'question');
 
         if (button) {
-            Ajax('/pages/gestione/quest/gestione_quest_ajax.php', {
+            Ajax('gestione/quest/gestione_quest_ajax.php', {
                 action: action,
                 id: id,
                 page: page

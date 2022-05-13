@@ -3,7 +3,7 @@ $(function(){
     let form = $('.edit-form');
 
     new Form('.gestione_status .form').onSubmit({
-        path:'/pages/gestione/online_status/gestione_status_ajax.php',
+        path:'gestione/online_status/gestione_status_ajax.php',
         success: refreshLists
     })
 
@@ -20,7 +20,7 @@ $(function(){
 
         let id = $(this).val()
 
-        Ajax('/pages/gestione/online_status/gestione_status_ajax',{'id':id,'action':'get_status_data'},setEditInput)
+        Ajax('gestione/online_status/gestione_status_ajax',{'id':id,'action':'get_status_data'},setEditInput)
 
 
     });

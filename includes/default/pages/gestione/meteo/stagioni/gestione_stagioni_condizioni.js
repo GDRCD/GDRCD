@@ -1,7 +1,7 @@
 $(function(){
 
   new Form('.gestione_stagioni_condizioni .form').onSubmit({
-    path: '/pages/gestione/meteo/stagioni/gestione_stagioni_ajax.php',
+    path: 'gestione/meteo/stagioni/gestione_stagioni_ajax.php',
     success: refreshPage,
   });
 

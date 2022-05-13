@@ -5,7 +5,7 @@
  */
 class DbMigrationEngine extends BaseClass
 {
-    const MIGRATIONS_FOLDER = __DIR__ . '/../../db_versions/';
+    const MIGRATIONS_FOLDER = __DIR__ . '/../../../db_versions/';
     
     /**
      * @fn updateDbSchema
@@ -103,7 +103,9 @@ class DbMigrationEngine extends BaseClass
     private static function loadMigrationClasses(){
         /** @var DbMigration[] $migrations */
         $migrations = [];
-        
+
+        var_dump(self::MIGRATIONS_FOLDER);
+
         foreach(new DirectoryIterator(self::MIGRATIONS_FOLDER) as $fileInfo){
             if($fileInfo->isDot() || $fileInfo->isDir()) {
                 continue;

@@ -12,10 +12,10 @@ class DB extends BaseClass
         static $db_link = false;
 
         if ($db_link === false) {
-            $db_user = DB_USER;
-            $db_pass = DB_PASS;
-            $db_name = DB_NAME;
-            $db_host = DB_HOST;
+            $db_user = $GLOBALS['PARAMETERS']['database']['username'];
+            $db_pass = $GLOBALS['PARAMETERS']['database']['password'];
+            $db_name = $GLOBALS['PARAMETERS']['database']['database_name'];
+            $db_host = $GLOBALS['PARAMETERS']['database']['url'];
             $db_error = isset($GLOBALS['MESSAGE']['error']['db_not_found']) ? $GLOBALS['MESSAGE']['error']['db_not_found'] : 'Errore nel database';
 
             #$db = mysql_connect($db_host, $db_user, $db_pass)or die(gdrcd_mysql_error());

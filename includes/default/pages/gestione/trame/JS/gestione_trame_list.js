@@ -11,7 +11,7 @@ $(function(){
         let button = await Swal.button('Sei sicuro?', 'Vuoi eliminare questa trama?', 'question');
 
         if (button) {
-            Ajax('/pages/gestione/trame/gestione_trame_ajax.php', {
+            Ajax('gestione/trame/gestione_trame_ajax.php', {
                 action: action,
                 id: id,
                 page: page

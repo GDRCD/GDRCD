@@ -1,7 +1,7 @@
 $(function(){
 
     new Form('form').onSubmit({
-        path:'/pages/gestione/esiti/esiti_ajax.php',
+        path:'gestione/esiti/esiti_ajax.php',
         success: function(data){
 
             if(data){
@@ -16,7 +16,7 @@ $(function(){
     })
 
     $('form #cd_add').on('click',function(){
-        Ajax('pages/gestione/esiti/esiti_ajax.php',{'action':'cd_add'},AddCD);
+        Ajax('gestione/esiti/esiti_ajax.php',{'action':'cd_add'},AddCD);
     });
 
     function AddCD(data){

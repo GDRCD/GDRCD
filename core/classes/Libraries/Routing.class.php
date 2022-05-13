@@ -200,7 +200,31 @@ class Router
             return "includes/default/pages/{$page}";
         }
 
-        return '';
+        return 'Url Inexisent';
+
+    }
+
+    public static function getAjaxPagesLink($page)
+    {
+        $db_search = DB::query("SELECT redirect FROM pages WHERE page='{$page}' LIMIT 1");
+
+        if (!empty($db_search['redirect'])) {
+            if (file_exists($db_search['redirect'])) {
+                return $db_search['redirect'];
+            }
+        }
+
+
+        $engine = Functions::get_constant('STANDARD_ENGINE');
+        if (file_exists(ROOT."includes/{$engine}/pages/{$page}")) {
+            return "includes/{$engine}/pages/{$page}";
+        }
+
+        if (file_exists(ROOT."includes/default/pages/{$page}")) {
+            return "includes/default/pages/{$page}";
+        }
+
+        return 'Url Inexisent';
 
     }
 
@@ -234,13 +258,13 @@ class Router
 
         $engine = Functions::get_constant('STANDARD_ENGINE');
 
-        if (file_exists("includes/{$engine}/themes")) {
-            return "includes/{$engine}/themes/";
+        if (file_exists(ROOT."includes/{$engine}/themes")) {
+            return ROOT."includes/{$engine}/themes/";
         }
 
 
-        if (file_exists("includes/default/themes")) {
-            return "includes/default/themes/";
+        if (file_exists(ROOT."includes/default/themes")) {
+            return ROOT."includes/default/themes/";
         }
 
         die('Non esiste una cartella di default per i temi.');

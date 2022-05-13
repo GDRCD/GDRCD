@@ -1,11 +1,11 @@
 $(function(){
 
     new Form('.quest_insert_form').onSubmit({
-        path:'/pages/gestione/quest/gestione_quest_ajax.php'
+        path:'gestione/quest/gestione_quest_ajax.php'
     })
 
     $('.quest_insert_form #new_member').on('click',function(){
-        Ajax('pages/gestione/quest/gestione_quest_ajax.php',{'action':'create_input'},CreateInput)
+        Ajax('gestione/quest/gestione_quest_ajax.php',{'action':'create_input'},CreateInput)
         return false;
     });
 

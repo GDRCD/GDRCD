@@ -9,7 +9,7 @@ $(function(){
     let button = await Swal.button('Sei sicuro?', 'Vuoi eliminare questa stagione? Azione irreversibile.', 'question');
 
     if (button) {
-      Ajax('/pages/gestione/meteo/stagioni/gestione_stagioni_ajax.php', {
+      Ajax('gestione/meteo/stagioni/gestione_stagioni_ajax.php', {
         action: action,
         id: id
       }, refreshList)

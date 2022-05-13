@@ -51,13 +51,16 @@ class Form {
         });
     }
 
-    sendData(form, path, success) {
+    async sendData(form, path, success) {
+
         //*** SEND AJAX FORM
         let data = new FormData(form),
-            cls = this;
+          cls = this;
+
+        data.append('path',path);
 
         $.ajax({
-            url: path,
+            url: 'core/wrapper_ajax.php',
             type: "post",
             data: data,
             contentType: false,
@@ -82,9 +85,9 @@ class Form {
                     if (json.swal_title) {
 
                         await Swal.fire(
-                            json.swal_title,
-                            (json.swal_message) ? json.swal_message : '',
-                            (json.swal_type) ? json.swal_type : ''
+                          json.swal_title,
+                          (json.swal_message) ? json.swal_message : '',
+                          (json.swal_type) ? json.swal_type : ''
                         )
 
                     }
@@ -101,5 +104,4 @@ class Form {
         $(form).find('select').val('');
         $(form).find('textarea').val('');
     }
-
 }

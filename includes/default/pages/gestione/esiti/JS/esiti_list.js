@@ -8,7 +8,7 @@ $(function(){
             action = main.data('action'),
             id = main.data('id');
 
-        Ajax('/pages/gestione/esiti/esiti_ajax.php',{
+        Ajax('gestione/esiti/esiti_ajax.php',{
             action: action,
             id: id
         },refreshList)

@@ -6,13 +6,13 @@ $(function(){
   Chosen.init('.chosen-select');
 
   new Form('.gestione_meteo_condizioni .form').onSubmit({
-    path: '/pages/gestione/meteo/condizioni/gestione_condizioni_ajax.php',
+    path: 'gestione/meteo/condizioni/gestione_condizioni_ajax.php',
     success: updateFormList
   });
 
   function updateFormList() {
     Ajax(
-      '/pages/gestione/meteo/condizioni/gestione_condizioni_ajax.php',
+      'gestione/meteo/condizioni/gestione_condizioni_ajax.php',
       {'action': 'get_conditions_list'},
       function (data) {
 
@@ -31,7 +31,7 @@ $(function(){
   editForm.find('select[name="id"]').on('change', function () {
     let id = $(this).val()
     Ajax(
-      '/pages/gestione/meteo/condizioni/gestione_condizioni_ajax.php',
+      'gestione/meteo/condizioni/gestione_condizioni_ajax.php',
       {'id': id, 'action': 'get_condition_data'},
       function (data) {
 

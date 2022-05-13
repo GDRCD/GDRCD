@@ -1,12 +1,12 @@
 $(function(){
 
     new Form('.members_add_form .form, .esiti_members .delete_member_form').onSubmit({
-        path:'/pages/gestione/esiti/esiti_ajax.php',
+        path:'gestione/esiti/esiti_ajax.php',
         success: refreshMembers
     })
 
     new Form('.members_add_form .form').onSubmit({
-        path:'/pages/gestione/esiti/esiti_ajax.php',
+        path:'gestione/esiti/esiti_ajax.php',
         success: refreshMembers
     })
 

@@ -3,7 +3,7 @@ $(function(){
     let form = $('.edit-form');
 
     new Form('.gestione_oggetti_tipo .form').onSubmit({
-        path:'/pages/gestione/oggetti/gestione_oggetti_ajax.php',
+        path:'gestione/oggetti/gestione_oggetti_ajax.php',
         success: refreshList
     })
 
@@ -20,7 +20,7 @@ $(function(){
 
         let id = $(this).val()
 
-        Ajax('/pages/gestione/oggetti/gestione_oggetti_ajax.php',{'id':id,'action':'get_object_type_data'},setEditInput)
+        Ajax('gestione/oggetti/gestione_oggetti_ajax.php',{'id':id,'action':'get_object_type_data'},setEditInput)
 
 
     });

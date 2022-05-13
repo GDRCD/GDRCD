@@ -3,7 +3,7 @@ $(function () {
     ScrollDown();
 
     new Form('.chat_form_ajax').onSubmit({
-        path: '/pages/chat/chat_ajax.php',
+        path: 'chat/chat_ajax.php',
         success: invioSuccess
     });
 
@@ -23,7 +23,7 @@ $(function () {
     function aggiornaChat() {
 
         $.ajax({
-            url: '/pages/chat/chat_ajax.php',
+            url: 'chat/chat_ajax.php',
             type: 'POST',
             data: {'action': 'aggiorna_chat'},
             success: (function (data) {
@@ -71,7 +71,7 @@ $(function () {
 
         if (dir != undefined) {
             $.ajax({
-                url: '/pages/chat/chat_ajax.php',
+                url: 'chat/chat_ajax.php',
                 type: "POST",
                 data: {'action': 'controllaChat', 'dir': dir},
                 success: function (data) {

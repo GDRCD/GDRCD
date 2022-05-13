@@ -1,7 +1,7 @@
 <?php
 
 /* PARAMETRI DI CONNESSIONE */
-const DB_USER = 'gdrcd';            //nome utente del database
-const DB_PASS = 'gdrcd';            //password del database
-const DB_NAME = 'db_name';    //nome del database
-const DB_HOST = 'localhost';        //indirizzo ip del database
+$PARAMETERS['database']['username'] = 'gdrcd';            //nome utente del database
+$PARAMETERS['database']['password'] = 'gdrcd';            //password del database
+$PARAMETERS['database']['database_name'] = 'gdrcd';    //nome del database
+$PARAMETERS['database']['url'] = 'localhost';        //indirizzo ip del database

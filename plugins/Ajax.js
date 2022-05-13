@@ -1,6 +1,9 @@
-function Ajax(path,data,success,type = 'POST'){
+async function Ajax(path,data,success,type = 'POST'){
+
+    data.path = path;
+
     $.ajax({
-        url: path,
+        url: 'core/wrapper_ajax.php',
         type: type,
         data: data,
         success: function (response) {

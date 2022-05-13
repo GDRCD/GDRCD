@@ -2,6 +2,10 @@
 /*Aggiorno la mappa corrente del PG*/
 $current_map = (isset($_GET['map_id']) === true) ? gdrcd_filter('num', $_GET['map_id']) : $_SESSION['mappa'];
 
+if($current_map < 0){
+    $current_map = 1;
+}
+
 $redirect_pc = 0;
 /*Se ho richiesto di far partire o arrivare una mappa mobile*/
 if((isset($_POST['op']) === true) && (($_POST['op'] == gdrcd_filter('out', $MESSAGE['interface']['maps']['leave'])) ||

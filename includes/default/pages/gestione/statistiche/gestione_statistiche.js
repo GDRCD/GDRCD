@@ -3,7 +3,7 @@ $(function(){
     let form = $('.edit-form');
 
     new Form('.gestione_statistiche .form').onSubmit({
-        path:'/pages/gestione/statistiche/gestione_statistiche_ajax.php',
+        path:'gestione/statistiche/gestione_statistiche_ajax.php',
         success: refreshList
     })
 
@@ -18,7 +18,7 @@ $(function(){
 
     form.find('select[name="stat"]').on('change',function(){
         let id = $(this).val();
-        Ajax('/pages/gestione/statistiche/gestione_statistiche_ajax.php',{'id':id,'action':'get_stat_data'},setEditInput);
+        Ajax('gestione/statistiche/gestione_statistiche_ajax.php',{'id':id,'action':'get_stat_data'},setEditInput);
     });
 
     function setEditInput(data){

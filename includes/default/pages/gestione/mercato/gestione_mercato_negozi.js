@@ -3,7 +3,7 @@ $(function () {
     let form = $('.edit-form');
 
     new Form('.gestione_negozi .form').onSubmit({
-        path: '/pages/gestione/mercato/gestione_mercato_ajax.php',
+        path: 'gestione/mercato/gestione_mercato_ajax.php',
         success: refreshShopLists
     })
 
@@ -27,7 +27,7 @@ $(function () {
 
         let id = $(this).val()
 
-        Ajax('/pages/gestione/mercato/gestione_mercato_ajax.php', {'shop': id, 'action': 'get_shop_data'}, setEditInput)
+        Ajax('gestione/mercato/gestione_mercato_ajax.php', {'shop': id, 'action': 'get_shop_data'}, setEditInput)
 
 
     });

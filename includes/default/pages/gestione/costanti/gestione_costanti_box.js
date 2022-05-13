@@ -1,7 +1,7 @@
 $(function(){
 
     new Form('.gestione_costanti form').onSubmit({
-        path: '/pages/gestione/costanti/gestione_costanti_ajax.php',
+        path: 'gestione/costanti/gestione_costanti_ajax.php',
         form_reset:false
     })
 

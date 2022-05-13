@@ -3,13 +3,13 @@ $(function () {
     let editForm = $('.edit-form');
 
     new Form('.gestione_abilita_requisiti .form').onSubmit({
-        path: '/pages/gestione/abilita/Requisiti/gestione_requisiti_ajax.php',
+        path: 'gestione/abilita/Requisiti/gestione_requisiti_ajax.php',
         success: updateFormList
     });
 
     function updateFormList() {
         Ajax(
-            '/pages/gestione/abilita/Requisiti/gestione_requisiti_ajax.php',
+            'gestione/abilita/Requisiti/gestione_requisiti_ajax.php',
             {'action': 'get_requirement_list'},
             function (data) {
 
@@ -24,7 +24,7 @@ $(function () {
     editForm.find('select[name="requisito"]').on('change', function () {
         let id = $(this).val()
         Ajax(
-            '/pages/gestione/abilita/Requisiti/gestione_requisiti_ajax.php',
+            'gestione/abilita/Requisiti/gestione_requisiti_ajax.php',
             {'id': id, 'action': 'get_requirement_data'},
             function (data) {
 

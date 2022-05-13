@@ -99,7 +99,7 @@
             var <?= $mkey ?>_hovers = <?= json_encode($hovers); ?>;
 
             $(function () {
-                $('.<?= $params['class'] ?> .link_menu a').mouseenter(function (ev) {
+                $('.link_menu a').mouseenter(function (ev) {
                     var $t = $(this);
                     var id = $t.attr('id');
                     if (id in <?= $mkey ?>_hovers) {

@@ -4,7 +4,7 @@ $(function(){
     let form = $('.edit-form');
 
     new Form('.gestione_abilita_extra .form').onSubmit({
-        path:'/pages/gestione/abilita/Extra/gestione_abilita_ajax.php'
+        path:'gestione/abilita/Extra/gestione_abilita_ajax.php'
     });
 
     form.find('#fake-extraction').on('click',function(){
@@ -13,7 +13,7 @@ $(function(){
             grado = $('#ModAbiExtraForm select[name="grado"]').val();
 
         $.ajax({
-           url:'/pages/gestione/abilita/Extra/gestione_abilita_ajax.php',
+           url:'gestione/abilita/Extra/gestione_abilita_ajax.php',
             type:"POST",
             data:{'action':'get_extra_data','abilita':abi,'grado':grado},
             success:function(data){
