@@ -135,7 +135,7 @@ if ($num_log > 0 && ($row['stanza'] !== $_SESSION['luogo']) && (isset($_POST['op
     	INNER JOIN mappa ON mappa.id = chat.stanza
     	LEFT JOIN personaggio ON personaggio.nome = chat.mittente 
     	WHERE stanza = " . gdrcd_filter('num', $chat) . " AND ora >= '" . $row['data_inizio'] . "' AND ora <= NOW() 
-    	AND (tipo = 'A' || tipo = 'P' || tipo = 'M' || tipo = 'N') GROUP BY mittente ORDER BY ora", 'result');
+    	AND (tipo = 'A' || tipo = 'P' || tipo = 'M' || tipo = 'N') GROUP BY chat.id, chat.mittente, chat.destinatario, chat.tipo, chat.ora ORDER BY ora", 'result');
 
     $start = gdrcd_query("	SELECT chat.id
     	FROM chat
