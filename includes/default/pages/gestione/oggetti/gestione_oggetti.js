@@ -2,26 +2,13 @@ $(function(){
 
     let form = $('.edit-form');
 
-    /*new Form('.gestione_oggetti .form').onSubmit({
-        path:'gestione/oggetti/gestione_oggetti_ajax.php',
-        success: refreshList
-    })*/
-
-
     form.find('select[name="oggetto"]').on('change',function(){
-
         let id = $(this).val()
-
         Ajax('gestione/oggetti/gestione_oggetti_ajax.php',{'id':id,'action':'get_object_data'},setEditInput)
-
-
     });
 
     function setEditInput(data){
-
         if(data != ''){
-
-
             let datas = JSON.parse(data);
 
             form.find('select[name="tipo"]').val(datas.tipo);
@@ -31,7 +18,6 @@ $(function(){
             form.find('input[name="cariche"]').val(datas.cariche);
             form.find('input[name="indossabile"]').prop("checked",datas.indossabile);
         }
-
     }
 
 });

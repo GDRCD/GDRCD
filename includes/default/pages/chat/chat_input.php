@@ -18,7 +18,7 @@ $chat_abi_class = ChatAbilita::getInstance();
 ?>
 
 <div class="chat_bottom">
-    <form method="POST" class="ajax_form chat_form_ajax" action="chat/chat_ajax.php">
+    <form class="ajax_form chat_form_ajax" action="chat/chat_ajax.php" data-callback="invioAzioneSuccess" data-swal="false">
         <div class="chat_text chat_internal_box">
 
             <div class="input_container small">

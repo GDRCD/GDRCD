@@ -138,7 +138,7 @@ if ($cls->permissionManageObjects()) { # Metodo di controllo per accesso alla pa
         </form>
 
         <!-- DELETE -->
-        <form method="POST" class="form ajax_form" action="gestione/oggetti/gestione_oggetti_ajax.php" data-callback="refreshObjectList">
+        <form class="form ajax_form" action="gestione/oggetti/gestione_oggetti_ajax.php" data-callback="refreshObjectList">
 
             <div class="form_title">Elimina Oggetto</div>
 

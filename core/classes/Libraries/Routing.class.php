@@ -270,4 +270,20 @@ class Router
         die('Non esiste una cartella di default per i temi.');
     }
 
+    public static function getPagesDir(){
+
+        $engine = Functions::get_constant('STANDARD_ENGINE');
+
+        if (file_exists(ROOT."includes/{$engine}/pages")) {
+            return ROOT."includes/{$engine}/pages/";
+        }
+
+
+        if (file_exists(ROOT."includes/default/pages")) {
+            return ROOT."includes/default/pages/";
+        }
+
+        die('Non esiste una cartella di default per i temi.');
+    }
+
 }

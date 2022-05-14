@@ -6,13 +6,15 @@ $(function () {
         let form = $(this),
             path = form.attr('action'),
             func = form.data('callback'),
-            reset = form.data('reset');
+            reset = form.data('reset'),
+            swal= form.data('swal');
 
         new Form().onSubmit({
             form: this,
             path: path,
             success: func ?? false,
-            form_reset: (reset) ?? true
+            form_reset: (reset) ?? true,
+            swal_alert: (swal) ?? true
         })
     })
 })
