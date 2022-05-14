@@ -104,7 +104,6 @@ class DbMigrationEngine extends BaseClass
         /** @var DbMigration[] $migrations */
         $migrations = [];
 
-        var_dump(self::MIGRATIONS_FOLDER);
 
         foreach(new DirectoryIterator(self::MIGRATIONS_FOLDER) as $fileInfo){
             if($fileInfo->isDot() || $fileInfo->isDir()) {
