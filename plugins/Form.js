@@ -17,6 +17,18 @@ $(function () {
     })
 })
 
+function refreshActualPage(){
+    setTimeout(()=>{
+        window.location.reload();
+    },2000)
+}
+
+function goBackHistory(){
+    setTimeout(()=> {
+        history.back();
+    },2000);
+}
+
 
 class Form {
 
