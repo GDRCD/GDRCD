@@ -1,0 +1,1 @@
+<?php Router::loadPages('frame/messages/index.inc.php'); ?>

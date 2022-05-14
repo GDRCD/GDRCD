@@ -1,7 +1,7 @@
 <?php
 
 /*Includo i file principali */
-require_once(__DIR__.'/includes/required.php');
+require_once(__DIR__.'/core/required.php');
 
 /*Leggo i dati del form di login*/
 $login1 = gdrcd_filter('get', $_POST['login1']);
@@ -54,7 +54,9 @@ $record = gdrcd_query("SELECT personaggio.pass, personaggio.nome, personaggio.co
  * Se si esce non correttamente dal gioco, sarà possibile entrare dopo 5 minuti dall'ultimo refresh registrato
  * @author Blancks
  */
-if( ! empty($record) and gdrcd_password_check($pass1, $record['pass']) && ($record['permessi'] > -1) && (strtotime($record['ora_entrata']) < strtotime($record['ora_uscita']) || (strtotime($record['ultimo_refresh']) + 300) < time())) {
+
+if( !empty($record) && gdrcd_password_check($pass1, $record['pass']) && ($record['permessi'] > -1) && (strtotime($record['ora_entrata']) < strtotime($record['ora_uscita']) || (strtotime($record['ultimo_refresh']) + 300) < time())) {
+
     $_SESSION['login'] = Filters::in($record['nome']);
     $_SESSION['login_id'] = Functions::getPgId($record['nome']);
     $_SESSION['cognome'] = $record['cognome'];
@@ -102,12 +104,15 @@ if( ! empty($record) and gdrcd_password_check($pass1, $record['pass']) && ($reco
     /*Registro l'evento (Avvenuto login)*/
     gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".gdrcd_filter('in', $_SESSION['login'])."','".$_SERVER['REMOTE_ADDR']."', NOW(), ".LOGGEDIN." ,'".$_SERVER['REMOTE_ADDR']."')");
 } elseif(strtotime($record['ora_entrata']) > strtotime($record['ora_uscita']) || (strtotime($record['ultimo_refresh']) + 300) > time()) {
+
+
     /*Se la postazione è stata esclusa*/
     echo '<div class="error_box"><h2 class="error_major">'.$MESSAGE['warning']['double_connection'].'</h2></div>';
     /*Registro l'evento (Tentativo di connessione da postazione esclusa)*/
     gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES ('".$login1."', 'Login_procedure', NOW(), ".BLOCKED.", '".$_SERVER['REMOTE_ADDR']."')");
     exit();
 } else {
+
     /*Sono stati inseriti username e password errati*/
     $_SESSION['login'] = '';
 
@@ -194,6 +199,7 @@ if($_SESSION['login'] != '') {
     <?php
     session_destroy();
 }
+
 ?>
     </body>
 </html>

@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 /**    * Fix Require al posto di include
@@ -48,7 +47,7 @@ if(isset($_REQUEST['page'])) {
 if(gdrcd_controllo_esilio($_SESSION['login']) === true) {
     session_destroy();
 } else {
-    require('layouts/'.$PARAMETERS['themes']['kind_of_layout'].'_frames.php');
+
+    require('layouts/left-right_frames.php');
 }
 
-require('footer.inc.php');  /*Footer comune*/

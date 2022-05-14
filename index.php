@@ -5,7 +5,7 @@ declare(strict_types=1);
 header('Content-Type:text/html; charset=UTF-8');
 
 //Includo i parametri, la configurazione, la lingua e le funzioni
-require_once('includes/required.php');
+require_once(__DIR__.'/core/required.php');
 
 //Eseguo la connessione al database
 $handleDBConnection = DB::connect();
@@ -50,7 +50,7 @@ $content = (!empty($_GET['content'])) ? gdrcd_filter('include', $_GET['content']
         <!-- IE9: mi stai ampiamente rompendo i maroni. -->
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
         <link rel="shortcut icon" href="favicon.png" type="image/png"/>
-        <link rel="stylesheet" href="themes/homepage/<?= $PARAMETERS['themes']['homepage']; ?>/homepage.css"
+        <link rel="stylesheet" href="<?=Router::getCssLink('homepage.css');?>"
               type="text/css"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"/>
         <title>
@@ -61,8 +61,7 @@ $content = (!empty($_GET['content'])) ? gdrcd_filter('include', $_GET['content']
 <?php
 
 // Includo la pagina
-gdrcd_load_modules($page, ['content' => $content]);
+Router::loadPages('homepage/index.inc.php');
 
-require 'footer.inc.php';
 
 DB::disconnect($handleDBConnection);

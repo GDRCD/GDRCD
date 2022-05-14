@@ -1,7 +1,7 @@
 <?php
 
 //Includio i parametri, la configurazione, la lingua e le funzioni
-require ('includes/required.php');
+require_once(__DIR__.'/core/required.php');
 
 //Eseguo la connessione al database
 $handleDBConnection = DB::connect();
