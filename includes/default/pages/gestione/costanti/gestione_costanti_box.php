@@ -26,7 +26,7 @@ if ($gestione->constantsPermission()) {
 
         <div class="form_container">
 
-            <form method="post" class="form">
+            <form class="form ajax_form" action="gestione/costanti/gestione_costanti_ajax.php" data-reset="false">
 
                 <?= $gestione->constantList(); ?>
 

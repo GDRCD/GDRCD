@@ -24,7 +24,9 @@ if ($cls->permissionManageWeather()) { # Metodo di controllo per accesso alla pa
     <div class="form_container gestione_meteo_venti">
 
         <!-- INSERT -->
-        <form method="POST" class="form">
+        <form class="form ajax_form"
+              action="gestione/meteo/venti/gestione_venti_ajax.php"
+              data-callback="updateVentiList">
 
             <div class="form_title">Aggiunta vento</div>
 
@@ -41,7 +43,9 @@ if ($cls->permissionManageWeather()) { # Metodo di controllo per accesso alla pa
         </form>
 
         <!-- EDIT -->
-        <form method="POST" class="form edit-form">
+        <form class="form edit-form ajax_form"
+              action="gestione/meteo/venti/gestione_venti_ajax.php"
+              data-callback="updateVentiList">
 
             <div class="form_title">Modifica vento</div>
 
@@ -65,7 +69,9 @@ if ($cls->permissionManageWeather()) { # Metodo di controllo per accesso alla pa
         </form>
 
         <!-- DELETE -->
-        <form method="POST" class="form">
+        <form class="form ajax_form"
+              action="gestione/meteo/venti/gestione_venti_ajax.php"
+              data-callback="updateVentiList">
 
             <div class="form_title">Elimina vento</div>
 

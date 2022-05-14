@@ -38,7 +38,9 @@ $stat_cls = Statistiche::getInstance();
 
         <div class="form_title">Crea Requisito Abilita</div>
 
-        <form method="POST" id="CreaAbiRequisitoForm" class="form">
+        <form class="form ajax_form"
+              action="gestione/abilita/Requisiti/gestione_requisiti_ajax.php"
+              data-callback="updateFormList">
 
 
             <!-- ABILITA -->
@@ -104,7 +106,9 @@ $stat_cls = Statistiche::getInstance();
         <div class="form_title">Modifica Requisito Abilita</div>
 
 
-        <form method="POST" id="ModAbiRequisitoForm" class="form edit-form">
+        <form class="form edit-form ajax_form"
+              action="gestione/abilita/Requisiti/gestione_requisiti_ajax.php"
+              data-callback="updateFormList">
 
             <!-- LISTA REQUISITI -->
             <div class="single_input">
@@ -175,7 +179,9 @@ $stat_cls = Statistiche::getInstance();
 
         <div class="form_title">Elimina Requisito Abilita</div>
 
-        <form method="POST" id="EliminaAbiRequisitoForm" class="form">
+        <form class="form ajax_form"
+              action="gestione/abilita/Requisiti/gestione_requisiti_ajax.php"
+              data-callback="updateFormList">
 
             <!-- LISTA REQUISITI -->
             <div class="single_input">

@@ -50,7 +50,7 @@ if ($cls->manageShopPermission()) { # Metodo di controllo per accesso alla pagin
         } ?>
 
         <!-- INSERT -->
-        <form method="POST" class="form">
+        <form method="POST" class="form ajax_form" action="gestione/mercato/gestione_mercato_ajax.php" data-callback="refreshShopLists">
 
             <div class="form_title">Aggiunta negozio</div>
 
@@ -78,7 +78,7 @@ if ($cls->manageShopPermission()) { # Metodo di controllo per accesso alla pagin
         </form>
 
         <!-- EDIT -->
-        <form method="POST" class="form edit-form">
+        <form method="POST" class="form edit-form ajax_form" action="gestione/mercato/gestione_mercato_ajax.php"  data-callback="refreshShopLists">
 
             <div class="form_title">Modifica negozio</div>
 
@@ -112,7 +112,7 @@ if ($cls->manageShopPermission()) { # Metodo di controllo per accesso alla pagin
         </form>
 
         <!-- DELETE -->
-        <form method="POST" class="form">
+        <form method="POST" class="form ajax_form" action="gestione/mercato/gestione_mercato_ajax.php"  data-callback="refreshShopLists">
 
             <div class="form_title">Elimina oggetto da negozio</div>
 

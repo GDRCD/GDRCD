@@ -4,6 +4,7 @@ gdrcd_controllo_sessione();
 
 echo '<div class="popup">';
 
+
 if ( ! empty($_GET['page'])) {
     gdrcd_load_modules(
         gdrcd_filter(

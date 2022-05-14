@@ -26,7 +26,7 @@ if ($esiti->esitoViewPermission($id_record) && $esiti->esitoExist($id_record)) {
             <div style="height: 1px;clear: both"></div>
         </div>
         <div class="give_answer form_container">
-            <form method="POST" class="form">
+            <form method="POST" class="form ajax_form" action="gestione/esiti/esiti_ajax.php" data-callback="refreshAnswers">
 
                 <div class="single_input">
                     <div class="label">Risposta</div>

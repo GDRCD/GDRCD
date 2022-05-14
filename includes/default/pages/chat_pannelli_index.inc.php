@@ -2,7 +2,7 @@
 
 Router::loadRequired();
 
-$pannello = gdrcd_filter('out',$_GET['pannello']);
+$pannello = gdrcd_filter('out', $_GET['pannello']);
 ?>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -11,10 +11,9 @@ $pannello = gdrcd_filter('out',$_GET['pannello']);
 <?php
 
 
-if(file_exists(__DIR__ . '/chat/pannelli/' .$pannello.'.php')) {
-    include(__DIR__ . '/chat/pannelli/' . $pannello . '.php');
-}
-else{
+if (file_exists(__DIR__ . '/chat/pannelli/' . $pannello . '.php')) {
+    Router::loadPages('/chat/pannelli/' . $pannello . '.php');
+} else {
     echo 'Pannello non trovato.';
 }
 

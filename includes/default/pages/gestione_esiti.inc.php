@@ -1,2 +1,2 @@
 
-<?php require(__DIR__ . '/gestione/esiti/esiti_index.php'); ?>
+<?php Router::loadPages('/gestione/esiti/esiti_index.php'); ?>

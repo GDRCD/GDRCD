@@ -1,14 +1,16 @@
 <div class="new_season">
 
 
-    <form class="form" method="post">
+    <form class="form  ajax_form"
+          action="gestione/meteo/stagioni/gestione_stagioni_ajax.php"
+          data-callback="redirectStagioniNew">
         <div class="single_input">
             <div class="label"><?php echo Filters::out($MESSAGE['interface']['administration']['name_col']); ?></div>
             <input type="text" name="nome" id="nome" class="form_input">
         </div>
         <div class="single_input">
             <div class="label"><?php echo Filters::out($MESSAGE['interface']['administration']['meteo_season']['min']); ?></div>
-            <input type="numer" name="minima" id="minima" class="form_input">
+            <input type="number" name="minima" id="minima" class="form_input">
 
         </div>
         <div class="single_input">
@@ -46,4 +48,4 @@
 
 </div>
 
-<script src="<?=Router::getPagesLink('gestione/meteo/stagioni/gestione_stagioni_new.js');?>"></script>
+<script src="<?= Router::getPagesLink('gestione/meteo/stagioni/gestione_stagioni_new.js'); ?>"></script>

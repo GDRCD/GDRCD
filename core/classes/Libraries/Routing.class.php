@@ -145,7 +145,15 @@ class Router
         return $results;
     }
 
-    public static function loadPages($page)
+    /**** DYNAMIC LOADING ***/
+
+    /**
+     * @fn loadPages
+     * @note Carica una pagina in base all'engine scelto
+     * @param string $page
+     * @return void
+     */
+    public static function loadPages(string $page):void
     {
 
         global $MESSAGE;
@@ -172,15 +180,27 @@ class Router
 
     }
 
-    public static function loadRequired(){
+    /**
+     * @fn loadRequired
+     * @note Carica il file required
+     * @return void
+     */
+    public static function loadRequired():void{
 
         $root = dirname(__FILE__).'/../../';
 
         require_once($root.'/required.php');
     }
 
+    /**** DYNAMIC LINK ****/
 
-    public static function getPagesLink($page)
+    /**
+     * @fn getPagesLink
+     * @note Ottieni il link di una pagina specifica da caricare in base all'engine
+     * @param string $page
+     * @return string
+     */
+    public static function getPagesLink(string $page):string
     {
         $db_search = DB::query("SELECT redirect FROM pages WHERE page='{$page}' LIMIT 1");
 
@@ -204,30 +224,12 @@ class Router
 
     }
 
-    public static function getAjaxPagesLink($page)
-    {
-        $db_search = DB::query("SELECT redirect FROM pages WHERE page='{$page}' LIMIT 1");
-
-        if (!empty($db_search['redirect'])) {
-            if (file_exists($db_search['redirect'])) {
-                return $db_search['redirect'];
-            }
-        }
-
-
-        $engine = Functions::get_constant('STANDARD_ENGINE');
-        if (file_exists(ROOT."includes/{$engine}/pages/{$page}")) {
-            return "includes/{$engine}/pages/{$page}";
-        }
-
-        if (file_exists(ROOT."includes/default/pages/{$page}")) {
-            return "includes/default/pages/{$page}";
-        }
-
-        return 'Url Inexisent';
-
-    }
-
+    /**
+     * @fn getCssLink
+     * @note Ottieni il link per il css in base all'engine
+     * @param string $page
+     * @return string
+     */
     public static function getCssLink(string $page): string
     {
 
@@ -254,6 +256,13 @@ class Router
         return '';
     }
 
+    /**** DYNAMIC DIR PATH ****/
+
+    /**
+     * @fn getThemeDir
+     * @note Ottiene il link relativo della cartella themes
+     * @return string|void
+     */
     public static function getThemeDir(){
 
         $engine = Functions::get_constant('STANDARD_ENGINE');
@@ -265,6 +274,27 @@ class Router
 
         if (file_exists(ROOT."includes/default/themes")) {
             return ROOT."includes/default/themes/";
+        }
+
+        die('Non esiste una cartella di default per i temi.');
+    }
+
+    /**
+     * @fn getPagesDir
+     * @note Ottieni il link relativo della cartella pages
+     * @return string|void
+     */
+    public static function getPagesDir(){
+
+        $engine = Functions::get_constant('STANDARD_ENGINE');
+
+        if (file_exists(ROOT."includes/{$engine}/pages")) {
+            return ROOT."includes/{$engine}/pages/";
+        }
+
+
+        if (file_exists(ROOT."includes/default/pages")) {
+            return ROOT."includes/default/pages/";
         }
 
         die('Non esiste una cartella di default per i temi.');

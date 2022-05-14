@@ -25,7 +25,7 @@ if($cls->managePermission()){ # Metodo di controllo per accesso alla pagina di g
     <div class="form_container">
 
         <!-- INSERT -->
-        <form method="POST" class="form">
+        <form method="POST" class="form ajax_form">
 
             <div class="form_title"><!-- TITOLO SEZIONE --></div>
 
@@ -43,7 +43,7 @@ if($cls->managePermission()){ # Metodo di controllo per accesso alla pagina di g
         </form>
 
         <!-- EDIT -->
-        <form method="POST" class="form">
+        <form method="POST" class="form  ajax_form">
 
             <div class="form_title"><!-- TITOLO SEZIONE --></div>
 
@@ -61,7 +61,7 @@ if($cls->managePermission()){ # Metodo di controllo per accesso alla pagina di g
         </form>
 
         <!-- DELETE -->
-        <form method="POST" class="form">
+        <form method="POST" class="form  ajax_form">
 
             <div class="form_title"><!-- TITOLO SEZIONE --></div>
 

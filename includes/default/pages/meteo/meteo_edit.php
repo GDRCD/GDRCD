@@ -11,34 +11,36 @@ $temp = Filters::in($chat_data['temp']);
 
 ?>
 
-<form class="form" method="post" id="form_meteo_edit">
+<form class="form ajax_form"
+      action="meteo/meteo_ajax.php"
+      data-reset="false">
     <div class="single_input">
         <div class="label">Condizione</div>
-        <select name="condizione" id="condizione" >
+        <select name="condizione" id="condizione">
             <option value=""></option>
             <?= MeteoCondizioni::getInstance()->listConditionsByText($meteo) ?>
         </select>
     </div>
     <div class="single_input">
         <div class="label">Vento</div>
-        <select name="vento" id="vento" >
+        <select name="vento" id="vento">
             <option value=""></option>
             <?= MeteoVenti::getInstance()->listWindsByText($vento) ?>
         </select>
     </div>
     <div class="single_input">
         <div class="label">Temperatura</div>
-        <input type="number" name="temp" id="temp" class="form_input" value="<?=$temp;?>">
+        <input type="number" name="temp" id="temp" class="form_input" value="<?= $temp; ?>">
     </div>
     <div class="single_input">
         <div class="label">Immagine</div>
-        <input type="text" name="img" id="img" class="form_input" value="<?=$img;?>">
+        <input type="text" name="img" id="img" class="form_input" value="<?= $img; ?>">
     </div>
     <div class="single_input">
         <input type="submit" name="submit" value="Modifica"/>
-        <input type="hidden" name="chat" value="<?=$chat;?>"/>
+        <input type="hidden" name="chat" value="<?= $chat; ?>"/>
         <input type="hidden" name="action" value="op_edit_chat">
     </div>
 </form>
 
-<script src="<?=Router::getPagesLink('meteo/meteo_edit.js');?>"></script>
+<script src="<?= Router::getPagesLink('meteo/meteo_edit.js'); ?>"></script>

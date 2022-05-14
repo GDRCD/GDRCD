@@ -85,6 +85,8 @@ if (($PARAMETERS['mode']['user_bbcode'] == 'ON' && $PARAMETERS['settings']['user
         <script src="plugins/FakeTable.js"></script>
         <script src="plugins/Swal.js"></script>
         <script src="plugins/Chosen.js"></script>
+        <script src="plugins/modal.js"></script>
+
 
         <?php
 

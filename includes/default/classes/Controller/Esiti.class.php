@@ -511,7 +511,7 @@ class Esiti extends BaseClass
                 $html .= "<div class='td'>" . Filters::int($row['dice_num']) . " dadi da " . Filters::int($row['dice_face']) . "</div>";
                 $html .= "<div class='td'>" . Filters::text($abi_data['nome']) . "</div>";
                 $html .= "<div class='td'>
-                            <form method='POST' class='chat_form_ajax'>
+                            <form class='form chat_form_ajax ajax_form' action='chat/chat_ajax.php' data-callback='invioSuccess'>
                                 <input type='hidden' name='action' value='send_esito'>
                                 <input type='hidden' name='id' value='{$id}'>
                                 <button type='submit'><i class='fas fa-dice'></i></button>
@@ -544,7 +544,7 @@ class Esiti extends BaseClass
 
         # Filtro i dati ricevuti
         $abi_dice = Filters::int($abi_roll['abi_dice']);
-        $abi_nome = Filters::in($abi_roll['nome']);
+        $abi_nome = Filters::in($abi_roll['abi_nome']);
         $car = Filters::int($abi_roll['car']);
 
         $dice = $chat->rollCustomDice($dice_num, $dice_face);
@@ -997,7 +997,7 @@ class Esiti extends BaseClass
             $html .= "<div class='td' > " . Personaggio::nameFromId(Filters::int($row['personaggio'])) . "</div > ";
             $html .= "<div class='td' > ";
 
-            $html .= "<form method = 'POST' class='delete_member_form' >
+            $html .= "<form action='gestione/esiti/esiti_ajax.php' class='delete_member_form ajax_form' data-callback='refreshMembers'>
                         <input type = 'hidden' name = 'action' value = 'delete_member' >
                         <input type = 'hidden' name = 'id' value = '{$id_row}' >
                         <input type = 'hidden' name = 'id_esito' value = '{$id}' >
