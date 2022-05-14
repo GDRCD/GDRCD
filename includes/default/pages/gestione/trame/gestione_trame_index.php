@@ -16,7 +16,7 @@ $quest = Quest::getInstance();
         </div>
         <!-- Corpo della pagina -->
         <div class="page_body">
-            <?php require(__DIR__ . 'gestione_trame_index.php/' . $quest->loadManagementTramePage(Filters::out($_GET['op']))); ?>
+            <?php Router::loadPages('gestione/trame/' . $quest->loadManagementTramePage(Filters::out($_GET['op']))); ?>
         </div><!-- pagina -->
     <?php } else { ?>
 

@@ -238,10 +238,10 @@ class Oggetti extends BaseClass
      * @param int $selected
      * @return string
      */
-    public function listObjectTypes(int $selected = 0): string
+    public function listObjectTypes(): string
     {
         $list = $this->getAllObjectTypes('id,nome');
-        return Template::getInstance()->startTemplate()->renderSelect('id','nome',$selected,$list);
+        return Template::getInstance()->startTemplate()->renderSelect('id','nome','',$list);
     }
 
     /**
@@ -250,20 +250,10 @@ class Oggetti extends BaseClass
      * @param int $selected
      * @return string
      */
-    public function listObjectPositions(int $selected = 0): string
+    public function listObjectPositions(): string
     {
-        $html = '<option value=""></option>';
         $list = $this->getAllObjectPositions('id,nome');
-
-        foreach ($list as $row) {
-            $id = Filters::int($row['id']);
-            $nome = Filters::in($row['nome']);
-            $sel = ($selected == $id) ? 'selected' : '';
-
-            $html .= "<option value='{$id}' {$sel}>{$nome}</option>";
-        }
-
-        return $html;
+        return Template::getInstance()->startTemplate()->renderSelect('id','nome','',$list);
     }
 
     /**

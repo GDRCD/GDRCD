@@ -36,7 +36,9 @@ if ($cls->permissionManageObjectsType()) { # Metodo di controllo per accesso all
     <div class="form_container gestione_oggetti_posizione">
 
         <!-- INSERT -->
-        <form method="POST" class="form">
+        <form class="form ajax_form"
+              action="gestione/oggetti/gestione_oggetti_ajax.php"
+        data-callback="refreshObjPosList">
 
             <div class="form_title">Creazione posizione oggetto</div>
 
@@ -67,7 +69,9 @@ if ($cls->permissionManageObjectsType()) { # Metodo di controllo per accesso all
         </form>
 
         <!-- EDIT -->
-        <form method="POST" class="form edit-form">
+        <form class="form edit-form ajax_form"
+              action="gestione/oggetti/gestione_oggetti_ajax.php"
+              data-callback="refreshObjPosList">
 
             <div class="form_title">Modifica tipologia oggetto</div>
 
@@ -105,7 +109,9 @@ if ($cls->permissionManageObjectsType()) { # Metodo di controllo per accesso all
         </form>
 
         <!-- DELETE -->
-        <form method="POST" class="form">
+        <form class="form ajax_form"
+              action="gestione/oggetti/gestione_oggetti_ajax.php"
+              data-callback="refreshObjPosList">
 
             <div class="form_title">Elimina tipologia Oggetto</div>
 

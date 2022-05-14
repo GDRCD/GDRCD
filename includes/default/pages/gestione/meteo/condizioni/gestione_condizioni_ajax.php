@@ -18,7 +18,7 @@ switch ($_POST['action']) {
         break;
 
     case 'op_edit':
-        echo json_encode($metoCond->ModAbiRequisito($_POST));
+        echo json_encode($metoCond->ModCondition($_POST));
         break;
 
     case 'op_delete':

@@ -4,6 +4,7 @@ Router::loadRequired();
 
 $esiti = Esiti::getInstance();
 
+var_dump(1);
 ?>
 
 <div class="gestione_pagina gestione_esiti">
@@ -16,7 +17,7 @@ $esiti = Esiti::getInstance();
 
         <!-- Corpo della pagina -->
         <div class="page_body">
-            <?php require_once(__DIR__ . 'esiti_index.php/' . $esiti->loadManagementEsitiPage(Filters::out($_GET['op']))); ?>
+            <?php  Router::loadPages('gestione/esiti/' . $esiti->loadManagementEsitiPage(Filters::out($_GET['op']))); ?>
         </div>
 
     <?php } else { ?>

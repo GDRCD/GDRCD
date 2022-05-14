@@ -2,19 +2,11 @@ $(function(){
 
     let form = $('.edit-form');
 
-    new Form('.gestione_oggetti .form').onSubmit({
+    /*new Form('.gestione_oggetti .form').onSubmit({
         path:'gestione/oggetti/gestione_oggetti_ajax.php',
         success: refreshList
-    })
+    })*/
 
-    function refreshList(data){
-        if(data){
-            let datas = JSON.parse(data);
-            if(datas.response){
-                $('.gestione_oggetti .form select[name="oggetto"]').html(datas.obj_list)
-            }
-        }
-    }
 
     form.find('select[name="oggetto"]').on('change',function(){
 
@@ -43,3 +35,13 @@ $(function(){
     }
 
 });
+
+
+function refreshObjectList(data){
+    if(data){
+        let datas = JSON.parse(data);
+        if(datas.response){
+            $('.gestione_oggetti .form .obj_list').html(datas.obj_list)
+        }
+    }
+}

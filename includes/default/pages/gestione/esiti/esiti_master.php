@@ -25,7 +25,7 @@ if ($esiti->esitoMembersPermission($id_record)) {
     <?php } ?>
 
     <div class="form_container change_master_form">
-        <form method="POST" class="form">
+        <form method="POST" class="form ajax_form" action="gestione/esiti/esiti_ajax.php">
 
             <div class="form_title">Seleziona il nuovo master.</div>
 

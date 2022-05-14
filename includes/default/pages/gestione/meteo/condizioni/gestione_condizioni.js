@@ -5,27 +5,11 @@ $(function(){
 
   Chosen.init('.chosen-select');
 
-  new Form('.gestione_meteo_condizioni .form').onSubmit({
+  /*new Form('.gestione_meteo_condizioni .form').onSubmit({
     path: 'gestione/meteo/condizioni/gestione_condizioni_ajax.php',
     success: updateFormList
-  });
+  });*/
 
-  function updateFormList() {
-    Ajax(
-      'gestione/meteo/condizioni/gestione_condizioni_ajax.php',
-      {'action': 'get_conditions_list'},
-      function (data) {
-
-        if (data) {
-          let datas = JSON.parse(data);
-
-          $('.gestione_meteo_condizioni .form').find('select[name="id"]').html(datas.List)
-
-          Chosen.reset('.chosen-select');
-
-        }
-      })
-  }
 
 
   editForm.find('select[name="id"]').on('change', function () {
@@ -53,3 +37,16 @@ $(function(){
     )
   });
 })
+
+
+function updateConditionsList(data) {
+
+  if(data){
+
+    let datas = JSON.parse(data);
+
+    $('.gestione_meteo_condizioni .form').find('select[name="id"]').html(datas.List)
+
+    Chosen.reset('.chosen-select');
+  }
+}

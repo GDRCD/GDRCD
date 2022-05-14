@@ -17,7 +17,10 @@ if ($quest->manageTramePermission()) {
 
         <!-- Form di inserimento/modifica -->
         <div class="panels_box form_container quest_edit_form">
-            <form method="post" class="form">
+            <form class="form ajax_form"
+                  action="gestione/trame/gestione_trame_ajax.php"
+                  data-reset="false"
+                  data-callback="goBackTrame">
 
 
                 <div class="form_title">
@@ -60,7 +63,7 @@ if ($quest->manageTramePermission()) {
         </div>
 
 
-        <script src="<?=Router::getPagesLink('gestione/trame/JS/gestione_trame_edit.js');?>"></script>
+        <script src="<?= Router::getPagesLink('gestione/trame/gestione_trame_edit.js'); ?>"></script>
 
     <?php } else { ?>
         <div class="warning">Trama inesistente</div>

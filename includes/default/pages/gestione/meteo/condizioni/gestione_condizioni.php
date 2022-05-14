@@ -24,7 +24,9 @@ if ($cls->permissionManageWeatherConditions()) { # Metodo di controllo per acces
     <div class="form_container gestione_meteo_condizioni">
 
         <!-- INSERT -->
-        <form method="POST" class="form">
+        <form class="form ajax_form"
+              action="gestione/meteo/condizioni/gestione_condizioni_ajax.php"
+              data-callback="updateConditionsList">
 
             <div class="form_title">Aggiunta condizione meteo</div>
 
@@ -35,8 +37,9 @@ if ($cls->permissionManageWeatherConditions()) { # Metodo di controllo per acces
 
             <div class="single_input">
                 <div class="label">Venti</div>
-                <select data-placeholder="Opzioni per il vento" multiple class="chosen-select" name="vento[]" id="vento" required>
-                    <?=MeteoVenti::getInstance()->listWinds();?>
+                <select data-placeholder="Opzioni per il vento" multiple class="chosen-select" name="vento[]" id="vento"
+                        required>
+                    <?= MeteoVenti::getInstance()->listWinds(); ?>
                 </select>
             </div>
 
@@ -53,14 +56,16 @@ if ($cls->permissionManageWeatherConditions()) { # Metodo di controllo per acces
         </form>
 
         <!-- EDIT -->
-        <form method="POST" class="form edit-form">
+        <form class="form ajax_form edit-form"
+              action="gestione/meteo/condizioni/gestione_condizioni_ajax.php"
+              data-callback="updateConditionsList">
 
             <div class="form_title">Modifica condizione meteo</div>
 
             <div class="single_input">
                 <div class="label">Condizione</div>
                 <select name="id" required>
-                    <?=$cls->listConditions();?>
+                    <?= $cls->listConditions(); ?>
                 </select>
             </div>
 
@@ -71,8 +76,9 @@ if ($cls->permissionManageWeatherConditions()) { # Metodo di controllo per acces
 
             <div class="single_input">
                 <div class="label">Venti</div>
-                <select data-placeholder="Opzioni per il vento" multiple class="chosen-select" name="vento[]" id="vento" required>
-                    <?=MeteoVenti::getInstance()->listWinds();?>
+                <select data-placeholder="Opzioni per il vento" multiple class="chosen-select" name="vento[]" id="vento"
+                        required>
+                    <?= MeteoVenti::getInstance()->listWinds(); ?>
                 </select>
             </div>
 
@@ -89,7 +95,9 @@ if ($cls->permissionManageWeatherConditions()) { # Metodo di controllo per acces
         </form>
 
         <!-- DELETE -->
-        <form method="POST" class="form">
+        <form class="form ajax_form"
+              action="gestione/meteo/condizioni/gestione_condizioni_ajax.php"
+              data-callback="updateConditionsList">
 
             <div class="form_title">Elimina condizione meteo</div>
 
@@ -113,7 +121,7 @@ if ($cls->permissionManageWeatherConditions()) { # Metodo di controllo per acces
         </div>
     </div>
 
-    <script src="<?=Router::getPagesLink('gestione/meteo/condizioni/gestione_condizioni.js');?>"></script>
+    <script src="<?= Router::getPagesLink('gestione/meteo/condizioni/gestione_condizioni.js'); ?>"></script>
 
 
 <?php } ?>

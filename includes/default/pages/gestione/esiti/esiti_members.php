@@ -19,7 +19,7 @@ if ($esiti->esitoMembersPermission($id_record)) {
     </div>
 
     <div class="form_container members_add_form">
-        <form method="POST" class="form">
+        <form class="form ajax_form" action="gestione/esiti/esiti_ajax.php" data-callback="refreshMembers">
 
             <div class="form_title">Aggiungi un membro.</div>
 

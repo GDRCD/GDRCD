@@ -46,7 +46,7 @@ if ($cls->manageShopObjectsPermission()) { # Metodo di controllo per accesso all
         } ?>
 
         <!-- INSERT -->
-        <form method="POST" class="form">
+        <form method="POST" class="form ajax_form" action="gestione/mercato/gestione_mercato_ajax.php">
 
             <div class="form_title">Aggiunta oggetti a negozio</div>
 
@@ -82,7 +82,7 @@ if ($cls->manageShopObjectsPermission()) { # Metodo di controllo per accesso all
         </form>
 
         <!-- EDIT -->
-        <form method="POST" class="form">
+        <form method="POST" class="form ajax_form" action="gestione/mercato/gestione_mercato_ajax.php">
 
             <div class="form_title">Modifica oggetti negozio</div>
 
@@ -118,7 +118,7 @@ if ($cls->manageShopObjectsPermission()) { # Metodo di controllo per accesso all
         </form>
 
         <!-- DELETE -->
-        <form method="POST" class="form">
+        <form method="POST" class="form ajax_form" action="gestione/mercato/gestione_mercato_ajax.php">
 
             <div class="form_title">Elimina oggetto da negozio</div>
 
@@ -145,7 +145,7 @@ if ($cls->manageShopObjectsPermission()) { # Metodo di controllo per accesso all
 
     </div>
 
-    <script src="/<?=Router::getPagesLink('gestione/mercato/gestione_mercato_oggetti.js§');?>"></script>
+    <script src="/<?=Router::getPagesLink('gestione/mercato/gestione_mercato_oggetti.js');?>"></script>
 
 
 <?php } ?>

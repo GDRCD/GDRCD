@@ -997,7 +997,7 @@ class Esiti extends BaseClass
             $html .= "<div class='td' > " . Personaggio::nameFromId(Filters::int($row['personaggio'])) . "</div > ";
             $html .= "<div class='td' > ";
 
-            $html .= "<form method = 'POST' class='delete_member_form' >
+            $html .= "<form action='gestione/esiti/esiti_ajax.php' class='delete_member_form ajax_form' data-callback='refreshMembers'>
                         <input type = 'hidden' name = 'action' value = 'delete_member' >
                         <input type = 'hidden' name = 'id' value = '{$id_row}' >
                         <input type = 'hidden' name = 'id_esito' value = '{$id}' >

@@ -127,7 +127,8 @@ class MeteoCondizioni extends Meteo
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Condizione meteo creata.',
-                'swal_type' => 'success'
+                'swal_type' => 'success',
+                'condition_list'=>$this->listConditions()
             ];
         } else {
             return [
@@ -145,13 +146,13 @@ class MeteoCondizioni extends Meteo
      * @param array $post
      * @return array
      */
-    public function ModAbiRequisito(array $post): array
+    public function ModCondition(array $post): array
     {
         if($this->permissionManageWeather()){
             $nome = Filters::in( $post['nome']);
             $vento = implode(",",$post['vento']);
             $id=Filters::in( $post['id']);
-            $img = Filters::in( $post['img']);
+            $img = Filters::in( $post['immagine']);
 
 
             DB::query("UPDATE  meteo_condizioni 
@@ -161,7 +162,8 @@ class MeteoCondizioni extends Meteo
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Condizione meteo modificata.',
-                'swal_type' => 'success'
+                'swal_type' => 'success',
+                'condition_list'=>$this->listConditions()
             ];
         } else{
             return [
@@ -191,7 +193,8 @@ class MeteoCondizioni extends Meteo
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Condizione meteo eliminata.',
-                'swal_type' => 'success'
+                'swal_type' => 'success',
+                'condition_list'=>$this->listConditions()
             ];
         } else{
             return [

@@ -16,7 +16,7 @@ $quest = Quest::getInstance();
         </div>
         <!-- Corpo della pagina -->
         <div class="page_body">
-            <?php require(__DIR__ . 'gestione_quest_index.php/' . $quest->loadManagementQuestPage(Filters::out($_GET['op']))); ?>
+            <?php Router::loadPages('gestione/quest/' . $quest->loadManagementQuestPage(Filters::out($_GET['op']))); ?>
         </div><!-- pagina -->
     <?php } else { ?>
 

@@ -2,10 +2,10 @@ $(function () {
 
     ScrollDown();
 
-    new Form('.chat_form_ajax').onSubmit({
+/*    new Form('.chat_form_ajax').onSubmit({
         path: 'chat/chat_ajax.php',
         success: invioSuccess
-    });
+    });*/
 
     function invioSuccess(data) {
         if (data != '') {
