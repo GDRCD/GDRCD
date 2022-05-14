@@ -4,12 +4,13 @@ Router::loadRequired(); # Inserisco il required se non presente, per futuro spos
 
 $cls = OnlineStatus::getInstance(); # Inizializzo classe
 
-if($cls->manageStatusPermission()){ # Metodo di controllo per accesso alla pagina di gestione
+if ($cls->manageStatusPermission()) { # Metodo di controllo per accesso alla pagina di gestione
 
     ?>
 
     <div class="general_incipit">
-        <div class="title"> Gestione delle risposte degli status online </div><br>
+        <div class="title"> Gestione delle risposte degli status online</div>
+        <br>
         La pagina serve per gestire le risposte presenti nel popup di scelta dello stato online.
         <br><br>
         <div class="subtitle">Tipi di risposte disponibili</div>
@@ -22,14 +23,16 @@ if($cls->manageStatusPermission()){ # Metodo di controllo per accesso alla pagin
     <div class="form_container gestione_status">
 
         <!-- INSERT -->
-        <form method="POST" class="form">
+        <form class="form ajax_form"
+              action="gestione/online_status/gestione_status_ajax.php"
+              data-callback="refreshStatusList">
 
             <div class="form_title">Inserisci un nuovo stato</div>
 
             <div class="single_input">
                 <div class="label">Tipo</div>
                 <select name="type" required>
-                    <?=$cls->renderStatusTypeList(); ?>
+                    <?= $cls->renderStatusTypeList(); ?>
                 </select>
             </div>
 
@@ -46,21 +49,23 @@ if($cls->manageStatusPermission()){ # Metodo di controllo per accesso alla pagin
         </form>
 
         <!-- EDIT -->
-        <form method="POST" class="form edit-form">
+        <form class="form edit-form ajax_form"
+              action="gestione/online_status/gestione_status_ajax.php"
+              data-callback="refreshStatusList">
 
             <div class="form_title">Modifica Stato Esistente</div>
 
             <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
                 <div class="label">Stato da modificare</div>
                 <select name="id" required>
-                    <?=$cls->renderStatusList();?>
+                    <?= $cls->renderStatusList(); ?>
                 </select>
             </div>
 
             <div class="single_input">
                 <div class="label">Tipo</div>
                 <select name="type" required>
-                    <?=$cls->renderStatusTypeList(); ?>
+                    <?= $cls->renderStatusTypeList(); ?>
                 </select>
             </div>
 
@@ -77,14 +82,16 @@ if($cls->manageStatusPermission()){ # Metodo di controllo per accesso alla pagin
         </form>
 
         <!-- DELETE -->
-        <form method="POST" class="form">
+        <form class="form ajax_form"
+              action="gestione/online_status/gestione_status_ajax.php"
+              data-callback="refreshStatusList">
 
             <div class="form_title">Elimina uno stato</div>
 
             <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
                 <div class="label">Stato da eliminare</div>
                 <select name="id" required>
-                    <?=$cls->renderStatusList();?>
+                    <?= $cls->renderStatusList(); ?>
                 </select>
             </div>
 
@@ -97,7 +104,7 @@ if($cls->manageStatusPermission()){ # Metodo di controllo per accesso alla pagin
 
     </div>
 
-    <script src="<?=Router::getPagesLink('gestione/online_status/gestione_status.js');?>"></script>
+    <script src="<?= Router::getPagesLink('gestione/online_status/gestione_status.js'); ?>"></script>
 
 
 <?php } ?>

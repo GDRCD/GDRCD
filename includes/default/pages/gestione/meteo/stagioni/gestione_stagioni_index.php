@@ -16,7 +16,7 @@ $stagioni = MeteoStagioni::getInstance();
 
         <!-- Corpo della pagina -->
         <div class="page_body">
-            <?php require_once(__DIR__ . 'gestione_stagioni_index.php/' . $stagioni->loadManagePage(Filters::out($_GET['op']))); ?>
+            <?php Router::loadPages('gestione/meteo/stagioni/' . $stagioni->loadManagePage(Filters::out($_GET['op']))); ?>
         </div>
 
     <?php } else { ?>

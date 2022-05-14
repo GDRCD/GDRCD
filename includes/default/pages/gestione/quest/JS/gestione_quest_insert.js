@@ -1,9 +1,5 @@
 $(function(){
 
-    new Form('.quest_insert_form').onSubmit({
-        path:'gestione/quest/gestione_quest_ajax.php'
-    })
-
     $('.quest_insert_form #new_member').on('click',function(){
         Ajax('gestione/quest/gestione_quest_ajax.php',{'action':'create_input'},CreateInput)
         return false;

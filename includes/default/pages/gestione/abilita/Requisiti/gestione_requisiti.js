@@ -2,25 +2,6 @@ $(function () {
 
     let editForm = $('.edit-form');
 
-    new Form('.gestione_abilita_requisiti .form').onSubmit({
-        path: 'gestione/abilita/Requisiti/gestione_requisiti_ajax.php',
-        success: updateFormList
-    });
-
-    function updateFormList() {
-        Ajax(
-            'gestione/abilita/Requisiti/gestione_requisiti_ajax.php',
-            {'action': 'get_requirement_list'},
-            function (data) {
-
-                if (data) {
-                    let datas = JSON.parse(data);
-
-                    $('.gestione_abilita_requisiti .form').find('select[name="requisito"]').html(datas.List)
-                }
-            })
-    }
-
     editForm.find('select[name="requisito"]').on('change', function () {
         let id = $(this).val()
         Ajax(
@@ -41,8 +22,24 @@ $(function () {
                 }
 
             }
-        )
+        ).then(() => {})
     });
 
 
 });
+
+function updateFormList() {
+    Ajax(
+        'gestione/abilita/Requisiti/gestione_requisiti_ajax.php',
+        {'action': 'get_requirement_list'},
+        function (data) {
+
+            console.log(data)
+
+            if (data) {
+                let datas = JSON.parse(data);
+
+                $('.gestione_abilita_requisiti .form').find('select[name="requisito"]').html(datas.List)
+            }
+        })
+}

@@ -167,7 +167,7 @@ function gdrcd_pages_path($page)
     }
 
     // Inizializzo le variabili del metodo
-    $pagesPath = dirname(__FILE__) . DIRECTORY_SEPARATOR. '..'.DIRECTORY_SEPARATOR.'pages';
+    $pagesPath = Router::getPagesDir();
     $pageFormatted = gdrcd_pages_format($page);
 
     // Imposto i possibili percorsi che posso caricare

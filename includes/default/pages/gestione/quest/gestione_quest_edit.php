@@ -16,7 +16,7 @@ if ($quest->manageQuestPermission()) {
         <!-- Form di inserimento/modifica -->
         <div class="panels_box form_container">
 
-            <form method="post" class="form quest_edit_form">
+            <form method="post" class="form quest_edit_form ajax_form" action="gestione/quest/gestione_quest_ajax.php">
 
                 <div class="form_title">
                     Modifica quest

@@ -1,6 +1,5 @@
 <?php /*Form di inserimento/modifica*/
 
-
 Router::loadRequired();
 
 $quest = Quest::getInstance();
@@ -10,7 +9,9 @@ if ($quest->manageTramePermission()) {
 
     <!-- Form di inserimento/modifica -->
     <div class="panels_box form_container quest_insert_form ">
-        <form method="post" class="form">
+        <form class="form ajax_form"
+              action="gestione/trame/gestione_trame_ajax.php"
+        data-callback="goBackTrame">
 
             <div class="form_title">
                 Inserisci trama
@@ -50,7 +51,7 @@ if ($quest->manageTramePermission()) {
         </form>
     </div>
 
-    <script src="<?=Router::getPagesLink('gestione/trame/JS/gestione_trame_insert.js');?>"></script>
+    <script src="<?=Router::getPagesLink('gestione/trame/gestione_trame_insert.js');?>"></script>
 
 <?php } else { ?>
     <div class="warning">Permesso negato</div>

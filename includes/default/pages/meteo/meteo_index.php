@@ -15,7 +15,7 @@ if ($class->permissionEditchat()) { ?>
 
             <!-- Corpo della pagina -->
             <div class="page_body">
-                <?php require_once(__DIR__ . '/meteo_edit.php'); ?>
+                <?php Router::loadPages('/meteo_edit.php'); ?>
             </div>
 
         <?php } else { ?>

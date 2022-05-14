@@ -9,7 +9,8 @@ if ($quest->manageQuestPermission()) {
     ?>
     <div class="panels_box form_container">
 
-        <form method="post" class="form quest_insert_form">
+        <form class="form quest_insert_form ajax_form"
+              action="gestione/quest/gestione_quest_ajax.php">
 
             <div class="form_title">
                 Inserisci quest

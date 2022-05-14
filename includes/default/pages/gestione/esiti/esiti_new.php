@@ -24,7 +24,7 @@ $op = Filters::out($_POST['op']);
         Functions::redirect('/main.php?page=gestione_esiti',2);
     } ?>
 
-    <form method="POST" class="form">
+    <form method="POST" class="form ajax_form" action="gestione/esiti/esiti_ajax.php" data-callback="refreshEsitiList">
 
 
         <div class="single_input">

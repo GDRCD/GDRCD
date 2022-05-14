@@ -4,29 +4,32 @@ Router::loadRequired(); # Inserisco il required se non presente, per futuro spos
 
 $cls = Oggetti::getInstance(); # Inizializzo classe
 
-if($cls->permissionManageObjects()){ # Metodo di controllo per accesso alla pagina di gestione
+if ($cls->permissionManageObjects()) { # Metodo di controllo per accesso alla pagina di gestione
 
-?>
+    ?>
 
-        <div class="general_incipit">
-            <div class="title"> Gestione oggetti </div>
-            <div class="subtitle"> Sezione per la gestione degli oggetti</div> <br>
+    <div class="general_incipit">
+        <div class="title"> Gestione oggetti</div>
+        <div class="subtitle"> Sezione per la gestione degli oggetti</div>
+        <br>
 
 
-            Da questa pagina e' possibile:
-            <ul>
-                <li>Creare un oggetto</li>
-                <li>Modificare un oggetto</li>
-                <li>Eliminare un oggetto</li>
-            </ul>
+        Da questa pagina e' possibile:
+        <ul>
+            <li>Creare un oggetto</li>
+            <li>Modificare un oggetto</li>
+            <li>Eliminare un oggetto</li>
+        </ul>
 
-        </div>
+    </div>
 
 
     <div class="form_container gestione_oggetti">
 
         <!-- INSERT -->
-        <form method="POST" class="form">
+        <form class="form ajax_form"
+              action="gestione/oggetti/gestione_oggetti_ajax.php"
+              data-callback="refreshObjectList">
 
             <div class="form_title">Creazione oggetto</div>
 
@@ -34,7 +37,7 @@ if($cls->permissionManageObjects()){ # Metodo di controllo per accesso alla pagi
             <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
                 <div class="label">Tipo</div>
                 <select name="tipo">
-                    <?=$cls->listObjectTypes();?>
+                    <?= $cls->listObjectTypes(); ?>
                 </select>
             </div>
 
@@ -76,7 +79,7 @@ if($cls->permissionManageObjects()){ # Metodo di controllo per accesso alla pagi
         </form>
 
         <!-- EDIT -->
-        <form method="POST" class="form edit-form">
+        <form class="form ajax_form edit-form" action="gestione/oggetti/gestione_oggetti_ajax.php" data-callback="refreshObjectList">
 
             <div class="form_title">Modifica oggetto</div>
 
@@ -84,8 +87,8 @@ if($cls->permissionManageObjects()){ # Metodo di controllo per accesso alla pagi
             <!-- LISTA OGGETTI -->
             <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
                 <div class="label">Oggetti</div>
-                <select name="oggetto">
-                    <?=$cls->listObjects();?>
+                <select name="oggetto" class="obj_list">
+                    <?= $cls->listObjects(); ?>
                 </select>
             </div>
 
@@ -93,7 +96,7 @@ if($cls->permissionManageObjects()){ # Metodo di controllo per accesso alla pagi
             <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
                 <div class="label">Tipo</div>
                 <select name="tipo">
-                    <?=$cls->listObjectTypes();?>
+                    <?= $cls->listObjectTypes(); ?>
                 </select>
             </div>
 
@@ -135,15 +138,15 @@ if($cls->permissionManageObjects()){ # Metodo di controllo per accesso alla pagi
         </form>
 
         <!-- DELETE -->
-        <form method="POST" class="form">
+        <form class="form ajax_form" action="gestione/oggetti/gestione_oggetti_ajax.php" data-callback="refreshObjectList">
 
             <div class="form_title">Elimina Oggetto</div>
 
             <!-- LISTA OGGETTI -->
             <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
                 <div class="label">Oggetti</div>
-                <select name="oggetto">
-                    <?=$cls->listObjects();?>
+                <select name="oggetto" class="obj_list">
+                    <?= $cls->listObjects(); ?>
                 </select>
             </div>
 
@@ -156,7 +159,7 @@ if($cls->permissionManageObjects()){ # Metodo di controllo per accesso alla pagi
 
     </div>
 
-    <script src="<?=Router::getPagesLink('gestione/oggetti/gestione_oggetti.js');?>"></script>
+    <script src="<?= Router::getPagesLink('gestione/oggetti/gestione_oggetti.js'); ?>"></script>
 
 
 <?php } ?>
