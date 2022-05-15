@@ -36,11 +36,6 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
             <div class="titolo_box">
                 <h2 style="margin-top:3px;">
                     <b><? echo $tit;?> - <? echo $pg;?></b>
-                    <a class="link_new"
-                       href='main.php?page=gestione_segnalazioni&segn=newesito&op=edit&id=<? echo gdrcd_filter('num',$blocco['id']);?>'
-                       target="_blank">
-                        Modifica serie di esiti
-                    </a>
                 </h2>
             </div>
 
