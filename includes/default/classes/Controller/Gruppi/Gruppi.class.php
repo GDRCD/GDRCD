@@ -25,9 +25,6 @@ class Gruppi extends BaseClass
         return Permissions::permission('MANAGE_GROUPS');
     }
 
-    public function permissionManageRoles(){
-        return Permissions::permission('MANAGE_GROUPS');
-    }
 
 
     public function getGroup(int $id,string $val = '*'){
@@ -146,6 +143,7 @@ class Gruppi extends BaseClass
             $id = Filters::in($post['id']);
 
             DB::query("DELETE FROM gruppi WHERE id='{$id}'");
+            DB::query("DELETE FROM gruppi_ruoli WHERE gruppo='{$id}'");
 
             return [
                 'response' => true,

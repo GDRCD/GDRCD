@@ -532,6 +532,7 @@ INSERT INTO `menu` (`menu_name`, `section`, `name`, `page`, `permission`) VALUES
   ('Gestione', 'Bacheche', 'Gestione Bacheche', 'gestione_bacheche', 'MANAGE_FORUMS'),
   ('Gestione', 'Gruppi', 'Gestione Gruppi', 'gestione_gruppi', 'MANAGE_GROUPS'),
   ('Gestione', 'Gruppi', 'Gestione Ruoli', 'gestione_ruoli', 'MANAGE_GROUPS'),
+  ('Gestione', 'Gruppi', 'Gestione Tipi', 'gestione_gruppi_tipo', 'MANAGE_GROUPS'),
   ('Gestione', 'Gestione', 'Gestione Costanti', 'gestione_costanti', 'MANAGE_CONSTANTS'),
   ('Gestione', 'Gestione', 'Gestione Versioni Database', 'gestione_db_migrations', 'MANAGE_DB_MIGRATIONS'),
   ('Gestione', 'Permessi', 'Gestione Permessi', 'gestione_permessi', 'MANAGE_PERMISSIONS'),

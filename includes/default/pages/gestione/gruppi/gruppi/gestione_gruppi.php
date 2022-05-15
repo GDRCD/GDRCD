@@ -4,7 +4,7 @@ Router::loadRequired(); # Inserisco il required se non presente, per futuro spos
 
 $cls = Gruppi::getInstance(); # Inizializzo classe
 
-if($cls->permissionManageGroups()){ # Metodo di controllo per accesso alla pagina di gestione
+if($cls->permissionManageGroups() && $cls->activeGroups()){ # Metodo di controllo per accesso alla pagina di gestione
 
 ?>
         <div class="general_incipit">
@@ -17,6 +17,8 @@ if($cls->permissionManageGroups()){ # Metodo di controllo per accesso alla pagin
                 <li>Modificare un gruppo</li>
                 <li>Eliminare un gruppo</li>
             </ul>
+
+            L'eliminazione di un gruppo include anche l'eliminazione di <span class="highlight">tutti i suoi ruoli e la dissociazione dei ruoli da tutti ipersonaggi</span> ed e' irreversibile.
 
         </div>
 

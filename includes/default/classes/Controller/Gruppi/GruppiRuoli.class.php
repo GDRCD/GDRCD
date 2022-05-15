@@ -15,10 +15,9 @@ class GruppiRuoli extends Gruppi
         $this->groups_max_roles = Functions::get_constant('GROUPS_MAX_ROLES');
     }
 
-    public function activeGroups(){
-        return $this->groups_active;
+    public function permissionManageRoles(){
+        return Permissions::permission('MANAGE_GROUPS');
     }
-
 
     public function getRole(int $id,string $val = '*'){
         return DB::query("SELECT {$val} FROM gruppi_ruoli WHERE id='{$id}' LIMIT 1");

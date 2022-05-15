@@ -4,7 +4,7 @@ Router::loadRequired(); # Inserisco il required se non presente, per futuro spos
 
 $cls = GruppiRuoli::getInstance(); # Inizializzo classe
 
-if($cls->permissionManageGroups()){ # Metodo di controllo per accesso alla pagina di gestione
+if($cls->permissionManageRoles() && $cls->activeGroups()){ # Metodo di controllo per accesso alla pagina di gestione
 
 ?>
         <div class="general_incipit">
