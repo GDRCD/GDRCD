@@ -61,7 +61,7 @@ $content = (!empty($_GET['content'])) ? gdrcd_filter('include', $_GET['content']
 <?php
 
 // Includo la pagina
-Router::loadPages('homepage/index.inc.php');
+gdrcd_load_modules($page, ['content' => $content]);
 
 
 DB::disconnect($handleDBConnection);
