@@ -39,6 +39,10 @@ class Router
         return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
     }
 
+    public static function getPageRedirect($page){
+       return DB::query("SELECT redirect FROM pages WHERE page='{$page}' LIMIT 1");
+    }
+
     /**
      * @fn startClasses
      * @note Start loader for dynamic integrations of the classes
@@ -159,7 +163,7 @@ class Router
         global $MESSAGE;
         global $PARAMETERS;
 
-        $db_search = DB::query("SELECT redirect FROM pages WHERE page='{$page}' LIMIT 1");
+        $db_search = Router::getPageRedirect($page);
 
         if (!empty($db_search['redirect'])) {
             if (file_exists($db_search['redirect'])) {
@@ -202,7 +206,7 @@ class Router
      */
     public static function getPagesLink(string $page):string
     {
-        $db_search = DB::query("SELECT redirect FROM pages WHERE page='{$page}' LIMIT 1");
+        $db_search = Router::getPageRedirect($page);
 
         if (!empty($db_search['redirect'])) {
             if (file_exists($db_search['redirect'])) {
@@ -233,8 +237,7 @@ class Router
     public static function getCssLink(string $page): string
     {
 
-        $db_search = DB::query("SELECT redirect FROM pages WHERE page='{$page}' LIMIT 1");
-
+        $db_search = Router::getPageRedirect($page);
 
         if (!empty($db_search['redirect'])) {
             if (file_exists($db_search['redirect'])) {
