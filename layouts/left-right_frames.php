@@ -128,6 +128,13 @@ if ($PARAMETERS['right_column']['activate'] == 'ON') {
 
 <div id="maincontent">
     <div class="output">
-        <?php Router::loadPages($strInnerPage); ?>
+        <?php
+        $link_alias = Router::getPageByAlias($strInnerPage);
+        if($link_alias){
+            Router::loadPages($link_alias);
+        }else{
+            Router::loadPages($strInnerPage);
+        }
+         ?>
     </div>
 </div>

@@ -153,7 +153,7 @@ class Router
      * @param string $page
      * @return void
      */
-    public static function loadPages(string $page):void
+    public static function loadPages(string $page): void
     {
 
         global $MESSAGE;
@@ -169,12 +169,12 @@ class Router
 
 
         $engine = Functions::get_constant('STANDARD_ENGINE');
-        if (file_exists(ROOT."includes/{$engine}/pages/{$page}")) {
-            require_once(ROOT."includes/{$engine}/pages/{$page}");
+        if (file_exists(ROOT . "includes/{$engine}/pages/{$page}")) {
+            require_once(ROOT . "includes/{$engine}/pages/{$page}");
         }
 
-        if (file_exists(ROOT."includes/default/pages/{$page}")) {
-            require_once(ROOT."includes/default/pages/{$page}");
+        if (file_exists(ROOT . "includes/default/pages/{$page}")) {
+            require_once(ROOT . "includes/default/pages/{$page}");
         }
 
 
@@ -185,14 +185,68 @@ class Router
      * @note Carica il file required
      * @return void
      */
-    public static function loadRequired():void{
+    public static function loadRequired(): void
+    {
 
-        $root = dirname(__FILE__).'/../../';
+        $root = dirname(__FILE__) . '/../../';
 
-        require_once($root.'/required.php');
+        require_once($root . '/required.php');
     }
 
     /**** DYNAMIC LINK ****/
+
+    /**
+     * @fn getPageRedirect
+     * @note Controlla se esiste un redirect per quella pagina in db
+     * @param string $page
+     * @return mixed
+     */
+    public static function getPageRedirect(string $page)
+    {
+        return DB::query("SELECT redirect FROM pages WHERE page='{$page}' LIMIT 1");
+    }
+
+    /**
+     * @fn getPageAlias
+     * @note Controlla se esiste un redirect per quell'alias
+     * @param string $page
+     * @return mixed
+     */
+    public static function getPageAlias(string $page)
+    {
+        return DB::query("SELECT redirect FROM pages_alias WHERE alias='{$page}' LIMIT 1");
+    }
+
+    /**
+     * @fn getPageByAlias
+     * @note Controlla se esiste un redirect per quell'alias in db
+     * @param string $page
+     * @return string
+     */
+    public static function getPageByAlias(string $page)
+    {
+
+        if (strpos($page, '.php')) {
+            $page = explode('.', $page)[0];
+        }
+
+        $db_search = Router::getPageAlias($page);
+
+        // Controllo il redirect esistente in db
+        if (!empty($db_search['redirect'])) {
+            if (file_exists($db_search['redirect'])) {
+                return $db_search['redirect'];
+            }
+        }
+
+        // Altrimenti controllo se segue la sintassi degli alias
+        if (strpos($page, '__')) {
+            $page = str_replace('__', '/', $page);
+            return $page.'.php';
+        }
+
+        return false;
+    }
 
     /**
      * @fn getPagesLink
@@ -200,7 +254,7 @@ class Router
      * @param string $page
      * @return string
      */
-    public static function getPagesLink(string $page):string
+    public static function getPagesLink(string $page)
     {
         $db_search = DB::query("SELECT redirect FROM pages WHERE page='{$page}' LIMIT 1");
 
@@ -209,6 +263,7 @@ class Router
                 return $db_search['redirect'];
             }
         }
+
 
 
         $engine = Functions::get_constant('STANDARD_ENGINE');
@@ -220,7 +275,7 @@ class Router
             return "includes/default/pages/{$page}";
         }
 
-        return 'Url Inexisent';
+        return false;
 
     }
 
@@ -263,17 +318,18 @@ class Router
      * @note Ottiene il link relativo della cartella themes
      * @return string|void
      */
-    public static function getThemeDir(){
+    public static function getThemeDir()
+    {
 
         $engine = Functions::get_constant('STANDARD_ENGINE');
 
-        if (file_exists(ROOT."includes/{$engine}/themes")) {
-            return ROOT."includes/{$engine}/themes/";
+        if (file_exists(ROOT . "includes/{$engine}/themes")) {
+            return ROOT . "includes/{$engine}/themes/";
         }
 
 
-        if (file_exists(ROOT."includes/default/themes")) {
-            return ROOT."includes/default/themes/";
+        if (file_exists(ROOT . "includes/default/themes")) {
+            return ROOT . "includes/default/themes/";
         }
 
         die('Non esiste una cartella di default per i temi.');
@@ -284,17 +340,18 @@ class Router
      * @note Ottieni il link relativo della cartella pages
      * @return string|void
      */
-    public static function getPagesDir(){
+    public static function getPagesDir()
+    {
 
         $engine = Functions::get_constant('STANDARD_ENGINE');
 
-        if (file_exists(ROOT."includes/{$engine}/pages")) {
-            return ROOT."includes/{$engine}/pages/";
+        if (file_exists(ROOT . "includes/{$engine}/pages")) {
+            return ROOT . "includes/{$engine}/pages/";
         }
 
 
-        if (file_exists(ROOT."includes/default/pages")) {
-            return ROOT."includes/default/pages/";
+        if (file_exists(ROOT . "includes/default/pages")) {
+            return ROOT . "includes/default/pages/";
         }
 
         die('Non esiste una cartella di default per i temi.');
