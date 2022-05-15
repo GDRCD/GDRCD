@@ -217,27 +217,6 @@ CREATE TABLE IF NOT EXISTS `codmostrina` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `codtipogilda`
---
-
-CREATE TABLE IF NOT EXISTS `codtipogilda` (
-  `descrizione` varchar(255) NOT NULL,
-  `cod_tipo` int NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`cod_tipo`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
---
--- Dump dei dati per la tabella `codtipogilda`
---
-
-INSERT INTO `codtipogilda` (`descrizione`, `cod_tipo`) VALUES
-('Positivo', 1),
-('Neutrale', 2),
-('Negativo', 3);
-
--- --------------------------------------------------------
-
---
 -- Struttura della tabella `config`
 --
 CREATE TABLE IF NOT EXISTS `config` (
@@ -308,7 +287,10 @@ INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,
     ('ONLINE_STATUS_LOGIN_REFRESH',1,'Online Status','Reselect al login','Login oscura ultima scelta dai presenti?','bool',1),
     ('SCHEDA_OBJECTS_PUBLIC',1,'Scheda Oggetti','Scheda Oggetti pubblica','Pagina inventario pubblica?','bool',1),
     ('SCHEDA_STATS_PUBLIC',1,'Scheda Oggetti','Scheda Statistiche pubblica','Pagina statistica pubblica?','bool',1),
-    ('SCHEDA_ABI_PUBLIC',1,'Scheda Abilita','Scheda Abilita pubblica','Pagina abilita pubblica?','bool',1);
+    ('SCHEDA_ABI_PUBLIC',1,'Scheda Abilita','Scheda Abilita pubblica','Pagina abilita pubblica?','bool',1),
+    ('GROUPS_ACTIVE',1,'Gruppi','Gruppi attivi','Gruppi attivi?','bool',1),
+    ('GROUPS_MAX_ROLES',3,'Gruppi','Massimo ruoli','Numero massimo di ruoli','int',1),
+    ('GROUPS_MAX_JOBS',3,'Gruppi','Massimo lavori liberi','Numero massimo di lavori liberi','int',1);
 
 -- --------------------------------------------------------
 
@@ -433,23 +415,72 @@ CREATE TABLE IF NOT EXISTS `esiti_risposte_risultati` (
 -- Struttura della tabella `gilda`
 --
 
-CREATE TABLE IF NOT EXISTS `gilda` (
-  `id_gilda` int NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `gruppi` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `nome` varchar(255) NOT NULL DEFAULT '',
   `tipo` varchar(255) NOT NULL DEFAULT '0',
   `immagine` varchar(255) DEFAULT NULL,
-  `url_sito` varchar(255) DEFAULT NULL,
+  `url` varchar(255) DEFAULT NULL,
   `statuto` text,
   `visibile` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_gilda`)
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 --
 -- Dump dei dati per la tabella `gilda`
 --
 
-INSERT INTO `gilda` (`id_gilda`, `nome`, `tipo`, `immagine`, `url_sito`, `statuto`, `visibile`) VALUES
-(1, 'Guardia cittadina', '1', 'standard_gilda.png', '', '', 1);
+INSERT INTO `gruppi` (`nome`, `tipo`, `immagine`, `url`, `statuto`, `visibile`) VALUES
+('Guardia cittadina', '1', 'standard_gilda.png', 'test', 'Statuto fasullo', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `gruppi_ruoli`
+--
+
+CREATE TABLE IF NOT EXISTS `gruppi_ruoli` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `gruppo` int NOT NULL DEFAULT '-1',
+    `nome` varchar(255) NOT NULL,
+    `immagine` varchar(255) NOT NULL,
+    `stipendio` int NOT NULL DEFAULT '0',
+    `poteri` int NOT NULL DEFAULT '0',
+    PRIMARY KEY (`id`)
+    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+--
+-- Dump dei dati per la tabella `gruppi_ruoli`
+--
+
+INSERT INTO `gruppi_ruoli` (`gruppo`, `nome`, `immagine`, `stipendio`, `poteri`) VALUES
+    (1, 'Capitano della guardia', 'standard_gilda.png', 100, 1),
+    (1, 'Ufficiale della guardia', 'standard_gilda.png', 70, 0),
+    (-1, 'Lavoratore', 'standard_gilda.png', 5, 0),
+    (1, 'Soldato della guardia', 'standard_gilda.png', 40, 0),
+    (1, 'Recluta della guardia', 'standard_gilda.png', 15, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `gruppi_tipo`
+--
+
+CREATE TABLE IF NOT EXISTS `gruppi_tipo` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `nome` varchar(255) NOT NULL,
+    `descrizione` text NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+--
+-- Dump dei dati per la tabella `gruppi_tipo`
+--
+
+INSERT INTO `gruppi_tipo` (`nome`, `descrizione`) VALUES
+    ('Positivo', 'prova'),
+    ('Neutrale', 'prova'),
+    ('Negativo', 'prova');
 
 -- --------------------------------------------------------
 
@@ -500,7 +531,7 @@ INSERT INTO `menu` (`menu_name`, `section`, `name`, `page`, `permission`) VALUES
   ('Gestione', 'Documentazioni', 'Gestione Regolamento', 'gestione_regolamento', 'MANAGE_RULES'),
   ('Gestione', 'Razze', 'Gestione Razze', 'gestione_razze', 'MANAGE_RACES'),
   ('Gestione', 'Bacheche', 'Gestione Bacheche', 'gestione_bacheche', 'MANAGE_FORUMS'),
-  ('Gestione', 'Gilde', 'Gestione Gilde e Ruoli', 'gestione_gilde', 'MANAGE_GUILDS'),
+  ('Gestione', 'Gruppi', 'Gestione Gruppi', 'gestione_gruppi', 'MANAGE_GROUPS'),
   ('Gestione', 'Gestione', 'Gestione Costanti', 'gestione_costanti', 'MANAGE_CONSTANTS'),
   ('Gestione', 'Gestione', 'Gestione Versioni Database', 'gestione_db_migrations', 'MANAGE_DB_MIGRATIONS'),
   ('Gestione', 'Permessi', 'Gestione Permessi', 'gestione_permessi', 'MANAGE_PERMISSIONS'),
@@ -941,7 +972,7 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
     ('MANAGE_CONSTANTS', 'Permesso per l\editing delle costanti'),
     ('MANAGE_RACES', 'Permesso per la gestione delle razze'),
     ('MANAGE_FORUMS', 'Permesso per la gestione delle bacheche'),
-    ('MANAGE_GUILDS', 'Permesso per la gestione delle gilde'),
+    ('MANAGE_GROUPS', 'Permesso per la gestione dei gruppi'),
     ('MANAGE_PERMISSIONS', 'Permesso per la gestione dei permessi'),
     ('MANAGE_MANUTENTIONS', 'Permesso per la gestione della manutenzione del db'),
     ('MANAGE_REPORTS', 'Permesso per la gestione delle giocate segnalate'),
@@ -1273,33 +1304,6 @@ CREATE TABLE IF NOT EXISTS `regolamento` (
   `titolo` varchar(255) NOT NULL,
   `testo` text NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `ruolo`
---
-
-CREATE TABLE IF NOT EXISTS `ruolo` (
-  `id_ruolo` int NOT NULL AUTO_INCREMENT,
-  `gilda` int NOT NULL DEFAULT '-1',
-  `nome_ruolo` varchar(255) NOT NULL,
-  `immagine` varchar(255) NOT NULL,
-  `stipendio` int NOT NULL DEFAULT '0',
-  `capo` int NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_ruolo`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
---
--- Dump dei dati per la tabella `ruolo`
---
-
-INSERT INTO `ruolo` (`id_ruolo`, `gilda`, `nome_ruolo`, `immagine`, `stipendio`, `capo`) VALUES
-(1, 1, 'Capitano della guardia', 'standard_gilda.png', 100, 1),
-(2, 1, 'Ufficiale della guardia', 'standard_gilda.png', 70, 0),
-(5, -1, 'Lavoratore', 'standard_gilda.png', 5, 0),
-(3, 1, 'Soldato della guardia', 'standard_gilda.png', 40, 0),
-(4, 1, 'Recluta della guardia', 'standard_gilda.png', 15, 0);
 
 -- --------------------------------------------------------
 
