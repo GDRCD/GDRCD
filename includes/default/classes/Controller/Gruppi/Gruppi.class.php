@@ -25,6 +25,10 @@ class Gruppi extends BaseClass
         return Permissions::permission('MANAGE_GROUPS');
     }
 
+    public function permissionManageRoles(){
+        return Permissions::permission('MANAGE_GROUPS');
+    }
+
 
     public function getGroup(int $id,string $val = '*'){
         return DB::query("SELECT {$val} FROM gruppi WHERE id='{$id}' LIMIT 1");

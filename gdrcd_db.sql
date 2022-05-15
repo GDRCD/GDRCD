@@ -456,7 +456,6 @@ CREATE TABLE IF NOT EXISTS `gruppi_ruoli` (
 INSERT INTO `gruppi_ruoli` (`gruppo`, `nome`, `immagine`, `stipendio`, `poteri`) VALUES
     (1, 'Capitano della guardia', 'standard_gilda.png', 100, 1),
     (1, 'Ufficiale della guardia', 'standard_gilda.png', 70, 0),
-    (-1, 'Lavoratore', 'standard_gilda.png', 5, 0),
     (1, 'Soldato della guardia', 'standard_gilda.png', 40, 0),
     (1, 'Recluta della guardia', 'standard_gilda.png', 15, 0);
 
@@ -532,6 +531,7 @@ INSERT INTO `menu` (`menu_name`, `section`, `name`, `page`, `permission`) VALUES
   ('Gestione', 'Razze', 'Gestione Razze', 'gestione_razze', 'MANAGE_RACES'),
   ('Gestione', 'Bacheche', 'Gestione Bacheche', 'gestione_bacheche', 'MANAGE_FORUMS'),
   ('Gestione', 'Gruppi', 'Gestione Gruppi', 'gestione_gruppi', 'MANAGE_GROUPS'),
+  ('Gestione', 'Gruppi', 'Gestione Ruoli', 'gestione_ruoli', 'MANAGE_GROUPS'),
   ('Gestione', 'Gestione', 'Gestione Costanti', 'gestione_costanti', 'MANAGE_CONSTANTS'),
   ('Gestione', 'Gestione', 'Gestione Versioni Database', 'gestione_db_migrations', 'MANAGE_DB_MIGRATIONS'),
   ('Gestione', 'Permessi', 'Gestione Permessi', 'gestione_permessi', 'MANAGE_PERMISSIONS'),
