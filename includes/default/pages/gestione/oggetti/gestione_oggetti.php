@@ -161,5 +161,6 @@ if ($cls->permissionManageObjects()) { # Metodo di controllo per accesso alla pa
 
     <script src="<?= Router::getPagesLink('gestione/oggetti/gestione_oggetti.js'); ?>"></script>
 
+    <div class="link_back"><a href="/main.php?page=gestione">Indietro</a></div>
 
 <?php } ?>

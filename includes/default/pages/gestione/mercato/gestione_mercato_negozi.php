@@ -133,6 +133,7 @@ if ($cls->manageShopPermission()) { # Metodo di controllo per accesso alla pagin
     </div>
 
     <script src="<?=Router::getPagesLink('gestione/mercato/gestione_mercato_negozi.js');?>"></script>
+    <div class="link_back"><a href="/main.php?page=gestione">Indietro</a></div>
 
 
 <?php } ?>

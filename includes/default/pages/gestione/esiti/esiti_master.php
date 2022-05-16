@@ -53,4 +53,4 @@ if ($esiti->esitoMembersPermission($id_record)) {
 <?php } ?>
 
 
-<div class="link_back"><a href="/main.php?page=gestione_esiti">Indietro</a></div>
+<div class="link_back"><a href="/main.php?page=gestione/esiti/esiti_index">Indietro</a></div>

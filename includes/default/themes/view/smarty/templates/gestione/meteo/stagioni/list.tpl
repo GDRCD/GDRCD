@@ -8,10 +8,10 @@
         <div class='td'>{{$row.sunset}}</div>
         <div class='td commands'>
             {if $row.meteo_season_permission}
-                <a href='/main.php?page=gestione_meteo_stagioni&op=edit&id={$row.id}' title='Modifica'>
+                <a href='/main.php?page=gestione/meteo/stagioni/gestione_stagioni_index&op=edit&id={$row.id}' title='Modifica'>
                     <i class="fas fa-edit"></i>
                 </a>
-                <a href='/main.php?page=gestione_meteo_stagioni&op=conditions&id={$row.id}' title='Modifica'>
+                <a href='/main.php?page=gestione/meteo/stagioni/gestione_stagioni_index&op=conditions&id={$row.id}' title='Modifica'>
                     <i class="fas fa-sun-cloud"></i>
                 </a>
                 <a class='ajax_link' data-id='{$row.id}' data-action='op_delete' href='#' title='Elimina'>

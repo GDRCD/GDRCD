@@ -14,9 +14,9 @@ if ($esiti->esitoViewPermission($id_record) && $esiti->esitoExist($id_record)) {
 
     if (isset($resp)) { ?>
         <div class="warning"><?= $resp['mex']; ?></div>
-        <div class="link_back"><a href="/main.php?page=gestione_esiti">Indietro</a></div>
+        <div class="link_back"><a href="/main.php?page=gestione/esiti/esiti_index">Indietro</a></div>
         <?php
-        Functions::redirect('/main.php?page=gestione_esiti&op=read&id_record=' . $id_record, 2);
+        Functions::redirect('/main.php?page=gestione/esiti/esiti_index&op=read&id_record=' . $id_record, 2);
     } ?>
 
     <div class="answer_box">

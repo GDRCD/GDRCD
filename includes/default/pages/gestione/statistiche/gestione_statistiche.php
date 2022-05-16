@@ -149,6 +149,7 @@ if ($cls->permissionManageStatistics()) { # Metodo di controllo per accesso alla
     </div>
 
     <script src="<?= Router::getPagesLink('gestione/statistiche/gestione_statistiche.js'); ?>"></script>
+    <div class="link_back"><a href="/main.php?page=gestione">Indietro</a></div>
 
 
 <?php } ?>
