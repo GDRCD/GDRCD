@@ -22,5 +22,9 @@ switch ($_POST['action']) {
         //cancella una nota
         echo json_encode($contatti_nota->deleteNota($_POST['id']));
         break;
+    case 'edit_nota':
+        //modifica una nota
+        echo json_encode($contatti_nota->editNota($_POST));
+        break;
 
 }

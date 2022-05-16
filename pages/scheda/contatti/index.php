@@ -22,5 +22,6 @@ if ($scheda_con->isAccessible($id_pg)) { ?>
         <?php require_once(__DIR__ . '/' . $contatti->loadManagementContactPage(Filters::out($op))); ?>
     </div>
 
-<?php }
+<?php
+}
 ?>

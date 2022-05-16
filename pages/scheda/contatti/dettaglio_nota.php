@@ -6,6 +6,6 @@ $id=Filters::in($_REQUEST['id']);
 
 $nota=$contatti_note->getNota('titolo, nota', $id);
 
-echo "<h3>{$nota['titolo']}</h3>";
+echo "<h3>".Filters::html($nota['titolo'])."</h3>";
 
-echo "<p>{$nota['nota']}</p>";
+echo "<p>".Filters::html($nota['nota'])."</p>";

@@ -8,6 +8,30 @@
 class ContactsNotes extends Contacts
 {
 
+    /**** ROUTING ***/
+
+    /**
+     * @fn loadManagementContactPage
+     * @note Routing delle pagine di gestione
+     * @param string $op
+     * @return string
+     */
+    public function loadManagementContactNotePage(string $op): string
+    {
+        $op = Filters::out($op);
+
+        switch ($op) {
+            default:
+                $page = 'dettaglio_nota.php';
+                break;
+
+            case 'edit_nota':
+                $page = 'modifica_nota.php';
+                break;
+        }
+
+        return $page;
+    }
 
     /**
      * @fn newNota
@@ -31,6 +55,30 @@ class ContactsNotes extends Contacts
             'swal_type' => 'success'
         ];
     }
+
+    /**
+     * @fn editNota
+     * @note Modifca una nuova nota al contatto
+     * @param array $post
+     * @return array
+     */
+    public function editNota(array $post): array
+    {
+        $id= Filters::in($post['id']);
+        $nota = Filters::in($post['nota']);
+        $pubblica=Filters::in($post['pubblica']);
+        $titolo= Filters::in($post['titolo']);
+
+        DB::query("UPDATE contatti_nota SET titolo = '{$titolo}', nota='{$nota}', pubblica='{$pubblica}' WHERE id= {$id}");
+        return [
+            'response' => true,
+            'swal_title' => 'Operazione riuscita!',
+            'swal_message' => 'Nota modificata con successo.',
+            'swal_type' => 'success'
+        ];
+    }
+
+
     /**
      * @fn getAllNote
      * @note Estrae le note di un contatto
@@ -126,7 +174,7 @@ class ContactsNotes extends Contacts
             $creato_il=Filters::date($row['creato_il'],'d/m/Y');
             $creato_da=Personaggio::nameFromId($row['creato_da']);
             $pop_up='javascript:modalWindow("note", "Dettaglio nota","popup.php?page=scheda_contatti_nota&id='.$id.'") ';
-
+            $pop_up_modifica='javascript:modalWindow("note", "Modifica nota","popup.php?page=scheda_contatti_nota&id='.$id.'&op=edit_nota") ';
             $array = [
                 'id'=>$id,
                 'titolo'=>$titolo,
@@ -137,7 +185,8 @@ class ContactsNotes extends Contacts
                 'pg'=>$pg,
                 'creato_il'=> $creato_il,
                 'creato_da'=>$creato_da,
-                'pop_up'=>$pop_up
+                'pop_up'=>$pop_up,
+                'pop_up_modifica'=>$pop_up_modifica
 
             ];
 
