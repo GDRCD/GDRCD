@@ -174,7 +174,7 @@ class ContactsNotes extends Contacts
             $creato_il=Filters::date($row['creato_il'],'d/m/Y');
             $creato_da=Personaggio::nameFromId($row['creato_da']);
             $pop_up='javascript:modalWindow("note", "Dettaglio nota","popup.php?page=scheda_contatti_nota&id='.$id.'") ';
-            $pop_up_modifica='javascript:modalWindow("note", "Modifica nota","popup.php?page=scheda_contatti_nota&id='.$id.'&op=edit_nota") ';
+            $pop_up_modifica='javascript:modalWindow("note_edit", "Modifica nota","popup.php?page=scheda_contatti_nota&id='.$id.'&op=edit_nota") ';
             $array = [
                 'id'=>$id,
                 'titolo'=>$titolo,
