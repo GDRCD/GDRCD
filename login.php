@@ -83,14 +83,6 @@ if( !empty($record) && gdrcd_password_check($pass1, $record['pass']) && ($record
     $_SESSION['tag'] = "";
     $_SESSION['last_message'] = 0;
 
-    $res = gdrcd_query("SELECT ruolo.gilda, ruolo.immagine FROM ruolo JOIN clgpersonaggioruolo ON clgpersonaggioruolo.id_ruolo = ruolo.id_ruolo WHERE clgpersonaggioruolo.personaggio = '".gdrcd_filter('in', $record['nome'])."'", 'result');
-
-    while($row = gdrcd_query($res, 'fetch')) {
-        $_SESSION['gilda'] .= ',*'.$row['gilda'].'*';
-        $_SESSION['img_gilda'] .= $row['immagine'].',';
-    }
-    gdrcd_query($res, 'free');
-
     /* Carico l'ultimo ip con cui si è collegato il personaggio */
     $lastlogindata = gdrcd_query("SELECT nome_interessato, autore FROM log WHERE nome_interessato = '".gdrcd_filter('in', $_SESSION['login'])."' AND codice_evento=".LOGGEDIN." ORDER BY data_evento DESC LIMIT 1");
 
@@ -139,7 +131,7 @@ if($_SESSION['login'] != '') {
         /*Creo un cookie*/
         setcookie('lastlogin', $_SESSION['login'], 0, '', '', 0);
 
-        if($PARAMETERS['settings']['auto_salary'] = 'ON') {
+        if($PARAMETERS['settings']['auto_salary'] == 'ON') {
             /*Stipendio*/
             $row = gdrcd_query("SELECT soldi, banca, ultimo_stipendio FROM personaggio WHERE nome = '".$_SESSION['login']."' LIMIT 1");
 

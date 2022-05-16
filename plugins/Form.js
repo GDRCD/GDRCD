@@ -94,8 +94,6 @@ class Form {
             processData: false,
             success: async function (data) {
 
-                console.log(success)
-
                 //*** CALLBACK
                 if (success != false) {
 

@@ -240,8 +240,7 @@ class Router
         }
 
         // Altrimenti controllo se segue la sintassi degli alias
-        if (strpos($page, '__')) {
-            $page = str_replace('__', '/', $page);
+        if (strpos($page, '/')) {
             return $page.'.php';
         }
 

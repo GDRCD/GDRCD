@@ -103,6 +103,7 @@ if ($cls->manageStatusPermission()) { # Metodo di controllo per accesso alla pag
     </div>
 
     <script src="<?= Router::getPagesLink('gestione/online_status/gestione_status_type.js'); ?>"></script>
+    <div class="link_back"><a href="/main.php?page=gestione">Indietro</a></div>
 
 
 <?php } ?>
