@@ -4,8 +4,6 @@ Router::loadRequired();
 
 $esiti = Esiti::getInstance();
 
-var_dump(1);
-
 ?>
 
 <div class="gestione_pagina gestione_esiti">
