@@ -483,7 +483,7 @@ class Quest extends BaseClass
                     </div>
                 
                     <div class='td commands'><!-- Iconcine dei controlli -->
-                        <a href='/main.php?page=gestione_quest&op=edit_quest&id_record={$id}'>
+                        <a href='/main.php?page=gestione/quest/gestione_quest_index&op=edit_quest&id_record={$id}'>
                             <i class='fas fa-edit'></i>
                         </a>
                         <a class='ajax_link' data-id='{$id}' data-page='{$page}' data-action='delete_quest' href='#'>
@@ -495,7 +495,7 @@ class Quest extends BaseClass
 
         $html .= '
             <div class="tr footer">
-                <a href="main.php?page=gestione_quest&op=insert_quest">
+                <a href="main.php?page=gestione/quest/gestione_quest_index&op=insert_quest">
                     Registra nuova quest
                 </a> |
                 <a href="main.php?page=gestione">
