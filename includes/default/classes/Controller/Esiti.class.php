@@ -690,7 +690,6 @@ class Esiti extends BaseClass
             ['href' => "/main.php?page={$path}&op=new", 'text' => 'Nuovo esito'],
             ['href' => "/main.php?page={$backlink}", 'text' => 'Indietro']
         ];
-        $footer_text = 'Testo di prova footer';
         return [
                 'body' => 'gestione/esiti/list',
                 'body_rows'=> $row_data,

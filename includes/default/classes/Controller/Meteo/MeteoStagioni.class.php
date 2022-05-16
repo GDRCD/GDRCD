@@ -145,8 +145,8 @@ class MeteoStagioni extends Meteo
             'Controlli'
         ];
         $links = [
-            ['href' => "/main.php?page=gestione_meteo_stagioni&op=new", 'text' => 'Nuova stagione'],
-            ['href' => "/main.php?page=gestione", 'text' => 'Indietro']
+            ['href' => "/main.php?page=gestione/meteo/stagioni/gestione_stagioni_index&op=new", 'text' => 'Nuova stagione'],
+            ['href' => "/main.php?page=gestione/meteo/stagioni/gestione_stagioni_index", 'text' => 'Indietro']
         ];
         return [
             'body' => 'gestione/meteo/stagioni/list',

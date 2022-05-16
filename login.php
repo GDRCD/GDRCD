@@ -83,7 +83,6 @@ if( !empty($record) && gdrcd_password_check($pass1, $record['pass']) && ($record
     $_SESSION['tag'] = "";
     $_SESSION['last_message'] = 0;
 
-
     /* Carico l'ultimo ip con cui si è collegato il personaggio */
     $lastlogindata = gdrcd_query("SELECT nome_interessato, autore FROM log WHERE nome_interessato = '".gdrcd_filter('in', $_SESSION['login'])."' AND codice_evento=".LOGGEDIN." ORDER BY data_evento DESC LIMIT 1");
 

@@ -81,7 +81,7 @@ if ($quest->manageQuestPermission()) {
 <?php } ?>
 
 <div class="link_back">
-    <a href="main.php?page=gestione_quest">
+    <a href="main.php?page=gestione/quest/gestione_quest_index">
         Torna a gestione quest
     </a>
 </div>

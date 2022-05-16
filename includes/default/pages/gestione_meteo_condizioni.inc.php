@@ -1,1 +1,0 @@
-<?php require_once(__DIR__ . '/gestione/meteo/condizioni/gestione_condizioni.php'); ?>

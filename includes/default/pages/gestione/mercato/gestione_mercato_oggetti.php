@@ -147,5 +147,6 @@ if ($cls->manageShopObjectsPermission()) { # Metodo di controllo per accesso all
 
     <script src="/<?=Router::getPagesLink('gestione/mercato/gestione_mercato_oggetti.js');?>"></script>
 
+    <div class="link_back"><a href="/main.php?page=gestione">Indietro</a></div>
 
 <?php } ?>

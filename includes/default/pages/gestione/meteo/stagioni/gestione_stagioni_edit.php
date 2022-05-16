@@ -56,7 +56,7 @@ $stagione = $stagioni->getSeason($id);
     </form>
 
     <div class="link_back">
-        <a href="main.php?page=gestione_meteo_stagioni">Torna indietro</a>
+        <a href="main.php?page=gestione/meteo/stagioni/gestione_stagioni_index">Torna indietro</a>
     </div>
 </div>
 

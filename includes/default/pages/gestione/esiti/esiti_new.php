@@ -19,9 +19,9 @@ $op = Filters::out($_POST['op']);
 
     <?php if(isset($resp)){ ?>
         <div class="warning"><?=$resp['mex'];?></div>
-        <div class="link_back"><a href="/main.php?page=gestione_esiti">Indietro</a></div>
+        <div class="link_back"><a href="/main.php?page=gestione/esiti/esiti_index">Indietro</a></div>
     <?php
-        Functions::redirect('/main.php?page=gestione_esiti',2);
+        Functions::redirect('/main.php?page=gestione/esiti/esiti_index',2);
     } ?>
 
     <form method="POST" class="form ajax_form" action="gestione/esiti/esiti_ajax.php" data-callback="refreshEsitiList">
@@ -91,5 +91,5 @@ $op = Filters::out($_POST['op']);
 
     <script src="<?=Router::getPagesLink('gestione/esiti/JS/esiti_new.js');?>"></script>
 
-    <div class="link_back"><a href="/main.php?page=gestione_esiti">Indietro</a></div>
+    <div class="link_back"><a href="/main.php?page=gestione/esiti/esiti_index">Indietro</a></div>
 </div>

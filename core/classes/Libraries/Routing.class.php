@@ -39,10 +39,6 @@ class Router
         return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
     }
 
-    public static function getPageRedirect($page){
-       return DB::query("SELECT redirect FROM pages WHERE page='{$page}' LIMIT 1");
-    }
-
     /**
      * @fn startClasses
      * @note Start loader for dynamic integrations of the classes
@@ -244,8 +240,7 @@ class Router
         }
 
         // Altrimenti controllo se segue la sintassi degli alias
-        if (strpos($page, '__')) {
-            $page = str_replace('__', '/', $page);
+        if (strpos($page, '/')) {
             return $page.'.php';
         }
 
