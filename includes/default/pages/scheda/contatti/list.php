@@ -1,6 +1,5 @@
 <?php
-
-require_once(__DIR__ . '/../../../includes/required.php');
+Router::loadRequired();
 
 $contatti = Contacts::getInstance();
 $id_pg = Filters::int($_GET['id_pg']);

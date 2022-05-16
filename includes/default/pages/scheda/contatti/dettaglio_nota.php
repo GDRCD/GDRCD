@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . '/../../../includes/required.php');
+Router::loadRequired();
 
 $contatti_note=ContactsNotes::GetInstance();
 $id=Filters::in($_REQUEST['id']);

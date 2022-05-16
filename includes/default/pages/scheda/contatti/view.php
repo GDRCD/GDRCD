@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . '/../../../includes/required.php');
+Router::loadRequired();
 
 $contatti = Contacts::getInstance();
 $contatti_note=ContactsNotes::GetInstance();
@@ -35,4 +35,4 @@ $contatto=Personaggio::getPgData($id_contatto['contatto']);//dati del personaggi
     </div>
 </div>
 
-<script src="/pages/scheda/contatti/JS/delete_nota.js"></script>
+<script src="JS/delete_nota.js"></script>

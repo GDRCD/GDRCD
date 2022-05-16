@@ -1,7 +1,7 @@
 $(function(){
 
     new Form('form').onSubmit({
-        path:'/pages/scheda/contatti/contatti_ajax.php',
+        path:'scheda/contatti/contatti_ajax.php',
         success: function(data){
 
             if(data){
@@ -19,7 +19,7 @@ $(function(){
     })
 
     $('form #cd_add').on('click',function(){
-        Ajax('pages/scheda/contatti/contatti_ajax.php',{'action':'new_contatto'},AddCD);
+        Ajax('scheda/contatti/contatti_ajax.php',{'action':'new_contatto'},AddCD);
     });
 
     function AddCD(data){

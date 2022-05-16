@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . '/../../../includes/required.php');
+Router::loadRequired();
 $contatti = Contacts::getInstance();
 $contatti_nota=ContactsNotes::getInstance();
 

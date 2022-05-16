@@ -1,7 +1,5 @@
-
 <?php
-
-require_once(__DIR__ . '/../../../includes/required.php');
+Router::loadRequired();
 
 $scheda_con = SchedaContatti::getInstance();
 $contatti=Contacts::getInstance();

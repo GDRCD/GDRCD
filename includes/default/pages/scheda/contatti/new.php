@@ -1,6 +1,5 @@
 <?php
-
-require_once(__DIR__ . '/../../../includes/required.php');
+Router::loadRequired();
 
 $contatti = Contacts::getInstance();
 $id_pg = Filters::int($_GET['id_pg']);
@@ -57,4 +56,4 @@ $op = Filters::out($_GET['op']);
 
 
 
-<script src="pages/scheda/contatti/JS/contatti.js"></script>
+<script src="<?= Router::getPagesLink('scheda/contatti/JS/contatti.js'); ?>"></script>
