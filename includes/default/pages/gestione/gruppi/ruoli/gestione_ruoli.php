@@ -129,6 +129,7 @@ if($cls->permissionManageRoles() && $cls->activeGroups()){ # Metodo di controllo
     </div>
 
     <script src="<?= Router::getPagesLink('gestione/gruppi/ruoli/gestione_ruoli.js'); ?>"></script>
+    <div class="link_back"><a href="/main.php?page=gestione">Indietro</a> </div>
 
 
 <?php } ?>

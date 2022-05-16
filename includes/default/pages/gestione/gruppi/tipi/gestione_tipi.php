@@ -97,6 +97,7 @@ if($cls->permissionManageTypes() && $cls->activeGroups()){ # Metodo di controllo
     </div>
 
     <script src="<?= Router::getPagesLink('gestione/gruppi/tipi/gestione_tipi.js'); ?>"></script>
+    <div class="link_back"><a href="/main.php?page=gestione">Indietro</a> </div>
 
 
 <?php } ?>
