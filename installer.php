@@ -33,4 +33,3 @@ require 'header.inc.php'; /*Header comune*/
         </a>
     </div>
 </div>
-<?php require('footer.inc.php');  /*Footer comune*/ ?>

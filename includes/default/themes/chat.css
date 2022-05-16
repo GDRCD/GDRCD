@@ -1,0 +1,229 @@
+/****************************************************************************/
+/* STILE DELLA CHAT E DEI PANNELLI */
+
+/* HELP: Da qui è possibile modificare:
+- I font ed i colori della chat
+- Le dimensioni e la posizione della chat
+- Lo sfondo della chat*/
+
+iframe.iframe_chat {
+    border: none;
+    width: 1px;
+    height: 1px;
+    margin: 0px;
+}
+
+div.chat_window {
+    text-align: center;
+}
+
+/**	* Fix per layout elastico
+	* @author Blancks
+*/
+
+
+div.pagina_frame_chat div.page_body div.panels_box {
+    position: absolute;
+    bottom: 9px;
+    left: 5px;
+    right: 5px;
+}
+
+/**	* Fine fix */
+
+/** * Avatar di chat
+	* @author Blancks
+*/
+img.chat_avatar {
+    margin: 8px;
+    display: block;
+    float: left;
+    position: relative;
+}
+
+/***** testo della chat *****/
+
+/* Tipi messaggio: (A azione, P parlato, N PNG, M Master, I Immagine, S sussurro, D dado, C skill check, O uso oggetto) */
+
+div.chat_row_A {
+    margin-top: 3px;
+}
+
+div.chat_row_A span.color2 {
+    margin-top: 3px;
+    color: #000;
+    font-weight: bolder;
+}
+
+div.chat_row_P {
+    margin-top: 3px;
+}
+
+div.chat_row_P span.color2 {
+    margin-top: 3px;
+    color: #000;
+    font-weight: bolder;
+}
+
+div.chat_row_M {
+    margin-top: 3px;
+
+    border-width: 2px;
+    border-color: green;
+    border-style: solid;
+    text-align: center;
+    color: green;
+}
+
+div.chat_row_N {
+    margin-top: 3px;
+}
+
+div.chat_row_N span.color2 {
+    color: #000;
+    font-weight: bolder;
+}
+
+div.chat_row_I {
+    margin-top: 3px;
+    text-align: center;
+}
+
+div.chat_row_S {
+    margin-top: 3px;
+}
+
+div.chat_row_D {
+    margin-top: 3px;
+    border-width: 2px;
+    border-color: blue;
+    border-style: solid;
+    color: cyan;
+}
+
+div.chat_row_C {
+    margin-top: 3px;
+    border-width: 2px;
+    border-color: blue;
+    border-style: solid;
+    color: cyan;
+}
+
+span.chat_time {
+    font-size: 10px;
+    font-weight: bolder;
+    margin-right: 3px;
+}
+
+span.chat_name {
+    font-weight: bolder;
+    font-size: 12px;
+    color: #000;
+}
+
+span.chat_msg {
+    color: #333;
+    font-size: 12px;
+}
+
+span.chat_master {
+}
+
+span.chat_me, span.chat_me_master {
+    text-decoration: underline;
+}
+
+/***** form inserimento *****/
+
+div.form_row {
+    clear: both;
+    height: 20px;
+}
+
+div.casella_chat {
+    float: left;
+    margin-bottom: 6px;
+}
+
+/*Casella Tag*/
+input#tag {
+    width: 90px;
+}
+
+/*Casella Messaggio*/
+input#message {
+    width: 280px;
+}
+
+/****************************************************************************/
+
+/*** GENERAL CHAT ***/
+
+div.chat_box {
+    width: 100%;
+    height: 99%;
+    text-align: left;
+    box-sizing: border-box;
+}
+
+div.chat_box .chat_azioni_box{
+    height: calc(100% - 150px);
+    width: 100%;
+}
+
+.chat_box .chat_azioni_box .chat_azioni{
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+.chat_box .chat_azioni_box .chat_azioni .chat_ico{
+    width: 40px;
+    height: 40px;
+}
+
+.chat_box .chat_input_box{
+    height: 150px;
+    width: 100%;
+}
+
+.chat_box .chat_input_box .chat_internal_box{
+    width: 100%;
+    height: 50px;
+    text-align: left;
+}
+
+.chat_box .chat_input_box .chat_internal_box .input_container{
+    display: inline-block;
+    margin: 0 1%;
+}
+
+.chat_box .chat_input_box .chat_internal_box  .input_container input,
+.chat_box .chat_input_box .chat_internal_box .input_container select{
+    width: 100%;
+}
+
+.chat_box .chat_input_box .chat_internal_box .input_container.invia{
+    width: 5%;
+}
+
+.chat_box .chat_input_box .chat_internal_box .input_container.small{
+    width: 8%;
+}
+
+.chat_box .chat_input_box .chat_internal_box .input_container.medium{
+    width: 20%;
+}
+
+.chat_box .chat_input_box .chat_internal_box .input_container.big{
+    width: 50%;
+}
+
+/*** ESITI IN CHAT ***/
+.esiti_in_chat .td{
+    width: 150px;
+}
+
+.esiti_in_chat input {
+    margin: 0 !important;
+}

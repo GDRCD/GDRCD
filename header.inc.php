@@ -3,7 +3,7 @@
 header('Content-Type:text/html; charset=UTF-8');
 
 //Includo i parametri, la configurazione, la lingua e le funzioni
-require_once('includes/required.php');
+require(__DIR__.'/core/required.php');
 
 
 # Controllo del login
@@ -51,30 +51,32 @@ if (($PARAMETERS['mode']['user_bbcode'] == 'ON' && $PARAMETERS['settings']['user
         <!-- IE9: mi stai ampiamente rompendo i maroni. -->
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
         <link rel="shortcut icon" href="favicon.png" type="image/png"/>
-        <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['homepage']; ?>/homepage.css"
+        <link rel="stylesheet" href="<?=Router::getCssLink('main.css');?>"
               type="text/css"/>
-        <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/main.css"
+        <link rel="stylesheet" href="<?=Router::getCssLink('chat.css');?>"
               type="text/css"/>
-        <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/chat.css"
+        <link rel="stylesheet" href="<?=Router::getCssLink('scheda.css');?>"
               type="text/css"/>
-        <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/presenti.css"
+        <link rel="stylesheet" href="<?=Router::getCssLink('messaggi.css');?>"
               type="text/css"/>
-        <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/scheda.css"
+        <link rel="stylesheet" href="<?=Router::getCssLink('forum.css');?>"
               type="text/css"/>
-        <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/messaggi.css"
-              type="text/css"/>
-        <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/forum.css"
-              type="text/css"/>
-        <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/presenti.css"
+        <link rel="stylesheet" href="<?=Router::getCssLink('presenti.css');?>"
               type="text/css"/>
 
         <!-- JQUERY -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"/>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+        <link rel="stylesheet" href="plugins/Jquery/jquery.min.css"/>
+        <script src="plugins/Jquery/jquery.min.js"></script>
+        <script src="plugins/Jquery/jquery-ui.min.js"></script>
+
+        <!-- Chosen 1.8.7 -->
+        <script src="plugins/Chosen/chosen.jquery.min.js"></script>
+        <link rel="stylesheet" href="plugins/Chosen/chosen.min.css"/>
 
         <!-- SweetAlert v2.11 -->
-        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script src="plugins/Swal/swal.min.js"></script>
+        <link rel="stylesheet" href="plugins/Swal/swal.min.css"/>
+
 
         <!-- CUSTOM PLUGINS -->
         <script src="plugins/Ajax.js"></script>
@@ -82,27 +84,13 @@ if (($PARAMETERS['mode']['user_bbcode'] == 'ON' && $PARAMETERS['settings']['user
         <script src="plugins/Menu.js"></script>
         <script src="plugins/FakeTable.js"></script>
         <script src="plugins/Swal.js"></script>
+        <script src="plugins/Chosen.js"></script>
+        <script src="plugins/modal.js"></script>
+
 
         <?php
-        /** * Il controllo individua se l'header non è impiegato per il main */
-        if (!isset($check_for_update)) {
-            ?>
-            <link rel="stylesheet"
-                  href="layouts/<?php echo $PARAMETERS['themes']['kind_of_layout'], '_frames.php?css=true'; ?>"
-                  type="text/css"/>
-            <?php
-        }
-        ?>
-        <title>
-            <?php echo $PARAMETERS['info']['site_name']; ?>
-        </title>
-        <?php
-        /** * Refresh fix, crossbrowser
-         * @author Blancks
-         */
-        if (!empty($_GET['ref'])) {
-            //
-        }
+
+
         ?>
     </head>
     <body class="main_body">
@@ -129,11 +117,12 @@ if ((($table == 0) && isset($dont_check) && !$dont_check) && isset($check_for_up
     exit();
 }
 
+
 $online_status = OnlineStatus::getInstance();
 if($online_status->isEnabled()) {
 
     if ($online_status->onlineStatusNeedRefresh()) {
-        require_once(__DIR__ . '/pages/online_status/choose_status.php');
+        Router::loadPages('online_status/choose_status.php');
     }
 }
 

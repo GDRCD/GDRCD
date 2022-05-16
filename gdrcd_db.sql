@@ -254,7 +254,8 @@ CREATE TABLE IF NOT EXISTS `config` (
 
 
 INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,`editable`) VALUES
-    ('TEMPLATE_ENGINE','Smarty','Template','Template utilizzato. Non modificare se non necessario.','Livello massimo abilità','string',1),
+    ('STANDARD_ENGINE','','Engine','Engine utilizzato. Non modificare se non necessario.','','string',1),
+    ('TEMPLATE_ENGINE','Smarty','Template','Template utilizzato. Non modificare se non necessario.','','string',1),
     ('ABI_LEVEL_CAP',5,'Abilita','Level cap Abilità','Livello massimo abilità','int',1),
     ('DEFAULT_PX_PER_LVL',10,'Abilita','Costo default Abilità','Moltiplicatore costo abilità, se non specificato','int',1),
     ('ABI_REQUIREMENT',1,'Abilita','Requisiti Abilità','Abilitare requisiti abilità?','bool',1),
@@ -279,6 +280,20 @@ INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,
     ('CHAT_PVT_SAVE',1,'Chat Salvataggio','Salva chat pvt','Salva chat attivo in pvt?','bool',1),
     ('CHAT_SAVE_LINK',1,'Chat Salvataggio','Salva chat in link','Salva chat in modalità link?','bool',1),
     ('CHAT_SAVE_DOWNLOAD',1,'Chat Salvataggio','Salva chat download','Salva chat con download?','bool',1),
+    ('WEATHER_MOON',1,'Meteo','Luna','Abilita o disabilita le fasi lunari','bool',1),
+    ('WEATHER_SEASON',1,'Meteo','Stagionale','Meteo stagioni o meteo Web api','bool',1),
+    ('WEATHER_WIND',1,'Meteo','Vento','Abilita o disabilita il vento','bool',1),
+    ('WEATHER_WEBAPI',0,'Meteo','Web Api','Abilita Web Api di OpenWeather','bool',1),
+    ('WEATHER_WEBAPIKEY','','Meteo','Web Api Key','Web Api di OpenWeather','String',1),
+    ('WEATHER_WEBAPI_CITY','','Meteo','Web Api Citta','Città di cui avere il meteo','String',1),
+    ('WEATHER_WEBAPI_ICON',0,'Meteo','Web Api icone','Icone di default o personalizzate','bool',1),
+    ('WEATHER_LAST_DATE',0,'Meteo','Meteo Impostazioni','Data ultimo aggiornamento meteo','String',0),
+    ('WEATHER_WEBAPI_FORMAT','png','Meteo','Icone estensione','Estensione delle icone','String',1),
+    ('WEATHER_LAST_CONDITION',0,'Meteo','Meteo Impostazioni','Ultime condizioni meteo registrato','String',0),
+    ('WEATHER_LAST_TEMP',0,'Meteo','Meteo Impostazioni','Ultima temperatura registrata','String',0),
+    ('WEATHER_LAST_IMG',0,'Meteo','Meteo Impostazioni','Ultima immagine registrata','String',0),
+    ('WEATHER_LAST_WIND',0,'Meteo','Meteo Impostazioni','Ultimo vento registrato','String',0),
+    ('WEATHER_UPDATE',4,'Meteo','Tempo di aggiornamento','Dopo quante ore si prevede il cambio meteo con le stagioni','int',1),
     ('ESITI_ENABLE',1,'Esiti','Attiva esiti','Abilitare la funzione esiti?','bool',1),
     ('ESITI_CHAT',1,'Esiti','Attiva esiti in chat','Abilitare la funzione di lancio degli esiti in chat?','bool',1),
     ('ESITI_TIRI',1,'Esiti','Lancio di dadi negli esiti','Abilitare la possibilità di lanciare dadi all''interno del pannello esiti?','bool',1),
@@ -497,6 +512,10 @@ INSERT INTO `menu` (`menu_name`, `section`, `name`, `page`, `permission`) VALUES
   ('Gestione', 'Permessi', 'Gestione Permessi', 'gestione_permessi', 'MANAGE_PERMISSIONS'),
   ('Gestione', 'Gestione', 'Manutenzione', 'gestione_manutenzione', 'MANAGE_MANUTENTIONS'),
   ('Gestione', 'Chat', 'Giocate Segnalate', 'gestione_segnalazioni', 'MANAGE_REPORTS'),
+  ('Gestione', 'Meteo', 'Gestione condizioni', 'gestione_meteo_condizioni', 'MANAGE_WEATHER_CONDITIONS'),
+  ('Gestione', 'Meteo', 'Gestione stagioni', 'gestione_meteo_stagioni', 'MANAGE_WEATHER_SEASONS'),
+  ('Gestione', 'Meteo', 'Gestione venti', 'gestione_meteo_venti', 'MANAGE_WEATHER'),
+  ('Gestione', 'Chat', 'Esiti in chat', 'gestione_esiti', 'MANAGE_OUTCOMES'),
   ('Gestione', 'Chat', 'Esiti in chat', 'gestione_esiti', 'MANAGE_OUTCOMES'),
   ('Gestione', 'Quest', 'Gestione Quest', 'gestione_quest', 'MANAGE_QUESTS'),
   ('Gestione', 'Quest', 'Gestione Trame', 'gestione_trame', 'MANAGE_TRAME_VIEW'),
@@ -523,6 +542,8 @@ CREATE TABLE IF NOT EXISTS `mappa` (
   `stato` varchar(255) NOT NULL DEFAULT '',
   `pagina` varchar(255) DEFAULT 'nulla.php',
   `chat` tinyint(1) NOT NULL DEFAULT '1',
+  `meteo_citta` varchar(255) DEFAULT NULL,
+  `meteo_fisso` varchar(255) DEFAULT NULL,
   `immagine` varchar(255) DEFAULT 'standard_luogo.png',
   `stanza_apparente` varchar(255) DEFAULT NULL,
   `id_mappa` int DEFAULT '0',
@@ -545,9 +566,9 @@ CREATE TABLE IF NOT EXISTS `mappa` (
 -- Dump dei dati per la tabella `mappa`
 --
 
-INSERT INTO `mappa` (`id`, `nome`, `descrizione`, `stato`, `pagina`, `chat`, `immagine`, `stanza_apparente`, `id_mappa`, `link_immagine`, `link_immagine_hover`, `id_mappa_collegata`, `x_cord`, `y_cord`, `invitati`, `privata`, `proprietario`, `ora_prenotazione`, `scadenza`, `costo`) VALUES
-(1, 'Strada', 'Via che congiunge la periferia al centro.', 'Nella norma', '', 1, 'standard_luogo.png', '', 1, '', '', 0, 180, 150, '', 0, 'Nessuno', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 0),
-(2, 'Piazza', 'Piccola piazza con panchine ed una fontana al centro.', 'Nella norma', '', 1, 'standard_luogo.png', '', 1, '', '', 0, 80, 150, '', 0, 'Nessuno', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 0);
+INSERT INTO `mappa` (`id`, `nome`, `descrizione`, `stato`, `pagina`, `chat`,`meteo_citta`,`meteo_fisso`, `immagine`, `stanza_apparente`, `id_mappa`, `link_immagine`, `link_immagine_hover`, `id_mappa_collegata`, `x_cord`, `y_cord`, `invitati`, `privata`, `proprietario`, `ora_prenotazione`, `scadenza`, `costo`) VALUES
+(1, 'Strada', 'Via che congiunge la periferia al centro.', 'Nella norma', '', 1,'New York',0, 'standard_luogo.png', '', 1, '', '', 0, 180, 150, '', 0, 'Nessuno', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 0),
+(2, 'Piazza', 'Piccola piazza con panchine ed una fontana al centro.', 'Nella norma', '', 1,'Miami',0, 'standard_luogo.png', '', 1, '', '', 0, 80, 150, '', 0, 'Nessuno', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 0);
 
 -- --------------------------------------------------------
 
@@ -653,6 +674,142 @@ CREATE TABLE IF NOT EXISTS `mercato_negozi` (
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `meteo_chat`
+--
+
+CREATE TABLE IF NOT EXISTS `meteo_chat` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `id_chat` int(11) NOT NULL,
+    `meteo` varchar(255) DEFAULT NULL,
+    `vento` varchar(255) DEFAULT NULL,
+    `temp` int DEFAULT NULL,
+    `img` varchar(255) DEFAULT NULL,
+    `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `meteo_mappa`
+--
+
+CREATE TABLE IF NOT EXISTS `meteo_mappa` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `id_mappa` int(11) NOT NULL,
+    `meteo` varchar(255) DEFAULT NULL,
+    `vento` varchar(255) DEFAULT NULL,
+    `temp` int DEFAULT NULL,
+    `img` varchar(255) DEFAULT NULL,
+     PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `meteo_condizioni`
+--
+
+CREATE TABLE IF NOT EXISTS `meteo_condizioni` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `nome` varchar(255) DEFAULT NULL,
+    `img` varchar(255) DEFAULT NULL,
+    `vento` varchar(255) DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Dati default per meteo_condizioni
+--
+
+INSERT INTO `meteo_condizioni` (`nome`, `img`, `vento`) VALUES
+    ('Sereno', 'imgs/meteo/sereno.gif', '1,2,3'),
+    ('Temporale', 'imgs/meteo/temporale.gif', '2,3'),
+    ('Neve', 'imgs/meteo/neve.gif', '1,4'),
+    ('Pioggia', 'imgs/meteo/pioggia.gif', '1,3');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `meteo_stagioni`
+--
+
+CREATE TABLE `meteo_stagioni` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `nome` VARCHAR(255) NULL DEFAULT NULL,
+    `minima` INT NULL,
+    `massima` INT NULL,
+    `data_inizio` DATE NULL DEFAULT NULL,
+    `data_fine` DATE NULL DEFAULT NULL,
+    `alba` TIME NULL DEFAULT NULL,
+    `tramonto` TIME NULL DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Dati default per le stagioni
+--
+
+INSERT INTO `meteo_stagioni` (`nome`, `minima`,`massima`, `data_inizio`,`data_fine`, `alba`, `tramonto`) VALUES
+    ('Autunno', '8', '18', '2000-01-01', '2120-12-22','06:45:00', '19:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `meteo_stagioni_condizioni`
+--
+
+CREATE TABLE `meteo_stagioni_condizioni` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `stagione` INT NULL,
+    `condizione` INT NULL,
+    `percentuale` INT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Dati default per le condizioni delle stagioni
+--
+
+INSERT INTO `meteo_stagioni_condizioni` (`stagione`, `condizione`,`percentuale`) VALUES
+    (1,1,25),
+    (1,2,25),
+    (1,3,25),
+    (1,4,25);
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `meteo_venti`
+--
+
+CREATE TABLE `meteo_venti` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `nome` varchar(255) NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Dati default per le condizioni delle stagioni
+--
+
+INSERT INTO `meteo_venti` (`nome`) VALUES
+    ('Brezza'),
+    ('Brezza Leggera'),
+    ('Vento forte'),
+    ('Burrasca');
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `oggetto`
 --
 
@@ -751,6 +908,32 @@ INSERT INTO `online_status_type`(`label`,`request`) VALUES
 -- Struttura della tabella `permessi_custom`
 --
 
+CREATE TABLE `pages` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `page` varchar(255) NOT NULL,
+    `redirect` text NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `permessi_custom`
+--
+
+CREATE TABLE `pages_alias` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `alias` varchar(255) NOT NULL,
+    `redirect` text NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `permessi_custom`
+--
+
 CREATE TABLE `permessi_custom` (
     `id` int NOT NULL AUTO_INCREMENT,
     `permission_name` varchar(255) NOT NULL,
@@ -774,13 +957,16 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
     ('MANAGE_MAPS', 'Permesso gestione mappe'),
     ('MANAGE_AMBIENT','Gestione ambientazione'),
     ('MANAGE_RULES','Gestione regolamento'),
-    ('MANAGE_CONSTANTS', 'Permesso per l\'editing delle costanti'),
+    ('MANAGE_CONSTANTS', 'Permesso per l\editing delle costanti'),
     ('MANAGE_RACES', 'Permesso per la gestione delle razze'),
     ('MANAGE_FORUMS', 'Permesso per la gestione delle bacheche'),
     ('MANAGE_GUILDS', 'Permesso per la gestione delle gilde'),
     ('MANAGE_PERMISSIONS', 'Permesso per la gestione dei permessi'),
     ('MANAGE_MANUTENTIONS', 'Permesso per la gestione della manutenzione del db'),
     ('MANAGE_REPORTS', 'Permesso per la gestione delle giocate segnalate'),
+    ('MANAGE_WEATHER ', 'Permesso per la gestione meteo'),
+    ('MANAGE_WEATHER_SEASONS', 'Permesso per la gestione delle stagioni meteo'),
+    ('MANAGE_WEATHER_CONDITIONS ', 'Permesso per la gestione delle condizioni meteo'),
     ('MANAGE_ESITI', 'Permesso per la gestione base degli esiti'),
     ('MANAGE_ALL_ESITI', 'Permesso per la visione/modifica di qualsiasi tipo di esito'),
     ('MANAGE_OUTCOMES', 'Permesso per la gestione degli esiti in chat'),
@@ -802,13 +988,11 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
     ('REMOVE_SCHEDA_OBJECTS','Permesso per la rimozione oggetti in schede altrui'),
     ('MANAGE_STATS','Permesso per la gestione statistiche'),
     ('VIEW_SCHEDA_STATS','Permesso per la visualizzazione statistiche in schede altrui'),
-    ('UPGRADE_SCHEDA_STATS','Permesso per l\'aumento statistiche in schede altrui'),
+    ('UPGRADE_SCHEDA_STATS','Permesso per laumento statistiche in schede altrui'),
     ('DOWNGRADE_SCHEDA_STATS','Permesso per la riduzione statistiche in schede altrui'),
     ('UPGRADE_SCHEDA_ABI','Permesso per aumento abilita in schede altrui'),
     ('DOWNGRADE_SCHEDA_ABI','Permesso per la diminuzione abilita in schede altrui'),
     ('VIEW_SCHEDA_ABI','Permesso per la visualizzazione abilita in schede altrui');
-
-
 
 
 -- --------------------------------------------------------

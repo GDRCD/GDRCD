@@ -1,1 +1,0 @@
-<?php require(__DIR__.'/frame/presenti/index.inc.php'); ?>
