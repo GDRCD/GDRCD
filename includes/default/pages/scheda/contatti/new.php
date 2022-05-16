@@ -13,7 +13,11 @@ $op = Filters::out($_GET['op']);
 </div>
 
 <div class="form_container">
-    <form method="POST" class="form">
+    <form class="form ajax_form"
+          action="scheda/contatti/contatti_ajax.php"
+          data-reset="false"
+          data-callback="goBackContatti">
+
         <div class="single_input">
             <div class='label'>
                 Nome
@@ -45,6 +49,7 @@ $op = Filters::out($_GET['op']);
                         <input type="hidden" name="action" value="new_contatto">
                         <input type="hidden" id="id_pg" name="id_pg" value="<?=$id_pg?>">
                         <input type="hidden" id="pg" name="pg" value="<?=$pg?>">
+                        <input type="hidden" id="url" value="/main.php?page=scheda_contatti&id_pg=<?=$id_pg?>&pg=<?=$pg?>">
                         <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>"/> |
                        <a href="/main.php?page=scheda_contatti&id_pg=<?=$id_pg?>&pg=<?=$pg?>">Torna indietro</a>
                     </div>
@@ -56,4 +61,4 @@ $op = Filters::out($_GET['op']);
 
 
 
-<script src="<?= Router::getPagesLink('scheda/contatti/JS/contatti.js'); ?>"></script>
+<script src="<?= Router::getPagesLink('scheda/contatti/JS/contatti_new.js'); ?>"></script>

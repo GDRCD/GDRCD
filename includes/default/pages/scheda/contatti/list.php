@@ -26,7 +26,7 @@ if($contatti->contactManage($id_pg))
     }
 ?>
 
-<script src="/pages/scheda/contatti/JS/delete_contatti.js"></script>
+    <script src="<?= Router::getPagesLink('scheda/contatti/JS/delete_contatti.js'); ?>"></script>
 <?php
 }
 ?>

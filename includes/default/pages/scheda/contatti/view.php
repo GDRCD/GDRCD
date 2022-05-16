@@ -35,4 +35,4 @@ $contatto=Personaggio::getPgData($id_contatto['contatto']);//dati del personaggi
     </div>
 </div>
 
-<script src="JS/delete_nota.js"></script>
+<script src="<?= Router::getPagesLink('scheda/contatti/JS/delete_nota.js'); ?>"></script>

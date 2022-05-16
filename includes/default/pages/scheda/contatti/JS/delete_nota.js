@@ -1,32 +1,34 @@
 $(function(){
 
-
-    $('body').on('click','.td.commands .ajax_link',function(e){
-
+    $('body').on('click', '.note_list .commands a.ajax_link', async function (e) {
         e.preventDefault();
+        e.stopImmediatePropagation();
 
-        let main = $(this),
-            action = main.data('action'),
-            id = main.data('id');
+        let id = $(this).data('id'),
+            action = $(this).data('action'),
+            page = $(this).data('page');
 
-        Ajax('/pages/scheda/contatti/contatti_ajax.php',{
-            action: action,
-            id: id
-        },refreshList)
+        let button = await Swal.button('Sei sicuro?', 'Vuoi eliminare questa nota?', 'question');
 
-
+        if (button) {
+            Ajax('scheda/contatti/contatti_ajax.php', {
+                action: action,
+                id: id,
+                page: page
+            }, refreshList)
+        }
     })
 
-    function refreshList(data){
+    function refreshList(data) {
 
-        if(data){
+        if (data) {
 
             let datas = JSON.parse(data);
 
-            if(datas.response){
+            if (datas.response) {
                 $('.note_list').html(datas.note_list)
 
-                Swal.fire(datas.swal_title,datas.swal_message,datas.swal_type)
+                Swal.fire(datas.swal_title, datas.swal_message, datas.swal_type)
 
             }
 
@@ -34,5 +36,4 @@ $(function(){
 
     }
 
-
-});
+})

@@ -8,7 +8,10 @@ $nota=$contatti_note->getNota('titolo, nota, pubblica', $id);
 ?>
 
 <div class="form_container">
-    <form method="POST" class="form">
+    <form class="form ajax_form"
+          action="scheda/contatti/contatti_ajax.php"
+          data-reset="false"
+          data-callback="goBackNoteContatto">
         <div class="single_input">
             <div class='label'>
                 Pubblica
@@ -34,18 +37,19 @@ $nota=$contatti_note->getNota('titolo, nota, pubblica', $id);
         <div class="fake-table">
             <div class="header">
                 <!-- bottoni -->
-                <div class="single_input">
-                    <div class='form_submit'>
-                        <input type="hidden" name="action" value="new_nota">
 
-                        <input type="hidden" id="id" name="id_contatto" value="<?=$id?>">
-
-                        <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>"/>
-
-                    </div>
+                <div class='single_input'>
+                    <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>"/>
+                    <input type="hidden" name="action" value="edit_nota">
+                    <input type="hidden" name="id_contatto" value="<?= Filters::int($id); ?>">
                 </div>
+
+
+
+
             </div>
         </div>
     </form>
 </div>
-<script src="pages/scheda/contatti/JS/nota_contatti.js"></script>
+<script src="<?= Router::getPagesLink('scheda/contatti/JS/edit_nota.js'); ?>"></script>
+

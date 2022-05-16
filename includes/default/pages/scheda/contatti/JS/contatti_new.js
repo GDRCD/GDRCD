@@ -1,7 +1,7 @@
 $(function () {
 
-});
-function goBackNoteContatto(){
+})
+function goBackContatti(){
     setTimeout(()=>{
         let  url = $('#url').val();
 
