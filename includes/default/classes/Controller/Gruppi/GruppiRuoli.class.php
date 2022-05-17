@@ -15,18 +15,68 @@ class GruppiRuoli extends Gruppi
         $this->groups_max_roles = Functions::get_constant('GROUPS_MAX_ROLES');
     }
 
-    public function permissionManageRoles(){
+    /**** PERMESSI ****/
+
+    /**
+     * @fn permissionManageRoles
+     * @note Controlla se si hanno i permessi per gestire i ruoli
+     * @return bool
+     */
+    public function permissionManageRoles(): bool
+    {
         return Permissions::permission('MANAGE_GROUPS');
     }
 
+    /**** TABLE HELPERS ****/
+
+    /**
+     * @fn getRole
+     * @note Estrae un ruolo
+     * @param int $id
+     * @param string $val
+     * @return bool|int|mixed|string
+     */
     public function getRole(int $id,string $val = '*'){
         return DB::query("SELECT {$val} FROM gruppi_ruoli WHERE id='{$id}' LIMIT 1");
     }
 
+    /**
+     * @fn getAllRoles
+     * @note Estrae tutti i ruoli
+     * @param string $val
+     * @return bool|int|mixed|string
+     */
     public function getAllRoles(string $val = '*'){
         return DB::query("SELECT {$val} FROM gruppi_ruoli WHERE 1",'result');
     }
 
+    /**
+     * @fn getAllGroupRoles
+     * @note Estrae i ruoli di un gruppo preciso
+     * @param int $id
+     * @param string $val
+     * @return bool|int|mixed|string
+     */
+    public function getAllGroupRoles(int $id, string $val = '*'){
+        return DB::query("SELECT {$val} FROM gruppi_ruoli WHERE gruppo='{$id}'",'result');
+    }
+
+    /**
+     * @fn getAllGroupMembers
+     * @note Estrae tutti i membri di un gruppo preciso
+     * @param int $id
+     * @param string $val
+     * @return bool|int|mixed|string
+     */
+    public function getAllGroupMembers(int $id, string $val = 'personaggio.nome,gruppi_ruoli.nome as role,gruppi_ruoli.immagine'){
+        return DB::query("
+                SELECT {$val} FROM gruppi_ruoli 
+                    LEFT JOIN personaggio_ruolo ON personaggio_ruolo.ruolo = gruppi_ruoli.id 
+                    LEFT JOIN personaggio ON personaggio_ruolo.personaggio = personaggio.id 
+                WHERE gruppi_ruoli.gruppo='{$id}' AND personaggio_ruolo.id IS NOT NULL",'result');
+    }
+
+    /**** LIST ****/
 
     /**
      * @fn listGroups
@@ -39,11 +89,118 @@ class GruppiRuoli extends Gruppi
         return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $roles);
     }
 
+    /**** AJAX ****/
+
+    /**
+     * @param array $post
+     * @return array
+     */
     public function ajaxRoleData(array $post):array{
         $id = Filters::int($post['id']);
         return $this->getRole($id);
     }
 
+    /**** RENDER ****/
+
+    /**
+     * @fn rolesList
+     * @note Render html della lista dei ruoli
+     * @param int $corp
+     * @return string
+     */
+    public function rolesList(int $corp): string
+    {
+        $template = Template::getInstance()->startTemplate();
+        $roles = $this->getAllGroupRoles($corp);
+        return $template->renderTable(
+            'servizi/roles_list',
+            $this->renderRolesList($roles)
+        );
+    }
+
+    /**
+     * @fn renderRolesList
+     * @note Render html lista ruoli
+     * @param object $list
+     * @return array
+     */
+    public function renderRolesList(object $list): array
+    {
+        $row_data = [];
+
+        foreach ($list as $row) {
+
+            $array = [
+                'id' => Filters::int($row['id']),
+                'name' => Filters::out($row['nome']),
+                'logo' => Router::getThemeDir().'imgs/groups/'.Filters::out($row['immagine']),
+                'stipendio' => Filters::int($row['stipendio']),
+                'poteri' => Filters::bool($row['poteri']),
+            ];
+
+            $row_data[] = $array;
+        }
+
+        $cells = [
+            'Nome',
+            'Logo',
+            'Stipendio',
+            'Poteri',
+        ];
+        return [
+            'body_rows' => $row_data,
+            'cells' => $cells,
+        ];
+    }
+
+    /**
+     * @fn membersList
+     * @note Render html della lista dei membri
+     * @param int $corp
+     * @return string
+     */
+    public function membersList(int $corp): string
+    {
+        $template = Template::getInstance()->startTemplate();
+        $members = $this->getAllGroupMembers($corp);
+        return $template->renderTable(
+            'servizi/members_list',
+            $this->renderMembersList($members)
+        );
+    }
+
+    /**
+     * @fn renderMembersList
+     * @note Render html lista membri
+     * @param object $list
+     * @return array
+     */
+    public function renderMembersList(object $list): array
+    {
+        $row_data = [];
+
+        foreach ($list as $row) {
+
+            $array = [
+                'id' => Filters::int($row['id']),
+                'personaggio' => Filters::out($row['nome']),
+                'logo' => Router::getThemeDir().'imgs/groups/'.Filters::out($row['immagine']),
+                'name' => Filters::out($row['role']),
+            ];
+
+            $row_data[] = $array;
+        }
+
+        $cells = [
+            'Personaggio',
+            'Ruolo',
+            'Logo'
+        ];
+        return [
+            'body_rows' => $row_data,
+            'cells' => $cells,
+        ];
+    }
 
     /** GESTIONE */
 

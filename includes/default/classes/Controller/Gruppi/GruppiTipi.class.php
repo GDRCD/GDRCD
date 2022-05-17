@@ -11,17 +11,42 @@ class GruppiTipi extends Gruppi
         parent::__construct();
     }
 
-    public function permissionManageTypes(){
+    /** PERMESSI */
+
+    /**
+     * @fn permissionManageTypes
+     * @note Controlla permessi sulla gestione dei tipi
+     * @return bool
+     */
+    public function permissionManageTypes(): bool
+    {
         return Permissions::permission('MANAGE_GROUPS');
     }
 
+    /** TABLE HELPERS */
+
+    /**
+     * @fn getType
+     * @note Estrae un tipo preciso
+     * @param int $id
+     * @param string $val
+     * @return bool|int|mixed|string
+     */
     public function getType(int $id,string $val = '*'){
         return DB::query("SELECT {$val} FROM gruppi_tipo WHERE id='{$id}' LIMIT 1");
     }
 
+    /**
+     * @fn getAllTypes
+     * @note Estrae tutti i tipi
+     * @param string $val
+     * @return bool|int|mixed|string
+     */
     public function getAllTypes(string $val = '*'){
         return DB::query("SELECT {$val} FROM gruppi_tipo WHERE 1",'result');
     }
+
+    /** LISTE */
 
     /**
      * @fn listTypes
@@ -34,11 +59,19 @@ class GruppiTipi extends Gruppi
         return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $types);
     }
 
+    /** AJAX */
 
+    /**
+     * @fn ajaxTypeData
+     * @note Estrae i dati di un tipo dinamicamente
+     * @param array $post
+     * @return array|bool|int|string
+     */
     public function ajaxTypeData(array $post):array{
         $id = Filters::int($post['id']);
         return $this->getType($id);
     }
+
     /** GESTIONE */
 
     /**

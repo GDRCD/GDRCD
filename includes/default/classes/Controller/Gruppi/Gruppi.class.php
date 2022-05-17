@@ -17,24 +17,84 @@ class Gruppi extends BaseClass
         $this->groups_max_jobs = Functions::get_constant('GROUPS_MAX_JOBS');
     }
 
-    public function activeGroups(){
+    /** CONFIG */
+
+    /**
+     * @fn activeGroups
+     * @note Controlla se i gruppi sono attivi
+     * @return bool
+     */
+    public function activeGroups(): bool
+    {
         return $this->groups_active;
     }
 
-    public function permissionManageGroups(){
+    /** PERMESSI */
+
+    /**
+     * @fn permissionManageGroups
+     * @note Controlla se si hanno i permesis per gestire i gruppi
+     * @return bool
+     */
+    public function permissionManageGroups(): bool
+    {
         return Permissions::permission('MANAGE_GROUPS');
     }
 
+    /** TABLE HELPERS */
 
-
+    /**
+     * @fn getGroup
+     * @note Estrae un gruppo
+     * @param int $id
+     * @param string $val
+     * @return bool|int|mixed|string
+     */
     public function getGroup(int $id,string $val = '*'){
         return DB::query("SELECT {$val} FROM gruppi WHERE id='{$id}' LIMIT 1");
     }
 
+    /**
+     * @fn getAllGroups
+     * @note Estrae tutti i gruppi
+     * @param string $val
+     * @return bool|int|mixed|string
+     */
     public function getAllGroups(string $val = '*'){
         return DB::query("SELECT {$val} FROM gruppi WHERE 1 ",'result');
     }
 
+    /**
+     * @fn getAllGroupsByType
+     * @note Estrae tutti i gruppi di un tipo
+     * @param string $type
+     * @param string $val
+     * @return bool|int|mixed|string
+     */
+    public function getAllGroupsByType(string $type,string $val = 'gruppi.*,gruppi_tipo.nome AS tipo_name'){
+        return DB::query("SELECT {$val} FROM gruppi LEFT JOIN gruppi_tipo ON gruppi_tipo.id = gruppi.tipo WHERE tipo='{$type}' ",'result');
+    }
+
+    /**
+     * @fn getGroupPeopleNumber
+     * @note Estrae il numero di membri di un gruppo
+     * @param int $id
+     * @return int
+     */
+    public function getGroupPeopleNumber(int $id): int
+    {
+        $sql = DB::query("
+                SELECT COUNT(personaggio.id) AS 'TOT' FROM personaggio 
+                    LEFT JOIN personaggio_ruolo 
+                        ON personaggio.id = personaggio_ruolo.personaggio
+                    LEFT JOIN gruppi_ruoli 
+                    ON gruppi_ruoli.id = personaggio_ruolo.ruolo
+                    WHERE gruppi_ruoli.gruppo = '{$id}' AND personaggio_ruolo.id IS NOT NULL ");
+
+        return Filters::int($sql['TOT']);
+    }
+
+    /** LISTE */
 
     /**
      * @fn listGroups
@@ -47,11 +107,110 @@ class Gruppi extends BaseClass
         return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $groups);
     }
 
+    /** AJAX */
+
+    /**
+     * @fn ajaxGroupData
+     * @note Estrazione dinamica dei dati di un gruppo
+     * @param array $post
+     * @return array|bool|int|string
+     */
     public function ajaxGroupData(array $post):array{
         $id = Filters::int($post['id']);
         return $this->getGroup($id);
     }
 
+    /** LOADER */
+
+    /**
+     * @fn loadServicePage
+     * @note Index della pagina servizi dei gruppi
+     * @param string $op
+     * @return string
+     */
+    public function loadServicePage(string $op): string
+    {
+        $op = Filters::out($op);
+
+        switch ($op) {
+            case 'read':
+                $page = 'read.php';
+                break;
+            default:
+                $page = 'view.php';
+                break;
+        }
+
+        return $page;
+
+    }
+
+    /** RENDER */
+
+    /**
+     * @fn groupsList
+     * @note Render html della lista dei gruppi
+     * @return string
+     */
+    public function groupsList(): string
+    {
+        $template = Template::getInstance()->startTemplate();
+        $types = GruppiTipi::getInstance()->getAllTypes();
+        $list = [];
+
+        foreach ($types as $type){
+            $typeId = Filters::int($type['id']);
+            $groups = $this->getAllGroupsByType($typeId);
+            foreach ($groups as $group){
+                $groupId = Filters::int($group['id']);
+                $group['member_number'] = $this->getGroupPeopleNumber($groupId);
+                array_push($list,$group);
+            }
+        }
+
+        return $template->renderTable(
+            'servizi/gruppi_list',
+            $this->renderGroupsList($list)
+        );
+    }
+
+    /**
+     * @fn renderGroupsList
+     * @note Render html lista gruppi
+     * @param array $list
+     * @return array
+     */
+    public function renderGroupsList(array $list): array
+    {
+        $row_data = [];
+
+        foreach ($list as $row) {
+
+            $array = [
+                'id' => Filters::int($row['id']),
+                'name' => Filters::out($row['nome']),
+                'member_number' => Filters::int($row['member_number']),
+                'tipo' => Filters::out($row['tipo_name'])
+            ];
+
+            $row_data[] = $array;
+        }
+
+        $cells = [
+            'Nome',
+            'Numero Membri',
+            'Tipo',
+            'Comandi',
+        ];
+        $links = [
+            ['href' => "/main.php?page=uffici", 'text' => 'Indietro']
+        ];
+        return [
+            'body_rows' => $row_data,
+            'cells' => $cells,
+            'links' => $links
+        ];
+    }
 
     /** GESTIONE */
 

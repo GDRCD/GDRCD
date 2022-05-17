@@ -322,12 +322,12 @@ class Router
         $engine = Functions::get_constant('STANDARD_ENGINE');
 
         if (file_exists(ROOT . "includes/{$engine}/themes")) {
-            return ROOT . "includes/{$engine}/themes/";
+            return "includes/{$engine}/themes/";
         }
 
 
         if (file_exists(ROOT . "includes/default/themes")) {
-            return ROOT . "includes/default/themes/";
+            return "includes/default/themes/";
         }
 
         die('Non esiste una cartella di default per i temi.');

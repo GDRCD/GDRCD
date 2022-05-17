@@ -191,18 +191,6 @@ CREATE TABLE IF NOT EXISTS `clgpersonaggiomostrine` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `clgpersonaggioruolo`
---
-
-CREATE TABLE IF NOT EXISTS `clgpersonaggioruolo` (
-  `personaggio` varchar(255) NOT NULL,
-  `id_ruolo` int NOT NULL DEFAULT '0',
-  `scadenza` date NOT NULL DEFAULT '2010-01-01'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Struttura della tabella `codmostrina`
 --
 
@@ -1219,6 +1207,20 @@ CREATE TABLE personaggio_quest  (
   `autore` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `personaggio_ruolo`
+--
+
+CREATE TABLE IF NOT EXISTS `personaggio_ruolo` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `personaggio` varchar(255) NOT NULL,
+    `ruolo` int NOT NULL,
+    `scadenza` date NOT NULL DEFAULT '2010-01-01',
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- ---------------------------------------------
 
