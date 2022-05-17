@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @class Gruppi
  * @note Classe che gestisce i gruppi
@@ -7,8 +8,8 @@ class Gruppi extends BaseClass
 {
 
     protected
-            $groups_active,
-            $groups_max_jobs;
+        $groups_active,
+        $groups_max_jobs;
 
     protected function __construct()
     {
@@ -41,6 +42,32 @@ class Gruppi extends BaseClass
         return Permissions::permission('MANAGE_GROUPS');
     }
 
+    /**
+     * @fn haveGroupPower
+     * @note Controlla se il personaggio ha almeno un ruolo con poteri o se ha i poteri per un singolo gruppo
+     * @param int $id
+     * @return int
+     */
+    public function haveGroupPower(int $id = 0): int
+    {
+
+        if ($id) {
+            $extra_query = "AND gruppi_ruoli.gruppo = '{$id}'";
+        }
+
+        $sql = DB::query("
+                SELECT COUNT(personaggio_ruolo.id) AS 'TOT' FROM gruppi_ruoli 
+                    LEFT JOIN personaggio_ruolo ON personaggio_ruolo.ruolo = gruppi_ruoli.id AND personaggio_ruolo.personaggio ='{$this->me_id}'
+                    WHERE gruppi_ruoli.poteri = 1 AND personaggio_ruolo.id IS NOT NULL {$extra_query}");
+
+        return Filters::int($sql['TOT']);
+    }
+
+    public function permissionServiceGroups(int $id = 0)
+    {
+        return $this->activeGroups() && ($this->haveGroupPower($id) || $this->permissionManageGroups());
+    }
+
     /** TABLE HELPERS */
 
     /**
@@ -50,7 +77,8 @@ class Gruppi extends BaseClass
      * @param string $val
      * @return bool|int|mixed|string
      */
-    public function getGroup(int $id,string $val = '*'){
+    public function getGroup(int $id, string $val = '*')
+    {
         return DB::query("SELECT {$val} FROM gruppi WHERE id='{$id}' LIMIT 1");
     }
 
@@ -60,8 +88,9 @@ class Gruppi extends BaseClass
      * @param string $val
      * @return bool|int|mixed|string
      */
-    public function getAllGroups(string $val = '*'){
-        return DB::query("SELECT {$val} FROM gruppi WHERE 1 ",'result');
+    public function getAllGroups(string $val = '*')
+    {
+        return DB::query("SELECT {$val} FROM gruppi WHERE 1 ", 'result');
     }
 
     /**
@@ -71,8 +100,9 @@ class Gruppi extends BaseClass
      * @param string $val
      * @return bool|int|mixed|string
      */
-    public function getAllGroupsByType(string $type,string $val = 'gruppi.*,gruppi_tipo.nome AS tipo_name'){
-        return DB::query("SELECT {$val} FROM gruppi LEFT JOIN gruppi_tipo ON gruppi_tipo.id = gruppi.tipo WHERE tipo='{$type}' ",'result');
+    public function getAllGroupsByType(string $type, string $val = 'gruppi.*,gruppi_tipo.nome AS tipo_name')
+    {
+        return DB::query("SELECT {$val} FROM gruppi LEFT JOIN gruppi_tipo ON gruppi_tipo.id = gruppi.tipo WHERE tipo='{$type}' ", 'result');
     }
 
     /**
@@ -115,7 +145,8 @@ class Gruppi extends BaseClass
      * @param array $post
      * @return array|bool|int|string
      */
-    public function ajaxGroupData(array $post):array{
+    public function ajaxGroupData(array $post): array
+    {
         $id = Filters::int($post['id']);
         return $this->getGroup($id);
     }
@@ -158,13 +189,13 @@ class Gruppi extends BaseClass
         $types = GruppiTipi::getInstance()->getAllTypes();
         $list = [];
 
-        foreach ($types as $type){
+        foreach ($types as $type) {
             $typeId = Filters::int($type['id']);
             $groups = $this->getAllGroupsByType($typeId);
-            foreach ($groups as $group){
+            foreach ($groups as $group) {
                 $groupId = Filters::int($group['id']);
                 $group['member_number'] = $this->getGroupPeopleNumber($groupId);
-                array_push($list,$group);
+                array_push($list, $group);
             }
         }
 
@@ -239,7 +270,7 @@ class Gruppi extends BaseClass
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Gruppo creato.',
                 'swal_type' => 'success',
-                'groups_list'=>$this->listGroups()
+                'groups_list' => $this->listGroups()
             ];
         } else {
             return [
@@ -259,8 +290,8 @@ class Gruppi extends BaseClass
      */
     public function ModGroup(array $post): array
     {
-        if($this->permissionManageGroups()){
-            $id=Filters::in( $post['id']);
+        if ($this->permissionManageGroups()) {
+            $id = Filters::in($post['id']);
             $nome = Filters::in($post['nome']);
             $tipo = Filters::int($post['tipo']);
             $img = Filters::in($post['immagine']);
@@ -277,9 +308,9 @@ class Gruppi extends BaseClass
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Gruppo modificato.',
                 'swal_type' => 'success',
-                'groups_list'=>$this->listGroups()
+                'groups_list' => $this->listGroups()
             ];
-        } else{
+        } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
@@ -295,9 +326,9 @@ class Gruppi extends BaseClass
      * @param array $post
      * @return array
      */
-    public function DelGroup(array $post):array
+    public function DelGroup(array $post): array
     {
-        if($this->permissionManageGroups()) {
+        if ($this->permissionManageGroups()) {
 
             $id = Filters::in($post['id']);
 
@@ -309,9 +340,9 @@ class Gruppi extends BaseClass
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Gruppo eliminato.',
                 'swal_type' => 'success',
-                'groups_list'=>$this->listGroups()
+                'groups_list' => $this->listGroups()
             ];
-        } else{
+        } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @class GruppiRuoli
  * @note Classe che gestisce i ruoli dei gruppi
@@ -36,7 +37,8 @@ class GruppiRuoli extends Gruppi
      * @param string $val
      * @return bool|int|mixed|string
      */
-    public function getRole(int $id,string $val = '*'){
+    public function getRole(int $id, string $val = '*')
+    {
         return DB::query("SELECT {$val} FROM gruppi_ruoli WHERE id='{$id}' LIMIT 1");
     }
 
@@ -46,8 +48,22 @@ class GruppiRuoli extends Gruppi
      * @param string $val
      * @return bool|int|mixed|string
      */
-    public function getAllRoles(string $val = '*'){
-        return DB::query("SELECT {$val} FROM gruppi_ruoli WHERE 1",'result');
+    public function getAllRoles(string $val = '*')
+    {
+        return DB::query("SELECT {$val} FROM gruppi_ruoli WHERE 1", 'result');
+    }
+
+    /**
+     * @fn getAllRolesByIds
+     * @note Estrae tutti i ruoli di piu' gruppi
+     * @param array $ids
+     * @param string $val
+     * @return bool|int|mixed|string
+     */
+    public function getAllRolesByIds(array $ids, string $val = '*')
+    {
+        $toSearch = implode(',', $ids);
+        return DB::query("SELECT {$val} FROM gruppi_ruoli WHERE gruppo IN ({$toSearch})", 'result');
     }
 
     /**
@@ -57,8 +73,9 @@ class GruppiRuoli extends Gruppi
      * @param string $val
      * @return bool|int|mixed|string
      */
-    public function getAllGroupRoles(int $id, string $val = '*'){
-        return DB::query("SELECT {$val} FROM gruppi_ruoli WHERE gruppo='{$id}'",'result');
+    public function getAllGroupRoles(int $id, string $val = '*')
+    {
+        return DB::query("SELECT {$val} FROM gruppi_ruoli WHERE gruppo='{$id}'", 'result');
     }
 
     /**
@@ -68,15 +85,68 @@ class GruppiRuoli extends Gruppi
      * @param string $val
      * @return bool|int|mixed|string
      */
-    public function getAllGroupMembers(int $id, string $val = 'personaggio.nome,gruppi_ruoli.nome as role,gruppi_ruoli.immagine'){
+    public function getAllGroupMembers(int $id, string $val = 'personaggio.nome,gruppi_ruoli.nome as role,gruppi_ruoli.immagine')
+    {
         return DB::query("
                 SELECT {$val} FROM gruppi_ruoli 
                     LEFT JOIN personaggio_ruolo ON personaggio_ruolo.ruolo = gruppi_ruoli.id 
                     LEFT JOIN personaggio ON personaggio_ruolo.personaggio = personaggio.id 
-                WHERE gruppi_ruoli.gruppo='{$id}' AND personaggio_ruolo.id IS NOT NULL",'result');
+                WHERE gruppi_ruoli.gruppo='{$id}' AND personaggio_ruolo.id IS NOT NULL", 'result');
+    }
+
+    /**
+     * @fn getAvailableRoles
+     * @note Estrae i ruoli che un personaggio puo' gestire
+     * @return bool|int|mixed|string
+     */
+    public function getAvailableRoles()
+    {
+        $groups = DB::query("
+                SELECT gruppi_ruoli.gruppo FROM gruppi_ruoli 
+                    LEFT JOIN personaggio_ruolo ON personaggio_ruolo.ruolo = gruppi_ruoli.id AND personaggio_ruolo.personaggio ='{$this->me_id}'
+                    WHERE gruppi_ruoli.poteri = 1 AND personaggio_ruolo.id IS NOT NULL", 'result');
+
+        $groups_list = [];
+
+        foreach ($groups as $group) {
+            array_push($groups_list, $group['gruppo']);
+        }
+
+        return $this->getAllRolesByIds($groups_list);
+    }
+
+    /**
+     * @fn getCharacterRolesNumbers
+     * @note Conta quanti ruoli ha un personaggio
+     * @param int $pg
+     * @return int
+     */
+    public function getCharacterRolesNumbers(int $pg): int
+    {
+
+        $groups = DB::query("
+                SELECT COUNT(personaggio_ruolo.id) AS 'TOT' FROM personaggio_ruolo 
+                WHERE personaggio_ruolo.personaggio ='{$pg}'");
+
+        return Filters::int($groups['TOT']);
     }
 
     /**** LIST ****/
+
+    /**
+     * @fn listGroups
+     * @note Genera gli option per i gruppi
+     * @return string
+     */
+    public function listAvailableRoles(): string
+    {
+        if ($this->permissionManageGroups()) {
+            $roles = $this->getAllRoles();
+        } else {
+            $roles = $this->getAvailableRoles();
+        }
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $roles);
+    }
 
     /**
      * @fn listGroups
@@ -89,13 +159,25 @@ class GruppiRuoli extends Gruppi
         return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $roles);
     }
 
+    /**
+     * @fn listGroups
+     * @note Genera gli option per i gruppi
+     * @return string
+     */
+    public function listServiceAvailableRoles(): string
+    {
+        $roles = $this->getAllRoles();
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $roles);
+    }
+
     /**** AJAX ****/
 
     /**
      * @param array $post
      * @return array
      */
-    public function ajaxRoleData(array $post):array{
+    public function ajaxRoleData(array $post): array
+    {
         $id = Filters::int($post['id']);
         return $this->getRole($id);
     }
@@ -133,7 +215,7 @@ class GruppiRuoli extends Gruppi
             $array = [
                 'id' => Filters::int($row['id']),
                 'name' => Filters::out($row['nome']),
-                'logo' => Router::getThemeDir().'imgs/groups/'.Filters::out($row['immagine']),
+                'logo' => Router::getThemeDir() . 'imgs/groups/' . Filters::out($row['immagine']),
                 'stipendio' => Filters::int($row['stipendio']),
                 'poteri' => Filters::bool($row['poteri']),
             ];
@@ -184,7 +266,7 @@ class GruppiRuoli extends Gruppi
             $array = [
                 'id' => Filters::int($row['id']),
                 'personaggio' => Filters::out($row['nome']),
-                'logo' => Router::getThemeDir().'imgs/groups/'.Filters::out($row['immagine']),
+                'logo' => Router::getThemeDir() . 'imgs/groups/' . Filters::out($row['immagine']),
                 'name' => Filters::out($row['role']),
             ];
 
@@ -229,7 +311,7 @@ class GruppiRuoli extends Gruppi
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Ruolo gruppo creato.',
                 'swal_type' => 'success',
-                'roles_list'=>$this->listRoles()
+                'roles_list' => $this->listRoles()
             ];
         } else {
             return [
@@ -249,8 +331,8 @@ class GruppiRuoli extends Gruppi
      */
     public function ModRole(array $post): array
     {
-        if($this->permissionManageRoles()){
-            $id=Filters::in( $post['id']);
+        if ($this->permissionManageRoles()) {
+            $id = Filters::in($post['id']);
             $group = Filters::int($post['gruppo']);
             $nome = Filters::in($post['nome']);
             $img = Filters::in($post['immagine']);
@@ -268,9 +350,9 @@ class GruppiRuoli extends Gruppi
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Ruolo gruppo modificato.',
                 'swal_type' => 'success',
-                'roles_list'=>$this->listRoles()
+                'roles_list' => $this->listRoles()
             ];
-        } else{
+        } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
@@ -286,9 +368,9 @@ class GruppiRuoli extends Gruppi
      * @param array $post
      * @return array
      */
-    public function DelRole(array $post):array
+    public function DelRole(array $post): array
     {
-        if($this->permissionManageRoles()) {
+        if ($this->permissionManageRoles()) {
 
             $id = Filters::in($post['id']);
 
@@ -299,9 +381,9 @@ class GruppiRuoli extends Gruppi
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Gruppo eliminato.',
                 'swal_type' => 'success',
-                'roles_list'=>$this->listRoles()
+                'roles_list' => $this->listRoles()
             ];
-        } else{
+        } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
@@ -309,6 +391,94 @@ class GruppiRuoli extends Gruppi
                 'swal_type' => 'error'
             ];
         }
+    }
+
+
+    /*** SERVICES ***/
+
+    /**
+     * @fn AssignRole
+     * @note Assegna un ruolo a un personaggio
+     * @param array $post
+     * @return array
+     */
+    public function AssignRole(array $post): array
+    {
+
+        $personaggio = Filters::int($post['personaggio']);
+        $ruolo = Filters::int($post['ruolo']);
+        $ruolo_data = $this->getRole($ruolo);
+        $group = Filters::int($ruolo_data['gruppo']);
+
+        if ($this->permissionServiceGroups($group)) {
+
+            $roles_number = $this->getCharacterRolesNumbers($personaggio);
+
+            if ($roles_number < $this->groups_max_roles) {
+
+                DB::query("INSERT INTO personaggio_ruolo(ruolo,personaggio) VALUES('{$ruolo}','{$personaggio}')");
+
+                return [
+                    'response' => true,
+                    'swal_title' => 'Successo!',
+                    'swal_message' => 'Ruolo assegnato correttamente!',
+                    'swal_type' => 'success'
+                ];
+            } else {
+                return [
+                    'response' => false,
+                    'swal_title' => 'Operazione fallita!',
+                    'swal_message' => 'Il personaggio ha raggiunto il numero massimo di ruoli disponibili.',
+                    'swal_type' => 'error'
+                ];
+            }
+
+
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
+        }
+
+    }
+
+    /**
+     * @fn RemoveRole
+     * @note Rimuovi un ruolo a un personaggio
+     * @param array $post
+     * @return array
+     */
+    public function RemoveRole(array $post): array
+    {
+
+        $personaggio = Filters::int($post['personaggio']);
+        $ruolo = Filters::int($post['ruolo']);
+        $ruolo_data = $this->getRole($ruolo);
+        $group = Filters::int($ruolo_data['gruppo']);
+
+        if ($this->permissionServiceGroups($group)) {
+
+            DB::query("DELETE FROM personaggio_ruolo WHERE ruolo='{$ruolo}' AND personaggio='{$personaggio}'");
+
+            return [
+                'response' => true,
+                'swal_title' => 'Successo!',
+                'swal_message' => 'Ruolo assegnato correttamente!',
+                'swal_type' => 'success'
+            ];
+
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
+        }
+
     }
 
 }
