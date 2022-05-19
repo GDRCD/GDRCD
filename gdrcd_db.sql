@@ -278,7 +278,9 @@ INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,
     ('SCHEDA_ABI_PUBLIC',1,'Scheda Abilita','Scheda Abilita pubblica','Pagina abilita pubblica?','bool',1),
     ('GROUPS_ACTIVE',1,'Gruppi','Gruppi attivi','Gruppi attivi?','bool',1),
     ('GROUPS_MAX_ROLES',3,'Gruppi','Massimo ruoli','Numero massimo di ruoli','int',1),
-    ('GROUPS_MAX_JOBS',3,'Gruppi','Massimo lavori liberi','Numero massimo di lavori liberi','int',1);
+    ('WORKS_ACTIVE',1,'Gruppi','Lavori attivi','Lavori attivi?','bool',1),
+    ('WORKS_DIMISSIONS_DAYS',1,'Gruppi','Giorni per dimissioni','Giorni per dimissioni','bool',1),
+    ('WORKS_MAX',3,'Gruppi','Massimo lavori liberi','Numero massimo di lavori liberi','int',1);
 
 -- --------------------------------------------------------
 
@@ -394,6 +396,21 @@ CREATE TABLE IF NOT EXISTS `esiti_risposte_risultati` (
     `risultato` int NOT NULL,
     `testo` text DEFAULT NULL,
     `lanciato_il` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `lavori`
+--
+
+CREATE TABLE IF NOT EXISTS `lavori` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `nome` varchar(255) NOT NULL,
+    `descrizione` text NOT NULL,
+    `immagine` varchar(255) NOT NULL,
+    `stipendio` int NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
@@ -521,6 +538,8 @@ INSERT INTO `menu` (`menu_name`, `section`, `name`, `page`, `permission`) VALUES
   ('Gestione', 'Gruppi', 'Gestione Gruppi', 'gestione/gruppi/gruppi/gestione_gruppi', 'MANAGE_GROUPS'),
   ('Gestione', 'Gruppi', 'Gestione Ruoli', 'gestione/gruppi/ruoli/gestione_ruoli', 'MANAGE_GROUPS'),
   ('Gestione', 'Gruppi', 'Gestione Tipi', 'gestione/gruppi/tipi/gestione_tipi', 'MANAGE_GROUPS'),
+  ('Gestione', 'Gruppi', 'Gestione Lavori', 'gestione/gruppi/lavori/gestione_lavori', 'MANAGE_WORKS'),
+  ('Gestione', 'Gruppi', 'Assegna/Rimuovi lavori', 'gestione/gruppi/lavori/assign_lavori', 'MANAGE_WORKS'),
   ('Gestione', 'Gestione', 'Gestione Costanti', 'gestione/costanti/gestione_costanti_box', 'MANAGE_CONSTANTS'),
   ('Gestione', 'Gestione', 'Gestione Versioni Database', 'gestione_db_migrations', 'MANAGE_DB_MIGRATIONS'),
   ('Gestione', 'Permessi', 'Gestione Permessi', 'gestione_permessi', 'MANAGE_PERMISSIONS'),
@@ -917,7 +936,7 @@ INSERT INTO `online_status_type`(`label`,`request`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `permessi_custom`
+-- Struttura della tabella `pages`
 --
 
 CREATE TABLE `pages` (
@@ -930,7 +949,7 @@ CREATE TABLE `pages` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `permessi_custom`
+-- Struttura della tabella `pages_alias`
 --
 
 CREATE TABLE `pages_alias` (
@@ -973,6 +992,7 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
     ('MANAGE_RACES', 'Permesso per la gestione delle razze'),
     ('MANAGE_FORUMS', 'Permesso per la gestione delle bacheche'),
     ('MANAGE_GROUPS', 'Permesso per la gestione dei gruppi'),
+    ('MANAGE_WORKS', 'Permesso per la gestione dei lavori liberi'),
     ('MANAGE_PERMISSIONS', 'Permesso per la gestione dei permessi'),
     ('MANAGE_MANUTENTIONS', 'Permesso per la gestione della manutenzione del db'),
     ('MANAGE_REPORTS', 'Permesso per la gestione delle giocate segnalate'),
@@ -1157,6 +1177,20 @@ CREATE TABLE IF NOT EXISTS `personaggio_abilita` (
     `personaggio` int NOT NULL,
     `abilita` int NOT NULL,
     `grado` int NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `personaggio_lavoro`
+--
+
+CREATE TABLE IF NOT EXISTS `personaggio_lavoro` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `personaggio` varchar(255) NOT NULL,
+    `lavoro` int NOT NULL,
+    `scadenza` date NOT NULL DEFAULT '2010-01-01',
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

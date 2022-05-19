@@ -649,7 +649,7 @@ $PARAMETERS['office']['guilds_adm']['text'] = "Amministrazione Gruppi";
 $PARAMETERS['office']['guilds_adm']['url'] = 'main.php?page=servizi/amministrazioneGilde/index';
 $PARAMETERS['office']['guilds_adm']['access_level'] = USER;
 $PARAMETERS['office']['job']['text'] = 'Lavoro';
-$PARAMETERS['office']['job']['url'] = 'main.php?page=servizi_lavoro';
+$PARAMETERS['office']['job']['url'] = 'main.php?page=servizi/lavori/index';
 $PARAMETERS['office']['job']['access_level'] = USER;
 $PARAMETERS['office']['guilds']['text'] = 'Gruppi';
 $PARAMETERS['office']['guilds']['url'] = 'main.php?page=servizi/gruppi/index';

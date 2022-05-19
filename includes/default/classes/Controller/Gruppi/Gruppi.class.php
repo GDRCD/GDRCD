@@ -8,14 +8,12 @@ class Gruppi extends BaseClass
 {
 
     protected
-        $groups_active,
-        $groups_max_jobs;
+        $groups_active;
 
     protected function __construct()
     {
         parent::__construct();
         $this->groups_active = Functions::get_constant('GROUPS_ACTIVE');
-        $this->groups_max_jobs = Functions::get_constant('GROUPS_MAX_JOBS');
     }
 
     /** CONFIG */

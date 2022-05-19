@@ -1147,6 +1147,10 @@ div.innertube {
     width: 32%;
 }
 
+.works_list .td{
+    width: 24%;
+}
+
 .group_rules{
     width: 90%;
     border: 1px solid black;
@@ -1160,8 +1164,10 @@ div.innertube {
 }
 
 
+
 .group_rules img,
 .roles_list img,
+.works_list img,
 .members_list img{
     max-height: 15px;
 }
