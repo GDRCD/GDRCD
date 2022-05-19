@@ -131,6 +131,19 @@ class GruppiRuoli extends Gruppi
         return Filters::int($groups['TOT']);
     }
 
+    /**
+     * @fn getCharacterSalaries
+     * @note Ottiene tutti gli stipendi dei ruoli di un personaggio
+     * @param int $pg
+     * @return bool|int|mixed|string
+     */
+    public function getCharacterRolesSalaries(int $pg){
+        return DB::query(
+            "SELECT gruppi_ruoli.stipendio FROM personaggio_ruolo 
+                    LEFT JOIN gruppi_ruoli ON (personaggio_ruolo.ruolo = gruppi_ruoli.id)
+                    WHERE personaggio_ruolo.personaggio ='{$pg}'",'result');
+    }
+
     /**** LIST ****/
 
     /**

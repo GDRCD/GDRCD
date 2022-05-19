@@ -52,5 +52,19 @@ class CarbonWrapper{
        return $start->diffInDays($end);
     }
 
+    /**
+     * @fn DatesDifferenceMinutes
+     * @note Calcola i minuti di differenza tra due date
+     * @param string $date1
+     * @param string $date2
+     * @return int
+     */
+    public static function DatesDifferenceMinutes(string $date1,string $date2): int
+    {
+       $start = Carbon::createFromFormat('Y-m-d H:i:s',  $date1);
+       $end = Carbon::createFromFormat('Y-m-d H:i:s',  $date2);
+       return $start->diffInMinutes($end);
+    }
+
 
 }

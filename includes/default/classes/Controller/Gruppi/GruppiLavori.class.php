@@ -107,6 +107,19 @@ class GruppiLavori extends Gruppi
                 WHERE personaggio_lavoro.personaggio ='{$pg}' AND personaggio_lavoro.lavoro='{$work}'");
     }
 
+    /**
+     * @fn getCharacterSalaries
+     * @note Ottiene tutti gli stipendi dei ruoli di un personaggio
+     * @param int $pg
+     * @return bool|int|mixed|string
+     */
+    public function getCharacterWorksSalaries(int $pg){
+        return DB::query(
+            "SELECT lavori.stipendio FROM personaggio_lavoro 
+                    LEFT JOIN lavori ON (personaggio_lavoro.lavoro = lavori.id)
+                    WHERE personaggio_lavoro.personaggio ='{$pg}'",'result');
+    }
+
     /** LISTE */
 
     /**

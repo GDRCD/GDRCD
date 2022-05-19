@@ -285,6 +285,21 @@ INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `cronjob`
+--
+
+CREATE TABLE IF NOT EXISTS `cronjob` (
+    `id` bigint NOT NULL AUTO_INCREMENT,
+    `name` varchar(255) NOT NULL DEFAULT '0',
+    `last_exec` datetime DEFAULT NULL,
+    `in_exec` varchar(255) NOT NULL DEFAULT '',
+    `interval` int NOT NULL DEFAULT 60,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `diario`
 --
 
