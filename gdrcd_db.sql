@@ -191,18 +191,6 @@ CREATE TABLE IF NOT EXISTS `clgpersonaggiomostrine` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `clgpersonaggioruolo`
---
-
-CREATE TABLE IF NOT EXISTS `clgpersonaggioruolo` (
-  `personaggio` varchar(255) NOT NULL,
-  `id_ruolo` int NOT NULL DEFAULT '0',
-  `scadenza` date NOT NULL DEFAULT '2010-01-01'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Struttura della tabella `codmostrina`
 --
 
@@ -213,27 +201,6 @@ CREATE TABLE IF NOT EXISTS `codmostrina` (
   `descrizione` varchar(255) NOT NULL DEFAULT 'nessuna',
   PRIMARY KEY (`id_mostrina`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `codtipogilda`
---
-
-CREATE TABLE IF NOT EXISTS `codtipogilda` (
-  `descrizione` varchar(255) NOT NULL,
-  `cod_tipo` int NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`cod_tipo`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
---
--- Dump dei dati per la tabella `codtipogilda`
---
-
-INSERT INTO `codtipogilda` (`descrizione`, `cod_tipo`) VALUES
-('Positivo', 1),
-('Neutrale', 2),
-('Negativo', 3);
 
 -- --------------------------------------------------------
 
@@ -308,7 +275,12 @@ INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,
     ('ONLINE_STATUS_LOGIN_REFRESH',1,'Online Status','Reselect al login','Login oscura ultima scelta dai presenti?','bool',1),
     ('SCHEDA_OBJECTS_PUBLIC',1,'Scheda Oggetti','Scheda Oggetti pubblica','Pagina inventario pubblica?','bool',1),
     ('SCHEDA_STATS_PUBLIC',1,'Scheda Oggetti','Scheda Statistiche pubblica','Pagina statistica pubblica?','bool',1),
-    ('SCHEDA_ABI_PUBLIC',1,'Scheda Abilita','Scheda Abilita pubblica','Pagina abilita pubblica?','bool',1);
+    ('SCHEDA_ABI_PUBLIC',1,'Scheda Abilita','Scheda Abilita pubblica','Pagina abilita pubblica?','bool',1),
+    ('GROUPS_ACTIVE',1,'Gruppi','Gruppi attivi','Gruppi attivi?','bool',1),
+    ('GROUPS_MAX_ROLES',3,'Gruppi','Massimo ruoli','Numero massimo di ruoli','int',1),
+    ('WORKS_ACTIVE',1,'Gruppi','Lavori attivi','Lavori attivi?','bool',1),
+    ('WORKS_DIMISSIONS_DAYS',1,'Gruppi','Giorni per dimissioni','Giorni per dimissioni','bool',1),
+    ('WORKS_MAX',3,'Gruppi','Massimo lavori liberi','Numero massimo di lavori liberi','int',1);
 
 -- --------------------------------------------------------
 
@@ -430,26 +402,89 @@ CREATE TABLE IF NOT EXISTS `esiti_risposte_risultati` (
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `lavori`
+--
+
+CREATE TABLE IF NOT EXISTS `lavori` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `nome` varchar(255) NOT NULL,
+    `descrizione` text NOT NULL,
+    `immagine` varchar(255) NOT NULL,
+    `stipendio` int NOT NULL DEFAULT '0',
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `gilda`
 --
 
-CREATE TABLE IF NOT EXISTS `gilda` (
-  `id_gilda` int NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `gruppi` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `nome` varchar(255) NOT NULL DEFAULT '',
   `tipo` varchar(255) NOT NULL DEFAULT '0',
   `immagine` varchar(255) DEFAULT NULL,
-  `url_sito` varchar(255) DEFAULT NULL,
+  `url` varchar(255) DEFAULT NULL,
   `statuto` text,
   `visibile` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_gilda`)
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 --
 -- Dump dei dati per la tabella `gilda`
 --
 
-INSERT INTO `gilda` (`id_gilda`, `nome`, `tipo`, `immagine`, `url_sito`, `statuto`, `visibile`) VALUES
-(1, 'Guardia cittadina', '1', 'standard_gilda.png', '', '', 1);
+INSERT INTO `gruppi` (`nome`, `tipo`, `immagine`, `url`, `statuto`, `visibile`) VALUES
+('Guardia cittadina', '1', 'standard_gilda.png', 'test', 'Statuto fasullo', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `gruppi_ruoli`
+--
+
+CREATE TABLE IF NOT EXISTS `gruppi_ruoli` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `gruppo` int NOT NULL DEFAULT '-1',
+    `nome` varchar(255) NOT NULL,
+    `immagine` varchar(255) NOT NULL,
+    `stipendio` int NOT NULL DEFAULT '0',
+    `poteri` int NOT NULL DEFAULT '0',
+    PRIMARY KEY (`id`)
+    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+--
+-- Dump dei dati per la tabella `gruppi_ruoli`
+--
+
+INSERT INTO `gruppi_ruoli` (`gruppo`, `nome`, `immagine`, `stipendio`, `poteri`) VALUES
+    (1, 'Capitano della guardia', 'standard_gilda.png', 100, 1),
+    (1, 'Ufficiale della guardia', 'standard_gilda.png', 70, 0),
+    (1, 'Soldato della guardia', 'standard_gilda.png', 40, 0),
+    (1, 'Recluta della guardia', 'standard_gilda.png', 15, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `gruppi_tipo`
+--
+
+CREATE TABLE IF NOT EXISTS `gruppi_tipo` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `nome` varchar(255) NOT NULL,
+    `descrizione` text NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+--
+-- Dump dei dati per la tabella `gruppi_tipo`
+--
+
+INSERT INTO `gruppi_tipo` (`nome`, `descrizione`) VALUES
+    ('Positivo', 'prova'),
+    ('Neutrale', 'prova'),
+    ('Negativo', 'prova');
 
 -- --------------------------------------------------------
 
@@ -500,7 +535,11 @@ INSERT INTO `menu` (`menu_name`, `section`, `name`, `page`, `permission`) VALUES
   ('Gestione', 'Documentazioni', 'Gestione Regolamento', 'gestione_regolamento', 'MANAGE_RULES'),
   ('Gestione', 'Razze', 'Gestione Razze', 'gestione_razze', 'MANAGE_RACES'),
   ('Gestione', 'Bacheche', 'Gestione Bacheche', 'gestione_bacheche', 'MANAGE_FORUMS'),
-  ('Gestione', 'Gilde', 'Gestione Gilde e Ruoli', 'gestione_gilde', 'MANAGE_GUILDS'),
+  ('Gestione', 'Gruppi', 'Gestione Gruppi', 'gestione/gruppi/gruppi/gestione_gruppi', 'MANAGE_GROUPS'),
+  ('Gestione', 'Gruppi', 'Gestione Ruoli', 'gestione/gruppi/ruoli/gestione_ruoli', 'MANAGE_GROUPS'),
+  ('Gestione', 'Gruppi', 'Gestione Tipi', 'gestione/gruppi/tipi/gestione_tipi', 'MANAGE_GROUPS'),
+  ('Gestione', 'Gruppi', 'Gestione Lavori', 'gestione/gruppi/lavori/gestione_lavori', 'MANAGE_WORKS'),
+  ('Gestione', 'Gruppi', 'Assegna/Rimuovi lavori', 'gestione/gruppi/lavori/assign_lavori', 'MANAGE_WORKS'),
   ('Gestione', 'Gestione', 'Gestione Costanti', 'gestione/costanti/gestione_costanti_box', 'MANAGE_CONSTANTS'),
   ('Gestione', 'Gestione', 'Gestione Versioni Database', 'gestione_db_migrations', 'MANAGE_DB_MIGRATIONS'),
   ('Gestione', 'Permessi', 'Gestione Permessi', 'gestione_permessi', 'MANAGE_PERMISSIONS'),
@@ -897,7 +936,7 @@ INSERT INTO `online_status_type`(`label`,`request`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `permessi_custom`
+-- Struttura della tabella `pages`
 --
 
 CREATE TABLE `pages` (
@@ -910,7 +949,7 @@ CREATE TABLE `pages` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `permessi_custom`
+-- Struttura della tabella `pages_alias`
 --
 
 CREATE TABLE `pages_alias` (
@@ -952,7 +991,8 @@ INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
     ('MANAGE_CONSTANTS', 'Permesso per l\editing delle costanti'),
     ('MANAGE_RACES', 'Permesso per la gestione delle razze'),
     ('MANAGE_FORUMS', 'Permesso per la gestione delle bacheche'),
-    ('MANAGE_GUILDS', 'Permesso per la gestione delle gilde'),
+    ('MANAGE_GROUPS', 'Permesso per la gestione dei gruppi'),
+    ('MANAGE_WORKS', 'Permesso per la gestione dei lavori liberi'),
     ('MANAGE_PERMISSIONS', 'Permesso per la gestione dei permessi'),
     ('MANAGE_MANUTENTIONS', 'Permesso per la gestione della manutenzione del db'),
     ('MANAGE_REPORTS', 'Permesso per la gestione delle giocate segnalate'),
@@ -1143,6 +1183,20 @@ CREATE TABLE IF NOT EXISTS `personaggio_abilita` (
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `personaggio_lavoro`
+--
+
+CREATE TABLE IF NOT EXISTS `personaggio_lavoro` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `personaggio` varchar(255) NOT NULL,
+    `lavoro` int NOT NULL,
+    `scadenza` date NOT NULL DEFAULT '2010-01-01',
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `personaggio_oggetto`
 --
 
@@ -1187,6 +1241,20 @@ CREATE TABLE personaggio_quest  (
   `autore` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `personaggio_ruolo`
+--
+
+CREATE TABLE IF NOT EXISTS `personaggio_ruolo` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `personaggio` varchar(255) NOT NULL,
+    `ruolo` int NOT NULL,
+    `scadenza` date NOT NULL DEFAULT '2010-01-01',
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- ---------------------------------------------
 
@@ -1284,33 +1352,6 @@ CREATE TABLE IF NOT EXISTS `regolamento` (
   `titolo` varchar(255) NOT NULL,
   `testo` text NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `ruolo`
---
-
-CREATE TABLE IF NOT EXISTS `ruolo` (
-  `id_ruolo` int NOT NULL AUTO_INCREMENT,
-  `gilda` int NOT NULL DEFAULT '-1',
-  `nome_ruolo` varchar(255) NOT NULL,
-  `immagine` varchar(255) NOT NULL,
-  `stipendio` int NOT NULL DEFAULT '0',
-  `capo` int NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_ruolo`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
---
--- Dump dei dati per la tabella `ruolo`
---
-
-INSERT INTO `ruolo` (`id_ruolo`, `gilda`, `nome_ruolo`, `immagine`, `stipendio`, `capo`) VALUES
-(1, 1, 'Capitano della guardia', 'standard_gilda.png', 100, 1),
-(2, 1, 'Ufficiale della guardia', 'standard_gilda.png', 70, 0),
-(5, -1, 'Lavoratore', 'standard_gilda.png', 5, 0),
-(3, 1, 'Soldato della guardia', 'standard_gilda.png', 40, 0),
-(4, 1, 'Recluta della guardia', 'standard_gilda.png', 15, 0);
 
 -- --------------------------------------------------------
 

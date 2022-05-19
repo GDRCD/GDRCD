@@ -34,8 +34,6 @@ function updateFormList() {
         {'action': 'get_requirement_list'},
         function (data) {
 
-            console.log(data)
-
             if (data) {
                 let datas = JSON.parse(data);
 

@@ -1,0 +1,352 @@
+<?php
+
+/**
+ * @class Gruppi
+ * @note Classe che gestisce i gruppi
+ */
+class Gruppi extends BaseClass
+{
+
+    protected
+        $groups_active;
+
+    protected function __construct()
+    {
+        parent::__construct();
+        $this->groups_active = Functions::get_constant('GROUPS_ACTIVE');
+    }
+
+    /** CONFIG */
+
+    /**
+     * @fn activeGroups
+     * @note Controlla se i gruppi sono attivi
+     * @return bool
+     */
+    public function activeGroups(): bool
+    {
+        return $this->groups_active;
+    }
+
+    /** PERMESSI */
+
+    /**
+     * @fn permissionManageGroups
+     * @note Controlla se si hanno i permesis per gestire i gruppi
+     * @return bool
+     */
+    public function permissionManageGroups(): bool
+    {
+        return Permissions::permission('MANAGE_GROUPS');
+    }
+
+    /**
+     * @fn haveGroupPower
+     * @note Controlla se il personaggio ha almeno un ruolo con poteri o se ha i poteri per un singolo gruppo
+     * @param int $id
+     * @return int
+     */
+    public function haveGroupPower(int $id = 0): int
+    {
+
+        if ($id) {
+            $extra_query = "AND gruppi_ruoli.gruppo = '{$id}'";
+        }
+
+        $sql = DB::query("
+                SELECT COUNT(personaggio_ruolo.id) AS 'TOT' FROM gruppi_ruoli 
+                    LEFT JOIN personaggio_ruolo ON personaggio_ruolo.ruolo = gruppi_ruoli.id AND personaggio_ruolo.personaggio ='{$this->me_id}'
+                    WHERE gruppi_ruoli.poteri = 1 AND personaggio_ruolo.id IS NOT NULL {$extra_query}");
+
+        return Filters::int($sql['TOT']);
+    }
+
+    public function permissionServiceGroups(int $id = 0)
+    {
+        return $this->activeGroups() && ($this->haveGroupPower($id) || $this->permissionManageGroups());
+    }
+
+    /** TABLE HELPERS */
+
+    /**
+     * @fn getGroup
+     * @note Estrae un gruppo
+     * @param int $id
+     * @param string $val
+     * @return bool|int|mixed|string
+     */
+    public function getGroup(int $id, string $val = '*')
+    {
+        return DB::query("SELECT {$val} FROM gruppi WHERE id='{$id}' LIMIT 1");
+    }
+
+    /**
+     * @fn getAllGroups
+     * @note Estrae tutti i gruppi
+     * @param string $val
+     * @return bool|int|mixed|string
+     */
+    public function getAllGroups(string $val = '*')
+    {
+        return DB::query("SELECT {$val} FROM gruppi WHERE 1 ", 'result');
+    }
+
+    /**
+     * @fn getAllGroupsByType
+     * @note Estrae tutti i gruppi di un tipo
+     * @param string $type
+     * @param string $val
+     * @return bool|int|mixed|string
+     */
+    public function getAllGroupsByType(string $type, string $val = 'gruppi.*,gruppi_tipo.nome AS tipo_name')
+    {
+        return DB::query("SELECT {$val} FROM gruppi LEFT JOIN gruppi_tipo ON gruppi_tipo.id = gruppi.tipo WHERE tipo='{$type}' ", 'result');
+    }
+
+    /**
+     * @fn getGroupPeopleNumber
+     * @note Estrae il numero di membri di un gruppo
+     * @param int $id
+     * @return int
+     */
+    public function getGroupPeopleNumber(int $id): int
+    {
+        $sql = DB::query("
+                SELECT COUNT(personaggio.id) AS 'TOT' FROM personaggio 
+                    LEFT JOIN personaggio_ruolo 
+                        ON personaggio.id = personaggio_ruolo.personaggio
+                    LEFT JOIN gruppi_ruoli 
+                    ON gruppi_ruoli.id = personaggio_ruolo.ruolo
+                    WHERE gruppi_ruoli.gruppo = '{$id}' AND personaggio_ruolo.id IS NOT NULL ");
+
+        return Filters::int($sql['TOT']);
+    }
+
+    /** LISTE */
+
+    /**
+     * @fn listGroups
+     * @note Genera gli option per i gruppi
+     * @return string
+     */
+    public function listGroups(): string
+    {
+        $groups = $this->getAllGroups();
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $groups);
+    }
+
+    /** AJAX */
+
+    /**
+     * @fn ajaxGroupData
+     * @note Estrazione dinamica dei dati di un gruppo
+     * @param array $post
+     * @return array|bool|int|string
+     */
+    public function ajaxGroupData(array $post): array
+    {
+        $id = Filters::int($post['id']);
+        return $this->getGroup($id);
+    }
+
+    /** LOADER */
+
+    /**
+     * @fn loadServicePage
+     * @note Index della pagina servizi dei gruppi
+     * @param string $op
+     * @return string
+     */
+    public function loadServicePage(string $op): string
+    {
+        $op = Filters::out($op);
+
+        switch ($op) {
+            case 'read':
+                $page = 'read.php';
+                break;
+            default:
+                $page = 'view.php';
+                break;
+        }
+
+        return $page;
+
+    }
+
+    /** RENDER */
+
+    /**
+     * @fn groupsList
+     * @note Render html della lista dei gruppi
+     * @return string
+     */
+    public function groupsList(): string
+    {
+        $template = Template::getInstance()->startTemplate();
+        $types = GruppiTipi::getInstance()->getAllTypes();
+        $list = [];
+
+        foreach ($types as $type) {
+            $typeId = Filters::int($type['id']);
+            $groups = $this->getAllGroupsByType($typeId);
+            foreach ($groups as $group) {
+                $groupId = Filters::int($group['id']);
+                $group['member_number'] = $this->getGroupPeopleNumber($groupId);
+                array_push($list, $group);
+            }
+        }
+
+        return $template->renderTable(
+            'servizi/gruppi_list',
+            $this->renderGroupsList($list)
+        );
+    }
+
+    /**
+     * @fn renderGroupsList
+     * @note Render html lista gruppi
+     * @param array $list
+     * @return array
+     */
+    public function renderGroupsList(array $list): array
+    {
+        $row_data = [];
+
+        foreach ($list as $row) {
+
+            $array = [
+                'id' => Filters::int($row['id']),
+                'name' => Filters::out($row['nome']),
+                'member_number' => Filters::int($row['member_number']),
+                'tipo' => Filters::out($row['tipo_name'])
+            ];
+
+            $row_data[] = $array;
+        }
+
+        $cells = [
+            'Nome',
+            'Numero Membri',
+            'Tipo',
+            'Comandi',
+        ];
+        $links = [
+            ['href' => "/main.php?page=uffici", 'text' => 'Indietro']
+        ];
+        return [
+            'body_rows' => $row_data,
+            'cells' => $cells,
+            'links' => $links
+        ];
+    }
+
+    /** GESTIONE */
+
+    /**
+     * @fn NewGroup
+     * @note Inserisce un gruppo
+     * @param array $post
+     * @return array
+     */
+    public function NewGroup(array $post): array
+    {
+        if ($this->permissionManageGroups()) {
+
+            $nome = Filters::in($post['nome']);
+            $tipo = Filters::int($post['tipo']);
+            $img = Filters::in($post['immagine']);
+            $url = Filters::in($post['url']);
+            $statuto = Filters::in($post['statuto']);
+            $visibile = Filters::checkbox($post['visibile']);
+
+
+            DB::query("INSERT INTO gruppi (nome,tipo,immagine,url,statuto,visibile )  VALUES ('{$nome}','{$tipo}','{$img}','{$url}','{$statuto}','{$visibile}') ");
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Gruppo creato.',
+                'swal_type' => 'success',
+                'groups_list' => $this->listGroups()
+            ];
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
+        }
+    }
+
+    /**
+     * @fn ModGroup
+     * @note Aggiorna un gruppo
+     * @param array $post
+     * @return array
+     */
+    public function ModGroup(array $post): array
+    {
+        if ($this->permissionManageGroups()) {
+            $id = Filters::in($post['id']);
+            $nome = Filters::in($post['nome']);
+            $tipo = Filters::int($post['tipo']);
+            $img = Filters::in($post['immagine']);
+            $url = Filters::in($post['url']);
+            $statuto = Filters::in($post['statuto']);
+            $visibile = Filters::checkbox($post['visibile']);
+
+
+            DB::query("UPDATE  gruppi 
+                SET nome = '{$nome}',tipo='{$tipo}', immagine='{$img}',url='{$url}',statuto='{$statuto}',visibile='{$visibile}' WHERE id='{$id}'");
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Gruppo modificato.',
+                'swal_type' => 'success',
+                'groups_list' => $this->listGroups()
+            ];
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
+        }
+    }
+
+    /**
+     * @fn DelGroup
+     * @note Cancella un gruppo
+     * @param array $post
+     * @return array
+     */
+    public function DelGroup(array $post): array
+    {
+        if ($this->permissionManageGroups()) {
+
+            $id = Filters::in($post['id']);
+
+            DB::query("DELETE FROM gruppi WHERE id='{$id}'");
+            DB::query("DELETE FROM gruppi_ruoli WHERE gruppo='{$id}'");
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Gruppo eliminato.',
+                'swal_type' => 'success',
+                'groups_list' => $this->listGroups()
+            ];
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
+        }
+    }
+}
