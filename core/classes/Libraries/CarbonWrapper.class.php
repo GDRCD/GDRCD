@@ -1,6 +1,6 @@
 <?php
 
-require ROOT.'plugins/Carbon/autoload.php';
+require ROOT . 'plugins/Carbon/autoload.php';
 
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
