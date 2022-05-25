@@ -73,16 +73,39 @@ select.day, select.month, select.year {
 }
 
 /** * Stile dei messaggi d'avviso dell'engine */
-div.warning, div.error {
-    background-color: #cf8888;
+div.error, div.warning, div.warning_low,
+div.success {
     font-size: 12px;
     text-align: center;
     margin: 15px;
     font-weight: bolder;
     padding: 10px;
+}
+
+div.error {
+    background-color: #cf8888;
     border: solid 1px #800;
     color: #970b0b;
 }
+
+div.warning {
+    background-color: #fff3cd;
+    border: solid 1px #ffecb5;
+    color: #664d03;
+}
+
+div.warning_low {
+    background-color: #e2e3e5;
+    border: solid 1px #d3d6d8;
+    color: #41464b;
+}
+
+div.success {
+    background-color: #d1e7dd;
+    border: solid 1px #badbcc;
+    color: #0f5132;
+}
+
 
 div.link_back {
     text-align: center;
