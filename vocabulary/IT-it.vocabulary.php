@@ -310,7 +310,14 @@ $MESSAGE['interface']['bank']['notice'] = 'ti ha accreditato';
 $MESSAGE['interface']['esitiserie']['intro'] = "Messaggio che spiega come funzionano le serie di esiti lato master";
 $MESSAGE['interface']['esitiserie']['intro_pg'] = "Messaggio che spiega come funzionano le serie di esiti lato pg";
 $MESSAGE['interface']['esiti']['page_name'] = 'Pannello esiti';
-$MESSAGE['interface']['esiti']['new'] = 'Apri una nuova serie di esiti';
+$MESSAGE['interface']['esiti']['data'] = 'Data';
+$MESSAGE['interface']['esiti']['data'] = 'Data';
+$MESSAGE['interface']['esiti']['data'] = 'Data';
+$MESSAGE['interface']['esiti']['data'] = 'Data';
+
+$MESSAGE['interface']['esiti']['link']['new'] = 'Apri una nuova serie di esiti';
+$MESSAGE['interface']['esiti']['link']['back'] = 'Torna indietro';
+$MESSAGE['interface']['esiti']['no_esiti'] = 'Nessuna serie di esiti aperta';
 $MESSAGE['interface']['esiti']['newesito'] = "Messaggio che spiega come funziona l'invio di nuovi esiti lato master";
 $MESSAGE['interface']['esiti']['newesitopg'] = "Messaggio che spiega come funziona l'invio di nuovi esiti lato pg";
 $MESSAGE['interface']['esiti']['esitochat'] = "Messaggio che spiega come funziona l'invio di nuovi esiti in chat lato master";
