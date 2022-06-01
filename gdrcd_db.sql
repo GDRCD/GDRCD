@@ -221,9 +221,9 @@ CREATE TABLE IF NOT EXISTS `config` (
 
 
 INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,`editable`) VALUES
-    ('STANDARD_ENGINE','','Engine','Engine utilizzato. Non modificare se non necessario.','','string',1),
+    ('STANDARD_ENGINE','default','Engine','Engine utilizzato. Non modificare se non necessario.','','string',1),
     ('TEMPLATE_ENGINE','Smarty','Template','Template utilizzato. Non modificare se non necessario.','','string',1),
-    ('INLINE_CRONJOB',1,'Engine','Cronjob','Cronjob inline nell header?','bool',1),
+    ('INLINE_CRONJOB',1,'Engine','Cronjob inline','Cronjob inline nell header?','bool',1),
     ('ABI_LEVEL_CAP',5,'Abilita','Level cap Abilità','Livello massimo abilità','int',1),
     ('DEFAULT_PX_PER_LVL',10,'Abilita','Costo default Abilità','Moltiplicatore costo abilità, se non specificato','int',1),
     ('ABI_REQUIREMENT',1,'Abilita','Requisiti Abilità','Abilitare requisiti abilità?','bool',1),
@@ -252,8 +252,8 @@ INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,
     ('WEATHER_SEASON',1,'Meteo','Stagionale','Meteo stagioni o meteo Web api','bool',1),
     ('WEATHER_WIND',1,'Meteo','Vento','Abilita o disabilita il vento','bool',1),
     ('WEATHER_WEBAPI',0,'Meteo','Web Api','Abilita Web Api di OpenWeather','bool',1),
-    ('WEATHER_WEBAPIKEY','','Meteo','Web Api Key','Web Api di OpenWeather','String',1),
-    ('WEATHER_WEBAPI_CITY','','Meteo','Web Api Citta','Città di cui avere il meteo','String',1),
+    ('WEATHER_WEBAPIKEY','fake_key','Meteo','Web Api Key','Web Api di OpenWeather','String',1),
+    ('WEATHER_WEBAPI_CITY','Rome','Meteo','Web Api Citta','Città di cui avere il meteo','String',1),
     ('WEATHER_WEBAPI_ICON',0,'Meteo','Web Api icone','Icone di default o personalizzate','bool',1),
     ('WEATHER_LAST_DATE',0,'Meteo','Meteo Impostazioni','Data ultimo aggiornamento meteo','String',0),
     ('WEATHER_WEBAPI_FORMAT','png','Meteo','Icone estensione','Estensione delle icone','String',1),
