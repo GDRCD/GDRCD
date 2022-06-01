@@ -61,14 +61,12 @@ class Gruppi extends BaseClass
         return Filters::int($sql['TOT']);
     }
 
-
     /**@fn permissionServiceGroups
      * @note Controllo se ho il permesso per accedere alla pagina dei servizi dei gruppi
      * @param int $id
      * @return bool
      */
     public function permissionServiceGroups(int $id = 0): bool
-
     {
         return $this->activeGroups() && ($this->haveGroupPower($id) || $this->permissionManageGroups());
     }

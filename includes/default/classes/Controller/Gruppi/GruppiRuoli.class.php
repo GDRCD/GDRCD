@@ -131,7 +131,6 @@ class GruppiRuoli extends Gruppi
         return Filters::int($groups['TOT']);
     }
 
-
     /**
      * @fn getCharacterSalaries
      * @note Ottiene tutti gli stipendi dei ruoli di un personaggio
