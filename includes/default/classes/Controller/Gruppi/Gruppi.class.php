@@ -61,7 +61,14 @@ class Gruppi extends BaseClass
         return Filters::int($sql['TOT']);
     }
 
-    public function permissionServiceGroups(int $id = 0)
+
+    /**@fn permissionServiceGroups
+     * @note Controllo se ho il permesso per accedere alla pagina dei servizi dei gruppi
+     * @param int $id
+     * @return bool
+     */
+    public function permissionServiceGroups(int $id = 0): bool
+
     {
         return $this->activeGroups() && ($this->haveGroupPower($id) || $this->permissionManageGroups());
     }
@@ -347,6 +354,45 @@ class Gruppi extends BaseClass
                 'swal_message' => 'Permesso negato.',
                 'swal_type' => 'error'
             ];
+        }
+    }
+
+    /*** CRONJOB ***/
+
+    /**
+     * @fn cronSalaries
+     * @note Cronjob di assegnazione dei salari giornalieri
+     * @return void
+     */
+    public function cronSalaries(){
+
+        $pgs = Personaggio::getInstance()->getAllPg();
+
+        foreach ($pgs as $pg){
+            $id = Filters::int($pg['id']);
+
+            //**! Tenere divisi i totali di ogni singola categoria, per poter inviare messaggi
+            // e log specifici per tipologia
+            $totale_ruoli = 0;
+            $totale_lavori = 0;
+
+            // STIPENDI DA RUOLI
+            $ruoli = GruppiRuoli::getInstance()->getCharacterRolesSalaries($id);
+            foreach ($ruoli as $ruolo){
+                $totale_ruoli += Filters::int($ruolo['stipendio']);
+            }
+
+            // STIPENDI DA LAVORI
+            $lavori = GruppiLavori::getInstance()->getCharacterWorksSalaries($id);
+            foreach ($lavori as $lavoro){
+                $totale_lavori += Filters::int($lavoro['stipendio']);
+            }
+
+            // TOTALE COMPLESSIVO
+            $totale = ($totale_lavori + $totale_ruoli);
+
+            // ASSEGNAZIONE DEL DENARO AL PG
+            Personaggio::updatePgData($id,"banca=banca+'{$totale}'");
         }
     }
 }
