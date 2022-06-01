@@ -294,6 +294,9 @@ CREATE TABLE IF NOT EXISTS `cronjob` (
     `last_exec` datetime DEFAULT NULL,
     `in_exec` varchar(255) NOT NULL DEFAULT '',
     `interval` int NOT NULL DEFAULT 60,
+    `interval_type` varchar(255) NOT NULL DEFAULT 'minutes',
+    `class` varchar(255) NOT NULL,
+    `function` varchar(255) NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -301,9 +304,9 @@ CREATE TABLE IF NOT EXISTS `cronjob` (
 -- Dump dei dati per la tabella `cronjob`
 --
 
-INSERT INTO `cronjob` (`name`,`last_exec`,`in_exec`,`interval`) VALUES
-    ('meteo_update',NULL,false,'60'),
-    ('stipendi_assign',NULL,false,'1');
+INSERT INTO `cronjob` (`name`,`last_exec`,`in_exec`,`interval`,`interval_type`,`class`,`function`) VALUES
+    ('meteo_update',NULL,false,'60','minutes','Meteo','meteoUpdate'),
+    ('stipendi_assign',NULL,false,'1','days','Gruppi','cronSalaries');
 
 -- --------------------------------------------------------
 
