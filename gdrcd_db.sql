@@ -297,6 +297,10 @@ CREATE TABLE IF NOT EXISTS `cronjob` (
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+INSERT INTO `cronjob` (`name`,`last_exec`,`in_exec`,`interval`) VALUES
+    ('meteo_update',NULL,false,'60'),
+    ('stipendi_assign',NULL,false,'1');
+
 -- --------------------------------------------------------
 
 --
