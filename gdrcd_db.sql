@@ -285,6 +285,32 @@ INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `cronjob`
+--
+
+CREATE TABLE IF NOT EXISTS `cronjob` (
+    `id` bigint NOT NULL AUTO_INCREMENT,
+    `name` varchar(255) NOT NULL DEFAULT '0',
+    `last_exec` datetime DEFAULT NULL,
+    `in_exec` varchar(255) NOT NULL DEFAULT '',
+    `interval` int NOT NULL DEFAULT 60,
+    `interval_type` varchar(255) NOT NULL DEFAULT 'minutes',
+    `class` varchar(255) NOT NULL,
+    `function` varchar(255) NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Dump dei dati per la tabella `cronjob`
+--
+
+INSERT INTO `cronjob` (`name`,`last_exec`,`in_exec`,`interval`,`interval_type`,`class`,`function`) VALUES
+    ('meteo_update',NULL,false,'60','minutes','Meteo','meteoUpdate'),
+    ('stipendi_assign',NULL,false,'1','days','Gruppi','cronSalaries');
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `diario`
 --
 
@@ -352,8 +378,6 @@ CREATE TABLE IF NOT EXISTS `esiti_risposte` (
   `modificatore` int(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
 
 -- --------------------------------------------------------
 
