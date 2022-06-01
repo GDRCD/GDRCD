@@ -297,6 +297,10 @@ CREATE TABLE IF NOT EXISTS `cronjob` (
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+--
+-- Dump dei dati per la tabella `cronjob`
+--
+
 INSERT INTO `cronjob` (`name`,`last_exec`,`in_exec`,`interval`) VALUES
     ('meteo_update',NULL,false,'60'),
     ('stipendi_assign',NULL,false,'1');
@@ -371,8 +375,6 @@ CREATE TABLE IF NOT EXISTS `esiti_risposte` (
   `modificatore` int(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
 
 -- --------------------------------------------------------
 
