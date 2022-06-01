@@ -305,7 +305,7 @@ CREATE TABLE IF NOT EXISTS `cronjob` (
 --
 
 INSERT INTO `cronjob` (`name`,`last_exec`,`in_exec`,`interval`,`interval_type`,`class`,`function`) VALUES
-    ('meteo_update',NULL,false,'60','minutes','Meteo','meteoUpdate'),
+    ('meteo_update',NULL,false,'60','minutes','Meteo','generateGlobalWeather'),
     ('stipendi_assign',NULL,false,'1','days','Gruppi','cronSalaries');
 
 -- --------------------------------------------------------
