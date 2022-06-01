@@ -19,7 +19,10 @@ if (!empty($_SESSION['login'])) {
 }
 
 // Cronjob
-Cronjob::getInstance()->startCron();
+if(Cronjob::getInstance()->inlineCronjob()) {
+    var_dump(1);
+    Cronjob::getInstance()->startCron();
+}
 
 /** * CONTROLLO PER AGGIORNAMENTO DB
  * Il controllo viene lanciato solo in index e nelle pagine di installer/upgrade.

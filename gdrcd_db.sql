@@ -223,6 +223,7 @@ CREATE TABLE IF NOT EXISTS `config` (
 INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,`editable`) VALUES
     ('STANDARD_ENGINE','','Engine','Engine utilizzato. Non modificare se non necessario.','','string',1),
     ('TEMPLATE_ENGINE','Smarty','Template','Template utilizzato. Non modificare se non necessario.','','string',1),
+    ('INLINE_CRONJOB',1,'Engine','Cronjob','Cronjob inline nell header?','bool',1),
     ('ABI_LEVEL_CAP',5,'Abilita','Level cap Abilità','Livello massimo abilità','int',1),
     ('DEFAULT_PX_PER_LVL',10,'Abilita','Costo default Abilità','Moltiplicatore costo abilità, se non specificato','int',1),
     ('ABI_REQUIREMENT',1,'Abilita','Requisiti Abilità','Abilitare requisiti abilità?','bool',1),
