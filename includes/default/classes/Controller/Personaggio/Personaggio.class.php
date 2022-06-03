@@ -49,16 +49,6 @@ class Personaggio extends BaseClass
         return DB::query("SELECT {$val} FROM personaggio WHERE id='{$pg}' LIMIT 1");
     }
 
-    /**
-     * @fn getAllPg
-     * @note Estrae tutti i personaggi
-     * @param string $val
-     * @return bool|int|mixed|string
-     */
-    public function getAllPg(string $val = '*')
-    {
-        return DB::query("SELECT {$val} FROM personaggio WHERE 1", 'result');
-    }
 
     /**** CONTROLS ****/
 
@@ -131,7 +121,7 @@ class Personaggio extends BaseClass
         DB::query("UPDATE personaggio SET {$set} WHERE id='{$id}' LIMIT 1");
     }
 
-<<<<<<< HEAD
+
     /***** LISTS *****/
 
     /**
@@ -158,7 +148,7 @@ class Personaggio extends BaseClass
         }
 
         return $html;
-=======
+    }
 
     /**
      * @fn listPgs
@@ -169,6 +159,6 @@ class Personaggio extends BaseClass
     {
         $roles = $this->getAllPg();
         return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $roles);
->>>>>>> dev6
+
     }
 }
