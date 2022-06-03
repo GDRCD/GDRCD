@@ -159,7 +159,7 @@ class Router
         global $MESSAGE;
         global $PARAMETERS;
 
-        $db_search = DB::query("SELECT redirect FROM pages WHERE page='{$page}' LIMIT 1");
+        $db_search = Router::getPageRedirect($page);
 
         if (!empty($db_search['redirect'])) {
             if (file_exists($db_search['redirect'])) {
@@ -255,7 +255,7 @@ class Router
      */
     public static function getPagesLink(string $page)
     {
-        $db_search = DB::query("SELECT redirect FROM pages WHERE page='{$page}' LIMIT 1");
+        $db_search = Router::getPageRedirect($page);
 
         if (!empty($db_search['redirect'])) {
             if (file_exists($db_search['redirect'])) {
@@ -287,8 +287,7 @@ class Router
     public static function getCssLink(string $page): string
     {
 
-        $db_search = DB::query("SELECT redirect FROM pages WHERE page='{$page}' LIMIT 1");
-
+        $db_search = Router::getPageRedirect($page);
 
         if (!empty($db_search['redirect'])) {
             if (file_exists($db_search['redirect'])) {
@@ -323,12 +322,12 @@ class Router
         $engine = Functions::get_constant('STANDARD_ENGINE');
 
         if (file_exists(ROOT . "includes/{$engine}/themes")) {
-            return ROOT . "includes/{$engine}/themes/";
+            return "includes/{$engine}/themes/";
         }
 
 
         if (file_exists(ROOT . "includes/default/themes")) {
-            return ROOT . "includes/default/themes/";
+            return "includes/default/themes/";
         }
 
         die('Non esiste una cartella di default per i temi.');

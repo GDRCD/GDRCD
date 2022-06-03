@@ -1,7 +1,8 @@
 <?php
 
 
-class Personaggio extends BaseClass{
+class Personaggio extends BaseClass
+{
 
     /*** PERSONAGGIO TABLES HELPER ***/
 
@@ -14,7 +15,7 @@ class Personaggio extends BaseClass{
     public static function getPgLocation(int $pg = 0): int
     {
 
-        if(empty($pg)){
+        if (empty($pg)) {
             $pg = Functions::getInstance()->getMyId();
         }
 
@@ -43,8 +44,20 @@ class Personaggio extends BaseClass{
      * @param string $val
      * @return bool|int|mixed|string
      */
-    public static function getPgData(int $pg, string $val ='*'){
+    public static function getPgData(int $pg, string $val = '*')
+    {
         return DB::query("SELECT {$val} FROM personaggio WHERE id='{$pg}' LIMIT 1");
+    }
+
+    /**
+     * @fn getAllPg
+     * @note Estrae tutti i personaggi
+     * @param string $val
+     * @return bool|int|mixed|string
+     */
+    public function getAllPg(string $val = '*')
+    {
+        return DB::query("SELECT {$val} FROM personaggio WHERE 1", 'result');
     }
 
     /**** CONTROLS ****/
@@ -85,7 +98,7 @@ class Personaggio extends BaseClass{
      * @var int $id
      * @return string
      */
-    public static function nameFromId(int $id):string
+    public static function nameFromId(int $id): string
     {
         $id = Filters::int($id);
         $data = DB::query("SELECT nome FROM personaggio WHERE id='{$id}' LIMIT 1");
@@ -113,11 +126,12 @@ class Personaggio extends BaseClass{
      * @param string $set
      * @return void
      */
-    public static function updatePgData(int $id, string $set):void
+    public static function updatePgData(int $id, string $set): void
     {
         DB::query("UPDATE personaggio SET {$set} WHERE id='{$id}' LIMIT 1");
     }
 
+<<<<<<< HEAD
     /***** LISTS *****/
 
     /**
@@ -144,5 +158,17 @@ class Personaggio extends BaseClass{
         }
 
         return $html;
+=======
+
+    /**
+     * @fn listPgs
+     * @note Genera gli option per i personaggi
+     * @return string
+     */
+    public function listPgs(): string
+    {
+        $roles = $this->getAllPg();
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $roles);
+>>>>>>> dev6
     }
 }

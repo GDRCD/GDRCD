@@ -131,6 +131,7 @@ if($_SESSION['login'] != '') {
         /*Creo un cookie*/
         setcookie('lastlogin', $_SESSION['login'], 0, '', '', 0);
 
+        # TODO RIMUOVERE
         if($PARAMETERS['settings']['auto_salary'] == 'ON') {
             /*Stipendio*/
             $row = gdrcd_query("SELECT soldi, banca, ultimo_stipendio FROM personaggio WHERE nome = '".$_SESSION['login']."' LIMIT 1");

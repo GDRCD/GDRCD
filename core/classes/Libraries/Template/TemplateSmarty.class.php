@@ -10,10 +10,10 @@ class TemplateSmarty extends Template
         $theme_dir = Router::getThemeDir();
 
         $this->smarty = new Smarty();
-        $this->smarty->setTemplateDir($theme_dir.'/view/smarty/templates');
-        $this->smarty->setConfigDir($theme_dir.'/view/smarty/config');
-        $this->smarty->setCompileDir($theme_dir.'/smarty/compiled');
-        $this->smarty->setCacheDir($theme_dir.'/view/smarty/cache');
+        $this->smarty->setTemplateDir(ROOT.$theme_dir.'/view/smarty/templates');
+        $this->smarty->setConfigDir(ROOT.$theme_dir.'/view/smarty/config');
+        $this->smarty->setCompileDir(ROOT.$theme_dir.'/smarty/compiled');
+        $this->smarty->setCacheDir(ROOT.$theme_dir.'/view/smarty/cache');
         return $this;
     }
 

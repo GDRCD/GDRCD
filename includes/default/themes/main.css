@@ -87,6 +87,7 @@ div.link_back {
     text-align: center;
     background-color: #d1d1d1;
     padding: 2px;
+    margin-top: 15px;
 }
 
 /** * Logout */
@@ -547,7 +548,8 @@ div.innertube {
     text-align: center;
 }
 
-.form_container .form .form_subtitle{
+.form_container .form .form_subtitle,
+.general_subtitle{
     font-size: 13px;
     font-weight: bold;
     margin: 10px 0;
@@ -1139,4 +1141,41 @@ div.innertube {
 
 #form_meteo_edit{
     text-align: center;
+}
+
+.gruppi_list .td{
+    width: 24%;
+}
+
+.roles_list .td{
+    width: 24%;
+}
+
+.members_list .td{
+    width: 32%;
+}
+
+.works_list .td{
+    width: 24%;
+}
+
+.group_rules{
+    width: 90%;
+    border: 1px solid black;
+    background: #7289da;
+    border-radius: 10px;
+    padding: 5px;
+    box-sizing: border-box;
+    min-height: 200px;
+    margin:0 auto;
+    text-align: left;
+}
+
+
+
+.group_rules img,
+.roles_list img,
+.works_list img,
+.members_list img{
+    max-height: 15px;
 }
