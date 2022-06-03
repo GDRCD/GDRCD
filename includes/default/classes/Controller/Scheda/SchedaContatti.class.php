@@ -12,7 +12,7 @@ class SchedaContatti extends Scheda
      */
     public function isPublic(): bool
     {
-        return Functions::get_constant('CONTACT_PUBLIC');
+        return Functions::get_constant('CONTACTS_ENABLED');
     }
 
     /**

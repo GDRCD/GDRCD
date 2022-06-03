@@ -27,7 +27,6 @@ class Contacts extends BaseClass
 
         # Se true, a prescindere dalla scelta del pg sulla nota, sono SEMPRE visibili solo a chi ha il permesso VIEW_CONTACTS ed al pg stesso, se false si rifa' a CONTACT_PUBLIC - default false
         $this->con_secret = Functions::get_constant('CONTACT_SECRETS');
-
         # attivi/disattivi le categorie contatto - default true
         $this->con_categories = Functions::get_constant('CONTACT_CATEGORIES');
 
@@ -36,6 +35,8 @@ class Contacts extends BaseClass
 
         # Solo lo staff puo' assegnare le categorie di contatto, true/false - default false
         $this->con_categories_staff = Functions::get_constant('CONTACT_CATEGORIES_STAFF_ONLY');
+
+
 
 
     }
@@ -85,10 +86,33 @@ class Contacts extends BaseClass
      * @note Controlla se è attiva la funzionalità dei contatti
      * @return bool
      */
+    public function contatcPublic(): bool
+    {
+        return $this->con_public;
+    }
+
     public function contatcEnables(): bool
     {
         return $this->con_enabled;
     }
+    public function contatcSecret(): bool
+    {
+        return $this->con_secret;
+    }
+    public function contatcCategories(): bool
+    {
+        return $this->con_categories;
+    }
+    public function contatcCategoriesPublic(): bool
+    {
+        return $this->con_categories_public;
+    }
+    public function contatcCategoriesStaff(): bool
+    {
+        return $this->con_categories_staff;
+    }
+
+
     /*** PERMISSIONS */
 
     /**
@@ -96,19 +120,28 @@ class Contacts extends BaseClass
      * @note Controlla se si hanno i permessi per gestire i contatti o se sono i propri
      * @return bool
      */
-    public function contactManage($pg): bool
+    public function contactView($pg): bool
     {
-        return (Personaggio::isMyPg($pg)) || (Permissions::permission('MANAGE_CONTACT'));
+        return (Personaggio::isMyPg($pg)) || (Permissions::permission('VIEW_CONTACTS'));
     }
-    /**
-     * @fn contactManage
-     * @note Controlla se si hanno i permessi per gestire i contatti
-     * @return bool
-     */
-    public function contactManageManager($pg): bool
+    public function contactUpdate($pg): bool
     {
-        return  (Permissions::permission('MANAGE_CONTACT'));
+        return (Personaggio::isMyPg($pg)) || (Permissions::permission('UPDATE_CONTACTS'));
     }
+    public function contactDelete($pg): bool
+    {
+        return (Personaggio::isMyPg($pg)) || (Permissions::permission('DELETE_CONTACTS'));
+    }
+    public function categoriePublic(): bool
+    {
+        return $this->contatcCategoriesPublic() || Permissions::permission('VIEW_CONTACTS_CATEGORIES');
+    }
+    public function categoriesStaff(): bool
+    {
+        return $this->contatcCategoriesStaff() || Permissions::permission('MODERATOR');
+    }
+
+
     /*** TABLES HELPERS ***/
 
     /**
@@ -167,7 +200,12 @@ class Contacts extends BaseClass
                 'id'=>$id,
                 'contatto' => $contatto,
                 'categoria'=>$categoria['nome'],
-                'contatti_view_permission'=> $this->contactManage($id_pg),
+                'contatti_view_permission'=> $this->contactView($id_pg),
+                'contatti_update_permission'=> $this->contactUpdate($id_pg),
+                'contatti_delete_permission'=> $this->contactDelete($id_pg),
+                'contatti_categories_enabled'=>$this->contatcCategories(),
+                'contatti_categories_public'=>$this->categoriePublic(),
+                'contatti_categories_staff'=>$this->categoriesStaff(),
                 'id_pg'=>$id_pg,
                 'pg'=>$pg
 

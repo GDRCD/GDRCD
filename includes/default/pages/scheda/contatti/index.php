@@ -6,7 +6,8 @@ $contatti=Contacts::getInstance();
 $id_pg = Filters::int($_GET['id_pg']);
 $op = Filters::out($_GET['op']);
 
-if ($scheda_con->isAccessible($id_pg)) { ?>
+if ($contatti->contatcEnables()) {
+    if ($scheda_con->isAccessible($id_pg)) { ?>
 
 
     <div class="pagina_scheda pagina_scheda_contatti">
@@ -21,5 +22,6 @@ if ($scheda_con->isAccessible($id_pg)) { ?>
     </div>
 
 <?php
+    }
 }
 ?>

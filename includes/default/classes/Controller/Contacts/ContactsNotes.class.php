@@ -87,17 +87,24 @@ class ContactsNotes extends Contacts
      */
     public function getAllNote($id,$id_pg)
     {
-        if($this->contactManage($id_pg))
-        { //se sei proprietario vedi tutte le note pubbliche e non, ma che non sono state eliminate
+        if($this->contactView($id_pg)){
+            //se sei il proprietario, visualizzi le tue note
             return DB::query("SELECT * FROM contatti_nota WHERE id_contatto={$id} AND eliminato=0", 'result');
         }
-        else if($this->contactManageManager($id_pg))
-        {//se hai i permessi di controllo sui contatti, puoi visionare tutti le note
-            return DB::query("SELECT * FROM contatti_nota WHERE id_contatto={$id}", 'result');
-        }else{
-            //altrimenti, vedi solo le note pubbliche e che non sono eliminate
-            return DB::query("SELECT * FROM contatti_nota WHERE id_contatto={$id} AND pubblica='si' AND eliminato=0", 'result');
+        else if($this->contatcSecret() && (Permissions::permission('VIEW_CONTACTS'))) {
+            //se le note sono secrete e hai il permesso di visualizzarle
+            return DB::query("SELECT * FROM contatti_nota WHERE id_contatto={$id} AND eliminato=0", 'result');
         }
+        else if($this->contatcPublic()){
+            //se la configurazione è impostata su pubblico
+            return DB::query("SELECT * FROM contatti_nota WHERE id_contatto={$id} AND eliminato=0", 'result');
+
+        }else{
+            //altrimenti, prende solo quelli impostati come pubblico dall'utente
+            return DB::query("SELECT * FROM contatti_nota WHERE id_contatto={$id} AND pubblica IN ('si', '') AND eliminato=0", 'result');
+        }
+
+
     }
     /**
      * @fn getNota
@@ -180,7 +187,9 @@ class ContactsNotes extends Contacts
                 'titolo'=>$titolo,
                 'nota' => $nota,
                 'pubblica'=>$pubblica,
-                'contatti_view_permission'=> $this->contactManage($id_pg),
+                'contatti_view_permission'=> $this->contactView($id_pg),
+                'contatti_update_permission'=> $this->contactUpdate($id_pg),
+                'contatti_delete_permission'=> $this->contactDelete($id_pg),
                 'id_pg'=>$id_pg,
                 'pg'=>$pg,
                 'creato_il'=> $creato_il,

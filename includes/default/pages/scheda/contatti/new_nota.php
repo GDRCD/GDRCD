@@ -17,15 +17,25 @@ $id_contatto= Filters::int($_REQUEST['id']);
           action="scheda/contatti/contatti_ajax.php"
           data-reset="false"
           data-callback="goBackNoteContatto">
-        <div class="single_input">
-            <div class='label'>
-                Pubblica
+        <?php
+
+        if(!$contatti->contatcPublic()){
+            ?>
+            <div class="single_input">
+                <div class='label'>
+                    Pubblica
+                </div>
+                <select name="pubblica">
+                    <option value="si" >Si</option>
+                    <option value="no" >No</option>
+                </select>
             </div>
-            <select name="pubblica">
-                 <option value="si">Si</option>
-                <option value="no">No</option>
-            </select>
-        </div>
+            <?php
+        }  else{ ?>
+        <input type="hidden" value="si" name="pubblica">
+        <?php
+        }
+        ?>
         <div class="single_input">
             <div class='label'>
                 Titolo nota

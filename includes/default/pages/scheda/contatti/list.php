@@ -14,17 +14,20 @@ if($contatti->contatcEnables()){
     ?>
 
 </div>
-<?php
-if($contatti->contactManage($id_pg))
-    {?>
+
 <div class="fake-table">
-    <div class="footer">
-        <a href="/main.php?page=scheda_contatti&op=new&id_pg=<?=$id_pg?>&pg=<?=$pg?>">Nuovo contatto</a> | <a href="/main.php?page=scheda&id_pg=<?=$id_pg?>&pg=<?=$pg?>">Torna indietro</a>
+    <div class="footer"><?php
+        if($contatti->contactUpdate($id_pg))
+        {
+            ?>
+        <a href="/main.php?page=scheda_contatti&op=new&id_pg=<?=$id_pg?>&pg=<?=$pg?>">Nuovo contatto</a> |
+            <?php
+        }
+        ?>
+        <a href="/main.php?page=scheda&id_pg=<?=$id_pg?>&pg=<?=$pg?>">Torna indietro</a>
     </div>
 </div>
-   <?php
-    }
-?>
+
 
     <script src="<?= Router::getPagesLink('scheda/contatti/JS/delete_contatti.js'); ?>"></script>
 <?php

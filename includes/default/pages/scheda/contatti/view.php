@@ -30,7 +30,14 @@ $contatto=Personaggio::getPgData($id_contatto['contatto']);//dati del personaggi
 
 <div class="fake-table">
     <div class="footer">
+        <?php
+        if($contatti->contactUpdate($id_pg)){
+
+        ?>
         <a href="/main.php?page=scheda_contatti&id_pg=<?=$id_pg?>&pg=<?=$pg?>&op=new_nota&id=<?=$id?>">Nuova nota</a> |
+        <?php
+        }
+        ?>
         <a href="/main.php?page=scheda_contatti&id_pg=<?=$id_pg?>&pg=<?=$pg?>">Torna indietro</a>
     </div>
 </div>

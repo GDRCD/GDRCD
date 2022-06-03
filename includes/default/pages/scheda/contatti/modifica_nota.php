@@ -12,6 +12,10 @@ $nota=$contatti_note->getNota('titolo, nota, pubblica', $id);
           action="scheda/contatti/contatti_ajax.php"
           data-reset="false"
           data-callback="closeNoteContatto">
+        <?php
+
+        if(!$contatti_note->contatcPublic()){
+        ?>
         <div class="single_input">
             <div class='label'>
                 Pubblica
@@ -21,6 +25,12 @@ $nota=$contatti_note->getNota('titolo, nota, pubblica', $id);
                 <option value="no" <?php echo ($nota['pubblica']=='no' ? 'selected' : '')?>>No</option>
             </select>
         </div>
+        <?php
+        }else{?>
+            <input type="hidden" value="si" name="pubblica">
+        <?php
+        }
+        ?>
         <div class="single_input">
             <div class='label'>
                 Titolo nota
