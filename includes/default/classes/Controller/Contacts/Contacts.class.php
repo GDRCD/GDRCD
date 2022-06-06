@@ -116,29 +116,49 @@ class Contacts extends BaseClass
     /*** PERMISSIONS */
 
     /**
-     * @fn contactManage
-     * @note Controlla se si hanno i permessi per gestire i contatti o se sono i propri
+     * @fn contactView
+     * @note Controlla se si hanno i permessi per vedere i contatti o se sono i propri
      * @return bool
      */
     public function contactView($pg): bool
     {
         return (Personaggio::isMyPg($pg)) || (Permissions::permission('VIEW_CONTACTS'));
     }
+    /**
+     * @fn contactUpdate
+     * @note Controlla se si hanno i permessi per aggiornare le note dei contatti propri o altrui
+     * @return bool
+     */
     public function contactUpdate($pg): bool
     {
         return (Personaggio::isMyPg($pg)) || (Permissions::permission('UPDATE_CONTACTS'));
     }
+    /**
+     * @fn contactDelete
+     * @note Controlla se si hanno i permessi per eliminare i contatti
+     * @return bool
+     */
     public function contactDelete($pg): bool
     {
         return (Personaggio::isMyPg($pg)) || (Permissions::permission('DELETE_CONTACTS'));
     }
+    /**
+     * @fn contactPublic
+     * @note Controlla se le categorie sono Pubbliche, altrimenti solo chi ha il permesso può vederle
+     * @return bool
+     */
     public function categoriePublic(): bool
     {
         return $this->contatcCategoriesPublic() || Permissions::permission('VIEW_CONTACTS_CATEGORIES');
     }
+    /**
+     * @fn contactStaff
+     * @note Controlla se le categorie sono visibili allo staff e se si hanno i permessi per vederle
+     * @return bool
+     */
     public function categoriesStaff(): bool
     {
-        return $this->contatcCategoriesStaff() || Permissions::permission('MODERATOR');
+        return $this->contatcCategoriesStaff() || Permissions::permission('VIEW_CONTACTS_CATEGORIES');
     }
 
 
