@@ -28,6 +28,9 @@ class ContactsNotes extends Contacts
             case 'edit_nota':
                 $page = 'modifica_nota.php';
                 break;
+            case 'edit':
+                $page = 'edit.php';
+                break;
         }
 
         return $page;

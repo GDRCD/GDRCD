@@ -56,6 +56,16 @@ class ContactsCategories extends Contacts
         $types = $this->getAllCategories();
         return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $types);
     }
+    /**
+     * @fn listCategories
+     * @note Genera gli option per i tipi di categorie
+     * @return string
+     */
+    public function listCategoriesToUpdate($selected): string
+    {
+        $types = $this->getAllCategories();
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', $selected, $types);
+    }
     /** GESTIONE */
 
     /**
@@ -70,7 +80,7 @@ class ContactsCategories extends Contacts
 
             $nome = Filters::in($post['nome']);
             $creato_il=date("Y-m-d H:i:s");
-            $creato_da="";
+            $creato_da=Filters::in($post['creato_da']);
 
 
             DB::query("INSERT INTO contatti_categorie (nome, creato_il, creato_da )  VALUES ('{$nome}','{$creato_il}','{$creato_da}') ");

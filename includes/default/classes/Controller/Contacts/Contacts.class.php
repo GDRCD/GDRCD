@@ -215,6 +215,8 @@ class Contacts extends BaseClass
             $categoria=$this->getOneContactCat('nome',$id_categoria);
 
             $contatto=Personaggio::nameFromId($id_contatto);
+            $pop_up_modifica='javascript:modalWindow("edit", "Modifica Contatto","popup.php?page=scheda_contatti_nota&id='.$id.'&op=edit") ';
+
 
             $array = [
                 'id'=>$id,
@@ -226,6 +228,7 @@ class Contacts extends BaseClass
                 'contatti_categories_enabled'=>$this->contatcCategories(),
                 'contatti_categories_public'=>$this->categoriePublic(),
                 'contatti_categories_staff'=>$this->categoriesStaff(),
+                'pop_up_modifica'=>$pop_up_modifica,
                 'id_pg'=>$id_pg,
                 'pg'=>$pg
 

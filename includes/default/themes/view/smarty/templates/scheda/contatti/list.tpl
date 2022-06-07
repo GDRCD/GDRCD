@@ -12,6 +12,10 @@
         <div class='td commands'>
 
             <a href='/main.php?page={$path}&op=view&id={$row.id}&id_pg={$row.id_pg}&pg={$row.pg}' title='Visualizza'><i class="far fa-info"></i></a>
+
+            {if $row.contatti_update_permission} <a href='{$row.pop_up_modifica}'><i class='fas fa-edit'></i></a>{/if}
+
+
             {if $row.contatti_delete_permission}
                 |  <a class='ajax_link' data-id='{$row.id}' data-action='delete_contatto' href='#' title='Elimina'><i class='far fa-trash'></i></a>
             {/if}

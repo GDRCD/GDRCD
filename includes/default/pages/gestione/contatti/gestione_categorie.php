@@ -30,8 +30,9 @@ if($cls->permissionManageCategories() ){ # Metodo di controllo per accesso alla 
 
             <div class="single_input">
                 <div class="label">Nome</div>
-                <input type="text" name="nome">
+                <input type="text" name="nome" required>
             </div>
+            <input type="hidden" name="creato_da" value="<?=Functions::getInstance()->getMyId();?>" >
 
 
             <div class="single_input">
@@ -44,7 +45,7 @@ if($cls->permissionManageCategories() ){ # Metodo di controllo per accesso alla 
         <!-- EDIT -->
         <form class="form edit_form ajax_form" action="gestione/contatti/gestione_categorie_ajax.php" data-callback="updateCategoriesList">
 
-            <div class="form_title">Modifica gruppo</div>
+            <div class="form_title">Modifica categoria</div>
 
             <div class="single_input">
                 <div class="label">Categorie</div>
@@ -55,7 +56,7 @@ if($cls->permissionManageCategories() ){ # Metodo di controllo per accesso alla 
 
             <div class="single_input">
                 <div class="label">Nome</div>
-                <input type="text" name="nome">
+                <input type="text" name="nome" required>
             </div>
 
 
@@ -69,10 +70,10 @@ if($cls->permissionManageCategories() ){ # Metodo di controllo per accesso alla 
         <!-- DELETE -->
         <form method="POST" class="form ajax_form" action="gestione/contatti/gestione_categorie_ajax.php" data-callback="updateCategoriesList">
 
-            <div class="form_title">Elimina gruppo</div>
+            <div class="form_title">Elimina categoria</div>
 
             <div class="single_input">
-                <div class="label">Gruppo</div>
+                <div class="label">Categoria</div>
                 <select name="id" required>
 
                     <?= $cls->listCategories(); ?>
