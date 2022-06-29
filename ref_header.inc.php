@@ -82,6 +82,8 @@ if((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) 
                         WHERE oggetto.id_oggetto='{$item}' 
                           AND clgpersonaggiooggetto.nome='{$me}' LIMIT 1");
 
+            // Informazioni dell'oggetto
+            $nomeOggetto = gdrcd_filter_out($data['nome']);
             $cariche = gdrcd_filter('num',$data['cariche']);
             $numero = gdrcd_filter('num',$data['numero']);
             $new_cariche = gdrcd_filter('num',$data['new_cariche']);
@@ -111,7 +113,7 @@ if((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) 
 
             gdrcd_query($query);
 
-            gdrcd_query("INSERT INTO chat ( stanza, imgs, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", '".$_SESSION['sesso'].";".$_SESSION['img_razza']."', '".$_SESSION['login']."', '', NOW(), 'O', '".$_SESSION['login'].' '.gdrcd_filter('in', $MESSAGE['chat']['commands']['die']['item']).': '.gdrcd_filter('in', $item[2])."')");
+            gdrcd_query("INSERT INTO chat ( stanza, imgs, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", '".$_SESSION['sesso'].";".$_SESSION['img_razza']."', '".$_SESSION['login']."', '', NOW(), 'O', '".$_SESSION['login'].' '.gdrcd_filter('in', $MESSAGE['chat']['commands']['die']['item']).': '.gdrcd_filter('in', $nomeOggetto)."')");
         }
     }
 
