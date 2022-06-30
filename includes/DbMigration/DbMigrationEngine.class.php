@@ -5,7 +5,7 @@
  */
 class DbMigrationEngine
 {
-    const MIGRATIONS_FOLDER = __DIR__ . '/../db_versions/';
+    const MIGRATIONS_FOLDER = __DIR__ . '/../../db_versions/';
     
     /**
      * @fn updateDbSchema
