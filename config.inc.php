@@ -768,7 +768,7 @@ $PARAMETERS['administration']['rules']['text'] = 'Gestione regolamento';
 $PARAMETERS['administration']['rules']['url'] = 'main.php?page=gestione_regolamento';
 $PARAMETERS['administration']['rules']['access_level'] = SUPERUSER;
 $PARAMETERS['administration']['maintenance']['text'] = 'Manutenzione';
-$PARAMETERS['administration']['maintenance']['url'] = 'main.php?page=gestione_manutenzione';
+$PARAMETERS['administration']['maintenance']['url'] = 'main.php?page=gestione/manutenzione';
 $PARAMETERS['administration']['maintenance']['access_level'] = SUPERUSER;
 
 
