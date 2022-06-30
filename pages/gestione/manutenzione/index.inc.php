@@ -1,18 +1,20 @@
-<div class="gestione_pagina">
+<?php
 
-    <!-- Titolo della pagina -->
-    <div class="gestione_incipit">
-        <div class="title"><?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['page_name']); ?></div>
-    </div>
-
-    <?php
     /*HELP: */
     /*Controllo permessi utente*/
     if(!gdrcd_controllo_permessi($PARAMETERS['administration']['maintenance']['access_level'])) {
         echo '<div class="error">'.gdrcd_filter('out', $MESSAGE['error']['not_allowed']).'</div>';
         die();
     }
+
     ?>
+
+<div class="gestione_pagina">
+
+    <!-- Titolo della pagina -->
+    <div class="gestione_incipit">
+        <div class="title"><?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['page_name']); ?></div>
+    </div>
         <!-- Corpo della pagina -->
         <div class="gestione_body">
         <?php
