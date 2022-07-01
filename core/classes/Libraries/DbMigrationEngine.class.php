@@ -22,8 +22,8 @@ class DbMigrationEngine extends BaseClass
 
         // AUTO CREATE - AUTO INSERT, FROM SQL FILE
         self::recursiveCreate($sql_file);
-        self::recursiveInsert($sql_file);
 
+        // CREATE STARTING DB MIGRATION ID
         self::trackAppliedMigration('000000_start_db');
 
         // EXECUTE MIGRATIONS
@@ -48,26 +48,6 @@ class DbMigrationEngine extends BaseClass
             $new_sql = substr($new_val, strpos($new_val, ';') + 1);
             self::recursiveCreate($new_sql);
         }
-    }
-
-    /**
-     * @fn recursiveInsert
-     * @note Funzione recursiva di inserimento dati
-     * @param $sql
-     * @return void
-     */
-    public static function recursiveInsert($sql)
-    {
-        $new_val = substr($sql, strpos($sql, 'INSERT INTO'));
-
-        if (!empty($new_val)) {
-            $string = substr($new_val, 0, strpos($new_val, ';') + 1);
-            DB::query($string);
-
-            $new_sql = substr($new_val, strpos($new_val, ';') + 1);
-            self::recursiveInsert($new_sql);
-        }
-
     }
 
     /**
