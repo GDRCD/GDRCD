@@ -1,4 +1,12 @@
 <?php
+
+/*HELP: */
+/*Controllo permessi utente*/
+if(!gdrcd_controllo_permessi($PARAMETERS['administration']['maintenance']['access_level'])) {
+    echo '<div class="error">'.gdrcd_filter('out', $MESSAGE['error']['not_allowed']).'</div>';
+    die();
+}
+
 /*Eseguo l'aggiornamento*/
 gdrcd_query("DELETE FROM clgpersonaggiooggetto WHERE nome IN (SELECT nome FROM personaggio WHERE permessi = -1)");
 gdrcd_query("OPTIMIZE TABLE clgpersonaggiooggetto");
@@ -35,12 +43,6 @@ gdrcd_query("DELETE FROM personaggio WHERE permessi = -1");
 gdrcd_query("OPTIMIZE TABLE personaggio");
 ?>
 <!-- Conferma -->
-<div class="warning">
+<div class="success">
     <?php echo gdrcd_filter('out', $MESSAGE['warning']['modified']); ?>
-</div>
-<!-- Link di ritorno alla visualizzazione di base -->
-<div class="link_back">
-    <a href="main.php?page=gestione_manutenzione">
-        <?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['link']['back']); ?>
-    </a>
 </div>
