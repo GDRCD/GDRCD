@@ -33,6 +33,20 @@ class DB extends BaseClass
     }
 
     /**
+     * @fn connect
+     * @note Funzione di connessione al db
+     * @return false|mysqli|null
+     */
+    public static function getDbName()
+    {
+        if (!empty($GLOBALS['PARAMETERS']['database']['database_name'])) {
+            return $GLOBALS['PARAMETERS']['database']['database_name'];
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * @fn disconnect
      * @note Funzione di disconnessione del db
      * @param mysqli $db
@@ -107,13 +121,11 @@ class DB extends BaseClass
      */
     public static function rowsNumber($array): int
     {
-        if(gettype($array) == 'object' ){
-            return self::query($array,'num_rows');
-        }
-        else if(gettype($array) == 'array') {
+        if (gettype($array) == 'object') {
+            return self::query($array, 'num_rows');
+        } else if (gettype($array) == 'array') {
             return count($array);
-        }
-        else{
+        } else {
             return 0;
         }
     }
@@ -125,7 +137,8 @@ class DB extends BaseClass
      * @param array $binds
      * @return false|mysqli_result|void
      */
-    public static function statement($sql, array $binds = array()){
+    public static function statement($sql, array $binds = array())
+    {
         $db_link = self::connect();
 
         if ($stmt = mysqli_prepare($db_link, $sql)) {

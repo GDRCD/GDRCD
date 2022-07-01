@@ -12,6 +12,12 @@ class Cronjob extends BaseClass
         parent::__construct();
     }
 
+    public  function inlineCronjob(){
+        return Functions::get_constant('INLINE_CRONJOB');
+    }
+
+    /*** TABLE HELPERS ***/
+
     /**
      * @fn getCron
      * @note Ottieni i dati di un cronjob
@@ -34,6 +40,8 @@ class Cronjob extends BaseClass
     {
         return DB::query("SELECT {$val} FROM cronjob WHERE 1",'result');
     }
+
+    /*** CONTROLS ***/
 
     /**
      * @fn isInExec
@@ -110,6 +118,8 @@ class Cronjob extends BaseClass
         DB::query("UPDATE cronjob SET in_exec=0,last_exec=NOW() WHERE id='{$id}' LIMIT 1");
     }
 
+    /*** FUNCTIONS ***/
+
     /**
      * @fn startCron
      * @note Esecuzione dei cronjob
@@ -139,6 +149,4 @@ class Cronjob extends BaseClass
         }
 
     }
-
-
 }
