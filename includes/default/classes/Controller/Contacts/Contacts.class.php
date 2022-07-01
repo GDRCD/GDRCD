@@ -15,6 +15,7 @@ class Contacts extends BaseClass
         $con_categories,
         $con_categories_public,
         $con_categories_staff;
+
     public function __construct()
     {
         parent::__construct();
@@ -35,8 +36,6 @@ class Contacts extends BaseClass
 
         # Solo lo staff puo' assegnare le categorie di contatto, true/false - default false
         $this->con_categories_staff = Functions::get_constant('CONTACT_CATEGORIES_STAFF_ONLY');
-
-
 
 
     }
@@ -95,18 +94,22 @@ class Contacts extends BaseClass
     {
         return $this->con_enabled;
     }
+
     public function contatcSecret(): bool
     {
         return $this->con_secret;
     }
+
     public function contatcCategories(): bool
     {
         return $this->con_categories;
     }
+
     public function contatcCategoriesPublic(): bool
     {
         return $this->con_categories_public;
     }
+
     public function contatcCategoriesStaff(): bool
     {
         return $this->con_categories_staff;
@@ -124,6 +127,7 @@ class Contacts extends BaseClass
     {
         return (Personaggio::isMyPg($pg)) || (Permissions::permission('VIEW_CONTACTS'));
     }
+
     /**
      * @fn contactUpdate
      * @note Controlla se si hanno i permessi per aggiornare le note dei contatti propri o altrui
@@ -133,6 +137,7 @@ class Contacts extends BaseClass
     {
         return (Personaggio::isMyPg($pg)) || (Permissions::permission('UPDATE_CONTACTS'));
     }
+
     /**
      * @fn contactDelete
      * @note Controlla se si hanno i permessi per eliminare i contatti
@@ -142,6 +147,7 @@ class Contacts extends BaseClass
     {
         return (Personaggio::isMyPg($pg)) || (Permissions::permission('DELETE_CONTACTS'));
     }
+
     /**
      * @fn contactPublic
      * @note Controlla se le categorie sono Pubbliche, altrimenti solo chi ha il permesso può vederle
@@ -151,6 +157,7 @@ class Contacts extends BaseClass
     {
         return $this->contatcCategoriesPublic() || Permissions::permission('VIEW_CONTACTS_CATEGORIES');
     }
+
     /**
      * @fn contactStaff
      * @note Controlla se le categorie sono visibili allo staff e se si hanno i permessi per vederle
@@ -173,7 +180,7 @@ class Contacts extends BaseClass
      */
     public function getAllContact(string $val = '*', string $pg)
     {
-        return DB::query("SELECT {$val} FROM contatti WHERE personaggio = '{$pg}' ", 'result');
+        return DB::query("SELECT {$val} FROM contatti WHERE personaggio = '{$pg}'  ", 'result');
     }
 
     /*** CONTACT INDEX ***/
@@ -187,7 +194,7 @@ class Contacts extends BaseClass
     public function ContactList($pg): string
     {
         $template = Template::getInstance()->startTemplate();
-        $list = $this->getAllContact( 'contatto, categoria, id', $pg);
+        $list = $this->getAllContact('contatto, categoria, id', $pg);
         return $template->renderTable(
             'scheda/contatti/list',
             $this->renderContactList($list, 'scheda', $pg)
@@ -204,33 +211,33 @@ class Contacts extends BaseClass
     public function renderContactList(object $list, string $page, $id_pg): array
     {
         $row_data = [];
-        $path =  'scheda_contatti';
+        $path = 'scheda_contatti';
         $backlink = 'scheda';
-        $pg=Personaggio::nameFromId($id_pg);
+        $pg = Personaggio::nameFromId($id_pg);
         foreach ($list as $row) {
-            $id=Filters::in($row['id']);
+            $id = Filters::in($row['id']);
 
             $id_contatto = Filters::in($row['contatto']);
             $id_categoria = Filters::in($row['categoria']);
-            $categoria=$this->getOneContactCat('nome',$id_categoria);
+            $categoria = $this->getOneContactCat('nome', $id_categoria);
 
-            $contatto=Personaggio::nameFromId($id_contatto);
-            $pop_up_modifica='javascript:modalWindow("edit", "Modifica Contatto","popup.php?page=scheda_contatti_nota&id='.$id.'&op=edit") ';
+            $contatto = Personaggio::nameFromId($id_contatto);
+            $pop_up_modifica = 'javascript:modalWindow("edit", "Modifica Contatto","popup.php?page=scheda_contatti_nota&id=' . $id . '&op=edit") ';
 
 
             $array = [
-                'id'=>$id,
+                'id' => $id,
                 'contatto' => $contatto,
-                'categoria'=>$categoria['nome'],
-                'contatti_view_permission'=> $this->contactView($id_pg),
-                'contatti_update_permission'=> $this->contactUpdate($id_pg),
-                'contatti_delete_permission'=> $this->contactDelete($id_pg),
-                'contatti_categories_enabled'=>$this->contatcCategories(),
-                'contatti_categories_public'=>$this->categoriePublic(),
-                'contatti_categories_staff'=>$this->categoriesStaff(),
-                'pop_up_modifica'=>$pop_up_modifica,
-                'id_pg'=>$id_pg,
-                'pg'=>$pg
+                'categoria' => $categoria['nome'],
+                'contatti_view_permission' => $this->contactView($id_pg),
+                'contatti_update_permission' => $this->contactUpdate($id_pg),
+                'contatti_delete_permission' => $this->contactDelete($id_pg),
+                'contatti_categories_enabled' => $this->contatcCategories(),
+                'contatti_categories_public' => $this->categoriePublic(),
+                'contatti_categories_staff' => $this->categoriesStaff(),
+                'pop_up_modifica' => $pop_up_modifica,
+                'id_pg' => $id_pg,
+                'pg' => $pg
 
             ];
 
@@ -244,17 +251,17 @@ class Contacts extends BaseClass
             'Controlli'
         ];
         $links = [
-          //  ['href' => "/main.php?page={$path}&op=new&id_pg={$id_pg}&pg={$pg}", 'text' => 'Nuovo contatto']
-           // ['href' => "/main.php?page={$backlink}&id_pg={$id_pg}&pg={$pg}", 'text' => 'Indietro']
+            //  ['href' => "/main.php?page={$path}&op=new&id_pg={$id_pg}&pg={$pg}", 'text' => 'Nuovo contatto']
+            // ['href' => "/main.php?page={$backlink}&id_pg={$id_pg}&pg={$pg}", 'text' => 'Indietro']
         ];
 
         return [
             'body' => 'scheda/contatti/list',
-            'body_rows'=> $row_data,
+            'body_rows' => $row_data,
             'cells' => $cells,
             'links' => $links,
-            'path'=>$path,
-            'page'=>$page
+            'path' => $path,
+            'page' => $page
 
         ];
     }
@@ -265,7 +272,8 @@ class Contacts extends BaseClass
      * @note Ritorna la lista delle categorie
      * @return string
      */
-    public function getAllContactCategorie(){
+    public function getAllContactCategorie()
+    {
         return DB::query("SELECT id, nome FROM contatti_categorie Order by nome", 'result');
     }
 
@@ -280,7 +288,7 @@ class Contacts extends BaseClass
     {
 
         $html = '<option value=""></option>';
-        $categorie=$this->getAllContactCategorie();
+        $categorie = $this->getAllContactCategorie();
 
         foreach ($categorie as $categoria) {
             $nome = Filters::out($categoria['nome']);
@@ -291,6 +299,7 @@ class Contacts extends BaseClass
 
         return $html;
     }
+
     /**
      * @fn getOneContactCat
      * @note estrae una categoria in base all'id
@@ -302,6 +311,7 @@ class Contacts extends BaseClass
         return DB::query("SELECT {$val} FROM contatti_categorie WHERE id={$id}");
 
     }
+
     /**
      * @fn newContatto
      * @note Inserisce un nuovo contatto
@@ -313,8 +323,8 @@ class Contacts extends BaseClass
         $personaggio = Filters::in($post['id_pg']);
         $contatto = Filters::in($post['contatto']);
 
-        $creato_da=Filters::in($post['id_pg']);
-        $categoria=Filters::in($post['categoria']);
+        $creato_da = Filters::in($post['id_pg']);
+        $categoria = Filters::in($post['categoria']);
         DB::query("INSERT INTO contatti(personaggio, contatto, categoria, creato_da, creato_il) VALUES('{$personaggio}', '{$contatto}', {$categoria},'{$creato_da}', NOW())");
         return [
             'response' => true,
@@ -334,7 +344,7 @@ class Contacts extends BaseClass
     public function deleteContatto(int $id)
     {
         $id = Filters::int($id);
-        $id_pg=DB::query("SELECT personaggio FROM contatti WHERE id = {$id} "); //recupero l'id del personaggio per ricaricare la lista dei contatti
+        $id_pg = DB::query("SELECT personaggio FROM contatti WHERE id = {$id} "); //recupero l'id del personaggio per ricaricare la lista dei contatti
         DB::query("DELETE FROM contatti WHERE id = '{$id}' LIMIT 1"); //Cancello il contatto
         return [
             'response' => true,
@@ -346,18 +356,39 @@ class Contacts extends BaseClass
     }
 
     /**
+     * @fn editContatto
+     * @note Modifca la categoria del contatto
+     * @param array $post
+     * @return array
+     */
+    public function editContatto(array $post): array
+    {
+        $id = Filters::in($post['id']);
+        $categoria = Filters::in($post['categoria']);
+
+        DB::query("UPDATE contatti SET categoria = '{$categoria}'  WHERE id= {$id}");
+        return [
+            'response' => true,
+            'swal_title' => 'Operazione riuscita!',
+            'swal_message' => 'Contatto modificato con successo.',
+            'swal_type' => 'success'
+        ];
+    }
+
+    /**
      * @fn contattiPresenti
      * @note estrai gli ID di tutti i contatti che il pg ha già inserito, ed aggiungendo il proprio serve ad escluderli dal select di aggiunta nuovo contatto
      * @param array $post
      * @return array
      */
-    public function contattiPresenti($pg){
-        $tot=$this->getAllContact('contatto', $pg);
-        $contatti_presenti=$pg.",";
-        foreach ($tot as $con){
-            $contatti_presenti.=$con['contatto'].",";
+    public function contattiPresenti($pg)
+    {
+        $tot = $this->getAllContact('contatto', $pg);
+        $contatti_presenti = $pg . ",";
+        foreach ($tot as $con) {
+            $contatti_presenti .= $con['contatto'] . ",";
         }
-       return rtrim($contatti_presenti, ",");
+        return rtrim($contatti_presenti, ",");
     }
 
     public function getContact(string $val = '*', int $id)

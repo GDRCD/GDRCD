@@ -26,5 +26,9 @@ switch ($_POST['action']) {
         //modifica una nota
         echo json_encode($contatti_nota->editNota($_POST));
         break;
+    case 'edit_contatto':
+        //modifica la categoria di un contatto
+        echo json_encode($contatti->editContatto($_POST));
+        break;
 
 }
