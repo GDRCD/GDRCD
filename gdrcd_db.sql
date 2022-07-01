@@ -10,12 +10,6 @@
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT = @@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS = @@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION = @@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-
 --
 -- Database: `my_giovannipaneselling`
 --
@@ -221,6 +215,7 @@ CREATE TABLE IF NOT EXISTS `config` (
 
 
 INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,`editable`) VALUES
+    ('DEVELOPING',1,'Engine','Gdr in sviluppo?','','bool',1),
     ('STANDARD_ENGINE','default','Engine','Engine utilizzato. Non modificare se non necessario.','','string',1),
     ('TEMPLATE_ENGINE','Smarty','Template','Template utilizzato. Non modificare se non necessario.','','string',1),
     ('INLINE_CRONJOB',1,'Engine','Cronjob inline','Cronjob inline nell header?','bool',1),
@@ -1441,19 +1436,4 @@ CREATE TABLE IF NOT EXISTS _gdrcd_db_versions (
   PRIMARY KEY (`migration_id`)
 );
 
-INSERT INTO _gdrcd_db_versions (migration_id,applied_on) VALUES
-  ('2020072500', NOW()),
-  ('2021103018',NOW()),
-  ('2021110101',NOW()),
-  ('2021110102',NOW()),
-  ('2021110103',NOW()),
-  ('2021110104',NOW()),
-  ('2021110105',NOW()),
-  ('2021110106',NOW()),
-  ('2021110107',NOW()),
-  ('2021110108',NOW()),
-  ('2021110109',NOW());
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

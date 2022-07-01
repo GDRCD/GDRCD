@@ -1,27 +1,28 @@
 <?php
 
-class AddStoria extends DbMigration
+/**
+ * Snapshot full della struttura del DB per GDRCD 5.5.1
+ */
+class GDRCD6 extends DbMigration
 {
     public function __construct()
     {
         parent::__construct();
     }
-    
+
     /**
      * @inheritDoc
      */
     public function up()
     {
-        DB::query("ALTER TABLE personaggio
-ADD COLUMN storia text");
+
     }
-    
+
     /**
      * @inheritDoc
      */
     public function down()
     {
-        DB::query("ALTER TABLE personaggio
-DROP COLUMN storia");
+
     }
 }
