@@ -296,9 +296,6 @@ class GDRCD6 extends DbMigration
                 (1000, 'Umani', 'Umano', 'Umana', '', 0, 0, 0, 0, 0, 0, 'standard_razza.png', 'standard_razza.png', '', 1, 1);"
         );
 
-        DB::query("");
-
-
     }
 
     /**
