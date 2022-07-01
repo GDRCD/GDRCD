@@ -80,7 +80,7 @@ class DbMigrationEngine extends BaseClass
     {
 
         $db = DB::getDbName();
-        DB::query("SET FOREIGN_KEY_CHECKS = 1;");
+        DB::query("SET FOREIGN_KEY_CHECKS = 0;");
         self::deleteDb($db);
         self::migrateDb();
     }
