@@ -6,7 +6,102 @@
 class DbMigrationEngine extends BaseClass
 {
     const MIGRATIONS_FOLDER = __DIR__ . '/../../../db_versions/';
-    
+    const SQL_FILE = ROOT . '/gdrcd_db.sql';
+
+    /**
+     * @fn migrateDb
+     * @note Funzione di migrazione INIZIALE del db partendo da file SQL
+     * @return void
+     * @throws ReflectionException
+     */
+    public static function migrateDb()
+    {
+
+        // GET SQL FILE CONTENT
+        $sql_file = trim(file_get_contents(self::SQL_FILE));
+
+        // AUTO CREATE - AUTO INSERT, FROM SQL FILE
+        self::recursiveCreate($sql_file);
+        self::recursiveInsert($sql_file);
+
+        self::trackAppliedMigration('000000_start_db');
+
+        // EXECUTE MIGRATIONS
+        if (self::dbNeedsUpdate()) {
+            self::updateDbSchema();
+        }
+    }
+
+    /**
+     * @fn recursiveCreate
+     * @note Funzione recursiva di creazione tabelle
+     * @param $sql
+     * @return void
+     */
+    public static function recursiveCreate($sql)
+    {
+        $new_val = substr($sql, strpos($sql, 'CREATE TABLE'));
+        if (!empty($new_val)) {
+            $string = substr($new_val, 0, strpos($new_val, ';') + 1);
+            DB::query($string);
+
+            $new_sql = substr($new_val, strpos($new_val, ';') + 1);
+            self::recursiveCreate($new_sql);
+        }
+    }
+
+    /**
+     * @fn recursiveInsert
+     * @note Funzione recursiva di inserimento dati
+     * @param $sql
+     * @return void
+     */
+    public static function recursiveInsert($sql)
+    {
+        $new_val = substr($sql, strpos($sql, 'INSERT INTO'));
+
+        if (!empty($new_val)) {
+            $string = substr($new_val, 0, strpos($new_val, ';') + 1);
+            DB::query($string);
+
+            $new_sql = substr($new_val, strpos($new_val, ';') + 1);
+            self::recursiveInsert($new_sql);
+        }
+
+    }
+
+    /**
+     * @fn resetDb
+     * @note Funzione di reset del database
+     * @return void
+     * @throws ReflectionException
+     */
+    public static function resetDB()
+    {
+
+        $db = DB::getDbName();
+        DB::query("SET FOREIGN_KEY_CHECKS = 0;");
+        self::deleteDb($db);
+        self::migrateDb();
+    }
+
+    /**
+     * @fn deleteDb
+     * @note Funzione ricursiva di eliminazione tabelle da db
+     * @param $db
+     * @return void
+     */
+    public static function deleteDb($db){
+        $tables = DB::query("SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = '{$db}'  ORDER BY table_name ASC");
+
+        if($tables) {
+            DB::query("DROP TABLE {$tables['TABLE_NAME']}");
+            self::deleteDb($db);
+        }
+
+    }
+
+
     /**
      * @fn updateDbSchema
      * @note Esegue le modifiche allo schema del DB portandolo alla versione specificata
@@ -20,14 +115,14 @@ class DbMigrationEngine extends BaseClass
         $migrations = self::loadMigrationClasses();
         self::createVersioningTable();//Per sicurezza cerchiamo di crearla sempre
         $lastApplied = self::getLastAppliedMigration();
-        
-        if(empty($lastApplied)) {
+
+        if (empty($lastApplied)) {
             self::performDbSetup($migrations, $lastApplied);
         }
-    
+
         $directionUp = true;
         $migrationsToApply = self::getMigrationsToApply($migrations, $lastApplied, $migration_id, $directionUp);
-        
+
         $applied = 0;
         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);//Necessario per le transazioni
         $connection = DB::connect();
@@ -43,27 +138,27 @@ class DbMigrationEngine extends BaseClass
                 }
                 $connection->commit();
                 $applied++;
-            }
-            catch (Exception $e){
+            } catch (Exception $e) {
                 //Attenzione questa è una misura di sicurezza debole: le DDL (CREATE TABLE, ALTER TABLE...) provocano
                 // dei commit automatici, a questo punto in realtà non è già più possibile fare rollback
                 $connection->rollback();
                 throw new Exception("Aggiornamento del database fallito: " . $e->getMessage(), 0, $e);
             }
         }
-        
+
         return $applied;
     }
-    
+
     /**
      * @fn dbNeedsInstallation
      * @note Indica se il database di GDRCD è stato installato o meno
      * @return bool
      */
-    public static function dbNeedsInstallation() {
+    public static function dbNeedsInstallation()
+    {
         return self::getTablesCountInDb() <= 1;//Controlliamo sempre 1 e non 0, per escludere la tabella delle  migration
     }
-    
+
     /**
      * @fn dbNeedsUpdate
      * @note Indica se il database non si trova all'ultima versione disponibile e necessita quindi di applicare una
@@ -71,28 +166,30 @@ class DbMigrationEngine extends BaseClass
      * @return bool
      * @throws ReflectionException
      */
-    public static function dbNeedsUpdate() {
-        if(self::dbNeedsInstallation()){
+    public static function dbNeedsUpdate()
+    {
+        if (self::dbNeedsInstallation()) {
             return true;
         }
-    
+
         $migrations = self::loadMigrationClasses();
         self::createVersioningTable();//Per sicurezza cerchiamo di crearla sempre
         $lastApplied = self::getLastAppliedMigration();
-    
-        return empty($lastApplied) or $migrations[count($migrations) -1]->getMigrationId() != (int)$lastApplied['migration_id'];
+
+        return empty($lastApplied) or $migrations[count($migrations) - 1]->getMigrationId() != (int)$lastApplied['migration_id'];
     }
-    
+
     /**
      * @fn getAllAvailableMigration
      * @note Restituisce un array di tutte le migration disponibili a sistema
      * @return DbMigration[]
      * @throws ReflectionException
      */
-    public static function getAllAvailableMigrations(){
+    public static function getAllAvailableMigrations()
+    {
         return self::loadMigrationClasses();
     }
-    
+
     /**
      * @fn loadMigrationClasses
      * @note Carica in memoria le classi di migrazione
@@ -100,45 +197,46 @@ class DbMigrationEngine extends BaseClass
      * esecuzione temporale delle migrazioni
      * @throws ReflectionException
      */
-    private static function loadMigrationClasses(){
+    private static function loadMigrationClasses()
+    {
         /** @var DbMigration[] $migrations */
         $migrations = [];
 
 
-        foreach(new DirectoryIterator(self::MIGRATIONS_FOLDER) as $fileInfo){
-            if($fileInfo->isDot() || $fileInfo->isDir()) {
+        foreach (new DirectoryIterator(self::MIGRATIONS_FOLDER) as $fileInfo) {
+            if ($fileInfo->isDot() || $fileInfo->isDir()) {
                 continue;
             }
             $filename = basename($fileInfo->getRealPath(), '.php');
             $parts = explode("_", $filename);
             $className = $filename;
-            if(count($parts) > 1){
+            if (count($parts) > 1) {
                 $className = $parts[1];
             }
-            
+
             include_once $fileInfo->getRealPath();
-            if(class_exists($className)){
+            if (class_exists($className)) {
                 $reflected = new ReflectionClass($className);
-                if($reflected->isSubclassOf("DbMigration")){
+                if ($reflected->isSubclassOf("DbMigration")) {
                     $migrations[] = $reflected->newInstance();
                 }
             }
         }
-        
+
         //Ordinamento per id, da l'ordine di esecuzione
-        usort($migrations, function($a, $b){
+        usort($migrations, function ($a, $b) {
             $aId = $a->getMigrationId();
             $bId = $b->getMigrationId();
-            
-            if($aId == $bId){
+
+            if ($aId == $bId) {
                 return 0;
             }
             return $aId < $bId ? -1 : 1;
         });
-        
+
         return $migrations;
     }
-    
+
     /**
      * @fn performDbSetup
      * @note Decide se eseguire il setup del sistema o se è già stato eseguito e quindi va solo aggiunta la tabella
@@ -146,16 +244,17 @@ class DbMigrationEngine extends BaseClass
      * @param DbMigration[] $migrations
      * @throws Exception
      */
-    private static function performDbSetup($migrations, &$lastApplied){
+    private static function performDbSetup($migrations, &$lastApplied)
+    {
         $tablesCount = self::getTablesCountInDb();
-        
-        if($tablesCount > 1){//Precedente installazione priva di Db Migrations (pre 5.6)?
+
+        if ($tablesCount > 1) {//Precedente installazione priva di Db Migrations (pre 5.6)?
             //Eseguiamo solo le migration dalla 5.6 in poi, assumendo il setup della 5.5.1 già fatto
             self::trackAppliedMigration($migrations[0]->getMigrationId());
             $lastApplied = self::getLastAppliedMigration();
         }
     }
-    
+
     /**
      * @fn getMigrationsToApply
      * @note Identifica quali migrazioni devono essere applicate in base all'ultima applicata e alla migrazione
@@ -167,9 +266,10 @@ class DbMigrationEngine extends BaseClass
      * @return DbMigration[]
      * @throws Exception
      */
-    private static function getMigrationsToApply($migrations, $lastApplied, $targetMigrationId, &$directionUp) {
+    private static function getMigrationsToApply($migrations, $lastApplied, $targetMigrationId, &$directionUp)
+    {
         $directionUp = true;
-        if(empty($targetMigrationId)) {//Auto migration
+        if (empty($targetMigrationId)) {//Auto migration
             $firstToApply = 0;
             foreach ($migrations as $k => $m) {
                 if ((int)$m->getMigrationId() > (int)$lastApplied['migration_id']) {
@@ -178,52 +278,51 @@ class DbMigrationEngine extends BaseClass
                 }
             }
             $migrationsToApply = array_slice($migrations, $firstToApply);
-        }
-        else{//migration verso una versione specifica
+        } else {//migration verso una versione specifica
             $lastAppliedIdx = 0;
             $targetIdx = -1;
-            foreach ($migrations as $k => $m){
-                if((int)$m->getMigrationId() == (int)$lastApplied['migration_id']){
+            foreach ($migrations as $k => $m) {
+                if ((int)$m->getMigrationId() == (int)$lastApplied['migration_id']) {
                     $lastAppliedIdx = $k;
                 }
-                if((int)$m->getMigrationId() == (int)$targetMigrationId){
+                if ((int)$m->getMigrationId() == (int)$targetMigrationId) {
                     $targetIdx = $k;
                 }
-                if($targetIdx != -1 && $lastAppliedIdx != 0){
+                if ($targetIdx != -1 && $lastAppliedIdx != 0) {
                     break;
                 }
             }
-            if($targetIdx == -1){
+            if ($targetIdx == -1) {
                 throw new Exception("La Versione del Database specificata non è stata trovata");
             }
-            
-            if($lastAppliedIdx > $targetIdx){
+
+            if ($lastAppliedIdx > $targetIdx) {
                 $directionUp = false;
-                $migrationsToApply = array_slice($migrations, $targetIdx +1, ($lastAppliedIdx - $targetIdx));
-            }
-            else{
-                $migrationsToApply = array_slice($migrations, $lastAppliedIdx +1, ($targetIdx - $lastAppliedIdx));
+                $migrationsToApply = array_slice($migrations, $targetIdx + 1, ($lastAppliedIdx - $targetIdx));
+            } else {
+                $migrationsToApply = array_slice($migrations, $lastAppliedIdx + 1, ($targetIdx - $lastAppliedIdx));
             }
         }
-        
+
         return $migrationsToApply;
     }
-    
+
     /**
      * @fn getTablesCountInDb
      * @note Trova il numero di tabelle presenti nel DB
      * @return int
      * @throws Exception
      */
-    private static function getTablesCountInDb() {
+    private static function getTablesCountInDb()
+    {
         global $PARAMETERS;
-        
+
         $count = DB::query("SELECT COUNT(*) AS number FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '"
-                                    .$PARAMETERS['database']['database_name']."'");
-        
+            . $PARAMETERS['database']['database_name'] . "'");
+
         return (int)$count['number'];
     }
-    
+
     /**
      * @fn createVersioningTable
      * @note Crea sul DB la tabella per il tracciamento delle versioni del DB
@@ -240,7 +339,7 @@ class DbMigrationEngine extends BaseClass
 );
         ");
     }
-    
+
     /**
      * @fn trackAppliedMigration
      * @note Aggiunge alla tabella delle migrazioni effettuate la migrazione specificata in $migration_id
@@ -251,7 +350,7 @@ class DbMigrationEngine extends BaseClass
     {
         DB::query("INSERT INTO _gdrcd_db_versions (migration_id,applied_on) VALUE ('" . Filters::in($migration_id) . "', NOW())");
     }
-    
+
     /**
      * @fn untrackAppliedMigration
      * @note Toglie dalla tabella delle migrazioni effettuate la migrazione specificata in $migration_id
@@ -259,9 +358,9 @@ class DbMigrationEngine extends BaseClass
      */
     private static function untrackAppliedMigration($migration_id)
     {
-        DB::query("DELETE FROM _gdrcd_db_versions WHERE migration_id = '" . Filters::in($migration_id) ."'");
+        DB::query("DELETE FROM _gdrcd_db_versions WHERE migration_id = '" . Filters::in($migration_id) . "'");
     }
-    
+
     /**
      * @fn isMigrationAlreadyApplied
      * @note controlla a DB se una migrazione è già stata applicata
@@ -274,7 +373,7 @@ class DbMigrationEngine extends BaseClass
         $result = DB::query("SELECT COUNT() AS N FROM _gdrcd_db_versions WHERE migration_id = '" . Filters::in($migration_id) . "'");
         return $result['N'] > 0;
     }
-    
+
     /**
      * @fn getAllAppliedMigrations
      * @note Trova tutte le migrazioni già applicate a DB
@@ -284,13 +383,13 @@ class DbMigrationEngine extends BaseClass
     {
         $result = DB::query("SELECT * FROM _gdrcd_db_versions ORDER BY migration_id", 'result');
         $all = [];
-        while($row = DB::query($result, 'assoc')){
+        while ($row = DB::query($result, 'assoc')) {
             $all[] = $row;
         }
-        
+
         return $all;
     }
-    
+
     /**
      * @fn getLastAppliedMigration
      * @note Trova l'ultima migrazione applicata dalla tabella su DB
@@ -301,5 +400,5 @@ class DbMigrationEngine extends BaseClass
     {
         return DB::query("SELECT * FROM _gdrcd_db_versions ORDER BY migration_id DESC LIMIT 1");
     }
-    
+
 }
