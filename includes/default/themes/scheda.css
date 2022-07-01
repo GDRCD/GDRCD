@@ -1,0 +1,590 @@
+/****************************************************************************/
+/* STILE DELLA SCHEDA DEL PERSONAGGIO */
+
+/* HELP: Da qui è possibile modificare:
+- I font ed i colori della scheda del personaggio
+- Le dimensioni, l'aspetto e la posizione degli elementi della scheda
+- Lo sfondo della scheda */
+
+div.pagina_scheda {
+    margin-left: auto;
+    margin-right: auto;
+    width: 520px;
+}
+
+div.pagina_scheda div.pagebody {
+}
+
+div.pagina_scheda a {
+    /*font-weight: normal;*/
+}
+
+div.pagina_scheda div.form_info {
+    font-style: italic;
+}
+
+/*Titoli dei box*/
+div.pagina_scheda div.titolo_box {
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+/*Box nome,ritratto,iscritto da, ultimo ingresso, scrivi a*/
+div.ritratto {
+    margin: 5px 5px 20px 3px;
+    float: left;
+    font-size: 12px;
+    width: 215px;
+    height: 410px;
+    text-align: center;
+}
+
+/*Nome PG*/
+div.ritratto div.ritratto_nome {
+    /*margin: 5px 0 0 0;*/
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/*Immagine*/
+div.ritratto div.ritratto_avatar {
+    width: 200px;
+    height: 300px;
+    margin: 0 7px 0 7px;
+    overflow: hidden;
+}
+
+div.ritratto_avatar img {
+    max-width: 200px;
+    max-height: 300px;
+}
+
+/*Link invia messaggio*/
+div.ritratto div.ritratto_invia_messaggio {
+    margin: 5px 0 0 0;
+}
+
+/*Box punteggi, razza, gilda, ruolo off*/
+div.profilo {
+    margin: 5px 3px 20px 5px;
+    float: right;
+    font-size: 12px;
+    width: 260px;
+}
+
+div.profilo div.profilo_voce {
+    text-align: justify;
+    clear: both;
+    height: 20px;
+}
+
+/*Nome campo*/
+div.profilo_voce div.profilo_voce_label {
+    width: 40%;
+    float: left;
+    margin-left: 5px;
+}
+
+/*Valore campo*/
+div.profilo_voce div.profilo_voce_valore {
+    text-align: right;
+    width: 50%;
+    float: right;
+    margin-right: 5px;
+}
+
+/*Icone gilda*/
+img.profilo_img_gilda {
+    height: 15px;
+    width: 15px;
+}
+
+/*Box status*/
+div.profilo_status {
+    margin: 5px 5px 5px 5px;
+    clear: both;
+    height: 100px;
+    text-align: justify;
+}
+
+/*Casella PF nei controlli master*/
+div.form_field input.healt_input {
+    width: 28px;
+}
+
+/*Box storia pg, box affetti*/
+div.background {
+    margin: 10px 3px 5px 3px;
+    clear: both;
+    overflow: hidden;
+    width: 510px;
+}
+
+div.background img {
+    max-width: 500px;
+}
+
+/*Menu' interno scheda*/
+div.menu_scheda {
+    margin: 0 3px 5px 5px;
+    float: right;
+    text-align: center;
+    font-size: 12px;
+    width: 500px;
+    height: 30px;
+}
+
+/*Box abilità*/
+div.elenco_abilita {
+    margin: 10px auto 5px auto;
+    clear: both;
+}
+
+div.elenco_abilita table {
+    margin: 2px auto 5px auto;
+    text-align: center;
+}
+
+div.elenco_abilita table tr{
+    border: solid black;
+    border-width: 0 0 1px 0;
+    display: block;
+    margin: 5px auto;
+    padding:5px 0;
+}
+
+div.elenco_abilita table tr:first-child{
+    border-width: 1px 0;
+}
+
+div.elenco_abilita td {
+    vertical-align: top;
+}
+
+div.abilita_scheda_nome {
+    width: 250px;
+    font-size: 12px;
+    background: #222222;
+    border:1px solid black;
+    color:white;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+
+div.abilita_scheda_nome:hover{
+    background: #555555;
+}
+
+div.abilita_scheda_text{
+    width: 100%;
+    background: grey;
+    border:1px solid black;
+    border-radius: 5px;
+    margin: 3px 0;
+    padding: 0 5px;
+    box-sizing: border-box;
+    display: none;
+}
+
+div.abilita_scheda_text .table-subtitle{
+    border-bottom: 1px solid black;
+    width: 90%;
+    margin: 3px auto;
+}
+
+div.abilita_scheda_car {
+    width: 90px;
+    font-size: 12px;
+}
+
+div.abilita_scheda_tank {
+    width: 20px;
+    font-size: 12px;
+}
+
+div.abilita_scheda_sub {
+    width: 80px;
+    font-size: 12px;
+}
+
+
+/****************************************************************************/
+
+/****************************************************************************/
+/* STILE DELLA PAGINA DI MODIFICA SCHEDA */
+
+div.modifica_scheda {
+    margin: 10px;
+}
+
+/****************************************************************************/
+
+/****************************************************************************/
+/* STILE DELLA PAGINA DI EQUIPAGGIAMENTO */
+
+div.omino_bianco_box {
+    margin-left: auto;
+    margin-right: auto;
+    width: 450px;
+    height: 300px;
+    text-align: center;
+}
+
+img.omino_bianco_img {
+    margin-top: 40px;
+    width: 300px;
+    height: 226px;
+}
+
+div.omino_bianco_armdx {
+    width: 49px;
+    height: 36px;
+    border: 1px dotted white;
+    margin-top: 5px;
+}
+
+div.omino_bianco_armdx img {
+    width: 48px;
+    height: 35px;
+}
+
+div.omino_bianco_armsx {
+    width: 49px;
+    height: 36px;
+    border: 1px dotted white;
+    margin-top: 5px;
+    margin-right: 0px;
+}
+
+div.omino_bianco_armsx img {
+    width: 48px;
+    height: 35px;
+}
+
+div.omino_bianco_chest {
+    width: 75px;
+    height: 50px;
+    border: 1px dotted white;
+    margin-top: 5px;
+    margin-right: 0px;
+}
+
+div.omino_bianco_chest img {
+    width: 74px;
+    height: 49px;
+}
+
+div.omino_bianco_legs {
+    width: 75px;
+    height: 50px;
+    border: 1px dotted white;
+    margin-top: 5px;
+}
+
+div.omino_bianco_legs img {
+    width: 74px;
+    height: 49px;
+    margin-right: 0px;
+}
+
+div.omino_bianco_feet {
+    width: 63px;
+    height: 46px;
+    border: 1px dotted white;
+    margin-top: 5px;
+}
+
+div.omino_bianco_feet img {
+    width: 62px;
+    height: 45px;
+}
+
+div.omino_bianco_head {
+    width: 63px;
+    height: 46px;
+    border: 1px dotted white;
+    margin-top: 5px;
+}
+
+div.omino_bianco_head img {
+    width: 62px;
+    height: 45px;
+}
+
+div.omino_bianco_neck {
+    width: 49px;
+    height: 36px;
+    border: 1px dotted white;
+    margin-top: 5px;
+}
+
+div.omino_bianco_neck img {
+    width: 48px;
+    height: 35px;
+}
+
+div.omino_bianco_ring {
+    width: 30px;
+    height: 20px;
+    border: 1px dotted white;
+    margin-top: 5px;
+}
+
+div.omino_bianco_ring img {
+    width: 29px;
+    height: 19px;
+}
+
+/*Inventario*/
+div.pagina_scheda_equip {
+}
+
+.skill_incr.active,
+.skill_decr.active {
+    visibility:visible;
+}
+.skill_incr.inactive,
+.skill_decr.inactive {
+    visibility:hidden;
+}
+
+
+
+/****************************************************************************/
+
+/** DIARIO **/
+
+.pagina_scheda_diario{
+    width: 100%;
+}
+
+.pagina_scheda_diario .fake-table{
+    width: 100%;
+    margin: 20px auto;
+}
+
+.pagina_scheda_diario .fake-table .footer,
+.pagina_scheda_diario .fake-table .header{
+    background: #23272a !important;
+    border-radius: 5px 5px 0 0;
+    color: #ccc !important;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+.pagina_scheda_diario .fake-table.view-table .footer{
+    border-radius: 0 0 5px 5px;
+}
+
+.pagina_scheda_diario .fake-table.view-table .header .td,
+.pagina_scheda_diario .fake-table.view-table .footer .td{
+    width: 49%;
+}
+
+.pagina_scheda_diario .fake-table .td{
+    width: 120px;
+    border-right: 1px solid #4d5259;
+}
+
+.pagina_scheda_diario .fake-table .td button{
+    color: #ccc;
+    text-decoration: none;
+}
+
+.pagina_scheda_diario .fake-table .td button:hover{
+    color: #fff;
+}
+
+.pagina_scheda_diario .fake-table .tr {
+    background: #7289da;
+    margin: 0 auto;
+    width: 650px;
+    color: #23272a;
+    border: solid black;
+    border-width: 0 1px 1px 1px;
+}
+
+.pagina_scheda_diario .fake-table .tr:nth-child(2){
+    border-top:none;
+}
+
+.pagina_scheda_diario .fake-table .td:last-child{
+    border-right: none;
+}
+
+/*** ESPERIENZA ***/
+
+.pagina_scheda_esperienza .exp_log_table .tr .causale{
+    width: 50%;
+}
+
+.pagina_scheda_esperienza .exp_log_table .tr .autore{
+    width: 25%;
+}
+
+.pagina_scheda_esperienza .exp_log_table .tr .data{
+    width: 20%;
+}
+
+/**** OGGETTI ****/
+
+.pagina_scheda_oggetti {
+    width: 100%;
+}
+
+.pagina_scheda_oggetti .dummy{
+    width: auto;
+    height: 100px;
+    display: none;
+}
+
+.pagina_scheda_oggetti .dummy img{
+    height: 100%;
+}
+
+.pagina_scheda_oggetti .objects_box{
+    width: 80%;
+    height: 200px;
+    overflow: auto;
+    background-color: #23272a;
+    border:1px solid black;
+    border-radius: 3px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.pagina_scheda_oggetti .objects_box .single_object {
+    width: 100px;
+    height: 110px;
+    display: inline-block;
+    vertical-align: top;
+    border: 1px solid black;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #7289da;
+    margin: 5px 3px;
+}
+
+.pagina_scheda_oggetti .objects_box .single_object .img{
+    height: 100px;
+    width: 100px;
+}
+
+.pagina_scheda_oggetti .objects_box .single_object img{
+    width: 100%;
+    height: 100%;
+}
+
+.pagina_scheda_oggetti .objects_box .single_object .name{
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: center;
+}
+
+.pagina_scheda_oggetti .single_object{
+    width: 98%;
+    height: 232px;
+    margin: 5px auto;
+    border-radius: 5px;
+    background-color: #4d5259;
+    border:1px solid black;
+    max-width: 800px;
+    color: #ccc;
+}
+
+.pagina_scheda_oggetti .single_object .object_img{
+    width: 220px;
+    height: 220px;
+    margin: 5px;
+    border:1px solid black;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.pagina_scheda_oggetti .single_object .object_img img{
+    width: 100%;
+    height: 100%;
+}
+
+.pagina_scheda_oggetti .single_object .object_data{
+    width: calc(100% - 250px);
+    display: inline-block;
+    vertical-align: top;
+    border:1px solid black;
+    background-color: #23272a;
+    height: 220px;
+    margin: 5px;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.pagina_scheda_oggetti .single_object .object_data .object_name{
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.pagina_scheda_oggetti .single_object .object_data .object_descr{
+    height: 90px;
+    overflow: auto;
+    border:1px solid #ccc;
+    padding: 5px;
+    box-sizing: border-box;
+    width: 98%;
+    margin:5px auto;
+    border-radius: 5px;
+}
+
+.pagina_scheda_oggetti .single_object .object_data .object_info{
+    text-align: left;
+    font-size: 13px;
+    padding-left: 5px;
+    box-sizing: border-box;
+}
+
+.pagina_scheda_oggetti .single_object .object_data .object_commands{
+    text-align: right;
+    padding: 0 5px;
+    box-sizing: border-box;
+}
+
+.pagina_scheda_oggetti .single_object .object_data .object_commands button{
+    background-color: #7289da;
+    color: white;
+    border:1px solid black;
+    padding: 0 10px;
+    cursor: pointer;
+}
+
+/**** STATS ****/
+
+.pagina_scheda_stats .stats_list{
+    margin-top: 15px;
+}
+
+.pagina_scheda_stats .fake-table {
+    width: 90%;
+    margin: 0 auto;
+}
+
+.pagina_scheda_stats .fake-table .tr{
+}
+
+.pagina_scheda_stats .fake-table .tr:first-child{
+    border-width: 1px 0;
+}
+
+.pagina_scheda_stats .fake-table .tr .td {
+    width: 30%;
+}
+
+.pagina_scheda_stats .hidden_text .table-text{
+    max-height: 300px;
+    overflow: auto;
+}

@@ -5,9 +5,9 @@ IMPORTANTE! non cancellate alcuna delle righe, ne modificate quanto scritto tra 
 
 /********** Homepage **********/
 /*Testo centrale homepage*/
-$MESSAGE['homepage']['main_content']['site_title'] = 'GDRCD 5.6';
-$MESSAGE['homepage']['main_content']['site_subtitle'] = 'Enhanced by Breaker';
-$MESSAGE['homepage']['main_content']['welcome'] = 'Benvenuto in GDRCD 5.6!';
+$MESSAGE['homepage']['main_content']['site_title'] = '<img src="imgs/logo_gdrcd.png" alt="GDRCD"/>';
+$MESSAGE['homepage']['main_content']['site_subtitle'] = 'Il CMS Open Source per i Giochi di Ruolo play-by-chat';
+$MESSAGE['homepage']['main_content']['welcome'] = 'Benvenuto in GDRCD!';
 $MESSAGE['homepage']['main_content']['infos'] = 'Prima di iniziare a realizzare il tuo sito, hai letto la LICENZA D\'USO che accompagna il prodotto? Se non l\'hai ancora fatto premurati gentilmente di leggerla. Troverai le istruzioni su come utilizzare  GDRCD 5.4 nel manuale allegato. Buon diverimento!';
 /*Box informativi*/
 $MESSAGE['homepage']['forms']['access_to'] = 'Accedi';
@@ -27,7 +27,9 @@ $MESSAGE['homepage']['info']['webm'] = 'Responsabile legale';
 $MESSAGE['homepage']['info']['dbadmin'] = 'Amministratore del Database';
 $MESSAGE['homepage']['info']['email'] = 'Contatti';
 $MESSAGE['homepage']['installer']['not_empty'] = 'Database già esistente.';
-$MESSAGE['homepage']['installer']['done'] = 'Database creato.';
+$MESSAGE['homepage']['installer']['done'] = 'Database aggiornato.';
+$MESSAGE['homepage']['installer']['install_title'] = 'Installazione Database GDRCD';
+$MESSAGE['homepage']['installer']['install_text'] = 'Vuoi procedere con l&#039;installazione del database di GDRCD?';
 $MESSAGE['installer']['instal'] = "Installa il database.";
 $MESSAGE['homepage']['updater']['done'] = 'Il Database è stato reso compatibile con GDRCD5.4';
 $MESSAGE['homepage']['updater']['update'] = 'Aggiorna adesso il database.';
@@ -96,6 +98,9 @@ $MESSAGE['logout']['logbackin'] = 'Per rientrare nel gioco tornare alla';
 /* Errori di interfaccia */
 
 $MESSAGE['interface']['layout_not_found'] = 'Modulo non trovato';
+$MESSAGE['interface']['page_missing'] = 'Parametro pagina mancante';
+$MESSAGE['interface']['page_not_found'] = 'Pagina non trovata';
+$MESSAGE['interface']['multiple_page_found'] = 'Non e stato possibile determinare la pagina, una o piu pagine vanno in conflitto';
 
 
 /**    * Termine inserimento
@@ -124,7 +129,9 @@ $MESSAGE['interface']['maps']['Status'] = 'Stato del luogo';
 $MESSAGE['interface']['maps']['set_meteo'] = 'imposta';
 /* Scheda */
 $MESSAGE['interface']['sheet']['page_name'] = 'Scheda del personaggio';
+$MESSAGE['interface']['sheet']['page_name_skill'] = 'Abilità del personaggio';
 $MESSAGE['interface']['sheet']['link']['back'] = 'Torna alla scheda.';
+$MESSAGE['interface']['sheet']['link']['back_roles'] = 'Torna alle giocate registrate.';
 $MESSAGE['interface']['sheet']['send_message_to']['send'] = 'Invia un';
 $MESSAGE['interface']['sheet']['send_message_to']['to'] = 'a';
 $MESSAGE['interface']['sheet']['first_login'] = 'Data registrazione';
@@ -132,6 +139,7 @@ $MESSAGE['interface']['sheet']['last_login'] = 'Ultimo login';
 $MESSAGE['interface']['sheet']['box_title']['portrait'] = 'Avatar';
 $MESSAGE['interface']['sheet']['box_title']['profile'] = 'Profilo';
 $MESSAGE['interface']['sheet']['box_title']['skills'] = 'Abilità';
+$MESSAGE['interface']['sheet']['box_title']['stats'] = 'Statistiche';
 $MESSAGE['interface']['sheet']['box_title']['background'] = 'Carattere e storia personale';
 $MESSAGE['interface']['sheet']['box_title']['relationships'] = 'Affetti';
 $MESSAGE['interface']['sheet']['profile']['role'] = 'Incarico utente';
@@ -142,12 +150,18 @@ $MESSAGE['interface']['sheet']['profile']['status'] = 'Status';
 $MESSAGE['interface']['sheet']['profile']['uneployed'] = 'Disoccupato';
 $MESSAGE['interface']['sheet']['menu']['update'] = 'Modifica';
 $MESSAGE['interface']['sheet']['menu']['transictions'] = 'Transazioni';
+$MESSAGE['interface']['sheet']['menu']['skill'] = 'Abilità';
+$MESSAGE['interface']['sheet']['menu']['stats'] = 'Statistiche';
 $MESSAGE['interface']['sheet']['menu']['experience'] = 'Esperienza';
 $MESSAGE['interface']['sheet']['menu']['inventory'] = 'Inventario';
 $MESSAGE['interface']['sheet']['menu']['equipment'] = 'Equipaggiamento';
 $MESSAGE['interface']['sheet']['menu']['diary'] = 'Diario';
 $MESSAGE['interface']['sheet']['menu']['gst'] = 'Amministra';
 $MESSAGE['interface']['sheet']['menu']['log'] = 'Log';
+$MESSAGE['interface']['sheet']['menu']['detail']='Descrizione e Conoscenze';
+$MESSAGE['interface']['sheet']['menu']['background']='Storia';
+$MESSAGE['interface']['sheet']['menu']['description']='Descrizione';
+$MESSAGE['interface']['sheet']['menu']['friend']='Conoscenze';
 $MESSAGE['interface']['sheet']['modify_form']['last_name'] = 'Cognome';
 $MESSAGE['interface']['sheet']['modify_form']['relationships'] = 'Affetti';
 $MESSAGE['interface']['sheet']['modify_form']['background'] = 'Background';
@@ -186,7 +200,8 @@ $MESSAGE['interface']['sheet']['items']['list']['put_in'] = 'Zaino';
 $MESSAGE['interface']['sheet']['items']['list']['wear'] = 'Indossa';
 $MESSAGE['interface']['sheet']['items']['list']['unwear'] = 'Togli';
 $MESSAGE['interface']['sheet']['items']['list']['give'] = 'Cedi a';
-$MESSAGE['interface']['sheet']['info_skill_cost'] = 'Il costo di incremento di un\'abilità è pari a ' . $PARAMETERS['settings']['px_x_rank'] . 'px moltiplicato per il grado che si intende acquisire.';
+$MESSAGE['interface']['sheet']['info_skill_cost'] = 'Il costo di incremento di un\'abilità è pari a ' . $PARAMETERS['settings']['px_x_rank'] . 'px moltiplicato per il grado che si intende acquisire, se non diversamente specificato dalla gestione per il livello che si intende acquistare.';
+$MESSAGE['interface']['sheet']['info_stats'] = 'Le stastiche sono aumentabili solo dallo staff.';
 $MESSAGE['interface']['sheet']['avalaible_xp'] = 'Punti esperienza disponibili';
 $MESSAGE['interface']['sheet']['px']['page_name'] = 'Riepilogo Esperienza';
 $MESSAGE['interface']['sheet']['px']['px'] = 'PX';
@@ -454,6 +469,24 @@ $MESSAGE['interface']['administration']['locations']['owner_default'] = 'Nessuno
 $MESSAGE['interface']['administration']['locations']['owner_err'] = 'Nessun gruppo o utente presente.';
 $MESSAGE['interface']['administration']['locations']['expiration_date'] = 'Scadenza';
 $MESSAGE['interface']['administration']['locations']['rent'] = 'Costo orario di affitto';
+
+/*Condizioni meteo*/
+$MESSAGE['interface']['administration']['meteo_condition']['page_name'] = 'Gestione Condizioni Meteo';
+$MESSAGE['interface']['administration']['meteo_condition']['link']['new']='Crea nuova condizione';
+$MESSAGE['interface']['administration']['meteo_condition']['wind_name']='Vento';
+
+/*Condizioni stagioni*/
+$MESSAGE['interface']['administration']['meteo_season']['page_name'] = 'Gestione delle stagioni';
+$MESSAGE['interface']['administration']['meteo_season']['min']='Temperatura minima';
+$MESSAGE['interface']['administration']['meteo_season']['max']='Temperatura massima';
+$MESSAGE['interface']['administration']['meteo_season']['date_start']='Data inizio';
+$MESSAGE['interface']['administration']['meteo_season']['date_end']='Data fine';
+$MESSAGE['interface']['administration']['meteo_season']['sunrise']='Alba';
+$MESSAGE['interface']['administration']['meteo_season']['sunset']='Tramonto';
+
+
+
+
 
 /**    * Denonimazioni relative al link immagine e collegamento mappa
  * @author Blancks
