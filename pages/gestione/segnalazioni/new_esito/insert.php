@@ -42,5 +42,4 @@ if ($_POST['op']=='insert') {
         <?php echo gdrcd_filter('out',$MESSAGE['warning']['inserted']);?>
     </div>
 
-<?	}
-?>
+<?php }

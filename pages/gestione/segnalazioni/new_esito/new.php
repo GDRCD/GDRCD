@@ -6,11 +6,11 @@ if ($_GET['op']=='new') {
     ?>
 
     <div class="page_title">
-        <h2>Serie di esiti: <? echo $blocco['titolo'];?></h2>
+        <h2>Serie di esiti: <?=$blocco['titolo'];?></h2>
     </div>
 
     <div class="form_info">
-        <? echo $MESSAGE['interface']['esiti']['newesito'];?>
+        <?=$MESSAGE['interface']['esiti']['newesito'];?>
     </div>
     <form action="main.php?page=gestione_segnalazioni&segn=esito_index"
           method="post"
@@ -34,7 +34,7 @@ if ($_GET['op']=='new') {
             Descrivere dettagliatamente quel che il personaggio può conoscere o scoprire, secondo la coerenza del caso,
             in maniera narrativa (come fareste in chat).
         </div>
-        <? if (TIRI_ESITO) { ?>
+        <?php if (TIRI_ESITO) { ?>
             <div class='form_label'>
                 Tira dei dadi
             </div>
@@ -42,7 +42,7 @@ if ($_GET['op']=='new') {
                 Numero di dadi: <input name="dice_num" value="" /><br>
                 Numero di facce dei dadi: <input name="dice_face" value="" /><br>
             </div>
-        <? } ?>
+        <?php } ?>
         <div class='form_label'>
             Note OFF
         </div>
@@ -59,12 +59,10 @@ if ($_GET['op']=='new') {
                    value="add">
             <input type="hidden"
                    name="id"
-                   value="<? echo $_GET['blocco'];?>">
+                   value="<?=$_GET['blocco'];?>">
             <input type="submit"
-                   value="<?php echo gdrcd_filter('out',$MESSAGE['interface']['forms']['submit']);?>" />
+                   value="<?=gdrcd_filter('out',$MESSAGE['interface']['forms']['submit']);?>" />
         </div>
 
     </form>
-<? }
-
-?>
+<?php }
