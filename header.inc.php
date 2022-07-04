@@ -5,9 +5,6 @@ header('Content-Type:text/html; charset=UTF-8');
 //Includo i parametri, la configurazione, la lingua e le funzioni
 require(__DIR__.'/core/required.php');
 
-echo 1;
-
-
 # Controllo del login
 if (!empty($_SESSION['login'])) {
     $me = gdrcd_filter('in', $_SESSION['login']);
