@@ -104,7 +104,9 @@
                                 <?php echo gdrcd_filter('out', $roles_f['partecipanti']); ?>
                             </div>
                         </td>
-                        <? $quer = "SELECT * FROM mappa WHERE id = '" . $roles_f['stanza'] . "' ";
+                        <?php
+                        //
+                        $quer = "SELECT * FROM mappa WHERE id = '" . $roles_f['stanza'] . "' ";
                         $res = gdrcd_query($quer, 'result');
                         $rec = gdrcd_query($res, 'fetch');
                         ?>
@@ -145,10 +147,9 @@
             </table>
 
 
-            <? } #Fine blocco
+            <?php } #Fine blocco
 
             ?>
         </div>
 <?php
 }
-    ?>

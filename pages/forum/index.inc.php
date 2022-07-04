@@ -2,7 +2,7 @@
     <!-- Titolo della pagina -->
     <div class="page_title">
         <h2>
-            <?php echo gdrcd_filter('out', $PARAMETERS['names']['forum']['plur']); ?>
+            <?=gdrcd_filter('out', $PARAMETERS['names']['forum']['plur']);?>
         </h2>
     </div>
     <!-- Box principale -->

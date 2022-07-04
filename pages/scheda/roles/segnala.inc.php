@@ -32,12 +32,12 @@ if (SEND_GM) {
 
         </form>
         <div class="link_back">
-            <a href="main.php?page=scheda_roles&pg=<? echo gdrcd_filter('in', $_REQUEST['pg']);?>">
+            <a href="main.php?page=scheda_roles&pg=<?=gdrcd_filter('in', $_REQUEST['pg']);?>">
                 <?php echo gdrcd_filter('out',
                     $MESSAGE['interface']['sheet']['link']['back_roles']); ?>
             </a>
         </div>
-    <? }
+    <?php }
 
     #Inserimento segnalazione GM
     if ($_POST['op'] == 'segnala_send') {
