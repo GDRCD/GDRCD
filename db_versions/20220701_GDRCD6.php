@@ -92,7 +92,13 @@ class GDRCD6 extends DbMigration
                 ('GROUPS_MAX_ROLES',3,'Gruppi','Massimo ruoli','Numero massimo di ruoli','int',1),
                 ('WORKS_ACTIVE',1,'Gruppi','Lavori attivi','Lavori attivi?','bool',1),
                 ('WORKS_DIMISSIONS_DAYS',1,'Gruppi','Giorni per dimissioni','Giorni per dimissioni','bool',1),
-                ('WORKS_MAX',3,'Gruppi','Massimo lavori liberi','Numero massimo di lavori liberi','int',1);"
+                ('WORKS_MAX',3,'Gruppi','Massimo lavori liberi','Numero massimo di lavori liberi','int',1),
+                ('CONTACTS_ENABLED', '1', 'Abilita/Disabilita la sezione contatti', 'Contatti', 'Abilita/disabilita i contatti', 'bool', 1),
+                ('CONTACT_PUBLIC', 1, 'Abilita/Disabilita la visualizzazione pubblica dei contatti', 'Contatti', 'Abilita/Disabilita la visualizzazione pubblica dei contatti', 'bool', 1),
+                ('CONTACT_SECRETS', 0, 'Abilita/Disabilita la scelta di nascondere le note', 'Contatti', 'Abilita/Disabilita la scelta di nascondere le note', 'bool', 1),
+                ('CONTACT_CATEGORIES', 1, 'Abilita/Disabilita le categorie', 'Contatti', 'Abilita/Disabilita le categorie', 'bool', 1),
+                ('CONTACT_CATEGORIES_PUBLIC', 1, 'Se abilitato, tutti vedono le categorie', 'Contatti', 'Se abilitato, tutti vedono le categorie', 'bool', 1),
+                ('CONTACT_CATEGORIES_STAFF_ONLY', 0, 'Se abilitato, solo lo staff può assegnare le categorie di contatto', 'Contatti', 'Se abilitato, solo lo staff può assegnare le categorie di contatto', 'bool', 1);"
         );
 
 
@@ -221,7 +227,7 @@ class GDRCD6 extends DbMigration
         );
 
         DB::query("
-            INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
+            INSERT INTO `permessi_custom`(`permission_name`, `description`) VALUES
                 ('LOG_CHAT', 'Permesso visualizzazione log chat'),
                 ('LOG_EVENTI', 'Permesso visualizzazione log evento'),
                 ('LOG_MESSAGGI', 'Permesso visualizzazione log messaggi'),
@@ -269,7 +275,14 @@ class GDRCD6 extends DbMigration
                 ('DOWNGRADE_SCHEDA_STATS','Permesso per la riduzione statistiche in schede altrui'),
                 ('UPGRADE_SCHEDA_ABI','Permesso per aumento abilita in schede altrui'),
                 ('DOWNGRADE_SCHEDA_ABI','Permesso per la diminuzione abilita in schede altrui'),
-                ('VIEW_SCHEDA_ABI','Permesso per la visualizzazione abilita in schede altrui');"
+                ('VIEW_SCHEDA_ABI','Permesso per la visualizzazione abilita in schede altrui'),
+                ('VIEW_CONTACTS','Permesso per la visualizzazione dei contatti in schede altrui'),
+                ('UPDATE_CONTACTS','Permesso per la modifica dei contatti in schede altrui'),
+                ('DELETE_CONTACTS','Permesso per la eliminazione dei contatti in schede altrui'),
+                ('VIEW_CONTACTS_CATEGORIES','Permesso per la visualizzazione delle categorie contatti in schede altrui'),
+                ('VIEW_CONTACTS_CATEGORIES','Permesso per la visualizzazione delle categorie contatti in schede altrui'),
+                ('MANAGE_CONTACTS_CATEGORIES','Permesso per la gestione delle categorie contatti')
+                ;"
         );
 
         DB::query("
