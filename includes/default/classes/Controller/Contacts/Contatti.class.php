@@ -354,14 +354,24 @@ class Contatti extends BaseClass
         $creato_da = Filters::int($post['id_pg']);
         $categoria = Filters::int($post['categoria']);
 
-        DB::query("INSERT INTO contatti(personaggio, contatto, categoria, creato_da, creato_il) VALUES('{$personaggio}', '{$contatto}', {$categoria},'{$creato_da}', NOW())");
+        if (Personaggio::isMyPg($personaggio)) {
+            DB::query("INSERT INTO contatti(personaggio, contatto, categoria, creato_da, creato_il) VALUES('{$personaggio}', '{$contatto}', {$categoria},'{$creato_da}', NOW())");
 
-        return [
-            'response' => true,
-            'swal_title' => 'Operazione riuscita!',
-            'swal_message' => 'Contatto creato con successo.',
-            'swal_type' => 'success'
-        ];
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Contatto creato con successo.',
+                'swal_type' => 'success'
+            ];
+
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Permesso negato!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
+        }
     }
 
     /**
@@ -375,13 +385,26 @@ class Contatti extends BaseClass
         $id = Filters::int($post['id']);
         $categoria = Filters::int($post['categoria']);
 
-        DB::query("UPDATE contatti SET categoria = '{$categoria}'  WHERE id= {$id}");
-        return [
-            'response' => true,
-            'swal_title' => 'Operazione riuscita!',
-            'swal_message' => 'Contatto modificato con successo.',
-            'swal_type' => 'success'
-        ];
+        $contact_data = $this->getContact($id, 'personaggio');
+        $owner = Filters::int($contact_data['personaggio']);
+
+        if ($this->contactUpdate($owner)) {
+
+            DB::query("UPDATE contatti SET categoria = '{$categoria}'  WHERE id= {$id}");
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Contatto modificato con successo.',
+                'swal_type' => 'success'
+            ];
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Permesso negato!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
+        }
     }
 
     /**
@@ -393,14 +416,26 @@ class Contatti extends BaseClass
     public function deleteContatto(int $id): array
     {
         $id = Filters::int($id);
-        $id_pg = DB::query("SELECT personaggio FROM contatti WHERE id = '{$id}' "); //recupero l'id del personaggio per ricaricare la lista dei contatti
-        DB::query("DELETE FROM contatti WHERE id = '{$id}' LIMIT 1"); //Cancello il contatto
-        return [
-            'response' => true,
-            'swal_title' => 'Operazione riuscita!',
-            'swal_message' => 'Contatto rimosso correttamente.',
-            'swal_type' => 'success',
-            'contatti_list' => $this->ContactList(Filters::int($id_pg['personaggio']))
-        ];
+
+        $contact_data = $this->getContact($id, 'personaggio');
+        $owner = Filters::int($contact_data['personaggio']);
+        if ($this->contactUpdate($owner)) {
+
+            DB::query("DELETE FROM contatti WHERE id = '{$id}' LIMIT 1"); //Cancello il contatto
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Contatto rimosso correttamente.',
+                'swal_type' => 'success',
+                'contatti_list' => $this->ContactList($owner)
+            ];
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Permesso negato!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
+        }
     }
 }

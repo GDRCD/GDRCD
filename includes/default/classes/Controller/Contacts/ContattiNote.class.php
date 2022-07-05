@@ -180,7 +180,7 @@ class ContattiNote extends Contatti
         $contact_data = $this->getContact($id_contatto, 'personaggio');
         $owner = Filters::int($contact_data['personaggio']);
 
-        if ($this->contactUpdate($owner)) {
+        if (Personaggio::isMyPg($owner)) {
 
             DB::query("INSERT INTO contatti_nota(id_contatto,titolo, nota, pubblica, creato_da, creato_il) VALUES('{$id_contatto}', '{$titolo}','{$nota}', '{$pubblica}','{$creato_da}', NOW())");
             return [
