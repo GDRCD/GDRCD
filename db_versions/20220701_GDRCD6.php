@@ -93,12 +93,12 @@ class GDRCD6 extends DbMigration
                 ('WORKS_ACTIVE',1,'Gruppi','Lavori attivi','Lavori attivi?','bool',1),
                 ('WORKS_DIMISSIONS_DAYS',1,'Gruppi','Giorni per dimissioni','Giorni per dimissioni','bool',1),
                 ('WORKS_MAX',3,'Gruppi','Massimo lavori liberi','Numero massimo di lavori liberi','int',1),
-                ('CONTACTS_ENABLED', '1', 'Abilita/Disabilita la sezione contatti', 'Contatti', 'Abilita/disabilita i contatti', 'bool', 1),
-                ('CONTACT_PUBLIC', 1, 'Abilita/Disabilita la visualizzazione pubblica dei contatti', 'Contatti', 'Abilita/Disabilita la visualizzazione pubblica dei contatti', 'bool', 1),
-                ('CONTACT_SECRETS', 0, 'Abilita/Disabilita la scelta di nascondere le note', 'Contatti', 'Abilita/Disabilita la scelta di nascondere le note', 'bool', 1),
-                ('CONTACT_CATEGORIES', 1, 'Abilita/Disabilita le categorie', 'Contatti', 'Abilita/Disabilita le categorie', 'bool', 1),
-                ('CONTACT_CATEGORIES_PUBLIC', 1, 'Se abilitato, tutti vedono le categorie', 'Contatti', 'Se abilitato, tutti vedono le categorie', 'bool', 1),
-                ('CONTACT_CATEGORIES_STAFF_ONLY', 0, 'Se abilitato, solo lo staff può assegnare le categorie di contatto', 'Contatti', 'Se abilitato, solo lo staff può assegnare le categorie di contatto', 'bool', 1);"
+                ('CONTACTS_ENABLED', 1, 'Contatti','Abilita/Disabilita la sezione contatti',  'Abilita/disabilita i contatti', 'bool', 1),
+                ('CONTACT_PUBLIC', 1, 'Contatti','Abilita/Disabilita la visualizzazione pubblica dei contatti',  'Abilita/Disabilita la visualizzazione pubblica dei contatti', 'bool', 1),
+                ('CONTACT_SECRETS', 0, 'Contatti','Abilita/Disabilita la scelta di nascondere le note',  'Abilita/Disabilita la scelta di nascondere le note', 'bool', 1),
+                ('CONTACT_CATEGORIES', 1, 'Contatti','Abilita/Disabilita le categorie',  'Abilita/Disabilita le categorie', 'bool', 1),
+                ('CONTACT_CATEGORIES_PUBLIC', 1, 'Contatti','Se abilitato, tutti vedono le categorie',  'Se abilitato, tutti vedono le categorie', 'bool', 1),
+                ('CONTACT_CATEGORIES_STAFF_ONLY', 0, 'Contatti', 'Se abilitato, solo lo staff può assegnare le categorie di contatto', 'Se abilitato, solo lo staff può assegnare le categorie di contatto', 'bool', 1);"
         );
 
 
