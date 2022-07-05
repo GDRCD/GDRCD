@@ -645,6 +645,14 @@ $PARAMETERS['office']['image_file'] = '';
 $PARAMETERS['office']['pg_list']['text'] = 'Anagrafe';
 $PARAMETERS['office']['pg_list']['url'] = 'main.php?page=servizi_anagrafe';
 $PARAMETERS['office']['pg_list']['access_level'] = USER;
+
+if (Functions::get_constant('PRESTAVOLTO_ENABLED')) {
+    $PARAMETERS['office']['prestavolti']['text'] = 'Prestavolti';
+    $PARAMETERS['office']['prestavolti']['url'] = 'main.php?page=servizi/prestavolto/index';
+    $PARAMETERS['office']['prestavolti']['access_level'] = USER;
+}
+
+
 $PARAMETERS['office']['guilds_adm']['text'] = "Amministrazione Gruppi";
 $PARAMETERS['office']['guilds_adm']['url'] = 'main.php?page=servizi/amministrazioneGilde/index';
 $PARAMETERS['office']['guilds_adm']['access_level'] = USER;
