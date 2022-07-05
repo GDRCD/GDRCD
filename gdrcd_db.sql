@@ -1100,6 +1100,26 @@ CREATE TABLE IF NOT EXISTS `statistiche` (
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `personaggio_prestavolto`
+--
+
+CREATE TABLE IF NOT EXISTS `personaggio_prestavolto` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `personaggio` INT(11) NULL DEFAULT NULL,
+    `nome` VARCHAR(255) NULL DEFAULT NULL COLLATE 'latin1_swedish_ci',
+    `cognome` VARCHAR(255) NULL DEFAULT NULL COLLATE 'latin1_swedish_ci',
+    `fonte` VARCHAR(255) NULL DEFAULT NULL COLLATE 'latin1_swedish_ci',
+    `condivisibile` INT(11) NULL DEFAULT NULL,
+    `condivisibile_descrizione` VARCHAR(255) NULL DEFAULT NULL COLLATE 'latin1_swedish_ci',
+    `condivisibile_immagine` VARCHAR(255) NULL DEFAULT NULL COLLATE 'latin1_swedish_ci',
+    `creato_il` DATETIME NULL DEFAULT NULL,
+    `modificato_il` DATETIME NULL DEFAULT NULL,
+    `eliminato_il` DATETIME NULL DEFAULT NULL,
+    PRIMARY KEY (`id`)
+    )ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `_gdrcd_db_versions`
 --
 
@@ -1108,5 +1128,7 @@ CREATE TABLE IF NOT EXISTS _gdrcd_db_versions (
   `applied_on` DATETIME NOT NULL ,
   PRIMARY KEY (`migration_id`)
 );
+
+
 
 
