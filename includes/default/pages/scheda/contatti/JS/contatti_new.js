@@ -1,6 +1,7 @@
 $(function () {
 
 })
+
 function goBackContatti(){
     setTimeout(()=>{
         let  url = $('#url').val();

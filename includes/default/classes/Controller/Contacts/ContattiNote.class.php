@@ -7,6 +7,7 @@
  */
 class ContattiNote extends Contatti
 {
+
     /*** TABLE HELPERS ***/
 
     /**
@@ -176,14 +177,28 @@ class ContattiNote extends Contatti
         $titolo = Filters::in($post['titolo']);
         $creato_da = Filters::int($post['id_pg']);
 
-        DB::query("INSERT INTO contatti_nota(id_contatto,titolo, nota, pubblica, creato_da, creato_il) VALUES('{$id_contatto}', '{$titolo}','{$nota}', '{$pubblica}','{$creato_da}', NOW())");
-        return [
-            'response' => true,
-            'swal_title' => 'Operazione riuscita!',
-            'swal_message' => 'Nota creata con successo.',
-            'swal_type' => 'success'
-        ];
+        $contact_data = $this->getContact($id_contatto, 'personaggio');
+        $owner = Filters::int($contact_data['personaggio']);
+
+        if ($this->contactUpdate($owner)) {
+
+            DB::query("INSERT INTO contatti_nota(id_contatto,titolo, nota, pubblica, creato_da, creato_il) VALUES('{$id_contatto}', '{$titolo}','{$nota}', '{$pubblica}','{$creato_da}', NOW())");
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Nota creata con successo.',
+                'swal_type' => 'success'
+            ];
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Permesso negato!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
+        }
     }
+
 
     /**
      * @fn editNota
@@ -198,13 +213,28 @@ class ContattiNote extends Contatti
         $pubblica = Filters::in($post['pubblica']);
         $titolo = Filters::in($post['titolo']);
 
-        DB::query("UPDATE contatti_nota SET titolo = '{$titolo}', nota='{$nota}', pubblica='{$pubblica}' WHERE id= {$id}");
-        return [
-            'response' => true,
-            'swal_title' => 'Operazione riuscita!',
-            'swal_message' => 'Nota modificata con successo.',
-            'swal_type' => 'success'
-        ];
+        $note_data = $this->getNota($id, 'id_contatto');
+        $contact_id = Filters::int($note_data['id_contatto']);
+        $contact_data = $this->getContact($contact_id, 'personaggio');
+        $owner = Filters::int($contact_data['personaggio']);
+
+        if ($this->contactUpdate($owner)) {
+            DB::query("UPDATE contatti_nota SET titolo = '{$titolo}', nota='{$nota}', pubblica='{$pubblica}' WHERE id= {$id}");
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Nota modificata con successo.',
+                'swal_type' => 'success'
+            ];
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Permesso negato!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
+        }
+
     }
 
     /**
@@ -217,16 +247,28 @@ class ContattiNote extends Contatti
     {
         $id = Filters::int($id);
         $nota_data = $this->getNota($id, 'id_contatto');
-        $pg = Filters::int($nota_data['id_contatto']);
+        $contact_id = Filters::int($nota_data['id_contatto']);
 
-        DB::query("UPDATE contatti_nota SET eliminato = '1' WHERE id = '{$id}' LIMIT 1");
+        $contact_data = $this->getContact($contact_id, 'personaggio');
+        $owner = Filters::int($contact_data['personaggio']);
 
-        return [
-            'response' => true,
-            'swal_title' => 'Operazione riuscita!',
-            'swal_message' => 'Nota rimossa correttamente.',
-            'swal_type' => 'success',
-            'note_list' => $this->NoteList($pg)
-        ];
+        if ($this->contactUpdate($owner)) {
+            DB::query("UPDATE contatti_nota SET eliminato = '1' WHERE id = '{$id}' LIMIT 1");
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Nota rimossa correttamente.',
+                'swal_type' => 'success',
+                'note_list' => $this->NoteList($contact_id)
+            ];
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Permesso negato!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
+        }
     }
 }
