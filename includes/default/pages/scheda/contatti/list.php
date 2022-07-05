@@ -1,10 +1,10 @@
 <?php
 Router::loadRequired();
 
-$contatti = Contacts::getInstance();
+$contatti = Contatti::getInstance();
 $id_pg = Filters::int($_GET['id_pg']);
 $pg = Filters::in($_GET['pg']);
-if($contatti->contatcEnables()){
+if($contatti->contactEnables()){
 ?>
 
 

@@ -1,14 +1,14 @@
 <?php
 Router::loadRequired();
 
-$contatti = Contacts::getInstance();
-$contatti_note=ContactsNotes::GetInstance();
+$contatti = Contatti::getInstance();
+$contatti_note=ContattiNote::GetInstance();
 
 $id_pg = Filters::int($_GET['id_pg']);//id della scheda pg
 $pg = Filters::in($_REQUEST['pg']); // nome del pg
 $id=Filters::int($_REQUEST['id']);//id del contatto
 
-$id_contatto=$contatti->getContact('contatto, creato_il', $id); //id del personaggio del contatto
+$id_contatto=$contatti->getContact( $id,'contatto, creato_il'); //id del personaggio del contatto
 
 $contatto=Personaggio::getPgData($id_contatto['contatto']);//dati del personaggio del contattos
 

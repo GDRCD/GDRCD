@@ -1,7 +1,7 @@
 <?php
 Router::loadRequired();
 
-$contatti = Contacts::getInstance();
+$contatti = Contatti::getInstance();
 $id_pg = Filters::int($_GET['id_pg']);
 $pg = Filters::out($_REQUEST['pg']);
 $id_contatto= Filters::int($_REQUEST['id']);
@@ -19,7 +19,7 @@ $id_contatto= Filters::int($_REQUEST['id']);
           data-callback="goBackNoteContatto">
         <?php
 
-        if(!$contatti->contatcPublic()){
+        if(!$contatti->contactPublic()){
             ?>
             <div class="single_input">
                 <div class='label'>

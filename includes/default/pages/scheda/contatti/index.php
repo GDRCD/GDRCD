@@ -2,11 +2,11 @@
 Router::loadRequired();
 
 $scheda_con = SchedaContatti::getInstance();
-$contatti=Contacts::getInstance();
+$contatti=Contatti::getInstance();
 $id_pg = Filters::int($_GET['id_pg']);
 $op = Filters::out($_GET['op']);
 
-if ($contatti->contatcEnables()) {
+if ($contatti->contactEnables()) {
     if ($scheda_con->isAccessible($id_pg)) { ?>
 
 

@@ -1,7 +1,7 @@
 <?php
 Router::loadRequired();
 
-$contatti = Contacts::getInstance();
+$contatti = Contatti::getInstance();
 $id_pg = Filters::int($_GET['id_pg']);
 $pg = Filters::out($_REQUEST['pg']);
 
@@ -25,8 +25,8 @@ $op = Filters::out($_GET['op']);
             <select name="contatto" required>
                 <?php
                 $contattiPresenti=$contatti->contattiPresenti($id_pg);
-                $lista = Personaggio::getAllPG('id, nome', "id NOT IN ({$contattiPresenti})", 'ORDER BY nome');
-                echo Personaggio::listPG(0,$lista);
+                $lista = Personaggio::getInstance()->getAllPG('id, nome', "id NOT IN ({$contattiPresenti})", 'ORDER BY nome');
+                echo Personaggio::getInstance()->listPG(0,$lista);
                 ?>
 
             </select>
@@ -37,7 +37,7 @@ $op = Filters::out($_GET['op']);
             </div>
             <select name="categoria">
                 <?php
-                    echo $contatti->listContactCategorie();
+                    echo $contatti->listContactCategories();
                 ?>
             </select>
         </div>

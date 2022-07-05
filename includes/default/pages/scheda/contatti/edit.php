@@ -1,11 +1,11 @@
 <?php
 Router::loadRequired();
 
-$contatti=Contacts::GetInstance();
+$contatti=Contatti::GetInstance();
 $id=Filters::int($_REQUEST['id']);//id del contatto
-$cls = ContactsCategories::getInstance(); # Inizializzo classe
+$cls = ContattiCategorie::getInstance(); # Inizializzo classe
 
-$idcategoria=$contatti->getContact('categoria', $id); //id del personaggio del contatto
+$idcategoria=$contatti->getContact( $id,'categoria'); //id del personaggio del contatto
 ?>
  <!-- EDIT -->
         <form class="form edit_form ajax_form" action="scheda/contatti/contatti_ajax.php"   data-callback="closeNoteContatto">

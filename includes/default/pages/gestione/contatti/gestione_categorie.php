@@ -2,7 +2,7 @@
 
 Router::loadRequired(); # Inserisco il required se non presente, per futuro spostamento in modale/ajax
 
-$cls = ContactsCategories::getInstance(); # Inizializzo classe
+$cls = ContattiCategorie::getInstance(); # Inizializzo classe
 
 if($cls->permissionManageCategories() ){ # Metodo di controllo per accesso alla pagina di gestione
 

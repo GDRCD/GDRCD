@@ -49,6 +49,14 @@ class Personaggio extends BaseClass
         return DB::query("SELECT {$val} FROM personaggio WHERE id='{$pg}' LIMIT 1");
     }
 
+    /**
+     * @fn listPG
+     * @note Ritorna la lista dei pg registrati escludendo quelli già presenti fra i contatti e l'utente stesso
+     * @return string
+     */
+    function getAllPG(string $val = '*', string $where = '1' , string $order = ''){
+        return DB::query("SELECT {$val} FROM personaggio  WHERE {$where} {$order}", 'result');
+    }
 
     /**** CONTROLS ****/
 
@@ -124,15 +132,6 @@ class Personaggio extends BaseClass
 
     /***** LISTS *****/
 
-    /**
-     * @fn listPG
-     * @note Ritorna la lista dei pg registrati escludendo quelli già presenti fra i contatti e l'utente stesso
-     * @return string
-     */
-    function getAllPG(string $val = '*', string $where = '1' , string $order = ''){
-        return DB::query("SELECT {$val} FROM personaggio  WHERE {$where} {$order}", 'result');
-
-    }
 
     public function listPG($selected = 0 , $pg)
     {
@@ -157,8 +156,8 @@ class Personaggio extends BaseClass
      */
     public function listPgs(): string
     {
-        $roles = $this->getAllPg();
-        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $roles);
+        $pgs = $this->getAllPg();
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $pgs);
 
     }
 }

@@ -1,10 +1,10 @@
 <?php
 Router::loadRequired();
 
-$contatti_note=ContactsNotes::GetInstance();
+$contatti_note=ContattiNote::GetInstance();
 $id=Filters::in($_REQUEST['id']);
 
-$nota=$contatti_note->getNota('titolo, nota, pubblica', $id);
+$nota=$contatti_note->getNota( $id,'titolo, nota, pubblica');
 ?>
 
 <div class="form_container">
@@ -14,7 +14,7 @@ $nota=$contatti_note->getNota('titolo, nota, pubblica', $id);
           data-callback="closeNoteContatto">
         <?php
 
-        if(!$contatti_note->contatcPublic()){
+        if(!$contatti_note->contactPublic()){
         ?>
         <div class="single_input">
             <div class='label'>

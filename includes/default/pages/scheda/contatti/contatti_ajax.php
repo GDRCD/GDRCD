@@ -1,7 +1,7 @@
 <?php
 Router::loadRequired();
-$contatti = Contacts::getInstance();
-$contatti_nota=ContactsNotes::getInstance();
+$contatti = Contatti::getInstance();
+$contatti_nota=ContattiNote::getInstance();
 
 
 
