@@ -281,7 +281,6 @@ class GDRCD6 extends DbMigration
                 ('UPDATE_CONTACTS','Permesso per la modifica dei contatti in schede altrui'),
                 ('DELETE_CONTACTS','Permesso per la eliminazione dei contatti in schede altrui'),
                 ('VIEW_CONTACTS_CATEGORIES','Permesso per la visualizzazione delle categorie contatti in schede altrui'),
-                ('VIEW_CONTACTS_CATEGORIES','Permesso per la visualizzazione delle categorie contatti in schede altrui'),
                 ('MANAGE_CONTACTS_CATEGORIES','Permesso per la gestione delle categorie contatti')
                 ;"
         );
