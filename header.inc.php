@@ -20,7 +20,6 @@ if (!empty($_SESSION['login'])) {
 
 // Cronjob
 if(Cronjob::getInstance()->inlineCronjob()) {
-    var_dump(1);
     Cronjob::getInstance()->startCron();
 }
 

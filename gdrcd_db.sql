@@ -11,7 +11,7 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 --
--- Database: `my_giovannipaneselling`
+-- Database: `gdrcd`
 --
 
 -- --------------------------------------------------------
@@ -28,14 +28,6 @@ CREATE TABLE IF NOT EXISTS `abilita` (
   `razza` int DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
---
--- Dump dei dati per la tabella `abilita`
---
-
-INSERT INTO `abilita` (`nome`, `statistica`, `descrizione`, `razza`) VALUES
-('Resistenza', 4, 'Il personaggio Ã¨ in grado di sopportare il dolore ed il disagio e sopporta minime dosi di agenti tossici nel proprio organismo. ', -1),
-('Sopravvivenza', 4, 'Il personaggio Ã¨ in grado di procurarsi cibo e riparo all''aperto, con mezzi minimi.', -1);
 
 -- --------------------------------------------------------
 
@@ -69,6 +61,8 @@ CREATE TABLE IF NOT EXISTS `abilita_requisiti` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
+
+--
 -- Struttura della tabella `ambientazione`
 --
 
@@ -91,16 +85,6 @@ CREATE TABLE IF NOT EXISTS `araldo` (
   `proprietari` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_araldo`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
---
--- Dump dei dati per la tabella `araldo`
---
-
-INSERT INTO `araldo` (`id_araldo`, `tipo`, `nome`, `proprietari`) VALUES
-(1, 4, 'Resoconti quest', 0),
-(2, 0, 'Notizie in gioco', 0),
-(3, 2, 'Umani', 1000),
-(4, 3, 'Ordini alla Guardia', 1);
 
 -- --------------------------------------------------------
 
@@ -249,6 +233,7 @@ CREATE TABLE IF NOT EXISTS `codmostrina` (
 --
 -- Struttura della tabella `config`
 --
+
 CREATE TABLE IF NOT EXISTS `config` (
   `id` int NOT NULL AUTO_INCREMENT,
   `const_name` varchar(255) NOT NULL,
@@ -260,7 +245,6 @@ CREATE TABLE IF NOT EXISTS `config` (
   `editable` tinyint(1) DEFAULT 1,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
 
 INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,`editable`) VALUES
     ('STANDARD_ENGINE','default','Engine','Engine utilizzato. Non modificare se non necessario.','','string',1),
@@ -330,7 +314,6 @@ INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,
     ('WORKS_ACTIVE',1,'Gruppi','Lavori attivi','Lavori attivi?','bool',1),
     ('WORKS_DIMISSIONS_DAYS',1,'Gruppi','Giorni per dimissioni','Giorni per dimissioni','bool',1),
     ('WORKS_MAX',3,'Gruppi','Massimo lavori liberi','Numero massimo di lavori liberi','int',1);
-
 -- --------------------------------------------------------
 
 --
@@ -348,14 +331,6 @@ CREATE TABLE IF NOT EXISTS `cronjob` (
     `function` varchar(255) NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Dump dei dati per la tabella `cronjob`
---
-
-INSERT INTO `cronjob` (`name`,`last_exec`,`in_exec`,`interval`,`interval_type`,`class`,`function`) VALUES
-    ('meteo_update',NULL,false,'60','minutes','Meteo','generateGlobalWeather'),
-    ('stipendi_assign',NULL,false,'1','days','Gruppi','cronSalaries');
 
 -- --------------------------------------------------------
 
@@ -390,7 +365,6 @@ CREATE TABLE IF NOT EXISTS `esiti` (
   `closed` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
 
 -- --------------------------------------------------------
 
@@ -504,13 +478,6 @@ CREATE TABLE IF NOT EXISTS `gruppi` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
---
--- Dump dei dati per la tabella `gilda`
---
-
-INSERT INTO `gruppi` (`nome`, `tipo`, `immagine`, `url`, `statuto`, `visibile`) VALUES
-('Guardia cittadina', '1', 'standard_gilda.png', 'test', 'Statuto fasullo', 1);
-
 -- --------------------------------------------------------
 
 --
@@ -527,17 +494,7 @@ CREATE TABLE IF NOT EXISTS `gruppi_ruoli` (
     PRIMARY KEY (`id`)
     ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
---
--- Dump dei dati per la tabella `gruppi_ruoli`
---
-
-INSERT INTO `gruppi_ruoli` (`gruppo`, `nome`, `immagine`, `stipendio`, `poteri`) VALUES
-    (1, 'Capitano della guardia', 'standard_gilda.png', 100, 1),
-    (1, 'Ufficiale della guardia', 'standard_gilda.png', 70, 0),
-    (1, 'Soldato della guardia', 'standard_gilda.png', 40, 0),
-    (1, 'Recluta della guardia', 'standard_gilda.png', 15, 0);
-
--- --------------------------------------------------------
+-----------------------------------------------------------
 
 --
 -- Struttura della tabella `gruppi_tipo`
@@ -549,15 +506,6 @@ CREATE TABLE IF NOT EXISTS `gruppi_tipo` (
     `descrizione` text NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
---
--- Dump dei dati per la tabella `gruppi_tipo`
---
-
-INSERT INTO `gruppi_tipo` (`nome`, `descrizione`) VALUES
-    ('Positivo', 'prova'),
-    ('Neutrale', 'prova'),
-    ('Negativo', 'prova');
 
 -- --------------------------------------------------------
 
@@ -590,48 +538,6 @@ CREATE TABLE `menu` (
     `permission` varchar(255) NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Dump dei dati per la tabella `menu`
---
-
-INSERT INTO `menu` (`menu_name`, `section`, `name`, `page`, `permission`) VALUES
-  ('Gestione', 'Log', 'Log Chat', 'log_chat', 'LOG_CHAT'),
-  ('Gestione', 'Log', 'Log Eventi', 'log_eventi', 'LOG_EVENTI'),
-  ('Gestione', 'Log', 'Log Messaggi', 'log_messaggi', 'LOG_MESSAGGI'),
-  ('Gestione', 'Abilità', 'Gestione Abilità', 'gestione_abilita', 'MANAGE_ABILITY'),
-  ('Gestione', 'Abilità', 'Dati Extra Abilità', 'gestione/abilita/extra/gestione_abilita_extra', 'MANAGE_ABILITY_EXTRA'),
-  ('Gestione', 'Abilità', 'Requisiti abilità', 'gestione/abilita/requisiti/gestione_requisiti', 'MANAGE_ABILITY_REQUIREMENT'),
-  ('Gestione', 'Locations', 'Gestione Luoghi', 'gestione_luoghi', 'MANAGE_LOCATIONS'),
-  ('Gestione', 'Locations', 'Gestione Mappe', 'gestione_mappe', 'MANAGE_MAPS'),
-  ('Gestione', 'Documentazioni', 'Gestione Ambientazione', 'gestione_ambientazione', 'MANAGE_AMBIENT'),
-  ('Gestione', 'Documentazioni', 'Gestione Regolamento', 'gestione_regolamento', 'MANAGE_RULES'),
-  ('Gestione', 'Razze', 'Gestione Razze', 'gestione_razze', 'MANAGE_RACES'),
-  ('Gestione', 'Bacheche', 'Gestione Bacheche', 'gestione_bacheche', 'MANAGE_FORUMS'),
-  ('Gestione', 'Gruppi', 'Gestione Gruppi', 'gestione/gruppi/gruppi/gestione_gruppi', 'MANAGE_GROUPS'),
-  ('Gestione', 'Gruppi', 'Gestione Ruoli', 'gestione/gruppi/ruoli/gestione_ruoli', 'MANAGE_GROUPS'),
-  ('Gestione', 'Gruppi', 'Gestione Tipi', 'gestione/gruppi/tipi/gestione_tipi', 'MANAGE_GROUPS'),
-  ('Gestione', 'Gruppi', 'Gestione Lavori', 'gestione/gruppi/lavori/gestione_lavori', 'MANAGE_WORKS'),
-  ('Gestione', 'Gruppi', 'Assegna/Rimuovi lavori', 'gestione/gruppi/lavori/assign_lavori', 'MANAGE_WORKS'),
-  ('Gestione', 'Gestione', 'Gestione Costanti', 'gestione/costanti/gestione_costanti_box', 'MANAGE_CONSTANTS'),
-  ('Gestione', 'Gestione', 'Gestione Versioni Database', 'gestione_db_migrations', 'MANAGE_DB_MIGRATIONS'),
-  ('Gestione', 'Permessi', 'Gestione Permessi', 'gestione_permessi', 'MANAGE_PERMISSIONS'),
-  ('Gestione', 'Gestione', 'Manutenzione', 'gestione_manutenzione', 'MANAGE_MANUTENTIONS'),
-  ('Gestione', 'Chat', 'Giocate Segnalate', 'gestione/segnalazioni/esito_index', 'MANAGE_REPORTS'),
-  ('Gestione', 'Meteo', 'Gestione condizioni', 'gestione/meteo/condizioni/gestione_condizioni', 'MANAGE_WEATHER_CONDITIONS'),
-  ('Gestione', 'Meteo', 'Gestione stagioni', 'gestione/meteo/stagioni/gestione_stagioni_index', 'MANAGE_WEATHER_SEASONS'),
-  ('Gestione', 'Meteo', 'Gestione venti', 'gestione/meteo/venti/gestione_venti', 'MANAGE_WEATHER'),
-  ('Gestione', 'Quest', 'Gestione Quest', 'gestione/quest/gestione_quest_index', 'MANAGE_QUESTS'),
-  ('Gestione', 'Quest', 'Gestione Trame', 'gestione/trame/gestione_trame_index', 'MANAGE_TRAME_VIEW'),
-  ('Gestione', 'Esiti', 'Esiti', 'gestione/esiti/esiti_index', 'MANAGE_ESITI'),
-  ('Gestione', 'Stato Online', 'Gestione stati', 'gestione/online_status/gestione_status', 'MANAGE_ONLINE_STATUS'),
-  ('Gestione', 'Stato Online', 'Gestione tipi stati', 'gestione/online_status/gestione_status_type', 'MANAGE_ONLINE_STATUS'),
-  ('Gestione', 'Oggetti', 'Gestione oggetti', 'gestione/oggetti/gestione_oggetti', 'MANAGE_OBJECTS'),
-  ('Gestione', 'Oggetti', 'Gestione tipi oggetto', 'gestione/oggetti/gestione_oggetti_tipo', 'MANAGE_OBJECTS_TYPES'),
-  ('Gestione', 'Oggetti', 'Gestione posizioni oggetto', 'gestione/oggetti/gestione_oggetti_posizioni', 'MANAGE_OBJECTS_POSITIONS'),
-  ('Gestione', 'Mercato', 'Gestione Oggetti Mercato', 'gestione/mercato/gestione_mercato_oggetti', 'MANAGE_SHOPS_OBJECTS'),
-  ('Gestione', 'Mercato', 'Gestione Negozi Mercato', 'gestione/mercato/gestione_mercato_negozi', 'MANAGE_SHOPS'),
-  ('Gestione', 'Statistiche', 'Gestione Statistiche', 'gestione/statistiche/gestione_statistiche', 'MANAGE_STATS');
 
 -- --------------------------------------------------------
 
@@ -666,14 +572,6 @@ CREATE TABLE IF NOT EXISTS `mappa` (
   FULLTEXT KEY `Invitati` (`invitati`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
---
--- Dump dei dati per la tabella `mappa`
---
-
-INSERT INTO `mappa` (`id`, `nome`, `descrizione`, `stato`, `pagina`, `chat`,`meteo_citta`,`meteo_fisso`, `immagine`, `stanza_apparente`, `id_mappa`, `link_immagine`, `link_immagine_hover`, `id_mappa_collegata`, `x_cord`, `y_cord`, `invitati`, `privata`, `proprietario`, `ora_prenotazione`, `scadenza`, `costo`) VALUES
-(1, 'Strada', 'Via che congiunge la periferia al centro.', 'Nella norma', '', 1,'New York',0, 'standard_luogo.png', '', 1, '', '', 0, 180, 150, '', 0, 'Nessuno', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 0),
-(2, 'Piazza', 'Piccola piazza con panchine ed una fontana al centro.', 'Nella norma', '', 1,'Miami',0, 'standard_luogo.png', '', 1, '', '', 0, 80, 150, '', 0, 'Nessuno', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 0);
-
 -- --------------------------------------------------------
 
 --
@@ -691,14 +589,6 @@ CREATE TABLE IF NOT EXISTS `mappa_click` (
   `altezza` smallint NOT NULL DEFAULT '330',
   PRIMARY KEY (`id_click`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
---
--- Dump dei dati per la tabella `mappa_click`
---
-
-INSERT INTO `mappa_click` (`id_click`, `nome`, `immagine`, `posizione`, `mobile`, `meteo`, `larghezza`, `altezza`) VALUES
-(1, 'Mappa principale', 'spacer.gif', 2, 0, '20Â°c - sereno', 500, 330),
-(2, 'Mappa secondaria', 'spacer.gif', 2, 0, '18Â°c - nuvoloso', 500, 330);
 
 -- --------------------------------------------------------
 
@@ -825,18 +715,6 @@ CREATE TABLE IF NOT EXISTS `meteo_condizioni` (
 -- --------------------------------------------------------
 
 --
--- Dati default per meteo_condizioni
---
-
-INSERT INTO `meteo_condizioni` (`nome`, `img`, `vento`) VALUES
-    ('Sereno', 'imgs/meteo/sereno.gif', '1,2,3'),
-    ('Temporale', 'imgs/meteo/temporale.gif', '2,3'),
-    ('Neve', 'imgs/meteo/neve.gif', '1,4'),
-    ('Pioggia', 'imgs/meteo/pioggia.gif', '1,3');
-
--- --------------------------------------------------------
-
---
 -- Struttura della tabella `meteo_stagioni`
 --
 
@@ -855,15 +733,6 @@ CREATE TABLE `meteo_stagioni` (
 -- --------------------------------------------------------
 
 --
--- Dati default per le stagioni
---
-
-INSERT INTO `meteo_stagioni` (`nome`, `minima`,`massima`, `data_inizio`,`data_fine`, `alba`, `tramonto`) VALUES
-    ('Autunno', '8', '18', '2000-01-01', '2120-12-22','06:45:00', '19:00:00');
-
--- --------------------------------------------------------
-
---
 -- Struttura della tabella `meteo_stagioni_condizioni`
 --
 
@@ -878,18 +747,6 @@ CREATE TABLE `meteo_stagioni_condizioni` (
 -- --------------------------------------------------------
 
 --
--- Dati default per le condizioni delle stagioni
---
-
-INSERT INTO `meteo_stagioni_condizioni` (`stagione`, `condizione`,`percentuale`) VALUES
-    (1,1,25),
-    (1,2,25),
-    (1,3,25),
-    (1,4,25);
-
--- --------------------------------------------------------
-
---
 -- Struttura della tabella `meteo_venti`
 --
 
@@ -898,18 +755,6 @@ CREATE TABLE `meteo_venti` (
     `nome` varchar(255) NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Dati default per le condizioni delle stagioni
---
-
-INSERT INTO `meteo_venti` (`nome`) VALUES
-    ('Brezza'),
-    ('Brezza Leggera'),
-    ('Vento forte'),
-    ('Burrasca');
 
 -- --------------------------------------------------------
 
@@ -958,19 +803,6 @@ CREATE TABLE IF NOT EXISTS `oggetto_tipo` (
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
---
--- Dump dei dati per la tabella `oggetto_tipo`
---
-
-INSERT INTO `oggetto_tipo` (`nome`) VALUES
-    ('Animale'),
-    ('Vestito'),
-    ('Piante'),
-    ('Gioiello'),
-    ('Arma'),
-    ('Attrezzo'),
-    ('Vario');
-
 -- --------------------------------------------------------
 
 --
@@ -997,14 +829,6 @@ CREATE TABLE `online_status_type` (
     `active` tinyint(1) DEFAULT 1,
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Dump dei dati per la tabella `oggetto`
---
-
-INSERT INTO `online_status_type`(`label`,`request`) VALUES
-('Tempo Login','Tempo online?'),
-('Tempo Azione','Tempo azione medio?');
 
 -- --------------------------------------------------------
 
@@ -1045,61 +869,6 @@ CREATE TABLE `permessi_custom` (
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
---
--- Dump dei dati per la tabella `permessi_custom`
---
-
-INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
-    ('LOG_CHAT', 'Permesso visualizzazione log chat'),
-    ('LOG_EVENTI', 'Permesso visualizzazione log evento'),
-    ('LOG_MESSAGGI', 'Permesso visualizzazione log messaggi'),
-    ('MANAGE_ABILITY', 'Permesso gestione abilità'),
-    ('MANAGE_ABILITY_EXTRA', 'Permesso gestione abilità dati extra'),
-    ('MANAGE_ABILITY_REQUIREMENT', 'Permesso gestione requisiti abilità '),
-    ('MANAGE_DB_MIGRATIONS', 'Permesso gestione versioni del database'),
-    ('MANAGE_LOCATIONS', 'Permesso gestione luoghi'),
-    ('MANAGE_MAPS', 'Permesso gestione mappe'),
-    ('MANAGE_AMBIENT','Gestione ambientazione'),
-    ('MANAGE_RULES','Gestione regolamento'),
-    ('MANAGE_CONSTANTS', 'Permesso per l\editing delle costanti'),
-    ('MANAGE_RACES', 'Permesso per la gestione delle razze'),
-    ('MANAGE_FORUMS', 'Permesso per la gestione delle bacheche'),
-    ('MANAGE_GROUPS', 'Permesso per la gestione dei gruppi'),
-    ('MANAGE_WORKS', 'Permesso per la gestione dei lavori liberi'),
-    ('MANAGE_PERMISSIONS', 'Permesso per la gestione dei permessi'),
-    ('MANAGE_MANUTENTIONS', 'Permesso per la gestione della manutenzione del db'),
-    ('MANAGE_REPORTS', 'Permesso per la gestione delle giocate segnalate'),
-    ('MANAGE_WEATHER ', 'Permesso per la gestione meteo'),
-    ('MANAGE_WEATHER_SEASONS', 'Permesso per la gestione delle stagioni meteo'),
-    ('MANAGE_WEATHER_CONDITIONS ', 'Permesso per la gestione delle condizioni meteo'),
-    ('MANAGE_ESITI', 'Permesso per la gestione base degli esiti'),
-    ('MANAGE_ALL_ESITI', 'Permesso per la visione/modifica di qualsiasi tipo di esito'),
-    ('MANAGE_OUTCOMES', 'Permesso per la gestione degli esiti in chat'),
-    ('MANAGE_QUESTS', 'Permesso per la gestione delle quest'),
-    ('MANAGE_QUESTS_OTHER', 'Permesso per la gestione delle quest altrui'),
-    ('MANAGE_TRAME_VIEW','Permesso per la visualizzazione delle trame'),
-    ('MANAGE_TRAME','Permesso per la modifica delle trame'),
-    ('MANAGE_TRAME_OTHER','Permesso per la modifica delle trame degli altri'),
-    ('SCHEDA_EXP_VIEW','Permesso per la visualizzazione della pagina esperienza in scheda'),
-    ('SCHEDA_EXP_MANAGE','Permesso per la visualizzazione della pagina esperienza in scheda'),
-    ('MANAGE_OBJECTS','Permesso per la gestione degli oggetti'),
-    ('MANAGE_OBJECTS_TYPES','Permesso per la gestione delle tipologie di oggetti'),
-    ('MANAGE_OBJECTS_POSITIONS','Permesso per la gestione delle posizioni oggetti'),
-    ('MANAGE_ONLINE_STATUS','Permesso per la gestione degli status online'),
-    ('MANAGE_SHOPS','Permesso per la gestione degli status online'),
-    ('MANAGE_SHOPS_OBJECTS','Permesso per la gestione degli status online'),
-    ('VIEW_SCHEDA_OBJECTS','Permesso per la visualizzazione oggetti in schede altrui'),
-    ('EQUIP_SCHEDA_OBJECTS','Permesso per l equipaggiamento oggetti in schede altrui'),
-    ('REMOVE_SCHEDA_OBJECTS','Permesso per la rimozione oggetti in schede altrui'),
-    ('MANAGE_STATS','Permesso per la gestione statistiche'),
-    ('VIEW_SCHEDA_STATS','Permesso per la visualizzazione statistiche in schede altrui'),
-    ('UPGRADE_SCHEDA_STATS','Permesso per laumento statistiche in schede altrui'),
-    ('DOWNGRADE_SCHEDA_STATS','Permesso per la riduzione statistiche in schede altrui'),
-    ('UPGRADE_SCHEDA_ABI','Permesso per aumento abilita in schede altrui'),
-    ('DOWNGRADE_SCHEDA_ABI','Permesso per la diminuzione abilita in schede altrui'),
-    ('VIEW_SCHEDA_ABI','Permesso per la visualizzazione abilita in schede altrui');
-
-
 -- --------------------------------------------------------
 
 --
@@ -1113,16 +882,6 @@ CREATE TABLE `permessi_group` (
     `superuser` tinyint(1) NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Dump dei dati per la tabella `permessi_group`
---
-
-INSERT INTO `permessi_group` (`id`, `group_name`, `description`, `superuser`) VALUES
-    (1, 'MASTER', 'Gruppo permessi master', 0),
-    (2, 'MODERATOR', 'Gruppo permessi moderatore', 0),
-    (3, 'SUPERUSER', 'Gruppo Permessi superuser', 1),
-    (4, 'USER', 'Permessi gruppo user', 0);
 
 -- --------------------------------------------------------
 
@@ -1150,13 +909,6 @@ CREATE TABLE `permessi_group_personaggio` (
     `personaggio` varchar(255) NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Dump dei dati per la tabella `permessi_group_personaggio`
---
-
-INSERT INTO `permessi_group_personaggio` (`id`, `group_id`, `personaggio`) VALUES
-    (1, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -1229,15 +981,6 @@ CREATE TABLE IF NOT EXISTS `personaggio` (
   KEY `IDRazza` (`id_razza`),
   KEY `Esilio` (`esilio`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Dump dei dati per la tabella `personaggio`
---
-
-
-INSERT INTO `personaggio` (`id`,`nome`, `cognome`, `pass`, `ultimo_cambiopass`, `data_iscrizione`, `email`, `permessi`, `ultima_mappa`, `ultimo_luogo`, `esilio`, `data_esilio`, `motivo_esilio`, `autore_esilio`, `sesso`, `id_razza`, `descrizione`, `affetti`, `stato`, `online_status`, `disponibile`, `url_img`, `url_img_chat`, `url_media`, `blocca_media`, `esperienza`, `car0`, `car1`, `car2`, `car3`, `car4`, `car5`, `salute`, `salute_max`, `data_ultima_gilda`, `soldi`, `banca`, `ultimo_stipendio`, `last_ip`, `is_invisible`, `ultimo_refresh`, `ora_entrata`, `ora_uscita`, `posizione`) VALUES
-(1,'Super', 'User', '$P$BcH1cP941XHOf0X61wVWWjzXqcCi2a/', NULL, '2011-06-04 00:47:48', '$P$BNZYtz9JOQE.O4Tv7qZyl3SzIoZzzR.', 5, 1, -1, '2009-01-01', '2009-01-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 7, 8, 6, 5, 6, 5, 100, 100, '2009-01-01 00:00:00', 300, 50000, '2009-01-01', '127.0.0.1', 0, '2021-10-08 00:28:13', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1),
-(2,'Test', 'Di FunzionaliÃ ', '$P$BUoa19QUuXsgIDlhGC3chR/3Q7hoRy0', NULL, '2011-06-04 00:47:48', '$P$Bd1amPCKkOF9GdgYsibZ96U92D5CtR0', 0, 1, -1, '2009-01-01', '2009-01-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 7, 8, 6, 5, 6, 5, 100, 100, '2009-01-01 00:00:00', 50, 50, '2009-01-01', '127.0.0.1', 0, '2009-01-01 00:00:00', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1);
 
 -- --------------------------------------------------------
 
@@ -1407,13 +1150,6 @@ CREATE TABLE IF NOT EXISTS `razza` (
   PRIMARY KEY (`id_razza`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
---
--- Dump dei dati per la tabella `razza`
---
-
-INSERT INTO `razza` (`id_razza`, `nome_razza`, `sing_m`, `sing_f`, `descrizione`, `bonus_car0`, `bonus_car1`, `bonus_car2`, `bonus_car3`, `bonus_car4`, `bonus_car5`, `immagine`, `icon`, `url_site`, `iscrizione`, `visibile`) VALUES
-(1000, 'Umani', 'Umano', 'Umana', '', 0, 0, 0, 0, 0, 0, 'standard_razza.png', 'standard_razza.png', '', 1, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -1486,16 +1222,3 @@ CREATE TABLE IF NOT EXISTS _gdrcd_db_versions (
   `applied_on` DATETIME NOT NULL ,
   PRIMARY KEY (`migration_id`)
 );
-
-INSERT INTO _gdrcd_db_versions (migration_id,applied_on) VALUES
-  ('2020072500', NOW()),
-  ('2021103018',NOW()),
-  ('2021110101',NOW()),
-  ('2021110102',NOW()),
-  ('2021110103',NOW()),
-  ('2021110104',NOW()),
-  ('2021110105',NOW()),
-  ('2021110106',NOW()),
-  ('2021110107',NOW()),
-  ('2021110108',NOW()),
-  ('2021110109',NOW());
