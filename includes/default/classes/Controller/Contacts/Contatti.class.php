@@ -335,11 +335,24 @@ class Contatti extends BaseClass
     {
         $pg = Filters::int($pg);
         $tot = $this->getAllCharacterContact($pg, 'contatto');
-        $contatti_presenti = "{$pg},";
+        $contatti_presenti = "";
         foreach ($tot as $con) {
             $contatti_presenti .= "{$con['contatto']},";
         }
         return rtrim($contatti_presenti, ",");
+    }
+
+    /**
+     * @fn filteredCharactersList
+     * @note Filtra la lista di personaggi disponibili in creazione nota
+     * @param int $id_pg
+     * @return string
+     */
+    public function filteredCharactersList(int $id_pg): string
+    {
+        $contattiPresenti = $this->contattiPresenti($id_pg);
+        $lista = Personaggio::getInstance()->getAllPG('id, nome', "id NOT IN ('{$id_pg}',{$contattiPresenti})", 'ORDER BY nome');
+        return Personaggio::getInstance()->listPG(0, $lista);
     }
 
     /*** FUNCTIONS ***/
