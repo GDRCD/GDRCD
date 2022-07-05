@@ -198,6 +198,9 @@ CREATE TABLE IF NOT EXISTS `config` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+
+
+
 -- --------------------------------------------------------
 
 --

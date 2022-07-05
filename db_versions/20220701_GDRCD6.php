@@ -92,7 +92,16 @@ class GDRCD6 extends DbMigration
                 ('GROUPS_MAX_ROLES',3,'Gruppi','Massimo ruoli','Numero massimo di ruoli','int',1),
                 ('WORKS_ACTIVE',1,'Gruppi','Lavori attivi','Lavori attivi?','bool',1),
                 ('WORKS_DIMISSIONS_DAYS',1,'Gruppi','Giorni per dimissioni','Giorni per dimissioni','bool',1),
-                ('WORKS_MAX',3,'Gruppi','Massimo lavori liberi','Numero massimo di lavori liberi','int',1);"
+                ('WORKS_MAX',3,'Gruppi','Massimo lavori liberi','Numero massimo di lavori liberi','int',1),
+                ('PRESTAVOLTO_ENABLED', '1', 'Prestavolti', 'Prestavolto', 'Abilitare la funzione dei prestavolti', 'bool', 1),
+                ('PRESTAVOLTO_SHAREABLE', '0', 'Prestavolti condivisi', 'Prestavolto', 'Abilitare la condivisione dei prestavolti', 'bool', 1),
+                ('PRESTAVOLTO_HAVE_IMAGE', '0', 'Immagine del prestavolto condiviso', 'Prestavolto', 'attivi/disattivi la possibilità di inserire una immagine del pv che stai usando ', 'bool', 1),
+                ('PRESTAVOLTO_INSERT_EDIT', '0', 'Possibilità di modifica Prestavolto', 'Prestavolto', 'attivi/disattivi la possibilità di modificare il pv dopo X tempo', 'bool', 1),
+                ('PRESTAVOLTO_INSERT_EDIT_TIMER', '0', 'Tempo a disposizione per modificare un Prestavolto', 'Prestavolto', 'indica dopo quanto tempo in ore (o giorni) un player può modificare il PV (tiene in considerazione la data di modifica, se non presente quella di inserimento). ', 'int', 1),
+                ('PRESTAVOLTO_BEGIN_EDIT', '0', 'Possibilità di modificare appena iscritto il Prestavolto', 'Prestavolto', 'attiva/disattiva la possibilità di modificare il PV dopo liscrizione', 'bool', 1),
+                ('PRESTAVOLTO_BEGIN_EDIT_TIMER', '0', 'Tempo a disposizione per modificare appena iscritto il Prestavolto', 'Prestavolto', 'indica entro quanto tempo (ore o giorni) è possibile effettuare una modifica sulla scelta del PV', 'int', 1),
+                ('PRESTAVOLTO_AUTO_REMOVE', '0', 'Rimozione automatica Prestavolto', 'Prestavolto', 'abilita/disabilita la rimozione automatica dei PV dopo X tempo di inattività', 'bool', 1),
+                ('PRESTAVOLTO_AUTO_REMOVE_TIMER', '0', 'Tempo di inattività per rimuovere un prestavolto', 'Prestavolto', 'se abilitato, specifica dopo quanto tempo di inattività un prestavolto viene considerato rimosso dal personaggio', 'int', 1);"
         );
 
 
@@ -269,7 +278,9 @@ class GDRCD6 extends DbMigration
                 ('DOWNGRADE_SCHEDA_STATS','Permesso per la riduzione statistiche in schede altrui'),
                 ('UPGRADE_SCHEDA_ABI','Permesso per aumento abilita in schede altrui'),
                 ('DOWNGRADE_SCHEDA_ABI','Permesso per la diminuzione abilita in schede altrui'),
-                ('VIEW_SCHEDA_ABI','Permesso per la visualizzazione abilita in schede altrui');"
+                ('VIEW_SCHEDA_ABI','Permesso per la visualizzazione abilita in schede altrui'),
+                ('PRESTAVOLTO_EDIT','Permesso per modificare un prestavolto altrui'),
+                ('PRESTAVOLTO_DELETE','Permesso per rimuovere un prestavolto altrui');"
         );
 
         DB::query("
