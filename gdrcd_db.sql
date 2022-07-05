@@ -138,6 +138,54 @@ CREATE TABLE IF NOT EXISTS `blacklist` (
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `contatti`
+--
+
+CREATE TABLE `contatti` (
+   `id` INT(11) NOT NULL AUTO_INCREMENT,
+   `personaggio` INT(11) NOT NULL DEFAULT '0',
+   `contatto` BIGINT(20) NOT NULL DEFAULT '0',
+   `categoria` VARCHAR(255) NOT NULL,
+   `creato_il` DATE NOT NULL,
+   `creato_da` VARCHAR(255) NOT NULL,
+   PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `contatti_nota`
+--
+
+CREATE TABLE `contatti_nota` (
+   `id` INT(11) NOT NULL AUTO_INCREMENT,
+   `id_contatto` INT(11) NOT NULL DEFAULT '0',
+   `titolo` VARCHAR(250) NULL DEFAULT NULL,
+   `nota` TEXT NOT NULL,
+   `pubblica` VARCHAR(50) NULL DEFAULT NULL,
+   `eliminato` INT(11) NOT NULL DEFAULT '0',
+   `creato_il` DATETIME NOT NULL,
+   `creato_da` VARCHAR(255) NOT NULL DEFAULT '0',
+   PRIMARY KEY (`id`)
+)ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `contatti_nota`
+--
+
+CREATE TABLE `contatti_categorie` (
+   `id` INT(11) NOT NULL AUTO_INCREMENT,
+   `nome` VARCHAR(255) NOT NULL DEFAULT '0',
+   `creato_il` DATETIME NOT NULL,
+   `creato_da` VARCHAR(255) NOT NULL DEFAULT '0',
+   PRIMARY KEY (`id`)
+)ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `chat`
 --
 
@@ -1097,8 +1145,6 @@ CREATE TABLE IF NOT EXISTS `statistiche` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
 --
 -- Struttura della tabella `_gdrcd_db_versions`
 --
@@ -1108,5 +1154,3 @@ CREATE TABLE IF NOT EXISTS _gdrcd_db_versions (
   `applied_on` DATETIME NOT NULL ,
   PRIMARY KEY (`migration_id`)
 );
-
-

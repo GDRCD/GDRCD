@@ -3,9 +3,7 @@
 $pg = Filters::out($_REQUEST['pg']);
 $me = Filters::out($_SESSION['login']);
 $perm = Filters::out($_SESSION['permessi']);
-$id_pg = Filters::int($_REQUEST['id_pg']);
-
-
+$id_pg=Personaggio::IdFromName($pg);
 
 /*Visualizza il link modifica se l'utente visualizza la propria scheda o se è almeno un capogilda*/
 ?>
@@ -20,30 +18,34 @@ $id_pg = Filters::int($_REQUEST['id_pg']);
     </a>
 
     <!-- Descrizione e Storia separate dalla pagina principale della scheda -->
-    <a href="main.php?page=scheda_descrizione&pg=<?php echo $_SESSION['login']; ?>&id_pg=<?=$id_pg;?>">
+    <a href="main.php?page=scheda_descrizione&pg=<?= $pg ?>&id_pg=<?=$id_pg;?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['detail']); ?>
     </a>
-    <a href="main.php?page=scheda_storia&pg=<?php echo $_SESSION['login']; ?>&id_pg=<?=$id_pg;?>">
+
+    <a href="main.php?page=scheda_contatti&pg=<?= $pg ?>&id_pg=<?=$id_pg;?>">
+        <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['contatti']); ?>
+    </a>
+    <a href="main.php?page=scheda_storia&pg=<?= $pg ?>&id_pg=<?=$id_pg;?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['background']); ?>
     </a>
     <!-- TRASFERIMENTI -->
-    <a href="main.php?page=scheda_trans&pg=<?php echo Filters::url( $_REQUEST['pg']); ?>&id_pg=<?=$id_pg;?>">
+    <a href="main.php?page=scheda_trans&pg=<?= $pg ?>&id_pg=<?=$id_pg;?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['transictions']); ?>
     </a>
 
     <!-- ESPERIENZA -->
-    <a href="main.php?page=scheda_px&pg=<?php echo Filters::url( $_REQUEST['pg']); ?>&id_pg=<?=$id_pg;?>">
+    <a href="main.php?page=scheda_px&pg=<?= $pg ?>&id_pg=<?=$id_pg;?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['experience']); ?>
     </a>
 
     <!-- INVENTARIO -->
-    <a href="main.php?page=scheda_oggetti&pg=<?php echo Filters::url( $_REQUEST['pg']); ?>&id_pg=<?=$id_pg;?>">
+    <a href="main.php?page=scheda_oggetti&pg=<?= $pg ?>&id_pg=<?=$id_pg;?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['equipment']); ?>
     </a>
 
     <!-- DIARIO -->
 <?php if (defined('PG_DIARY_ENABLED') and PG_DIARY_ENABLED) { ?>
-    <a href="main.php?page=scheda_diario&pg=<?php echo Filters::url( $_REQUEST['pg']); ?>&id_pg=<?=$id_pg;?>">
+    <a href="main.php?page=scheda_diario&pg=<?= $pg ?>&id_pg=<?=$id_pg;?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['diary']); ?>
     </a>
 <?php } ?>

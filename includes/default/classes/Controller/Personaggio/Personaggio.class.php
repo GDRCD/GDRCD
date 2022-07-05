@@ -50,14 +50,12 @@ class Personaggio extends BaseClass
     }
 
     /**
-     * @fn getAllPg
-     * @note Estrae tutti i personaggi
-     * @param string $val
-     * @return bool|int|mixed|string
+     * @fn listPG
+     * @note Ritorna la lista dei pg registrati escludendo quelli già presenti fra i contatti e l'utente stesso
+     * @return string
      */
-    public function getAllPg(string $val = '*')
-    {
-        return DB::query("SELECT {$val} FROM personaggio WHERE 1", 'result');
+    function getAllPG(string $val = '*', string $where = '1' , string $order = ''){
+        return DB::query("SELECT {$val} FROM personaggio  WHERE {$where} {$order}", 'result');
     }
 
     /**** CONTROLS ****/
@@ -105,6 +103,19 @@ class Personaggio extends BaseClass
 
         return Filters::out($data['nome']);
     }
+    /**
+     * @fn IdFromName
+     * @note Estrae il nome del pg dall'id
+     * @var int $id
+     * @return string
+     */
+    public static function IdFromName(string $nome):string
+    {
+        $nome = Filters::in($nome);
+        $data = DB::query("SELECT id FROM personaggio WHERE nome='{$nome}' LIMIT 1");
+
+        return Filters::out($data['id']);
+    }
 
     /**
      * @fn updatePgData
@@ -119,6 +130,25 @@ class Personaggio extends BaseClass
     }
 
 
+    /***** LISTS *****/
+
+
+    public function listPG($selected = 0 , $pg)
+    {
+
+        $html = '<option value=""></option>';
+
+
+        foreach ($pg as $personaggi) {
+            $nome = Filters::out($personaggi['nome']);
+            $id = Filters::int($personaggi['id']);
+            $sel = ($id == $selected) ? 'selected' : '';
+            $html .= "<option value='{$id}' {$sel}>{$nome}</option>";
+        }
+
+        return $html;
+    }
+
     /**
      * @fn listPgs
      * @note Genera gli option per i personaggi
@@ -126,7 +156,8 @@ class Personaggio extends BaseClass
      */
     public function listPgs(): string
     {
-        $roles = $this->getAllPg();
-        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $roles);
+        $pgs = $this->getAllPg();
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $pgs);
+
     }
 }

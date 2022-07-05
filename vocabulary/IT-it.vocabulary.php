@@ -162,6 +162,8 @@ $MESSAGE['interface']['sheet']['menu']['detail']='Descrizione e Conoscenze';
 $MESSAGE['interface']['sheet']['menu']['background']='Storia';
 $MESSAGE['interface']['sheet']['menu']['description']='Descrizione';
 $MESSAGE['interface']['sheet']['menu']['friend']='Conoscenze';
+$MESSAGE['interface']['sheet']['menu']['contatti']='Contatti';
+
 $MESSAGE['interface']['sheet']['modify_form']['last_name'] = 'Cognome';
 $MESSAGE['interface']['sheet']['modify_form']['relationships'] = 'Affetti';
 $MESSAGE['interface']['sheet']['modify_form']['background'] = 'Background';
