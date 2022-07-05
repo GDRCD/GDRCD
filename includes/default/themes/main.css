@@ -716,12 +716,13 @@ div.innertube {
 /*** GESTIONE CONTATTI ***/
 
 .pagina_scheda_contatti .contatti_list .header .td{
-    width: 130px;
+    width: 32%;
 }
 
 .pagina_scheda_contatti .contatti_list .td{
-    width: 135px;
+    width: 32%;
 }
+
 /*** GESTIONE ESITI ***/
 
 .gestione_esiti .esiti_list .header .td{

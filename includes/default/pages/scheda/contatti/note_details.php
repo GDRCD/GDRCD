@@ -1,4 +1,5 @@
 <?php
+
 Router::loadRequired();
 
 $contatti_note=ContattiNote::GetInstance();

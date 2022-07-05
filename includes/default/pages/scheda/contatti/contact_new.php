@@ -14,7 +14,7 @@ $op = Filters::out($_GET['op']);
 
 <div class="form_container">
     <form class="form ajax_form"
-          action="scheda/contatti/contatti_ajax.php"
+          action="scheda/contatti/contact_ajax.php"
           data-reset="false"
           data-callback="goBackContatti">
 
@@ -46,7 +46,7 @@ $op = Filters::out($_GET['op']);
                 <!-- bottoni -->
                 <div class="single_input">
                     <div class='form_submit'>
-                        <input type="hidden" name="action" value="new_contatto">
+                        <input type="hidden" name="action" value="contact_new">
                         <input type="hidden" id="id_pg" name="id_pg" value="<?=$id_pg?>">
                         <input type="hidden" id="pg" name="pg" value="<?=$pg?>">
                         <input type="hidden" id="url" value="/main.php?page=scheda_contatti&id_pg=<?=$id_pg?>&pg=<?=$pg?>">
@@ -61,4 +61,4 @@ $op = Filters::out($_GET['op']);
 
 
 
-<script src="<?= Router::getPagesLink('scheda/contatti/JS/contatti_new.js'); ?>"></script>
+<script src="<?= Router::getPagesLink('scheda/contatti/JS/contact_new.js'); ?>"></script>

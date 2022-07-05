@@ -34,7 +34,7 @@ $contatto = Personaggio::getPgData($id_contatto['contatto']);//dati del personag
         if (Personaggio::isMyPg($id_pg)) {
 
             ?>
-            <a href="/main.php?page=scheda_contatti&id_pg=<?= $id_pg ?>&pg=<?= $pg ?>&op=new_nota&id=<?= $id ?>">Nuova
+            <a href="/main.php?page=scheda_contatti&id_pg=<?= $id_pg ?>&pg=<?= $pg ?>&op=note_new&id=<?= $id ?>">Nuova
                 nota</a> |
             <?php
         }
@@ -43,4 +43,4 @@ $contatto = Personaggio::getPgData($id_contatto['contatto']);//dati del personag
     </div>
 </div>
 
-<script src="<?= Router::getPagesLink('scheda/contatti/JS/delete_nota.js'); ?>"></script>
+<script src="<?= Router::getPagesLink('scheda/contatti/JS/note_view.js'); ?>"></script>

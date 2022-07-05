@@ -6,9 +6,11 @@ $id=Filters::int($_REQUEST['id']);//id del contatto
 $cls = ContattiCategorie::getInstance(); # Inizializzo classe
 
 $idcategoria=$contatti->getContact( $id,'categoria'); //id del personaggio del contatto
+
+
 ?>
  <!-- EDIT -->
-        <form class="form edit_form ajax_form" action="scheda/contatti/contatti_ajax.php"   data-callback="closeNoteContatto">
+        <form class="form edit_form ajax_form" action="scheda/contatti/contact_ajax.php"   data-callback="closeNoteContatto">
 
             <div class="form_title">Modifica categoria</div>
 
@@ -28,4 +30,4 @@ $idcategoria=$contatti->getContact( $id,'categoria'); //id del personaggio del c
 
         </form>
 
-<script src="<?= Router::getPagesLink('scheda/contatti/JS/edit_contatto.js'); ?>"></script>
+<script src="<?= Router::getPagesLink('scheda/contatti/JS/contact_edit.js'); ?>"></script>

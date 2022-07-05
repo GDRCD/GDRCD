@@ -60,21 +60,27 @@ class Contatti extends BaseClass
                 $page = 'list.php';
                 break;
 
-            case 'new':
-                $page = 'new.php';
+            case 'contact_new':
+                $page = 'contact_new.php';
                 break;
 
-            case 'edit':
-                $page = 'edit.php';
+            case 'contact_edit':
+                $page = 'contact_edit.php';
                 break;
-            case 'view':
-                $page = 'view.php';
+
+            case 'note_view':
+                $page = 'note_view.php';
                 break;
-            case 'new_nota':
-                $page = 'new_nota.php';
+            case 'note_new':
+                $page = 'note_new.php';
                 break;
-            case 'dettaglio_nota':
-                $page = 'dettaglio_nota.php';
+
+            case 'note_details':
+                $page = 'note_details.php';
+                break;
+
+            case 'note_edit':
+                $page = 'note_edit.php';
                 break;
         }
 
@@ -248,7 +254,7 @@ class Contatti extends BaseClass
             $categoria = ContattiCategorie::getInstance()->getCategory($id_categoria, 'nome');
 
             $contatto = Personaggio::nameFromId($id_contatto);
-            $pop_up_modifica = 'javascript:modalWindow("edit", "Modifica Contatto","popup.php?page=scheda_contatti_nota&id=' . $id . '&op=edit") ';
+            $pop_up_modifica = 'javascript:modalWindow("edit", "Modifica Contatto","popup.php?page=scheda_contatti_nota&id=' . $id . '&op=contact_edit") ';
 
 
             $array = [
@@ -276,10 +282,7 @@ class Contatti extends BaseClass
             'Categoria',
             'Controlli'
         ];
-        $links = [
-            //  ['href' => "/main.php?page={$path}&op=new&id_pg={$id_pg}&pg={$pg}", 'text' => 'Nuovo contatto']
-            // ['href' => "/main.php?page={$backlink}&id_pg={$id_pg}&pg={$pg}", 'text' => 'Indietro']
-        ];
+        $links = [];
 
         return [
             'body' => 'scheda/contatti/list',

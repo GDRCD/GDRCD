@@ -11,7 +11,7 @@ $(function(){
         let button = await Swal.button('Sei sicuro?', 'Vuoi eliminare questa nota?', 'question');
 
         if (button) {
-            Ajax('scheda/contatti/contatti_ajax.php', {
+            Ajax('scheda/contatti/contact_ajax.php', {
                 action: action,
                 id: id,
                 page: page

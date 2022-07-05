@@ -14,7 +14,7 @@ $id_contatto= Filters::int($_REQUEST['id']);
 
 <div class="form_container">
     <form class="form ajax_form"
-          action="scheda/contatti/contatti_ajax.php"
+          action="scheda/contatti/contact_ajax.php"
           data-reset="false"
           data-callback="goBackNoteContatto">
         <?php
@@ -54,14 +54,14 @@ $id_contatto= Filters::int($_REQUEST['id']);
                 <!-- bottoni -->
                 <div class="single_input">
                     <div class='form_submit'>
-                        <input type="hidden" name="action" value="new_nota">
+                        <input type="hidden" name="action" value="note_new">
                         <input type="hidden" id="id_pg" name="id_pg" value="<?=$id_pg?>">
                         <input type="hidden" id="pg" name="pg" value="<?=$pg?>">
                         <input type="hidden" id="id_contatto" name="id_contatto" value="<?=$id_contatto?>">
-                        <input type="hidden" id="url" value="/main.php?page=scheda_contatti&id_pg=<?=$id_pg?>&pg=<?=$pg?>&op=view&id=<?=$id_contatto?>">
+                        <input type="hidden" id="url" value="/main.php?page=scheda_contatti&id_pg=<?=$id_pg?>&pg=<?=$pg?>&op=note_view&id=<?=$id_contatto?>">
 
                         <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>"/> |
-                        <a href="/main.php?page=scheda_contatti&id_pg=<?=$id_pg?>&pg=<?=$pg?>&op=view&id=<?=$id_contatto?>">Torna indietro</a>
+                        <a href="/main.php?page=scheda_contatti&id_pg=<?=$id_pg?>&pg=<?=$pg?>&op=note_view&id=<?=$id_contatto?>">Torna indietro</a>
                     </div>
                 </div>
             </div>
@@ -69,4 +69,4 @@ $id_contatto= Filters::int($_REQUEST['id']);
     </form>
 </div>
 
-<script src="<?= Router::getPagesLink('scheda/contatti/JS/nota_contatti.js'); ?>"></script>
+<script src="<?= Router::getPagesLink('scheda/contatti/JS/note_new.js'); ?>"></script>

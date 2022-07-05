@@ -9,7 +9,7 @@ $nota=$contatti_note->getNota( $id,'titolo, nota, pubblica');
 
 <div class="form_container">
     <form class="form ajax_form"
-          action="scheda/contatti/contatti_ajax.php"
+          action="scheda/contatti/contact_ajax.php"
           data-reset="false"
           data-callback="closeNoteContatto">
         <?php
@@ -50,7 +50,7 @@ $nota=$contatti_note->getNota( $id,'titolo, nota, pubblica');
                 <div class='form_submit'>
                     <div class='single_input'>
                         <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>"/>
-                        <input type="hidden" name="action" value="edit_nota">
+                        <input type="hidden" name="action" value="note_edit">
                         <input type="hidden" name="id" value="<?= Filters::int($id); ?>">
 
                     </div>
@@ -59,5 +59,5 @@ $nota=$contatti_note->getNota( $id,'titolo, nota, pubblica');
         </div>
     </form>
 </div>
-<script src="<?= Router::getPagesLink('scheda/contatti/JS/edit_nota.js'); ?>"></script>
+<script src="<?= Router::getPagesLink('scheda/contatti/JS/note_edit.js'); ?>"></script>
 

@@ -50,34 +50,6 @@ class ContattiNote extends Contatti
         return DB::query("SELECT {$val} FROM contatti_nota WHERE id = '{$id}' ");
     }
 
-    /**** ROUTING ***/
-
-    /**
-     * @fn loadManagementContactPage
-     * @note Routing delle pagine di gestione
-     * @param string $op
-     * @return string
-     */
-    public function loadManagementContactNotePage(string $op): string
-    {
-        $op = Filters::out($op);
-
-        switch ($op) {
-            default:
-                $page = 'dettaglio_nota.php';
-                break;
-
-            case 'edit_nota':
-                $page = 'modifica_nota.php';
-                break;
-            case 'edit':
-                $page = 'edit.php';
-                break;
-        }
-
-        return $page;
-    }
-
     /*** CONTACT INDEX ***/
 
     /**
@@ -103,7 +75,7 @@ class ContattiNote extends Contatti
             $creato_il = Filters::date($row['creato_il'], 'd/m/Y');
             $creato_da = Personaggio::nameFromId($row['creato_da']);
             $pop_up = 'javascript:modalWindow("note", "Dettaglio nota","popup.php?page=scheda_contatti_nota&id=' . $id . '") ';
-            $pop_up_modifica = 'javascript:modalWindow("note_edit", "Modifica nota","popup.php?page=scheda_contatti_nota&id=' . $id . '&op=edit_nota") ';
+            $pop_up_modifica = 'javascript:modalWindow("note_edit", "Modifica nota","popup.php?page=scheda_contatti_nota&id=' . $id . '&op=note_edit") ';
             $array = [
                 'id' => $id,
                 'titolo' => $titolo,

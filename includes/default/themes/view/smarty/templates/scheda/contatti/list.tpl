@@ -11,7 +11,7 @@
         {/if}
         <div class='td commands'>
 
-            <a href='/main.php?page={$path}&op=view&id={$row.id}&id_pg={$row.id_pg}&pg={$row.pg}' title='Visualizza'><i class="far fa-info"></i></a>
+            <a href='/main.php?page={$path}&op=note_view&id={$row.id}&id_pg={$row.id_pg}&pg={$row.pg}' title='Visualizza'><i class="far fa-info"></i></a>
 
             {if $row.contatti_update_permission} <a href='{$row.pop_up_modifica}'><i class='fas fa-edit'></i></a>{/if}
 
