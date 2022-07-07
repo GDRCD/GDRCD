@@ -162,6 +162,8 @@ $MESSAGE['interface']['sheet']['menu']['detail']='Descrizione e Conoscenze';
 $MESSAGE['interface']['sheet']['menu']['background']='Storia';
 $MESSAGE['interface']['sheet']['menu']['description']='Descrizione';
 $MESSAGE['interface']['sheet']['menu']['friend']='Conoscenze';
+$MESSAGE['interface']['sheet']['menu']['contatti']='Contatti';
+
 $MESSAGE['interface']['sheet']['modify_form']['last_name'] = 'Cognome';
 $MESSAGE['interface']['sheet']['modify_form']['relationships'] = 'Affetti';
 $MESSAGE['interface']['sheet']['modify_form']['background'] = 'Background';
@@ -469,6 +471,24 @@ $MESSAGE['interface']['administration']['locations']['owner_default'] = 'Nessuno
 $MESSAGE['interface']['administration']['locations']['owner_err'] = 'Nessun gruppo o utente presente.';
 $MESSAGE['interface']['administration']['locations']['expiration_date'] = 'Scadenza';
 $MESSAGE['interface']['administration']['locations']['rent'] = 'Costo orario di affitto';
+
+/*Condizioni meteo*/
+$MESSAGE['interface']['administration']['meteo_condition']['page_name'] = 'Gestione Condizioni Meteo';
+$MESSAGE['interface']['administration']['meteo_condition']['link']['new']='Crea nuova condizione';
+$MESSAGE['interface']['administration']['meteo_condition']['wind_name']='Vento';
+
+/*Condizioni stagioni*/
+$MESSAGE['interface']['administration']['meteo_season']['page_name'] = 'Gestione delle stagioni';
+$MESSAGE['interface']['administration']['meteo_season']['min']='Temperatura minima';
+$MESSAGE['interface']['administration']['meteo_season']['max']='Temperatura massima';
+$MESSAGE['interface']['administration']['meteo_season']['date_start']='Data inizio';
+$MESSAGE['interface']['administration']['meteo_season']['date_end']='Data fine';
+$MESSAGE['interface']['administration']['meteo_season']['sunrise']='Alba';
+$MESSAGE['interface']['administration']['meteo_season']['sunset']='Tramonto';
+
+
+
+
 
 /**    * Denonimazioni relative al link immagine e collegamento mappa
  * @author Blancks

@@ -1,0 +1,1182 @@
+/** * Skin advanced
+	* @author Blancks
+*/
+
+/** * Parametri di default nella pagina
+*/
+body {
+    padding: 0;
+    margin: 0;
+    color: #222;
+    font-family: Verdana, Sans;
+    font-size: 11px;
+}
+
+body.transparent_body {
+    background-color: transparent;
+    background-image: none;
+}
+
+div, ul, li {
+    margin: 0;
+    padding: 0;
+}
+
+.blank {
+    clear: both;
+}
+
+a, a:visited {
+    color: #333;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #222;
+    font-weight: bolder;
+    text-decoration: underline;
+}
+
+div.form_field table {
+    margin: 5px auto;
+}
+
+input, textarea, select {
+    width: 80%;
+    margin-bottom: 10px;
+}
+
+input[type='submit'] {
+    width: auto;
+    margin: 5px 0 15px 0;
+}
+
+textarea {
+    height: 100px;
+}
+
+div.form_label {
+    font-size: 13px;
+    font-weight: bolder;
+    margin-top: 5px;
+}
+
+div.form_info {
+    font-size: 12px;
+    margin-bottom: 15px;
+}
+
+select.day, select.month, select.year {
+    width: 60px;
+    display: inline-block;
+}
+
+/** * Stile dei messaggi d'avviso dell'engine */
+div.warning, div.error {
+    background-color: #cf8888;
+    font-size: 12px;
+    text-align: center;
+    margin: 15px;
+    font-weight: bolder;
+    padding: 10px;
+    border: solid 1px #800;
+    color: #970b0b;
+}
+
+div.link_back {
+    text-align: center;
+    background-color: #d1d1d1;
+    padding: 2px;
+    margin-top: 15px;
+}
+
+/** * Logout */
+div.logout_box {
+    margin: 20px auto;
+    padding: 10px;
+    text-align: center;
+    background-color: #D9D9D9;
+    border: solid 1px #333;
+    -moz-border-radius: 5px; /* Bordi arrotondati */
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    border-radius: 5px;
+}
+
+div.logout_box a {
+    text-decoration: underline;
+    font-style: italic;
+}
+
+/** * Titoli delle sezioni
+*/
+div.innertube h2, div.output h2, div.page_title h2 {
+    font-size: 14px;
+    font-weight: bolder;
+    border-bottom: 1px solid #D9D9D9;
+    padding-bottom: 4px;
+    margin-top: 0;
+}
+
+/** * Stile dei contenitori grigi con i bordini arrotondati
+*/
+div.pagina_info_location, div.messages, div.forums, div.menu, div.presenti, div.output {
+    margin: 5px auto;
+    padding: 10px;
+    width: 180px;
+    background-color: #b9b9b9;
+    border: solid 1px #444;
+    -moz-border-radius: 5px; /* Bordi arrotondati */
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    border-radius: 5px;
+}
+
+div.output {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0px;
+    left: 0px;
+    width: auto;
+    overflow: auto;
+    text-align: center;
+    background: url("imgs/main_bg.jpg") no-repeat top center #b9b9b9;
+}
+
+/** * Informazioni con anteprima luogo
+*/
+div.info_image {
+    text-align: center;
+}
+
+div.box_stato_luogo {
+    padding-top: 2px;
+    margin-bottom: 15px;
+}
+
+div.meteo, div.meteo_date {
+    padding-top: 5px;
+    text-align: center;
+    font-size: 12px;
+}
+
+div.meteo_luna img{
+    margin:0 auto;
+    width: 30px;
+    height: 30px;
+    display: block;
+}
+
+/** * Frame Messaggi 
+*/
+iframe.iframe_messages,
+iframe.iframe_forums {
+    height: 20px;
+    width: 180px;
+}
+
+div.box_messages, .box_forums {
+    text-align: center;
+    font-size: 14px;
+}
+
+div.box_messages a,
+div.box_forums a,
+div.box_messages a:visited,
+div.box_forums a:visited {
+    text-decoration: none;
+    color: #444;
+}
+
+div.messaggio_forum_nuovo a, div.messaggio_forum_nuovo a:visited {
+    font-weight: bolder;
+    font-style: italic;
+    color: #111;
+}
+
+/** * Men� di gioco
+*/
+select#gotomap {
+    display: block;
+    width: 160px;
+    margin: 0 auto 15px auto;
+}
+
+div.link_menu {
+    padding: 0 0 0 20px;
+    font-size: 14px;
+}
+
+div.link_menu a {
+    display: block;
+    padding: 5px;
+    text-align: left;
+}
+
+div.link_menu a:hover {
+    background-color: #cfcfcf;
+    text-decoration: none;
+    -moz-border-radius: 5px; /* Bordi arrotondati */
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    border-radius: 5px;
+}
+
+div.link_menu a.sprite {
+    display: block;
+    width: 50px;
+    height: 50px;
+    background: no-repeat top left;
+}
+
+div.link_menu a.sprite:hover {
+    background-position: 0 100%;
+}
+
+/** * Mappa cliccabile */
+
+/** * Posizionamento mappa cliccabile 
+*/
+div.mappaclick_map {
+    margin: 20px auto;
+}
+
+/** * Link testuali sulla mappa */
+div.mappaclick_map a {
+    font-size: 13px;
+    font-weight: bolder;
+}
+
+/** * stile della tooltip di descrizione sulla mappa 
+*/
+div#descriptionLoc {
+    position: absolute;
+    width: 200px;
+    background-color: #cfcfcf;
+    padding: 20px;
+    font-size: 12px;
+    border: solid 1px #666;
+    font-family: Verdana, Sans;
+    text-align: left;
+
+    -moz-border-radius: 5px; /* Bordi arrotondati */
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    border-radius: 5px;
+
+    display: none; /*NON TOCCARE* Di configurazione: nasconde la tip in partenza */
+    z-index: 9999; /*NON TOCCARE* Di configurazione: mostra la tooltip sopra gli altri link */
+}
+
+/** * Stili relativi all'elenco delle mappe in basso
+*/
+div.mappaclick_more {
+    padding-top: 10px;
+}
+
+div.mappaclick_more a {
+    background-color: #cfcfcf;
+    padding: 8px;
+    margin-right: 10px;
+    -moz-border-radius: 5px; /* Bordi arrotondati */
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    border-radius: 5px;
+}
+
+/** * Messages center
+*/
+div.elenco_record_gioco {
+    padding: 20px;
+}
+
+div.elenco_record_gioco table {
+    width: 100%;
+    background-color: #d1d1d1;
+    -moz-border-radius: 5px; /* Bordi arrotondati */
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    border-radius: 5px;
+}
+
+div.elementi_elenco {
+    padding-top: 5px;
+    text-align: center;
+}
+
+div.titoli_elenco,
+span.titoli_elenco {
+    font-weight: bold;
+    font-size: 12px;
+    font-style: italic;
+}
+
+img.colonna_elenco_messaggi_icon {
+    width: 30px;
+    height: 30px;
+}
+
+div.controlli_elenco {
+    width: 60px;
+}
+
+div.controllo_elenco {
+    width: 20px;
+    float: left;
+}
+
+div.controllo_elenco input[type='image'] {
+    width: 15px;
+}
+
+/** * Ambientazione/Regolamento */
+div.user_ambientazione div.elementi_elenco, div.servizi_abilita div.elementi_elenco {
+    text-align: left;
+    padding: 5px;
+}
+
+div.user_ambientazione td.casella_titolo div.elementi_elenco,
+div.servizi_abilita td.casella_titolo div.elementi_elenco {
+    font-size: 14px;
+    font-weight: bolder;
+    padding: 2px 0 2px 10px;
+}
+
+/** * Generico per elenchi, bacheche, regolamento, ambientazione etc */
+div.capitolo_elenco {
+    font-weight: bolder;
+    font-size: 13px;
+    text-align: left;
+    padding: 5px 5px 5px 20px;
+    background-color: #c9c9c9;
+}
+
+div.elementi_elenco {
+    min-height: 20px;
+}
+
+td.casella_elemento, div.elementi_elenco {
+    font-size: 12px;
+    background-color: #d9d9d9;
+}
+
+div.controllo_elenco input[type='image'] {
+    height: 15px;
+    width: 15px;
+    display: block;
+    margin: 2px 5px;
+}
+
+div.elementi_elenco a {
+    font-weight: bolder;
+}
+
+div.elementi_elenco a:hover {
+    text-decoration: none;
+}
+
+/** * Stile tabelle nei moduli di gestione */
+div.elenco_record_gestione table {
+    width: 95%;
+    margin: 10px auto;
+}
+
+/** * Accorgimenti Layout */
+
+/** * Allineamento verticale delle colonne 
+*/
+#framecontentLeft, #framecontentRight {
+    display: table;
+}
+
+/*** DIARI ***/
+.btn-link {
+    border: none;
+    outline: none;
+    background: none;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+    font-family: inherit;
+    font-size: inherit;
+}
+
+/** * margine delle colonne */
+div.innertube {
+    margin: 0;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+/** MENU DEFAULT **/
+.menu_box .single_menu{
+    margin: 10px auto !important;
+}
+
+.menu_box .single_section .section_title{
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    border: solid black;
+    border-width: 1px 0;
+    margin: 10px 0;
+    padding: 5px 0;
+    clear: both;
+}
+
+.menu_box .single_section .box_input{
+    display:none;
+    background: lightgrey;
+    border:1px solid black;
+    width: 98%;
+    margin: 0 auto;
+}
+
+.menu_box .box_input .single_menu{
+    margin: 10px auto !important;
+    background: grey;
+    border:1px solid black;
+    border-radius: 5px;
+    width: 300px;
+    padding: 5px 0;
+}
+
+/**
+ GESTIONE COSTANTI
+ */
+.gestione_costanti .single_input{
+    margin: 10px auto !important;
+}
+
+.gestione_costanti .single_section .gestione_form_title{
+    cursor: pointer;
+}
+
+.gestione_costanti .single_section .box_input{
+    display: none;
+}
+
+/** GESTIONE PERMESSI **/
+.gestione_permessi #permessi_gerarchia{
+    list-style: none;
+}
+
+.gestione_permessi #permessi_gerarchia li{
+    width: 50%;
+    margin: 5px auto;
+    background: grey;
+    border:1px solid black;
+    color: white;
+}
+
+/**
+ * Stili relative alle pagine dei menù:
+ * GESTIONE
+ * SERVIZI
+ */
+.gestione_pagina .gestione_incipit,
+.servizi_pagina .servizi_incipit,
+.general_incipit{
+    background: grey;
+    padding: 10px;
+    color:black;
+    border:1px solid black;
+    width: 80%;
+    margin:5px auto;
+    font-size: 13px;
+}
+
+.gestione_pagina .gestione_incipit .title,
+.servizi_pagina .servizi_incipit .title,
+.general_incipit .title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.gestione_pagina .gestione_incipit .subtitle_gst,
+.servizi_pagina .servizi_incipit .subtitle_gst,
+.general_incipit .subtitle {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.gestione_pagina .gestione_incipit .highlight,
+.servizi_pagina .servizi_incipit .highlight,
+.general_incipit .highlight {
+    font-weight: bold;
+    color: rgb(177, 71, 71);
+}
+
+.gestione_pagina .gestione_incipit ul,
+.servizi_pagina .servizi_incipit ul,
+.general_incipit ul{
+    width: 80%;
+    margin:0 auto;
+}
+
+.gestione_pagina .gestione_incipit ul li,
+.servizi_pagina .servizi_incipit ul li,
+.general_incipit ul li{
+    padding: 5px 0;
+    text-align: left;
+}
+
+.form_container{
+    width: 90%;
+    margin: 5px auto;
+}
+
+.form_container .form{
+    width: 100%;
+}
+
+.form_container .form_info{
+    font-size: 12px;
+    font-style: italic;
+}
+
+.form_container .form .form_title,
+.general_title{
+    font-size: 15px;
+    font-weight: bold;
+    border: solid black;
+    border-width: 1px 0;
+    margin: 10px 0;
+    padding: 5px 0;
+    clear: both;
+    text-align: center;
+}
+
+.form_container .form .form_subtitle,
+.general_subtitle{
+    font-size: 13px;
+    font-weight: bold;
+    margin: 10px 0;
+    padding: 5px 0;
+    clear: both;
+}
+
+.form_container .form .single_input{
+    width: 100%;
+    margin: 5px;
+}
+
+.form_container .form .single_input .label{
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.form_container .form .single_input input,
+.form_container .form .single_input textarea,
+.form_container .form .single_input select{
+    margin: 0 !important;
+    max-width: 500px;
+    border: 1px solid grey;
+}
+
+.single_input.w-33{
+    width: 32% !important;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.single_input.w-25{
+    width: 25% !important;
+    display: inline-block;
+    vertical-align: top;
+}
+
+
+/*** FAKE-TABLE ***/
+
+.fake-table{
+    margin: 10px 0;
+    width: 100%;
+    text-align: center;
+}
+
+.fake-table .header{
+    border-radius: 5px 5px 0 0;
+}
+
+.fake-table .footer{
+    border-radius: 0 0 5px 5px;
+}
+
+.fake-table .footer,
+.fake-table .header{
+    background: #23272a !important;
+    color: #ccc !important;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    padding: 5px 0;
+    font-size: 15px;
+}
+
+
+.fake-table .footer a,
+.fake-table .header a{
+    color: #ccc !important;
+}
+
+
+.fake-table .tr{
+    width: 100%;
+    height: auto;
+    padding: 5px;
+    box-sizing: border-box;
+    background: #7289da;
+    color: #23272a;
+    border: solid black;
+    border-width: 0 1px 1px 1px;
+}
+
+.fake-table .tr:nth-child(2){
+    border-top:none;
+}
+
+.fake-table .tr .td{
+    display: inline-block;
+    vertical-align: top;
+    border-right: 1px solid #4d5259;
+    min-height: 15px;
+}
+
+.fake-table .tr .td img,
+.fake-table .tr .td input[type="image"]{
+    width: 25px;
+    height: 25px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.fake-table .tr .td button,
+.fake-table .tr .td a{
+    color: #ccc;
+    text-decoration: none;
+    background: none;
+    border:none;
+    cursor: pointer;
+}
+
+.fake-table .tr .td button:hover,
+.fake-table .tr .td a:hover{
+    color: #fff;
+}
+
+.fake-table .tr .td:last-child{
+    border-right: none;
+}
+
+.fake-table .open_text span{
+    cursor: pointer;
+}
+
+.fake-table .open_text span:hover{
+    color: black;
+    font-weight: bold;
+}
+
+.fake-table .hidden_text{
+    display: none;
+}
+
+.fake-table .hidden_text .td{
+    width: 100% !important;
+}
+
+.fake-table .table-subtitle{
+    font-size: 15px;
+    font-weight: bold;
+    padding: 5px 0;
+}
+
+.fake-table .table-text{
+    margin:5px 0;
+    text-align: left;
+    border:1px solid black;
+    background-color: #4d5259;
+    color: #ccc;
+    width: 100%;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+
+/** GESTIONE QUEST **/
+
+.quest_list .td{
+    width: calc( (100% / 8) - 10px);
+}
+
+.quest_insert_form #new_member{
+    margin: 20px auto;
+}
+/*** GESTIONE CONTATTI ***/
+
+.pagina_scheda_contatti .contatti_list .header .td{
+    width: 32%;
+}
+
+.pagina_scheda_contatti .contatti_list .td{
+    width: 32%;
+}
+
+/*** GESTIONE ESITI ***/
+
+.gestione_esiti .esiti_list .header .td{
+    width: 130px;
+}
+
+.gestione_esiti .esiti_list .td{
+    width: 135px;
+}
+
+.gestione_esiti .esiti_list .closed{
+    background: #435595;
+}
+
+.gestione_esiti .esiti_list .closed .td{
+    border-color: black !important;
+}
+
+.gestione_esiti .esiti_members{
+    width: 400px;
+    margin:0 auto;
+}
+
+.gestione_esiti .answer_box{
+    width: 100%;
+    border:1px solid black;
+}
+
+.gestione_esiti .answer_box .titolo_box{
+    font-size: 18px;
+    font-weight: bold;
+    background: #4d5259;
+    margin: 0 0 5px 0;
+    border-bottom: 1px solid black;
+    padding: 2px 0;
+    color: #ccc;
+}
+
+.gestione_esiti .answer_box .answer_list{
+    width: 100%;
+    margin: 5px 0;
+    padding: 5px;
+    box-sizing: border-box;
+    border-bottom:1px solid black;
+    height: 450px;
+    overflow: auto;
+}
+
+.gestione_esiti .answer_box .answer_list .single_answer{
+    width: 52%;
+    border:1px solid black;
+    border-radius: 5px;
+    clear: both;
+    margin: 3px 0;
+    text-align: left;
+}
+
+.gestione_esiti .answer_box .answer_list .single_answer.mine{
+    float: left;
+    background: #4d5259;
+    color: #ccc;
+}
+
+.gestione_esiti .answer_box .answer_list .single_answer.other{
+    float: right;
+    background: #7289da;
+}
+
+.gestione_esiti .answer_box .answer_list .single_answer .text{
+    padding: 5px;
+    box-sizing: border-box;
+    font-size: 13px;
+}
+
+.gestione_esiti .answer_box .answer_list .single_answer .dice{
+    text-align: center;
+    background: black;
+    width: 100%;
+    color: #ce5a6a;
+    border-bottom:1px solid #ccc;
+    padding: 3px 0;
+    font-size: 13px;
+}
+
+.gestione_esiti .answer_box .answer_list .single_answer .dice a{
+    color: #d98692;
+    text-decoration: none;
+    font-weight: normal;
+}
+
+.gestione_esiti .answer_box .answer_list .single_answer .dice a:hover{
+    color: #ccc;
+}
+
+.gestione_esiti .answer_box .answer_list .single_answer .dice_result{
+    text-align: center;
+    background: black;
+    width: 100%;
+    color: #7289da;
+    border-bottom:1px solid #ccc;
+    padding: 3px 0;
+    font-size: 13px;
+}
+
+.gestione_esiti .answer_box .answer_list .single_answer .dice_result:hover{
+    color: #b6bed9;
+    cursor: pointer;
+}
+
+.gestione_esiti .answer_box .answer_list .single_answer .dice_result .internal_text{
+    display: none;
+}
+
+.gestione_esiti .answer_box .answer_list .single_answer .sub_text{
+    text-align: center;
+    background: black;
+    width: 100%;
+    color: #ccc;
+    font-size: 10px;
+    padding: 3px 0;
+}
+
+
+/**** MERCATO ***/
+
+.shops_page{
+    width: 100%;
+    height: 100%;
+    text-align: left;
+}
+
+.shops_page .single_shop{
+    height: 235px;
+    display: inline-block;
+    vertical-align: top;
+    margin: 5px;
+    text-align: center;
+    background-color: #4d5259;
+    border-radius: 5px;
+    border: 1px solid black;
+}
+
+.shops_page .single_shop .shop_img{
+    width: 200px;
+    margin: 5px;
+    height: 200px;
+    border:1px solid black;
+}
+
+.shops_page .single_shop .shop_img img{
+    width: 100%;
+    height: 100%;
+}
+
+.shops_page .single_shop .shop_name a{
+    color: #ccc;
+    font-size: 15px;
+}
+
+.shops_page .single_shop_object{
+    width: 98%;
+    height: 232px;
+    margin: 5px auto;
+    border-radius: 5px;
+    background-color: #4d5259;
+    border:1px solid black;
+    max-width: 800px;
+    color: #ccc;
+}
+
+.shops_page .single_shop_object .object_img{
+    width: 220px;
+    height: 220px;
+    margin: 5px;
+    border:1px solid black;
+    display: inline-block;
+    vertical-align: top;
+}
+
+
+.shops_page .single_shop_object .object_img img{
+    width: 100%;
+    height: 100%;
+}
+
+.shops_page .single_shop_object .object_data{
+    width: calc(100% - 250px);
+    display: inline-block;
+    vertical-align: top;
+    border:1px solid black;
+    background-color: #23272a;
+    height: 220px;
+    margin: 5px;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+
+.shops_page .single_shop_object .object_data .object_name{
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.shops_page .single_shop_object .object_data .object_descr{
+    height: 90px;
+    overflow: auto;
+    border:1px solid #ccc;
+    padding: 5px;
+    box-sizing: border-box;
+    width: 98%;
+    margin:5px auto;
+    border-radius: 5px;
+}
+
+
+.shops_page .single_shop_object .object_data .object_info{
+    text-align: left;
+    font-size: 13px;
+    padding-left: 5px;
+    box-sizing: border-box;
+}
+
+.shops_page .single_shop_object .object_data .object_commands{
+    text-align: right;
+    padding: 0 5px;
+    box-sizing: border-box;
+}
+
+
+.shops_page .single_shop_object .object_data .object_commands button{
+    background-color: #7289da;
+    color: white;
+    border:1px solid black;
+    padding: 0 10px;
+    cursor: pointer;
+}
+
+/*** SERVIZI ESITI ***/
+
+.esiti_pagina .esiti_list .header .td{
+    width: 145px;
+}
+
+.esiti_pagina .esiti_list .td{
+    width: 150px;
+}
+
+.esiti_pagina .esiti_list .closed{
+    background: #435595;
+}
+
+.esiti_pagina .esiti_list .closed .td{
+    border-color: black !important;
+}
+
+.esiti_pagina .answer_box{
+    width: 100%;
+    border:1px solid black;
+}
+
+.esiti_pagina .answer_box .titolo_box{
+    font-size: 18px;
+    font-weight: bold;
+    background: #4d5259;
+    margin: 0 0 5px 0;
+    border-bottom: 1px solid black;
+    padding: 2px 0;
+    color: #ccc;
+}
+
+.esiti_pagina .answer_box .answer_list{
+    width: 100%;
+    margin: 5px 0;
+    padding: 5px;
+    box-sizing: border-box;
+    border-bottom:1px solid black;
+    height: 450px;
+    overflow: auto;
+}
+
+.esiti_pagina .answer_box .answer_list .single_answer{
+    width: 52%;
+    border:1px solid black;
+    border-radius: 5px;
+    clear: both;
+    margin: 3px 0;
+    text-align: left;
+}
+
+.esiti_pagina .answer_box .answer_list .single_answer.mine{
+    float: left;
+    background: #4d5259;
+    color: #ccc;
+}
+
+.esiti_pagina .answer_box .answer_list .single_answer.other{
+    float: right;
+    background: #7289da;
+}
+
+.esiti_pagina .answer_box .answer_list .single_answer .text{
+    padding: 5px;
+    box-sizing: border-box;
+    font-size: 13px;
+}
+
+.esiti_pagina .answer_box .answer_list .single_answer .dice{
+    text-align: center;
+    background: black;
+    width: 100%;
+    color: #ce5a6a;
+    border-bottom:1px solid #ccc;
+    padding: 3px 0;
+    font-size: 13px;
+}
+
+.esiti_pagina .answer_box .answer_list .single_answer .dice a{
+    color: #d98692;
+    text-decoration: none;
+    font-weight: normal;
+}
+
+.esiti_pagina .answer_box .answer_list .single_answer .dice a:hover{
+    color: #ccc;
+}
+
+.esiti_pagina .answer_box .answer_list .single_answer .dice_result{
+    text-align: center;
+    background: black;
+    width: 100%;
+    color: #7289da;
+    border-bottom:1px solid #ccc;
+    padding: 3px 0;
+    font-size: 13px;
+}
+
+.esiti_pagina .answer_box .answer_list .single_answer .dice_result:hover{
+    color: #b6bed9;
+    cursor: pointer;
+}
+
+.esiti_pagina .answer_box .answer_list .single_answer .dice_result .internal_text{
+    display: none;
+}
+
+.esiti_pagina .answer_box .answer_list .single_answer .sub_text{
+    text-align: center;
+    background: black;
+    width: 100%;
+    color: #ccc;
+    font-size: 10px;
+    padding: 3px 0;
+}
+
+/** ONLINE STATUS ***/
+
+.floating_box_status{
+    position: absolute;
+    top:20px;
+    right: 20px;
+    width: 200px;
+    background: grey;
+    border:1px solid black;
+    border-radius: 15px;
+    min-height: 150px;
+    z-index: 999;
+    padding: 5px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.floating_box_status.minimized{
+    width: 20px !important;
+    height: 20px !important;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.floating_box_status.minimized > *{
+    display: none;
+}
+
+.floating_box_status .change-dimension{
+    display: block !important;
+    cursor: pointer;
+    background: white;
+    color: black;
+    border-radius: 100%;
+    position: absolute;
+    right: -1px;
+    top: -1px;
+    height: 20px;
+    width: 20px;
+    line-height: 20px;
+}
+
+.floating_box_status .subtitle{
+    margin-top: 5px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.floating_box_status ul{
+    list-style: none;
+    text-align: left;
+    margin-top: 5px;
+}
+
+.floating_box_status ul li {
+
+}
+
+.floating_box_status ul li input{
+    width: 20px;
+}
+
+#form_meteo_edit{
+    text-align: center;
+}
+
+.gruppi_list .td{
+    width: 24%;
+}
+
+.roles_list .td{
+    width: 24%;
+}
+
+.members_list .td{
+    width: 32%;
+}
+
+.works_list .td{
+    width: 24%;
+}
+
+.group_rules{
+    width: 90%;
+    border: 1px solid black;
+    background: #7289da;
+    border-radius: 10px;
+    padding: 5px;
+    box-sizing: border-box;
+    min-height: 200px;
+    margin:0 auto;
+    text-align: left;
+}
+
+
+
+.group_rules img,
+.roles_list img,
+.works_list img,
+.members_list img{
+    max-height: 15px;
+}

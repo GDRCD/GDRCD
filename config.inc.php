@@ -603,7 +603,6 @@ $PARAMETERS['menu']['map']['url'] = 'main.php?page=mappaclick&map_id=' . $_SESSI
 $PARAMETERS['menu']['map']['image_file'] = '';
 $PARAMETERS['menu']['map']['image_file_onclick'] = '';
 
-
 $PARAMETERS['menu']['profile']['text'] = 'Scheda';
 $PARAMETERS['menu']['profile']['url'] = 'main.php?page=scheda&pg='.$_SESSION['login'].'&id_pg='.Functions::getInstance()->getMyId();
 /*Esempio di link nel caso si volesse aprire come scheda modale
@@ -646,14 +645,14 @@ $PARAMETERS['office']['image_file'] = '';
 $PARAMETERS['office']['pg_list']['text'] = 'Anagrafe';
 $PARAMETERS['office']['pg_list']['url'] = 'main.php?page=servizi_anagrafe';
 $PARAMETERS['office']['pg_list']['access_level'] = USER;
-$PARAMETERS['office']['guilds_adm']['text'] = "Amministrazione " . strtolower($PARAMETERS['names']['guild_name']['sing']);
-$PARAMETERS['office']['guilds_adm']['url'] = 'main.php?page=servizi_adm_gilde';
+$PARAMETERS['office']['guilds_adm']['text'] = "Amministrazione Gruppi";
+$PARAMETERS['office']['guilds_adm']['url'] = 'main.php?page=servizi/amministrazioneGilde/index';
 $PARAMETERS['office']['guilds_adm']['access_level'] = USER;
 $PARAMETERS['office']['job']['text'] = 'Lavoro';
-$PARAMETERS['office']['job']['url'] = 'main.php?page=servizi_lavoro';
+$PARAMETERS['office']['job']['url'] = 'main.php?page=servizi/lavori/index';
 $PARAMETERS['office']['job']['access_level'] = USER;
-$PARAMETERS['office']['guilds']['text'] = $PARAMETERS['names']['guild_name']['plur'];
-$PARAMETERS['office']['guilds']['url'] = 'main.php?page=servizi_gilde';
+$PARAMETERS['office']['guilds']['text'] = 'Gruppi';
+$PARAMETERS['office']['guilds']['url'] = 'main.php?page=servizi/gruppi/index';
 $PARAMETERS['office']['guilds']['access_level'] = USER;
 $PARAMETERS['office']['market']['text'] = 'Mercato';
 $PARAMETERS['office']['market']['url'] = 'main.php?page=servizi_mercato';

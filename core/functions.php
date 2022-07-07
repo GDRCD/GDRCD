@@ -18,7 +18,7 @@
  */
 function gdrcd_encript($str)
 {
-    require_once(dirname(__FILE__) . '/../includes/PasswordHash.php');
+    require_once(dirname(__FILE__) . '/PasswordHash.php');
     $hasher = new PasswordHash(8, true);
 
     return $hasher->HashPassword($str);
@@ -26,7 +26,7 @@ function gdrcd_encript($str)
 
 function gdrcd_password_check($pass, $stored)
 {
-    require_once(dirname(__FILE__) . '/../includes/PasswordHash.php');
+    require_once(dirname(__FILE__) . '/PasswordHash.php');
     $hasher = new PasswordHash(8, true);
 
     return $hasher->CheckPassword($pass, $stored);
@@ -167,7 +167,7 @@ function gdrcd_pages_path($page)
     }
 
     // Inizializzo le variabili del metodo
-    $pagesPath = dirname(__FILE__) . DIRECTORY_SEPARATOR. '..'.DIRECTORY_SEPARATOR.'pages';
+    $pagesPath = Router::getPagesDir();
     $pageFormatted = gdrcd_pages_format($page);
 
     // Imposto i possibili percorsi che posso caricare
