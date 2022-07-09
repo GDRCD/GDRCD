@@ -15,8 +15,7 @@
     {
         gdrcd_query(
             "UPDATE personaggio 
-                    SET email = '" . gdrcd_filter('in', gdrcd_encript($_POST['modifica_email'])) . "', 
-                        affetti = '" . gdrcd_filter('in', $_POST['modifica_affetti']) . "', 
+                    SET affetti = '" . gdrcd_filter('in', $_POST['modifica_affetti']) . "', 
                         descrizione = '" . gdrcd_filter('in', $_POST['modifica_background']) . "', 
                         url_media = '" . gdrcd_filter('in', gdrcd_filter('fullurl', $_POST['modifica_url_media'])) . "', 
                         url_img = '" . gdrcd_filter('in', gdrcd_filter('fullurl', $_POST['modifica_url_img'])) . "', 
@@ -37,7 +36,7 @@
     {
         /*Carico le informazioni del PG*/
 
-        $record = gdrcd_query("SELECT email, sesso, id_razza, descrizione, affetti, url_img, url_media, car0, car1, car2, car3, car4, car5, salute_max, banca  FROM personaggio WHERE nome='" . gdrcd_filter('in',
+        $record = gdrcd_query("SELECT sesso, id_razza, descrizione, affetti, url_img, url_media, car0, car1, car2, car3, car4, car5, salute_max, banca  FROM personaggio WHERE nome='" . gdrcd_filter('in',
                 $_REQUEST['pg']) . "'");
     }
     ?>
@@ -57,16 +56,6 @@
                 <div class="form_gioco">
                     <!-- Form utente modifica -->
                     <form action="main.php?page=scheda_gst" method="post">
-
-                        <div class='form_label'>
-                            <?php echo gdrcd_filter('out',
-                                $MESSAGE['interface']['sheet']['modify_form']['admin']['email']); ?>
-                        </div>
-                        <div class='form_field'>
-                            <input type="text" name="modifica_email"
-                                   value="<?php echo gdrcd_filter('out', $record['email']); ?>"/>
-                        </div>
-
 
                         <div class='form_label'>
                             <?php echo gdrcd_filter('out',
