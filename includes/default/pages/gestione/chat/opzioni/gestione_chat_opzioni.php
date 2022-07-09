@@ -20,9 +20,10 @@ if ($cls->permissionManageOptions()) { # Metodo di controllo per accesso alla pa
         </ul>
         <br>
 
+
         E' importante sapere che i valori creati qui si auto-inseriscono nell'apposita pagina di modifica opzioni chat della scheda,
         ma che vanno poi collegate,
-        all'interno del codice, nel punto interessato.
+        <span class="highlight">all'interno del codice</span>, nel punto interessato.
     </div>
 
 
