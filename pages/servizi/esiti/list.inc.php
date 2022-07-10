@@ -6,12 +6,23 @@
     $pageend = $pagebegin + $PARAMETERS['settings']['posts_per_page'];
 
     //Conteggio record totali
-    $record_globale = gdrcd_query("SELECT COUNT(*) FROM blocco_esiti WHERE pg = '".$_SESSION['login']."' ");
-    $totaleresults = $record_globale['COUNT(*)'];
+    $record_globale = gdrcd_query("SELECT COUNT(*) totale_esiti FROM blocco_esiti WHERE pg = '".$_SESSION['login']."' ");
+    $totaleresults = $record_globale['totale_esiti'];
 
     // Ottengo tutte le serie di esiti associate al PG
-    $query="SELECT * FROM blocco_esiti WHERE pg = '".$_SESSION['login']."' 
-            ORDER BY id DESC LIMIT ".$pagebegin.", ".$PARAMETERS['settings']['posts_per_page']."";
+    $query="SELECT 
+                # Ottengo tutti i dettagli della serie di esiti
+                be. *,
+                # Seleziono il numero di esiti associati alla serie
+                SUM(IF(e.autore != '".gdrcd_filter_in($_SESSION['login'])."', 1, 0)) n_esiti,
+                # Seleziono il numero di esiti associati alla serie che sono stati visualizzati
+                SUM(IF(e.autore != '".gdrcd_filter_in($_SESSION['login'])."' AND e.letto_pg = 0, 1, 0)) n_esiti_non_letti
+            FROM blocco_esiti be
+            LEFT JOIN esiti e ON be.id = e.id_blocco
+            WHERE be.pg = '".gdrcd_filter_in($_SESSION['login'])."' 
+            GROUP BY be.id 
+            ORDER BY be.id DESC 
+            LIMIT ".gdrcd_filter_in($pagebegin).", ".gdrcd_filter_in($PARAMETERS['settings']['posts_per_page']);
     $result=gdrcd_query($query, 'result');
 
     // Se non sono presenti serie di esiti, mostro messaggio
@@ -28,7 +39,7 @@
                 for($i = 0; $i <= floor($totaleresults / $PARAMETERS['settings']['posts_per_page']); $i++) {
                     if($i != $_REQUEST['offset']) {
                         ?>
-                        <a href="main.php?page=servizi_esiti&offset=<?php echo $i; ?>"><?php echo $i + 1; ?></a>
+                        <a href="main.php?page=servizi/esiti&offset=<?php echo $i; ?>"><?php echo $i + 1; ?></a>
                         <?php
                     } else {
                         echo ' '.($i + 1).' ';
@@ -100,7 +111,7 @@
                                 </div>
                             </td>
                             <td>
-                                <form action="main.php?page=servizi_esiti" method="post">
+                                <form action="main.php?page=servizi/esiti" method="post">
                                     <input type="hidden"
                                            name="op"
                                            value="view" />
@@ -119,7 +130,7 @@
 ?>
 <!-- link scrivi messaggio -->
 <div class="link_back">
-    <a href="main.php?page=servizi_esitinew&op=first">
+    <a href="main.php?page=servizi/esitinew&op=first">
         <?php echo $MESSAGE['interface']['esiti']['link']['new']; ?>
     </a>
 </div>

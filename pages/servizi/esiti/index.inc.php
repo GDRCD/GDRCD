@@ -16,6 +16,13 @@
                 include('view.inc.php');
                 break;
 
+            default:    // Pagina di default
+                break;
+        }
+        /*
+         * Richieste GET
+         */
+        switch(gdrcd_filter_get($_GET['op'])) {
             default: // Pagina di default
                 include('list.inc.php');
                 break;
