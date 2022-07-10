@@ -50,7 +50,9 @@ $PARAMETERS['info']['site_url'] = 'http://gdrcd.test/'; //indirizzo URL del gioc
 $PARAMETERS['info']['webmaster_name'] = 'Webmaster'; //nome e cognome del responsabile del sito
 $PARAMETERS['info']['webmaster_email'] = 'webmaster@gdrhost.it'; //email ufficiale del webmaster (è visibile in homepage)
 $PARAMETERS['info']['homepage_name'] = 'Homepage'; //nome con il quale si indica la prima pagina visualizzata
-$PARAMETERS['info']['dbadmin_name'] = 'Admin DB'; //nome del responsabile del database
+$PARAMETERS['info']['dbadmin_name'] = 'Admin DB';
+$PARAMETERS['info']['GDRCD'] = '5.6.0.3'; //nome del gioco
+
 /* HELP: I parametri di questa voce compaiono come informazioni sulla homepage. */
 
 
@@ -669,7 +671,7 @@ $PARAMETERS['office']['market']['access_level'] = USER;
 if (ESITI)
 {
     $PARAMETERS['office']['esiti']['text'] = 'Pannello esiti';
-    $PARAMETERS['office']['esiti']['url'] = 'main.php?page=servizi/esiti';
+    $PARAMETERS['office']['esiti']['url'] = 'main.php?page=servizi_esiti';
     $PARAMETERS['office']['esiti']['access_level'] = USER;
 }
 if ($PARAMETERS['mode']['privaterooms'] == 'ON')
