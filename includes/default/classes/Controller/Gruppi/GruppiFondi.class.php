@@ -261,15 +261,18 @@ class GruppiFondi extends Gruppi
 
                 // Per ogni fondo
                 foreach ($founds as $found) {
+                    $found_id = Filters::int($found['id']);
                     $interval = Filters::int($found['interval']);
                     $interval_type = Filters::out($found['interval_type']);
-                    $last_exec = Filters::out($found['interval_type']);
+                    $last_exec = Filters::out($found['last_exec']);
 
                     // Se devo assegnare il fondo
                     if (CarbonWrapper::needExec($interval, $interval_type, $last_exec)) {
+                        var_dump(1);
                         $denaro = Filters::int($found['denaro']);
                         $total_given += $denaro;
                         DB::query("UPDATE gruppi SET denaro=denaro+'{$denaro}' WHERE id='{$group_id}' LIMIT 1");
+                        DB::query("UPDATE gruppi_fondi SET last_exec=NOW() WHERE id='{$found_id}' LIMIT 1");
                     }
                 }
 
