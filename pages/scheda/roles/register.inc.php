@@ -38,14 +38,14 @@ if ($_REQUEST['pg'] == $_SESSION['login']) {
                         <option value="<?php echo $i;?>"><?php echo $i;?></option>
                     <?php }//for ?>
                 </select> | <select name="month_a" class="day">
-                    <? if ($_POST['mese']!==1) { ?>
+                    <?php if ($_POST['mese']!==1) { ?>
                         <option value="<?php echo $meseprima;?>"><?php echo $meseprima;?></option>
-                    <? } ?>
+                    <?php } ?>
                     <option value="<?php echo $_POST['mese'];?>" selected ><?php echo $_POST['mese'];?></option>
-                    <? if ($_POST['mese']!==12) { ?>
+                    <?php if ($_POST['mese']!==12) { ?>
                         <option value="<?php echo $mesedopo;?>"><?php echo $mesedopo;?></option>
-                    <? } ?>
-                </select> | <? echo $_POST['anno']; ?><br>
+                    <?php } ?>
+                </select> | <?php echo $_POST['anno']; ?><br>
                 <!-- Ora -->
                 Ora:<select name="hour_a" class="month">
                     <?php for($i=0; $i<=23; $i++){?>
@@ -69,14 +69,14 @@ if ($_REQUEST['pg'] == $_SESSION['login']) {
                         <option value="<?php echo $i;?>"><?php echo $i;?></option>
                     <?php }//for ?>
                 </select> | <select name="month_b" class="day">
-                    <? if ($_POST['mese']!==1) { ?>
+                    <?php if ($_POST['mese']!==1) { ?>
                         <option value="<?php echo $meseprima;?>"><?php echo $meseprima;?></option>
-                    <? } ?>
+                    <?php } ?>
                     <option value="<?php echo $_POST['mese'];?>" selected ><?php echo $_POST['mese'];?></option>
-                    <? if ($_POST['mese']!==12) { ?>
+                    <?php if ($_POST['mese']!==12) { ?>
                         <option value="<?php echo $mesedopo;?>"><?php echo $mesedopo;?></option>
-                    <? } ?>
-                </select> | <? echo $_POST['anno']; ?><br>
+                    <?php } ?>
+                </select> | <?php echo $_POST['anno']; ?><br>
                 <!-- Ora -->
                 Ora:  <select name="hour_b" class="month">
                     <?php for($i=0; $i<=23; $i++){?>

@@ -50,9 +50,7 @@ $PARAMETERS['info']['site_url'] = 'http://gdrcd.test/'; //indirizzo URL del gioc
 $PARAMETERS['info']['webmaster_name'] = 'Webmaster'; //nome e cognome del responsabile del sito
 $PARAMETERS['info']['webmaster_email'] = 'webmaster@gdrhost.it'; //email ufficiale del webmaster (è visibile in homepage)
 $PARAMETERS['info']['homepage_name'] = 'Homepage'; //nome con il quale si indica la prima pagina visualizzata
-$PARAMETERS['info']['dbadmin_name'] = 'Admin DB';
-$PARAMETERS['info']['GDRCD'] = '5.6.0.3'; //nome del gioco
-
+$PARAMETERS['info']['dbadmin_name'] = 'Admin DB'; //nome del responsabile del database
 /* HELP: I parametri di questa voce compaiono come informazioni sulla homepage. */
 
 
@@ -739,6 +737,10 @@ if (ESITI)
     $PARAMETERS['administration']['esiti']['url'] = 'main.php?page=gestione_segnalazioni&segn=esiti_master';
     $PARAMETERS['administration']['esiti']['access_level'] = ESITI_PERM;
 }
+
+$PARAMETERS['administration']['email']['text'] = 'Gestione email';
+$PARAMETERS['administration']['email']['url'] = 'main.php?page=gestione_cambio_email';
+$PARAMETERS['administration']['email']['access_level'] = MODERATOR;
 $PARAMETERS['administration']['skills']['text'] = 'Gestione abilità';
 $PARAMETERS['administration']['skills']['url'] = 'main.php?page=gestione_abilita';
 $PARAMETERS['administration']['skills']['access_level'] = SUPERUSER;
@@ -770,7 +772,7 @@ $PARAMETERS['administration']['rules']['text'] = 'Gestione regolamento';
 $PARAMETERS['administration']['rules']['url'] = 'main.php?page=gestione_regolamento';
 $PARAMETERS['administration']['rules']['access_level'] = SUPERUSER;
 $PARAMETERS['administration']['maintenance']['text'] = 'Manutenzione';
-$PARAMETERS['administration']['maintenance']['url'] = 'main.php?page=gestione_manutenzione';
+$PARAMETERS['administration']['maintenance']['url'] = 'main.php?page=gestione/manutenzione';
 $PARAMETERS['administration']['maintenance']['access_level'] = SUPERUSER;
 
 

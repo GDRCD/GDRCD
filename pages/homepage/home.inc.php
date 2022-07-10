@@ -7,17 +7,11 @@
     Stai utilizzando la versione <strong><?=$PARAMETERS['info']['GDRCD']?></strong> di GDRCD, sviluppata dal <a href="https://github.com/orgs/GDRCD/people" target="_blank">Team di GDRCD</a>
     sulla base del lavoro fatto da <strong>Salvatore (Blancks) Rotondo</strong> e <strong>breaker</strong> con <strong>GDRCD 5.1</strong>.
 </p>
-<p>
-    Questa versione di GDRCD corregge un importante numero di criticità riscontrate nella versione precedente e
-    stabilisce la basi per una prossima ottimizzazione del core principale delle funzioni che compongono il CMS,
-    sia in termini di <strong>qualità</strong>, che di <strong>stabilità</strong> e <strong>sicurezza</strong>.
-    Sono state implementate nuove features su iniziativa del Team di GDRCD o provenienti dalla communità di
+    In questa versione di GDRCD sono state implementate nuove features su iniziativa del Team di GDRCD o provenienti dalla communità di
     <a href="https://gdr-online.com/" target="_blank">GdR-Online.com</a>, quest'ultime completamente riviste
     per essere quanto più personalizzabili in base alle esigenze.
-</p>
 <p>
-    I files della corrente versione, a fronte di tutte queste novità, <strong>non sono retrocompatibili</strong> nei
-    riguardi di <strong>GDRCD 5.4</strong> di <strong>breaker</strong> (se non con un ampio lavoro di rielaborazione)
+    I files <strong>non sono retrocompatibili</strong> nei riguardi di <strong>GDRCD 5.4</strong> di <strong>breaker</strong>
     tuttavia il software è progettato per <strong>rilevare il database di un installazione precedente ed aggiornarlo autonomamente</strong>
     al fine di renderlo compatibile con la presente versione.
 </p>
@@ -31,17 +25,10 @@
 <p>
     Troverai le istruzioni su come utilizzare GDRCD <?=$PARAMETERS['info']['GDRCD']?> nel <a href="ISTRUZIONI.txt">manuale</a> allegato.
 </p>
-<img src="imgs/pelready.png" style="float:left;">
-<p><br /><strong>PEL Ready</strong></p>
 <p>
-    Il presente Software fornisce gli strumenti sul piano tecnico per aderire in semplicità al <a href="http://www.gdr-online.com/progetto_legalita.asp">progetto di educazione alla legalità</a>
-    per i giochi di ruolo online al fine di sensibilizzare gli utilizzatori del CMS a tale iniziativa, nel rispetto e nella sicurezza dei possibili futuri giocatori.
-</p>
-<p>
-    Ti piace il progetto ? Lo hai trovato particolarmente utile ?
-    Allora scopri come puoi contribuire al suo sviluppo dando un occhiata al <a href="http://www.gdr-online.com/readforum.asp?id=137092">topic dedicato</a> su <a href="https://gdr-online.com/" target="_blank">GdR-Online.com</a>,
+    Se vuoi contribuire al progetto e al suo sviluppo dai un occhiata al <a href="http://www.gdr-online.com/readforum.asp?id=137092">topic dedicato</a> su <a href="https://gdr-online.com/" target="_blank">GdR-Online.com</a>,
     leggendo la <a href="https://github.com/GDRCD/GDRCD/wiki">Wiki su GitHub</a> o iscrivendoti al <a href="https://discord.gg/DJWaXPrQPQ">Server Discord Ufficiale</a>, dedicato al confronto, allo sviluppo e al mantimento di GDRCD.
-    <u>Ogni aiuto che viene dato è prezioso più di quel che sembra!</u>
+    <u>Ogni aiuto offerto è sempre prezioso!</u>
 </p>
 
 <p>Buon diverimento!</p>

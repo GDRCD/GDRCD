@@ -466,6 +466,16 @@ function gdrcd_controllo_esilio($pg)
 }
 
 /**
+ * Controlla se l'utente possiede i permessi indicati
+ * @param string $permesso : il permesso da controllare
+ * @return true se il pg possiede i permessi, false altrimenti
+ */
+function gdrcd_controllo_permessi($permesso)
+{
+    return (bool)$_SESSION['permessi'] >= $permesso;
+}
+
+/**
  * Controlla se l'utente è loggato da pochi minuti. Utile per l'icona entra/esce
  * @param string $time : data in un formato leggibile da strtotime()
  * @return int

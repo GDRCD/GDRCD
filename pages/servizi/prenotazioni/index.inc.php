@@ -12,7 +12,7 @@ if (gdrcd_filter('get', $_POST['action']) == "bookRoom") {
 
     if(
             $checkRoom['privata'] == 1
-        &&  $checkRoom['costo'] > 0
+        &&  $checkRoom['costo'] >= 0
         &&  $checkRoom['scadenza'] <= strftime('%Y-%m-%d %H:%M:%S')
     ) {
         $bookableRoom = true;

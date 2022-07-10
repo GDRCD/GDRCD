@@ -19,7 +19,9 @@ if ($num_check == 0) {
         <h2>Log chat</h2>
     </div>
     <div class="log_roles">
-        <? $name = gdrcd_query(" SELECT nome FROM mappa WHERE id = " . $check_f['stanza'] . "", 'result');
+        <?php
+        //
+        $name = gdrcd_query(" SELECT nome FROM mappa WHERE id = " . $check_f['stanza'] . "", 'result');
         $r_nam = gdrcd_query($name, 'fetch');
 
         $query = gdrcd_query("	SELECT chat.id, chat.imgs, chat.mittente, chat.destinatario, chat.tipo, chat.ora, 
@@ -282,4 +284,4 @@ if ($num_check == 0) {
                 $MESSAGE['interface']['sheet']['link']['back_roles']); ?>
         </a>
     </div>
-<? }
+<?php }
