@@ -63,7 +63,7 @@ class DB extends BaseClass
      * @param string $mode
      * @return mixed
      */
-    public static function query($sql, string $mode = 'query')
+    public static function query($sql, string $mode = 'query', $die_on_fail = true)
     {
 
         $db_link = self::connect();
@@ -72,18 +72,18 @@ class DB extends BaseClass
             case 'query':
                 switch (strtoupper(substr(trim($sql), 0, 6))) {
                     case 'SELECT':
-                        $result = mysqli_query($db_link, $sql) or die(self::error($sql));
+                        $result = mysqli_query($db_link, $sql) or self::error($sql, $die_on_fail);
                         $row = mysqli_fetch_array($result, MYSQLI_BOTH);
                         mysqli_free_result($result);
 
                         return $row;
 
                     default:
-                        return mysqli_query($db_link, $sql) or die(self::error($sql));
+                        return mysqli_query($db_link, $sql) or self::error($sql, $die_on_fail);
                 }
 
             case 'result':
-                $result = mysqli_query($db_link, $sql) or die(self::error($sql));
+                $result = mysqli_query($db_link, $sql) or self::error($sql, $die_on_fail);
 
                 return $result;
 
@@ -238,7 +238,7 @@ class DB extends BaseClass
      * @param string|false $details
      * @return string
      */
-    public static function error($details = false): string
+    public static function error($details = false, $die_on_fail = true): string
     {
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 50);
 
@@ -248,6 +248,6 @@ class DB extends BaseClass
             $error_msg .= '<br><br><strong>Error Detail</strong>: ' . $details;
         }
 
-        return $error_msg;
+        return ($die_on_fail) ? die($error_msg) : $error_msg;
     }
 }

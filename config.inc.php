@@ -657,7 +657,7 @@ $PARAMETERS['office']['guilds']['access_level'] = USER;
 $PARAMETERS['office']['market']['text'] = 'Mercato';
 $PARAMETERS['office']['market']['url'] = 'main.php?page=servizi_mercato';
 $PARAMETERS['office']['market']['access_level'] = USER;
-if (Functions::get_constant('ESITI_ENABLE')) {
+if (Functions::get_constant('ESITI_ENABLE', false)) {
     $PARAMETERS['office']['esiti']['text'] = 'Pannello esiti';
     $PARAMETERS['office']['esiti']['url'] = 'main.php?page=servizi_esiti';
     $PARAMETERS['office']['esiti']['access_level'] = USER;

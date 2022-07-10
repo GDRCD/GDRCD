@@ -11,23 +11,38 @@ class Functions extends BaseClass
      * @fn get_constant
      * @note Funzione di estrazione delle costanti dal db
      * @param string $name
+     * @param bool $die_on_fail
      * @return mixed
      */
-    public static function get_constant(string $name)
+    public static function get_constant(string $name, bool $die_on_fail = true)
     {
 
-        $name = gdrcd_filter('in', $name);
+        $name = Filters::in( $name);
 
-        $search = gdrcd_query("SELECT const_name,val FROM config WHERE const_name='{$name}'", 'result');
-        $num = gdrcd_query($search, 'num_rows');
+        $search = DB::query("SELECT const_name,val FROM config WHERE const_name='{$name}'", 'result',$die_on_fail);
+        $num = DB::rowsNumber($search);
 
         if ($num == 0) {
-            die("Costante {$name} inesistente nella tabella config.");
+            $message = "Costante {$name} inesistente nella tabella config.";
+
+            if($die_on_fail){
+                die($message);
+            } else{
+                var_dump($message);
+                return false;
+            }
         } else if ($num > 1) {
-            die("Esistono più costanti con il nome '{$name}'. Correggere e riprovare.");
+           $message ="Esistono più costanti con il nome '{$name}'. Correggere e riprovare.";
+
+            if($die_on_fail){
+                die($message);
+            } else{
+                var_dump($message);
+                return false;
+            }
         } else {
-            $row = gdrcd_query($search, 'fetch');
-            return gdrcd_filter('out', $row['val']);
+            $row = DB::query($search, 'fetch', $die_on_fail);
+            return Filters::out($row['val']);
         }
     }
 
