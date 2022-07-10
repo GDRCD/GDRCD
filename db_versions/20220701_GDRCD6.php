@@ -103,6 +103,27 @@ class GDRCD6 extends DbMigration
 
 
         DB::query("
+            INSERT INTO `chat_opzioni` (`nome`,`titolo`,`descrizione`,`tipo`,`creato_da`) VALUES
+                ('action_size','Dimensione Azione','','int','1'),
+                ('action_color_talk','Colore Parlato Azione','','string','1'),
+                ('action_color_descr','Colore Descrizione Azione','','string','1'),
+                ('master_size','Dimensione MasterScreen','','int','1'),
+                ('master_color_talk','Colore Parlato MasterScreen','','string','1'),
+                ('master_color_descr','Colore Descrizione MasterScreen','','string','1'),
+                ('sussurro_size','Dimensione Sussurro','','int','1'),
+                ('sussurro_color','Colore Sussurro','','string','1'),
+                ('sussurro_globale_size','Dimensione Sussurro Globale','','int','1'),
+                ('sussurro_globale_color','Colore Sussurro Globale','','string','1'),
+                ('png_size','Dimensione azione PNG','','int','1'),
+                ('png_color_talk','Colore Parlato PNG','','string','1'),
+                ('png_color_descr','Colore Descrizione PNG','','string','1'),
+                ('mod_size','Dimensione Moderazione','','int','1'),
+                ('mod_color','Colore Moderazione','','string','1'),
+                ('other_size','Dimensione Dadi/Oggetti/Altro','','string','1'),
+                ('other_color','Colore Dadi/Oggetti/Altro','','string','1');"
+        );
+        
+        DB::query("
             INSERT INTO `cronjob` (`name`,`last_exec`,`in_exec`,`interval`,`interval_type`,`class`,`function`) VALUES
                 ('meteo_update',NULL,false,'60','minutes','Meteo','generateGlobalWeather'),
                 ('stipendi_assign',NULL,false,'1','days','Gruppi','cronSalaries');"
@@ -151,7 +172,8 @@ class GDRCD6 extends DbMigration
               ('Gestione', 'Gestione', 'Gestione Versioni Database', 'gestione_db_migrations', 'MANAGE_DB_MIGRATIONS'),
               ('Gestione', 'Permessi', 'Gestione Permessi', 'gestione_permessi', 'MANAGE_PERMISSIONS'),
               ('Gestione', 'Gestione', 'Manutenzione', 'gestione_manutenzione', 'MANAGE_MANUTENTIONS'),
-              ('Gestione', 'Chat', 'Giocate Segnalate', 'gestione/segnalazioni/esito_index', 'MANAGE_REPORTS'),
+              ('Gestione', 'Chat', 'Giocate Segnalate', 'gestione/segnalazioni/esito_index', 'MANAGE_REPORTS'),            
+              ('Gestione', 'Chat', 'Opzioni Chat', 'gestione/chat/opzioni/gestione_chat_opzioni', 'MANAGE_CHAT_OPTIONS'),
               ('Gestione', 'Meteo', 'Gestione condizioni', 'gestione/meteo/condizioni/gestione_condizioni', 'MANAGE_WEATHER_CONDITIONS'),
               ('Gestione', 'Meteo', 'Gestione stagioni', 'gestione/meteo/stagioni/gestione_stagioni_index', 'MANAGE_WEATHER_SEASONS'),
               ('Gestione', 'Meteo', 'Gestione venti', 'gestione/meteo/venti/gestione_venti', 'MANAGE_WEATHER'),
@@ -281,7 +303,8 @@ class GDRCD6 extends DbMigration
                 ('UPDATE_CONTACTS','Permesso per la modifica dei contatti in schede altrui'),
                 ('DELETE_CONTACTS','Permesso per la eliminazione dei contatti in schede altrui'),
                 ('VIEW_CONTACTS_CATEGORIES','Permesso per la visualizzazione delle categorie contatti in schede altrui'),
-                ('MANAGE_CONTACTS_CATEGORIES','Permesso per la gestione delle categorie contatti')
+                ('MANAGE_CONTACTS_CATEGORIES','Permesso per la gestione delle categorie contatti'),
+                ('MANAGE_CHAT_OPTIONS','Permesso per la gestione delle opzioni personalizzabili in chat')
                 ;"
         );
 

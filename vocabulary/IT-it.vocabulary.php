@@ -149,6 +149,7 @@ $MESSAGE['interface']['sheet']['profile']['experience'] = 'Esperienza';
 $MESSAGE['interface']['sheet']['profile']['status'] = 'Status';
 $MESSAGE['interface']['sheet']['profile']['uneployed'] = 'Disoccupato';
 $MESSAGE['interface']['sheet']['menu']['update'] = 'Modifica';
+$MESSAGE['interface']['sheet']['menu']['chat_options'] = 'Opzioni Chat';
 $MESSAGE['interface']['sheet']['menu']['transictions'] = 'Transazioni';
 $MESSAGE['interface']['sheet']['menu']['skill'] = 'Abilità';
 $MESSAGE['interface']['sheet']['menu']['stats'] = 'Statistiche';

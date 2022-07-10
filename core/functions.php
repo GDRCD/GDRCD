@@ -124,14 +124,13 @@ function gdrcd_load_modules($page, $params = [])
         // Controllo la tipologia di informazione passata (file o page) e poi determino il percorso del modulo
         $modulePath = is_file($page) ? $page : gdrcd_pages_path($page);
 
-        if(!file_exists($modulePath)) {
+        if (!file_exists($modulePath)) {
             throw new Exception($MESSAGE['interface']['layout_not_found']);
         }
 
         // Includo il modulo
         include($modulePath);
-    }
-    catch(Exception $e) {
+    } catch (Exception $e) {
         echo $e->getMessage();
     }
 }
@@ -143,9 +142,9 @@ function gdrcd_load_modules($page, $params = [])
  */
 function gdrcd_pages_format($page)
 {
-    $page = str_replace('\\',DIRECTORY_SEPARATOR, $page);
+    $page = str_replace('\\', DIRECTORY_SEPARATOR, $page);
     //converte la combinaizone di caratteri __ nel separatore di directory
-    $page = str_replace('__',DIRECTORY_SEPARATOR, $page);
+    $page = str_replace('__', DIRECTORY_SEPARATOR, $page);
     //
     return gdrcd_filter('include', $page);
 }
@@ -162,7 +161,7 @@ function gdrcd_pages_path($page)
     global $MESSAGE;
 
     // Controllo che sia stato attribuito un valore a page
-    if(empty($page)) {
+    if (empty($page)) {
         throw new Exception($MESSAGE['interface']['page_missing']);
     }
 
@@ -173,28 +172,28 @@ function gdrcd_pages_path($page)
     // Imposto i possibili percorsi che posso caricare
     $routes = [
         '.inc.php',
-        DIRECTORY_SEPARATOR.'index.inc.php'
+        DIRECTORY_SEPARATOR . 'index.inc.php'
     ];
 
     // Inizializzo la variabile contenitore dei moduli
     $modules = [];
 
     // Scorro i percorsi impostati per individuare corrispondenze
-    foreach ($routes AS $route) {
-        $file = implode(DIRECTORY_SEPARATOR, [$pagesPath, $pageFormatted.$route]);
+    foreach ($routes as $route) {
+        $file = implode(DIRECTORY_SEPARATOR, [$pagesPath, $pageFormatted . $route]);
         // Se esiste la corrispondenza, allora inserisco
-        if(file_exists($file)) {
+        if (file_exists($file)) {
             $modules[] = $file;
         }
     }
 
     // Controllo che sia stata trovata almeno una corrispondenza
-    if(empty($modules)) {
+    if (empty($modules)) {
         throw new Exception($MESSAGE['interface']['page_not_found']);
     }
 
     // Se sono state trovate piu corrispondenze, blocco il caricamento
-    if(count($modules) > 1) {
+    if (count($modules) > 1) {
         throw new Exception($MESSAGE['interface']['multiple_page_found']);
     }
 
@@ -397,15 +396,18 @@ function gdrcd_angs($str)
  * @param string $str : la stringa da controllare
  * @return $str con la parti colorate
  */
-function gdrcd_chatcolor($str)
+function gdrcd_chatcolor($str, $colore_parlato)
 {
+
+    $colore_parlato = ($colore_parlato) ?? '';
+
     $search = [
         '#\&lt;(.+?)\&gt;#is',
         '#\[(.+?)\]#is',
     ];
     $replace = [
-        '<span class="color2">&lt;$1&gt;</span>',
-        '<span class="color2">&lt;$1&gt;</span>',
+        "<span class='color2' style='color:{$colore_parlato}'>&lt;$1&gt;</span>",
+        "<span class='color2' style='color:{$colore_parlato}'>&lt;$1&gt;</span>",
     ];
 
     return preg_replace($search, $replace, $str);
@@ -516,5 +518,5 @@ function gdrcd_filter($type, $val)
  */
 function gdrcd_query($sql, string $mode = 'query')
 {
-    return DB::query($sql,$mode);
+    return DB::query($sql, $mode);
 }

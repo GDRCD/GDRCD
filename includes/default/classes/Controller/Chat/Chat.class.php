@@ -116,7 +116,13 @@ class Chat extends BaseClass
         $this->chat_esiti = Functions::get_constant('ESITI_CHAT');
     }
 
-    public function controllaChat($post)
+    /**
+     * @fn controllaChat
+     * @note Controllo chat
+     * @param $post
+     * @return array
+     */
+    public function controllaChat($post): array
     {
 
         $dir = Filters::int($post['dir']);
@@ -135,7 +141,7 @@ class Chat extends BaseClass
      * @param int $id
      * @return void
      */
-    public function setLast($id)
+    public function setLast(int $id): void
     {
         $_SESSION['last_action_id'] = $id;
         $this->last_action = $id;
@@ -144,11 +150,11 @@ class Chat extends BaseClass
     /**
      * @fn assignExp
      * @note Assegna l'esperienza indicata al personaggio che ha inviato l'azione
-     * @param string $tipo
+     * @param mixed $azione
      * @return void
      * # TODO globalizzare i valori
      */
-    private function assignExp($azione)
+    private function assignExp($azione): void
     {
         # Filtro i valori passati
         $tipo = Filters::in($azione['tipo']);
@@ -193,7 +199,7 @@ class Chat extends BaseClass
      * @note Controlla se nella scheda pg l'audio e' segnato attivato o meno
      * @return bool
      */
-    public function audioActivated()
+    public function audioActivated(): bool
     {
         return DB::query("SELECT blocca_media FROM personaggio WHERE nome='{$this->me}' LIMIT 1")['blocca_media'];
     }
@@ -203,7 +209,7 @@ class Chat extends BaseClass
      * @note Si occupa di controllare che la chat sia accessibile (non pvt o pvt accessibile dal pg)
      * @return bool
      */
-    public function chatAccess()
+    public function chatAccess(): bool
     {
         # Inizializzo le variabili necessarie
         $resp = false;
@@ -245,7 +251,7 @@ class Chat extends BaseClass
      * @param string $invitati
      * @return bool
      */
-    private function pvtInvited($proprietario, $invitati)
+    private function pvtInvited(string $proprietario, string $invitati): bool
     {
         # Filtro i dati passati
         $proprietario = Filters::out($proprietario);
@@ -267,7 +273,7 @@ class Chat extends BaseClass
      * @param string $scadenza
      * @return bool
      */
-    private function pvtClosed($scadenza)
+    private function pvtClosed(string $scadenza): bool
     {
         # Filtro i dati passati
         $scadenza = Filters::out($scadenza);
@@ -286,7 +292,7 @@ class Chat extends BaseClass
      * @note Stampi le azioni in chat, funzione pubblica da richiamare per lo stamp
      * @return string
      */
-    public function printChat()
+    public function printChat(): string
     {
         if ($this->chatAccess()) {
             # Inizializzo le variabili necessarie
@@ -302,6 +308,8 @@ class Chat extends BaseClass
 
             # Ritorno l'html creato
             return $html;
+        } else {
+            return '';
         }
     }
 
@@ -332,7 +340,7 @@ class Chat extends BaseClass
      * @param array $azione
      * @return string
      */
-    private function Filter($azione)
+    private function Filter(array $azione): string
     {
         # Filtro i dati passati
         $tipo = Filters::out($azione['tipo']);
@@ -357,8 +365,10 @@ class Chat extends BaseClass
                 $html .= $this->htmlPNG($azione);
                 break;
             case 'M':
-            case 'MOD':
                 $html .= $this->htmlMaster($azione);
+                break;
+            case 'MOD':
+                $html .= $this->htmlMod($azione);
                 break;
             case 'I':
                 $html .= $this->htmlImage($azione);
@@ -386,21 +396,22 @@ class Chat extends BaseClass
      * @fn formattedText
      * @note Formatta il testo con le giuste funzioni di gdrcd
      * @param string $testo
+     * @param string $colore_parlato
      * @return string
      */
-    private function formattedText($testo)
+    private function formattedText(string $testo, string $colore_parlato = ''): string
     {
         # Evidenzio il mio nome e cambio il testo tra le variabili, ritorno il risultato
-        return gdrcd_chatme($this->me, gdrcd_chatcolor(Filters::out($testo)));
+        return gdrcd_chatme($this->me, gdrcd_chatcolor($testo, $colore_parlato));
     }
 
     /**
      * @fn getIcons
      * @note Funzione che si occupa dell'estrazione delle icone chat
      * @param string $mittente
-     * @return string
+     * @return array
      */
-    private function getIcons($mittente)
+    private function getIcons(string $mittente): array
     {
         # Filtro il mittente passato
         $mittente = Filters::in($mittente);
@@ -425,16 +436,28 @@ class Chat extends BaseClass
      * @return string
      *  # TODO aggiungere icone chat
      */
-    private function htmlAzione($azione)
+    private function htmlAzione(array $azione): string
     {
 
         # Filtro le variabili necessarie
         $mittente = Filters::out($azione['mittente']);
         $tag = Filters::out($azione['destinatario']);
         $img_chat = Filters::out($azione['url_img_chat']);
+        $testo = Filters::string($azione['testo']);
+
+        # Customizzazioni
+        $colore_testo_parlato = PersonaggioChatOpzioni::getInstance()->getOptionValue('action_color_talk', $this->me_id);
+        $colore_parlato = Filters::out($colore_testo_parlato['valore']);
+
+        $colore_testo_descr = PersonaggioChatOpzioni::getInstance()->getOptionValue('action_color_descr', $this->me_id);
+        $colore_descr = Filters::out($colore_testo_descr['valore']);
+
+        $testo_size = PersonaggioChatOpzioni::getInstance()->getOptionValue('action_size', $this->me_id);
+        $size = Filters::out($testo_size['valore']) ? Filters::out($testo_size['valore']) . 'px' : '';
+
         # Formo i testi necessari
         $ora = gdrcd_format_time($azione['ora']);
-        $testo = $this->formattedText($azione['testo']);
+        $testo = $this->formattedText($testo, $colore_parlato);
 
         # Se le icone in chat sono abilitate
         if ($this->chat_icone) {
@@ -463,7 +486,7 @@ class Chat extends BaseClass
         $html .= "<span class='chat_time'>{$ora}</span> ";
         $html .= "<span class='chat_name'><a href='#'>{$mittente}</a></span> ";
         $html .= "<span class='chat_tag'> [{$tag}]</span> ";
-        $html .= "<span class='chat_msg'>{$testo}</span> ";
+        $html .= "<span class='chat_msg' style='color:{$colore_descr}; font-size:{$size};'>{$testo}</span> ";
         $html .= '<br style="clear:both;" /> ';
 
         # Ritorno l'html creato
@@ -476,7 +499,7 @@ class Chat extends BaseClass
      * @param array $azione
      * @return string
      */
-    private function htmlSussurro($azione)
+    private function htmlSussurro(array $azione): string
     {
         # Inizializzo le variabili necessarie
         $intestazione = '';
@@ -485,10 +508,19 @@ class Chat extends BaseClass
         # Filtro le variabili necessarie
         $mittente = Filters::out($azione['mittente']);
         $destinatario = Filters::out($azione['destinatario']);
+        $testo = Filters::string($azione['testo']);
+
+
+        # Customizzazioni
+        $colore_testo_parlato = PersonaggioChatOpzioni::getInstance()->getOptionValue('sussurro_color', $this->me_id);
+        $colore_parlato = Filters::out($colore_testo_parlato['valore']);
+
+        $testo_size = PersonaggioChatOpzioni::getInstance()->getOptionValue('sussurro_size', $this->me_id);
+        $size = Filters::out($testo_size['valore']) ? Filters::out($testo_size['valore']) . 'px' : '';
 
         # Formo i testi necessari
         $ora = gdrcd_format_time($azione['ora']);
-        $testo = $this->formattedText($azione['testo']);
+        $testo = $this->formattedText($testo, '');
 
         # Se sono io il mittente
         if ($this->me == $mittente) {
@@ -505,7 +537,7 @@ class Chat extends BaseClass
         if ($intestazione != '') {
             $html .= "<span class='chat_time'>{$ora}</span> ";
             $html .= "<span class='chat_name'>{$intestazione}</span> ";
-            $html .= "<span class='chat_msg'>{$testo}</span> ";
+            $html .= "<span class='chat_msg' style='color:{$colore_parlato};font-size:{$size};'>{$testo}</span> ";
         }
 
         # Ritorno l'html stampato
@@ -518,19 +550,27 @@ class Chat extends BaseClass
      * @param array $azione
      * @return string
      */
-    private function htmlSussurroGlobale($azione)
+    private function htmlSussurroGlobale(array $azione): string
     {
         # Filtro i dati necessari
         $mittente = Filters::out($azione['mittente']);
         $ora = gdrcd_format_time($azione['ora']);
+        $testo = Filters::string($azione['testo']);
+
+        # Customizzazioni
+        $colore_testo_parlato = PersonaggioChatOpzioni::getInstance()->getOptionValue('sussurro_globale_color', $this->me_id);
+        $colore_parlato = Filters::out($colore_testo_parlato['valore']);
+
+        $testo_size = PersonaggioChatOpzioni::getInstance()->getOptionValue('sussurro_globale_size', $this->me_id);
+        $size = Filters::out($testo_size['valore']) ? Filters::out($testo_size['valore']) . 'px' : '';
 
         # Formo i testi necessari
-        $testo = $this->formattedText($azione['testo']);
+        $testo = $this->formattedText($testo);
 
         # Creo il corpo azione
         $html = "<span class='chat_time'>{$ora}</span> ";
         $html .= "<span class='chat_name'>{$mittente} sussurra a tutti: </span> ";
-        $html .= "<span class='chat_msg'>{$testo}</span> ";
+        $html .= "<span class='chat_msg' style='color:{$colore_parlato};font-size:{$size};'>{$testo}</span> ";
 
         # Ritorno l'html dell'azione
         return $html;
@@ -542,19 +582,32 @@ class Chat extends BaseClass
      * @param array $azione
      * @return string
      */
-    private function htmlPNG($azione)
+    private function htmlPNG(array $azione): string
     {
         # Filtro i dati necessari
         $destinatario = Filters::out($azione['destinatario']);
+        $testo = Filters::string($azione['testo']);
+
+
+        # Customizzazioni
+        $colore_testo_parlato = PersonaggioChatOpzioni::getInstance()->getOptionValue('png_color_talk', $this->me_id);
+        $colore_parlato = Filters::out($colore_testo_parlato['valore']);
+
+        $colore_testo_descr = PersonaggioChatOpzioni::getInstance()->getOptionValue('png_color_descr', $this->me_id);
+        $colore_descr = Filters::out($colore_testo_descr['valore']);
+
+        $testo_size = PersonaggioChatOpzioni::getInstance()->getOptionValue('png_size', $this->me_id);
+        $size = Filters::out($testo_size['valore']) ? Filters::out($testo_size['valore']) . 'px' : '';
 
         # Formo i testi necessari
         $ora = gdrcd_format_time($azione['ora']);
-        $testo = $this->formattedText($azione['testo']);
+        $testo = $this->formattedText($testo, $colore_parlato);
 
         # Creo il corpo azione
         $html = "<span class='chat_time'>{$ora}</span> ";
         $html .= "<span class='chat_name'>{$destinatario}</span> ";
-        $html .= "<span class='chat_msg'>{$testo}</span> ";
+        $html .= "<span class='chat_msg' style='color:{$colore_descr};font-size:{$size};'>{$testo}</span> ";
+
 
         # Ritorno l'html dell'azione
         return $html;
@@ -566,15 +619,56 @@ class Chat extends BaseClass
      * @param array $azione
      * @return string
      */
-    private function htmlMaster($azione)
+    private function htmlMaster(array $azione): string
     {
+        $testo = Filters::string($azione['testo']);
+
+        # Customizzazioni
+        $colore_testo_parlato = PersonaggioChatOpzioni::getInstance()->getOptionValue('master_color_talk', $this->me_id);
+        $colore_parlato = Filters::out($colore_testo_parlato['valore']);
+
+        $colore_testo_descr = PersonaggioChatOpzioni::getInstance()->getOptionValue('master_color_descr', $this->me_id);
+        $colore_descr = Filters::out($colore_testo_descr['valore']);
+
+        $testo_size = PersonaggioChatOpzioni::getInstance()->getOptionValue('master_size', $this->me_id);
+        $size = Filters::out($testo_size['valore']) ? Filters::out($testo_size['valore']) . 'px' : '';
+
         # Formo i testi necessari
         $ora = gdrcd_format_time($azione['ora']);
-        $testo = $this->formattedText($azione['testo']);
+        $testo = $this->formattedText($testo, $colore_parlato);
 
         # Creo il corpo azione
         $html = "<span class='chat_time'>{$ora}</span> ";
-        $html .= "<span class='chat_master'>{$testo}</span>";
+        $html .= "<span class='chat_msg' style='color:{$colore_descr};font-size:{$size};'>{$testo}</span> ";
+
+        # Ritorno l'html dell'azione
+        return $html;
+    }
+
+    /**
+     * @fn htmlMod
+     * @note Stampa html per il tipo 'MOD'.Moderazione
+     * @param array $azione
+     * @return string
+     */
+    private function htmlMod(array $azione): string
+    {
+        $testo = Filters::string($azione['testo']);
+
+        # Customizzazioni
+        $colore_testo_parlato = PersonaggioChatOpzioni::getInstance()->getOptionValue('mod_color', $this->me_id);
+        $colore_parlato = Filters::out($colore_testo_parlato['valore']);
+
+        $testo_size = PersonaggioChatOpzioni::getInstance()->getOptionValue('mod_size', $this->me_id);
+        $size = Filters::out($testo_size['valore']) ? Filters::out($testo_size['valore']) . 'px' : '';
+
+        # Formo i testi necessari
+        $ora = gdrcd_format_time($azione['ora']);
+        $testo = $this->formattedText($testo);
+
+        # Creo il corpo azione
+        $html = "<span class='chat_time'>{$ora}</span> ";
+        $html .= "<span class='chat_msg' style='color:{$colore_parlato};font-size:{$size};'>{$testo}</span> ";
 
         # Ritorno l'html dell'azione
         return $html;
@@ -586,15 +680,24 @@ class Chat extends BaseClass
      * @param array $azione
      * @return string
      */
-    private function htmlOnlyText($azione)
+    private function htmlOnlyText(array $azione): string
     {
+        $testo = Filters::string($azione['testo']);
+
+        # Customizzazioni
+        $colore_testo_parlato = PersonaggioChatOpzioni::getInstance()->getOptionValue('other_color', $this->me_id);
+        $colore_parlato = Filters::out($colore_testo_parlato['valore']);
+
+        $testo_size = PersonaggioChatOpzioni::getInstance()->getOptionValue('other_size', $this->me_id);
+        $size = Filters::out($testo_size['valore']) ? Filters::out($testo_size['valore']) . 'px' : '';
+
         # Formo i testi necessari
         $ora = gdrcd_format_time($azione['ora']);
-        $testo = $this->formattedText($azione['testo']);
+        $testo = $this->formattedText($testo);
 
         # Creo il corpo azione
         $html = "<span class='chat_time'>{$ora}</span> ";
-        $html .= "<span class='chat_msg'>{$testo}</span> ";
+        $html .= "<span class='chat_msg' style='color:{$colore_parlato};font-size:{$size};'>{$testo}</span> ";
 
         # Ritorno l'html dell'azione
         return $html;
@@ -606,7 +709,7 @@ class Chat extends BaseClass
      * @param array $azione
      * @return string
      */
-    private function htmlImage($azione)
+    private function htmlImage(array $azione): string
     {
         # Formo i testi necessari
         $ora = gdrcd_format_time($azione['ora']);
@@ -629,7 +732,7 @@ class Chat extends BaseClass
      * @param array $post
      * @return array
      */
-    public function send($post)
+    public function send(array $post): array
     {
         if ($this->chatAccess()) {
             # Inizializzo le variabili necessarie
@@ -664,6 +767,11 @@ class Chat extends BaseClass
 
             # Ritorno il risultato dell'invio ed eventuale messaggio di errore
             return $resp;
+        } else {
+            return [
+                'response' => false,
+                'error' => 'Permesso negato.'
+            ];
         }
     }
 
@@ -674,7 +782,7 @@ class Chat extends BaseClass
      * @param int $permission
      * @return array
      */
-    private function sendAction($post, $permission)
+    private function sendAction(array $post, int $permission): array
     {
         # Filtro le variabili necessarie
         $permission = Filters::int($permission);
@@ -708,7 +816,7 @@ class Chat extends BaseClass
      * @param array $post
      * @return array
      */
-    private function sendSussurro($post)
+    private function sendSussurro(array $post): array
     {
         # Filtro le variabili necessarie
         $tag = Filters::in($post['tag']);
@@ -743,7 +851,7 @@ class Chat extends BaseClass
      * @note Funzione che si occupa del salvataggio dell'azione in DB
      * @param array $post
      */
-    private function saveAction($post)
+    private function saveAction(array $post)
     {
         # Filtro le variabili necessarie
         $tag = Filters::in($post['tag']);
@@ -762,6 +870,7 @@ class Chat extends BaseClass
      * @note Estrae tutti gli oggetti di un personaggio
      * @param int $pg
      * @param bool $only_equipped
+     * @param string $val
      * @return bool|int|mixed|string
      */
     public static function getPgAllObjects(int $pg, bool $only_equipped, $val = 'personaggio_oggetto.*,oggetto.*')
@@ -799,7 +908,7 @@ class Chat extends BaseClass
 
         if (!empty($excluded)) {
             $implode = implode(',', $excluded);
-            $extra_query = " AND personaggio_oggetto.id NOT IN ({$excluded})";
+            $extra_query = " AND personaggio_oggetto.id NOT IN ({$implode})";
         }
 
         # Estraggo i bonus di tutti gli oggetti equipaggiati
@@ -829,7 +938,7 @@ class Chat extends BaseClass
      * @note Crea la lista di oggetti utilizzabili in chat
      * @return string
      */
-    public function objectsList()
+    public function objectsList(): string
     {
         $html = '';
         $obj_class = Oggetti::getInstance();
@@ -857,7 +966,7 @@ class Chat extends BaseClass
      * @note Crea la lista delle chat
      * @return string
      */
-    public function chatList()
+    public function chatList(): string
     {
         $html = '<option value=""></option>';
 
@@ -884,7 +993,7 @@ class Chat extends BaseClass
      * @param array $post
      * @return array
      */
-    public function roll($post)
+    public function roll(array $post): array
     {
         if ($this->chatAccess()) {
             # Inizializzo le variabili necessarie
@@ -969,6 +1078,9 @@ class Chat extends BaseClass
 
             # Ritorno il responso positivo
             return ['response' => true, 'error' => ''];
+        } else {
+            return ['response' => false, 'error' => 'Permesso negato.'];
+
         }
     }
 
@@ -978,7 +1090,7 @@ class Chat extends BaseClass
      * @param int $id
      * @return array
      */
-    public function rollAbility($id)
+    public function rollAbility(int $id): array
     {
         # Filtro le variabili necessarie
         $id = Filters::int($id);
@@ -1010,7 +1122,7 @@ class Chat extends BaseClass
      * @param int $obj
      * @return array
      */
-    private function rollCar($car, $obj)
+    private function rollCar(int $car, int $obj): array
     {
         # Filtro i dati passati
         $car = Filters::int($car);
@@ -1043,7 +1155,7 @@ class Chat extends BaseClass
      * @return array
      * #TODO Adattare statistiche oggetto
      */
-    private function rollObj($obj, $car)
+    private function rollObj(int $obj, int $car): array
     {
         # Filtro le variabili necessarie
         $obj = Filters::int($obj);
@@ -1067,7 +1179,7 @@ class Chat extends BaseClass
      * @note Funzione che si occupa del lancio del dado
      * @return int
      */
-    private function rollDice()
+    private function rollDice(): int
     {
         # Lancio il dado
         return rand(1, $this->chat_dice_base);
@@ -1076,9 +1188,11 @@ class Chat extends BaseClass
     /**
      * @fn rollCustomDice
      * @note Funzione che si occupa del lancio di dadi diversi da quelli base
+     * @param int $num
+     * @param int $face
      * @return int
      */
-    public function rollCustomDice($num, $face)
+    public function rollCustomDice(int $num, int $face): int
     {
         # Lancio il dado
         $total = 0;
@@ -1098,7 +1212,7 @@ class Chat extends BaseClass
      * @param array $array
      * @return void
      */
-    private function saveDice($array)
+    private function saveDice(array $array):void
     {
         # Filtro le variabili necessarie
         $dice = Filters::in($array['dice']);

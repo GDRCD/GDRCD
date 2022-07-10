@@ -12,7 +12,7 @@ class Gestione extends BaseClass{
      * @param string $type
      * @return string
      */
-    private final function inputByType(string $name, $val, string $type): string
+    public final function inputByType(string $name, $val, string $type): string
     {
 
         $type = Filters::out($type);

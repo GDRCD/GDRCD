@@ -205,6 +205,23 @@ CREATE TABLE IF NOT EXISTS `chat` (
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `chat_opzioni`
+--
+
+CREATE TABLE IF NOT EXISTS `chat_opzioni` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `nome` varchar(255) NOT NULL,
+    `titolo` varchar(255) NOT NULL,
+    `descrizione` text DEFAULT NULL,
+    `tipo` varchar(255) DEFAULT 'String',
+    `creato_da` int DEFAULT NULL,
+    `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `clgpersonaggiomostrine`
 --
 
@@ -925,6 +942,20 @@ CREATE TABLE IF NOT EXISTS `personaggio_abilita` (
     `personaggio` int NOT NULL,
     `abilita` int NOT NULL,
     `grado` int NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `personaggio_chat_opzioni`
+--
+
+CREATE TABLE IF NOT EXISTS `personaggio_chat_opzioni` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `personaggio` int NOT NULL,
+    `opzione` varchar(255) NOT NULL,
+    `valore` varchar(255) NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
