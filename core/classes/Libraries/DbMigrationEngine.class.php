@@ -71,10 +71,11 @@ class DbMigrationEngine extends BaseClass
      * @param $db
      * @return void
      */
-    public static function deleteDb($db){
+    public static function deleteDb($db)
+    {
         $tables = DB::query("SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = '{$db}'  ORDER BY table_name ASC");
 
-        if($tables) {
+        if ($tables) {
             DB::query("DROP TABLE {$tables['TABLE_NAME']}");
             self::deleteDb($db);
         }
@@ -131,12 +132,25 @@ class DbMigrationEngine extends BaseClass
 
     /**
      * @fn dbNeedsInstallation
-     * @note Indica se il database di GDRCD è stato installato o meno
+     * @note Indica se il database di GDRCD 6.0 è stato installato o meno
      * @return bool
      */
     public static function dbNeedsInstallation()
     {
-        return self::getTablesCountInDb() <= 1;//Controlliamo sempre 1 e non 0, per escludere la tabella delle  migration
+        return (self::getTablesCountInDb() <= 1 && self::dbConfigExist());//Controlliamo sempre 1 e non 0, per escludere la tabella delle  migration
+    }
+
+    /**
+     * @fn dbConfigExist
+     * @note Controlla se la tabella config esiste
+     * @return bool
+     */
+    public static function dbConfigExist(): bool
+    {
+        $db = DB::getDbName();
+        $config_table = DB::query("SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = '{$db}' AND table_name='config' LIMIT 1");
+
+        return !empty($config_table);
     }
 
     /**
@@ -299,7 +313,6 @@ class DbMigrationEngine extends BaseClass
 
         $count = DB::query("SELECT COUNT(*) AS number FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '"
             . $PARAMETERS['database']['database_name'] . "'");
-
         return (int)$count['number'];
     }
 
