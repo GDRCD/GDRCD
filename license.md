@@ -1,5 +1,5 @@
 ========================================================================================
-LICENZA GDRCD#5.6.0.3 (Gioco di Ruolo a Codice Distribuito)
+LICENZA GDRCD#5.6 (Gioco di Ruolo a Codice Distribuito)
 ========================================================================================
 
 Versione 5.6
