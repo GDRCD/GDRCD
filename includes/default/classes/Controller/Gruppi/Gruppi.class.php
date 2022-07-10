@@ -398,7 +398,7 @@ class Gruppi extends BaseClass
                         // TODO Sostituire pg name con pg id all'invio messaggio
                         $titolo = Filters::in('Stipendio non depositato');
                         $testo = Filters::in("Il gruppo '{$group_name}' non ha abbastanza soldi per pagare il tuo stipendio di {$stipendio} dollari.");
-                        DB::query("INSERT INTO messaggi(mittente,destinatario,tipo,oggetto,testo) VALUES('System','{$this->me}',0,'{$titolo}','{$testo}') ");
+                        DB::query("INSERT INTO messaggi(mittente,destinatario,tipo,oggetto,testo) VALUES('System','{$id}',0,'{$titolo}','{$testo}') ");
                     }
 
                 }

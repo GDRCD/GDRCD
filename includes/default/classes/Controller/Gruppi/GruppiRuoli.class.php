@@ -95,6 +95,23 @@ class GruppiRuoli extends Gruppi
     }
 
     /**
+     * @fn getAllGroupBoss
+     * @note Estrae tutti i membri di un gruppo preciso
+     * @param int $id
+     * @param string $val
+     * @return bool|int|mixed|string
+     */
+    public function getAllGroupBoss(int $id, string $val = 'personaggio.id,personaggio.nome,gruppi_ruoli.nome as role,gruppi_ruoli.immagine')
+    {
+
+        return DB::query("
+                SELECT {$val} FROM gruppi_ruoli 
+                    LEFT JOIN personaggio_ruolo ON personaggio_ruolo.ruolo = gruppi_ruoli.id 
+                    LEFT JOIN personaggio ON personaggio_ruolo.personaggio = personaggio.id 
+                WHERE gruppi_ruoli.gruppo='{$id}' AND personaggio_ruolo.id IS NOT NULL AND gruppi_ruoli.poteri = 1", 'result');
+    }
+
+    /**
      * @fn getAvailableRoles
      * @note Estrae i ruoli che un personaggio puo' gestire
      * @return bool|int|mixed|string

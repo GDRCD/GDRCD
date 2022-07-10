@@ -413,7 +413,7 @@ CREATE TABLE IF NOT EXISTS `lavori` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `gilda`
+-- Struttura della tabella `gruppi`
 --
 
 CREATE TABLE IF NOT EXISTS `gruppi` (
@@ -425,6 +425,24 @@ CREATE TABLE IF NOT EXISTS `gruppi` (
   `statuto` text,
   `denaro` int NOT NULL DEFAULT 0,
   `visibile` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `gruppi_fondi`
+--
+
+CREATE TABLE IF NOT EXISTS `gruppi_fondi` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nome` varchar(255) NOT NULL DEFAULT '',
+  `gruppo` int NOT NULL,
+  `denaro` int DEFAULT NULL,
+  `interval` int DEFAULT NULL,
+  `interval_type` varchar(255) NOT NULL,
+  `last_exec` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
