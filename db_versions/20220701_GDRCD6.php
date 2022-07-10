@@ -92,10 +92,37 @@ class GDRCD6 extends DbMigration
                 ('GROUPS_MAX_ROLES',3,'Gruppi','Massimo ruoli','Numero massimo di ruoli','int',1),
                 ('WORKS_ACTIVE',1,'Gruppi','Lavori attivi','Lavori attivi?','bool',1),
                 ('WORKS_DIMISSIONS_DAYS',1,'Gruppi','Giorni per dimissioni','Giorni per dimissioni','bool',1),
-                ('WORKS_MAX',3,'Gruppi','Massimo lavori liberi','Numero massimo di lavori liberi','int',1);"
+                ('WORKS_MAX',3,'Gruppi','Massimo lavori liberi','Numero massimo di lavori liberi','int',1),
+                ('CONTACTS_ENABLED', 1, 'Contatti','Abilita/Disabilita la sezione contatti',  'Abilita/disabilita i contatti', 'bool', 1),
+                ('CONTACT_PUBLIC', 1, 'Contatti','Abilita/Disabilita la visualizzazione pubblica dei contatti',  'Abilita/Disabilita la visualizzazione pubblica dei contatti', 'bool', 1),
+                ('CONTACT_SECRETS', 1, 'Contatti','Abilita/Disabilita la scelta di nascondere le note',  'Abilita/Disabilita la scelta di nascondere le note', 'bool', 1),
+                ('CONTACT_CATEGORIES', 1, 'Contatti','Abilita/Disabilita le categorie',  'Abilita/Disabilita le categorie', 'bool', 1),
+                ('CONTACT_CATEGORIES_PUBLIC', 1, 'Contatti','Se abilitato, tutti vedono le categorie',  'Se abilitato, tutti vedono le categorie', 'bool', 1),
+                ('CONTACT_CATEGORIES_STAFF_ONLY', 0, 'Contatti', 'Se abilitato, solo lo staff può assegnare le categorie di contatto', 'Se abilitato, solo lo staff può assegnare le categorie di contatto', 'bool', 1);"
         );
 
 
+        DB::query("
+            INSERT INTO `chat_opzioni` (`nome`,`titolo`,`descrizione`,`tipo`,`creato_da`) VALUES
+                ('action_size','Dimensione Azione','','int','1'),
+                ('action_color_talk','Colore Parlato Azione','','string','1'),
+                ('action_color_descr','Colore Descrizione Azione','','string','1'),
+                ('master_size','Dimensione MasterScreen','','int','1'),
+                ('master_color_talk','Colore Parlato MasterScreen','','string','1'),
+                ('master_color_descr','Colore Descrizione MasterScreen','','string','1'),
+                ('sussurro_size','Dimensione Sussurro','','int','1'),
+                ('sussurro_color','Colore Sussurro','','string','1'),
+                ('sussurro_globale_size','Dimensione Sussurro Globale','','int','1'),
+                ('sussurro_globale_color','Colore Sussurro Globale','','string','1'),
+                ('png_size','Dimensione azione PNG','','int','1'),
+                ('png_color_talk','Colore Parlato PNG','','string','1'),
+                ('png_color_descr','Colore Descrizione PNG','','string','1'),
+                ('mod_size','Dimensione Moderazione','','int','1'),
+                ('mod_color','Colore Moderazione','','string','1'),
+                ('other_size','Dimensione Dadi/Oggetti/Altro','','string','1'),
+                ('other_color','Colore Dadi/Oggetti/Altro','','string','1');"
+        );
+        
         DB::query("
             INSERT INTO `cronjob` (`name`,`last_exec`,`in_exec`,`interval`,`interval_type`,`class`,`function`) VALUES
                 ('meteo_update',NULL,false,'60','minutes','Meteo','generateGlobalWeather'),
@@ -145,7 +172,8 @@ class GDRCD6 extends DbMigration
               ('Gestione', 'Gestione', 'Gestione Versioni Database', 'gestione_db_migrations', 'MANAGE_DB_MIGRATIONS'),
               ('Gestione', 'Permessi', 'Gestione Permessi', 'gestione_permessi', 'MANAGE_PERMISSIONS'),
               ('Gestione', 'Gestione', 'Manutenzione', 'gestione_manutenzione', 'MANAGE_MANUTENTIONS'),
-              ('Gestione', 'Chat', 'Giocate Segnalate', 'gestione/segnalazioni/esito_index', 'MANAGE_REPORTS'),
+              ('Gestione', 'Chat', 'Giocate Segnalate', 'gestione/segnalazioni/esito_index', 'MANAGE_REPORTS'),            
+              ('Gestione', 'Chat', 'Opzioni Chat', 'gestione/chat/opzioni/gestione_chat_opzioni', 'MANAGE_CHAT_OPTIONS'),
               ('Gestione', 'Meteo', 'Gestione condizioni', 'gestione/meteo/condizioni/gestione_condizioni', 'MANAGE_WEATHER_CONDITIONS'),
               ('Gestione', 'Meteo', 'Gestione stagioni', 'gestione/meteo/stagioni/gestione_stagioni_index', 'MANAGE_WEATHER_SEASONS'),
               ('Gestione', 'Meteo', 'Gestione venti', 'gestione/meteo/venti/gestione_venti', 'MANAGE_WEATHER'),
@@ -159,7 +187,8 @@ class GDRCD6 extends DbMigration
               ('Gestione', 'Oggetti', 'Gestione posizioni oggetto', 'gestione/oggetti/gestione_oggetti_posizioni', 'MANAGE_OBJECTS_POSITIONS'),
               ('Gestione', 'Mercato', 'Gestione Oggetti Mercato', 'gestione/mercato/gestione_mercato_oggetti', 'MANAGE_SHOPS_OBJECTS'),
               ('Gestione', 'Mercato', 'Gestione Negozi Mercato', 'gestione/mercato/gestione_mercato_negozi', 'MANAGE_SHOPS'),
-              ('Gestione', 'Statistiche', 'Gestione Statistiche', 'gestione/statistiche/gestione_statistiche', 'MANAGE_STATS');"
+              ('Gestione', 'Statistiche', 'Gestione Statistiche', 'gestione/statistiche/gestione_statistiche', 'MANAGE_STATS'),
+              ('Gestione', 'Contatti', 'Gestione Categorie', 'gestione/contatti/gestione_categorie', 'MANAGE_CONTACTS_CATEGORIES');"
         );
 
         DB::query("
@@ -221,7 +250,7 @@ class GDRCD6 extends DbMigration
         );
 
         DB::query("
-            INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
+            INSERT INTO `permessi_custom`(`permission_name`, `description`) VALUES
                 ('LOG_CHAT', 'Permesso visualizzazione log chat'),
                 ('LOG_EVENTI', 'Permesso visualizzazione log evento'),
                 ('LOG_MESSAGGI', 'Permesso visualizzazione log messaggi'),
@@ -269,7 +298,14 @@ class GDRCD6 extends DbMigration
                 ('DOWNGRADE_SCHEDA_STATS','Permesso per la riduzione statistiche in schede altrui'),
                 ('UPGRADE_SCHEDA_ABI','Permesso per aumento abilita in schede altrui'),
                 ('DOWNGRADE_SCHEDA_ABI','Permesso per la diminuzione abilita in schede altrui'),
-                ('VIEW_SCHEDA_ABI','Permesso per la visualizzazione abilita in schede altrui');"
+                ('VIEW_SCHEDA_ABI','Permesso per la visualizzazione abilita in schede altrui'),
+                ('VIEW_CONTACTS','Permesso per la visualizzazione dei contatti in schede altrui'),
+                ('UPDATE_CONTACTS','Permesso per la modifica dei contatti in schede altrui'),
+                ('DELETE_CONTACTS','Permesso per la eliminazione dei contatti in schede altrui'),
+                ('VIEW_CONTACTS_CATEGORIES','Permesso per la visualizzazione delle categorie contatti in schede altrui'),
+                ('MANAGE_CONTACTS_CATEGORIES','Permesso per la gestione delle categorie contatti'),
+                ('MANAGE_CHAT_OPTIONS','Permesso per la gestione delle opzioni personalizzabili in chat')
+                ;"
         );
 
         DB::query("

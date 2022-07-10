@@ -66,6 +66,10 @@ class Filters extends BaseClass
 
                 $val = preg_replace(array_keys($notAllowed), array_values($notAllowed), $val);
                 break;
+
+            case 'string':
+                $val = htmlspecialchars($val);
+                break;
         }
 
         return $val;
@@ -195,5 +199,16 @@ class Filters extends BaseClass
     public static function checkbox($val): int
     {
         return !empty($val) ? 1 : 0;
+    }
+
+    /**
+     * @fn string
+     * @note Filtro di tipo string per estrazione da db
+     * @param string $val
+     * @return string
+     */
+    public static function string(string $val): string
+    {
+        return self::gdrcd_filter('string',$val);
     }
 }

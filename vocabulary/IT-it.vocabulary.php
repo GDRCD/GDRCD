@@ -149,6 +149,7 @@ $MESSAGE['interface']['sheet']['profile']['experience'] = 'Esperienza';
 $MESSAGE['interface']['sheet']['profile']['status'] = 'Status';
 $MESSAGE['interface']['sheet']['profile']['uneployed'] = 'Disoccupato';
 $MESSAGE['interface']['sheet']['menu']['update'] = 'Modifica';
+$MESSAGE['interface']['sheet']['menu']['chat_options'] = 'Opzioni Chat';
 $MESSAGE['interface']['sheet']['menu']['transictions'] = 'Transazioni';
 $MESSAGE['interface']['sheet']['menu']['skill'] = 'Abilità';
 $MESSAGE['interface']['sheet']['menu']['stats'] = 'Statistiche';
@@ -162,6 +163,8 @@ $MESSAGE['interface']['sheet']['menu']['detail']='Descrizione e Conoscenze';
 $MESSAGE['interface']['sheet']['menu']['background']='Storia';
 $MESSAGE['interface']['sheet']['menu']['description']='Descrizione';
 $MESSAGE['interface']['sheet']['menu']['friend']='Conoscenze';
+$MESSAGE['interface']['sheet']['menu']['contatti']='Contatti';
+
 $MESSAGE['interface']['sheet']['modify_form']['last_name'] = 'Cognome';
 $MESSAGE['interface']['sheet']['modify_form']['relationships'] = 'Affetti';
 $MESSAGE['interface']['sheet']['modify_form']['background'] = 'Background';

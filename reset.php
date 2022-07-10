@@ -3,9 +3,9 @@ $dont_check = true;
 require 'core/required.php';
 
 if (!DbMigrationEngine::dbNeedsInstallation()) {
-    $development = Filters::bool(Functions::get_constant('DEVELOPING'));
+    $development = Filters::bool(Functions::get_constant('DEVELOPING', false));
 
-    if ($development) {
+    if ($development || !DbMigrationEngine::dbConfigExist()) {
         ?>
         <div class="pagina_ambientazione">
             <?php

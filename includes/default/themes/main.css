@@ -713,6 +713,15 @@ div.innertube {
 .quest_insert_form #new_member{
     margin: 20px auto;
 }
+/*** GESTIONE CONTATTI ***/
+
+.pagina_scheda_contatti .contatti_list .header .td{
+    width: 32%;
+}
+
+.pagina_scheda_contatti .contatti_list .td{
+    width: 32%;
+}
 
 /*** GESTIONE ESITI ***/
 
