@@ -139,8 +139,9 @@ class GruppiRuoli extends Gruppi
      */
     public function getCharacterRolesSalaries(int $pg){
         return DB::query(
-            "SELECT gruppi_ruoli.stipendio FROM personaggio_ruolo 
+            "SELECT gruppi.id,gruppi.nome,gruppi_ruoli.stipendio,gruppi.denaro FROM personaggio_ruolo 
                     LEFT JOIN gruppi_ruoli ON (personaggio_ruolo.ruolo = gruppi_ruoli.id)
+                    LEFT JOIN gruppi ON (gruppi_ruoli.gruppo = gruppi.id)
                     WHERE personaggio_ruolo.personaggio ='{$pg}'",'result');
     }
 

@@ -15,6 +15,7 @@ $(function(){
                     editForm.find('select[name="tipo"]').val(datas.tipo);
                     editForm.find('input[name="url"]').val(datas.url);
                     editForm.find('textarea[name="statuto"]').val(datas.statuto);
+                    editForm.find('input[name="denaro"]').val(datas.denaro);
                     editForm.find('input[name="visibile"]').prop("checked",datas.visibile == 1);
                 }
             }

@@ -8,12 +8,14 @@ class Gruppi extends BaseClass
 {
 
     protected
-        $groups_active;
+        $groups_active,
+        $pay_from_money;
 
     protected function __construct()
     {
         parent::__construct();
         $this->groups_active = Functions::get_constant('GROUPS_ACTIVE');
+        $this->pay_from_money = Functions::get_constant('GROUPS_PAY_FROM_MONEY');
     }
 
     /** CONFIG */
@@ -263,10 +265,11 @@ class Gruppi extends BaseClass
             $img = Filters::in($post['immagine']);
             $url = Filters::in($post['url']);
             $statuto = Filters::in($post['statuto']);
+            $denaro = Filters::int($post['denaro']);
             $visibile = Filters::checkbox($post['visibile']);
 
 
-            DB::query("INSERT INTO gruppi (nome,tipo,immagine,url,statuto,visibile )  VALUES ('{$nome}','{$tipo}','{$img}','{$url}','{$statuto}','{$visibile}') ");
+            DB::query("INSERT INTO gruppi (nome,tipo,immagine,url,statuto,denaro,visibile )  VALUES ('{$nome}','{$tipo}','{$img}','{$url}','{$statuto}','{$denaro}','{$visibile}') ");
 
             return [
                 'response' => true,
@@ -300,11 +303,12 @@ class Gruppi extends BaseClass
             $img = Filters::in($post['immagine']);
             $url = Filters::in($post['url']);
             $statuto = Filters::in($post['statuto']);
+            $denaro = Filters::int($post['denaro']);
             $visibile = Filters::checkbox($post['visibile']);
 
 
             DB::query("UPDATE  gruppi 
-                SET nome = '{$nome}',tipo='{$tipo}', immagine='{$img}',url='{$url}',statuto='{$statuto}',visibile='{$visibile}' WHERE id='{$id}'");
+                SET nome = '{$nome}',tipo='{$tipo}', immagine='{$img}',url='{$url}',statuto='{$statuto}',denaro='{$denaro}',visibile='{$visibile}' WHERE id='{$id}'");
 
             return [
                 'response' => true,
@@ -377,7 +381,27 @@ class Gruppi extends BaseClass
             // STIPENDI DA RUOLI
             $ruoli = GruppiRuoli::getInstance()->getCharacterRolesSalaries($id);
             foreach ($ruoli as $ruolo){
-                $totale_ruoli += Filters::int($ruolo['stipendio']);
+                $group_id = Filters::int($ruolo['id']);
+                $group_name = Filters::out($ruolo['nome']);
+                $corp_money = Filters::int($ruolo['denaro']);
+                $stipendio = Filters::int($ruolo['stipendio']);
+
+                if(!$this->pay_from_money) {
+                    $totale_ruoli += Filters::int($stipendio);
+                } else{
+
+                    if($corp_money && ($corp_money >= $stipendio)){
+                        $totale_ruoli += Filters::int($stipendio);
+                        DB::query("UPDATE gruppi SET denaro=denaro-'{$stipendio}' WHERE id='{$group_id}' LIMIT 1");
+                    } else{
+
+                        // TODO Sostituire pg name con pg id all'invio messaggio
+                        $titolo = Filters::in('Stipendio non depositato');
+                        $testo = Filters::in("Il gruppo '{$group_name}' non ha abbastanza soldi per pagare il tuo stipendio di {$stipendio} dollari.");
+                        DB::query("INSERT INTO messaggi(mittente,destinatario,tipo,oggetto,testo) VALUES('System','{$this->me}',0,'{$titolo}','{$testo}') ");
+                    }
+
+                }
             }
 
             // STIPENDI DA LAVORI

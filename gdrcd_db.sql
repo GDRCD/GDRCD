@@ -423,6 +423,7 @@ CREATE TABLE IF NOT EXISTS `gruppi` (
   `immagine` varchar(255) DEFAULT NULL,
   `url` varchar(255) DEFAULT NULL,
   `statuto` text,
+  `denaro` int NOT NULL DEFAULT 0,
   `visibile` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;

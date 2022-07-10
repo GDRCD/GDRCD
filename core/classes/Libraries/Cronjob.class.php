@@ -1,7 +1,5 @@
 <?php
 
-const METEO_UPDATE = 'meteo_update';
-const STIPENDI = 'stipendi_assign';
 date_default_timezone_set('Europe/Rome');
 
 class Cronjob extends BaseClass
