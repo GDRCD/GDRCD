@@ -18,12 +18,12 @@ class PersonaggioChatOpzioni extends BaseClass
     /**
      * @fn getOptionValue
      * @note Ottiene il valore di un'opzione chat specifica in base al personaggio
-     * @param int $option
+     * @param string $option
      * @param int $pg
      * @param string $val
      * @return bool|int|mixed|string
      */
-    public function getOptionValue(int $option, int $pg, string $val = '*')
+    public function getOptionValue(string $option, int $pg, string $val = '*')
     {
         return DB::query("SELECT {$val} FROM personaggio_chat_opzioni WHERE opzione='{$option}' AND personaggio='{$pg}' LIMIT 1");
     }

@@ -142,13 +142,16 @@ class SchedaChatOpzioni extends Scheda
                 break;
 
             case 'int':
-                if(!is_numeric($val) || is_float($val)){
-                    return false;
+                if($val) {
+                    if (!is_numeric($val) || is_float($val)) {
+                        return false;
+                    } else {
+                        $val = Filters::int($val);
+                    }
+                    break;
+                } else{
+                    $val = '';
                 }
-                else{
-                    $val = Filters::int($val);
-                }
-                break;
 
             default:
             case 'string':

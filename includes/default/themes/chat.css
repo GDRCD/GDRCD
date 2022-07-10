@@ -75,6 +75,20 @@ div.chat_row_M {
     color: green;
 }
 
+div.chat_row_MOD {
+    margin-top: 3px;
+
+    border-width: 2px;
+    border-color: red;
+    border-style: solid;
+    text-align: center;
+    color: red;
+}
+
+div.chat_row_MOD .chat_msg{
+    color: red;
+}
+
 div.chat_row_N {
     margin-top: 3px;
 }
