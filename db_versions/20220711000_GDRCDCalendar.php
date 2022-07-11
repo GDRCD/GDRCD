@@ -27,6 +27,7 @@ class GDRCD5603 extends DbMigration
      */
     public function down()
     {
+        gdrcd_query("DROP TABLE IF EXISTS eventi");
 
     }
 }
