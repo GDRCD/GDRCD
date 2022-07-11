@@ -1,27 +1,29 @@
 body{
+    background: #b9b9b9;
     overflow: auto;
 }
 .eventi{
     border:2px solid #343434;
-    height:550px;
-    display:inline-block;
-    float:left;
-    text-align:center;
+    height:400px;
+    width:350px;
     padding:5px;
-    width:300px;
-    position:absolute; top:0px;margin-left:575px;
+    margin-left: 5px;
+    float:left;
+    display:block;
     overflow: auto;
+}
+.calendario{
+    border:2px solid #343434;
+    height:400px;
+    width:400px;
+    padding:5px;
+    float:left;
+    display:block;
 }
 .main{
     position:absolute;width:auto;left:10%;
 }
-.calendario{
-    border:2px solid #343434;
-    height:550px;
-    display:inline-block;
-    float:left;
-    padding:5px;width:630px; position:absolute; top:0px;margin-left:-70px;
-}
+
 .button {
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
@@ -94,5 +96,8 @@ body{
     bottom: 0;
 }
 .area_bottoni{
-    position:absolute; top:600px; left:510px;
+    position:absolute; top:450px; left:310px;
+}
+#calendar{
+    width: 100%;
 }
