@@ -20,10 +20,6 @@ class GDRCD5601 extends DbMigration
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
         gdrcd_query("ALTER TABLE personaggio ADD storia text DEFAULT NULL;");
-
-
-
-
     }
 
     /**
