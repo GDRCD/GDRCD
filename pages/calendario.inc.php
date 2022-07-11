@@ -15,6 +15,9 @@
             case 'edit': //Form modifica pagina
                 include('calendario/edit.php');
                 break;
+            case 'edit_page': //Form modifica pagina
+                include('calendario/edit_page.php');
+                break;
 
             case 'new': // Form nuova pagina
                 include('calendario/new.php');

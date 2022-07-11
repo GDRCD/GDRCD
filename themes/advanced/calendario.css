@@ -106,3 +106,6 @@ body{
 #calendar{
     width: 100%;
 }
+.tabella_modifica{
+    border:1px solid #222; margin-left:0px;width:100%;
+}
