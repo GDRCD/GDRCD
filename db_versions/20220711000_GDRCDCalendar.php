@@ -1,6 +1,6 @@
 <?php
 
-class GDRCD5603 extends DbMigration
+class GDRCDCalendar extends DbMigration
 {
     /**
      * @inheritDoc
