@@ -5,6 +5,16 @@ if($totaleresults>0){
 
 //Determinazione pagina (paginazione)
     $pagebegin=(int)gdrcd_filter('get',$_POST['offset'])*$PARAMETERS['settings']['records_per_page_calendar'];
+$pageend=$PARAMETERS['settings']['records_per_page_calendar'];
+//Conteggio record totali
+$record_globale = gdrcd_query("SELECT COUNT(*) FROM eventi");
+$totaleresults = $record_globale['COUNT(*)'];
+$today=date("Y-m-d");
+
+//Lettura record
+$query= "SELECT eventi.id, titolo, descrizione , start, end,eventi_tipo.title, eventi_colori.backgroundColor, eventi_colori.textColor, eventi_colori.colore  FROM eventi 
+                LEFT JOIN eventi_tipo ON eventi.title = eventi_tipo.id
+                LEFT  JOIN eventi_colori ON eventi.colore = eventi_colori.id WHERE start > '{$today}' ORDER BY start ASC LIMIT ".$pagebegin.", ".$pageend;
 
     $pageend=$PARAMETERS['settings']['records_per_page_calendar'];
     //Conteggio record totali
