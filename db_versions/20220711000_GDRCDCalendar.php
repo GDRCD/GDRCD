@@ -60,10 +60,7 @@ class GDRCDCalendar extends DbMigration
             INSERT INTO eventi_colori (id, backgroundColor, borderColor, textColor, colore) VALUES (9, 'black', 'black', 'white', 'Nero');
             INSERT INTO eventi_colori (id, backgroundColor, borderColor, textColor, colore) VALUES (10, 'white', 'white', 'black', 'Bianco');
         ");
-}
-
-
-
+    }
 
     /**
      * @inheritDoc
