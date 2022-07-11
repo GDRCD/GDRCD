@@ -259,6 +259,9 @@ $PARAMETERS['settings']['view_logs'] = 10; //Numero di log visualizzato.
 $PARAMETERS['settings']['auto_salary'] = 'OFF'; //ON per attivare l'accredito automatico dello stipendio al primo login
 
 
+/* CALENDARIO **/
+$PARAMETERS['settings']['records_per_page_calendar'] = 5;
+
 
 /** * Abilitazione dell'audio in land
  * @author Blancks
