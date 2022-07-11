@@ -48,7 +48,6 @@ $numresults=gdrcd_query($result, 'num_rows');
                                        title="<?= gdrcd_filter('out',$MESSAGE['interface']['administration']['ops']['edit']); ?>" />
                             </form>
                         </div>
-
                         <div class="controllo_elenco" >
                             <form action="<?php echo (CALENDAR_POPUP)?'popup' : 'main'; ?>.php?page=calendario" method="post">
                                 <input type="hidden" name="id" value="<?= $row['id']?>" />
@@ -58,8 +57,6 @@ $numresults=gdrcd_query($result, 'num_rows');
                                        alt="<?= gdrcd_filter('out',$MESSAGE['interface']['administration']['ops']['erase']); ?>"
                                        title="<?=gdrcd_filter('out',$MESSAGE['interface']['administration']['ops']['erase']); ?>"/>
                             </form>
-
-
                         </div> <?php } //permessi ?>
                     </div>
                 </td>
