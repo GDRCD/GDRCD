@@ -831,7 +831,7 @@ function gdrcd_chatme($user, $str, $master = false)
  * @param string $str : specifica il soggetto di cui creare la lista. Attualmente è supportato solo 'personaggi', che crea una lista di tutti gli utenti del gdr
  * @return il tag html <datalist> già pronto per essere stampato sulla pagina
  */
-function gdrcd_list($str)
+function gdrcd_list($str, $id=NULL)
 {
     switch (strtolower($str)) {
         case 'personaggi':
@@ -845,7 +845,32 @@ function gdrcd_list($str)
             gdrcd_query($characters, 'free');
             $list .= '</datalist>';
             break;
+        case 'eventi_tipo':
+            $list = '<select name="title">';
+            $query = "SELECT id,title FROM eventi_tipo ORDER BY title";
+            $tipo = gdrcd_query($query, 'result');
+
+            while ($option = gdrcd_query($tipo, 'fetch')) {
+                $sel=(gdrcd_filter('int',$option['id'])==gdrcd_filter('int',$id))?'selected':'';
+                $list .= '<option value="'.gdrcd_filter('int',$option['id']).' " '.$sel.' >'.gdrcd_filter('out',$option['title']).'</option>';
+            }
+
+            $list .= '</select>';
+            break;
+        case 'eventi_colori':
+            $list = '<select name="colore">';
+            $query = "SELECT id,colore FROM eventi_colori ORDER BY colore";
+            $tipo = gdrcd_query($query, 'result');
+
+            while ($option = gdrcd_query($tipo, 'fetch')) {
+                $sel=(gdrcd_filter('int',$option['id'])==gdrcd_filter('int',$id))?'selected':'';
+                $list .= '<option value="'.gdrcd_filter('int',$option['id']).'  " '.$sel.' >'.gdrcd_filter('out',$option['colore']).'</option>';
+            }
+
+            $list .= '</select>';
+            break;
     }
+
 
     return $list;
 }

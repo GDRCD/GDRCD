@@ -41,6 +41,7 @@ body{
     color: #FFF;
     padding: 8px 12px;
     text-decoration: none;
+    margin: 5px;
 }
 .intestazione_eventi{
     padding:5px;border:1px solid #343434; width:auto;text-align:center; background: #909090
@@ -100,7 +101,7 @@ body{
     bottom: 0;
 }
 .area_bottoni{
-    position:absolute; top:450px; left:310px;
+ display: flex;
 }
 #calendar{
     width: 100%;

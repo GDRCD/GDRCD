@@ -29,11 +29,29 @@
             default: //Lista pagine
                 include('calendario/index.php');
                 break;
-        } ?>
+        }  ?>
     </div>
     <div style="clear:both;"></div>
     <div class="area_bottoni">
-        <a href="popup.php?page=calendario" class="button" >Visualizza appuntamenti</a>
+        <form action="<?php echo (CALENDAR_POPUP)?'popup' : 'main'; ?>.php?page=calendario" method="post">
+            <button type="submit"   class="button" >Visualizza eventi</button>
+        </form>
+
+        <?php
+        if($_SESSION['permessi']>=MODERATOR){
+            ?>
+            <form action="<?php echo (CALENDAR_POPUP)?'popup' : 'main'; ?>.php?page=calendario" method="post">
+                <input hidden value="new" name="op">
+                <button type="submit"   class="button" >Aggiungi</button>
+            </form>
+            <form action="<?php echo (CALENDAR_POPUP)?'popup' : 'main'; ?>.php?page=calendario" method="post">
+                <input hidden value="edit" name="op">
+                <button type="submit"   class="button" >Modifica</button>
+            </form>
+
+            <?php
+        }
+        ?>
 
 
     </div>
