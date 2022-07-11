@@ -38,7 +38,7 @@ $PARAMETERS['info']['GDRCD'] = '5.6.0.3'; //versione di GDRCD
 /* PARAMETRI DI CONNESSIONE */
 $PARAMETERS['database']['username'] = 'gdrcd';            //nome utente del database
 $PARAMETERS['database']['password'] = 'gdrcd';            //password del database
-$PARAMETERS['database']['database_name'] = 'gdrcd';    //nome del database
+$PARAMETERS['database']['database_name'] = 'calendario';    //nome del database
 $PARAMETERS['database']['url'] = 'localhost';        //indirizzo ip del database
 
 
@@ -257,7 +257,7 @@ $PARAMETERS['settings']['cars_cap'] = 10;//Punteggio massimo per una caratterist
 $PARAMETERS['settings']['cars_sum'] = 40;//Punteggio totale da distribuire tra le caratteristiche in fase di iscrizione.
 $PARAMETERS['settings']['view_logs'] = 10; //Numero di log visualizzato.
 $PARAMETERS['settings']['auto_salary'] = 'OFF'; //ON per attivare l'accredito automatico dello stipendio al primo login
-
+$PARAMETERS['settings']['records_per_page_calendar'] = 10;
 
 
 /** * Abilitazione dell'audio in land

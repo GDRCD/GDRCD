@@ -225,6 +225,10 @@ $MESSAGE['interface']['sheet']['diary']['text']= 'Testo';
 $MESSAGE['interface']['sheet']['diary']['back']= 'Torna al diario';
 $MESSAGE['interface']['sheet']['diary']['button_save']='Salva';
 
+/*Calendario*/
+$MESSAGE['interface']['sheet']['menu']['calendar']='Calendario';
+
+
 /*Messaggi privati*/
 $MESSAGE['interface']['messages']['recipient'] = 'Destinatario';
 $MESSAGE['interface']['messages']['multiple']['title'] = $PARAMETERS['names']['private_message']['sing'] . 'collettivo';

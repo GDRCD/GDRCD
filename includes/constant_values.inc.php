@@ -120,6 +120,10 @@ const CALENDAR = true;
 
 //Attiva o disattiva la versione popup del calendario (default: true)
 const CALENDAR_POPUP = true;
+//Attiva o disattiva il calendario personale (default: true)
+const CALENDAR_PERSONAL = true;
+//Attiva o disattiva la visibilità del calendario personale altrui (default: true)
+const CALENDAR_PERSONAL_PUBLIC = true;
 
 /*Vettori globali dei parametri*/
 $PARAMETER = array();

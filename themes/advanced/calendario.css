@@ -94,6 +94,10 @@ body{
     background-color: black;
     color: #fff;
 }
+.white{
+    background-color: white;
+    color: #000;
+}
 #calendar-container {
     top: 0;
     left: 0;

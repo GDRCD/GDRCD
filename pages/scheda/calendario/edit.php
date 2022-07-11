@@ -8,11 +8,16 @@ if($totaleresults>0){
 
     $pageend=$PARAMETERS['settings']['records_per_page_calendar'];
     //Conteggio record totali
+    $pg=gdrcd_filter('out', $_GET['pg']);
 
     //Lettura record
-    $query= "SELECT eventi.id, titolo, descrizione , start, end,eventi_tipo.title, eventi_colori.backgroundColor, eventi_colori.textColor, eventi_colori.colore  FROM eventi 
-                    LEFT JOIN eventi_tipo ON eventi.title = eventi_tipo.id
-                    LEFT  JOIN eventi_colori ON eventi.colore = eventi_colori.id ORDER BY start ASC LIMIT ".$pagebegin.", ".$pageend;
+    $query= "SELECT eventi_personaggio.id,  start, end,eventi_tipo.title, eventi_colori.backgroundColor,
+       eventi_colori.borderColor, eventi_colori.textColor  
+FROM eventi_personaggio 
+
+LEFT JOIN eventi_tipo ON eventi_personaggio.title = eventi_tipo.id
+LEFT  JOIN eventi_colori ON eventi_personaggio.colore = eventi_colori.id 
+WHERE personaggio='{$pg}' ORDER BY start ASC LIMIT ".$pagebegin.", ".$pageend;
     $result=gdrcd_query($query, 'result');
     $numresults=gdrcd_query($result, 'num_rows');
 /* Se esistono record */
@@ -40,8 +45,9 @@ if($totaleresults>0){
                     <!-- Modifica -->
                     <div class="controlli_elenco" >
                         <div class="controllo_elenco" >
-                            <form action="<?php echo (CALENDAR_POPUP)?'popup' : 'main'; ?>.php?page=calendario" method="post">
+                            <form action="main.php?page=scheda_calendario&pg=<?= $pg?>" method="post">
                                 <input type="hidden" name="id" value="<?= $row['id']?>" />
+                                <input type="hidden" name="pg" value="<?= $pg?>" />
                                 <input hidden value="edit_page" name="op">
                                 <input type="image" src="imgs/icons/edit.png"
                                        alt="<?= gdrcd_filter('out',$MESSAGE['interface']['administration']['ops']['edit']); ?>"

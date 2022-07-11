@@ -1,5 +1,5 @@
 <?php
-    $record_globale = gdrcd_query("SELECT COUNT(*) as tot FROM eventi");
+    $record_globale = gdrcd_query("SELECT COUNT(*) as tot FROM eventi_personaggio");
     $totaleresults = $record_globale['tot'];
     if($totaleresults>0){
     $pagebegin=(int)gdrcd_filter('get',$_REQUEST['offset'])*$PARAMETERS['settings']['records_per_page_calendar'];
@@ -8,10 +8,13 @@
 
     $today=date("Y-m-d");
 
-    $query= "SELECT eventi.id, titolo, descrizione , start, end,eventi_tipo.title, eventi_colori.backgroundColor, eventi_colori.textColor, eventi_colori.colore  FROM eventi 
-                LEFT JOIN eventi_tipo ON eventi.title = eventi_tipo.id
-                LEFT  JOIN eventi_colori ON eventi.colore = eventi_colori.id
-                WHERE start > '{$today}' order by start ASC LIMIT {$pagebegin}, {$pageend}";
+    $query= "SELECT eventi_personaggio.id,  start, end,eventi_tipo.title, eventi_colori.backgroundColor, titolo, descrizione, eventi_colori.colore, eventi_colori.textColor  
+        FROM eventi_personaggio 
+            LEFT JOIN eventi_tipo ON eventi_personaggio.title = eventi_tipo.id
+            LEFT  JOIN eventi_colori ON eventi_personaggio.colore = eventi_colori.id
+                WHERE start > '{$today}' AND personaggio='{$pg}'  order by start ASC LIMIT {$pagebegin}, {$pageend}";
+
+
     $result = gdrcd_query($query, 'result');
 
     while ($row=gdrcd_query($result, 'fetch')){
