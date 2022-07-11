@@ -8,6 +8,7 @@ class GDRCD5603 extends DbMigration
     public function up()
     {
         gdrcd_query("ALTER TABLE messaggioaraldo CHANGE messaggio messaggio longtext DEFAULT NULL");
+
     }
 
     /**
