@@ -1,6 +1,10 @@
 body{
-    background: #b9b9b9;
+
     overflow: auto;
+}
+.pagina_calendario{
+    background: #b9b9b9;
+
 }
 .eventi{
     border:2px solid #343434;

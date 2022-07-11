@@ -3,7 +3,7 @@
 require ('../../includes/required.php');
 
 //Eseguo la connessione al database
-$handleDBConnection = gdrcd_connect();$sqlQuery = "SELECT id,  start, end,title, backgroundColor, borderColor, textColor  FROM tbl_events ORDER BY id";
+$handleDBConnection = gdrcd_connect();$sqlQuery = "SELECT id,  start, end,title, backgroundColor, borderColor, textColor  FROM eventi ORDER BY id";
 $result = gdrcd_query($sqlQuery, 'result');
 $eventArray = array();
 foreach ($result as $array){
