@@ -38,7 +38,7 @@ $numresults=gdrcd_query($result, 'num_rows');
                 ?>
                 <td class="casella_controlli"><!-- Iconcine dei controlli -->
                     <!-- Modifica -->
-                    <div class="controlli_elenco" style="width:20px;">
+                    <div class="controlli_elenco" >
                         <div class="controllo_elenco" >
                             <form action="<?php echo (CALENDAR_POPUP)?'popup' : 'main'; ?>.php?page=calendario" method="post">
                                 <input type="hidden" name="id" value="<?= $row['id']?>" />
