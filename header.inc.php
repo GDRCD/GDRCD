@@ -65,6 +65,8 @@ if(($PARAMETERS['mode']['user_bbcode'] == 'ON' && $PARAMETERS['settings']['user_
     <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/scheda.css" type="text/css" />
     <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/messaggi.css" type="text/css" />
     <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/forum.css" type="text/css" />
+    <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/calendario.css" type="text/css" />
+    <link rel="stylesheet" href="includes/fullcalendar/lib/main.css" type="text/css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
     <?php
     /** * Il controllo individua se l'header non è impiegato per il main */

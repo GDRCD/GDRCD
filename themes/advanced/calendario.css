@@ -1,0 +1,98 @@
+body{
+    overflow: auto;
+}
+.eventi{
+    border:2px solid #343434;
+    height:550px;
+    display:inline-block;
+    float:left;
+    text-align:center;
+    padding:5px;
+    width:300px;
+    position:absolute; top:0px;margin-left:575px;
+    overflow: auto;
+}
+.main{
+    position:absolute;width:auto;left:10%;
+}
+.calendario{
+    border:2px solid #343434;
+    height:550px;
+    display:inline-block;
+    float:left;
+    padding:5px;width:630px; position:absolute; top:0px;margin-left:-70px;
+}
+.button {
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    border: solid 1px #20538D;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);
+    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+    background: #4479BA;
+    color: #FFF;
+    padding: 8px 12px;
+    text-decoration: none;
+}
+.intestazione_eventi{
+    padding:5px;border:1px solid #343434; width:auto;text-align:center; background: #909090
+}
+.descrizione_eventi{
+    padding:5px;border:1px solid #343434;  width:auto;text-align:justify
+}
+.colore_evento{
+    padding:5px;
+    font-size:13px;
+    text-shadow: 1px 1px 3px #fff;
+    border:1px solid #343434;
+    width:auto;
+    text-align: center;
+}
+
+.purple{
+    background-color: purple;
+    color: #FFFFFF;
+}
+.lightblue{
+    background-color: lightblue;
+    color: #000000;
+}
+.green{
+    background-color: green;
+    color: #fff;
+}
+.pink{
+    background-color: pink;
+    color: #000;
+}
+.gold{
+    background-color: gold;
+    color: #000;
+}
+.grey{
+    background-color: grey;
+    color: #000;
+}
+.orange{
+    background-color: orange;
+    color: #000;
+}
+.red{
+    background-color: red;
+    color: #fff;
+}
+.black{
+    background-color: black;
+    color: #fff;
+}
+#calendar-container {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+.area_bottoni{
+    position:absolute; top:600px; left:510px;
+}

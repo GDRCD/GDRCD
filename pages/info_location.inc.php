@@ -80,6 +80,15 @@
                 <img src="themes/<?php echo gdrcd_filter('out', $PARAMETERS['themes']['current_theme']); ?>/imgs/locations/<?php echo $immagine_luogo ?>"
                      class="immagine_luogo" alt="<?php echo gdrcd_filter('out', $record['descrizione']); ?>"
                      title="<?php echo gdrcd_filter('out', $record['descrizione']); ?>">
+                <?php
+                if(CALENDAR && CALENDAR_POPUP){
+                    echo '<a href="javascript:modalWindow(\'calendar\', \'Calendario\', \'popup.php?page=calendario\');">Calendario</a>';
+                }elseif (CALENDAR){
+                    echo '<a href="main.php?page=calendario">Calendario</a>';
+                }
+
+
+                ?>
             </div>
             <?php if ((isset($record['stato']) === true) || (isset($record['descrizione']) === true)) {
                 echo '<div class="box_stato_luogo"><marquee onmouseover="this.stop()" onmouseout="this.start()" direction="left" scrollamount="3" class="stato_luogo">&nbsp;' . $MESSAGE['interface']['maps']['Status'] . ': ' . gdrcd_filter('out', $record['stato']) . ' -  ' . gdrcd_filter('out', $record['descrizione']) . '</marquee></div>';
