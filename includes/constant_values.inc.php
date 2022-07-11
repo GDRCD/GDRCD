@@ -118,7 +118,7 @@ const FULL_PERM = MODERATOR;
 //Attiva o disattiva il pacchetto intero (default: true)
 const CALENDAR = true;
 //Attiva o disattiva la versione popup del calendario (default: true)
-const CALENDAR_POPUP = false;
+const CALENDAR_POPUP = true;
 
 /*Vettori globali dei parametri*/
 $PARAMETER = array();
