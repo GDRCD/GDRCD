@@ -97,7 +97,7 @@ if( ! empty($record) and gdrcd_password_check($pass1, $record['pass']) && ($reco
     /*Se la postazione ha già un cookie attivo per un personaggio differente registro l'evento (Possibile account multiplo)*/
     if((isset($_COOKIE['lastlogin']) === true) && ($_COOKIE['lastlogin'] != $_SESSION['login'])) {
         gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".gdrcd_filter('in', $_SESSION['login'])."','doppio (cookie)', NOW(), ".ACCOUNTMULTIPLO.", '".$_COOKIE['lastlogin']."')");
-    } elseif($lastlogindata['autore'] == $_SERVER['REMOTE_ADDR']) {
+    } elseif($lastlogindata['autore'] == $_SERVER['REMOTE_ADDR'] && $lastlogindata['nome_interessato'] != $_SESSION['login'] ) {
         gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".gdrcd_filter('in', $_SESSION['login'])."','doppio (ip)', NOW(), ".ACCOUNTMULTIPLO.", '".gdrcd_filter('in', $lastlogindata['nome_interessato'])."')");
     }
 
