@@ -38,7 +38,7 @@ $PARAMETERS['info']['GDRCD'] = '5.6.0.3'; //versione di GDRCD
 /* PARAMETRI DI CONNESSIONE */
 $PARAMETERS['database']['username'] = 'gdrcd';            //nome utente del database
 $PARAMETERS['database']['password'] = 'gdrcd';            //password del database
-$PARAMETERS['database']['database_name'] = 'calendario';    //nome del database
+$PARAMETERS['database']['database_name'] = 'gdrcd';    //nome del database
 $PARAMETERS['database']['url'] = 'localhost';        //indirizzo ip del database
 
 
@@ -260,7 +260,7 @@ $PARAMETERS['settings']['auto_salary'] = 'OFF'; //ON per attivare l'accredito au
 $PARAMETERS['settings']['records_per_page_calendar'] = 10;
 
 /* CALENDARIO **/
-$PARAMETERS['settings']['records_per_page_calendar'] = 5;
+$PARAMETERS['settings']['records_per_page_calendar'] = 10;
 
 
 /** * Abilitazione dell'audio in land

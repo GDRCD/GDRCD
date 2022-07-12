@@ -1,5 +1,14 @@
 <?php
-    $record_globale = gdrcd_query("SELECT COUNT(*) as tot FROM eventi_personaggio");
+    if(isset($_REQUEST['pg']) === false) {
+        echo gdrcd_filter('out', $MESSAGE['error']['unknonw_character_sheet']);
+        exit();
+    }
+    else{
+        $pg=gdrcd_filter('out', $_REQUEST['pg']);
+        $me = gdrcd_filter('out',$_SESSION['login']);
+        $permessi  = gdrcd_filter('out',$_SESSION['permessi']);
+    }
+    $record_globale = gdrcd_query("SELECT COUNT(*) as tot FROM eventi_personaggio WHERE personaggio='{$pg}'");
     $totaleresults = $record_globale['tot'];
     if($totaleresults>0){
     $pagebegin=(int)gdrcd_filter('get',$_REQUEST['offset'])*$PARAMETERS['settings']['records_per_page_calendar'];
@@ -44,7 +53,7 @@
         echo gdrcd_filter('out',$MESSAGE['interface']['pager']['pages_name']);
         for($i=0;$i<=floor($totaleresults/$PARAMETERS['settings']['records_per_page_calendar']);$i++){
             if ($i!=gdrcd_filter('num',$_REQUEST['offset'])){?>
-                <a href="<?php echo (CALENDAR_POPUP)?'popup' : 'main'; ?>.php?page=calendario&offset=<?=$i; ?>"><?=$i+1; ?></a>
+                <a href="main.php?page=scheda_calendario&pg=<?=$pg?>&offset=<?=$i; ?>"><?=$i+1; ?></a>
                 <?php
             } else {
                 echo ' '.($i+1).' ';

@@ -1,3 +1,17 @@
+<?php
+if (isset($_REQUEST['pg']) === false) {
+    echo gdrcd_filter('out', $MESSAGE['error']['unknonw_character_sheet']);
+    exit();
+}else{
+    $pg=gdrcd_filter('out', $_REQUEST['pg']);
+    $me = gdrcd_filter('out',$_SESSION['login']);
+    $permessi  = gdrcd_filter('out',$_SESSION['permessi']);
+}
+if ((CALENDAR and CALENDAR_PERSONAL and CALENDAR_PERSONAL_PUBLIC)
+|| (CALENDAR and CALENDAR_PERSONAL and $permessi >= ROLE_PERM)
+|| (CALENDAR and CALENDAR_PERSONAL and $pg == $me)) {
+
+?>
 <form action="main.php?page=scheda_calendario&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']); ?>" method="post" class="form_gestione">
         <div class='form_label'>Tipo di evento</div>
         <div class='form_field'>
@@ -23,7 +37,7 @@
         </div>
         <div class='form_label'>Data fine indicativa</div>
         <div class='form_field'>
-            <input type="datetime-local" required name="end" >
+            <input type="datetime-local"  name="end" >
         </div>
         <!-- bottoni -->
         <div class='form_submit'>
@@ -32,3 +46,6 @@
                 <input type="submit" class="button" value="<?php echo gdrcd_filter('out','inserisci');?>" />
         </div>
     </form>
+<?php
+}
+?>

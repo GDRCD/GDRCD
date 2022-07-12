@@ -43,7 +43,13 @@ if (($pg == $me) || ($permessi >= GUILDMODERATOR)) { ?>
         <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['menu']['diary']); ?>
     </a>
 <?php } ?>
-<?php if (( CALENDAR and CALENDAR_PERSONAL and CALENDAR_PERSONAL_PUBLIC)|| (CALENDAR and CALENDAR_PERSONAL || ($permessi >= ROLE_PERM) || ($pg == $me))) { ?>
+<?php if (
+        (CALENDAR and CALENDAR_PERSONAL and CALENDAR_PERSONAL_PUBLIC)
+        ||
+        (CALENDAR and CALENDAR_PERSONAL and $permessi >= ROLE_PERM)
+        || (CALENDAR and CALENDAR_PERSONAL and $pg == $me)
+
+) { ?>
     <a href="main.php?page=scheda_calendario&pg=<?=$pg;?>">
         <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['menu']['calendar']); ?>
     </a>

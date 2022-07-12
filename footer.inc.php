@@ -4,6 +4,8 @@
 <!--<script type="text/javascript" src="includes/gdrcdskills.js"></script>-->
 <script type="text/javascript" src="/includes/modal.js"></script>
 <script type="text/javascript" src="/includes/fullcalendar/lib/main.js"></script>
+<script src='/includes/popper.min.js'></script>
+<script src='/includes/tooltip.min.js'></script>
 <?php
 /** * Abilitazione tooltip
  * @author Blancks

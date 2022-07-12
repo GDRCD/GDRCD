@@ -8,10 +8,19 @@ document.addEventListener('DOMContentLoaded', function() {
             left: 'title',
             themeSystem: 'bootstrap5',
         },
-        displayEventTime: false,
+        displayEventTime: true,
         editable: false,
-        navLinks: true, // can click day/week names to navigate views
+
         dayMaxEvents: true, // allow "more" link when too many events
+
+        eventDidMount: function(info) {
+            var tooltip = new Tooltip(info.el, {
+                title: info.event.extendedProps.description,
+                placement: 'top',
+                trigger: 'hover',
+                container: 'body'
+            });
+        },
         events: "pages/scheda/calendario/event.php?pg="+pg,
     });
     calendar.setOption('locale', 'it');

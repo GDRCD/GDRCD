@@ -1,23 +1,32 @@
 <?php
-$record_globale = gdrcd_query("SELECT COUNT(*) as tot FROM eventi");
-$totaleresults = $record_globale['tot'];
-if($totaleresults>0){
+//Se non e' stato specificato il nome del pg
+if(isset($_REQUEST['pg']) === false) {
+    echo gdrcd_filter('out', $MESSAGE['error']['unknonw_character_sheet']);
+    exit();
+}else{
+    $pg=gdrcd_filter('out', $_REQUEST['pg']);
+    $me = gdrcd_filter('out',$_SESSION['login']);
+    $permessi  = gdrcd_filter('out',$_SESSION['permessi']);
+}
+if ((CALENDAR and CALENDAR_PERSONAL and CALENDAR_PERSONAL_PUBLIC)
+    || (CALENDAR and CALENDAR_PERSONAL and $permessi >= ROLE_PERM)
+    || (CALENDAR and CALENDAR_PERSONAL and $pg == $me)) {
 
-//Determinazione pagina (paginazione)
+    $record_globale = gdrcd_query("SELECT COUNT(*) as tot FROM eventi_personaggio WHERE personaggio='{$pg}'");
+    $totaleresults = $record_globale['tot'];
+    if($totaleresults>0){
+
+    //Determinazione pagina (paginazione)
     $pagebegin=(int)gdrcd_filter('get',$_POST['offset'])*$PARAMETERS['settings']['records_per_page_calendar'];
-
     $pageend=$PARAMETERS['settings']['records_per_page_calendar'];
     //Conteggio record totali
-    $pg=gdrcd_filter('out', $_GET['pg']);
-
     //Lettura record
-    $query= "SELECT eventi_personaggio.id,  start, end,eventi_tipo.title, eventi_colori.backgroundColor,
-       eventi_colori.borderColor, eventi_colori.textColor  
-FROM eventi_personaggio 
+    $query= "SELECT eventi_personaggio.id,  start, end,eventi_tipo.title, eventi_colori.backgroundColor, eventi_colori.borderColor, eventi_colori.textColor  
+            FROM eventi_personaggio 
+            LEFT JOIN eventi_tipo ON eventi_personaggio.title = eventi_tipo.id
+            LEFT  JOIN eventi_colori ON eventi_personaggio.colore = eventi_colori.id 
+            WHERE personaggio='{$pg}' ORDER BY start ASC LIMIT ".$pagebegin.", ".$pageend;
 
-LEFT JOIN eventi_tipo ON eventi_personaggio.title = eventi_tipo.id
-LEFT  JOIN eventi_colori ON eventi_personaggio.colore = eventi_colori.id 
-WHERE personaggio='{$pg}' ORDER BY start ASC LIMIT ".$pagebegin.", ".$pageend;
     $result=gdrcd_query($query, 'result');
     $numresults=gdrcd_query($result, 'num_rows');
 /* Se esistono record */
@@ -39,7 +48,7 @@ WHERE personaggio='{$pg}' ORDER BY start ASC LIMIT ".$pagebegin.", ".$pageend;
                     </div>
                 </td>
                 <?php
-                if($_SESSION['permessi']>=MODERATOR){
+                if(($permessi>=MODERATOR)||($pg == $me)){
                 ?>
                 <td class="casella_controlli"><!-- Iconcine dei controlli -->
                     <!-- Modifica -->
@@ -55,9 +64,9 @@ WHERE personaggio='{$pg}' ORDER BY start ASC LIMIT ".$pagebegin.", ".$pageend;
                             </form>
                         </div>
                         <div class="controllo_elenco" >
-                            <form action="<?php echo (CALENDAR_POPUP)?'popup' : 'main'; ?>.php?page=calendario" method="post">
+                            <form action="main.php?page=scheda_calendario&pg=<?= $pg?>" method="post">
                                 <input type="hidden" name="id" value="<?= $row['id']?>" />
-                                <input hidden value="delete" name="op">
+                                 <input type="hidden" name="pg" value="<?= $pg?>" />
                                 <input type="image"
                                        src="imgs/icons/erase.png"
                                        alt="<?= gdrcd_filter('out',$MESSAGE['interface']['administration']['ops']['erase']); ?>"
@@ -76,7 +85,7 @@ WHERE personaggio='{$pg}' ORDER BY start ASC LIMIT ".$pagebegin.", ".$pageend;
         echo gdrcd_filter('out',$MESSAGE['interface']['pager']['pages_name']);
         for($i=0;$i<=floor($totaleresults/$PARAMETERS['settings']['records_per_page_calendar']);$i++){
             if ($i!=gdrcd_filter('num',$_POST['offset'])){?>
-            <form action="<?php echo (CALENDAR_POPUP)?'popup' : 'main'; ?>.php?page=calendario" method="post">
+            <form action="main.php?page=scheda_calendario&pg=<?=$pg?>&offset=<?=$i; ?>"" method="post">
                 <input hidden value="<?php echo $i; ?>" name="offset">
                 <input hidden value="edit" name="op">
                 <button type="submit"   class="btn-link" ><?php echo $i+1; ?></button>
@@ -89,5 +98,6 @@ WHERE personaggio='{$pg}' ORDER BY start ASC LIMIT ".$pagebegin.", ".$pageend;
 </div>
 
 <?php
+    }
 }
 ?>

@@ -11,11 +11,25 @@ class GDRCDCalendar extends DbMigration
             CREATE TABLE IF NOT EXISTS `eventi` (
                 `id` INT(11) NOT NULL AUTO_INCREMENT,
                 `title`  INT(11) NULL DEFAULT NULL,
-                `start` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                `end` DATETIME NULL DEFAULT NULL DEFAULT CURRENT_TIMESTAMP,
+                `start` DATETIME NOT NULL DEFAULT,
+                `end` DATETIME NULL DEFAULT NULL DEFAULT,
                 `titolo` VARCHAR(250) DEFAULT NULL,
                 `descrizione` TEXT DEFAULT NULL,
                 `colore`  INT(11) NULL DEFAULT NULL,
+                PRIMARY KEY (`id`)
+            ) ENGINE=MyISAM DEFAULT CHARSET=utf8;"
+        );
+        gdrcd_query("
+            CREATE TABLE IF NOT EXISTS `eventi_personaggio` (
+                `id` INT(11) NOT NULL AUTO_INCREMENT,
+                `title`  INT(11) NULL DEFAULT NULL,
+                `start` DATETIME NOT NULL DEFAULT,
+                `end` DATETIME NULL DEFAULT NULL DEFAULT,
+                `titolo` VARCHAR(250) DEFAULT NULL,
+                `descrizione` TEXT DEFAULT NULL,
+                `colore`  INT(11) NULL DEFAULT NULL,
+                `personaggio`  VARCHAR(50)DEFAULT NULL,
+                
                 PRIMARY KEY (`id`)
             ) ENGINE=MyISAM DEFAULT CHARSET=utf8;"
         );
@@ -35,18 +49,17 @@ class GDRCDCalendar extends DbMigration
             CREATE TABLE IF NOT EXISTS `eventi_tipo` (
                 `id` INT(11) NOT NULL AUTO_INCREMENT,
                 `title` VARCHAR(50) DEFAULT NULL,
-                `permessi` VARCHAR(50) DEFAULT NULL,
                 PRIMARY KEY (`id`)
             ) ENGINE=MyISAM DEFAULT CHARSET=utf8;"
         );
 
         gdrcd_query("
             INSERT INTO `eventi_tipo` (`title`, `permessi`) 
-            VALUES ('QUEST', 'GAMEMASTER'),
-                   ('ROLE', NULL),
-                   ('GRUPPO', NULL),
-                   ('CORP', 'GUILDMODERATOR'),
-                   ('ALTRO', NULL);"
+            VALUES ('QUEST'),
+                   ('ROLE'),
+                   ('GRUPPO'),
+                   ('CORP'),
+                   ('ALTRO');"
         );
 
         gdrcd_query("
@@ -70,6 +83,8 @@ class GDRCDCalendar extends DbMigration
     public function down()
     {
         gdrcd_query("DROP TABLE IF EXISTS `eventi`");
-
+        gdrcd_query("DROP TABLE IF EXISTS `eventi_personaggio`");
+        gdrcd_query("DROP TABLE IF EXISTS `eventi_colori`");
+        gdrcd_query("DROP TABLE IF EXISTS `eventi_tipo`");
     }
 }

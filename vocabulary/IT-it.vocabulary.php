@@ -727,6 +727,8 @@ $MESSAGE['error']['unknown_username_details'] = 'Eseguire di nuovo la procedura 
 $MESSAGE['error']['unknown_username_failure_count'] = 'Fallimento numero:';
 $MESSAGE['error']['unknown_username_warning'] = 'Con 10 fallimenti consecutivi sarà interdetto l\'accessola dalla postazione corrente.';
 
+$MESSAGE['error']['error_date']='La data di inizio deve essere precedente a quella di fine';
+
 
 /********** INFORMAZIONI E SUGGERIMENTI **********/
 $MESSAGE['warning']['blacklisted'] = 'Questa postazione è stata esclusa dal gioco!';

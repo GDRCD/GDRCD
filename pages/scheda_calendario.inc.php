@@ -7,7 +7,13 @@
     }
     else{
         $pg=gdrcd_filter('out', $_REQUEST['pg']);
+        $me = gdrcd_filter('out',$_SESSION['login']);
+        $permessi  = gdrcd_filter('out',$_SESSION['permessi']);
     }
+
+    if ((CALENDAR and CALENDAR_PERSONAL and CALENDAR_PERSONAL_PUBLIC)
+        || (CALENDAR and CALENDAR_PERSONAL and $permessi >= ROLE_PERM)
+        || (CALENDAR and CALENDAR_PERSONAL and $pg == $me)) {
     /*Visualizzo la pagina*/
   ?>
     <div class="page_title">
@@ -62,7 +68,7 @@
                 </form>
 
                 <?php
-                if($_SESSION['permessi']>=MODERATOR){
+                if(($permessi>=MODERATOR)||($pg == $me)){
                     ?>
                     <form action="main.php?page=scheda_calendario&pg=<?=$pg?>" method="post">
                         <input hidden value="new" name="op">
@@ -89,3 +95,7 @@
 
 
 <script src='pages/scheda/calendario/calendar.js'></script>
+
+<?php
+}
+    ?>

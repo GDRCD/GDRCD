@@ -81,10 +81,10 @@
                      class="immagine_luogo" alt="<?php echo gdrcd_filter('out', $record['descrizione']); ?>"
                      title="<?php echo gdrcd_filter('out', $record['descrizione']); ?>">
                 <?php
-                if(CALENDAR && CALENDAR_POPUP){
-                    echo '<a href="javascript:modalWindow(\'calendar\', \'Calendario\', \'popup.php?page=calendario\');">Calendario</a>';
+                 if(CALENDAR && CALENDAR_POPUP){
+                    echo '<a href="javascript:modalWindow(\'calendar\', \'Calendario\', \'popup.php?page=calendario\');" style="font-weight: bold">Calendario</a>';
                 }elseif (CALENDAR){
-                    echo '<a href="main.php?page=calendario">Calendario</a>';
+                    echo '<a href="main.php?page=calendario" style="font-weight: bold">Calendario</a>';
                 }
 
 

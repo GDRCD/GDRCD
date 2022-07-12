@@ -1,5 +1,18 @@
 <?php
-$loaded_record=gdrcd_query("SELECT * FROM eventi_personaggio WHERE personaggio='".gdrcd_filter('out',$_POST['pg'])."' AND id=".gdrcd_filter('num',$_POST['id'])." LIMIT 1 ");
+
+if (isset($_REQUEST['pg']) === false) {
+    echo gdrcd_filter('out', $MESSAGE['error']['unknonw_character_sheet']);
+    exit();
+}else{
+    $pg=gdrcd_filter('out', $_REQUEST['pg']);
+    $me = gdrcd_filter('out',$_SESSION['login']);
+    $permessi  = gdrcd_filter('out',$_SESSION['permessi']);
+}
+if ((CALENDAR and CALENDAR_PERSONAL and CALENDAR_PERSONAL_PUBLIC)
+    || (CALENDAR and CALENDAR_PERSONAL and $permessi >= ROLE_PERM)
+    || (CALENDAR and CALENDAR_PERSONAL and $pg == $me)) {
+
+    $loaded_record=gdrcd_query("SELECT * FROM eventi_personaggio WHERE personaggio='".gdrcd_filter('out',$_POST['pg'])."' AND id=".gdrcd_filter('num',$_POST['id'])." LIMIT 1 ");
 ?>
 
 <form action="main.php?page=scheda_calendario&pg=<?=gdrcd_filter('out',$_POST['pg'])?>" method="post" class="form_gestione">
@@ -37,3 +50,6 @@ $loaded_record=gdrcd_query("SELECT * FROM eventi_personaggio WHERE personaggio='
                 <input type="submit" class="button" value="<?php echo gdrcd_filter('out','inserisci');?>" />
         </div>
     </form>
+<?php
+}
+?>
