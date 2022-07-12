@@ -451,11 +451,12 @@ class Gruppi extends BaseClass
      * @note Cronjob di assegnazione dei salari giornalieri
      * @return void
      */
-    public function cronSalaries(){
+    public function cronSalaries()
+    {
 
         $pgs = Personaggio::getInstance()->getAllPg();
 
-        foreach ($pgs as $pg){
+        foreach ($pgs as $pg) {
             $id = Filters::int($pg['id']);
 
             //**! Tenere divisi i totali di ogni singola categoria, per poter inviare messaggi
@@ -466,20 +467,20 @@ class Gruppi extends BaseClass
 
             // STIPENDI DA RUOLI
             $ruoli = GruppiRuoli::getInstance()->getCharacterRolesSalaries($id);
-            foreach ($ruoli as $ruolo){
+            foreach ($ruoli as $ruolo) {
                 $group_id = Filters::int($ruolo['id']);
                 $group_name = Filters::out($ruolo['nome']);
                 $corp_money = Filters::int($ruolo['denaro']);
                 $stipendio = Filters::int($ruolo['stipendio']);
 
-                if(!Gruppi::getInstance()->payFromMoney()) {
+                if (!Gruppi::getInstance()->payFromMoney()) {
                     $totale_ruoli += Filters::int($stipendio);
-                } else{
+                } else {
 
-                    if($corp_money && ($corp_money >= $stipendio)){
+                    if ($corp_money && ($corp_money >= $stipendio)) {
                         $totale_ruoli += Filters::int($stipendio);
                         DB::query("UPDATE gruppi SET denaro=denaro-'{$stipendio}' WHERE id='{$group_id}' LIMIT 1");
-                    } else{
+                    } else {
 
                         // TODO Sostituire pg name con pg id all'invio messaggio
                         $titolo = Filters::in('Stipendio non depositato');
@@ -492,50 +493,50 @@ class Gruppi extends BaseClass
 
             // STIPENDI DA LAVORI
             $lavori = GruppiLavori::getInstance()->getCharacterWorksSalaries($id);
-            foreach ($lavori as $lavoro){
+            foreach ($lavori as $lavoro) {
                 $totale_lavori += Filters::int($lavoro['stipendio']);
             }
 
             //STIPENDI EXTRA
-            $extra = GruppiStipendiExtra::getInstance()->getPgExtraEarns($id,'gruppi_stipendi_extra.*,gruppi.denaro,gruppi.nome AS group_name');
-            foreach ($extra as $extra_earn){
-                $extra_id = Filters::int($extra_earn['id']);
-                $last_exec = Filters::out($extra_earn['last_exec']);
-                $interval = Filters::int($extra_earn['interval']);
-                $interval_type = Filters::out($extra_earn['interval_type']);
-                $extra_val = Filters::int($extra_earn['valore']);
-                $group_id = Filters::int($extra_earn['gruppo']);
-                $corp_money = Filters::int($extra_earn['denaro']);
-                $group_name = Filters::out($extra_earn['group_name']);
+            if (GruppiStipendiExtra::getInstance()->activeExtraEarn()) {
+                $extra = GruppiStipendiExtra::getInstance()->getPgExtraEarns($id, 'gruppi_stipendi_extra.*,gruppi.denaro,gruppi.nome AS group_name');
+                foreach ($extra as $extra_earn) {
+                    $extra_id = Filters::int($extra_earn['id']);
+                    $last_exec = Filters::out($extra_earn['last_exec']);
+                    $interval = Filters::int($extra_earn['interval']);
+                    $interval_type = Filters::out($extra_earn['interval_type']);
+                    $extra_val = Filters::int($extra_earn['valore']);
+                    $group_id = Filters::int($extra_earn['gruppo']);
+                    $corp_money = Filters::int($extra_earn['denaro']);
+                    $group_name = Filters::out($extra_earn['group_name']);
 
-                if(CarbonWrapper::needExec($interval,$interval_type,$last_exec)){
+                    if (CarbonWrapper::needExec($interval, $interval_type, $last_exec)) {
 
-                    if(!Gruppi::getInstance()->payFromMoney()) {
-                        $totale_extra += Filters::int($extra_val);
-                    } else{
-                        if($corp_money && ($corp_money >= $extra_val)){
+                        if (!Gruppi::getInstance()->payFromMoney()) {
                             $totale_extra += Filters::int($extra_val);
-                            DB::query("UPDATE gruppi SET denaro=denaro-'{$extra_val}' WHERE id='{$group_id}' LIMIT 1");
-                        } else{
-                            // TODO Sostituire pg name con pg id all'invio messaggio
-                            $titolo = Filters::in('Stipendio non depositato');
-                            $testo = Filters::in("Il gruppo '{$group_name}' non ha abbastanza soldi per pagare il tuo stipendio extra di {$extra_val} dollari.");
-                            DB::query("INSERT INTO messaggi(mittente,destinatario,tipo,oggetto,testo) VALUES('System','{$id}',0,'{$titolo}','{$testo}') ");
+                        } else {
+                            if ($corp_money && ($corp_money >= $extra_val)) {
+                                $totale_extra += Filters::int($extra_val);
+                                DB::query("UPDATE gruppi SET denaro=denaro-'{$extra_val}' WHERE id='{$group_id}' LIMIT 1");
+                            } else {
+                                // TODO Sostituire pg name con pg id all'invio messaggio
+                                $titolo = Filters::in('Stipendio non depositato');
+                                $testo = Filters::in("Il gruppo '{$group_name}' non ha abbastanza soldi per pagare il tuo stipendio extra di {$extra_val} dollari.");
+                                DB::query("INSERT INTO messaggi(mittente,destinatario,tipo,oggetto,testo) VALUES('System','{$id}',0,'{$titolo}','{$testo}') ");
+                            }
                         }
+
+                        DB::query("UPDATE gruppi_stipendi_extra SET last_exec=NOW() WHERE id='{$extra_id}' LIMIT 1");
                     }
-
-                    DB::query("UPDATE gruppi_stipendi_extra SET last_exec=NOW() WHERE id='{$extra_id}' LIMIT 1");
                 }
-
             }
+
 
             // TOTALE COMPLESSIVO
             $totale = ($totale_lavori + $totale_ruoli + $totale_extra);
 
-            var_dump('extra: '.$totale_extra);
-
             // ASSEGNAZIONE DEL DENARO AL PG
-            Personaggio::updatePgData($id,"banca=banca+'{$totale}'");
+            Personaggio::updatePgData($id, "banca=banca+'{$totale}'");
         }
     }
 }
