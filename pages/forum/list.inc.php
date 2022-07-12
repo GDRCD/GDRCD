@@ -11,9 +11,7 @@ $ultimotipo = -1;
             <?php
             while($row = gdrcd_query($result, 'fetch')) {
 
-                // Controllo i permessi di visualizzazione del forum
-                if((($row['tipo'] == SOLORAZZA) && ($_SESSION['id_razza'] != $row['proprietari']) && ($_SESSION['permessi'] < MODERATOR)) || (($row['tipo'] == SOLOGILDA) && (strpos($_SESSION['gilda'], '*'.$row['proprietari'].'*') === false) && ($_SESSION['permessi'] < MODERATOR)) || (($row['tipo'] >= SOLOMASTERS) && ($_SESSION['permessi'] < GAMEMASTER)) || (($row['tipo'] >= SOLOMODERATORS) && ($_SESSION['permessi'] < MODERATOR))) {
-                    // Se non possiedo i permessi, non mostro la sezione
+                if(!forumControl(gdrcd_filter('out',$row['tipo']),$row['proprietari'])){
                     continue;
                 }
 
