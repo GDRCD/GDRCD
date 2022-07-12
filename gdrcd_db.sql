@@ -462,6 +462,24 @@ CREATE TABLE IF NOT EXISTS `gruppi_ruoli` (
     PRIMARY KEY (`id`)
     ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `personaggio_ruolo`
+--
+
+CREATE TABLE IF NOT EXISTS `gruppi_stipendi_extra` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `nome` varchar(255) NOT NULL,
+    `personaggio` varchar(255) NOT NULL,
+    `gruppo` int NOT NULL,
+    `valore` int NOT NULL,
+    `interval` int NOT NULL DEFAULT 60,
+    `interval_type` varchar(255) NOT NULL DEFAULT 'minutes',
+    `last_exec` datetime DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 -----------------------------------------------------------
 
 --
