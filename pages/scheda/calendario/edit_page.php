@@ -40,7 +40,7 @@ if ((CALENDAR and CALENDAR_PERSONAL and CALENDAR_PERSONAL_PUBLIC)
         </div>
         <div class='form_label'>Data fine indicativa</div>
         <div class='form_field'>
-            <input type="datetime-local"  name="end"  value="<?=gdrcd_filter('out',$loaded_record['end']); ?>" >
+            <input type="datetime-local"  name="end"  value="<?=gdrcd_filter('out',$loaded_record['end']); ?>" required>
         </div>
         <!-- bottoni -->
         <div class='form_submit'>

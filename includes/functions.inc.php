@@ -622,7 +622,7 @@ function gdrcd_format_time($time_in)
 /**
  * Funzione di formattazione data completa nel formato italiano
  * @param $datetime_in : la data e ora in formato leggibile da strtotime()
- * @return la data/ora nel formato DD/MM/YYYY hh:mm
+ * @return string la data/ora nel formato DD/MM/YYYY hh:mm
  */
 function gdrcd_format_datetime($datetime_in)
 {
@@ -631,12 +631,22 @@ function gdrcd_format_datetime($datetime_in)
 
 /**
  * Funzione di formattazione data completa nel formato standard del database
- * @param $datetime_in : la data e ora in formato leggibile da strtotime()
- * @return la data/ora nel formato YYYY-MM-DD hh:mm
+ * @param string $datetime_in : la data e ora in formato leggibile da strtotime()
+ * @return string la data/ora nel formato YYYY-MM-DD hh:mm
  */
 function gdrcd_format_datetime_standard($datetime_in)
 {
     return date('Y-m-d H:i', strtotime($datetime_in));
+}
+
+/**
+ * Funzione di formattazione data completa nel formato standard del database
+ * @param string $datetime_in : la data e ora in formato leggibile da strtotime()
+ * @return string la data/ora nel formato YYYY-MM-DD hh:mm
+ */
+function gdrcd_format_datetime_timestamp($datetime_in)
+{
+    return strtotime($datetime_in);
 }
 
 /**

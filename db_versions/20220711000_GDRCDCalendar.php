@@ -11,8 +11,8 @@ class GDRCDCalendar extends DbMigration
             CREATE TABLE IF NOT EXISTS `eventi` (
                 `id` INT(11) NOT NULL AUTO_INCREMENT,
                 `title`  INT(11) NULL DEFAULT NULL,
-                `start` DATETIME NOT NULL DEFAULT,
-                `end` DATETIME NULL DEFAULT NULL DEFAULT,
+                `start` DATETIME NOT NULL,
+                `end` DATETIME  NOT NULL,
                 `titolo` VARCHAR(250) DEFAULT NULL,
                 `descrizione` TEXT DEFAULT NULL,
                 `colore`  INT(11) NULL DEFAULT NULL,
@@ -23,8 +23,8 @@ class GDRCDCalendar extends DbMigration
             CREATE TABLE IF NOT EXISTS `eventi_personaggio` (
                 `id` INT(11) NOT NULL AUTO_INCREMENT,
                 `title`  INT(11) NULL DEFAULT NULL,
-                `start` DATETIME NOT NULL DEFAULT,
-                `end` DATETIME NULL DEFAULT NULL DEFAULT,
+                `start` DATETIME NOT NULL,
+                `end` DATETIME  NOT NULL,
                 `titolo` VARCHAR(250) DEFAULT NULL,
                 `descrizione` TEXT DEFAULT NULL,
                 `colore`  INT(11) NULL DEFAULT NULL,
@@ -54,7 +54,7 @@ class GDRCDCalendar extends DbMigration
         );
 
         gdrcd_query("
-            INSERT INTO `eventi_tipo` (`title`, `permessi`) 
+            INSERT INTO `eventi_tipo` (`title`) 
             VALUES ('QUEST'),
                    ('ROLE'),
                    ('GRUPPO'),

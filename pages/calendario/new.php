@@ -23,7 +23,7 @@
         </div>
         <div class='form_label'>Data fine indicativa</div>
         <div class='form_field'>
-            <input type="datetime-local"  name="end" >
+            <input type="datetime-local"  name="end" required>
         </div>
         <!-- bottoni -->
         <div class='form_submit'>

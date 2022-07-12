@@ -6,14 +6,18 @@ switch ($_POST['op']) {
 
     case 'save_new':
         $title = gdrcd_filter('int', $_POST['title']);
-        $start = gdrcd_format_datetime_standard($_POST['start']);
-        $end = ($_POST['end'])? "'".gdrcd_format_datetime_standard($_POST['end'])."'" : 'NULL';
+        $start = gdrcd_filter('in', $_POST['start']);
+        $end = gdrcd_filter('in', $_POST['end']);
         $titolo = gdrcd_filter('in', $_POST['titolo']);
         $descrizione = gdrcd_filter('in', $_POST['descrizione']);
         $colore = gdrcd_filter('int', $_POST['colore']);
-        if(($start<$end)||(empty($end))){
+
+        $start_control = gdrcd_format_datetime_timestamp($start);
+        $end_control = gdrcd_format_datetime_timestamp($end);
+
+        if(($start_control<$end_control)||(empty($end))){
             gdrcd_query("INSERT INTO eventi (title, start, end, titolo, descrizione, colore)  VALUES
-            ('{$title}', '{$start}',{$end} ,'{$titolo}','{$descrizione}', '{$colore}') ");
+            ('{$title}', '{$start}','{$end}' ,'{$titolo}','{$descrizione}', '{$colore}') ");
         }else {
             echo gdrcd_filter('out', $MESSAGE['error']['error_date']);
         }
@@ -22,17 +26,22 @@ switch ($_POST['op']) {
     case 'save_edit':
         $id = gdrcd_filter('int', $_POST['id']);
         $title = gdrcd_filter('int', $_POST['title']);
-        $start = gdrcd_format_datetime_standard($_POST['start']);
-        $end = ($_POST['end'])? "'".gdrcd_format_datetime_standard($_POST['end'])."'" : 'NULL';
+        $start = gdrcd_filter('in', $_POST['start']);
+        $end = gdrcd_filter('in', $_POST['end']);
         $titolo = gdrcd_filter('in', $_POST['titolo']);
         $descrizione = gdrcd_filter('in', $_POST['descrizione']);
         $colore = gdrcd_filter('int', $_POST['colore']);
-        if(($start<$end)||(empty($end))){
+
+        $start_control = gdrcd_format_datetime_timestamp($start);
+        $end_control = gdrcd_format_datetime_timestamp($end);
+
+        if($start_control>$end_control){
+            echo gdrcd_filter('out', $MESSAGE['error']['error_date']);
+            break;
+        }else {
             gdrcd_query("UPDATE  eventi 
                 SET title = '{$title}',start='{$start}',  end='{$end}' ,titolo='{$titolo}',descrizione='{$descrizione}', colore='{$colore}'
                 WHERE id='{$id}' LIMIT 1 ");
-        }else {
-            echo gdrcd_filter('out', $MESSAGE['error']['error_date']);
         }
         break;
     case 'delete':
