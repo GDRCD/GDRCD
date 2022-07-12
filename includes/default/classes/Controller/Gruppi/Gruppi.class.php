@@ -9,6 +9,8 @@ class Gruppi extends BaseClass
 
     protected
         $groups_active,
+        $group_icon_chat,
+        $group_icon_present,
         $pay_from_money;
 
     protected function __construct()
@@ -16,6 +18,8 @@ class Gruppi extends BaseClass
         parent::__construct();
         $this->groups_active = Functions::get_constant('GROUPS_ACTIVE');
         $this->pay_from_money = Functions::get_constant('GROUPS_PAY_FROM_MONEY');
+        $this->group_icon_chat = Functions::get_constant('GROUPS_ICON_CHAT');
+        $this->group_icon_present = Functions::get_constant('GROUPS_ICON_PRESENT');
     }
 
     /** CONFIG */
@@ -38,6 +42,26 @@ class Gruppi extends BaseClass
     public function payFromMoney(): bool
     {
         return $this->pay_from_money;
+    }
+
+    /**
+     * @fn activeGroupIconChat
+     * @note Controlla se sono attive le icone gruppo in chat
+     * @return bool
+     */
+    public function activeGroupIconChat(): bool
+    {
+        return $this->group_icon_chat;
+    }
+
+    /**
+     * @fn activeGroupIconPresent
+     * @note Controlla se sono attive le icone gruppo nei presenti
+     * @return bool
+     */
+    public function activeGroupIconPresent(): bool
+    {
+        return $this->group_icon_present;
     }
 
     /** PERMESSI */

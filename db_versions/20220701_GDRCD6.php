@@ -93,6 +93,8 @@ class GDRCD6 extends DbMigration
                 ('GROUPS_PAY_FROM_MONEY',1,'Gruppi','Stipendi da possedimento gruppi','Stipendi da possedimento gruppi','bool',1),
                 ('GROUPS_FOUNDS',1,'Gruppi','Fondi Gruppo','Introiti automatizzati per gruppi','bool',1),
                 ('GROUPS_EXTRA_EARNS',1,'Gruppi','Stipendi extra Gruppo','Introiti extra per personaggi da gruppi','bool',1),
+                ('GROUPS_ICON_CHAT',1,'Gruppi','Icone gruppo in chat','Icone gruppi in chat','bool',1),
+                ('GROUPS_ICON_PRESENT',1,'Gruppi','Icone gruppo nei presenti','Icone gruppi in chat','bool',1),
                 ('WORKS_ACTIVE',1,'Gruppi','Lavori attivi','Lavori attivi?','bool',1),
                 ('WORKS_DIMISSIONS_DAYS',1,'Gruppi','Giorni per dimissioni','Giorni per dimissioni','bool',1),
                 ('WORKS_MAX',3,'Gruppi','Massimo lavori liberi','Numero massimo di lavori liberi','int',1),

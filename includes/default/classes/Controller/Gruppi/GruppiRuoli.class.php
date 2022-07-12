@@ -133,22 +133,6 @@ class GruppiRuoli extends Gruppi
     }
 
     /**
-     * @fn getCharacterRolesNumbers
-     * @note Conta quanti ruoli ha un personaggio
-     * @param int $pg
-     * @return int
-     */
-    public function getCharacterRolesNumbers(int $pg): int
-    {
-
-        $groups = DB::query("
-                SELECT COUNT(personaggio_ruolo.id) AS 'TOT' FROM personaggio_ruolo 
-                WHERE personaggio_ruolo.personaggio ='{$pg}'");
-
-        return Filters::int($groups['TOT']);
-    }
-
-    /**
      * @fn getCharacterSalaries
      * @note Ottiene tutti gli stipendi dei ruoli di un personaggio
      * @param int $pg
@@ -443,7 +427,7 @@ class GruppiRuoli extends Gruppi
 
         if ($this->permissionServiceGroups($group)) {
 
-            $roles_number = $this->getCharacterRolesNumbers($personaggio);
+            $roles_number = PersonaggioRuolo::getInstance()->getCharacterRolesNumbers($personaggio);
 
             if ($roles_number < $this->groups_max_roles) {
 

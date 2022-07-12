@@ -18,6 +18,7 @@ $chat_abi_class = ChatAbilita::getInstance();
 ?>
 
 <div class="chat_bottom">
+
     <form class="ajax_form chat_form_ajax" action="chat/chat_ajax.php" data-callback="invioAzioneSuccess" data-swal="false" data-reset="false">
         <div class="chat_text chat_internal_box">
 
@@ -36,6 +37,10 @@ $chat_abi_class = ChatAbilita::getInstance();
                         <option value="MOD">Moderazione</option>
                     <?php } ?>
 
+                </select>
+
+                <select name="whispTo" class="whisp-chosen" data-placeholder="Sussurra a:">
+                    <?=Personaggio::getInstance()->listPgs();?>
                 </select>
             </div>
 
