@@ -6,7 +6,7 @@ if( ! empty($row)) {
     $chiuso = $row['chiuso'];
 
     /*Restrizione di accesso i forum admin e master*/
-    if((($row['tipo'] == SOLORAZZA) && ($_SESSION['id_razza'] != $row['proprietari']) && ($_SESSION['permessi'] < MODERATOR)) || (($row['tipo'] == SOLOGILDA) && (strpos($_SESSION['gilda'], '*'.$row['proprietari'].'*') === false) && ($_SESSION['permessi'] < MODERATOR)) || (($row['tipo'] >= SOLOMASTERS) && ($_SESSION['permessi'] < GAMEMASTER)) || (($row['tipo'] >= SOLOMODERATORS) && ($_SESSION['permessi'] < MODERATOR))) {
+    if(!forumControl($row['tipo'],$row['proprietari'])){
         echo '<div class="error">'.gdrcd_filter('out', $MESSAGE['error']['not_allowed']).'</div>';
     } else {
         //Inserimento il record al pg come thread letto

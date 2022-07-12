@@ -772,7 +772,7 @@ function gdrcd_redirect($url, $tempo = false)
 /**
  * Sostituisce eventuali parentesi angolari in coppia in una stringa con parentesi quadre
  * @param string $str : la stringa da controllare
- * @return $str con la coppie di parentesi angolari sostituite con parentesi quadre
+ * @return string $str con la coppie di parentesi angolari sostituite con parentesi quadre
  */
 function gdrcd_angs($str)
 {
@@ -889,4 +889,47 @@ function gdrcd_brute_debug($args)
         gdrcd_dump($arg);
     }
     die('FINE');
+}
+
+/**
+ * Funzione controllo permessi forum
+ * @param int $tipo
+ * @param mixed $proprietari
+ * @return bool
+ */
+function forumControl($tipo, $proprietari = '')
+{
+
+
+    $tipo = gdrcd_filter('num', $tipo);
+    $perm = gdrcd_filter('num', $_SESSION['permessi']);
+    $razza = gdrcd_filter('num', $_SESSION['id_razza']);
+    $gilda = gdrcd_filter('out', $_SESSION['gilda']);
+
+    switch ($tipo) {
+        case PERTUTTI:
+        case INGIOCO:
+            return true;
+
+        case SOLORAZZA:
+            return (($razza == $proprietari) || ($perm >= MODERATOR));
+
+        case SOLOGILDA:
+
+            if (empty($proprietari)) {
+                return false;
+            } else {
+                return (strpos($gilda, '*' . $proprietari . '*') || ($perm >= MODERATOR));
+            }
+
+        case SOLOMASTERS:
+            return ($perm >= GAMEMASTER);
+
+        case SOLOMODERATORS:
+            return ($perm >= MODERATOR);
+
+        default:
+            return ($perm >= ADMIN);
+    }
+
 }

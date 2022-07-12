@@ -23,7 +23,7 @@ if($row['autore'] == $_SESSION['login'] || ($row['autore'] != $_SESSION['login']
 } else {
     ?>
     <div class="warning">
-        Furbacchione ;-)
+        Permesso negato.
     </div>
     <?php
 }
