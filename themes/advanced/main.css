@@ -106,6 +106,17 @@ div.success {
     color: #0f5132;
 }
 
+div.warning.mysql, 
+div.error.mysql {
+	text-align:left;
+	font-weight:normal;
+}
+
+div.warning.mysql summary, 
+div.error.mysql summary{
+	margin-top:1em;
+	font-weight:bold;
+}
 
 div.link_back {
     text-align: center;
