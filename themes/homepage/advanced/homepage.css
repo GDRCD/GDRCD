@@ -90,6 +90,18 @@ div.warning, div.error {
     color: #970b0b;
 }
 
+div.warning.mysql, 
+div.error.mysql {
+	text-align:left;
+	font-weight:normal;
+}
+
+div.warning.mysql summary, 
+div.error.mysql summary{
+	margin-top:1em;
+	font-weight:bold;
+}
+
 div.link_back {
     text-align: center;
     background-color: #d1d1d1;
