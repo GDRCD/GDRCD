@@ -923,16 +923,10 @@ function forumControl($tipo, $proprietari = '')
             }
 
         case SOLOMASTERS:
-            return (($perm == GAMEMASTER) || ($perm == MODERATOR) || ($perm >= ADMIN));
+            return ($perm >= GAMEMASTER);
 
         case SOLOMODERATORS:
-            return (($perm == ADMIN) || ($perm >= ADMIN));
-
-        case MODEADMIN:
-            return (($perm >= ADMIN) || ($perm == MODERATOR));
-
-        case CAPICORP:
-            return ($perm >= GUILDMODERATOR);
+            return ($perm >= MODERATOR);
 
         default:
             return ($perm >= ADMIN);
