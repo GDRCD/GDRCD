@@ -2,7 +2,7 @@
 //Permessi
 $row = gdrcd_query("SELECT tipo, proprietari FROM araldo WHERE id_araldo = ".gdrcd_filter('num', $_REQUEST['what'])."");
 
-if((($row['tipo'] == SOLORAZZA) && ($_SESSION['id_razza'] != $row['proprietari']) && ($_SESSION['permessi'] < MODERATOR)) || (($row['tipo'] == SOLOGILDA) && (strpos($_SESSION['gilda'], '*'.$row['proprietari'].'*') === false) && ($_SESSION['permessi'] < MODERATOR)) || (($row['tipo'] >= SOLOMASTERS) && ($_SESSION['permessi'] < GAMEMASTER)) || (($row['tipo'] >= SOLOMODERATORS) && ($_SESSION['permessi'] < MODERATOR))) {
+if(!forumControl($row['tipo'],$row['proprietari'])){
     /*Restrizione di visualizzazione solo master e admin*/
     echo '<div class="error">'.gdrcd_filter('out', $MESSAGE['error']['not_allowed']).'</div>';
     ?>
