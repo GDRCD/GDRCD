@@ -11,9 +11,9 @@
     È possibile consultare i cambiamenti che vengono effettuatti di versione in versione nei <a href="https://github.com/GDRCD/GDRCD/releases" target="_blank">changelog ufficiali</a> del software.
 </p>
 <p>
-    I files <strong>non sono retrocompatibili</strong> nei riguardi di <strong>GDRCD 5.4</strong> di <strong>breaker</strong>,
-    tuttavia il software è progettato per <strong>rilevare il database di un installazione precedente ed aggiornarlo autonomamente</strong>
-    al fine di renderlo compatibile con la presente versione.
+    La versione 5.6 <strong>non è retrocompatibile</strong> con le versioni inferiori alla 5.5,
+    poichè dalla versione 5.5 è stato introdotto un sistema di <strong>rilevamento di modifiche progressive al database di un installazione precedente con aggiornamento automatico</strong>
+    al fine di rendere le versioni superiori alla 5.5 compatibili con quelle successive.
 </p>
 <p>
     Troverai le istruzioni su come utilizzare GDRCD nel <a href="ISTRUZIONI.txt">manuale</a> allegato.
