@@ -113,7 +113,7 @@ class Cronjob extends BaseClass
      */
     public function endExec(int $id):void
     {
-        DB::query("UPDATE cronjob SET in_exec=0 WHERE id='{$id}' LIMIT 1");
+        DB::query("UPDATE cronjob SET in_exec=0,last_exec=NOW() WHERE id='{$id}' LIMIT 1");
     }
 
     /*** FUNCTIONS ***/

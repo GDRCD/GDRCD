@@ -1,31 +1,16 @@
 <?php
 
-Router::loadRequired(); # Inserisco il required se non presente, per futuro spostamento in modale/ajax
+Router::loadRequired();
 
-$cls = GruppiStipendiExtra::getInstance(); # Inizializzo classe
+$gruppi = GruppiStipendiExtra::getInstance();
 
-if($cls->permissionServiceGroups() && $cls->activeExtraEarn()){ # Metodo di controllo per accesso alla pagina di gestione
+if ($gruppi->activeExtraEarn()) {
+    ?>
 
-?>
-        <div class="general_incipit">
-            <div class="title"> Gestione Stipendi extra </div>
-            <div class="subtitle">Gestione degli stipendi extra dai gruppi ai personaggi</div>
+    <div class="group_extra_earn_container">
+        <div class="general_title">Aggiunta Stipendio Extra</div>
 
-            Da questa pagina e' possibile:
-            <ul>
-                <li>Creare uno stipendio extra per un personaggio</li>
-                <li>Modificare uno stipendio extra per un personaggio</li>
-                <li>Eliminare uno stipendio extra per un personaggio</li>
-            </ul>
-
-        </div>
-
-    <div class="form_container group_earn_extra_management">
-
-        <!-- INSERT -->
-        <form class="form ajax_form" action="gestione/gruppi/stipendiExtra/gestione_stipendi_extra_ajax.php" data-callback="updateFounds">
-
-            <div class="form_title">Crea fondo gruppo</div>
+        <form class="ajax_form" action="servizi/amministrazioneGilde/ajax.php" data-callback="updateGroupEarns">
 
             <div class="single_input">
                 <div class="label">Nome</div>
@@ -35,7 +20,7 @@ if($cls->permissionServiceGroups() && $cls->activeExtraEarn()){ # Metodo di cont
             <div class="single_input">
                 <div class="label">Gruppo</div>
                 <select name="gruppo" required>
-                    <?= Gruppi::getInstance()->listGroups(); ?>
+                    <?= Gruppi::getInstance()->listAvailableGroups(); ?>
                 </select>
             </div>
 
@@ -68,23 +53,22 @@ if($cls->permissionServiceGroups() && $cls->activeExtraEarn()){ # Metodo di cont
                 <input type="datetime-local" name="last_exec" required>
             </div>
 
-
             <div class="single_input">
-                <input type="hidden" name="action" value="op_insert"> <!-- OP NEEDED -->
-                <input type="submit" value="Crea">
+                <input type="hidden" name="action" value="new_extra_earn"> <!-- OP NEEDED -->
+                <input type="submit" value="Assegna">
             </div>
 
         </form>
 
-        <!-- EDIT -->
-        <form class="form edit_form ajax_form" action="gestione/gruppi/stipendiExtra/gestione_stipendi_extra_ajax.php" data-callback="updateFounds">
+        <div class="general_title">Modifica Stipendio Extra</div>
 
-            <div class="form_title">Modifica fondo gruppo</div>
+        <form class="ajax_form edit_form" action="servizi/amministrazioneGilde/ajax.php" data-callback="updateGroupEarns">
+
 
             <div class="single_input">
-                <div class="label">Stipendi Extra</div>
-                <select name="id" required>
-                    <?= $cls->listExtraEarns(); ?>
+                <div class="label">Stipendi extra</div>
+                <select name="id" id="id" required>
+                    <?= GruppiStipendiExtra::getInstance()->listAvailableExtraEarns(); ?>
                 </select>
             </div>
 
@@ -96,7 +80,7 @@ if($cls->permissionServiceGroups() && $cls->activeExtraEarn()){ # Metodo di cont
             <div class="single_input">
                 <div class="label">Gruppo</div>
                 <select name="gruppo" required>
-                    <?= Gruppi::getInstance()->listGroups(); ?>
+                    <?= Gruppi::getInstance()->listAvailableGroups(); ?>
                 </select>
             </div>
 
@@ -125,35 +109,34 @@ if($cls->permissionServiceGroups() && $cls->activeExtraEarn()){ # Metodo di cont
             </div>
 
             <div class="single_input">
-                <input type="hidden" name="action" value="op_edit"> <!-- OP NEEDED -->
-                <input type="submit" value="Modifica">
+                <input type="hidden" name="action" value="mod_extra_earn"> <!-- OP NEEDED -->
+                <input type="submit" value="Assegna">
             </div>
 
         </form>
 
-        <!-- DELETE -->
-        <form method="POST" class="form ajax_form" action="gestione/gruppi/stipendiExtra/gestione_stipendi_extra_ajax.php" data-callback="updateFounds">
+        <div class="general_title">Rimuovi Stipendio Extra</div>
 
-            <div class="form_title">Elimina fondo gruppo</div>
+        <form class="ajax_form" action="servizi/amministrazioneGilde/ajax.php" data-callback="updateGroupEarns">
 
             <div class="single_input">
-                <div class="label">Stipendi Extra</div>
-                <select name="id" required>
-                    <?= $cls->listExtraEarns(); ?>
+                <div class="label">Stipendi extra</div>
+                <select name="id" id="id" required>
+                    <?= GruppiStipendiExtra::getInstance()->listAvailableExtraEarns(); ?>
                 </select>
             </div>
 
             <div class="single_input">
-                <input type="hidden" name="action" value="op_delete"> <!-- OP NEEDED -->
-                <input type="submit" value="Elimina">
+                <input type="hidden" name="action" value="remove_extra_earn"> <!-- OP NEEDED -->
+                <input type="submit" value="Rimuovi">
             </div>
 
         </form>
 
+        <script src="<?=Router::getPagesLink('servizi/amministrazioneGilde/view_extra_earn.js');?>"></script>
+
+        <div class="link_back">
+            <a href="main.php?page=servizi/amministrazioneGilde/index">Torna indietro</a>
+        </div>
     </div>
-
-    <script src="<?= Router::getPagesLink('gestione/gruppi/stipendiExtra/gestione_stipendi_extra.js'); ?>"></script>
-    <div class="link_back"><a href="/main.php?page=gestione">Indietro</a> </div>
-
-
 <?php } ?>

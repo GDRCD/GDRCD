@@ -165,8 +165,8 @@ class GruppiRuoli extends Gruppi
     /**** LIST ****/
 
     /**
-     * @fn listGroups
-     * @note Genera gli option per i gruppi
+     * @fn listAvailableRoles
+     * @note Genera gli option per i ruoli disponibili
      * @return string
      */
     public function listAvailableRoles(): string

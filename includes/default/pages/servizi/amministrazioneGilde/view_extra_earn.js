@@ -23,9 +23,9 @@ $(function(){
 })
 
 
-function updateFounds(data) {
+function updateGroupEarns(data) {
     if (data) {
         let datas = JSON.parse(data);
-        $('.group_earn_extra_management .form').find('select[name="id"]').html(datas.earns_list)
+        $('.group_extra_earn_container .form').find('select[name="id"]').html(datas.earns_list)
     }
 }

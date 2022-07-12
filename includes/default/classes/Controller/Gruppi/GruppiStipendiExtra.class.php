@@ -28,7 +28,7 @@ class GruppiStipendiExtra extends Gruppi
      * @param string $val
      * @return bool|int|mixed|string
      */
-    public static function getAllExtraEarn(string $val = '*')
+    public function getAllExtraEarn(string $val = '*')
     {
         return DB::query("SELECT {$val}
                                 FROM gruppi_stipendi_extra 
@@ -42,7 +42,7 @@ class GruppiStipendiExtra extends Gruppi
      * @param string $val
      * @return bool|int|mixed|string
      */
-    public static function getExtraEarn(int $id, string $val = '*')
+    public function getExtraEarn(int $id, string $val = '*')
     {
         return DB::query("SELECT {$val}
                                 FROM gruppi_stipendi_extra 
@@ -56,7 +56,7 @@ class GruppiStipendiExtra extends Gruppi
      * @param string $val
      * @return bool|int|mixed|string
      */
-    public static function getPgExtraEarns(int $pg, string $val = '*')
+    public function getPgExtraEarns(int $pg, string $val = '*')
     {
         return DB::query("SELECT {$val}
                                 FROM gruppi_stipendi_extra 
@@ -67,15 +67,16 @@ class GruppiStipendiExtra extends Gruppi
     /**
      * @fn getGroupExtraEarns
      * @note Estrae gli stipendi extra dati da un gruppo
-     * @param int $group
+     * @param array $groups
      * @param string $val
      * @return bool|int|mixed|string
      */
-    public static function getGroupExtraEarns(int $group, string $val = '*')
+    public function getGroupExtraEarnsByIds(array $groups, string $val = '*')
     {
+        $toSearch = implode(',', $groups);
         return DB::query("SELECT {$val}
                                 FROM gruppi_stipendi_extra 
-                                WHERE personaggio_statistiche.gruppo = '{$group}' ", 'result');
+                                WHERE gruppi_stipendi_extra.gruppo IN ({$toSearch}) ", 'result');
     }
 
 
@@ -100,9 +101,22 @@ class GruppiStipendiExtra extends Gruppi
      * @note Controlla che si abbiano i permessi per gestire gli stipendi extra
      * @return bool
      */
-    public static function permissionMangeExtraEarn(): bool
+    public function permissionMangeExtraEarn(): bool
     {
         return Permissions::permission('MANAGE_GROUPS_EXTRA_EARN');
+    }
+
+    /**
+     * @fn permissionMangeExtraEarn
+     * @note Controlla che si abbiano i permessi per gestire gli stipendi extra
+     * @param int $id
+     * @return bool
+     */
+    public function permissionMangeSpecificEarn(int $id): bool
+    {
+        $earn_data = $this->getExtraEarn($id);
+        $group_id = Filters::int($earn_data['gruppo']);
+        return $this->haveGroupPower($group_id);
     }
 
     /*** LISTS ***/
@@ -115,6 +129,18 @@ class GruppiStipendiExtra extends Gruppi
     public function listExtraEarns(): string
     {
         $earns = $this->getAllExtraEarn();
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $earns);
+    }
+
+    /**
+     * @fn listAvailableExtraEarns
+     * @note Genera gli option per gli stipendi extra disponibili
+     * @return string
+     */
+    public function listAvailableExtraEarns(): string
+    {
+        $groups = $this->getAvailableGroups();
+        $earns = $this->getGroupExtraEarnsByIds($groups);
         return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $earns);
     }
 
@@ -218,9 +244,125 @@ class GruppiStipendiExtra extends Gruppi
             return [
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
-                'swal_message' => 'Tipo gruppo eliminato.',
+                'swal_message' => 'Stipendio extra eliminato.',
                 'swal_type' => 'success',
                 'earns_list' => $this->listExtraEarns()
+            ];
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
+        }
+    }
+
+    /*** AMMINISTRAZIONE GILDE ***/
+
+    /**
+     * @fn NewExtraEarnByBoss
+     * @note Inserisce un nuovo stipendio extra se sei il capo
+     * @param array $post
+     * @return array
+     */
+    public function NewExtraEarnByBoss(array $post): array
+    {
+        $group = Filters::int($post['gruppo']);
+
+        if ($this->haveGroupPower($group)) {
+
+            $id = Filters::in($post['id']);
+            $nome = Filters::text($post['nome']);
+            $pg = Filters::int($post['personaggio']);
+            $group = Filters::int($post['gruppo']);
+            $valore = Filters::int($post['denaro']);
+            $interval = Filters::int($post['interval']);
+            $interval_type = Filters::in($post['interval_type']);
+            $last_exec = Filters::in($post['last_exec']);
+
+
+            DB::query("INSERT INTO gruppi_stipendi_extra (`nome`, `personaggio`, `gruppo`, `valore`, `interval`, `interval_type`, `last_exec`)
+                            VALUES ('{$nome}', '{$pg}', '{$group}', '{$valore}', '{$interval}', '{$interval_type}', '{$last_exec}')");
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Stipendio extra creato.',
+                'swal_type' => 'success',
+                'earns_list' => $this->listAvailableExtraEarns()
+            ];
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
+        }
+    }
+
+    /**
+     * @fn ModExtraEarnByBoss
+     * @note Modifica un stipendio extra se sei il capo
+     * @param array $post
+     * @return array
+     */
+    public function ModExtraEarnByBoss(array $post): array
+    {
+        $id = Filters::in($post['id']);
+        $group = Filters::int($post['gruppo']);
+
+        if ($this->permissionMangeSpecificEarn($id) && $this->haveGroupPower($group)) {
+
+            $nome = Filters::text($post['nome']);
+            $pg = Filters::int($post['personaggio']);
+            $valore = Filters::int($post['denaro']);
+            $interval = Filters::int($post['interval']);
+            $interval_type = Filters::in($post['interval_type']);
+
+            DB::query("UPDATE gruppi_stipendi_extra 
+                            SET `nome` = '{$nome}', `personaggio` = '{$pg}', `valore` = '{$valore}', 
+                                `interval` = '{$interval}', `interval_type` = '{$interval_type}'
+                            WHERE id = '{$id}'");
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Stipendio extra modificato.',
+                'swal_type' => 'success',
+                'earns_list' => $this->listAvailableExtraEarns()
+            ];
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
+        }
+    }
+
+    /**
+     * @fn RemoveExtraEarnByBoss
+     * @note Elimina uno stipendio extra se sei il capo
+     * @param array $post
+     * @return array
+     */
+    public function RemoveExtraEarnByBoss(array $post): array
+    {
+        $id = Filters::in($post['id']);
+
+        if ($this->permissionMangeSpecificEarn($id)) {
+
+            DB::query("DELETE FROM gruppi_stipendi_extra WHERE id = '{$id}'");
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Stipendio extra eliminato.',
+                'swal_type' => 'success',
+                'earns_list' => $this->listAvailableExtraEarns()
             ];
         } else {
             return [

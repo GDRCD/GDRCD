@@ -139,6 +139,40 @@ class Gruppi extends BaseClass
         return Filters::int($sql['TOT']);
     }
 
+
+    /**
+     * @fn getAvailableGroups
+     * @note Estrae i gruppi che un personaggio puo' gestire
+     * @return array
+     */
+    public function getAvailableGroups(): array
+    {
+        $groups = DB::query("
+                    SELECT gruppi_ruoli.gruppo FROM gruppi_ruoli 
+                    LEFT JOIN personaggio_ruolo ON personaggio_ruolo.ruolo = gruppi_ruoli.id AND personaggio_ruolo.personaggio ='{$this->me_id}'
+                    WHERE gruppi_ruoli.poteri = 1 AND personaggio_ruolo.id IS NOT NULL", 'result');
+
+        $groups_list = [];
+
+        foreach ($groups as $group) {
+            $groups_list[] = $group['gruppo'];
+        }
+
+        return $groups_list;
+    }
+
+    /**
+     * @fn getAllGroupsByIds
+     * @note Estrae tutti i gruppi da piu' id
+     * @param array $ids
+     * @param string $val
+     * @return bool|int|mixed|string
+     */
+    public function getAllGroupsByIds(array $ids, string $val = '*')
+    {
+        $toSearch = implode(',', $ids);
+        return DB::query("SELECT {$val} FROM gruppi WHERE id IN ({$toSearch})", 'result');
+    }
     /** LISTE */
 
     /**
@@ -151,6 +185,23 @@ class Gruppi extends BaseClass
         $groups = $this->getAllGroups();
         return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $groups);
     }
+
+    /**
+     * @fn listAvailableGroups
+     * @note Genera gli option per i gruppi disponibili
+     * @return string
+     */
+    public function listAvailableGroups(): string
+    {
+        if ($this->permissionManageGroups()) {
+            $roles = $this->getAllGroups();
+        } else {
+            $groups = $this->getAvailableGroups();
+            $roles = $this->getAllGroupsByIds($groups);
+        }
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $roles);
+    }
+
 
     /** AJAX */
 
@@ -181,6 +232,30 @@ class Gruppi extends BaseClass
         switch ($op) {
             case 'read':
                 $page = 'read.php';
+                break;
+            default:
+                $page = 'view.php';
+                break;
+        }
+
+        return $page;
+
+    }
+
+    /**
+     * @fn loadGroupAdministrationPage
+     * @note Index della pagina amministrazione dei gruppi
+     * @param string $op
+     * @return string
+     */
+    public function loadGroupAdministrationPage(string $op): string
+    {
+        $op = Filters::out($op);
+
+
+        switch ($op) {
+            case 'view_extra_earn':
+                $page = 'view_extra_earn.php';
                 break;
             default:
                 $page = 'view.php';
