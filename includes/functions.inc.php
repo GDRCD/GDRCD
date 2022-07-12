@@ -476,6 +476,47 @@ function gdrcd_controllo_permessi($permesso)
 }
 
 /**
+ * Funzione controllo permessi forum
+ * @param int $tipo
+ * @param mixed $proprietari
+ * @return bool
+ */
+function gdrcd_controllo_permessi_forum($tipo, $proprietari = '')
+{
+    $tipo = gdrcd_filter('num', $tipo);
+    $perm = gdrcd_filter('num', $_SESSION['permessi']);
+    $razza = gdrcd_filter('num', $_SESSION['id_razza']);
+    $gilda = gdrcd_filter('out', $_SESSION['gilda']);
+
+    switch ($tipo) {
+        case PERTUTTI:
+        case INGIOCO:
+            return true;
+
+        case SOLORAZZA:
+            return (($razza == $proprietari) || ($perm >= MODERATOR));
+
+        case SOLOGILDA:
+
+            if (empty($proprietari)) {
+                return false;
+            } else {
+                return (strpos($gilda, '*' . $proprietari . '*') || ($perm >= MODERATOR));
+            }
+
+        case SOLOMASTERS:
+            return ($perm >= GAMEMASTER);
+
+        case SOLOMODERATORS:
+            return ($perm >= MODERATOR);
+
+        default:
+            return ($perm >= SUPERUSER);
+    }
+}
+
+
+/**
  * Controlla se l'utente è loggato da pochi minuti. Utile per l'icona entra/esce
  * @param string $time : data in un formato leggibile da strtotime()
  * @return int
@@ -889,47 +930,4 @@ function gdrcd_brute_debug($args)
         gdrcd_dump($arg);
     }
     die('FINE');
-}
-
-/**
- * Funzione controllo permessi forum
- * @param int $tipo
- * @param mixed $proprietari
- * @return bool
- */
-function forumControl($tipo, $proprietari = '')
-{
-
-
-    $tipo = gdrcd_filter('num', $tipo);
-    $perm = gdrcd_filter('num', $_SESSION['permessi']);
-    $razza = gdrcd_filter('num', $_SESSION['id_razza']);
-    $gilda = gdrcd_filter('out', $_SESSION['gilda']);
-
-    switch ($tipo) {
-        case PERTUTTI:
-        case INGIOCO:
-            return true;
-
-        case SOLORAZZA:
-            return (($razza == $proprietari) || ($perm >= MODERATOR));
-
-        case SOLOGILDA:
-
-            if (empty($proprietari)) {
-                return false;
-            } else {
-                return (strpos($gilda, '*' . $proprietari . '*') || ($perm >= MODERATOR));
-            }
-
-        case SOLOMASTERS:
-            return ($perm >= GAMEMASTER);
-
-        case SOLOMODERATORS:
-            return ($perm >= MODERATOR);
-
-        default:
-            return ($perm >= ADMIN);
-    }
-
 }

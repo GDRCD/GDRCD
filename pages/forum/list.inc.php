@@ -11,7 +11,7 @@ $ultimotipo = -1;
             <?php
             while($row = gdrcd_query($result, 'fetch')) {
 
-                if(!forumControl(gdrcd_filter('out',$row['tipo']),$row['proprietari'])){
+                if(!gdrcd_controllo_permessi_forum(gdrcd_filter('out',$row['tipo']),$row['proprietari'])){
                     continue;
                 }
 

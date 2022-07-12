@@ -14,7 +14,7 @@ $thread = gdrcd_query("SELECT araldo.id_araldo, araldo.tipo, araldo.proprietari"
 
 if(gdrcd_query($thread, 'num_rows')) {
     $araldoData = gdrcd_query($thread, 'fetch');
-    if(forumControl($araldoData['tipo'],$araldoData['proprietari'])){
+    if(gdrcd_controllo_permessi_forum($araldoData['tipo'],$araldoData['proprietari'])){
         //Solo se il thread non è chiuso
         gdrcd_query("INSERT INTO messaggioaraldo (id_messaggio_padre, id_araldo, titolo, messaggio, autore, data_messaggio, data_ultimo_messaggio ) VALUES (".gdrcd_filter('num', $_POST['padre']).", ".gdrcd_filter('num', $araldoData['id_araldo']).", '".gdrcd_filter('in', $_POST['titolo'])."', '".gdrcd_filter('in', $_POST['messaggio'])."', '".gdrcd_filter('in', $_SESSION['login'])."', NOW(), NOW())");
 

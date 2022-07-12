@@ -6,7 +6,7 @@ if( ! empty($row)) {
     $chiuso = $row['chiuso'];
 
     /*Restrizione di accesso i forum admin e master*/
-    if(!forumControl($row['tipo'],$row['proprietari'])){
+    if(!gdrcd_controllo_permessi_forum($row['tipo'],$row['proprietari'])){
         echo '<div class="error">'.gdrcd_filter('out', $MESSAGE['error']['not_allowed']).'</div>';
     } else {
         //Inserimento il record al pg come thread letto
