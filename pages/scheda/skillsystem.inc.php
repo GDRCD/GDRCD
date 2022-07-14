@@ -10,9 +10,13 @@ while($row = gdrcd_query($abilita, 'fetch')) {
     $px_spesi += $px_abi;
     $ranks[$row['id_abilita']] = $row['grado'];
 }
-gdrcd_query($abilita, 'free');
 
-$px_totali_pg = $personaggio['esperienza'];
+$personaggio=gdrcd_query("SELECT id_razza, esperienza FROM personaggio WHERE nome='".gdrcd_filter('in', $_REQUEST['pg'])."'", 'query');
+
+
+$px_totali_pg = gdrcd_filter('int', $personaggio['esperienza']) ;
+
+
 ?>
 <div class="elenco_abilita"><!-- Elenco abilità -->
     <div class="titolo_box">
@@ -79,7 +83,7 @@ $px_totali_pg = $personaggio['esperienza'];
                         </td>
                         <td>
                             <div class="abilita_scheda_tank">
-                                <?php echo 0 + gdrcd_filter('out', $ranks[$row['id_abilita']]); ?>
+                                <?php echo 0 + gdrcd_filter('int', $ranks[$row['id_abilita']]); ?>
                             </div>
                         </td>
                         <td>
@@ -107,7 +111,7 @@ $px_totali_pg = $personaggio['esperienza'];
                         echo '</table></td>';
                     }
                 }//while
-            gdrcd_query($result, 'free');
+
             ?>
             </tr>
         </table>
