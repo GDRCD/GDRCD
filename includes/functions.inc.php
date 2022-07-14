@@ -263,27 +263,13 @@ function gdrcd_mysql_error($details = false)
 {
     $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 50);
 
-	foreach($backtrace as $v) {
-		if($v['function'] == 'gdrcd_query') {
-			$base = $v;
-		}
-		$history .= '<strong>FILE: </strong>: ' . $v['file'] . ' - '; 
-		$history .= '<strong>LINE: </strong>: ' . $v['line'] . '</br />';		
-	}    
-	$error_msg  = '<div class="error mysql">';
-    $error_msg .= '<strong>GDRCD MySQLi Error</strong>:</br>'; 
+    $error_msg = '<strong>GDRCD MySQLi Error</strong> [File: ' . basename($backtrace[1]['file']) . '; Line: ' . $backtrace[1]['line'] . ']<br>' . '<strong>Error Code</strong>: ' . mysqli_errno(gdrcd_connect()) . '<br>' . '<strong>Error String</strong>: ' . mysqli_error(gdrcd_connect());
+
     if ($details !== false) {
-        $error_msg .= '<strong>QUERY: </strong>: ' . $details . '</br>';
-    }	
-	$error_msg .= '<strong>ERROR [' . mysqli_errno(gdrcd_connect()) . ']</strong>: ' . mysqli_error(gdrcd_connect()) .'<br />';
-    $error_msg .= '<strong>FILE: </strong>: ' . $base['file'] . ' - '; 
-	$error_msg .= '<strong>LINE: </strong>: ' . $base['line'] . '<br />';
- 	$error_msg .= '<details>';	
-	$error_msg .= '<summary>Dettagli</summary>';
-	$error_msg .= $history;	
-    $error_msg .= '</details>';	    
-	$error_msg .= '</div>';
-	return $error_msg;
+        $error_msg .= '<br><br><strong>Error Detail</strong>: ' . $details;
+    }
+
+    return $error_msg;
 }
 
 /**
@@ -490,63 +476,17 @@ function gdrcd_controllo_permessi($permesso)
 }
 
 /**
- * Funzione controllo permessi forum
- * @param int $tipo
- * @param mixed $proprietari
- * @return bool
- */
-function gdrcd_controllo_permessi_forum($tipo, $proprietari = '')
-{
-    $tipo = gdrcd_filter('num', $tipo);
-    $perm = gdrcd_filter('num', $_SESSION['permessi']);
-    $razza = gdrcd_filter('num', $_SESSION['id_razza']);
-    $gilda = gdrcd_filter('out', $_SESSION['gilda']);
-
-    switch ($tipo) {
-        case PERTUTTI:
-        case INGIOCO:
-            return true;
-
-        case SOLORAZZA:
-            return (($razza == $proprietari) || ($perm >= MODERATOR));
-
-        case SOLOGILDA:
-
-            if (empty($proprietari)) {
-                return false;
-            } else {
-                return (strpos($gilda, '*' . $proprietari . '*') || ($perm >= MODERATOR));
-            }
-
-        case SOLOMASTERS:
-            return ($perm >= GAMEMASTER);
-
-        case SOLOMODERATORS:
-            return ($perm >= MODERATOR);
-
-        default:
-            return ($perm >= SUPERUSER);
-    }
-}
-
-
-/**
  * Controlla se l'utente è loggato da pochi minuti. Utile per l'icona entra/esce
  * @param string $time : data in un formato leggibile da strtotime()
  * @return int
  */
 function gdrcd_check_time($time)
 {
-    $time_hours = date('H', strtotime($time));
-    $time_minutes = date('i', strtotime($time));
+    $start=gdrcd_format_datetime_timestamp($time);
+    $now=gdrcd_format_datetime_timestamp(date('H:i'));
 
-    if ($time_hours == date('H')) {
-        return date('i') - $time_minutes;
-    } elseif ($time_hours == (date('H') - 1) || $time_hours == (strftime('H') + 11)) {
-        return date('i') - $time_minutes + 60;
-    }
 
-    return 61;
+    return $now-$start;
 }
 
 /**
@@ -560,7 +500,7 @@ function gdrcd_check_time($time)
  * @param string $path : il percorso filesystem del file da includere
  * @param array $params : un array di dati aggiuntivi passabili al modulo
  */
-function gdrcd_load_modules($page, $params = [])
+function gdrcd_load_modules($page, array $params = [])
 {
     global $MESSAGE;
     global $PARAMETERS;
@@ -677,7 +617,7 @@ function gdrcd_format_time($time_in)
 /**
  * Funzione di formattazione data completa nel formato italiano
  * @param $datetime_in : la data e ora in formato leggibile da strtotime()
- * @return la data/ora nel formato DD/MM/YYYY hh:mm
+ * @return string la data/ora nel formato DD/MM/YYYY hh:mm
  */
 function gdrcd_format_datetime($datetime_in)
 {
@@ -686,12 +626,22 @@ function gdrcd_format_datetime($datetime_in)
 
 /**
  * Funzione di formattazione data completa nel formato standard del database
- * @param $datetime_in : la data e ora in formato leggibile da strtotime()
- * @return la data/ora nel formato YYYY-MM-DD hh:mm
+ * @param string $datetime_in : la data e ora in formato leggibile da strtotime()
+ * @return string la data/ora nel formato YYYY-MM-DD hh:mm
  */
 function gdrcd_format_datetime_standard($datetime_in)
 {
     return date('Y-m-d H:i', strtotime($datetime_in));
+}
+
+/**
+ * Funzione di formattazione data completa nel formato standard del database
+ * @param string $datetime_in : la data e ora in formato leggibile da strtotime()
+ * @return string la data/ora nel formato YYYY-MM-DD hh:mm
+ */
+function gdrcd_format_datetime_timestamp($datetime_in)
+{
+    return strtotime($datetime_in);
 }
 
 /**
@@ -827,7 +777,7 @@ function gdrcd_redirect($url, $tempo = false)
 /**
  * Sostituisce eventuali parentesi angolari in coppia in una stringa con parentesi quadre
  * @param string $str : la stringa da controllare
- * @return string $str con la coppie di parentesi angolari sostituite con parentesi quadre
+ * @return $str con la coppie di parentesi angolari sostituite con parentesi quadre
  */
 function gdrcd_angs($str)
 {
@@ -884,10 +834,12 @@ function gdrcd_chatme($user, $str, $master = false)
 /**
  * Crea un campo di autocompletamento HTML5 (<datalist>) per vari contenuti
  * @param string $str : specifica il soggetto di cui creare la lista. Attualmente è supportato solo 'personaggi', che crea una lista di tutti gli utenti del gdr
- * @return il tag html <datalist> già pronto per essere stampato sulla pagina
+ * @return string il tag html <datalist> già pronto per essere stampato sulla pagina
  */
-function gdrcd_list($str)
+function gdrcd_list($str, $id=NULL)
 {
+    $list = '';
+
     switch (strtolower($str)) {
         case 'personaggi':
             $list = '<datalist id="personaggi">';
@@ -900,7 +852,33 @@ function gdrcd_list($str)
             gdrcd_query($characters, 'free');
             $list .= '</datalist>';
             break;
+
+        case 'eventi_tipo':
+            $tipo = gdrcd_query("SELECT id,title FROM eventi_tipo ORDER BY title", 'result');
+
+            $list = '<select name="title">';
+            while ($option = gdrcd_query($tipo, 'fetch')) {
+                $sel=(gdrcd_filter('int',$option['id'])==gdrcd_filter('int',$id))?'selected':'';
+                $list .= '<option value="'.gdrcd_filter('int',$option['id']).' " '.$sel.' >'.gdrcd_filter('out',$option['title']).'</option>';
+            }
+
+            $list .= '</select>';
+            break;
+
+        case 'eventi_colori':
+            $colori = gdrcd_query("SELECT id,colore FROM eventi_colori ORDER BY colore", 'result');
+
+            $list = '<select name="colore">';
+
+            while ($option = gdrcd_query($colori, 'fetch')) {
+                $sel=(gdrcd_filter('int',$option['id'])==gdrcd_filter('int',$id))?'selected':'';
+                $list .= '<option value="'.gdrcd_filter('int',$option['id']).'  " '.$sel.' >'.gdrcd_filter('out',$option['colore']).'</option>';
+            }
+
+            $list .= '</select>';
+            break;
     }
+
 
     return $list;
 }
