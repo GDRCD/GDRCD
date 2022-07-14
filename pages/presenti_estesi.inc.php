@@ -78,7 +78,10 @@
             echo '<li class="presente"'.$online_state.'>';
             //Entrata, uscita PG
             //Controllo da quanto il pg e' loggato
+
+
             $activity = gdrcd_check_time($record['ora_entrata']);
+           
             //Se e' loggato da meno di 2 minuti
             if ($activity <= 2)   {
                 //Lo segnalo come appena entrato
@@ -137,7 +140,6 @@
             echo '</a> ';
             echo '</li>';
         }//while
-        gdrcd_query($result, 'free');
         echo '</ul>';
         ?>
     </div>
