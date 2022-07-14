@@ -67,6 +67,7 @@ if ((CALENDAR and CALENDAR_PERSONAL and CALENDAR_PERSONAL_PUBLIC)
                             <form action="main.php?page=scheda_calendario&pg=<?= $pg?>" method="post">
                                 <input type="hidden" name="id" value="<?= $row['id']?>" />
                                  <input type="hidden" name="pg" value="<?= $pg?>" />
+                                <input hidden value="delete" name="op">
                                 <input type="image"
                                        src="imgs/icons/erase.png"
                                        alt="<?= gdrcd_filter('out',$MESSAGE['interface']['administration']['ops']['erase']); ?>"

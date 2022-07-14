@@ -50,6 +50,7 @@ switch ($_POST['op']) {
             break;
         }
     case 'delete':
+        $personaggio = gdrcd_filter('in', $_POST['pg']);
         $id = gdrcd_filter('int', $_POST['id']);
         gdrcd_query("DELETE FROM eventi_personaggio WHERE id='{$id}'");
         break;
