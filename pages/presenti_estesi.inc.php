@@ -81,21 +81,16 @@
 
 
             $activity = gdrcd_check_time($record['ora_entrata']);
-           
+
             //Se e' loggato da meno di 2 minuti
             if ($activity <= 2)   {
                 //Lo segnalo come appena entrato
                 echo '<img class="presenti_ico" src="imgs/icons/enter.gif" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['enter']).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['enter']).'" />';
             } else  {
-                //Altrimenti, se si e' sloggato da piu' di 2 minuti lo segnalo come uscito
-                $activity = gdrcd_check_time($record['ultimo_refresh']);
-                if ($activity > 3) {
-                    echo '<img class="presenti_ico" src="imgs/icons/exit.gif" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['exit']).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['exit']).'" />';
-                } else {
-                    //Altrimenti e' semplicemente loggato
+                 //Altrimenti e' semplicemente loggato
                     echo '<img class="presenti_ico" src="imgs/icons/blank.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['logged']).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['logged']).'" />';
                 }//else
-            }//else
+             
             switch ($record['permessi']) {
                 case USER:
                     $alt_permessi = '';
