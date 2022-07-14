@@ -10,7 +10,7 @@
         <div class="form_info">
             <?php echo $MESSAGE['interface']['esiti']['pg_page']; ?>
         </div>
-            <a class="but_newd" href='main.php?page=servizi_esitinew&op=first' target="_blank">
+            <a class="but_newd" href='main.php?page=servizi_esitinew&op=first' >
                 Apri una nuova serie di esiti
             </a>
 
@@ -23,7 +23,9 @@
                         AND pg = '".gdrcd_filter('in',$_SESSION['login'])."' ORDER BY id ", 'result');
                     $result=gdrcd_query($query, 'fetch');
 
+
                     $tit = gdrcd_filter('out', $result['titolo']);
+
                     $pg = gdrcd_filter('out', $result['pg']);
 
                     gdrcd_query("UPDATE esiti SET letto_pg = 1 WHERE id_blocco = ".$id." ");
@@ -32,19 +34,21 @@
                 <div class="fate_frame">
                     <div class="titolo_box">
                         <h2 >
-                            <?php echo $tit; ?>
+                            <?php echo $tit;  ?>
                         </h2>
                     </div>
 
-                    <?php $quer="SELECT * FROM esiti WHERE id_blocco = ".$id." AND chat = 0 
+                    <?php
+                    $quer="SELECT * FROM esiti WHERE id_blocco = ".$id." AND chat = 0 
                         AND pg = '".gdrcd_filter('in',$_SESSION['login'])."' ORDER BY data DESC";
-                    $res=gdrcd_query($quer, 'result'); ?>
 
-                    <?php if ($tit['closed']==0) { ?>
+
+                    $res=gdrcd_query($quer, 'result');
+
+                    if ($result['closed']==0) { ?>
                         <div class="titolo_box">
                             <a class="link_new"
-                               href='main.php?page=servizi_esitinew&op=new&blocco=<?php echo gdrcd_filter('num',$id);?>'
-                               target="_blank">
+                               href='main.php?page=servizi_esitinew&op=new&blocco=<?php echo gdrcd_filter('num',$id);?>'>
                                 Invia una nuova richiesta di esito
                             </a>
                         </div>
