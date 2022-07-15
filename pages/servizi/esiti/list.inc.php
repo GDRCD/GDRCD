@@ -130,7 +130,7 @@
 ?>
 <!-- link scrivi messaggio -->
 <div class="link_back">
-    <a href="main.php?page=servizi/esitinew&op=first">
+    <a href="main.php?page=servizi/esiti&op=new">
         <?php echo $MESSAGE['interface']['esiti']['link']['new']; ?>
     </a>
 </div>

@@ -23,6 +23,10 @@
          * Richieste GET
          */
         switch(gdrcd_filter_get($_GET['op'])) {
+            case 'new':  // Form di inserimento nuova serie esiti (Solo visualizzazione)
+                include('new.inc.php');
+                break;
+
             default: // Pagina di default
                 include('list.inc.php');
                 break;
