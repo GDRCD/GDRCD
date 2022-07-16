@@ -19,12 +19,15 @@ if ($_POST['type'] == 0) {
 $totale = gdrcd_query($total, 'num_rows');
 ?>
 <div class="search_bg">
-    Ricerca giocate - Ricerca per <b><? echo $type; ?> [ <? echo gdrcd_filter('out', $_POST['search']); ?> ]</b><br>
-    <? echo '<b>' . $totale . '</b> giocate effettuate secondo questi criteri di ricerca'; ?>
+    Ricerca giocate - Ricerca per <b><?=$type;?> [ <?=gdrcd_filter('out', $_POST['search']);?> ]</b><br>
+    <?='<b>' . $totale . '</b> giocate effettuate secondo questi criteri di ricerca'; ?>
 </div>
 
-<? $year = gdrcd_query("SELECT YEAR(data_inizio) as year FROM segnalazione_role 
-    WHERE mittente = '" . gdrcd_filter('in', $pg) . "' GROUP BY YEAR(data_inizio) ORDER BY YEAR(data_inizio) DESC", "result");
+<?php
+
+$year = gdrcd_query("SELECT YEAR(data_inizio) as year FROM segnalazione_role 
+                     WHERE mittente = '" . gdrcd_filter('in', $pg) . "' GROUP BY YEAR(data_inizio) ORDER BY YEAR(data_inizio) DESC", "result");
+
 while ($ry = gdrcd_query($year, 'fetch')) {
     echo '<div class="page_title" ><h2 style="font-family: Aileron;">' . $ry['year'] . '</h2></div>';
     $month = gdrcd_query("SELECT MONTH(data_inizio) as month FROM segnalazione_role 
@@ -106,7 +109,7 @@ while ($ry = gdrcd_query($year, 'fetch')) {
         $num = gdrcd_query($numbers, 'num_rows');
         if ($num > 0) {
             echo '<div class="titolo_box">' . $mese . '</div>'; ?>
-            <div class="elenco_record_gioco" id="<? echo $rm['month'] . '' . $ry['year'] ?>">
+            <div class="elenco_record_gioco" id="<?=$rm['month'] . '' . $ry['year'] ?>">
                 <table>
                     <tr class="titles_table">
                         <td class="casella_titolo">
@@ -154,16 +157,18 @@ while ($ry = gdrcd_query($year, 'fetch')) {
                                 <?php echo 'Stato'; ?>
                             </div>
                         </td>
-                        <? if (($pg == $_SESSION['login'] && $row['conclusa'] == 1) || ($_SESSION['permessi'] >= MODERATOR)) { ?>
+                        <?php if (($pg == $_SESSION['login'] && $row['conclusa'] == 1) || ($_SESSION['permessi'] >= MODERATOR)) { ?>
                             <td class="casella_titolo" style="width: 100px;">
                                 <div class="titoli_elenco">
 
                                 </div>
                             </td>
-                        <? } ?>
+                        <?php } ?>
                     </tr>
                     <tr>
-                        <? while ($row = gdrcd_query($query, 'fetch')){
+                        <?php
+                        //
+                        while ($row = gdrcd_query($query, 'fetch')){
                         $chat = gdrcd_query("SELECT nome FROM mappa 
                             WHERE id = " . gdrcd_filter('num', $row['stanza']) . " ", "result");
                         $r_chat = gdrcd_query($chat, 'fetch');
@@ -231,7 +236,7 @@ while ($ry = gdrcd_query($year, 'fetch')) {
                                 } ?>
                             </div>
                         </td>
-                        <? if (($pg == $_SESSION['login'] && $row['conclusa'] == 1) || ($_SESSION['permessi'] >= MODERATOR)) { ?>
+                        <?php if (($pg == $_SESSION['login'] && $row['conclusa'] == 1) || ($_SESSION['permessi'] >= MODERATOR)) { ?>
                             <td class="casella_titolo" style="width: 100px;">
                                 <div class="elementi_elenco">
                                     <form action="main.php?page=scheda_roles&pg=<?php echo gdrcd_filter('in', $_REQUEST['pg']); ?>"
@@ -248,12 +253,12 @@ while ($ry = gdrcd_query($year, 'fetch')) {
                                     </form>
                                 </div>
                             </td>
-                        <? } ?>
+                        <?php } ?>
                     </tr>
-                    <? } ?>
+                    <?php } ?>
                 </table>
             </div>
-        <? } #num rows
+        <?php } #num rows
     }
 } ?>
 

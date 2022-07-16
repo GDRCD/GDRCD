@@ -32,6 +32,9 @@ if( ! empty($_SESSION['login'])) {
     }
 }
 
+/* INFORMAZIONI SU GDRCD */
+$PARAMETERS['info']['GDRCD'] = '5.6.0.4'; //versione di GDRCD
+
 /* PARAMETRI DI CONNESSIONE */
 $PARAMETERS['database']['username'] = 'gdrcd';            //nome utente del database
 $PARAMETERS['database']['password'] = 'gdrcd';            //password del database
@@ -41,27 +44,18 @@ $PARAMETERS['database']['url'] = 'localhost';        //indirizzo ip del database
 
 /* HELP: Sostituire le diciture inserite tra le virgolette con i parametri di connessione al Database del proprio dominio. Essi sono forniti al momento della registrazione. Se non si e' in possesso di tali parametri consultare le FAQ della homepage dell'host che fornisce il dominio. Se non le si trovano li contattare lo staff dell'host. */
 
-
-/* POLITICA DI CRIPTAZIONE
- * E' stata rimossa la possibilita' di scegliere se salvare le password in chiaro.
- * Sono stati rimossi i metodi SHA-1 e MD5 non essendo piu' sicuri. Rimane solo la funzione BCRYPT
- */
-
 /* INFORMAZIONI SUL SITO */
-$PARAMETERS['info']['site_name'] = 'GDRCD 5.6.0.3'; //nome del gioco
+$PARAMETERS['info']['site_name'] = 'GDRCD 5.6.0.4'; //nome del gioco
 $PARAMETERS['info']['site_url'] = 'http://gdrcd.test/'; //indirizzo URL del gioco
 $PARAMETERS['info']['webmaster_name'] = 'Webmaster'; //nome e cognome del responsabile del sito
 $PARAMETERS['info']['webmaster_email'] = 'webmaster@gdrhost.it'; //email ufficiale del webmaster (è visibile in homepage)
 $PARAMETERS['info']['homepage_name'] = 'Homepage'; //nome con il quale si indica la prima pagina visualizzata
-$PARAMETERS['info']['dbadmin_name'] = 'Admin DB';
-$PARAMETERS['info']['GDRCD'] = '5.6.0.3'; //nome del gioco
-
+$PARAMETERS['info']['dbadmin_name'] = 'Admin DB'; //nome del responsabile del database
 /* HELP: I parametri di questa voce compaiono come informazioni sulla homepage. */
 
 
 /* SCELTA DELLA LINGUA */
 $PARAMETERS['languages']['set'] = 'IT-it'; //lingua italiana
-
 /* HELP: Per definire un diverso vocabolario creare una copia del file /vocabulary/IT-it.vocabulary.php nella cartella vocabulary. Il nome del file deve essere [nome].vocabulary.php, dove la stringa [nome] può essere scelta e deve essere il valore specificato in $PARAMETER['languages']['set']. */
 
 
@@ -743,6 +737,10 @@ if (ESITI)
     $PARAMETERS['administration']['esiti']['url'] = 'main.php?page=gestione_segnalazioni&segn=esiti_master';
     $PARAMETERS['administration']['esiti']['access_level'] = ESITI_PERM;
 }
+
+$PARAMETERS['administration']['email']['text'] = 'Gestione email';
+$PARAMETERS['administration']['email']['url'] = 'main.php?page=gestione_cambio_email';
+$PARAMETERS['administration']['email']['access_level'] = MODERATOR;
 $PARAMETERS['administration']['skills']['text'] = 'Gestione abilità';
 $PARAMETERS['administration']['skills']['url'] = 'main.php?page=gestione_abilita';
 $PARAMETERS['administration']['skills']['access_level'] = SUPERUSER;
@@ -774,7 +772,7 @@ $PARAMETERS['administration']['rules']['text'] = 'Gestione regolamento';
 $PARAMETERS['administration']['rules']['url'] = 'main.php?page=gestione_regolamento';
 $PARAMETERS['administration']['rules']['access_level'] = SUPERUSER;
 $PARAMETERS['administration']['maintenance']['text'] = 'Manutenzione';
-$PARAMETERS['administration']['maintenance']['url'] = 'main.php?page=gestione_manutenzione';
+$PARAMETERS['administration']['maintenance']['url'] = 'main.php?page=gestione/manutenzione';
 $PARAMETERS['administration']['maintenance']['access_level'] = SUPERUSER;
 
 

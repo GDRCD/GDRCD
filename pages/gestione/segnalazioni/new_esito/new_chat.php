@@ -8,7 +8,7 @@ if ($_SESSION['permessi']>=ESITI_PERM && ESITI_CHAT && $blocco['pg']!==$_SESSION
             <h2>Esito in chat</h2>
         </div>
         <div class="form_info">
-            <? echo $MESSAGE['interface']['esiti']['esitochat'];?>
+            <?=$MESSAGE['interface']['esiti']['esitochat'];?>
         </div>
 
         <form action="main.php?page=gestione_segnalazioni&segn=esito_index"
@@ -96,4 +96,3 @@ if ($_SESSION['permessi']>=ESITI_PERM && ESITI_CHAT && $blocco['pg']!==$_SESSION
         </form>
     <?php }
 }
-?>

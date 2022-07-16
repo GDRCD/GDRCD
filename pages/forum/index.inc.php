@@ -1,73 +1,58 @@
-<?php
-/*Carico l'elenco dei forum*/
-$result = gdrcd_query("SELECT id_araldo, nome, tipo, proprietari FROM araldo ORDER BY tipo, nome", 'result');
-
-$ultimotipo = -1;
-?>
-<!-- Elenco forum -->
-<div class="elenco_esteso">
-    <div class="elenco_record_gioco">
-        <table>
-            <?php
-            while($row = gdrcd_query($result, 'fetch')) {
-
-                // Controllo i permessi di visualizzazione del forum
-                if((($row['tipo'] == SOLORAZZA) && ($_SESSION['id_razza'] != $row['proprietari']) && ($_SESSION['permessi'] < MODERATOR)) || (($row['tipo'] == SOLOGILDA) && (strpos($_SESSION['gilda'], '*'.$row['proprietari'].'*') === false) && ($_SESSION['permessi'] < MODERATOR)) || (($row['tipo'] >= SOLOMASTERS) && ($_SESSION['permessi'] < GAMEMASTER)) || (($row['tipo'] >= SOLOMODERATORS) && ($_SESSION['permessi'] < MODERATOR))) {
-                    // Se non possiedo i permessi, non mostro la sezione
-                    continue;
-                }
-
-                if($row['tipo'] != $ultimotipo) {
-                    /*Sono ordinati per tipo, se cambia stampo il nuovo tipo come capoverso*/
-                    $ultimotipo = $row['tipo'];
-                    ?>
-                    <tr><!-- Intestazione tabella -->
-                        <td colspan="2">
-                            <div class="capitolo_elenco">
-                                <?php echo gdrcd_filter('out', $PARAMETERS['names']['forum']['plur'].' '.strtolower($MESSAGE['interface']['forums']['type'][$ultimotipo])); ?>
-                            </div>
-                        </td>
-                    </tr>
-                    <?php
-                } //if
-
-                $new_msg = gdrcd_query("SELECT COUNT(id) AS num FROM araldo_letto WHERE araldo_id = ".$row['id_araldo']." AND nome = '".$_SESSION['login']."';");
-                $new_msg2 = gdrcd_query("SELECT COUNT(id_messaggio) AS num FROM messaggioaraldo WHERE id_araldo = ".$row['id_araldo']." AND id_messaggio_padre = -1");
-
-                ?>
-                <tr><!-- Forum della categoria -->
-                    <td class="forum_main_post_author">
-                        <div class="forum_date_big">
-                            <?php
-                            if($new_msg2['num'] > $new_msg['num']) {
-                                echo $MESSAGE['interface']['forums']['topic']['new_posts_forum'];
-                            }
-                            ?>
-                        </div>
-                    </td>
-                    <td class="casella_elemento">
-                        <div class="elementi_elenco">
-                            <a href="main.php?page=forum&op=visit&what=<?php echo gdrcd_filter('out', $row['id_araldo']); ?>&name=<?php echo gdrcd_filter('out', $row['nome']); ?>">
-                                <?php echo gdrcd_filter('out', $row['nome']); ?>
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-                <?php
-            }//while
-            gdrcd_query($result, 'free');
-            ?>
-        </table>
-        <?php //Pulsante segna tutto come letto ?>
-        <div class="panels_box">
-            <div class="form_gioco">
-                <form action="main.php?page=forum" method="post">
-                    <div class="form_submit">
-                        <input type="hidden" name="op" value="readall" />
-                        <input type="submit" name="dummy" value="Segna tutto come letto" />
-                    </div>
-                </form>
-            </div>
-        </div>
+<div class="pagina_forum">
+    <!-- Titolo della pagina -->
+    <div class="page_title">
+        <h2>
+            <?=gdrcd_filter('out', $PARAMETERS['names']['forum']['plur']);?>
+        </h2>
     </div>
-</div>
+    <!-- Box principale -->
+    <div class="page_body">
+        <?php
+        /*
+         * Richieste POST
+         */
+        switch(gdrcd_filter_get($_POST['op'])) {
+            case 'delete': //Cancellazione messaggio o topic
+                include('delete.inc.php');
+                break;
+            case 'edit': //Modifica messaggio o topic
+                include('edit.inc.php');
+                break;
+            case 'insert': //Inserimento messaggio o topic
+                include('insert.inc.php');
+                break;
+            case 'readall': //Funzione segna tutto come letto
+                include('readall.inc.php');
+                break;
+            default:
+                break;
+        }
+        /*
+         * Richieste GET
+         */
+        switch(gdrcd_filter_get($_GET['op'])) {
+            case 'composer': //Creazione nuovi messaggi e topic
+                include('composer.inc.php');
+                break;
+            case 'delete_conf':
+                include('delete_conf.inc.php');
+                break;
+            case 'modifica': //Form modifica
+                include('modifica.inc.php');
+                break;
+            case 'read': //Visualizzazione topic
+                include('read.inc.php');
+                break;
+            case 'visit': //Visualizzazione dei topic
+                include('visit.inc.php');
+                break;
+            case false: //Visualizzazione di base (Elenco forum)
+            default:
+                include('list.inc.php');
+                break;
+        }
+        ?>
+    </div>
+    <!-- Box principale -->
+
+</div><!-- Pagina -->

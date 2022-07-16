@@ -6,7 +6,7 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
     </div>
 
     <div class="form_info">
-        <? echo $MESSAGE['interface']['esiti']['gm_page']; ?>
+        <?=$MESSAGE['interface']['esiti']['gm_page'];?>
     </div>
     <a class="but_newd" href='main.php?page=gestione_segnalazioni&segn=esito_index&op=first' target="_blank">
        Apri una nuova serie di esiti
@@ -35,46 +35,45 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
         <div class="fate_frame">
             <div class="titolo_box">
                 <h2 style="margin-top:3px;">
-                    <b><? echo $tit;?> - <? echo $pg;?></b>
-                    <a class="link_new"
-                       href='main.php?page=gestione_segnalazioni&segn=newesito&op=edit&id=<? echo gdrcd_filter('num',$blocco['id']);?>'
-                       target="_blank">
-                        Modifica serie di esiti
-                    </a>
+                    <b><?=$tit;?> - <?=$pg;?></b>
                 </h2>
             </div>
 
-            <? 	$quer="SELECT * FROM esiti WHERE id_blocco = ".gdrcd_filter('num',$blocco['id'])." ORDER BY data DESC";
-            $res=gdrcd_query($quer, 'result'); ?>
+            <?php
+            //
+            $quer="SELECT * FROM esiti WHERE id_blocco = ".gdrcd_filter('num',$blocco['id'])." ORDER BY data DESC";
+            $res=gdrcd_query($quer, 'result');
 
-            <? if ($tit['closed']==0) { ?>
+            if ($tit['closed']==0) { ?>
                 <div class="titolo_box">
                     <a class="link_new"
-                       href='main.php?page=gestione_segnalazioni&segn=esito_index&op=edit&id=<? echo gdrcd_filter('num',$blocco['id']);?>'
+                       href='main.php?page=gestione_segnalazioni&segn=esito_index&op=edit&id=<?=gdrcd_filter('num',$blocco['id']);?>'
                        target="_blank">
                         Modifica
                     </a> |
                     <a class="link_new"
-                       href='main.php?page=gestione_segnalazioni&segn=esito_index&op=new&blocco=<? echo gdrcd_filter('num',$blocco['id']);?>'
+                       href='main.php?page=gestione_segnalazioni&segn=esito_index&op=new&blocco=<?=gdrcd_filter('num',$blocco['id']);?>'
                             target="_blank">
                             Invia un nuovo esito
                     </a>
-                    <?
+                    <?php
                     if (ESITI_CHAT){
                     ?>
                         | <a class="link_new"
-                             href='main.php?page=gestione_segnalazioni&segn=esito_index&op=newchat&blocco=<? echo gdrcd_filter('num',$blocco['id']);?>'
+                             href='main.php?page=gestione_segnalazioni&segn=esito_index&op=newchat&blocco=<?=gdrcd_filter('num',$blocco['id']);?>'
                              target="_blank">
                             Invia un esito in chat
                         </a>
-                    <?  } ?>
+                    <?php  } ?>
                 </div>
-            <? 	}
+            <?php 	}
+
+            //
             while  ($row=gdrcd_query($res, 'fetch')) {
                 $abilita=gdrcd_query("SELECT nome FROM abilita WHERE id_abilita = ".$row['id_ab']." ");
                 $chat=gdrcd_query("SELECT nome FROM mappa WHERE id = ".$row['chat']." ");	?>
                 <div class="title_esi">
-                    Autore:<b><? echo $row['autore'].'</b> | Creato il: '.gdrcd_format_date($row['data']).' alle
+                    Autore:<b><?=$row['autore'].'</b> | Creato il: '.gdrcd_format_date($row['data']).' alle
                      '.gdrcd_format_time($row['data']);?>
                 </div>
 
@@ -138,7 +137,7 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
                 for ($i = 0; $i <= floor($totaleresults / $PARAMETERS['settings']['posts_per_page']); $i++) {
                     if ($i != $_REQUEST['offset']) {
                         ?>
-                        <a href="main.php?page=gestione_segnalazioni&segn=esiti_master&offset=<?php echo $i; ?>"><?php echo $i + 1; ?></a>
+                        <a href="main.php?page=gestione_segnalazioni&segn=esiti_master&offset=<?=$i;?>"><?=$i + 1;?></a>
                         <?php
                     } else {
                         echo ' ' . ($i + 1) . ' ';

@@ -68,7 +68,7 @@ $MESSAGE['register']['fields']['stats'] = 'Caratteristiche';
 $MESSAGE['register']['fields']['stats_info'] = 'La somma dei punteggi deve essere';
 $MESSAGE['register']['summary'] = 'Riepilogo';
 /* Condizioni */
-$MESSAGE['register']['disclaimer'] = 'Registrazione (ai sensi del D. Lgs n°196/2003 - Codice in materia di protezione dei dati personali): L\'utente, registrandosi, presta il consenso al trattamento dei suoi dati ed autorizza l\'inserimento degli stessi nella banca dati del gioco con il fine di inserirli nell\'elenco dei suoi utenti. Gli stessi dati NON saranno ceduti e utilizzati da alcun soggetto estraneo a chi, attualmente o in futuro, gestisce il presente gioco. I dati saranno trattati con strumenti elettronici e informatici serviranno esclusivamente per partecipare al gioco e per ricevere eventuali ed indispensabili comunicazioni tecniche via e-mail (come l’invio della psw all’indirizzo di posta elettronica dichiarata in sede di registrazione). Autorizzando al trattamento dei dati, l’utente autorizza non solo la registrazione dell’indirizzo e–mail ma permette la registrazione dell’indirizzo IP, l’ora dell’iscrizione e l’ora di ogni login.  L\'indicazione di dati personali completi è assolutamente volontaria e facoltativa. L\'interessato potrà  in ogni momento e gratuitamente esercitare i diritti di cui all\'art. 7 del D.Lgs n°196/2003, quali: la possibilità  di accedere ai registri del Garante, ottenere informazioni in relazione ai dati che lo riguardano, ottenere la cancellazione o il blocco, ovvero l\'aggiornamento, la rettifica o l\'integrazione inviando una e-mail all\'indirizzo indicato nella home page.';
+$MESSAGE['register']['disclaimer'] = 'Registrazione (ai sensi del D. Lgs n°196/2003 - Codice in materia di protezione dei dati personali): L\'utente, registrandosi, presta il consenso al trattamento dei suoi dati ed autorizza l\'inserimento degli stessi nella banca dati del gioco con il fine di inserirli nell\'elenco dei suoi utenti. Gli stessi dati NON saranno ceduti e utilizzati da alcun soggetto estraneo a chi, attualmente o in futuro, gestisce il presente gioco. I dati saranno trattati con strumenti elettronici e informatici serviranno esclusivamente per partecipare al gioco e per ricevere eventuali ed indispensabili comunicazioni tecniche via e-mail (come l’invio della psw all’indirizzo di posta elettronica dichiarata in sede di registrazione). Autorizzando al trattamento dei dati, l’utente autorizza non solo la registrazione dell’indirizzo e–mail ma permette la registrazione dell’indirizzo IP, l’ora dell’iscrizione e l’ora di ogni login.  L\'indicazione di dati personali completi è assolutamente volontaria e facoltativa. L\'interessato potrà  in ogni momento e gratuitamente esercitare i diritti di cui all\'art. 7 del D.Lgs n°196/2003, quali: la possibilità  di accedere ai registri del Garante, ottenere informazioni in relazione ai dati che lo riguardano, ottenere la cancellazione o il blocco, ovvero l\'aggiornamento, la rettifica o l\'integrazione inviando una e-mail all\'indirizzo indicato nella home page.';
 $MESSAGE['register']['rules_read'] = 'L\'utente dichiara inoltre di aver preso visione del regolamento, come proposto in homepage, di averlo compreso ed accettato in ogni sua parte, e di rispondere a tutti i requisiti richiesti, comprese le eventuali restrizioni di età.';
 /* Benvenuti */
 $MESSAGE['register']['welcome']['message']['subject'] = 'Registrazione a';
@@ -654,6 +654,12 @@ $MESSAGE['interface']['user']['pass']['new'] = 'Inserire la nuova password';
 $MESSAGE['interface']['user']['pass']['force'] = 'Cambia password ad un account';
 $MESSAGE['interface']['user']['pass']['submit']['user'] = 'Salva';
 $MESSAGE['interface']['user']['pass']['change_to'] = 'Cambia a...';
+/*Cambio email*/
+$MESSAGE['interface']['user']['email']['page_name'] = 'Cambio password';
+$MESSAGE['interface']['user']['email']['email'] = 'Inserire la nuova mail';
+$MESSAGE['interface']['user']['email']['new'] = 'Selezionare personaggio';
+$MESSAGE['interface']['user']['email']['submit']['user'] = 'Cambia email';
+$MESSAGE['interface']['user']['email']['change_to'] = 'Cambia a...';
 /*Cancella account*/
 $MESSAGE['interface']['user']['delete']['page_name'] = 'Cancella account';
 $MESSAGE['interface']['user']['delete']['email'] = 'Inserire la EMail di registrazione per conferma';

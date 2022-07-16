@@ -8,40 +8,23 @@
     sulla base del lavoro fatto da <strong>Salvatore (Blancks) Rotondo</strong> e <strong>breaker</strong> con <strong>GDRCD 5.1</strong>.
 </p>
 <p>
-    Questa versione di GDRCD corregge un importante numero di criticità riscontrate nella versione precedente e
-    stabilisce la basi per una prossima ottimizzazione del core principale delle funzioni che compongono il CMS,
-    sia in termini di <strong>qualità</strong>, che di <strong>stabilità</strong> e <strong>sicurezza</strong>.
-    Sono state implementate nuove features su iniziativa del Team di GDRCD o provenienti dalla communità di
-    <a href="https://gdr-online.com/" target="_blank">GdR-Online.com</a>, quest'ultime completamente riviste
-    per essere quanto più personalizzabili in base alle esigenze.
+    È possibile consultare i cambiamenti che vengono effettuatti di versione in versione nei <a href="https://github.com/GDRCD/GDRCD/releases" target="_blank">changelog ufficiali</a> del software.
 </p>
 <p>
-    I files della corrente versione, a fronte di tutte queste novità, <strong>non sono retrocompatibili</strong> nei
-    riguardi di <strong>GDRCD 5.4</strong> di <strong>breaker</strong> (se non con un ampio lavoro di rielaborazione)
-    tuttavia il software è progettato per <strong>rilevare il database di un installazione precedente ed aggiornarlo autonomamente</strong>
-    al fine di renderlo compatibile con la presente versione.
+    La versione 5.6 <strong>non è retrocompatibile</strong> con le versioni inferiori alla 5.5,
+    poichè dalla versione 5.5 è stato introdotto un sistema di <strong>rilevamento di modifiche progressive al database di un installazione precedente con aggiornamento automatico</strong>
+    al fine di rendere le versioni superiori alla 5.5 compatibili con quelle successive.
 </p>
 <p>
-    Puoi trovare tutte le informazioni sulle modifiche eseguite sulla repository ufficiale di <a href="https://github.com/GDRCD/GDRCD">GitHub</a>
-    a questo <a href="https://github.com/GDRCD/GDRCD/releases/tag/5.6.0.3">indirizzo</a>.
+    Troverai le istruzioni su come utilizzare GDRCD nel <a href="ISTRUZIONI.txt">manuale</a> allegato.
 </p>
 <p>
     Prima di iniziare a realizzare il tuo sito, hai letto la <a href="license.md">licenza d'uso</a> che accompagna il prodotto? Se non l'hai ancora fatto premurati gentilmente di leggerla.
 </p>
 <p>
-    Troverai le istruzioni su come utilizzare GDRCD 5.6.0.3 nel <a href="ISTRUZIONI.txt">manuale</a> allegato.
-</p>
-<img src="imgs/pelready.png" style="float:left;">
-<p><br /><strong>PEL Ready</strong></p>
-<p>
-    Il presente Software fornisce gli strumenti sul piano tecnico per aderire in semplicità al <a href="http://www.gdr-online.com/progetto_legalita.asp">progetto di educazione alla legalità</a>
-    per i giochi di ruolo online al fine di sensibilizzare gli utilizzatori del CMS a tale iniziativa, nel rispetto e nella sicurezza dei possibili futuri giocatori.
-</p>
-<p>
-    Ti piace il progetto ? Lo hai trovato particolarmente utile ?
-    Allora scopri come puoi contribuire al suo sviluppo dando un occhiata al <a href="http://www.gdr-online.com/readforum.asp?id=137092">topic dedicato</a> su <a href="https://gdr-online.com/" target="_blank">GdR-Online.com</a>,
+    Se vuoi contribuire al progetto e al suo sviluppo dai un occhiata al <a href="http://www.gdr-online.com/readforum.asp?id=137092">topic dedicato</a> su <a href="https://gdr-online.com/" target="_blank">GdR-Online.com</a>,
     leggendo la <a href="https://github.com/GDRCD/GDRCD/wiki">Wiki su GitHub</a> o iscrivendoti al <a href="https://discord.gg/DJWaXPrQPQ">Server Discord Ufficiale</a>, dedicato al confronto, allo sviluppo e al mantimento di GDRCD.
-    <u>Ogni aiuto che viene dato è prezioso più di quel che sembra!</u>
+    <u>Ogni aiuto offerto è sempre prezioso!</u>
 </p>
 
 <p>Buon diverimento!</p>
