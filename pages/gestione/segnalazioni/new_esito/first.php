@@ -54,6 +54,7 @@ if ($_GET['op']=='first') { ?>
         </div>
 
     </form>
+    <a href="main.php?page=gestione_segnalazioni&segn=esiti_master">Torna indietro</a>
 <?php }
 
 ?>
