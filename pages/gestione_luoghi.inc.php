@@ -224,13 +224,13 @@
                             <?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['locations']['x']); ?>
                         </div>
                         <div class='form_field'>
-                            <input name="x_cord" value="<?php echo 0 + gdrcd_filter('out', $loaded_location['x_cord']); ?>" />
+                            <input name="x_cord" value="<?php echo 0 + gdrcd_filter('num', $loaded_location['x_cord']); ?>" />
                         </div>
                         <div class='form_label'>
                             <?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['locations']['y']); ?>
                         </div>
                         <div class='form_field'>
-                            <input name="y_cord" value="<?php echo 0 + gdrcd_filter('out', $loaded_location['y_cord']); ?>" />
+                            <input name="y_cord" value="<?php echo 0 + gdrcd_filter('num', $loaded_location['y_cord']); ?>" />
                         </div>
                         <div class='form_info'>
                             <?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['locations']['x_info']); ?>
@@ -327,7 +327,7 @@
                                 <?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['locations']['rent']); ?>
                             </div>
                             <div class='form_field'>
-                                <input name="costo" value="<?php echo 0 + gdrcd_filter('out', $loaded_location['costo']); ?>" />
+                                <input name="costo" value="<?php echo 0 + gdrcd_filter('num', $loaded_location['costo']); ?>" />
                             </div>
                         <?php
                         }//else
