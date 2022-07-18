@@ -19,7 +19,7 @@
         exit();
     }
     $personaggio = gdrcd_query($personaggi, 'fetch');
-    gdrcd_query($personaggio, 'free');
+   //gdrcd_query($personaggio, 'free');
     $bonus_oggetti = gdrcd_query("SELECT SUM(oggetto.bonus_car0) AS BO0, SUM(oggetto.bonus_car1) AS BO1, SUM(oggetto.bonus_car2) AS BO2, SUM(oggetto.bonus_car3) AS BO3, SUM(oggetto.bonus_car4) AS BO4, SUM(oggetto.bonus_car5) AS BO5
             FROM oggetto JOIN clgpersonaggiooggetto ON oggetto.id_oggetto = clgpersonaggiooggetto.id_oggetto
             WHERE clgpersonaggiooggetto.nome = '".gdrcd_filter('in', $_REQUEST['pg'])."' AND clgpersonaggiooggetto.posizione > ".ZAINO."");
@@ -162,7 +162,7 @@
                                     }
                                 }
                             }
-                            gdrcd_query($guilds, 'free');
+
                         } ?>
                     </div>
                 </div>
