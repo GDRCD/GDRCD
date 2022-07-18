@@ -8,7 +8,7 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
     <div class="form_info">
         <?=$MESSAGE['interface']['esiti']['gm_page'];?>
     </div>
-    <a class="but_newd" href='main.php?page=gestione_segnalazioni&segn=esito_index&op=first' target="_blank">
+    <a class="but_newd" href='main.php?page=gestione_segnalazioni&segn=esito_index&op=first' >
        Apri una nuova serie di esiti
     </a>
 
@@ -44,24 +44,22 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
             $quer="SELECT * FROM esiti WHERE id_blocco = ".gdrcd_filter('num',$blocco['id'])." ORDER BY data DESC";
             $res=gdrcd_query($quer, 'result');
 
-            if ($tit['closed']==0) { ?>
+            if (!isset($tit['closed'])) { ?>
                 <div class="titolo_box">
                     <a class="link_new"
-                       href='main.php?page=gestione_segnalazioni&segn=esito_index&op=edit&id=<?=gdrcd_filter('num',$blocco['id']);?>'
-                       target="_blank">
+                       href='main.php?page=gestione_segnalazioni&segn=esito_index&op=edit&id=<?=gdrcd_filter('num',$blocco['id']);?>'>
                         Modifica
                     </a> |
                     <a class="link_new"
-                       href='main.php?page=gestione_segnalazioni&segn=esito_index&op=new&blocco=<?=gdrcd_filter('num',$blocco['id']);?>'
-                            target="_blank">
+                       href='main.php?page=gestione_segnalazioni&segn=esito_index&op=new&blocco=<?=gdrcd_filter('num',$blocco['id']);?>'>
                             Invia un nuovo esito
                     </a>
                     <?php
                     if (ESITI_CHAT){
                     ?>
                         | <a class="link_new"
-                             href='main.php?page=gestione_segnalazioni&segn=esito_index&op=newchat&blocco=<?=gdrcd_filter('num',$blocco['id']);?>'
-                             target="_blank">
+                             href='main.php?page=gestione_segnalazioni&segn=esito_index&op=newchat&blocco=<?=gdrcd_filter('num',$blocco['id']);?>'>
+                             href='main.php?page=gestione_segnalazioni&segn=esito_index&op=newchat&blocco=<?=gdrcd_filter('num',$blocco['id']);?>'>
                             Invia un esito in chat
                         </a>
                     <?php  } ?>

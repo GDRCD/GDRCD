@@ -41,5 +41,6 @@ if ($_POST['op']=='insert') {
     <div class="warning">
         <?php echo gdrcd_filter('out',$MESSAGE['warning']['inserted']);?>
     </div>
+    <br><a href="main.php?page=gestione_segnalazioni&segn=esiti_master">Torna indietro</a>
 
 <?php }
