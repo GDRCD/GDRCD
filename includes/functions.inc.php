@@ -431,7 +431,7 @@ function gdrcd_html_filter($str)
         "#(<iframe.*?\/?>.*?(<\/iframe>)?)#is" => "Frame non consentiti",
         "#(<object.*?>.*?(<\/object>)?)#is" => "Contenuti multimediali non consentiti",
         "#(<embed.*?\/?>.*?(<\/embed>)?)#is" => "Contenuti multimediali non consentiti",
-        //"#([o,O][N,n](.*?)=(.*?)\"?'?[^\s\"']+'?\"?)#is" => " ",
+        "#\bon([a-z]*?)=(['|\"])(.*?)\\2#mi" => " ",
         "#(javascript:[^\s\"']+)#is" => ""
     ];
 
