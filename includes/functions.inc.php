@@ -347,7 +347,7 @@ function gdrcd_filter($what, $str)
             break;
 
         case 'out':
-            $str = htmlentities($str, ENT_QUOTES, 'utf-8', false);
+            $str = gdrcd_html_filter(htmlentities($str, ENT_QUOTES, "UTF-8"));
             break;
 
         case 'addslashes':
@@ -427,11 +427,11 @@ function gdrcd_filter_url($str)
 function gdrcd_html_filter($str)
 {
     $notAllowed = [
-        "#(<script.*?>.*?(<\/script>)?)#is" => "Script non consentiti",
+        "#<script(.*?)>(.*?)</script>#is" => "Script non consentiti",
         "#(<iframe.*?\/?>.*?(<\/iframe>)?)#is" => "Frame non consentiti",
         "#(<object.*?>.*?(<\/object>)?)#is" => "Contenuti multimediali non consentiti",
         "#(<embed.*?\/?>.*?(<\/embed>)?)#is" => "Contenuti multimediali non consentiti",
-        "#([o,O][N,n](.*?)=(.*?)\"?'?[^\s\"']+'?\"?)#is" => " ",
+        //"#([o,O][N,n](.*?)=(.*?)\"?'?[^\s\"']+'?\"?)#is" => " ",
         "#(javascript:[^\s\"']+)#is" => ""
     ];
 
