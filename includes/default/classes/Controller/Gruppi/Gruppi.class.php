@@ -97,6 +97,22 @@ class Gruppi extends BaseClass
         return Filters::int($sql['TOT']);
     }
 
+    /**
+     * @fn haveGroupRole
+     * @note Controlla se il personaggio ha almeno un ruolo di un singolo gruppo
+     * @param int $id
+     * @return int
+     */
+    public function haveGroupRole(int $id): int
+    {
+        $sql = DB::query("
+                SELECT COUNT(personaggio_ruolo.id) AS 'TOT' FROM gruppi_ruoli 
+                    LEFT JOIN personaggio_ruolo ON personaggio_ruolo.ruolo = gruppi_ruoli.id AND personaggio_ruolo.personaggio ='{$this->me_id}'
+                    WHERE personaggio_ruolo.id IS NOT NULL AND gruppi_ruoli.gruppo = '{$id}'");
+
+        return Filters::int($sql['TOT']);
+    }
+
     /**@fn permissionServiceGroups
      * @note Controllo se ho il permesso per accedere alla pagina dei servizi dei gruppi
      * @param int $id
@@ -254,6 +270,9 @@ class Gruppi extends BaseClass
         $op = Filters::out($op);
 
         switch ($op) {
+            case 'storage':
+                $page = 'storage.php';
+                break;
             case 'read':
                 $page = 'read.php';
                 break;
@@ -335,7 +354,8 @@ class Gruppi extends BaseClass
                 'id' => Filters::int($row['id']),
                 'name' => Filters::out($row['nome']),
                 'member_number' => Filters::int($row['member_number']),
-                'tipo' => Filters::out($row['tipo_name'])
+                'tipo' => Filters::out($row['tipo_name']),
+                'storage_permission' => GruppiOggetto::getInstance()->permissionViewStorage($row['id'])
             ];
 
             $row_data[] = $array;

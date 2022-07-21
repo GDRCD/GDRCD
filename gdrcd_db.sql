@@ -449,6 +449,21 @@ CREATE TABLE IF NOT EXISTS `gruppi_fondi` (
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `gruppi_fondi`
+--
+
+CREATE TABLE IF NOT EXISTS `gruppi_oggetto` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `gruppo` int NOT NULL,
+  `oggetto` int DEFAULT NULL,
+  `cariche` int DEFAULT 0,
+  `commento` text DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `gruppi_ruoli`
 --
 
