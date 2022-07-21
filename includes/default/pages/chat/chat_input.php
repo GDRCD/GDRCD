@@ -10,7 +10,7 @@ if (!isset($chat)) {
 }
 
 $esiti_chat = Functions::get_constant('ESITI_CHAT');
-$esiti= Functions::get_constant('ESITI_ENABLE');
+$esiti = Functions::get_constant('ESITI_ENABLE');
 
 $stat_class = Statistiche::getInstance();
 $chat_abi_class = ChatAbilita::getInstance();
@@ -19,7 +19,8 @@ $chat_abi_class = ChatAbilita::getInstance();
 
 <div class="chat_bottom">
 
-    <form class="ajax_form chat_form_ajax" action="chat/chat_ajax.php" data-callback="invioAzioneSuccess" data-swal="false" data-reset="false">
+    <form class="ajax_form chat_form_ajax" action="chat/chat_ajax.php" data-callback="invioAzioneSuccess"
+          data-swal="false" data-reset="false">
         <div class="chat_text chat_internal_box">
 
             <div class="input_container small">
@@ -38,9 +39,11 @@ $chat_abi_class = ChatAbilita::getInstance();
                     <?php } ?>
 
                 </select>
+            </div>
+            <div class="input_container small">
 
                 <select name="whispTo" class="whisp-chosen" data-placeholder="Sussurra a:">
-                    <?=Personaggio::getInstance()->listPgs();?>
+                    <?= Personaggio::getInstance()->listPgs(); ?>
                 </select>
             </div>
 
@@ -66,21 +69,21 @@ $chat_abi_class = ChatAbilita::getInstance();
             <div class="input_container small">
                 <select name="abilita">
                     <option value="">Abilita</option>
-                    <?=$chat_abi_class->renderChatAbilita();?>
+                    <?= $chat_abi_class->renderChatAbilita(); ?>
                 </select>
             </div>
 
             <div class="input_container small">
                 <select name="caratteristica">
                     <option value="">Caratteristica</option>
-                    <?= $stat_class->listStats();?>
+                    <?= $stat_class->listStats(); ?>
                 </select>
             </div>
 
             <div class="input_container small">
                 <select name="oggetto">
                     <option value="">Oggetto</option>
-                    <?=$chat->objectsList();?>
+                    <?= $chat->objectsList(); ?>
                 </select>
             </div>
 
@@ -98,7 +101,8 @@ $chat_abi_class = ChatAbilita::getInstance();
         </button>
         <?php
         if ($esiti_chat && $esiti) { ?>
-            <button name="esiti" onclick="modalWindow('esiti', 'Esiti in chat', 'popup.php?page=chat_pannelli_index&pannello=esiti_chat')">
+            <button name="esiti"
+                    onclick="modalWindow('esiti', 'Esiti in chat', 'popup.php?page=chat_pannelli_index&pannello=esiti_chat')">
                 Esiti
             </button>
         <?php } ?>
@@ -106,4 +110,4 @@ $chat_abi_class = ChatAbilita::getInstance();
 
 </div>
 
-<script src="<?=Router::getPagesLink('chat/JS/chat_input.js');?>"></script>
+<script src="<?= Router::getPagesLink('chat/JS/chat_input.js'); ?>"></script>
