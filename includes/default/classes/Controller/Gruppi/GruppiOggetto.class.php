@@ -172,7 +172,14 @@ class GruppiOggetto extends Gruppi
         );
     }
 
-    public function renderAjaxSingleObjectData($data)
+    /**
+     * @fn renderAjaxSingleObjectData
+     * @note Render in ajax dei dati del singolo oggetto
+     * TODO aggiungere dati necessari per il render dell'oggetto
+     * @param array $data
+     * @return array
+     */
+    public function renderAjaxSingleObjectData(array $data): array
     {
         $id = Filters::int($data['id']);
         $object = $this->getGroupObject($id);
