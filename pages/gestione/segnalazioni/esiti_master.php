@@ -8,7 +8,7 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
     <div class="form_info">
         <?=$MESSAGE['interface']['esiti']['gm_page'];?>
     </div>
-    <a class="but_newd" href='main.php?page=gestione_segnalazioni&segn=esito_index&op=first' target="_blank">
+    <a class="but_newd" href='main.php?page=gestione_segnalazioni&segn=esito_index&op=first'>
        Apri una nuova serie di esiti
     </a>
 
@@ -48,12 +48,12 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
                 <div class="titolo_box">
                     <a class="link_new"
                        href='main.php?page=gestione_segnalazioni&segn=esito_index&op=edit&id=<?=gdrcd_filter('num',$blocco['id']);?>'
-                       target="_blank">
+                    >
                         Modifica
                     </a> |
                     <a class="link_new"
                        href='main.php?page=gestione_segnalazioni&segn=esito_index&op=new&blocco=<?=gdrcd_filter('num',$blocco['id']);?>'
-                            target="_blank">
+                            >
                             Invia un nuovo esito
                     </a>
                     <?php
@@ -61,7 +61,7 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
                     ?>
                         | <a class="link_new"
                              href='main.php?page=gestione_segnalazioni&segn=esito_index&op=newchat&blocco=<?=gdrcd_filter('num',$blocco['id']);?>'
-                             target="_blank">
+                             >
                             Invia un esito in chat
                         </a>
                     <?php  } ?>
