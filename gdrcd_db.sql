@@ -1199,6 +1199,19 @@ CREATE TABLE IF NOT EXISTS `segnalazione_role` (
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `sessi`
+--
+
+CREATE TABLE IF NOT EXISTS `sessi` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `nome` varchar(255) NOT NULL,
+  `immagine` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `send_GM`
 --
 
