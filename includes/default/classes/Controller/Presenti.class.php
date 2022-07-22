@@ -29,6 +29,35 @@ class Presenti extends BaseClass
         );
     }
 
+    /**
+     * @fn getPresentiFromCurrentPosition
+     * @note Ottieni i presenti per un luogo specifico
+     * @return bool|int|mixed|string
+     */
+    public function getPresentiFromCurrentPosition()
+    {
+        $location = Personaggio::getPgLocation();
+
+        return DB::query("
+             SELECT * FROM `personaggio` 
+             WHERE `ora_entrata` > `ora_uscita` 
+                AND `ultimo_refresh` > DATE_SUB(NOW(), INTERVAL 45 MINUTE)
+                AND `ultimo_luogo` = '{$location}' ",
+            'result'
+        );
+    }
+
+    /*** AJAX ***/
+
+    /**
+     * @fn ajaxPresences
+     * @note Richiamo dei presenti mini via ajax
+     * @return array
+     */
+    public function ajaxPresences(): array
+    {
+        return ['template' => $this->listMiniPresences(), 'counter' => $this->numberOfPresences()];
+    }
 
     /**** RENDERING ****/
 
@@ -51,19 +80,22 @@ class Presenti extends BaseClass
     public function renderMiniPresences(): array
     {
 
-        $characters = $this->getPresenti();
+        $characters = $this->getPresentiFromCurrentPosition();
         $compiled_characters = [];
 
         foreach ($characters as $character) {
 
             $gender_data = Sessi::getInstance()->getGender($character['sesso']);
+            $availability_data = Disponibilita::getInstance()->getAvailability($character['disponibile']);
 
             $compiled_characters[] = [
                 'id' => Filters::out($character['id']),
                 'nome' => Filters::out($character['nome']),
                 'cognome' => Filters::out($character['cognome']),
                 'gender_name' => Filters::out($gender_data['nome']),
-                'gender_icon' => Router::getImgsDir().Filters::out($gender_data['immagine'])
+                'gender_icon' => Router::getImgsDir() . Filters::out($gender_data['immagine']),
+                'availability_name' => Filters::out($availability_data['nome']),
+                'availability_icon' => Router::getImgsDir() . Filters::out($availability_data['immagine']),
             ];
 
         }
