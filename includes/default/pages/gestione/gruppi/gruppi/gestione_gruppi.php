@@ -50,9 +50,15 @@ if($cls->permissionManageGroups() && $cls->activeGroups()){ # Metodo di controll
                 <div class="label">Url Esterno</div>
                 <input type="text" name="url" required>
             </div>
+
             <div class="single_input">
                 <div class="label">Statuto</div>
                 <textarea name="statuto"></textarea>
+            </div>
+
+            <div class="single_input">
+                <div class="label">Denaro</div>
+                <input type="number" name="denaro" required>
             </div>
 
             <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
@@ -100,9 +106,15 @@ if($cls->permissionManageGroups() && $cls->activeGroups()){ # Metodo di controll
                 <div class="label">Url Esterno</div>
                 <input type="text" name="url" required>
             </div>
+
             <div class="single_input">
                 <div class="label">Statuto</div>
                 <textarea name="statuto"></textarea>
+            </div>
+
+            <div class="single_input">
+                <div class="label">Denaro</div>
+                <input type="number" name="denaro" required>
             </div>
 
             <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->

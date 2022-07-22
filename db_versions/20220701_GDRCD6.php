@@ -90,6 +90,12 @@ class GDRCD6 extends DbMigration
                 ('SCHEDA_ABI_PUBLIC',1,'Scheda Abilita','Scheda Abilita pubblica','Pagina abilita pubblica?','bool',1),
                 ('GROUPS_ACTIVE',1,'Gruppi','Gruppi attivi','Gruppi attivi?','bool',1),
                 ('GROUPS_MAX_ROLES',3,'Gruppi','Massimo ruoli','Numero massimo di ruoli','int',1),
+                ('GROUPS_PAY_FROM_MONEY',1,'Gruppi','Stipendi da possedimento gruppi','Stipendi da possedimento gruppi','bool',1),
+                ('GROUPS_FOUNDS',1,'Gruppi','Fondi Gruppo','Introiti automatizzati per gruppi','bool',1),
+                ('GROUPS_EXTRA_EARNS',1,'Gruppi','Stipendi extra Gruppo','Introiti extra per personaggi da gruppi','bool',1),
+                ('GROUPS_ICON_CHAT',1,'Gruppi','Icone gruppo in chat','Icone gruppi in chat','bool',1),
+                ('GROUPS_ICON_PRESENT',1,'Gruppi','Icone gruppo nei presenti','Icone gruppi in chat','bool',1),
+                ('GROUPS_STORAGE',1,'Gruppi','Magazzini gruppi attivi','Magazzini gruppi attivi','bool',1),
                 ('WORKS_ACTIVE',1,'Gruppi','Lavori attivi','Lavori attivi?','bool',1),
                 ('WORKS_DIMISSIONS_DAYS',1,'Gruppi','Giorni per dimissioni','Giorni per dimissioni','bool',1),
                 ('WORKS_MAX',3,'Gruppi','Massimo lavori liberi','Numero massimo di lavori liberi','int',1),
@@ -126,6 +132,7 @@ class GDRCD6 extends DbMigration
         DB::query("
             INSERT INTO `cronjob` (`name`,`last_exec`,`in_exec`,`interval`,`interval_type`,`class`,`function`) VALUES
                 ('meteo_update',NULL,false,'60','minutes','Meteo','generateGlobalWeather'),
+                ('fondi_assign',NULL,false,'1','days','GruppiFondi','assignFounds'),
                 ('stipendi_assign',NULL,false,'1','days','Gruppi','cronSalaries');"
         );
 
@@ -164,10 +171,12 @@ class GDRCD6 extends DbMigration
               ('Gestione', 'Razze', 'Gestione Razze', 'gestione_razze', 'MANAGE_RACES'),
               ('Gestione', 'Bacheche', 'Gestione Bacheche', 'gestione_bacheche', 'MANAGE_FORUMS'),
               ('Gestione', 'Gruppi', 'Gestione Gruppi', 'gestione/gruppi/gruppi/gestione_gruppi', 'MANAGE_GROUPS'),
-              ('Gestione', 'Gruppi', 'Gestione Ruoli', 'gestione/gruppi/ruoli/gestione_ruoli', 'MANAGE_GROUPS'),
-              ('Gestione', 'Gruppi', 'Gestione Tipi', 'gestione/gruppi/tipi/gestione_tipi', 'MANAGE_GROUPS'),
+              ('Gestione', 'Gruppi', 'Gestione Gruppi Ruoli', 'gestione/gruppi/ruoli/gestione_ruoli', 'MANAGE_GROUPS'),
+              ('Gestione', 'Gruppi', 'Gestione Gruppi Tipi', 'gestione/gruppi/tipi/gestione_tipi', 'MANAGE_GROUPS'),
               ('Gestione', 'Gruppi', 'Gestione Lavori', 'gestione/gruppi/lavori/gestione_lavori', 'MANAGE_WORKS'),
               ('Gestione', 'Gruppi', 'Assegna/Rimuovi lavori', 'gestione/gruppi/lavori/assign_lavori', 'MANAGE_WORKS'),
+              ('Gestione', 'Gruppi', 'Gestione Gruppi Fondi', 'gestione/gruppi/fondi/gestione_fondi', 'MANAGE_GROUPS_FOUNDS'),
+              ('Gestione', 'Gruppi', 'Gestione Stipendi Extra', 'gestione/gruppi/stipendiExtra/gestione_stipendi_extra', 'MANAGE_GROUPS_EXTRA_EARN'),
               ('Gestione', 'Gestione', 'Gestione Costanti', 'gestione/costanti/gestione_costanti_box', 'MANAGE_CONSTANTS'),
               ('Gestione', 'Gestione', 'Gestione Versioni Database', 'gestione_db_migrations', 'MANAGE_DB_MIGRATIONS'),
               ('Gestione', 'Permessi', 'Gestione Permessi', 'gestione_permessi', 'MANAGE_PERMISSIONS'),
@@ -266,6 +275,9 @@ class GDRCD6 extends DbMigration
                 ('MANAGE_RACES', 'Permesso per la gestione delle razze'),
                 ('MANAGE_FORUMS', 'Permesso per la gestione delle bacheche'),
                 ('MANAGE_GROUPS', 'Permesso per la gestione dei gruppi'),
+                ('MANAGE_GROUPS_FOUNDS', 'Permesso per la gestione degli introiti dei gruppi'),
+                ('MANAGE_GROUPS_EXTRA_EARN', 'Permesso per la gestione degli introiti dei gruppi'),
+                ('MANAGE_GROUPS_STORAGES', 'Permesso per la gestione dei magazzini dei gruppi'),
                 ('MANAGE_WORKS', 'Permesso per la gestione dei lavori liberi'),
                 ('MANAGE_PERMISSIONS', 'Permesso per la gestione dei permessi'),
                 ('MANAGE_MANUTENTIONS', 'Permesso per la gestione della manutenzione del db'),

@@ -95,6 +95,23 @@ class GruppiRuoli extends Gruppi
     }
 
     /**
+     * @fn getAllGroupBoss
+     * @note Estrae tutti i membri di un gruppo preciso
+     * @param int $id
+     * @param string $val
+     * @return bool|int|mixed|string
+     */
+    public function getAllGroupBoss(int $id, string $val = 'personaggio.id,personaggio.nome,gruppi_ruoli.nome as role,gruppi_ruoli.immagine')
+    {
+
+        return DB::query("
+                SELECT {$val} FROM gruppi_ruoli 
+                    LEFT JOIN personaggio_ruolo ON personaggio_ruolo.ruolo = gruppi_ruoli.id 
+                    LEFT JOIN personaggio ON personaggio_ruolo.personaggio = personaggio.id 
+                WHERE gruppi_ruoli.gruppo='{$id}' AND personaggio_ruolo.id IS NOT NULL AND gruppi_ruoli.poteri = 1", 'result');
+    }
+
+    /**
      * @fn getAvailableRoles
      * @note Estrae i ruoli che un personaggio puo' gestire
      * @return bool|int|mixed|string
@@ -116,22 +133,6 @@ class GruppiRuoli extends Gruppi
     }
 
     /**
-     * @fn getCharacterRolesNumbers
-     * @note Conta quanti ruoli ha un personaggio
-     * @param int $pg
-     * @return int
-     */
-    public function getCharacterRolesNumbers(int $pg): int
-    {
-
-        $groups = DB::query("
-                SELECT COUNT(personaggio_ruolo.id) AS 'TOT' FROM personaggio_ruolo 
-                WHERE personaggio_ruolo.personaggio ='{$pg}'");
-
-        return Filters::int($groups['TOT']);
-    }
-
-    /**
      * @fn getCharacterSalaries
      * @note Ottiene tutti gli stipendi dei ruoli di un personaggio
      * @param int $pg
@@ -139,16 +140,17 @@ class GruppiRuoli extends Gruppi
      */
     public function getCharacterRolesSalaries(int $pg){
         return DB::query(
-            "SELECT gruppi_ruoli.stipendio FROM personaggio_ruolo 
+            "SELECT gruppi.id,gruppi.nome,gruppi_ruoli.stipendio,gruppi.denaro FROM personaggio_ruolo 
                     LEFT JOIN gruppi_ruoli ON (personaggio_ruolo.ruolo = gruppi_ruoli.id)
+                    LEFT JOIN gruppi ON (gruppi_ruoli.gruppo = gruppi.id)
                     WHERE personaggio_ruolo.personaggio ='{$pg}'",'result');
     }
 
     /**** LIST ****/
 
     /**
-     * @fn listGroups
-     * @note Genera gli option per i gruppi
+     * @fn listAvailableRoles
+     * @note Genera gli option per i ruoli disponibili
      * @return string
      */
     public function listAvailableRoles(): string
@@ -425,7 +427,7 @@ class GruppiRuoli extends Gruppi
 
         if ($this->permissionServiceGroups($group)) {
 
-            $roles_number = $this->getCharacterRolesNumbers($personaggio);
+            $roles_number = PersonaggioRuolo::getInstance()->getCharacterRolesNumbers($personaggio);
 
             if ($roles_number < $this->groups_max_roles) {
 

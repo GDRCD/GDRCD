@@ -95,4 +95,42 @@ class CarbonWrapper{
     }
 
 
+    /**
+     * @fn needExec
+     * @note Controlla se una funzione necessita di esecuzione
+     * @param int $interval
+     * @param string $interval_type
+     * @param string $last_exec
+     * @return bool
+     */
+    public static function needExec(int $interval, string $interval_type, string $last_exec): bool
+    {
+
+        // Se non e' mai stato eseguito, lo eseguo
+        if (empty($last_exec)) {
+            return true;
+        } else {
+            // Altrimenti estraggo la differenza in base al tipo
+            switch ($interval_type) {
+                case 'months':
+                    $diff = CarbonWrapper::DatesDifferenceMonths(date('Y-m-d'), Filters::date($last_exec,'Y-m-d'));
+                    break;
+                case 'days':
+                    $diff = CarbonWrapper::DatesDifferenceDays(date('Y-m-d'), Filters::date($last_exec,'Y-m-d'));
+                    break;
+                case 'hours':
+                    $diff = CarbonWrapper::DatesDifferenceHours(date('Y-m-d H:i:s'), Filters::date($last_exec,'Y-m-d H:i:s'));
+                    break;
+                case 'minutes':
+                    $diff = CarbonWrapper::DatesDifferenceMinutes(date('Y-m-d H:i:s'), Filters::date($last_exec,'Y-m-d H:i:s'));
+                    break;
+                default:
+                    $diff = 0;
+                    break;
+            }
+
+            // Controllo se e' superato il timer richiesto
+            return ($diff >= $interval);
+        }
+    }
 }

@@ -54,3 +54,12 @@ $gruppi = Gruppi::getInstance();
     </div>
 
 </form>
+
+
+<div class="link_back">
+    <a href="main.php?page=servizi/amministrazioneGilde/index&op=view_extra_earn">Gestisci stipendi extra</a>
+</div>
+
+<div class="link_back">
+    <a href="main.php?page=uffici">Torna indietro</a>
+</div>

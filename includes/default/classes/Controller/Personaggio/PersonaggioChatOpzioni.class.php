@@ -1,6 +1,6 @@
 <?php
 
-class PersonaggioChatOpzioni extends BaseClass
+class PersonaggioChatOpzioni extends Personaggio
 {
 
     /**
@@ -31,7 +31,6 @@ class PersonaggioChatOpzioni extends BaseClass
     /**
      * @fn getAllOptionsValues
      * @note Ottiene tutte le opzioni chat di un personaggio
-     * @param int $option
      * @param int $pg
      * @param string $val
      * @return bool|int|mixed|string
