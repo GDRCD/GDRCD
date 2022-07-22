@@ -299,6 +299,20 @@ CREATE TABLE IF NOT EXISTS `diario` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `disponibilita`
+--
+
+CREATE TABLE IF NOT EXISTS `disponibilita` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nome` varchar(255) NOT NULL,
+  `immagine` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 -- --------------------------------------------------------
 
 --
