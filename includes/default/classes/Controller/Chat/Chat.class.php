@@ -414,17 +414,37 @@ class Chat extends BaseClass
     private function getIcons(string $mittente): array
     {
         # Filtro il mittente passato
-        $mittente = Filters::in($mittente);
+        $mittente = Filters::int($mittente);
+
+
+        $icons = [];
 
         # Ritorno le sue icone estratte
-        return DB::query("SELECT razza.icon,razza.nome_razza,personaggio.sesso
-                                FROM personaggio 
-                                    
-                                    LEFT JOIN razza 
-                                    ON (razza.id_razza = personaggio.id_razza)
-                                    
-                                    WHERE personaggio.nome = '{$mittente}'
-                                    ");
+        $races = DB::query("
+                SELECT razza.icon,razza.nome_razza,personaggio.sesso
+                FROM personaggio 
+                LEFT JOIN razza ON (razza.id_razza = personaggio.id_razza)
+                WHERE personaggio.id = '{$mittente}'", 'result');
+
+        foreach ($races as $race){
+            $icons[] = [
+                "Title" => Filters::out($race['nome_razza']),
+                "Img" => 'races/'.Filters::out($race['icon'])
+            ];
+        }
+
+        if(Gruppi::getInstance()->activeGroupIconChat()){
+            $roles = PersonaggioRuolo::getInstance()->getAllCharacterRolesWithRoleData($mittente);
+
+            foreach ($roles as $role){
+                $icons[] = [
+                    "Title" => Filters::out($role['nome']),
+                    "Img" => 'groups/'.Filters::out($role['immagine'])
+                ];
+            }
+        }
+
+        return $icons;
     }
 
     /***** TIPOLOGIE HTML STAMP *****/
@@ -440,7 +460,9 @@ class Chat extends BaseClass
     {
 
         # Filtro le variabili necessarie
-        $mittente = Filters::out($azione['mittente']);
+        $mittente = Filters::int($azione['mittente']);
+        $mittente_data = Personaggio::getPgData($mittente,'nome');
+        $mittente_nome = Filters::out($mittente_data['nome']);
         $tag = Filters::out($azione['destinatario']);
         $img_chat = Filters::out($azione['url_img_chat']);
         $testo = Filters::string($azione['testo']);
@@ -464,9 +486,6 @@ class Chat extends BaseClass
 
             # Estraggo le icone
             $data_imgs = $this->getIcons($mittente);
-            $sesso = Filters::out($data_imgs['sesso']);
-            $razza_nome = Filters::out($data_imgs['nome_razza']);
-            $razza_icon = Filters::out($data_imgs['icon']);
 
             # Aggiungo l'html delle icone
             $html = "<span class='chat_icons'>";
@@ -476,15 +495,18 @@ class Chat extends BaseClass
                 $html .= " <img class='chat_ico' src='{$img_chat}' class='chat_avatar'> ";
             }
 
-            $html .= "<img class='chat_ico' src='themes/{$this->parameters['themes']['current_theme']}/imgs/races/{$razza_icon}' title='{$razza_nome}'> ";
-            $html .= "<img class='chat_ico' src='imgs/icons/testamini{$sesso}.png' title='{$razza_nome}'> ";
+            foreach ($data_imgs as $data_img) {
+                $link = Router::getImgsDir().$data_img['Img'];
+                $html .= "<img class='chat_ico' src='{$link}' title='{$data_img['Title']}'> ";
+            }
+
             $html .= "</span>";
         }
 
 
         # Creo il corpo azione
         $html .= "<span class='chat_time'>{$ora}</span> ";
-        $html .= "<span class='chat_name'><a href='#'>{$mittente}</a></span> ";
+        $html .= "<span class='chat_name'><a href='#'>{$mittente_nome}</a></span> ";
         $html .= "<span class='chat_tag'> [{$tag}]</span> ";
         $html .= "<span class='chat_msg' style='color:{$colore_descr}; font-size:{$size};'>{$testo}</span> ";
         $html .= '<br style="clear:both;" /> ';
@@ -506,10 +528,17 @@ class Chat extends BaseClass
         $html = '';
 
         # Filtro le variabili necessarie
-        $mittente = Filters::out($azione['mittente']);
-        $destinatario = Filters::out($azione['destinatario']);
+        $mittente = Filters::int($azione['mittente']);
+        $destinatario = Filters::int($azione['destinatario']);
         $testo = Filters::string($azione['testo']);
 
+
+        $mittente_data = Personaggio::getPgData($mittente,'nome');
+        $mittente_nome = Filters::out($mittente_data['nome']);
+
+        // TODO Cambiare campo libero destinatario sussurro con select personaggi
+        $destinatario_data = Personaggio::getPgData($destinatario,'nome');
+        $destinatario_nome = Filters::out($destinatario_data['nome']);
 
         # Customizzazioni
         $colore_testo_parlato = PersonaggioChatOpzioni::getInstance()->getOptionValue('sussurro_color', $this->me_id);
@@ -523,14 +552,14 @@ class Chat extends BaseClass
         $testo = $this->formattedText($testo, '');
 
         # Se sono io il mittente
-        if ($this->me == $mittente) {
-            $intestazione = "Hai sussurrato a {$destinatario}: ";
+        if ($this->me_id == $mittente) {
+            $intestazione = "Hai sussurrato a {$destinatario_nome}: ";
         } # Se sono io il destinatario
-        else if ($this->me == $destinatario) {
-            $intestazione = "{$mittente} ti ha sussurrato: ";
+        else if ($this->me_id == $destinatario) {
+            $intestazione = "{$mittente_nome} ti ha sussurrato: ";
         } # Se non sono nessuno di entrambi ma sono uno staffer
         else if ($this->permission > MODERATOR) {
-            $intestazione = "{$mittente} ha sussurrato a {$destinatario}";
+            $intestazione = "{$mittente_nome} ha sussurrato a {$destinatario_nome}";
         }
 
         # Se l'intestazione non e' vuota, significa che posso leggere il messaggio e lo stampo
@@ -553,9 +582,12 @@ class Chat extends BaseClass
     private function htmlSussurroGlobale(array $azione): string
     {
         # Filtro i dati necessari
-        $mittente = Filters::out($azione['mittente']);
+        $mittente = Filters::int($azione['mittente']);
         $ora = gdrcd_format_time($azione['ora']);
         $testo = Filters::string($azione['testo']);
+
+        $mittente_data = Personaggio::getPgData($mittente,'nome');
+        $mittente_nome = Filters::out($mittente_data['nome']);
 
         # Customizzazioni
         $colore_testo_parlato = PersonaggioChatOpzioni::getInstance()->getOptionValue('sussurro_globale_color', $this->me_id);
@@ -569,7 +601,7 @@ class Chat extends BaseClass
 
         # Creo il corpo azione
         $html = "<span class='chat_time'>{$ora}</span> ";
-        $html .= "<span class='chat_name'>{$mittente} sussurra a tutti: </span> ";
+        $html .= "<span class='chat_name'>{$mittente_nome} sussurra a tutti: </span> ";
         $html .= "<span class='chat_msg' style='color:{$colore_parlato};font-size:{$size};'>{$testo}</span> ";
 
         # Ritorno l'html dell'azione
@@ -819,14 +851,18 @@ class Chat extends BaseClass
     private function sendSussurro(array $post): array
     {
         # Filtro le variabili necessarie
-        $tag = Filters::in($post['tag']);
         $luogo = $this->luogo;
+        $sussurraA = Filters::int($post['whispTo']);
+
 
         # Controllo che il personaggio a cui sussurro sia nella mia stessa chat
-        $count = DB::query("SELECT count(nome) AS total FROM personaggio WHERE nome='{$tag}' AND ultimo_luogo='{$luogo}' LIMIT 1");
+        $count = DB::query("SELECT count(id) AS total FROM personaggio WHERE id='{$sussurraA}' AND ultimo_luogo='{$luogo}' LIMIT 1");
+
 
         # Se e' nella mia stessa chat
         if (Filters::int($count['total']) > 0) {
+
+            $post['tag'] = $sussurraA;
 
             # Salvo l'azione in DB
             $this->saveAction($post);
@@ -860,7 +896,7 @@ class Chat extends BaseClass
 
         # Salvo l'azione in DB
         DB::query("INSERT INTO chat(stanza,imgs,mittente,destinatario,tipo,testo)
-                              VALUE('{$this->luogo}','test','{$this->me}','{$tag}','{$tipo}','{$testo}')");
+                              VALUE('{$this->luogo}','test','{$this->me_id}','{$tag}','{$tipo}','{$testo}')");
     }
 
     /*** TABLE HELPERS ***/
@@ -1212,7 +1248,7 @@ class Chat extends BaseClass
      * @param array $array
      * @return void
      */
-    private function saveDice(array $array):void
+    private function saveDice(array $array): void
     {
         # Filtro le variabili necessarie
         $dice = Filters::in($array['dice']);

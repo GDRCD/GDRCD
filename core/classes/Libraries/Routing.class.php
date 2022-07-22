@@ -352,6 +352,28 @@ class Router
     }
 
     /**
+     * @fn getThemeDir
+     * @note Ottiene il link relativo della cartella themes
+     * @return string|void
+     */
+    public static function getImgsDir()
+    {
+
+        $engine = Functions::get_constant('STANDARD_ENGINE');
+
+        if (file_exists(ROOT . "includes/{$engine}/themes/imgs")) {
+            return "includes/{$engine}/themes/imgs/";
+        }
+
+
+        if (file_exists(ROOT . "includes/default/themes/imgs")) {
+            return "includes/default/themes/imgs/";
+        }
+
+        die('Non esiste una cartella di default per le immagini.');
+    }
+
+    /**
      * @fn getPagesDir
      * @note Ottieni il link relativo della cartella pages
      * @return string|void
