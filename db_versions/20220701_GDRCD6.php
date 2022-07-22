@@ -197,6 +197,7 @@ class GDRCD6 extends DbMigration
               ('Gestione', 'Mercato', 'Gestione Oggetti Mercato', 'gestione/mercato/gestione_mercato_oggetti', 'MANAGE_SHOPS_OBJECTS'),
               ('Gestione', 'Mercato', 'Gestione Negozi Mercato', 'gestione/mercato/gestione_mercato_negozi', 'MANAGE_SHOPS'),
               ('Gestione', 'Statistiche', 'Gestione Statistiche', 'gestione/statistiche/gestione_statistiche', 'MANAGE_STATS'),
+              ('Gestione', 'Sessi', 'Gestione Sessi', 'gestione/sessi/gestione_sessi', 'MANAGE_GENDERS'),
               ('Gestione', 'Contatti', 'Gestione Categorie', 'gestione/contatti/gestione_categorie', 'MANAGE_CONTACTS_CATEGORIES');"
         );
 
@@ -316,7 +317,8 @@ class GDRCD6 extends DbMigration
                 ('DELETE_CONTACTS','Permesso per la eliminazione dei contatti in schede altrui'),
                 ('VIEW_CONTACTS_CATEGORIES','Permesso per la visualizzazione delle categorie contatti in schede altrui'),
                 ('MANAGE_CONTACTS_CATEGORIES','Permesso per la gestione delle categorie contatti'),
-                ('MANAGE_CHAT_OPTIONS','Permesso per la gestione delle opzioni personalizzabili in chat')
+                ('MANAGE_CHAT_OPTIONS','Permesso per la gestione delle opzioni personalizzabili in chat'),
+                ('MANAGE_GENDERS','Permesso per la gestione dei generi')
                 ;"
         );
 
@@ -335,13 +337,18 @@ class GDRCD6 extends DbMigration
 
         DB::query("
             INSERT INTO `personaggio` (`id`,`nome`, `cognome`, `pass`, `ultimo_cambiopass`, `data_iscrizione`, `email`, `permessi`, `ultima_mappa`, `ultimo_luogo`, `esilio`, `data_esilio`, `motivo_esilio`, `autore_esilio`, `sesso`, `id_razza`, `descrizione`, `affetti`, `stato`, `online_status`, `disponibile`, `url_img`, `url_img_chat`, `url_media`, `blocca_media`, `esperienza`, `car0`, `car1`, `car2`, `car3`, `car4`, `car5`, `salute`, `salute_max`, `data_ultima_gilda`, `soldi`, `banca`, `ultimo_stipendio`, `last_ip`, `is_invisible`, `ultimo_refresh`, `ora_entrata`, `ora_uscita`, `posizione`) VALUES
-                (1,'Super', 'User', '\$P\$BcH1cP941XHOf0X61wVWWjzXqcCi2a/', NULL, '2011-06-04 00:47:48', '\$P\$BNZYtz9JOQE.O4Tv7qZyl3SzIoZzzR.', 5, 1, -1, '2009-01-01', '2009-01-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 7, 8, 6, 5, 6, 5, 100, 100, '2009-01-01 00:00:00', 300, 50000, '2009-01-01', '127.0.0.1', 0, '2021-10-08 00:28:13', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1),
-                (2,'Test', 'Di FunzionaliÃ ', '\$P\$BUoa19QUuXsgIDlhGC3chR/3Q7hoRy0', NULL, '2011-06-04 00:47:48', '\$P\$Bd1amPCKkOF9GdgYsibZ96U92D5CtR0', 0, 1, -1, '2009-01-01', '2009-01-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 7, 8, 6, 5, 6, 5, 100, 100, '2009-01-01 00:00:00', 50, 50, '2009-01-01', '127.0.0.1', 0, '2009-01-01 00:00:00', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1);"
+                (1,'Super', 'User', '\$P\$BcH1cP941XHOf0X61wVWWjzXqcCi2a/', NULL, '2011-06-04 00:47:48', '\$P\$BNZYtz9JOQE.O4Tv7qZyl3SzIoZzzR.', 5, 1, -1, '2009-01-01', '2009-01-01', '', '', 1, 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 7, 8, 6, 5, 6, 5, 100, 100, '2009-01-01 00:00:00', 300, 50000, '2009-01-01', '127.0.0.1', 0, '2021-10-08 00:28:13', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1),
+                (2,'Test', 'Di FunzionaliÃ ', '\$P\$BUoa19QUuXsgIDlhGC3chR/3Q7hoRy0', NULL, '2011-06-04 00:47:48', '\$P\$Bd1amPCKkOF9GdgYsibZ96U92D5CtR0', 0, 1, -1, '2009-01-01', '2009-01-01', '', '', 1, 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 7, 8, 6, 5, 6, 5, 100, 100, '2009-01-01 00:00:00', 50, 50, '2009-01-01', '127.0.0.1', 0, '2009-01-01 00:00:00', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1);"
         );
 
         DB::query("
             INSERT INTO `razza` (`id_razza`, `nome_razza`, `sing_m`, `sing_f`, `descrizione`, `bonus_car0`, `bonus_car1`, `bonus_car2`, `bonus_car3`, `bonus_car4`, `bonus_car5`, `immagine`, `icon`, `url_site`, `iscrizione`, `visibile`) VALUES
                 (1000, 'Umani', 'Umano', 'Umana', '', 0, 0, 0, 0, 0, 0, 'standard_razza.png', 'standard_razza.png', '', 1, 1);"
+        );
+
+        DB::query("INSERT INTO sessi(`nome`,`immagine`) VALUES 
+             ('Uomo','gender/m.png'),
+             ('Donna','gender/f.png');"
         );
 
     }

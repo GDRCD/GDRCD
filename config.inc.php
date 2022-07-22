@@ -181,7 +181,7 @@ $PARAMETERS['left_column']['box']['link_menu']['page'] = 'link_menu'; //Menu' de
 
 /*COLONNA DESTRA*/
 $PARAMETERS['right_column']['box']['frame_presenti']['class'] = 'presenti';
-$PARAMETERS['right_column']['box']['frame_presenti']['page'] = 'frame_presenti'; //Presenti.
+$PARAMETERS['right_column']['box']['frame_presenti']['page'] = 'presenti/mini'; //Presenti mini.
 
 
 /* NOMI CHIAVE DEL GIOCO */
