@@ -39,7 +39,8 @@ class Presenti extends BaseClass
         return DB::query('
              SELECT * FROM `personaggio` 
              WHERE `ora_entrata` > `ora_uscita` AND `ultimo_refresh` > DATE_SUB(NOW(), INTERVAL 45 MINUTE)
-                 ORDER BY `ultimo_luogo` ASC',
+                 ORDER BY `ultimo_luogo` ASC,
+                          `is_invisible` ASC',
             'result'
         );
     }
@@ -57,7 +58,8 @@ class Presenti extends BaseClass
              SELECT * FROM `personaggio` 
              WHERE `ora_entrata` > `ora_uscita` 
                 AND `ultimo_refresh` > DATE_SUB(NOW(), INTERVAL 45 MINUTE)
-                AND `ultimo_luogo` = '{$location}' ",
+                AND `ultimo_luogo` = '{$location}' 
+                AND ( (`is_invisible` = 0 AND `id` != '{$this->me_id}') OR `id`='{$this->me_id}')",
             'result'
         );
     }
@@ -141,6 +143,7 @@ class Presenti extends BaseClass
 
         $characters = $this->getFullPresences();
         $compiled_characters = [];
+        $invisible_character = [];
         $last_position = 0;
 
         foreach ($characters as $character) {
@@ -159,30 +162,36 @@ class Presenti extends BaseClass
                 'availability_icon' => Router::getImgsDir() . Filters::out($availability_data['immagine']),
                 'position_id' => Filters::int($character['ultimo_luogo']),
                 'mini_avatar' => Filters::out($character['url_img_chat']),
+                'invisible' => Filters::bool($character['is_invisible']),
             ];
 
             if ($position != $last_position) {
                 $last_position = $position;
                 // TODO sostiture query con funzione get di classe Mappa, quando sarà disponibile
-                if($position > 0) {
+                if ($position > 0) {
                     $location_data = DB::query("SELECT * FROM `mappa` WHERE `id` = '{$position}' LIMIT 1",);
                     $data['position'] = Filters::out($location_data['nome']);
-                } else{
+                } else {
                     $data['position'] = 'Mappa';
                 }
             }
 
-            $compiled_characters[] = $data;
+
+            if (Filters::bool($character['is_invisible'])) {
+                $invisible_character[] = $data;
+            } else {
+                $compiled_characters[] = $data;
+            }
         }
 
-        return $compiled_characters;
+        return ['characters' => $compiled_characters, 'invisible' => $invisible_character];
     }
 
     public function listFullPresences()
     {
         return Template::getInstance()->startTemplate()->render(
             'presenti/full',
-            ['body_row' => $this->renderFullPresences()]
+            $this->renderFullPresences()
         );
     }
 

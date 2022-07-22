@@ -1,4 +1,4 @@
-{foreach $body_row as $row}
+{foreach $characters as $row}
 
     {if $row.position}
         <div class="general_title">
@@ -29,7 +29,8 @@
 
             <div class="presente_commands">
                 <!-- # TODO Cambiare nome a id una volta fatti i messaggi -->
-                <a href="/main.php?page=messages_center&op=create&destinatario={{$row.nome}}" title="Invia messaggio a {{$row.nome}}">
+                <a href="/main.php?page=messages_center&op=create&destinatario={{$row.nome}}"
+                   title="Invia messaggio a {{$row.nome}}">
                     <i class="fas fa-paper-plane"></i>
                 </a>
             </div>
@@ -37,3 +38,41 @@
 
     </div>
 {/foreach}
+
+
+{if count($invisible) > 0}
+    <div class="general_title">
+
+        Invisibili
+
+    </div>
+    {foreach $invisible as $row}
+        <div class="single_presente">
+
+            <div class="presente_image">
+                <img src="{{$row.mini_avatar}}" alt="">
+            </div>
+            <div class="presente_info">
+                <div class="presente_name">
+                    <a href="main.php?page=scheda&pg={{$row.nome}}&id_pg={{$row.id}}">
+                        {{$row.nome}}
+                    </a>
+                    <img class="presenti_ico" src="{{$row.gender_icon}}" alt="{{$row.gender_name}}"
+                         title="{{$row.gender_name}}"/>
+                    <img class="presenti_ico" src="{{$row.availability_icon}}" alt="{{$row.availability_name}}"
+                         title="{{$row.availability_name}}"/>
+                </div>
+
+                <div class="presente_commands">
+                    <!-- # TODO Cambiare nome a id una volta fatti i messaggi -->
+                    <a href="/main.php?page=messages_center&op=create&destinatario={{$row.nome}}"
+                       title="Invia messaggio a {{$row.nome}}">
+                        <i class="fas fa-paper-plane"></i>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    {/foreach}
+
+{/if}

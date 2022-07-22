@@ -16,6 +16,9 @@ if (!empty($_SESSION['login'])) {
         die('Non sei collegato con nessun pg.');
     }
 
+    // Refresh ultimo_refresh
+    $me_id = Functions::getInstance()->getMyId();
+    DB::query("UPDATE personaggio SET ultimo_refresh = NOW() WHERE  id='{$me_id}' LIMIT 1");
 }
 
 // Cronjob
