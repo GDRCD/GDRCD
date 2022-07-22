@@ -357,8 +357,8 @@ class GDRCD6 extends DbMigration
 
         DB::query("
             INSERT INTO sessi(`nome`,`immagine`) VALUES
-            ('Maschio','sessi/m.png'),
-            ('Femmina','sessi/f.png');"
+            ('Maschio','gender/m.png'),
+            ('Femmina','gender/f.png');"
         );
 
     }
