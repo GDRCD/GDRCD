@@ -197,6 +197,8 @@ class GDRCD6 extends DbMigration
               ('Gestione', 'Mercato', 'Gestione Oggetti Mercato', 'gestione/mercato/gestione_mercato_oggetti', 'MANAGE_SHOPS_OBJECTS'),
               ('Gestione', 'Mercato', 'Gestione Negozi Mercato', 'gestione/mercato/gestione_mercato_negozi', 'MANAGE_SHOPS'),
               ('Gestione', 'Statistiche', 'Gestione Statistiche', 'gestione/statistiche/gestione_statistiche', 'MANAGE_STATS'),
+              ('Gestione', 'Extra', 'Gestione Disponibilita', 'gestione/disponibilita/gestione_disponibilita', 'MANAGE_AVAILABILITIES'),
+              ('Gestione', 'Extra', 'Gestione Sessi', 'gestione/sessi/gestione_sessi', 'MANAGE_GENDERS'),
               ('Gestione', 'Contatti', 'Gestione Categorie', 'gestione/contatti/gestione_categorie', 'MANAGE_CONTACTS_CATEGORIES');"
         );
 
@@ -316,7 +318,9 @@ class GDRCD6 extends DbMigration
                 ('DELETE_CONTACTS','Permesso per la eliminazione dei contatti in schede altrui'),
                 ('VIEW_CONTACTS_CATEGORIES','Permesso per la visualizzazione delle categorie contatti in schede altrui'),
                 ('MANAGE_CONTACTS_CATEGORIES','Permesso per la gestione delle categorie contatti'),
-                ('MANAGE_CHAT_OPTIONS','Permesso per la gestione delle opzioni personalizzabili in chat')
+                ('MANAGE_CHAT_OPTIONS','Permesso per la gestione delle opzioni personalizzabili in chat'),
+                ('MANAGE_AVAILABILITIES','Permesso per la gestione delle disponibilita'),
+                ('MANAGE_GENDERS','Permesso per la gestione dei sessi')
                 ;"
         );
 
@@ -343,6 +347,20 @@ class GDRCD6 extends DbMigration
             INSERT INTO `razza` (`id_razza`, `nome_razza`, `sing_m`, `sing_f`, `descrizione`, `bonus_car0`, `bonus_car1`, `bonus_car2`, `bonus_car3`, `bonus_car4`, `bonus_car5`, `immagine`, `icon`, `url_site`, `iscrizione`, `visibile`) VALUES
                 (1000, 'Umani', 'Umano', 'Umana', '', 0, 0, 0, 0, 0, 0, 'standard_razza.png', 'standard_razza.png', '', 1, 1);"
         );
+
+        DB::query("
+            INSERT INTO disponibilita(`nome`,`immagine`) VALUES
+            ('Disponibile','availability/disponibile.png'),
+            ('Non Disponibile','availability/non_disponibile.png'),
+            ('Occupato','availability/in_lavorazione.png');"
+        );
+
+        DB::query("
+            INSERT INTO sessi(`nome`,`immagine`) VALUES
+            ('Maschio','sessi/m.png'),
+            ('Femmina','sessi/f.png');"
+        );
+
 
     }
 
