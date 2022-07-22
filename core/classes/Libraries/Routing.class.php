@@ -151,7 +151,7 @@ class Router
      * @fn loadPages
      * @note Carica una pagina in base all'engine scelto
      * @param string $page
-     * @return void
+     * @return false
      */
     public static function loadPages(string $page): void
     {
@@ -179,6 +179,25 @@ class Router
 
 
     }
+
+
+    public static function loadFramePart(string $page): void
+    {
+        global $MESSAGE;
+        global $PARAMETERS;
+
+        $response = self::getPagesLink($page . '.inc.php');
+
+        if (!$response) {
+            $response = self::getPagesLink($page . '.php');
+        }
+
+        if ($response) {
+            require_once($response);
+        }
+
+    }
+
 
     /**
      * @fn loadRequired
@@ -241,7 +260,7 @@ class Router
 
         // Altrimenti controllo se segue la sintassi degli alias
         if (strpos($page, '/')) {
-            return $page.'.php';
+            return $page . '.php';
         }
 
         return false;
@@ -262,7 +281,6 @@ class Router
                 return $db_search['redirect'];
             }
         }
-
 
 
         $engine = Functions::get_constant('STANDARD_ENGINE');
