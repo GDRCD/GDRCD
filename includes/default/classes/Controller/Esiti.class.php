@@ -614,7 +614,11 @@ class Esiti extends BaseClass
     public function esitiListPLayer(): string
     {
         $list = $this->getAllEsitoPlayer($this->me_id, 'esiti.*', 'ORDER BY closed ASC,data ASC');
-        return $this->renderEsitiList($list, 'servizi');
+        return Template::getInstance()->startTemplate()->renderTable(
+            'gestione/esiti/list',
+
+            $this->renderEsitiList($list, 'servizi')
+        );
     }
 
     /**
@@ -659,15 +663,15 @@ class Esiti extends BaseClass
 
             $array = [
                 'id' => $id,
-                'author'=> Personaggio::nameFromId(Filters::in($row['autore'])),
-                'totale_esiti'=> $this->getEsitoAnswesNum($id),
-                'new_response'=>$this->haveNewResponse($id),
-                'closed' =>Filters::int($row['closed']),
-                'closed_cls'=>Filters::bool($row['closed']) ? 'closed' : '',
-                'date'=>Filters::date($row['data'], 'd/m/Y'),
-                'titolo'=>Filters::out($row['titolo']),
+                'author' => Personaggio::nameFromId(Filters::in($row['autore'])),
+                'totale_esiti' => $this->getEsitoAnswesNum($id),
+                'new_response' => $this->haveNewResponse($id),
+                'closed' => Filters::int($row['closed']),
+                'closed_cls' => Filters::bool($row['closed']) ? 'closed' : '',
+                'date' => Filters::date($row['data'], 'd/m/Y'),
+                'titolo' => Filters::out($row['titolo']),
                 'master' => $master,
-                'esito_view_permission'=> $this->esitoViewPermission($id),
+                'esito_view_permission' => $this->esitoViewPermission($id),
                 'esito_membri_permission' => $this->esitoMembersPermission($id),
                 'esito_manage' => $this->esitiManageAll(),
                 'esiti_close_permission' => $this->esitoClosePermission($id),
@@ -691,14 +695,14 @@ class Esiti extends BaseClass
             ['href' => "/main.php?page={$backlink}", 'text' => 'Indietro']
         ];
         return [
-                'body' => 'gestione/esiti/list',
-                'body_rows'=> $row_data,
-                'cells' => $cells,
-                'links' => $links,
-                'path'=>$path,
-                'page'=>$page,
-                'footer_text' => $footer_text
-            ];
+            'body' => 'gestione/esiti/list',
+            'body_rows' => $row_data,
+            'cells' => $cells,
+            'links' => $links,
+            'path' => $path,
+            'page' => $page,
+            'footer_text' => $footer_text
+        ];
     }
 
     /**
