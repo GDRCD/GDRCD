@@ -961,7 +961,7 @@ CREATE TABLE IF NOT EXISTS `personaggio` (
   `motivo_esilio` varchar(255) DEFAULT NULL,
   `autore_esilio` varchar(255) DEFAULT NULL,
   `sesso` varchar(255) DEFAULT 'm',
-  `id_razza` int DEFAULT '1000',
+  `razza` int DEFAULT '1000',
   `descrizione` text,
   `affetti` text,
   `storia` text,
@@ -993,7 +993,7 @@ CREATE TABLE IF NOT EXISTS `personaggio` (
   `ora_uscita` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `posizione` int NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  KEY `IDRazza` (`id_razza`),
+  KEY `IDRazza` (`razza`),
   KEY `Esilio` (`esilio`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -1159,24 +1159,18 @@ CREATE TABLE IF NOT EXISTS  quest_trama  (
 -- Struttura della tabella `razza`
 --
 
-CREATE TABLE IF NOT EXISTS `razza` (
-  `id_razza` int NOT NULL AUTO_INCREMENT,
-  `nome_razza` varchar(255) NOT NULL DEFAULT '',
+CREATE TABLE IF NOT EXISTS `razze` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nome` varchar(255) NOT NULL DEFAULT '',
   `sing_m` varchar(255) NOT NULL DEFAULT '',
   `sing_f` varchar(255) NOT NULL DEFAULT '',
   `descrizione` text NOT NULL,
-  `bonus_car0` int NOT NULL DEFAULT '0',
-  `bonus_car1` int NOT NULL DEFAULT '0',
-  `bonus_car2` int NOT NULL DEFAULT '0',
-  `bonus_car3` int NOT NULL DEFAULT '0',
-  `bonus_car4` int NOT NULL DEFAULT '0',
-  `bonus_car5` int NOT NULL DEFAULT '0',
-  `immagine` varchar(255) NOT NULL DEFAULT 'standard_razza.png',
-  `icon` varchar(255) NOT NULL DEFAULT 'standard_razza.png',
+  `immagine` varchar(255) NOT NULL DEFAULT 'races/standard_razza.png',
+  `icon` varchar(255) NOT NULL DEFAULT 'races/standard_razza.png',
   `url_site` varchar(255) DEFAULT NULL,
   `iscrizione` tinyint(1) NOT NULL DEFAULT '1',
   `visibile` tinyint(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id_razza`)
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------

@@ -48,11 +48,12 @@ class PersonaggioRuolo extends Personaggio
      * @param string $val
      * @return bool|int|mixed|string
      */
-    public function getAllCharacterRolesWithRoleData(int $pg, string $val = '*')
+    public function getAllCharacterRolesWithRoleData(int $pg, string $val = 'personaggio_ruolo.*,gruppi_ruoli.*,gruppi.nome AS gruppo_nome')
     {
         return DB::query("
              SELECT {$val} FROM personaggio_ruolo 
              LEFT JOIN gruppi_ruoli ON (gruppi_ruoli.id = personaggio_ruolo.ruolo) 
+             LEFT JOIN gruppi ON (gruppi.id = gruppi_ruoli.gruppo) 
              WHERE personaggio_ruolo.personaggio='{$pg}'",'result');
     }
 

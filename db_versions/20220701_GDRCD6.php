@@ -138,15 +138,15 @@ class GDRCD6 extends DbMigration
 
         DB::query("
             INSERT INTO `gruppi` (`nome`, `tipo`, `immagine`, `url`, `statuto`, `visibile`) VALUES
-                ('Guardia cittadina', '1', 'standard_gilda.png', 'test', 'Statuto fasullo', 1);"
+                ('Guardia cittadina', '1', 'groups/standard_gilda.png', 'test', 'Statuto fasullo', 1);"
         );
 
         DB::query("
             INSERT INTO `gruppi_ruoli` (`gruppo`, `nome`, `immagine`, `stipendio`, `poteri`) VALUES
-                (1, 'Capitano della guardia', 'standard_gilda.png', 100, 1),
-                (1, 'Ufficiale della guardia', 'standard_gilda.png', 70, 0),
-                (1, 'Soldato della guardia', 'standard_gilda.png', 40, 0),
-                (1, 'Recluta della guardia', 'standard_gilda.png', 15, 0);"
+                (1, 'Capitano della guardia', 'groups/standard_gilda.png', 100, 1),
+                (1, 'Ufficiale della guardia', 'groups/standard_gilda.png', 70, 0),
+                (1, 'Soldato della guardia', 'groups/standard_gilda.png', 40, 0),
+                (1, 'Recluta della guardia', 'groups/standard_gilda.png', 15, 0);"
         );
 
         DB::query("
@@ -199,6 +199,7 @@ class GDRCD6 extends DbMigration
               ('Gestione', 'Statistiche', 'Gestione Statistiche', 'gestione/statistiche/gestione_statistiche', 'MANAGE_STATS'),
               ('Gestione', 'Extra', 'Gestione Disponibilita', 'gestione/disponibilita/gestione_disponibilita', 'MANAGE_AVAILABILITIES'),
               ('Gestione', 'Extra', 'Gestione Sessi', 'gestione/sessi/gestione_sessi', 'MANAGE_GENDERS'),
+              ('Gestione', 'Extra', 'Gestione Razze', 'gestione/razze/gestione_razze', 'MANAGE_RACES'),
               ('Gestione', 'Contatti', 'Gestione Categorie', 'gestione/contatti/gestione_categorie', 'MANAGE_CONTACTS_CATEGORIES');"
         );
 
@@ -320,6 +321,7 @@ class GDRCD6 extends DbMigration
                 ('MANAGE_CONTACTS_CATEGORIES','Permesso per la gestione delle categorie contatti'),
                 ('MANAGE_CHAT_OPTIONS','Permesso per la gestione delle opzioni personalizzabili in chat'),
                 ('MANAGE_AVAILABILITIES','Permesso per la gestione delle disponibilita'),
+                ('MANAGE_RACES','Permesso per la gestione delle razze'),
                 ('MANAGE_GENDERS','Permesso per la gestione dei sessi')
                 ;"
         );
@@ -338,14 +340,14 @@ class GDRCD6 extends DbMigration
         );
 
         DB::query("
-            INSERT INTO `personaggio` (`id`,`nome`, `cognome`, `pass`, `ultimo_cambiopass`, `data_iscrizione`, `email`, `permessi`, `ultima_mappa`, `ultimo_luogo`, `esilio`, `data_esilio`, `motivo_esilio`, `autore_esilio`, `sesso`, `id_razza`, `descrizione`, `affetti`, `stato`, `online_status`, `disponibile`, `url_img`, `url_img_chat`, `url_media`, `blocca_media`, `esperienza`, `car0`, `car1`, `car2`, `car3`, `car4`, `car5`, `salute`, `salute_max`, `data_ultima_gilda`, `soldi`, `banca`, `ultimo_stipendio`, `last_ip`, `is_invisible`, `ultimo_refresh`, `ora_entrata`, `ora_uscita`, `posizione`) VALUES
+            INSERT INTO `personaggio` (`id`,`nome`, `cognome`, `pass`, `ultimo_cambiopass`, `data_iscrizione`, `email`, `permessi`, `ultima_mappa`, `ultimo_luogo`, `esilio`, `data_esilio`, `motivo_esilio`, `autore_esilio`, `sesso`, `razza`, `descrizione`, `affetti`, `stato`, `online_status`, `disponibile`, `url_img`, `url_img_chat`, `url_media`, `blocca_media`, `esperienza`, `car0`, `car1`, `car2`, `car3`, `car4`, `car5`, `salute`, `salute_max`, `data_ultima_gilda`, `soldi`, `banca`, `ultimo_stipendio`, `last_ip`, `is_invisible`, `ultimo_refresh`, `ora_entrata`, `ora_uscita`, `posizione`) VALUES
                 (1,'Super', 'User', '\$P\$BcH1cP941XHOf0X61wVWWjzXqcCi2a/', NULL, '2011-06-04 00:47:48', '\$P\$BNZYtz9JOQE.O4Tv7qZyl3SzIoZzzR.', 5, 1, -1, '2009-01-01', '2009-01-01', '', '', 1, 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 7, 8, 6, 5, 6, 5, 100, 100, '2009-01-01 00:00:00', 300, 50000, '2009-01-01', '127.0.0.1', 0, '2021-10-08 00:28:13', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1),
                 (2,'Test', 'Di FunzionaliÃ ', '\$P\$BUoa19QUuXsgIDlhGC3chR/3Q7hoRy0', NULL, '2011-06-04 00:47:48', '\$P\$Bd1amPCKkOF9GdgYsibZ96U92D5CtR0', 0, 1, -1, '2009-01-01', '2009-01-01', '', '', 1, 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 7, 8, 6, 5, 6, 5, 100, 100, '2009-01-01 00:00:00', 50, 50, '2009-01-01', '127.0.0.1', 0, '2009-01-01 00:00:00', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1);"
         );
 
         DB::query("
-            INSERT INTO `razza` (`id_razza`, `nome_razza`, `sing_m`, `sing_f`, `descrizione`, `bonus_car0`, `bonus_car1`, `bonus_car2`, `bonus_car3`, `bonus_car4`, `bonus_car5`, `immagine`, `icon`, `url_site`, `iscrizione`, `visibile`) VALUES
-                (1000, 'Umani', 'Umano', 'Umana', '', 0, 0, 0, 0, 0, 0, 'standard_razza.png', 'standard_razza.png', '', 1, 1);"
+            INSERT INTO `razze` (`id`, `nome`, `sing_m`, `sing_f`, `descrizione`, `immagine`, `icon`, `url_site`, `iscrizione`, `visibile`) VALUES
+                (1000, 'Umani', 'Umano', 'Umana', '', 'races/standard_razza.png', 'races/standard_razza.png', '', 1, 1);"
         );
 
         DB::query("

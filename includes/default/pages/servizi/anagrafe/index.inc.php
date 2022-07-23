@@ -14,7 +14,7 @@ if ($_POST['action'] == "searchPersonaggio") {
         }
 
         if (gdrcd_filter('get', $_REQUEST['razza'])) {
-            $whereFilters[] = "personaggio.id_razza = '" . gdrcd_filter('get', $_REQUEST['razza']) . "'";
+            $whereFilters[] = "personaggio.razza = '" . gdrcd_filter('get', $_REQUEST['razza']) . "'";
         }
 
         $limit_val = gdrcd_filter('num', $_REQUEST['limit']);
@@ -26,7 +26,7 @@ if ($_POST['action'] == "searchPersonaggio") {
         $querySearch = "SELECT personaggio.url_img_chat, personaggio.nome, personaggio.cognome, personaggio.sesso, 
                                razza.nome_razza 
                         FROM personaggio 
-                        LEFT JOIN razza ON personaggio.id_razza = razza.id_razza 
+                        LEFT JOIN razza ON personaggio.razza = razza.id 
                         WHERE 1 " . (isset($whereFilters) ? ' AND ' . implode(' AND ', $whereFilters) : NULL) . '
                         ORDER BY nome DESC '.$limit;
         $resultSearch = gdrcd_query($querySearch, 'result');

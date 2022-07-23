@@ -423,7 +423,7 @@ class Chat extends BaseClass
         $races = DB::query("
                 SELECT razza.icon,razza.nome_razza,personaggio.sesso
                 FROM personaggio 
-                LEFT JOIN razza ON (razza.id_razza = personaggio.id_razza)
+                LEFT JOIN razze ON (razze.id = personaggio.razza)
                 WHERE personaggio.id = '{$mittente}'", 'result');
 
         foreach ($races as $race){
