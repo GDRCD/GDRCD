@@ -1260,7 +1260,7 @@ CREATE TABLE IF NOT EXISTS `statistiche` (
 --
 
 CREATE TABLE IF NOT EXISTS _gdrcd_db_versions (
-  `migration_id` varchar(255) NOT NULL,
+  `migration_id` varchar(250) NOT NULL,
   `applied_on` DATETIME NOT NULL ,
   PRIMARY KEY (`migration_id`)
 );

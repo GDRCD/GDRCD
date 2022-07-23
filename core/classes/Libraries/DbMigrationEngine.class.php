@@ -137,7 +137,7 @@ class DbMigrationEngine extends BaseClass
      */
     public static function dbNeedsInstallation()
     {
-        return (self::getTablesCountInDb() <= 1 && self::dbConfigExist());//Controlliamo sempre 1 e non 0, per escludere la tabella delle  migration
+        return (self::getTablesCountInDb() <= 1 && !self::dbConfigExist());//Controlliamo sempre 1 e non 0, per escludere la tabella delle  migration
     }
 
     /**
