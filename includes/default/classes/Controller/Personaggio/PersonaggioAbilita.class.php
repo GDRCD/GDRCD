@@ -4,8 +4,8 @@
 class PersonaggioAbilita extends Personaggio
 {
     private $abi_class,
-    $req_class,
-    $extra_class;
+        $req_class,
+        $extra_class;
 
     protected function __construct()
     {
@@ -58,7 +58,7 @@ class PersonaggioAbilita extends Personaggio
     {
         return DB::query("SELECT {$val} FROM personaggio_abilita 
                                 LEFT JOIN abilita ON (personaggio_abilita.abilita = abilita.id)
-                                WHERE personaggio_abilita.personaggio='{$pg}' AND abilita.razza = '-1'",'result');
+                                WHERE personaggio_abilita.personaggio='{$pg}' AND abilita.razza = '-1'", 'result');
     }
 
     /**
@@ -71,12 +71,12 @@ class PersonaggioAbilita extends Personaggio
     public function getPgRaceAbility(int $pg, string $val = 'abilita.*,personaggio_abilita.*')
     {
         # Estaggo la razza del pg
-        $pg_data = Personaggio::getPgData($this->me_id,'id_razza');
+        $pg_data = Personaggio::getPgData($this->me_id, 'id_razza');
         $race = Filters::int($pg_data['id_razza']);
 
         return DB::query("SELECT {$val} FROM personaggio_abilita 
                                 LEFT JOIN abilita ON (personaggio_abilita.abilita = abilita.id)
-                                WHERE personaggio_abilita.personaggio='{$pg}' AND abilita.razza = '{$race}'",'result');
+                                WHERE personaggio_abilita.personaggio='{$pg}' AND abilita.razza = '{$race}'", 'result');
     }
 
     /*** PERMISSION */
@@ -94,7 +94,7 @@ class PersonaggioAbilita extends Personaggio
         $grado = Filters::int($grado);
         $new_grado = Filters::int(($grado + 1));
 
-        return (((Personaggio::isMyPg($pg)) || Permissions::permission('UPGRADE_ABI_SCHEDA')) && ($new_grado <= $this->abi_class->abiLevelCap()));
+        return (((Personaggio::isMyPg($pg)) || Permissions::permission('UPGRADE_SCHEDA_ABI')) && ($new_grado <= $this->abi_class->abiLevelCap()));
     }
 
     /**
@@ -166,14 +166,13 @@ class PersonaggioAbilita extends Personaggio
     /**
      * @fn upgradeAbilita
      * @note Aumenta una skill del personaggio
-     * @param int $abi
-     * @param string $pg
+     * @param array $post
      * @return array
      */
-    public function upgradeAbilita(int $abi, string $pg): array
+    public function upgradeAbilita(array $post): array
     {
-        $abi = Filters::int($abi);
-        $pg = Filters::int($pg);
+        $abi = Filters::int($post['abilita']);
+        $pg = Filters::int($post['pg']);
         $abi_pg = $this->getPgAbility($abi, $pg, 'personaggio_abilita.grado');
         $grado = Filters::int($abi_pg['grado']);
 
@@ -186,7 +185,7 @@ class PersonaggioAbilita extends Personaggio
 
                 if ($this->abi_class->extraActive()) {
 
-                    $extra = $this->extra_class->getAbilitaExtra($abi, $new_grado,'costo');
+                    $extra = $this->extra_class->getAbilitaExtra($abi, $new_grado, 'costo');
 
                     if (!empty($extra['costo']) && ($extra['costo'] > 0)) {
                         $costo = Filters::int($extra['costo']);
@@ -206,15 +205,38 @@ class PersonaggioAbilita extends Personaggio
                         DB::query("UPDATE personaggio_abilita SET grado='{$new_grado}' WHERE personaggio='{$pg}' AND abilita='{$abi}' LIMIT 1");
                     }
 
-                    return ['response' => true, 'mex' => $this->operationDone('UpOk')];
+                    return [
+                        'response' => true,
+                        'swal_title' => 'Operazione riuscita!',
+                        'swal_message' => 'Abilità aumentata con successo.',
+                        'swal_type' => 'success',
+                        'new_template' => SchedaAbilita::getInstance()->abilityPage($pg),
+                        'remained_exp' => PersonaggioAbilita::getInstance()->RemainedExp($pg)
+                    ];
+
                 } else {
-                    return ['response' => false, 'mex' => $this->operationDone('ExpKo')];
+                    return [
+                        'response' => false,
+                        'swal_title' => 'Operazione negata!',
+                        'swal_message' => 'Non hai abbastanza esperienza per l\'acquisto.',
+                        'swal_type' => 'error'
+                    ];
                 }
             } else {
-                return ['response' => false, 'mex' => $this->operationDone('ReqKo')];
+                return [
+                    'response' => false,
+                    'swal_title' => 'Operazione negata!',
+                    'swal_message' => 'Non hai i requisiti necessari per questa abilita.',
+                    'swal_type' => 'error'
+                ];
             }
         } else {
-            return ['response' => false, 'mex' => $this->operationDone('PermKo')];
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione negata!',
+                'swal_message' => 'Non hai i permessi per effettuare questa operazione.',
+                'swal_type' => 'error'
+            ];
         }
 
     }
@@ -222,16 +244,15 @@ class PersonaggioAbilita extends Personaggio
     /**
      * @fn downgradeAbilita
      * @note Diminuisce un'abilita' di un livello
-     * @param int $abi
-     * @param string $pg
+     * @param array $post
      * @return array
      */
-    public function downgradeAbilita(int $abi, string $pg): array
+    public function downgradeAbilita(array $post): array
     {
-        $abi = Filters::int($abi);
-        $pg = Filters::int($pg);
+        $abi = Filters::int($post['abilita']);
+        $pg = Filters::int($post['pg']);
 
-        $abi_data = $this->getPgAbility($abi, $pg,'grado');
+        $abi_data = $this->getPgAbility($abi, $pg, 'grado');
         $grado = Filters::int($abi_data['grado']);
 
         if ($this->permissionDowngradeAbilita($grado)) {
@@ -244,9 +265,22 @@ class PersonaggioAbilita extends Personaggio
                 DB::query("UPDATE personaggio_abilita SET grado='{$new_grado}' WHERE personaggio='{$pg}' AND abilita='{$abi}' LIMIT 1");
             }
 
-            return ['response' => true, 'mex' => $this->operationDone('downOk')];
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Abilità diminuita correttamente.',
+                'swal_type' => 'success',
+                'new_template' => SchedaAbilita::getInstance()->abilityPage($pg),
+                'remained_exp' => PersonaggioAbilita::getInstance()->RemainedExp($pg)
+
+            ];
         } else {
-            return ['response' => false, 'mex' => $this->operationDone('PermKo')];
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione negata!',
+                'swal_message' => 'Non hai i permessi per effettuare questa operazione.',
+                'swal_type' => 'error'
+            ];
         }
 
     }

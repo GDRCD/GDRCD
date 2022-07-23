@@ -56,8 +56,8 @@ class Abilita extends BaseClass
     /**
      * @fn getAllAbilita
      * @note Estrae la lista abilita, se specificato un pg ci associa anche il grado
-     * @param string $pg
-     * @return bool|int
+     * @param string $val
+     * @return bool|int|array
      */
     public function getAllAbilita(string $val = 'abilita.*')
     {
@@ -67,7 +67,8 @@ class Abilita extends BaseClass
     /**
      * @fn getAllAbilitaByRace
      * @note Estrae la lista abilita da razza
-     * @param string $pg
+     * @param int $race
+     * @param string $val
      * @return bool|int
      */
     public function getAllAbilitaByRace(int $race,string $val = 'abilita.*')

@@ -196,19 +196,8 @@ div.abilita_scheda_text .table-subtitle{
     margin: 3px auto;
 }
 
-div.abilita_scheda_car {
-    width: 90px;
-    font-size: 12px;
-}
-
-div.abilita_scheda_tank {
-    width: 20px;
-    font-size: 12px;
-}
-
-div.abilita_scheda_sub {
-    width: 80px;
-    font-size: 12px;
+.ability_table .tr .td{
+    width: 23% !important;
 }
 
 

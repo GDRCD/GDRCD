@@ -3,13 +3,13 @@
 $pg = Filters::out($_REQUEST['pg']);
 $me = Filters::out($_SESSION['login']);
 $perm = Filters::out($_SESSION['permessi']);
-$id_pg = Personaggio::IdFromName($pg);
+$id_pg = Filters::out($_REQUEST['id_pg']);
 
 /*Visualizza il link modifica se l'utente visualizza la propria scheda o se è almeno un capogilda*/
 ?>
 
     <!-- ABILITA -->
-    <a href="main.php?page=scheda_skill&pg=<?= $pg ?>&id_pg=<?= $id_pg; ?>">
+    <a href="main.php?page=scheda/index&op=abilita&id_pg=<?= $id_pg; ?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['skill']); ?>
     </a>
 
