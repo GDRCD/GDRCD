@@ -33,7 +33,6 @@ a, a:visited {
 
 a:hover {
     color: #222;
-    font-weight: bolder;
     text-decoration: underline;
 }
 

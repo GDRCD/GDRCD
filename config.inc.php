@@ -604,7 +604,7 @@ $PARAMETERS['menu']['map']['image_file'] = '';
 $PARAMETERS['menu']['map']['image_file_onclick'] = '';
 
 $PARAMETERS['menu']['profile']['text'] = 'Scheda';
-$PARAMETERS['menu']['profile']['url'] = 'main.php?page=scheda&pg='.$_SESSION['login'].'&id_pg='.Functions::getInstance()->getMyId();
+$PARAMETERS['menu']['profile']['url'] = 'main.php?page=scheda/index&pg='.$_SESSION['login'].'&id_pg='.Functions::getInstance()->getMyId();
 /*Esempio di link nel caso si volesse aprire come scheda modale
 $PARAMETERS['menu']['profile']['url']="javascript:modalWindow('scheda', 'Scheda di ". $_SESSION['login'] ."', 'popup.php?page=scheda&pg=". $_SESSION['login'] ."');";
 */

@@ -26,4 +26,112 @@ class Scheda extends BaseClass
         return (Personaggio::pgExist($id_pg));
     }
 
+    /**** INDEX ****/
+
+    /**
+     * @fn loadCharacterPage
+     * @note Routing delle pagine della scheda
+     * @param string $op
+     * @return string
+     */
+    public function loadCharacterPage(string $op): string
+    {
+        $op = Filters::out($op);
+
+        switch ($op) {
+            default:
+                $page = 'main.php';
+                break;
+        }
+
+        return $page;
+    }
+
+    /**** RENDER ****/
+
+
+    /**
+     * @fn getGroupIcons
+     * @note Funzione che si occupa dell'estrazione delle icone della scheda
+     * @param string $pg_id
+     * @return string
+     */
+    private function getGroupIcons(string $pg_id): string
+    {
+        # Filtro il mittente passato
+        $pg_id = Filters::int($pg_id);
+
+        $icons = '';
+
+        if(Gruppi::getInstance()->activeGroupIconChat()){
+            $roles = PersonaggioRuolo::getInstance()->getAllCharacterRolesWithRoleData($pg_id);
+
+            foreach ($roles as $role){
+                $link = Router::getImgsDir().$role['immagine'];
+                $icons .= "<img src='{$link}' title='{$role['gruppo_nome']} - {$role['nome']}'>";
+            }
+        }
+
+        return $icons;
+    }
+
+    /**
+     * @fn getRaceIcon
+     * @note Funzione che si occupa dell'estrazione dell'icone della razza
+     * @param string $pg_id
+     * @return string
+     */
+    private function getRaceIcon(string $pg_id): string
+    {
+        # Filtro il mittente passato
+        $pg_id = Filters::int($pg_id);
+        $character_data = Personaggio::getPgData($pg_id,'razza');
+        $race_id = Filters::int($character_data['razza']);
+        $race_data = Razze::getInstance()->getRace($race_id,'icon,sing_m,sing_f');
+        $icon = Filters::out($race_data['icon']);
+        $name = Filters::out($race_data['nome']);
+
+        $link = Router::getImgsDir().$icon;
+        return "<img src='{$link}' title='{$name}'>";
+    }
+
+    /**
+     * @fn renderMainPage
+     * @note Renderizza la scheda pg
+     * @param int $id_pg
+     * @return array
+     */
+    public function renderMainPage(int $id_pg): array
+    {
+
+        $character_data = Personaggio::getPgData($id_pg);
+
+        $data = [
+            'id' => Filters::out($character_data['id']),
+            'character_data'=>$character_data,
+            'groups_icons'=> $this->getGroupIcons($id_pg),
+            'race_icon'=>$this->getRaceIcon($id_pg),
+            'registration_day' => Filters::date($character_data['data_iscrizione'],'d/m/Y'),
+            'last_login' => Filters::date($character_data['ora_entrata'],'d/m/Y')
+        ];
+
+
+        return $data;
+    }
+
+    /**
+     * @fn characterPage
+     * @note Renderizza la scheda pg
+     * @param int $id_pg
+     * @return mixed
+     */
+    public function characterMainPage(int $id_pg)
+    {
+        return Template::getInstance()->startTemplate()->render(
+            'scheda/main',
+            $this->renderMainPage($id_pg)
+        );
+    }
+
+
 }

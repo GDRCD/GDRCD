@@ -588,3 +588,69 @@ div.pagina_scheda_equip {
     max-height: 300px;
     overflow: auto;
 }
+
+/*** GENERAL ***/
+
+.container_character{
+    width: 550px;
+    margin: 20px auto;
+}
+
+
+/**** MAIN PAGE ****/
+
+.scheda_main_page .first_box{
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.scheda_main_page .first_box .left_avatar{
+    width:200px;
+    height: 300px;
+    display: flex;
+    flex-wrap: wrap;
+    text-align: center;
+    justify-content: center;
+}
+
+.scheda_main_page .first_box .left_avatar img{
+    width: 100%;
+    height: 100%;
+    border:1px solid black;
+    margin-top: 10px;
+}
+
+.scheda_main_page .first_box .scheda_name{
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.scheda_main_page .first_box .right_data{
+    display: flex;
+    flex-grow: 0.7;
+    justify-content: center;
+    font-size: 12px;
+    flex-wrap: wrap;
+    align-items: stretch;
+    flex-direction: column;
+}
+
+
+.scheda_main_page .first_box .right_data .single_info{
+    display: flex;
+    flex-grow: 0.8;
+    justify-content: space-between;
+    border-bottom: 1px solid black;
+    padding: 5px 0;
+}
+
+.scheda_main_page .first_box .right_data .single_info img{
+    width: 20px;
+    height: 20px;
+    float: left;
+}
+
+.scheda_main_page .first_box .right_data .message_link{
+    margin-top: 10px;
+}
