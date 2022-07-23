@@ -200,6 +200,10 @@ div.abilita_scheda_text .table-subtitle{
     width: 23% !important;
 }
 
+.ability_table .abilita_scheda_sub form{
+    display: inline-block;
+    width: 25%;
+}
 
 /****************************************************************************/
 
