@@ -46,6 +46,10 @@ class Scheda extends BaseClass
             case 'abilita':
                 $page = 'abilita/index.php';
                 break;
+
+            case 'stats':
+                $page = 'stats/index.php';
+                break;
         }
 
         return $page;

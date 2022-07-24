@@ -116,6 +116,7 @@ class SchedaAbilita extends Scheda
             'body' => 'scheda/abilita',
             'body_rows' => $abilities_data,
             'cells' => $cells,
+            'table_title' => 'Abilità',
         ];
 
     }

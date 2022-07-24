@@ -11,7 +11,6 @@ if ($scheda_abi->available($id_pg)) {
 
 
         <div class="pagina_scheda pagina_scheda_stats">
-            <div class="general_title">Abilità</div>
             <?php require_once(__DIR__ . "/list.php"); ;?>
 
         </div>

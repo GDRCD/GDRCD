@@ -164,46 +164,6 @@ div.elenco_abilita td {
     vertical-align: top;
 }
 
-div.abilita_scheda_nome {
-    width: 250px;
-    font-size: 12px;
-    background: #222222;
-    border:1px solid black;
-    color:white;
-    cursor: pointer;
-    border-radius: 10px;
-}
-
-
-div.abilita_scheda_nome:hover{
-    background: #555555;
-}
-
-div.abilita_scheda_text{
-    width: 100%;
-    background: grey;
-    border:1px solid black;
-    border-radius: 5px;
-    margin: 3px 0;
-    padding: 0 5px;
-    box-sizing: border-box;
-    display: none;
-}
-
-div.abilita_scheda_text .table-subtitle{
-    border-bottom: 1px solid black;
-    width: 90%;
-    margin: 3px auto;
-}
-
-.ability_table .tr .td{
-    width: 23% !important;
-}
-
-.ability_table .abilita_scheda_sub form{
-    display: inline-block;
-    width: 25%;
-}
 
 /****************************************************************************/
 
@@ -555,32 +515,6 @@ div.pagina_scheda_equip {
     cursor: pointer;
 }
 
-/**** STATS ****/
-
-.pagina_scheda_stats .stats_list{
-    margin-top: 15px;
-}
-
-.pagina_scheda_stats .fake-table {
-    width: 90%;
-    margin: 0 auto;
-}
-
-.pagina_scheda_stats .fake-table .tr{
-}
-
-.pagina_scheda_stats .fake-table .tr:first-child{
-    border-width: 1px 0;
-}
-
-.pagina_scheda_stats .fake-table .tr .td {
-    width: 30%;
-}
-
-.pagina_scheda_stats .hidden_text .table-text{
-    max-height: 300px;
-    overflow: auto;
-}
 
 /*** GENERAL ***/
 
@@ -629,7 +563,6 @@ div.pagina_scheda_equip {
     flex-direction: column;
 }
 
-
 .scheda_main_page .first_box .right_data .single_info{
     display: flex;
     flex-grow: 0.8;
@@ -646,4 +579,81 @@ div.pagina_scheda_equip {
 
 .scheda_main_page .first_box .right_data .message_link{
     margin-top: 10px;
+}
+
+
+/**** ABILITA ***/
+
+
+div.abilita_scheda_nome {
+    width: 250px;
+    font-size: 12px;
+    background: #222222;
+    border:1px solid black;
+    color:white;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+
+div.abilita_scheda_nome:hover{
+    background: #555555;
+}
+
+div.abilita_scheda_text{
+    width: 100%;
+    background: grey;
+    border:1px solid black;
+    border-radius: 5px;
+    margin: 3px 0;
+    padding: 0 5px;
+    box-sizing: border-box;
+    display: none;
+}
+
+div.abilita_scheda_text .table-subtitle{
+    border-bottom: 1px solid black;
+    width: 90%;
+    margin: 3px auto;
+}
+
+.ability_table .tr .td{
+    width: 23% !important;
+}
+
+.ability_table .abilita_scheda_sub form{
+    display: inline-block;
+    width: 25%;
+}
+
+/**** STATS ***/
+
+.pagina_scheda_stats .stats_list{
+    margin-top: 15px;
+}
+
+.pagina_scheda_stats .fake-table {
+    width: 90%;
+    margin: 0 auto;
+}
+
+.pagina_scheda_stats .fake-table .tr{
+}
+
+.pagina_scheda_stats .fake-table .tr:first-child{
+    border-width: 1px 0;
+}
+
+.pagina_scheda_stats .fake-table .tr .td {
+    width: 30%;
+}
+
+.pagina_scheda_stats .hidden_text .table-text{
+    max-height: 300px;
+    overflow: auto;
+}
+
+.stats_list .scheda_stat_table .stats_command form{
+    display: inline-block;
+    width: 25%;
 }

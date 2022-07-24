@@ -13,7 +13,7 @@ $id_pg = Filters::out($_REQUEST['id_pg']);
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['skill']); ?>
     </a>
 
-    <a href="main.php?page=scheda_stats&pg=<?= $pg ?>&id_pg=<?= $id_pg; ?>">
+    <a href="main.php?page=scheda/index&op=stats&id_pg=<?= $id_pg; ?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['stats']); ?>
     </a>
 
