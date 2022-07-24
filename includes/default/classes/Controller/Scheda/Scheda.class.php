@@ -74,14 +74,19 @@ class Scheda extends BaseClass
                 $page = 'contatti/note_details.php';
                 break;
 
-            // TRANSAZIONI
+            // STORIA
             case 'storia':
                 $page = 'storia.php';
                 break;
 
-            // STORIA
+            // TRANSAZIONI
             case 'transazioni':
                 $page = 'transazioni/transazioni.php';
+                break;
+
+            // OGGETTI
+            case 'oggetti':
+                $page = 'oggetti/oggetti.php';
                 break;
 
         }

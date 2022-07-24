@@ -25,19 +25,12 @@ $id_pg = Filters::out($_REQUEST['id_pg']);
     </a>
 
     <!-- TRASFERIMENTI -->
-    <!-- TODO refactor transazioni -->
     <a href="main.php?page=scheda/index&op=transazioni&pg=<?= $pg ?>&id_pg=<?= $id_pg; ?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['transictions']); ?>
     </a>
 
-    <!-- ESPERIENZA -->
-    <!-- TODO refactor esperienza -->
-    <a href="main.php?page=scheda_px&pg=<?= $pg ?>&id_pg=<?= $id_pg; ?>">
-        <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['experience']); ?>
-    </a>
-
     <!-- INVENTARIO -->
-    <a href="main.php?page=scheda_oggetti&pg=<?= $pg ?>&id_pg=<?= $id_pg; ?>">
+    <a href="main.php?page=scheda/index&op=oggetti&id_pg=<?= $id_pg; ?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['equipment']); ?>
     </a>
 
