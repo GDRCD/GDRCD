@@ -322,7 +322,8 @@ class GDRCD6 extends DbMigration
                 ('MANAGE_CHAT_OPTIONS','Permesso per la gestione delle opzioni personalizzabili in chat'),
                 ('MANAGE_AVAILABILITIES','Permesso per la gestione delle disponibilita'),
                 ('MANAGE_RACES','Permesso per la gestione delle razze'),
-                ('MANAGE_GENDERS','Permesso per la gestione dei sessi')
+                ('MANAGE_GENDERS','Permesso per la gestione dei sessi'),
+                ('VIEW_LOGS','Permesso per la visione dei logs')
                 ;"
         );
 

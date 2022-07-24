@@ -530,11 +530,11 @@ CREATE TABLE IF NOT EXISTS `gruppi_tipo` (
 
 CREATE TABLE IF NOT EXISTS `log` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `nome_interessato` varchar(255) NOT NULL DEFAULT '',
   `autore` varchar(255) NOT NULL DEFAULT '',
-  `data_evento` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `codice_evento` varchar(255) NOT NULL DEFAULT '',
-  `descrizione_evento` varchar(255) NOT NULL DEFAULT '',
+  `destinatario` varchar(255) NOT NULL DEFAULT '',
+  `tipo` varchar(255) NOT NULL DEFAULT '',
+  `testo` varchar(255) NOT NULL DEFAULT '',
+  `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
