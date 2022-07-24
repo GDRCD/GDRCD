@@ -298,6 +298,8 @@ class GDRCD6 extends DbMigration
                 ('MANAGE_TRAME_OTHER','Permesso per la modifica delle trame degli altri'),
                 ('SCHEDA_EXP_VIEW','Permesso per la visualizzazione della pagina esperienza in scheda'),
                 ('SCHEDA_EXP_MANAGE','Permesso per la visualizzazione della pagina esperienza in scheda'),
+                ('SCHEDA_VIEW_LOGS','Permesso per la visione dei logs'),
+                ('SCHEDA_VIEW_TRANSACTIONS','Permesso per la visione delle transazioni altrui'),
                 ('MANAGE_OBJECTS','Permesso per la gestione degli oggetti'),
                 ('MANAGE_OBJECTS_TYPES','Permesso per la gestione delle tipologie di oggetti'),
                 ('MANAGE_OBJECTS_POSITIONS','Permesso per la gestione delle posizioni oggetti'),
@@ -322,9 +324,8 @@ class GDRCD6 extends DbMigration
                 ('MANAGE_CHAT_OPTIONS','Permesso per la gestione delle opzioni personalizzabili in chat'),
                 ('MANAGE_AVAILABILITIES','Permesso per la gestione delle disponibilita'),
                 ('MANAGE_RACES','Permesso per la gestione delle razze'),
-                ('MANAGE_GENDERS','Permesso per la gestione dei sessi'),
-                ('VIEW_LOGS','Permesso per la visione dei logs')
-                ;"
+                ('MANAGE_GENDERS','Permesso per la gestione dei sessi')
+               ;"
         );
 
         DB::query("

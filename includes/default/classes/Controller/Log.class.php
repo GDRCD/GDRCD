@@ -83,7 +83,7 @@ class Log extends BaseClass
      */
     public function permissionViewLogs(): bool
     {
-        return Permissions::permission('VIEW_LOGS');
+        return Permissions::permission('SCHEDA_VIEW_LOGS');
     }
 
     /**

@@ -54,7 +54,8 @@ class Personaggio extends BaseClass
      * @note Ritorna la lista dei pg registrati escludendo quelli già presenti fra i contatti e l'utente stesso
      * @return mixed
      */
-    function getAllPG(string $val = '*', string $where = '1' , string $order = ''){
+    function getAllPG(string $val = '*', string $where = '1', string $order = '')
+    {
         return DB::query("SELECT {$val} FROM personaggio  WHERE {$where} {$order}", 'result');
     }
 
@@ -87,14 +88,13 @@ class Personaggio extends BaseClass
         return ($pg == $me);
     }
 
-
     /*** FUNCTIONS  ***/
 
     /**
      * @fn nameFromId
      * @note Estrae il nome del pg dall'id
-     * @var int $id
      * @return string
+     * @var int $id
      */
     public static function nameFromId(int $id): string
     {
@@ -103,13 +103,14 @@ class Personaggio extends BaseClass
 
         return Filters::out($data['nome']);
     }
+
     /**
      * @fn IdFromName
-     * @note Estrae il nome del pg dall'id
-     * @var int $id
+     * @note Estrae l'id del pg dal nome
+     * @param string $nome
      * @return string
      */
-    public static function IdFromName(string $nome):string
+    public static function IdFromName(string $nome): string
     {
         $nome = Filters::in($nome);
         $data = DB::query("SELECT id FROM personaggio WHERE nome='{$nome}' LIMIT 1");
@@ -132,23 +133,6 @@ class Personaggio extends BaseClass
 
     /***** LISTS *****/
 
-
-    public function listPG($selected = 0 , $pg)
-    {
-
-        $html = '<option value=""></option>';
-
-
-        foreach ($pg as $personaggi) {
-            $nome = Filters::out($personaggi['nome']);
-            $id = Filters::int($personaggi['id']);
-            $sel = ($id == $selected) ? 'selected' : '';
-            $html .= "<option value='{$id}' {$sel}>{$nome}</option>";
-        }
-
-        return $html;
-    }
-
     /**
      * @fn listPgs
      * @note Genera gli option per i personaggi
@@ -159,70 +143,6 @@ class Personaggio extends BaseClass
         $pgs = $this->getAllPg();
         return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $pgs);
 
-    }
-
-    /**** RENDER ****/
-
-
-
-    /**
-     * @fn renderTransactionsPage
-     * @note Elabora i dati per la pagina transazioni
-     * @param int $id_pg
-     * @return array
-     */
-    public function renderTransactionsPage(int $id_pg): array
-    {
-
-        $logs = Log::getInstance()->getAllLogsByDestinatarioAndType($id_pg, BONIFICO);
-        $logs_data = [];
-
-
-        $cells = [
-            'Causale',
-            'Destinatario',
-            'Data',
-            'Autore'
-        ];
-
-        foreach ($logs as $log) {
-
-            $id = Filters::int($log['id']);
-            $autore = Filters::int($log['autore']);
-            $destinatario = Filters::int($log['destinatario']);
-
-            $logs_data[] = [
-                'id' => $id,
-                'testo' => substr(Filters::out($log['testo']), 0, 30),
-                'title' => Filters::out($log['testo']),
-                'autore'=>$this->nameFromId($autore),
-                'destinatario'=>$this->nameFromId($destinatario),
-                'creato_il'=> Filters::date($log['creato_il'],'h:i:s d/m/Y'),
-            ];
-        }
-
-
-        return [
-            'body_rows' => $logs_data,
-            'cells' => $cells,
-            'table_title' => 'Transazioni',
-        ];
-
-    }
-
-    /**
-     * @fn abilityPage
-     * @note Renderizza la scheda abilita'
-     * @param int $id_pg
-     * @return string
-     */
-    public function transactionsPage(int $id_pg): string
-    {
-
-        return Template::getInstance()->startTemplate()->renderTable(
-            'scheda/transazioni',
-            $this->renderTransactionsPage($id_pg)
-        );
     }
 
 }

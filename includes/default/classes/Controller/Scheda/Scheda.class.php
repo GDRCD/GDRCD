@@ -81,7 +81,7 @@ class Scheda extends BaseClass
 
             // STORIA
             case 'transazioni':
-                $page = 'transazioni.php';
+                $page = 'transazioni/transazioni.php';
                 break;
 
         }
