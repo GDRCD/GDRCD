@@ -251,7 +251,7 @@ class Contatti extends BaseClass
             $categoria = ContattiCategorie::getInstance()->getCategory($id_categoria, 'nome');
 
             $contatto = Personaggio::nameFromId($id_contatto);
-            $pop_up_modifica = 'javascript:modalWindow("edit", "Modifica Contatto","popup.php?page=scheda_contatti_nota&id=' . $id . '&op=contact_edit") ';
+            $pop_up_modifica = 'javascript:modalWindow("edit", "Modifica Contatto","popup.php?page=scheda/contatti/index_popup&id=' . $id . '&op=contact_edit") ';
 
             $row_data[] = [
                 'id' => $id,

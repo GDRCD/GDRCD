@@ -82,7 +82,7 @@ class ContattiNote extends Contatti
                 'pg_name' => Personaggio::nameFromId($id_pg),
                 'creato_il' => Filters::date($row['creato_il'], 'd/m/Y'),
                 'creato_da' => Personaggio::nameFromId($row['creato_da']),
-                'pop_up_modifica' => 'javascript:modalWindow("note_edit", "Modifica nota","popup.php?page=scheda_contatti_nota&id=' . $id . '&op=note_edit") '
+                'pop_up_modifica' => 'javascript:modalWindow("note_edit", "Modifica nota","popup.php?page=scheda/contatti/index_popup&id=' . $id . '&op=note_edit") '
             ];
 
             $row_data[] = $array;
