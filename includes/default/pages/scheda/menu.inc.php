@@ -20,15 +20,18 @@ $id_pg = Filters::out($_REQUEST['id_pg']);
     <a href="main.php?page=scheda/index&op=contatti&id_pg=<?= $id_pg; ?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['contatti']); ?>
     </a>
-    <a href="main.php?page=scheda_storia&pg=<?= $pg ?>&id_pg=<?= $id_pg; ?>">
+    <a href="main.php?page=scheda/index&op=storia&id_pg=<?= $id_pg; ?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['background']); ?>
     </a>
+
     <!-- TRASFERIMENTI -->
+    <!-- TODO refactor transazioni -->
     <a href="main.php?page=scheda_trans&pg=<?= $pg ?>&id_pg=<?= $id_pg; ?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['transictions']); ?>
     </a>
 
     <!-- ESPERIENZA -->
+    <!-- TODO refactor esperienza -->
     <a href="main.php?page=scheda_px&pg=<?= $pg ?>&id_pg=<?= $id_pg; ?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['experience']); ?>
     </a>
@@ -47,7 +50,7 @@ $id_pg = Filters::out($_REQUEST['id_pg']);
 
     <!-- ROLES -->
 <?php if (($_SESSION['permessi'] >= ROLE_PERM || $_REQUEST['pg'] == $_SESSION['login']) && REG_ROLE) { ?>
-    <a href="main.php?page=scheda_roles&pg=<?=$pg;?>&id_pg=<?= $id_pg; ?>">
+    <a href="main.php?page=scheda_roles&pg=<?= $pg; ?>&id_pg=<?= $id_pg; ?>">
         Giocate registrate
     </a>
 <?php } ?>
@@ -56,12 +59,12 @@ $id_pg = Filters::out($_REQUEST['id_pg']);
 <?php if ($_SESSION['permessi'] >= MODERATOR) { ?>
 
     <!-- LOG -->
-    <a href="main.php?page=scheda_log&pg=<?=$pg;?>&id_pg=<?= $id_pg; ?>">
+    <a href="main.php?page=scheda_log&pg=<?= $pg; ?>&id_pg=<?= $id_pg; ?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['log']); ?>
     </a>
 
     <!-- AMMINISTRA -->
-    <a href="main.php?page=scheda_gst&pg=<?=$pg;?>&id_pg=<?= $id_pg; ?>">
+    <a href="main.php?page=scheda_gst&pg=<?= $pg; ?>&id_pg=<?= $id_pg; ?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['gst']); ?>
     </a>
     <a href="main.php?page=scheda_log&pg=<?= $pg; ?>&id_pg=<?= $id_pg; ?>">
@@ -71,14 +74,14 @@ $id_pg = Filters::out($_REQUEST['id_pg']);
 
     <!-- CHAT OPTIONS -->
 <?php if ($_REQUEST['pg'] == $_SESSION['login']) { ?>
-    <a href="main.php?page=scheda/chat/opzioni/index&pg=<?=$pg;?>&id_pg=<?= $id_pg; ?>">
+    <a href="main.php?page=scheda/chat/opzioni/index&pg=<?= $pg; ?>&id_pg=<?= $id_pg; ?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['chat_options']); ?>
     </a>
 <?php } ?>
 
     <!-- MODIFICA -->
 <?php if (($_REQUEST['pg'] == $_SESSION['login']) || ($_SESSION['permessi'] >= GUILDMODERATOR)) { ?>
-    <a href="main.php?page=scheda_modifica&pg=<?=$pg;?>&id_pg=<?= $id_pg; ?>">
+    <a href="main.php?page=scheda_modifica&pg=<?= $pg; ?>&id_pg=<?= $id_pg; ?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['update']); ?>
     </a>
 <?php } ?>

@@ -43,14 +43,17 @@ class Scheda extends BaseClass
                 $page = 'main.php';
                 break;
 
+            // ABILITA
             case 'abilita':
                 $page = 'abilita/index.php';
                 break;
 
+            // STATISTICHE
             case 'stats':
                 $page = 'stats/index.php';
                 break;
 
+            // CONTATTi
             case 'contatti':
                 $page = 'contatti/index.php';
                 break;
@@ -70,6 +73,12 @@ class Scheda extends BaseClass
             case 'contatti_nota_details':
                 $page = 'contatti/note_details.php';
                 break;
+
+            // STORIA
+            case 'storia':
+                $page = 'storia.php';
+                break;
+
         }
 
         return $page;
@@ -91,11 +100,11 @@ class Scheda extends BaseClass
 
         $icons = '';
 
-        if(Gruppi::getInstance()->activeGroupIconChat()){
+        if (Gruppi::getInstance()->activeGroupIconChat()) {
             $roles = PersonaggioRuolo::getInstance()->getAllCharacterRolesWithRoleData($pg_id);
 
-            foreach ($roles as $role){
-                $link = Router::getImgsDir().$role['immagine'];
+            foreach ($roles as $role) {
+                $link = Router::getImgsDir() . $role['immagine'];
                 $icons .= "<img src='{$link}' title='{$role['gruppo_nome']} - {$role['nome']}'>";
             }
         }
@@ -113,13 +122,13 @@ class Scheda extends BaseClass
     {
         # Filtro il mittente passato
         $pg_id = Filters::int($pg_id);
-        $character_data = Personaggio::getPgData($pg_id,'razza');
+        $character_data = Personaggio::getPgData($pg_id, 'razza');
         $race_id = Filters::int($character_data['razza']);
-        $race_data = Razze::getInstance()->getRace($race_id,'icon,sing_m,sing_f');
+        $race_data = Razze::getInstance()->getRace($race_id, 'icon,sing_m,sing_f');
         $icon = Filters::out($race_data['icon']);
         $name = Filters::out($race_data['nome']);
 
-        $link = Router::getImgsDir().$icon;
+        $link = Router::getImgsDir() . $icon;
         return "<img src='{$link}' title='{$name}'>";
     }
 
@@ -136,11 +145,11 @@ class Scheda extends BaseClass
 
         $data = [
             'id' => Filters::out($character_data['id']),
-            'character_data'=>$character_data,
-            'groups_icons'=> $this->getGroupIcons($id_pg),
-            'race_icon'=>$this->getRaceIcon($id_pg),
-            'registration_day' => Filters::date($character_data['data_iscrizione'],'d/m/Y'),
-            'last_login' => Filters::date($character_data['ora_entrata'],'d/m/Y')
+            'character_data' => $character_data,
+            'groups_icons' => $this->getGroupIcons($id_pg),
+            'race_icon' => $this->getRaceIcon($id_pg),
+            'registration_day' => Filters::date($character_data['data_iscrizione'], 'd/m/Y'),
+            'last_login' => Filters::date($character_data['ora_entrata'], 'd/m/Y')
         ];
 
 
