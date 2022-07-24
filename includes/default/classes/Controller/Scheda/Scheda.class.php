@@ -89,6 +89,23 @@ class Scheda extends BaseClass
                 $page = 'oggetti/oggetti.php';
                 break;
 
+            // DIARIO
+            case 'diario':
+                $page = 'diario/index.php';
+                break;
+
+            case 'diario_view':
+                $page = 'diario/view.php';
+                break;
+
+            case 'diario_new':
+                $page = 'diario/new.php';
+                break;
+
+            case 'diario_edit':
+                $page = 'diario/edit.php';
+                break;
+
         }
 
         return $page;

@@ -848,3 +848,15 @@ div.scheda_exp_table .tr .td {
     padding: 0 10px;
     cursor: pointer;
 }
+
+/*** DIARIO ***/
+
+.scheda_diario_table .tr .td {
+    width: 23% !important;
+}
+
+.scheda_diario_table .commands a,
+.scheda_diario_table .commands form {
+    display: inline-block;
+    width: 20px;
+}

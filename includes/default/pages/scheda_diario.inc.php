@@ -37,7 +37,7 @@
                     break;
 
                 default: //Lista pagine
-                    include('scheda/diario/index.inc.php');
+                    include('scheda/diario/index_old.inc.php');
                     break;
             } ?>
 

@@ -290,12 +290,12 @@ CREATE TABLE IF NOT EXISTS `cronjob` (
 CREATE TABLE IF NOT EXISTS `diario` (
   `id` int NOT NULL AUTO_INCREMENT,
   `personaggio` varchar(255) DEFAULT NULL,
-  `data` date NOT NULL,
-  `data_inserimento` datetime NOT NULL,
-  `data_modifica` datetime DEFAULT NULL,
-  `visibile` varchar(255) NOT NULL,
   `titolo` varchar(255) NOT NULL DEFAULT '',
   `testo` text NOT NULL,
+  `data` date NOT NULL,
+  `data_inserimento` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `data_modifica` datetime DEFAULT NULL,
+  `visibile` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

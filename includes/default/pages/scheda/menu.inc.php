@@ -35,8 +35,8 @@ $id_pg = Filters::out($_REQUEST['id_pg']);
     </a>
 
     <!-- DIARIO -->
-<?php if (defined('PG_DIARY_ENABLED') && PG_DIARY_ENABLED) { ?>
-    <a href="main.php?page=scheda_diario&pg=<?= $pg ?>&id_pg=<?= $id_pg; ?>">
+<?php if (SchedaDiario::getInstance()->diaryActive()) { ?>
+    <a href="main.php?page=scheda/index&op=diario&id_pg=<?= $id_pg; ?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['diary']); ?>
     </a>
 <?php } ?>
