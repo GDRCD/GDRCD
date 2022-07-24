@@ -18,6 +18,10 @@ $id_pg = Filters::int($_GET['id_pg']);
 
 </div>
 
+<div class="link_back">
+    <a href="/main.php?page=scheda/index&id_pg=<?= $id_pg ?>">Torna indietro</a>
+</div>
+
 <script src="<?=Router::getPagesLink('scheda/stats/list.js');?>"></script>
 
 

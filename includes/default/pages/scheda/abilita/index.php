@@ -10,9 +10,8 @@ if ($scheda_abi->available($id_pg)) {
     if ($scheda_abi->isAccessible($id_pg)) { ?>
 
 
-        <div class="pagina_scheda pagina_scheda_stats">
+        <div class="pagina_scheda_stats">
             <?php require_once(__DIR__ . "/list.php"); ;?>
-
         </div>
 
     <?php }
