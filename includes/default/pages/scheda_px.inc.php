@@ -49,7 +49,7 @@ if (Personaggio::isMyPg($id_pg) || $quest->viewExpPermission()) {
                         <div class="single_input">
                             <input type="submit" value="Assegna">
                             <input type="hidden" name="op" value="assegna_px" required>
-                            <input type="hidden" name="pg" value="<?= $pg; ?>" required>
+                            <input type="hidden" name="pg" value="<?= $id_pg; ?>" required>
                         </div>
                     </form>
                 </div>
