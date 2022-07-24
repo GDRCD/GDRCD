@@ -25,36 +25,39 @@ class Log extends BaseClass
     /**
      * @fn getAllLogs
      * @note Ottieni tutti i logs dalla tabella logs
+     * @param int $limit
      * @param string $val
      * @return bool|int|mixed|string
      */
-    public function getAllLogs(string $val = '*')
+    public function getAllLogs(int $limit = 500,string $val = '*')
     {
-        return DB::query("SELECT {$val} FROM log WHERE 1", 'result');
+        return DB::query("SELECT {$val} FROM log WHERE 1 LIMIT {$limit}", 'result');
     }
 
     /**
      * @fn getAllLogsByType
      * @note Ottieni tutti i logs dalla tabella logs
      * @param string $type
+     * @param int $limit
      * @param string $val
      * @return bool|int|mixed|string
      */
-    public function getAllLogsByType(string $type, string $val = '*')
+    public function getAllLogsByType(string $type, int $limit = 500, string $val = '*')
     {
-        return DB::query("SELECT {$val} FROM log WHERE tipo='{$type}'", 'result');
+        return DB::query("SELECT {$val} FROM log WHERE tipo='{$type}' LIMIT {$limit}", 'result');
     }
 
     /**
      * @fn getAllLogsByDestinatario
      * @note Ottieni tutti i logs dalla tabella logs
      * @param int $destinatario
+     * @param int $limit
      * @param string $val
      * @return bool|int|mixed|string
      */
-    public function getAllLogsByDestinatario(int $destinatario, string $val = '*')
+    public function getAllLogsByDestinatario(int $destinatario, int $limit = 500, string $val = '*')
     {
-        return DB::query("SELECT {$val} FROM log WHERE destinatario='{$destinatario}'", 'result');
+        return DB::query("SELECT {$val} FROM log WHERE destinatario='{$destinatario}' LIMIT {$limit}", 'result');
     }
 
     /**

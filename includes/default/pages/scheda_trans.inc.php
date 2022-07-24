@@ -58,13 +58,13 @@
                                 <tr>
                                     <!-- Oggetto, immagine, quantità -->
                                     <td class="casella_elemento">
-                                        <div class="elementi_elenco"><?php echo gdrcd_filter('out', $record['descrizione_evento']); ?></div>
+                                        <div class="elementi_elenco"><?php echo gdrcd_filter('out', $record['testo']); ?></div>
                                     </td>
                                     <td class="casella_elemento">
-                                        <div class="elementi_elenco"><?php echo gdrcd_filter('out', $record['nome_interessato']); ?></div>
+                                        <div class="elementi_elenco"><?php echo gdrcd_filter('out', $record['destinatario']); ?></div>
                                     </td>
                                     <td class="casella_elemento">
-                                        <div class="elementi_elenco"><?php echo gdrcd_filter('out', gdrcd_format_date($record['data_evento'])); ?></div>
+                                        <div class="elementi_elenco"><?php echo gdrcd_filter('out', gdrcd_format_date($record['creato_il'])); ?></div>
                                     </td>
                                     <td class="casella_elemento">
                                         <div class="elementi_elenco"><?php echo gdrcd_filter('out', $record['autore']); ?></div>

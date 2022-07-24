@@ -26,7 +26,7 @@ $id_pg = Filters::out($_REQUEST['id_pg']);
 
     <!-- TRASFERIMENTI -->
     <!-- TODO refactor transazioni -->
-    <a href="main.php?page=scheda_trans&pg=<?= $pg ?>&id_pg=<?= $id_pg; ?>">
+    <a href="main.php?page=scheda/index&op=transazioni&pg=<?= $pg ?>&id_pg=<?= $id_pg; ?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['transictions']); ?>
     </a>
 
