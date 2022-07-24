@@ -103,7 +103,6 @@ class SchedaStats extends Scheda
 
 
         return [
-            'body' => 'scheda/stats',
             'body_rows' => $stats_data,
             'cells' => $cells,
             'table_title' => 'Statistiche',

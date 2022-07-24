@@ -17,12 +17,7 @@ $id_pg = Filters::out($_REQUEST['id_pg']);
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['stats']); ?>
     </a>
 
-    <!-- Descrizione e Storia separate dalla pagina principale della scheda -->
-    <a href="main.php?page=scheda_descrizione&pg=<?= $pg ?>&id_pg=<?= $id_pg; ?>">
-        <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['detail']); ?>
-    </a>
-
-    <a href="main.php?page=scheda_contatti&pg=<?= $pg ?>&id_pg=<?= $id_pg; ?>">
+    <a href="main.php?page=scheda/index&op=contatti&id_pg=<?= $id_pg; ?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['contatti']); ?>
     </a>
     <a href="main.php?page=scheda_storia&pg=<?= $pg ?>&id_pg=<?= $id_pg; ?>">

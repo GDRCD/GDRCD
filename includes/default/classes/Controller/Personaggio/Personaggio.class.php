@@ -52,7 +52,7 @@ class Personaggio extends BaseClass
     /**
      * @fn listPG
      * @note Ritorna la lista dei pg registrati escludendo quelli già presenti fra i contatti e l'utente stesso
-     * @return string
+     * @return mixed
      */
     function getAllPG(string $val = '*', string $where = '1' , string $order = ''){
         return DB::query("SELECT {$val} FROM personaggio  WHERE {$where} {$order}", 'result');

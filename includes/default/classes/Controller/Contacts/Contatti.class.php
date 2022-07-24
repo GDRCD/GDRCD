@@ -233,19 +233,16 @@ class Contatti extends BaseClass
     /*** CONTACT INDEX ***/
 
     /**
-     * TODO CONTROLLARE
      * @fn renderContactList
      * @note Render html lista contatti pg
-     * @param object $list
-     * @param string $page
      * @param int $id_pg
      * @return array
      */
-    public function renderContactList(object $list, string $page, int $id_pg): array
+    public function renderContactList(int $id_pg): array
     {
+        $list = $this->getAllCharacterContact($id_pg, 'contatto, categoria, id');
         $row_data = [];
-        $path = 'scheda_contatti';
-        $pg = Personaggio::nameFromId($id_pg);
+
         foreach ($list as $row) {
             $id = Filters::in($row['id']);
 
@@ -256,9 +253,9 @@ class Contatti extends BaseClass
             $contatto = Personaggio::nameFromId($id_contatto);
             $pop_up_modifica = 'javascript:modalWindow("edit", "Modifica Contatto","popup.php?page=scheda_contatti_nota&id=' . $id . '&op=contact_edit") ';
 
-
-            $array = [
+            $row_data[] = [
                 'id' => $id,
+                'id_contatto' => $id_contatto,
                 'contatto' => $contatto,
                 'categoria' => $categoria['nome'],
                 'contatti_view_permission' => $this->contactView($id_pg),
@@ -269,29 +266,24 @@ class Contatti extends BaseClass
                 'contatti_categories_staff' => $this->categoriesStaff(),
                 'pop_up_modifica' => $pop_up_modifica,
                 'id_pg' => $id_pg,
-                'pg' => $pg
-
+                'pg' => Personaggio::nameFromId($id_pg)
             ];
-
-            $row_data[] = $array;
         }
 
         $cells = [
-
             'Nome',
             'Categoria',
             'Controlli'
         ];
-        $links = [];
+        $links = [
+            ['href' => "/main.php?page=scheda/index&op=contatti_new&id_pg={$id_pg}", 'text' => 'Nuovo contatto', 'separator' => true],
+            ['href' => "/main.php?page=scheda/index&id_pg={$id_pg}", 'text' => ' Torna indietro']
+        ];
 
         return [
-            'body' => 'scheda/contatti/list',
             'body_rows' => $row_data,
             'cells' => $cells,
             'links' => $links,
-            'path' => $path,
-            'page' => $page
-
         ];
     }
 
@@ -306,11 +298,9 @@ class Contatti extends BaseClass
     public function ContactList(int $pg): string
     {
         $pg = Filters::int($pg);
-        $template = Template::getInstance()->startTemplate();
-        $list = $this->getAllCharacterContact($pg, 'contatto, categoria, id');
-        return $template->renderTable(
+        return Template::getInstance()->startTemplate()->renderTable(
             'scheda/contatti/list',
-            $this->renderContactList($list, 'scheda', $pg)
+            $this->renderContactList($pg)
         );
     }
 
@@ -351,8 +341,9 @@ class Contatti extends BaseClass
     public function filteredCharactersList(int $id_pg): string
     {
         $contattiPresenti = $this->contattiPresenti($id_pg);
-        $lista = Personaggio::getInstance()->getAllPG('id, nome', "id NOT IN ('{$id_pg}',{$contattiPresenti})", 'ORDER BY nome');
-        return Personaggio::getInstance()->listPG(0, $lista);
+        $extraQuery = !empty($contattiPresenti) ? ",{$contattiPresenti}" : '';
+        $lista = Personaggio::getInstance()->getAllPG('id, nome', "id NOT IN ('{$id_pg}'{$extraQuery})", 'ORDER BY nome');
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $lista);
     }
 
     /*** FUNCTIONS ***/

@@ -50,6 +50,26 @@ class Scheda extends BaseClass
             case 'stats':
                 $page = 'stats/index.php';
                 break;
+
+            case 'contatti':
+                $page = 'contatti/index.php';
+                break;
+
+            case 'contatti_new':
+                $page = 'contatti/contact_new.php';
+                break;
+
+            case 'contatti_view':
+                $page = 'contatti/note_view.php';
+                break;
+
+            case 'contatti_nota_new':
+                $page = 'contatti/note_new.php';
+                break;
+
+            case 'contatti_nota_details':
+                $page = 'contatti/note_details.php';
+                break;
         }
 
         return $page;

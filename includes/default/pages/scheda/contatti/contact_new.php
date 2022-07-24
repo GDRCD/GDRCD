@@ -23,10 +23,10 @@ $op = Filters::out($_GET['op']);
                 Nome
             </div>
             <select name="contatto" required>
-                <?php Contatti::getInstance()->filteredCharactersList($id_pg) ?>
-
+                <?= Contatti::getInstance()->filteredCharactersList($id_pg) ?>
             </select>
         </div>
+
         <div class="single_input">
             <div class='label'>
                 Categoria
@@ -37,25 +37,21 @@ $op = Filters::out($_GET['op']);
                 ?>
             </select>
         </div>
-        <div class="fake-table">
-            <div class="header">
-                <!-- bottoni -->
-                <div class="single_input">
-                    <div class='form_submit'>
-                        <input type="hidden" name="action" value="contact_new">
-                        <input type="hidden" id="id_pg" name="id_pg" value="<?= $id_pg ?>">
-                        <input type="hidden" id="pg" name="pg" value="<?= $pg ?>">
-                        <input type="hidden" id="url"
-                               value="/main.php?page=scheda_contatti&id_pg=<?= $id_pg ?>&pg=<?= $pg ?>">
-                        <input type="submit"
-                               value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>"/> |
-                        <a href="/main.php?page=scheda_contatti&id_pg=<?= $id_pg ?>&pg=<?= $pg ?>">Torna indietro</a>
-                    </div>
-                </div>
-            </div>
+
+        <div class="single_input">
+            <input type="hidden" name="action" value="contact_new">
+            <input type="hidden" id="id_pg" name="id_pg" value="<?= $id_pg ?>">
+            <input type="hidden" id="pg" name="pg" value="<?= $pg ?>">
+            <input type="hidden" id="url" value="/main.php?page=scheda/index&op=contatti&id_pg=<?= $id_pg ?>">
+            <input type="submit" value="Crea contatto"/>
         </div>
     </form>
-</div>
 
+
+    <div class="link_back">
+        <a href="/main.php?page=scheda/index&op=contatti&id_pg=<?= $id_pg ?>">Torna indietro</a>
+    </div>
+
+</div>
 
 <script src="<?= Router::getPagesLink('scheda/contatti/JS/contact_new.js'); ?>"></script>

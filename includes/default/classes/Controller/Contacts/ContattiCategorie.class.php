@@ -50,21 +50,10 @@ class ContattiCategorie extends Contatti
     /**
      * @fn listCategories
      * @note Genera gli option per i tipi di categorie
-     * @return string
-     */
-    public function listCategories(): string
-    {
-        $types = $this->getAllCategories();
-        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $types);
-    }
-
-    /**
-     * @fn listCategories
-     * @note Genera gli option per i tipi di categorie
      * @param int $selected
      * @return string
      */
-    public function listCategoriesToUpdate(int $selected): string
+    public function listCategories(int $selected = 0): string
     {
         $types = $this->getAllCategories();
         return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', $selected, $types);
