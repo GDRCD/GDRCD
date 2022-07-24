@@ -17,9 +17,12 @@ $id_pg = Filters::out($_REQUEST['id_pg']);
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['stats']); ?>
     </a>
 
+<?php if (Contatti::getInstance()->contactEnables()) { ?>
     <a href="main.php?page=scheda/index&op=contatti&id_pg=<?= $id_pg; ?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['contatti']); ?>
     </a>
+<?php } ?>
+
     <a href="main.php?page=scheda/index&op=storia&id_pg=<?= $id_pg; ?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['background']); ?>
     </a>
