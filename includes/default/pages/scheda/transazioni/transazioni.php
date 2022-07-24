@@ -6,18 +6,16 @@ $scheda_transactions = SchedaTransazioni::getInstance();
 if (Personaggio::isMyPg($id_pg) || $scheda_transactions->permissionViewTransactions($id_pg)) { ?>
 
 
-    <div class="scheda_transazioni_box">
-        <div class="fake-table scheda_transazioni_table">
-            <?= $scheda_transactions->transactionsPage($id_pg); ?>
-        </div>
+    <div class="fake-table log_table">
+        <?=Log::getInstance()->logTable($id_pg, BONIFICO, 10, 'Log Transazioni');?>
     </div>
 
 <?php }
 
 if (Personaggio::isMyPg($id_pg) || $scheda_transactions->viewExpPermission()) { ?>
     <div class="scheda_exp_box">
-        <div class="fake-table scheda_exp_table">
-            <?= $scheda_transactions->expTable($id_pg); ?>
+        <div class="fake-table log_table scheda_exp_table">
+            <?=Log::getInstance()->logTable($id_pg, PX, 10, 'Esperienza');?>
         </div>
     </div>
 

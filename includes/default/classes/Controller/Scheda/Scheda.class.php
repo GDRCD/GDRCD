@@ -106,6 +106,11 @@ class Scheda extends BaseClass
                 $page = 'diario/edit.php';
                 break;
 
+            //LOG
+            case 'log':
+                $page = 'log.php';
+                break;
+
         }
 
         return $page;

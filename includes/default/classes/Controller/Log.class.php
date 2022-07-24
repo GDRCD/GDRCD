@@ -29,7 +29,7 @@ class Log extends BaseClass
      * @param string $val
      * @return bool|int|mixed|string
      */
-    public function getAllLogs(int $limit = 500,string $val = '*')
+    public function getAllLogs(int $limit = 500, string $val = '*')
     {
         return DB::query("SELECT {$val} FROM log WHERE 1 LIMIT {$limit}", 'result');
     }
@@ -77,8 +77,8 @@ class Log extends BaseClass
     /**** PERMISSIONS ****/
 
     /**
-     * @fn permissionManageGenders
-     * @note Controlla se il personaggio può gestire i generi
+     * @fn permissionViewLogs
+     * @note Controlla se il personaggio può vedere i logs
      * @return bool
      */
     public function permissionViewLogs(): bool
@@ -87,8 +87,8 @@ class Log extends BaseClass
     }
 
     /**
-     * @fn newGender
-     * @note Inserisce un nuovo genere
+     * @fn newLog
+     * @note Inserisce un nuovo log
      * @param array $data
      * @return void
      */
@@ -101,4 +101,74 @@ class Log extends BaseClass
 
         DB::query("INSERT INTO log (autore, tipo, testo, destinatario) VALUES ('{$autore}', '{$tipo}', '{$testo}', '{$destinatario}')");
     }
+
+    /*** RENDER ***/
+
+
+    /**
+     * @fn renderLogTable
+     * @note Elabora e restituisce la tabella dei logs
+     * @param int $id_pg
+     * @param string $title
+     * @param int $type
+     * @param int $limit
+     * @return array
+     */
+    public function renderLogTable(int $id_pg, int $type, int $limit , string $title ): array
+    {
+
+        $logs = Log::getInstance()->getAllLogsByDestinatarioAndType($id_pg, $type, $limit);
+        $logs_data = [];
+
+        $cells = [
+            'Causale',
+            'Destinatario',
+            'Data',
+            'Autore'
+        ];
+
+        foreach ($logs as $log) {
+
+            $id = Filters::int($log['id']);
+            $autore = Filters::int($log['autore']);
+            $destinatario = Filters::int($log['destinatario']);
+
+            $logs_data[] = [
+                'id' => $id,
+                'testo' => substr(Filters::out($log['testo']), 0, 30),
+                'title' => Filters::out($log['testo']),
+                'autore' => Personaggio::nameFromId($autore),
+                'destinatario' => Personaggio::nameFromId($destinatario),
+                'creato_il' => Filters::date($log['creato_il'], 'h:i:s d/m/Y'),
+            ];
+        }
+
+
+        return [
+            'body_rows' => $logs_data,
+            'cells' => $cells,
+            'table_title' => $title
+        ];
+
+    }
+
+
+    /**
+     * @fn abilityPage
+     * @note Renderizza la scheda abilita'
+     * @param int $id_pg
+     * @param int $type
+     * @param int $limit
+     * @param string $title
+     * @return string
+     */
+    public function logTable(int $id_pg, int $type, int $limit = 500, string $title = "Log"): string
+    {
+
+        return Template::getInstance()->startTemplate()->renderTable(
+            'log/table',
+            $this->renderLogTable($id_pg, $type, $limit, $title)
+        );
+    }
+
 }

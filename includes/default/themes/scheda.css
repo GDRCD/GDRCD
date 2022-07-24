@@ -860,3 +860,9 @@ div.scheda_exp_table .tr .td {
     display: inline-block;
     width: 20px;
 }
+
+/*** LOG ***/
+
+.log_table .tr .td {
+    width: 23% !important;
+}

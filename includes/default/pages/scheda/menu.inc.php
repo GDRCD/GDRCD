@@ -5,7 +5,6 @@ $me = Filters::out($_SESSION['login']);
 $perm = Filters::out($_SESSION['permessi']);
 $id_pg = Filters::out($_REQUEST['id_pg']);
 
-/*Visualizza il link modifica se l'utente visualizza la propria scheda o se è almeno un capogilda*/
 ?>
 
     <!-- ABILITA -->
@@ -55,16 +54,13 @@ $id_pg = Filters::out($_REQUEST['id_pg']);
 <?php if ($_SESSION['permessi'] >= MODERATOR) { ?>
 
     <!-- LOG -->
-    <a href="main.php?page=scheda_log&pg=<?= $pg; ?>&id_pg=<?= $id_pg; ?>">
+    <a href="main.php?page=scheda/index&op=log&id_pg=<?= $id_pg; ?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['log']); ?>
     </a>
 
     <!-- AMMINISTRA -->
     <a href="main.php?page=scheda_gst&pg=<?= $pg; ?>&id_pg=<?= $id_pg; ?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['gst']); ?>
-    </a>
-    <a href="main.php?page=scheda_log&pg=<?= $pg; ?>&id_pg=<?= $id_pg; ?>">
-        <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['log']); ?>
     </a>
 <?php } ?>
 

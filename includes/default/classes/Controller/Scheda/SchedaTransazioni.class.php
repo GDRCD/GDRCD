@@ -48,66 +48,6 @@ class SchedaTransazioni extends Scheda
     /***** RENDER ***/
 
     /**
-     * @fn renderTransactionsPage
-     * @note Elabora i dati per la pagina transazioni
-     * @param int $id_pg
-     * @return array
-     */
-    public function renderTransactionsPage(int $id_pg): array
-    {
-
-        $logs = Log::getInstance()->getAllLogsByDestinatarioAndType($id_pg, BONIFICO, 10);
-        $logs_data = [];
-
-
-        $cells = [
-            'Causale',
-            'Destinatario',
-            'Data',
-            'Autore'
-        ];
-
-        foreach ($logs as $log) {
-
-            $id = Filters::int($log['id']);
-            $autore = Filters::int($log['autore']);
-            $destinatario = Filters::int($log['destinatario']);
-
-            $logs_data[] = [
-                'id' => $id,
-                'testo' => substr(Filters::out($log['testo']), 0, 30),
-                'title' => Filters::out($log['testo']),
-                'autore' => Personaggio::nameFromId($autore),
-                'destinatario' => Personaggio::nameFromId($destinatario),
-                'creato_il' => Filters::date($log['creato_il'], 'h:i:s d/m/Y'),
-            ];
-        }
-
-
-        return [
-            'body_rows' => $logs_data,
-            'cells' => $cells,
-            'table_title' => 'Transazioni',
-        ];
-
-    }
-
-    /**
-     * @fn abilityPage
-     * @note Renderizza la scheda abilita'
-     * @param int $id_pg
-     * @return string
-     */
-    public function transactionsPage(int $id_pg): string
-    {
-
-        return Template::getInstance()->startTemplate()->renderTable(
-            'scheda/transazioni',
-            $this->renderTransactionsPage($id_pg)
-        );
-    }
-
-    /**
      * @fn renderPgExpLog
      * @note Lista degli ultimi log di tipo esperienza
      * @param $pg
@@ -190,7 +130,7 @@ class SchedaTransazioni extends Scheda
                     'swal_title' => 'Operazione riuscita!',
                     'swal_message' => 'Esperienza assegnata correttamente.',
                     'swal_type' => 'success',
-                    'new_template' => $this->expTable($pg)
+                    'new_template' => Log::getInstance()->logTable($pg, PX, 10, 'Esperienza')
                 ];
             } else {
                 return [

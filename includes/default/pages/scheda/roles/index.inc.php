@@ -28,7 +28,7 @@ if (($_REQUEST['pg'] == $_SESSION['login']) || ($_SESSION['permessi'] >= ROLE_PE
                value="Registra giocata"/>
     </form>
 
-<? }
+<?php }
 
 ################################################
 
@@ -56,7 +56,7 @@ if (($_REQUEST['pg'] == $_SESSION['login']) || ($_SESSION['permessi'] >= ROLE_PE
                 <button type="submit" class="but_roles">Cerca</button>
         </form>
     </div>
-<? }
+<?php }
 
 
 ################################################
@@ -67,7 +67,7 @@ if (($_REQUEST['pg'] == $_SESSION['login']) || ($_SESSION['permessi'] >= ROLE_PE
 
 
 $year = gdrcd_query("SELECT YEAR(data_inizio) as year FROM segnalazione_role 
-    WHERE mittente = '" . gdrcd_filter('in', $pg) . "' GROUP BY YEAR(data_inizio) 
+    WHERE mittente = '" . gdrcd_filter('in', $pg) . "'
     ORDER BY data_inizio DESC", "result");
 
 #PULSANTI SELEZIONE ANNO
@@ -91,7 +91,7 @@ echo '<div class="container_months">';
 echo '<div class="page_title" ><h2>' . $yearchosen . '</h2></div>';
 $month = gdrcd_query("SELECT MONTH(data_inizio) as month FROM segnalazione_role 
     WHERE mittente = '" . gdrcd_filter('in', $pg) . "' AND YEAR(data_inizio) = '" . gdrcd_filter('num', $yearchosen) . "'
-    GROUP BY MONTH(data_inizio) ORDER BY data_inizio DESC", "result");
+    ORDER BY data_inizio DESC", "result");
 while ($rm = gdrcd_query($month, 'fetch')) {
     if ($rm['month'] == 1) {
         $mese = 'Gennaio';
@@ -175,16 +175,16 @@ while ($rm = gdrcd_query($month, 'fetch')) {
                                     Stato
                                 </div>
                             </td>
-                            <? if (($pg == $_SESSION['login'] && $row['conclusa'] == 1) || ($_SESSION['permessi'] >= ROLE_PERM)) { ?>
+                            <?php if (($pg == $_SESSION['login'] && $row['conclusa'] == 1) || ($_SESSION['permessi'] >= ROLE_PERM)) { ?>
                                 <td class="casella_titolo">
                                     <div class="titoli_elenco">
 
                                     </div>
                                 </td>
-                            <? } ?>
+                            <?php } ?>
                         </tr>
                         <tr>
-                            <? while ($row = gdrcd_query($query, 'fetch')){
+                            <?php while ($row = gdrcd_query($query, 'fetch')){
                             $chat = gdrcd_query("SELECT nome FROM mappa 
                                 WHERE id = " . gdrcd_filter('num', $row['stanza']) . " ", "result");
                             $r_chat = gdrcd_query($chat, 'fetch');
@@ -208,7 +208,7 @@ while ($rm = gdrcd_query($month, 'fetch')) {
                             $mydate = date('Y-m-d H:i:s');
                             ?>
                             <td>
-                                <? if ((($new_time > $mydate) && $pg == $_SESSION['login'] && $row['conclusa'] == 1)
+                                <?php if ((($new_time > $mydate) && $pg == $_SESSION['login'] && $row['conclusa'] == 1)
                                     || ($_SESSION['permessi'] >= EDIT_PERM && $row['conclusa'] == 1)) { ?>
                                     <form action="main.php?page=scheda_roles&pg=<?php echo gdrcd_filter('in', $_REQUEST['pg']); ?>"
                                           method="post">
@@ -220,7 +220,7 @@ while ($rm = gdrcd_query($month, 'fetch')) {
                                                value="<?php echo $row['id']; ?>"/>
                                         <button type="submit" class="but_roles">Modifica registrazione</button>
                                     </form>
-                                <? }
+                                <?php }
                                 ?>
                             </td>
                             <td class="casella_titolo">
@@ -264,9 +264,9 @@ while ($rm = gdrcd_query($month, 'fetch')) {
                                     } ?>
                                 </div>
                             </td>
-                            <? if (($pg == $_SESSION['login'] && $row['conclusa'] == 1) || ($_SESSION['permessi'] >= ROLE_PERM && $row['conclusa'] == 1)) { ?>
+                            <?php if (($pg == $_SESSION['login'] && $row['conclusa'] == 1) || ($_SESSION['permessi'] >= ROLE_PERM && $row['conclusa'] == 1)) { ?>
                                 <td>
-                                    <?  if ($_SESSION['permessi'] >= LOG_PERM) { ?>
+                                    <?php  if ($_SESSION['permessi'] >= LOG_PERM) { ?>
                                         <form action="main.php?page=scheda_roles&pg=<?php echo gdrcd_filter('in', $_REQUEST['pg']); ?>"
                                               method="post">
                                             <input type="hidden"
@@ -278,7 +278,7 @@ while ($rm = gdrcd_query($month, 'fetch')) {
                                             <button type="submit" class="but_roles">Log chat</button>
 
                                         </form>
-                                    <?  }
+                                    <?php  }
                                     if (SEND_GM) { ?>
                                         <form action="main.php?page=scheda_roles&pg=<?php echo gdrcd_filter('in', $_REQUEST['pg']); ?>"
                                               method="post">
@@ -291,20 +291,20 @@ while ($rm = gdrcd_query($month, 'fetch')) {
                                             <button type="submit" class="but_roles">Segnala ai Master</button>
 
                                         </form>
-                                    <?  }
+                                    <?php  }
                                         if ($pg == $_SESSION['login'] && $row['conclusa'] == 1 && SAVE_ROLE) { ?>
                                             <a href="pages/scheda/roles/save.proc.php?id=<?php echo $row['id']; ?>" target="_blank">
                                                 Scarica giocata
                                             </a>
-                                    <?  } ?>
+                                    <?php  } ?>
                                 </td>
-                            <? } ?>
+                            <?php } ?>
                         </tr>
-                        <? } ?>
+                        <?php } ?>
                     </table>
                 </div>
             </div>
         </div>
-    <? } #num rows
+    <?php } #num rows
 } ?>
     </div>
