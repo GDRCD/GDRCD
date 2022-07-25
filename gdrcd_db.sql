@@ -263,6 +263,9 @@ CREATE TABLE IF NOT EXISTS `config` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+
+
+
 -- --------------------------------------------------------
 
 --
@@ -1063,6 +1066,27 @@ CREATE TABLE `personaggio_online_status` (
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `personaggio_prestavolto`
+--
+
+CREATE TABLE IF NOT EXISTS `personaggio_prestavolto` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `personaggio` INT(11) NULL DEFAULT NULL,
+    `nome` VARCHAR(255) NULL DEFAULT NULL,
+    `cognome` VARCHAR(255) NULL DEFAULT NULL,
+    `fonte` VARCHAR(255) NULL DEFAULT NULL,
+    `condivisibile` INT(11) NULL DEFAULT NULL,
+    `condivisibile_descrizione` VARCHAR(255) NULL DEFAULT NULL,
+    `condivisibile_immagine` VARCHAR(255) NULL DEFAULT NULL,
+    `creato_il` DATETIME NULL DEFAULT NULL,
+    `modificato_il` DATETIME NULL DEFAULT NULL,
+    `eliminato_il` DATETIME NULL DEFAULT NULL,
+    PRIMARY KEY (`id`)
+)ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `personaggio_quest`
 --
 
@@ -1238,6 +1262,8 @@ CREATE TABLE IF NOT EXISTS `statistiche` (
   `creato_da` int DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
 
 --
 -- Struttura della tabella `_gdrcd_db_versions`

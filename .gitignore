@@ -175,3 +175,4 @@ includes/config-overrides.php
 .directory
 .user.ini
 **/compiled
+core/db_config.php
