@@ -47,6 +47,10 @@ if ($_GET['op']=='first') { ?>
         </div>
 
     </form>
-<?php }
-
-?>
+<?php } ?>
+<!-- link nuova serie esiti -->
+<div class="link_back">
+    <a href='main.php?page=servizi_esiti'>
+        Torna indietro
+    </a>
+</div>
