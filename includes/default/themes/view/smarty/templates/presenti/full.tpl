@@ -18,7 +18,7 @@
         </div>
         <div class="presente_info">
             <div class="presente_name">
-                <a href="main.php?page=scheda&pg={{$row.nome}}&id_pg={{$row.id}}">
+                <a href="main.php?page=scheda/index&id_pg={{$row.id}}">
                     {{$row.nome}}
                 </a>
                 <img class="presenti_ico" src="{{$row.gender_icon}}" alt="{{$row.gender_name}}"
