@@ -47,10 +47,16 @@ class Sessi extends BaseClass
 
     /**** LISTS ***/
 
-    public function listGenders()
+    /**
+     * @fn listGenders
+     * @note Lista dei sessi disponibili
+     * @param int $selected
+     * @return mixed
+     */
+    public function listGenders(int $selected = 0)
     {
         $genders = $this->getAllGenders();
-        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $genders);
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', $selected, $genders);
     }
 
 

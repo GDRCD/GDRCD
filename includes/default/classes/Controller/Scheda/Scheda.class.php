@@ -14,6 +14,9 @@ class Scheda extends BaseClass
         parent::__construct();
     }
 
+
+    /*** CONTROLS ***/
+
     /**
      * @fn available
      * @note Controlla se una scheda e' accessibile.
@@ -24,6 +27,50 @@ class Scheda extends BaseClass
     {
         $id_pg = Filters::int($id_pg);
         return (Personaggio::pgExist($id_pg));
+    }
+
+    /***** PERMESSI ***/
+
+    /**
+     * @fn permissionUpdateCharacter
+     * @note Controlla se un personaggio puo' essere modificato.
+     * @param int $id_pg
+     * @return bool
+     */
+    public function permissionUpdateCharacter(int $id_pg): bool
+    {
+        return Personaggio::isMyPg($id_pg) || Permissions::permission('SCHEDA_UPDATE');
+    }
+
+    /**
+     * @fn permissionStatusCharacter
+     * @note Controlla se lo status di un personaggio puo' essere modificato.
+     * @return bool
+     */
+    public function permissionStatusCharacter(): bool
+    {
+        return Permissions::permission('SCHEDA_STATUS_MANAGE');
+    }
+
+    /**
+     * @fn permissionBanCharacter
+     * @note Controlla se un personaggio puo' essere bannato.
+     * @return bool
+     */
+    public function permissionBanCharacter(): bool
+    {
+        return Permissions::permission('SCHEDA_BAN');
+    }
+
+
+    /**
+     * @fn permissionAdministrationCharacter
+     * @note Controlla se le info fondamentali di un personaggio possono essere modificate.
+     * @return bool
+     */
+    public function permissionAdministrationCharacter(): bool
+    {
+        return  Permissions::permission('SCHEDA_ADMINISTRATION_MANAGE');
     }
 
     /**** INDEX ****/
@@ -109,6 +156,16 @@ class Scheda extends BaseClass
             //LOG
             case 'log':
                 $page = 'log.php';
+                break;
+
+            //MODIFICA
+            case 'modifica':
+                $page = 'modifica/index.php';
+                break;
+
+            //AMMINISTRA
+            case 'amministra':
+                $page = 'amministra/index.php';
                 break;
 
         }
@@ -200,6 +257,155 @@ class Scheda extends BaseClass
             'scheda/main',
             $this->renderMainPage($id_pg)
         );
+    }
+
+
+    /**** FUNCTIONS ***/
+
+    /**
+     * @fn updateCharacterData
+     * @note Aggiorna i dati del personaggio
+     * @param array $post
+     * @return array
+     */
+    public function updateCharacterData(array $post): array
+    {
+        $id_pg = Filters::int($post['pg']);
+
+        if ($this->permissionUpdateCharacter($id_pg)) {
+
+            $cognome = Filters::in($post['cognome']);
+            $url_img = Filters::in($post['url_img']);
+            $url_img_chat = Filters::in($post['url_img_chat']);
+            $online_status = Filters::int($post['online_status']);
+            $descrizione = Filters::in($post['descrizione']);
+            $storia = Filters::in($post['storia']);
+            $url_media = Filters::in($post['url_media']);
+            $blocca_media = Filters::checkbox($post['blocca_media']);
+
+
+            DB::query("UPDATE personaggio SET cognome = '{$cognome}', url_img = '{$url_img}', url_img_chat = '{$url_img_chat}', online_status = '{$online_status}', descrizione = '{$descrizione}', storia = '{$storia}', url_media = '{$url_media}', blocca_media = '{$blocca_media}' WHERE id = '{$id_pg}'");
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Modifica effettuata correttamente.',
+                'swal_type' => 'success'
+            ];
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
+        }
+
+    }
+
+    /**
+     * @fn updateCharacterStatus
+     * @note Aggiorna lo stato del personaggio
+     * @param array $post
+     * @return array
+     */
+    public function updateCharacterStatus(array $post): array
+    {
+
+        if ($this->permissionStatusCharacter()) {
+
+            $id_pg = Filters::int($post['pg']);
+            $stato = Filters::in($post['stato']);
+            $salute = Filters::int($post['salute']);
+
+            DB::query("UPDATE personaggio SET stato = '{$stato}', salute = '{$salute}' WHERE id = '{$id_pg}'");
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Modifica stato effettuata correttamente.',
+                'swal_type' => 'success'
+            ];
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
+        }
+
+    }
+
+    /**
+     * @fn updateAdministrationCharacter
+     * @note Aggiorna i dati dell'amministratore del personaggio
+     * @param array $post
+     * @return array
+     */
+    public function updateAdministrationCharacter(array $post): array
+    {
+
+        if ($this->permissionAdministrationCharacter()) {
+
+            $id_pg = Filters::int($post['pg']);
+            $sesso = Filters::int($post['sesso']);
+            $razza = Filters::int($post['razza']);
+            $banca = Filters::int($post['banca']);
+            $soldi = Filters::int($post['soldi']);
+
+
+            DB::query("UPDATE personaggio SET sesso = '{$sesso}', razza = '{$razza}', banca = '{$banca}', soldi = '{$soldi}' WHERE id = '{$id_pg}'");
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Modifica amministrazione effettuata correttamente.',
+                'swal_type' => 'success'
+            ];
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
+        }
+
+    }
+
+    /**
+     * @fn banCharacter
+     * @note Ban di un personaggio
+     * @param array $post
+     * @return array
+     */
+    public function banCharacter(array $post): array
+    {
+
+        if ($this->permissionBanCharacter()) {
+
+            $id_pg = Filters::int($post['pg']);
+            $esilio = Filters::in($post['esilio']);
+            $motivo_esilio = Filters::in($post['motivo_esilio']);
+
+            DB::query("UPDATE personaggio SET esilio = '{$esilio}', motivo_esilio = '{$motivo_esilio}', autore_esilio ='{$this->me_id}', data_esilio=NOW() WHERE id = '{$id_pg}'");
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Ban effettuato correttamente.',
+                'swal_type' => 'success'
+            ];
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error'
+            ];
+        }
+
     }
 
 
