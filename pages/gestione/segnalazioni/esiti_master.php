@@ -8,10 +8,6 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
     <div class="form_info">
         <?=$MESSAGE['interface']['esiti']['gm_page'];?>
     </div>
-    <a class="but_newd" href='main.php?page=gestione_segnalazioni&segn=esito_index&op=first' >
-       Apri una nuova serie di esiti
-    </a>
-
     <?php
     # Lista di tutti i blocchi di esiti
      if ($_POST['op']=='list') {
@@ -46,27 +42,9 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
 
             if (!isset($tit['closed'])) { ?>
                 <div class="titolo_box">
-                    <a class="link_new"
-
-                       href='main.php?page=gestione_segnalazioni&segn=esito_index&op=edit&id=<?=gdrcd_filter('num',$blocco['id']);?>'
-                    >
-                        Modifica
-                    </a> |
-                    <a class="link_new"
-                       href='main.php?page=gestione_segnalazioni&segn=esito_index&op=new&blocco=<?=gdrcd_filter('num',$blocco['id']);?>'
-                            >
-                            Invia un nuovo esito
+                    <a class="link_new" href='main.php?page=gestione_segnalazioni&segn=esito_index&op=edit&id=<?=gdrcd_filter('num',$blocco['id']);?>'>
+                        [ Modifica ]
                     </a>
-                    <?php
-                    if (ESITI_CHAT){
-                    ?>
-                        | <a class="link_new"
-
-                             href='main.php?page=gestione_segnalazioni&segn=esito_index&op=newchat&blocco=<?=gdrcd_filter('num',$blocco['id']);?>'
-                             >
-                            Invia un esito in chat
-                        </a>
-                    <?php  } ?>
                 </div>
             <?php 	}
 
@@ -101,11 +79,28 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
                 <b>Note OFF:</b> <?php echo $row['noteoff'];?>
             <?php } # Singolo esito ?>
         </div><br>
+         <?php if (!isset($tit['closed'])) { ?>
+             <div class="link_back">
+                 <a href='main.php?page=gestione_segnalazioni&segn=esito_index&op=new&blocco=<?=gdrcd_filter('num',$blocco['id']);?>'>
+                 Invia un nuovo esito
+                </a>
+             </div>
+             <?php
+             if (ESITI_CHAT){
+                 ?>
+                 | <a class="link_new"
+
+                      href='main.php?page=gestione_segnalazioni&segn=esito_index&op=newchat&blocco=<?=gdrcd_filter('num',$blocco['id']);?>'
+                 >
+                     Invia un esito in chat
+                 </a>
+             <?php  }
+         } // Fine if !isset?>
          <!-- Link a piè di pagina -->
          <div class="link_back">
              <a href="main.php?page=gestione_segnalazioni&segn=esiti_master">Torna alla lista</a>
          </div>
-    <?php }
+    <?php } // Fine lista esiti
     else if (isset($_POST['op'])===FALSE) {
     //Determinazione pagina (paginazione)
     $pagebegin = (int)$_REQUEST['offset'] * $PARAMETERS['settings']['posts_per_page'];
@@ -237,6 +232,11 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
                     </tr>
                 <?php } #Fine blocco  ?>
             </table>
+        </div>
+        <div class="link_back">
+            <a href='main.php?page=gestione_segnalazioni&segn=esito_index&op=first'>
+                Apri una nuova serie di esiti
+            </a>
         </div>
     <?php
         }
