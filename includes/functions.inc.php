@@ -559,7 +559,7 @@ function gdrcd_check_time($time)
  * @param string $path : il percorso filesystem del file da includere
  * @param array $params : un array di dati aggiuntivi passabili al modulo
  */
-function gdrcd_load_modules($page, array $params = [])
+function gdrcd_load_modules($page, $params = [])
 {
     global $MESSAGE;
     global $PARAMETERS;
@@ -691,16 +691,6 @@ function gdrcd_format_datetime($datetime_in)
 function gdrcd_format_datetime_standard($datetime_in)
 {
     return date('Y-m-d H:i', strtotime($datetime_in));
-}
-
-/**
- * Funzione di formattazione data completa nel formato standard del database
- * @param string $datetime_in : la data e ora in formato leggibile da strtotime()
- * @return string la data/ora nel formato YYYY-MM-DD hh:mm
- */
-function gdrcd_format_datetime_timestamp($datetime_in)
-{
-    return strtotime($datetime_in);
 }
 
 /**
