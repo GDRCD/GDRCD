@@ -1,28 +1,30 @@
 <?php
 
-
-class Prestavolto extends BaseClass
+class PersonaggioPrestavolto extends BaseClass
 {
 
     /**
      * @var mixed
      * @var mixed
      */
-    private $enabled;
+    private $prestavolti_enabled;
 
     public function __construct()
     {
         parent::__construct();
-        $this->enabled = Functions::get_constant('PRESTAVOLTO_ENABLED');
+        $this->prestavolti_enabled = Functions::get_constant('PRESTAVOLTO_ENABLED');
     }
 
     /*** GETTERS */
 
-    public function isEnabled(){
-        return $this->enabled;
+    /**
+     * @fn
+     * @return false|mixed
+     */
+    public function prestavoltiEnabled()
+    {
+        return $this->prestavolti_enabled;
     }
-
-
 
     /** LOADER */
 
@@ -36,7 +38,7 @@ class Prestavolto extends BaseClass
     {
         $op = Filters::out($op);
 
-        switch ($op) {
+        switch ( $op ) {
             case 'read':
                 $page = 'read.php';
                 break;
@@ -48,6 +50,7 @@ class Prestavolto extends BaseClass
         return $page;
 
     }
+
     /** TABLE HELPERS */
 
     /**
@@ -67,32 +70,33 @@ class Prestavolto extends BaseClass
      * @note Render html della lista dei gruppi
      * @return string
      */
-    public function List(): string
+    public function serviziPrestavoltoList(): string
     {
         $template = Template::getInstance()->startTemplate();
         return $template->renderTable(
             'servizi/prestavolti_list',
-            $this->renderList($this->getAllPrestavolto())
+            $this->renderList()
         );
     }
+
     /**
      * @fn renderList
      * @note Render html lista gruppi
-     * @param array $list
      * @return array
      */
-    public function renderList(object $list): array
+    public function renderList(): array
     {
+        $list = $this->getAllPrestavolto();
         $row_data = [];
 
-        foreach ($list as $row) {
+        foreach ( $list as $row ) {
 
             $array = [
 
                 'nome' => Filters::out($row['nome']),
                 'cognome' => Filters::out($row['cognome']),
                 'fonte' => Filters::out($row['fonte']),
-                'personaggio' => Personaggio::nameFromId(Filters::int($row['personaggio']))
+                'personaggio' => Personaggio::nameFromId(Filters::int($row['personaggio'])),
 
             ];
 
@@ -103,17 +107,18 @@ class Prestavolto extends BaseClass
             'Personaggio',
             'Nome',
             'Cognome',
-            'Fonte'
+            'Fonte',
         ];
+
         $links = [
-            ['href' => "/main.php?page=uffici", 'text' => 'Indietro']
+            ['href' => "/main.php?page=uffici", 'text' => 'Indietro'],
         ];
+
         return [
             'body_rows' => $row_data,
             'cells' => $cells,
-            'links' => $links
+            'links' => $links,
         ];
     }
-
 
 }

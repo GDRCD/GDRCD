@@ -1,12 +1,10 @@
 <?php
 
 Router::loadRequired();
+$prestavolto = PersonaggioPrestavolto::getInstance();
 
-$prestavolto = Prestavolto::getInstance();
 ?>
 
-
 <div class="fake-table works_list">
-    <?= $prestavolto->List(); ?>
+    <?= $prestavolto->serviziPrestavoltoList(); ?>
 </div>
-

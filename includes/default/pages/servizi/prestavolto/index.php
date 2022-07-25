@@ -2,9 +2,9 @@
 
 Router::loadRequired();
 
-$prestavolto = Prestavolto::getInstance();
+$prestavolto = PersonaggioPrestavolto::getInstance();
 
-if ($prestavolto->isEnabled()) { ?>
+if ( $prestavolto->prestavoltiEnabled() ) { ?>
     <div class="groups_page">
         <!-- Titolo della pagina -->
         <div class="general_title">
