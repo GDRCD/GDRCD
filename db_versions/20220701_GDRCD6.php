@@ -77,6 +77,7 @@ class GDRCD6 extends DbMigration
                 ('ESITI_CHAT',1,'Esiti','Attiva esiti in chat','Abilitare la funzione di lancio degli esiti in chat?','bool',1),
                 ('ESITI_TIRI',1,'Esiti','Lancio di dadi negli esiti','Abilitare la possibilità di lanciare dadi all''interno del pannello esiti?','bool',1),
                 ('ESITI_FROM_PLAYER',1,'Esiti','Esiti dai player','Abilitare richiesta esiti da parte dei player?','bool',1),
+                ('DIARY_ENABLED',1,'Diario','Diari attivi','Abilitare diari in scheda pg?','bool',1),
                 ('QUEST_ENABLED',1,'Quest','Attivazione Quest migliorate','Gestione quest migliorata, attiva?','bool',1),
                 ('QUEST_VIEW',2,'Quest','Permessi visual quest','Permesso minimo per visualizzazione delle quest','permission',1),
                 ('QUEST_SUPER_PERMISSION',3,'Quest','Permessi speciali','Permesso minimo per modificare qualsiasi parte del pacchetto','int',1),
@@ -298,6 +299,14 @@ class GDRCD6 extends DbMigration
                 ('MANAGE_TRAME_OTHER','Permesso per la modifica delle trame degli altri'),
                 ('SCHEDA_EXP_VIEW','Permesso per la visualizzazione della pagina esperienza in scheda'),
                 ('SCHEDA_EXP_MANAGE','Permesso per la visualizzazione della pagina esperienza in scheda'),
+                ('SCHEDA_VIEW_LOGS','Permesso per la visione dei logs'),
+                ('SCHEDA_VIEW_TRANSACTIONS','Permesso per la visione delle transazioni altrui'),
+                ('SCHEDA_DIARY_VIEW','Permesso per la visione dei diari privati altrui'),
+                ('SCHEDA_DIARY_EDIT','Permesso per la modifica dei diari altrui'),
+                ('SCHEDA_UPDATE','Permesso per la modifica dei dati personaggio altrui'),
+                ('SCHEDA_STATUS_MANAGE','Permesso per la modifica dei dati status altrui'),
+                ('SCHEDA_BAN','Permesso per il ban di un personaggio dalla scheda'),
+                ('SCHEDA_ADMINISTRATION_MANAGE','Permesso per la pagina amministrazione della scheda'),
                 ('MANAGE_OBJECTS','Permesso per la gestione degli oggetti'),
                 ('MANAGE_OBJECTS_TYPES','Permesso per la gestione delle tipologie di oggetti'),
                 ('MANAGE_OBJECTS_POSITIONS','Permesso per la gestione delle posizioni oggetti'),
@@ -322,9 +331,8 @@ class GDRCD6 extends DbMigration
                 ('MANAGE_CHAT_OPTIONS','Permesso per la gestione delle opzioni personalizzabili in chat'),
                 ('MANAGE_AVAILABILITIES','Permesso per la gestione delle disponibilita'),
                 ('MANAGE_RACES','Permesso per la gestione delle razze'),
-                ('MANAGE_GENDERS','Permesso per la gestione dei sessi'),
-                ('VIEW_LOGS','Permesso per la visione dei logs')
-                ;"
+                ('MANAGE_GENDERS','Permesso per la gestione dei sessi')
+               ;"
         );
 
         DB::query("
@@ -341,9 +349,9 @@ class GDRCD6 extends DbMigration
         );
 
         DB::query("
-            INSERT INTO `personaggio` (`id`,`nome`, `cognome`, `pass`, `ultimo_cambiopass`, `data_iscrizione`, `email`, `permessi`, `ultima_mappa`, `ultimo_luogo`, `esilio`, `data_esilio`, `motivo_esilio`, `autore_esilio`, `sesso`, `razza`, `descrizione`, `affetti`, `stato`, `online_status`, `disponibile`, `url_img`, `url_img_chat`, `url_media`, `blocca_media`, `esperienza`, `car0`, `car1`, `car2`, `car3`, `car4`, `car5`, `salute`, `salute_max`, `data_ultima_gilda`, `soldi`, `banca`, `ultimo_stipendio`, `last_ip`, `is_invisible`, `ultimo_refresh`, `ora_entrata`, `ora_uscita`, `posizione`) VALUES
-                (1,'Super', 'User', '\$P\$BcH1cP941XHOf0X61wVWWjzXqcCi2a/', NULL, '2011-06-04 00:47:48', '\$P\$BNZYtz9JOQE.O4Tv7qZyl3SzIoZzzR.', 5, 1, -1, '2009-01-01', '2009-01-01', '', '', 1, 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 7, 8, 6, 5, 6, 5, 100, 100, '2009-01-01 00:00:00', 300, 50000, '2009-01-01', '127.0.0.1', 0, '2021-10-08 00:28:13', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1),
-                (2,'Test', 'Di FunzionaliÃ ', '\$P\$BUoa19QUuXsgIDlhGC3chR/3Q7hoRy0', NULL, '2011-06-04 00:47:48', '\$P\$Bd1amPCKkOF9GdgYsibZ96U92D5CtR0', 0, 1, -1, '2009-01-01', '2009-01-01', '', '', 1, 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 7, 8, 6, 5, 6, 5, 100, 100, '2009-01-01 00:00:00', 50, 50, '2009-01-01', '127.0.0.1', 0, '2009-01-01 00:00:00', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1);"
+            INSERT INTO `personaggio` (`id`,`nome`, `cognome`, `pass`, `ultimo_cambiopass`, `data_iscrizione`, `email`, `permessi`, `ultima_mappa`, `ultimo_luogo`, `esilio`, `data_esilio`, `motivo_esilio`, `autore_esilio`, `sesso`, `razza`, `descrizione`, `affetti`, `stato`, `online_status`, `disponibile`, `url_img`, `url_img_chat`, `url_media`, `blocca_media`, `esperienza`, `salute`, `salute_max`, `soldi`, `banca`, `last_ip`, `is_invisible`, `ultimo_refresh`, `ora_entrata`, `ora_uscita`, `posizione`) VALUES
+                (1,'Super', 'User', '\$P\$BcH1cP941XHOf0X61wVWWjzXqcCi2a/', NULL, '2011-06-04 00:47:48', '\$P\$BNZYtz9JOQE.O4Tv7qZyl3SzIoZzzR.', 5, 1, -1, '2009-01-01', '2009-01-01', '', '', 1, 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 100, 100, 300, 50000,  '127.0.0.1', 0, '2021-10-08 00:28:13', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1),
+                (2,'Test', 'Di FunzionaliÃ ', '\$P\$BUoa19QUuXsgIDlhGC3chR/3Q7hoRy0', NULL, '2011-06-04 00:47:48', '\$P\$Bd1amPCKkOF9GdgYsibZ96U92D5CtR0', 0, 1, -1, '2009-01-01', '2009-01-01', '', '', 1, 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000',  100, 100, 50, 50, '127.0.0.1', 0, '2009-01-01 00:00:00', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1);"
         );
 
         DB::query("

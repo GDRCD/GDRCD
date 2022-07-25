@@ -67,4 +67,63 @@ class SchedaStats extends Scheda
 
     /**** RENDERING ****/
 
+    /**
+     * @fn renderStatsPage
+     * @note Elabora i dati della scheda statistiche
+     * @param int $id_pg
+     * @return array
+     */
+    public function renderStatsPage(int $id_pg): array
+    {
+
+        $stats = PersonaggioStats::getInstance()->getPgAllStats($id_pg);
+        $stats_data = [];
+
+
+        $cells = [
+            'Nome',
+            'Grado',
+            'Comandi'
+        ];
+
+        foreach ($stats as $stat) {
+
+            $id = Filters::int($stat['id']);
+
+            $stats_data[] = [
+                'id' => $id,
+                'id_pg' => $id_pg,
+                'nome' => Filters::out($stat['nome']),
+                'descrizione' => Filters::text($stat['descrizione']),
+                'valore' => Filters::int($stat['valore']),
+                'upgrade_permission' => PersonaggioStats::permissionUpgradeStats() && PersonaggioStats::isPgStatUpgradable($id, $id_pg),
+                'downgrade_permission' => PersonaggioStats::permissionDowngradeStats() && PersonaggioStats::isPgStatDowngradable($id, $id_pg)
+            ];
+        }
+
+
+        return [
+            'body_rows' => $stats_data,
+            'cells' => $cells,
+            'table_title' => 'Statistiche',
+        ];
+
+    }
+
+    /**
+     * @fn abilityPage
+     * @note Renderizza la scheda abilita'
+     * @param int $id_pg
+     * @return string
+     */
+    public function statsPage(int $id_pg): string
+    {
+
+        return Template::getInstance()->startTemplate()->renderTable(
+            'scheda/stats',
+            $this->renderStatsPage($id_pg)
+        );
+    }
+
+
 }

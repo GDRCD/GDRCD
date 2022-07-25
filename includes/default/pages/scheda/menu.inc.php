@@ -1,89 +1,77 @@
 <?php
 
-$pg = Filters::out($_REQUEST['pg']);
 $me = Filters::out($_SESSION['login']);
 $perm = Filters::out($_SESSION['permessi']);
-$id_pg = Personaggio::IdFromName($pg);
+$id_pg = Filters::out($_GET['id_pg']);
 
-/*Visualizza il link modifica se l'utente visualizza la propria scheda o se è almeno un capogilda*/
 ?>
 
-    <!-- ABILITA -->
-    <a href="main.php?page=scheda_skill&pg=<?= $pg ?>&id_pg=<?= $id_pg; ?>">
-        <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['skill']); ?>
-    </a>
+<!-- ABILITA -->
+<a href="main.php?page=scheda/index&op=abilita&id_pg=<?= $id_pg; ?>">
+    <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['skill']); ?>
+</a>
 
-    <a href="main.php?page=scheda_stats&pg=<?= $pg ?>&id_pg=<?= $id_pg; ?>">
-        <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['stats']); ?>
-    </a>
+<a href="main.php?page=scheda/index&op=stats&id_pg=<?= $id_pg; ?>">
+    <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['stats']); ?>
+</a>
 
-    <!-- Descrizione e Storia separate dalla pagina principale della scheda -->
-    <a href="main.php?page=scheda_descrizione&pg=<?= $pg ?>&id_pg=<?= $id_pg; ?>">
-        <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['detail']); ?>
-    </a>
-
-    <a href="main.php?page=scheda_contatti&pg=<?= $pg ?>&id_pg=<?= $id_pg; ?>">
+<?php if (Contatti::getInstance()->contactEnables()) { ?>
+    <a href="main.php?page=scheda/index&op=contatti&id_pg=<?= $id_pg; ?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['contatti']); ?>
     </a>
-    <a href="main.php?page=scheda_storia&pg=<?= $pg ?>&id_pg=<?= $id_pg; ?>">
-        <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['background']); ?>
-    </a>
-    <!-- TRASFERIMENTI -->
-    <a href="main.php?page=scheda_trans&pg=<?= $pg ?>&id_pg=<?= $id_pg; ?>">
-        <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['transictions']); ?>
-    </a>
+<?php } ?>
 
-    <!-- ESPERIENZA -->
-    <a href="main.php?page=scheda_px&pg=<?= $pg ?>&id_pg=<?= $id_pg; ?>">
-        <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['experience']); ?>
-    </a>
+<a href="main.php?page=scheda/index&op=storia&id_pg=<?= $id_pg; ?>">
+    <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['background']); ?>
+</a>
 
-    <!-- INVENTARIO -->
-    <a href="main.php?page=scheda_oggetti&pg=<?= $pg ?>&id_pg=<?= $id_pg; ?>">
-        <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['equipment']); ?>
-    </a>
+<!-- TRASFERIMENTI -->
+<a href="main.php?page=scheda/index&op=transazioni&id_pg=<?= $id_pg; ?>">
+    <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['transictions']); ?>
+</a>
 
-    <!-- DIARIO -->
-<?php if (defined('PG_DIARY_ENABLED') && PG_DIARY_ENABLED) { ?>
-    <a href="main.php?page=scheda_diario&pg=<?= $pg ?>&id_pg=<?= $id_pg; ?>">
+<!-- INVENTARIO -->
+<a href="main.php?page=scheda/index&op=oggetti&id_pg=<?= $id_pg; ?>">
+    <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['equipment']); ?>
+</a>
+
+<!-- DIARIO -->
+<?php if (SchedaDiario::getInstance()->diaryActive()) { ?>
+    <a href="main.php?page=scheda/index&op=diario&id_pg=<?= $id_pg; ?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['diary']); ?>
     </a>
 <?php } ?>
 
-    <!-- ROLES -->
+<!-- ROLES -->
 <?php if (($_SESSION['permessi'] >= ROLE_PERM || $_REQUEST['pg'] == $_SESSION['login']) && REG_ROLE) { ?>
-    <a href="main.php?page=scheda_roles&pg=<?=$pg;?>&id_pg=<?= $id_pg; ?>">
+    <a href="main.php?page=scheda_roles&id_pg=<?= $id_pg; ?>">
         Giocate registrate
     </a>
 <?php } ?>
 
-    <!-- Se maggiore di moderatore -->
-<?php if ($_SESSION['permessi'] >= MODERATOR) { ?>
-
-    <!-- LOG -->
-    <a href="main.php?page=scheda_log&pg=<?=$pg;?>&id_pg=<?= $id_pg; ?>">
-        <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['log']); ?>
-    </a>
-
-    <!-- AMMINISTRA -->
-    <a href="main.php?page=scheda_gst&pg=<?=$pg;?>&id_pg=<?= $id_pg; ?>">
-        <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['gst']); ?>
-    </a>
-    <a href="main.php?page=scheda_log&pg=<?= $pg; ?>&id_pg=<?= $id_pg; ?>">
-        <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['log']); ?>
-    </a>
-<?php } ?>
-
-    <!-- CHAT OPTIONS -->
-<?php if ($_REQUEST['pg'] == $_SESSION['login']) { ?>
-    <a href="main.php?page=scheda/chat/opzioni/index&pg=<?=$pg;?>&id_pg=<?= $id_pg; ?>">
+<!-- CHAT OPTIONS -->
+<?php if (Personaggio::isMyPg($id_pg)) { ?>
+    <a href="main.php?page=scheda/chat/opzioni/index&id_pg=<?= $id_pg; ?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['chat_options']); ?>
     </a>
 <?php } ?>
 
-    <!-- MODIFICA -->
-<?php if (($_REQUEST['pg'] == $_SESSION['login']) || ($_SESSION['permessi'] >= GUILDMODERATOR)) { ?>
-    <a href="main.php?page=scheda_modifica&pg=<?=$pg;?>&id_pg=<?= $id_pg; ?>">
+<?php if (Log::getInstance()->permissionViewLogs()) { ?>
+    <a href="main.php?page=scheda/index&op=log&id_pg=<?= $id_pg; ?>">
+        <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['log']); ?>
+    </a>
+<?php } ?>
+
+<!-- MODIFICA -->
+<?php if (Scheda::getInstance()->permissionUpdateCharacter($id_pg)) { ?>
+    <a href="main.php?page=scheda/index&op=modifica&id_pg=<?= $id_pg; ?>">
         <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['update']); ?>
+    </a>
+<?php } ?>
+
+<?php if (Scheda::getInstance()->permissionAdministrationCharacter()) { ?>
+    <a href="main.php?page=scheda/index&op=amministra&id_pg=<?= $id_pg; ?>">
+        <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['gst']); ?>
+
     </a>
 <?php } ?>

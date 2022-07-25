@@ -52,9 +52,10 @@ class Personaggio extends BaseClass
     /**
      * @fn listPG
      * @note Ritorna la lista dei pg registrati escludendo quelli già presenti fra i contatti e l'utente stesso
-     * @return string
+     * @return mixed
      */
-    function getAllPG(string $val = '*', string $where = '1' , string $order = ''){
+    function getAllPG(string $val = '*', string $where = '1', string $order = '')
+    {
         return DB::query("SELECT {$val} FROM personaggio  WHERE {$where} {$order}", 'result');
     }
 
@@ -87,14 +88,13 @@ class Personaggio extends BaseClass
         return ($pg == $me);
     }
 
-
     /*** FUNCTIONS  ***/
 
     /**
      * @fn nameFromId
      * @note Estrae il nome del pg dall'id
-     * @var int $id
      * @return string
+     * @var int $id
      */
     public static function nameFromId(int $id): string
     {
@@ -103,13 +103,14 @@ class Personaggio extends BaseClass
 
         return Filters::out($data['nome']);
     }
+
     /**
      * @fn IdFromName
-     * @note Estrae il nome del pg dall'id
-     * @var int $id
+     * @note Estrae l'id del pg dal nome
+     * @param string $nome
      * @return string
      */
-    public static function IdFromName(string $nome):string
+    public static function IdFromName(string $nome): string
     {
         $nome = Filters::in($nome);
         $data = DB::query("SELECT id FROM personaggio WHERE nome='{$nome}' LIMIT 1");
@@ -132,23 +133,6 @@ class Personaggio extends BaseClass
 
     /***** LISTS *****/
 
-
-    public function listPG($selected = 0 , $pg)
-    {
-
-        $html = '<option value=""></option>';
-
-
-        foreach ($pg as $personaggi) {
-            $nome = Filters::out($personaggi['nome']);
-            $id = Filters::int($personaggi['id']);
-            $sel = ($id == $selected) ? 'selected' : '';
-            $html .= "<option value='{$id}' {$sel}>{$nome}</option>";
-        }
-
-        return $html;
-    }
-
     /**
      * @fn listPgs
      * @note Genera gli option per i personaggi
@@ -160,4 +144,5 @@ class Personaggio extends BaseClass
         return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $pgs);
 
     }
+
 }

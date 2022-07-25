@@ -55,41 +55,34 @@ class ContattiNote extends Contatti
     /**
      * @fn renderNoteList
      * @note Render html lista contatti pg
-     * @param object $list
-     * @param string $page
-     * @param int $id_pg
+     * @param int $id_contatto
      * @return array
      */
-    public function renderNoteList(object $list, string $page, int $id_pg): array
+    public function renderNoteList(int $id_contatto): array
     {
+        $contact_data = $this->getContact($id_contatto);
+        $id_pg = Filters::int($contact_data['personaggio']);
+        $contact = Filters::int($contact_data['contatto']);
+
+        $list = $this->getAllNote($id_contatto, $id_pg);
         $row_data = [];
-        $path = 'scheda_contatti';
-        $pg = Personaggio::nameFromId($id_pg);
+
         foreach ($list as $row) {
             $id = Filters::in($row['id']);
 
-            $id_contatto = Filters::in($row['contatto']);
-            $pubblica = Filters::in($row['pubblica']);
-            $titolo = Filters::out($row['titolo']);
-            $nota = substr(Filters::out($row['nota']), 0, 10);
-            $creato_il = Filters::date($row['creato_il'], 'd/m/Y');
-            $creato_da = Personaggio::nameFromId($row['creato_da']);
-            $pop_up = 'javascript:modalWindow("note", "Dettaglio nota","popup.php?page=scheda_contatti_nota&id=' . $id . '") ';
-            $pop_up_modifica = 'javascript:modalWindow("note_edit", "Modifica nota","popup.php?page=scheda_contatti_nota&id=' . $id . '&op=note_edit") ';
             $array = [
-                'id' => $id,
-                'titolo' => $titolo,
-                'nota' => $nota,
-                'pubblica' => $pubblica,
+                'id' => Filters::in($row['id']),
+                'titolo' => Filters::out($row['titolo']),
+                'nota' => substr(Filters::out($row['nota']), 0, 10),
+                'pubblica' => Filters::in($row['pubblica']),
                 'contatti_view_permission' => $this->contactView($id_pg),
                 'contatti_update_permission' => $this->contactUpdate($id_pg),
                 'contatti_delete_permission' => $this->contactDelete($id_pg),
-                'id_pg' => $id_pg,
-                'pg' => $pg,
-                'creato_il' => $creato_il,
-                'creato_da' => $creato_da,
-                'pop_up' => $pop_up,
-                'pop_up_modifica' => $pop_up_modifica
+                'id_pg' => $contact,
+                'pg_name' => Personaggio::nameFromId($id_pg),
+                'creato_il' => Filters::date($row['creato_il'], 'd/m/Y'),
+                'creato_da' => Personaggio::nameFromId($row['creato_da']),
+                'pop_up_modifica' => 'javascript:modalWindow("note_edit", "Modifica nota","popup.php?page=scheda/contatti/index_popup&id=' . $id . '&op=note_edit") '
             ];
 
             $row_data[] = $array;
@@ -100,15 +93,21 @@ class ContattiNote extends Contatti
             'Nota',
             'Controlli'
         ];
-        $links = [];
+        $links = [
+            ['href' => "/main.php?page=scheda/index&op=contatti_nota_new&id_pg={$id_pg}&id={$id_contatto}", 'text' => 'Nuova nota', 'separator' => true],
+            ['href' => "/main.php?page=scheda/index&id_pg={$id_pg}", 'text' => 'Torna indietro'],
+        ];
+
+        $contact_name = Personaggio::nameFromId($contact);
+        $contact_created = Filters::date($contact_data['creato_il'], 'd/m/Y');
+        $table_title = "{$contact_name} - Creato il: {$contact_created}";
 
         return [
             'body' => 'scheda/contatti/note_list',
             'body_rows' => $row_data,
             'cells' => $cells,
             'links' => $links,
-            'path' => $path,
-            'page' => $page
+            'table_title' => $table_title
         ];
     }
 
@@ -117,19 +116,14 @@ class ContattiNote extends Contatti
     /**
      * @fn NoteList
      * @note Render html della lista delle note di un contatto
-     * @param int $id_contatto
+     * @param int $pg
      * @return string
      */
     public function NoteList(int $id_contatto): string
     {
-        $template = Template::getInstance()->startTemplate();
-        $contact_data = $this->getContact($id_contatto, 'personaggio');
-        $pg = Filters::int($contact_data['personaggio']);
-
-        $list = $this->getAllNote($id_contatto, $pg);
-        return $template->renderTable(
+        return Template::getInstance()->startTemplate()->renderTable(
             'scheda/contatti/note_list',
-            $this->renderNoteList($list, 'scheda_contatti', $pg)
+            $this->renderNoteList($id_contatto)
         );
     }
 

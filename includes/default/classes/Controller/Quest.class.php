@@ -211,26 +211,6 @@ class Quest extends BaseClass
         return Permissions::permission('MANAGE_TRAME');
     }
 
-    /**
-     * @fn viewExpPermission
-     * @note Controllo permessi per visualizzazione esperienza scheda
-     * @return bool
-     */
-    public function viewExpPermission(): bool
-    {
-        return Permissions::permission('SCHEDA_EXP_VIEW');
-    }
-
-    /**
-     * @fn manageExpPermission
-     * @note Controllo permessi per singola assegnazione esperienza scheda
-     * @return bool
-     */
-    public function manageExpPermission(): bool
-    {
-        return Permissions::permission('SCHEDA_EXP_MANAGE');
-    }
-
     /*** ROUTING **/
 
     /**
@@ -360,36 +340,6 @@ class Quest extends BaseClass
     }
 
     /*** SCHEDA PX ***/
-
-    /**
-     * @fn renderPgExpLog
-     * @note Lista degli ultimi log di tipo esperienza
-     * @param $pg
-     * @return string
-     */
-    public function renderPgExpLog($pg): string
-    {
-        $pg = Filters::in($pg);
-
-        $html = '';
-
-        $list = Log::getInstance()->getAllLogsByDestinatarioAndType($pg, $this->px_code, $this->num_log_scheda);
-
-        foreach ($list as $row) {
-            $descr = Filters::out($row['descrizione_evento']);
-            $data = Filters::date($row['data_evento'], 'd/m/Y');
-            $autore_id = Filters::int($row['autore']);
-            $autore = Personaggio::nameFromId($autore_id);
-
-            $html .= "<div class='tr'>";
-            $html .= "<div class='td causale'>{$descr}</div>";
-            $html .= "<div class='td autore'>{$autore}</div>";
-            $html .= "<div class='td data'>{$data}</div>";
-            $html .= "</div>";
-        }
-
-        return $html;
-    }
 
     /**
      * @fn renderQuestList
@@ -606,46 +556,6 @@ class Quest extends BaseClass
             </div>';
 
         return $html;
-    }
-
-    /**
-     * @fn assignSingleExp
-     * @note Assegnazione singola exp
-     * #TODO Sostituire il nome con l'id quando avverra' il cambio della scheda
-     * @param array $post
-     * @return array
-     */
-    public function assignSingleExp(array $post): array
-    {
-
-        if ($this->manageExpPermission()) {
-
-            $pg = Filters::in($post['pg']);
-            $pg_name = Personaggio::nameFromId($pg);
-            $causale = Filters::in($post['causale']);
-            $px = Filters::int($post['px']);
-
-            if (!empty($causale) && ($px != 0) && !empty($pg)) {
-
-                Personaggio::updatePgData($pg, "esperienza = esperienza + '{$px}'");
-
-                Log::newLog([
-                    "autore" => $this->me_id,
-                    "destinatario" => $pg,
-                    "tipo" => $this->px_code,
-                    "testo" => "Assegnati {$px}px a {$pg_name} per '{$causale}'",
-                ]);
-
-                $resp = ['response' => true, 'mex' => 'Esperienza modificata con successo.'];
-            } else {
-                $resp = ['response' => false, 'mex' => 'Compila tutti i campi.'];
-            }
-
-        } else {
-            $resp = ['response' => false, 'mex' => 'Permessi Negati.'];
-        }
-
-        return $resp;
     }
 
     /*** TRAME LISTA PAGE **/

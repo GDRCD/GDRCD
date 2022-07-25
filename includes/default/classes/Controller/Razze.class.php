@@ -47,10 +47,16 @@ class Razze extends BaseClass
 
     /**** LISTS ***/
 
-    public function listRaces()
+    /**
+     * @fn listRaces
+     * @note Lista delle razze disponibili
+     * @param int $selected
+     * @return mixed
+     */
+    public function listRaces(int $selected = 0)
     {
         $genders = $this->getAllRaces();
-        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $genders);
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', $selected, $genders);
     }
 
 
