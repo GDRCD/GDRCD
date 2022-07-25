@@ -3,18 +3,17 @@
 $dont_check = true;
 require 'core/required.php';
 
-
 ?>
 <div class="pagina_ambientazione">
     <?php
 
-    if (isset($_POST['do_update'])) {
-        switch ($_POST['do_update']) {
+    if ( isset($_POST['do_update']) ) {
+        switch ( $_POST['do_update'] ) {
             case 'Installa':
-                if (DbMigrationEngine::dbNeedsInstallation() and !empty($_POST['do_update'])) {
+                if ( DbMigrationEngine::dbNeedsInstallation() and !empty($_POST['do_update']) ) {
 
                     try {
-                        if (file_exists(ROOT . '/gdrcd_db.sql')) {
+                        if ( file_exists(ROOT . '/gdrcd_db.sql') ) {
                             DbMigrationEngine::migrateDb(); ?>
 
                             <div class="warning">Fatto!</div>
@@ -29,7 +28,7 @@ require 'core/required.php';
                         } else {
                             echo "<div class='warning'>FILE NON ESISTENTe.</div>";
                         }
-                    } catch (Exception $e) {
+                    } catch ( Exception $e ) {
                         echo '<div class="warning">' . gdrcd_filter('out', $e->getMessage()) . '</div>';
                     }
                 }
@@ -38,7 +37,7 @@ require 'core/required.php';
         }
     }
 
-    if (DbMigrationEngine::dbNeedsInstallation()) {
+    if ( DbMigrationEngine::dbNeedsInstallation() ) {
         ?>
         <form method="post" action="installer.php">
             <h2>GDRCD 6.0</h2>
