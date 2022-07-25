@@ -21,10 +21,9 @@ class Router
      */
     public static final function getInstance(): Router
     {
-        if (!(self::$_instance instanceof self)) {
+        if ( !(self::$_instance instanceof self) ) {
             self::$_instance = new self();
         }
-
 
         return self::$_instance;
     }
@@ -57,7 +56,7 @@ class Router
 
         $exist = $this->loadLibraries($className);
 
-        if (!$exist) {
+        if ( !$exist ) {
             $this->loadController($className);
         }
     }
@@ -77,11 +76,11 @@ class Router
 
         $exist = false;
 
-        foreach ($roots as $folder) {
+        foreach ( $roots as $folder ) {
 
             $new_path = $folder . '/' . $className . '.class.php';
 
-            if (file_exists($new_path) && is_readable($new_path)) {
+            if ( file_exists($new_path) && is_readable($new_path) ) {
                 require_once($new_path);
                 $exist = true;
                 break;
@@ -104,18 +103,18 @@ class Router
 
         $exist = false;
 
-        foreach ($roots as $folder) {
+        foreach ( $roots as $folder ) {
 
             $new_path = $folder . '/' . $className . '.class.php';
 
-            if (file_exists($new_path) && is_readable($new_path)) {
+            if ( file_exists($new_path) && is_readable($new_path) ) {
                 require_once($new_path);
                 $exist = true;
                 break;
             }
         }
 
-        if (!$exist) {
+        if ( !$exist ) {
             throw new Exception(
                 "Class '$className' not exists.'");
         }
@@ -129,14 +128,14 @@ class Router
      * @param array $results
      * @return array
      */
-    private final function dirList(string $dir, array &$results = array()): array
+    private final function dirList(string $dir, array &$results = []): array
     {
 
         $files = scandir($dir);
 
-        foreach ($files as $key => $value) {
+        foreach ( $files as $key => $value ) {
             $path = realpath($dir . DIRECTORY_SEPARATOR . $value);
-            if (is_dir($path) && ($value != ".") && ($value != "..")) {
+            if ( is_dir($path) && ($value != ".") && ($value != "..") ) {
                 $this->dirList($path, $results);
                 $results[] = $path;
             }
@@ -161,25 +160,22 @@ class Router
 
         $db_search = Router::getPageRedirect($page);
 
-        if (!empty($db_search['redirect'])) {
-            if (file_exists($db_search['redirect'])) {
+        if ( !empty($db_search['redirect']) ) {
+            if ( file_exists($db_search['redirect']) ) {
                 require_once($db_search['redirect']);
             }
         }
 
-
         $engine = Functions::get_constant('STANDARD_ENGINE');
-        if (file_exists(ROOT . "includes/{$engine}/pages/{$page}")) {
+        if ( file_exists(ROOT . "includes/{$engine}/pages/{$page}") ) {
             require_once(ROOT . "includes/{$engine}/pages/{$page}");
         }
 
-        if (file_exists(ROOT . "includes/default/pages/{$page}")) {
+        if ( file_exists(ROOT . "includes/default/pages/{$page}") ) {
             require_once(ROOT . "includes/default/pages/{$page}");
         }
 
-
     }
-
 
     public static function loadFramePart(string $page): void
     {
@@ -188,16 +184,15 @@ class Router
 
         $response = self::getPagesLink($page . '.inc.php');
 
-        if (!$response) {
+        if ( !$response ) {
             $response = self::getPagesLink($page . '.php');
         }
 
-        if ($response) {
+        if ( $response ) {
             require_once($response);
         }
 
     }
-
 
     /**
      * @fn loadRequired
@@ -245,21 +240,21 @@ class Router
     public static function getPageByAlias(string $page)
     {
 
-        if (strpos($page, '.php')) {
+        if ( strpos($page, '.php') ) {
             $page = explode('.', $page)[0];
         }
 
         $db_search = Router::getPageAlias($page);
 
         // Controllo il redirect esistente in db
-        if (!empty($db_search['redirect'])) {
-            if (file_exists($db_search['redirect'])) {
+        if ( !empty($db_search['redirect']) ) {
+            if ( file_exists($db_search['redirect']) ) {
                 return $db_search['redirect'];
             }
         }
 
         // Altrimenti controllo se segue la sintassi degli alias
-        if (strpos($page, '/')) {
+        if ( strpos($page, '/') ) {
             return $page . '.php';
         }
 
@@ -276,19 +271,18 @@ class Router
     {
         $db_search = Router::getPageRedirect($page);
 
-        if (!empty($db_search['redirect'])) {
-            if (file_exists($db_search['redirect'])) {
+        if ( !empty($db_search['redirect']) ) {
+            if ( file_exists($db_search['redirect']) ) {
                 return $db_search['redirect'];
             }
         }
 
-
         $engine = Functions::get_constant('STANDARD_ENGINE');
-        if (file_exists("includes/{$engine}/pages/{$page}")) {
+        if ( file_exists("includes/{$engine}/pages/{$page}") ) {
             return "includes/{$engine}/pages/{$page}";
         }
 
-        if (file_exists("includes/default/pages/{$page}")) {
+        if ( file_exists("includes/default/pages/{$page}") ) {
             return "includes/default/pages/{$page}";
         }
 
@@ -307,20 +301,19 @@ class Router
 
         $db_search = Router::getPageRedirect($page);
 
-        if (!empty($db_search['redirect'])) {
-            if (file_exists($db_search['redirect'])) {
+        if ( !empty($db_search['redirect']) ) {
+            if ( file_exists($db_search['redirect']) ) {
                 return $db_search['redirect'];
             }
         }
 
         $engine = Functions::get_constant('STANDARD_ENGINE');
 
-        if (file_exists("includes/{$engine}/themes/{$page}")) {
+        if ( file_exists("includes/{$engine}/themes/{$page}") ) {
             return "includes/{$engine}/themes/{$page}";
         }
 
-
-        if (file_exists("includes/default/themes/{$page}")) {
+        if ( file_exists("includes/default/themes/{$page}") ) {
             return "includes/default/themes/{$page}";
         }
 
@@ -339,12 +332,11 @@ class Router
 
         $engine = Functions::get_constant('STANDARD_ENGINE');
 
-        if (file_exists(ROOT . "includes/{$engine}/themes")) {
+        if ( file_exists(ROOT . "includes/{$engine}/themes") ) {
             return "includes/{$engine}/themes/";
         }
 
-
-        if (file_exists(ROOT . "includes/default/themes")) {
+        if ( file_exists(ROOT . "includes/default/themes") ) {
             return "includes/default/themes/";
         }
 
@@ -361,12 +353,11 @@ class Router
 
         $engine = Functions::get_constant('STANDARD_ENGINE');
 
-        if (file_exists(ROOT . "includes/{$engine}/themes/imgs")) {
+        if ( file_exists(ROOT . "includes/{$engine}/themes/imgs") ) {
             return "includes/{$engine}/themes/imgs/";
         }
 
-
-        if (file_exists(ROOT . "includes/default/themes/imgs")) {
+        if ( file_exists(ROOT . "includes/default/themes/imgs") ) {
             return "includes/default/themes/imgs/";
         }
 
@@ -383,12 +374,11 @@ class Router
 
         $engine = Functions::get_constant('STANDARD_ENGINE');
 
-        if (file_exists(ROOT . "includes/{$engine}/pages")) {
+        if ( file_exists(ROOT . "includes/{$engine}/pages") ) {
             return ROOT . "includes/{$engine}/pages/";
         }
 
-
-        if (file_exists(ROOT . "includes/default/pages")) {
+        if ( file_exists(ROOT . "includes/default/pages") ) {
             return ROOT . "includes/default/pages/";
         }
 

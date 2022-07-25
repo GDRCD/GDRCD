@@ -7,7 +7,7 @@ $stagioni = MeteoStagioni::getInstance();
 ?>
 
 <div class="servizi_pagina esiti_pagina">
-    <?php  if ($stagioni->activeSeason() && $stagioni->permissionManageSeasons()) { ?>
+    <?php if ( $stagioni->activeSeason() && $stagioni->permissionManageSeasons() ) { ?>
 
         <!-- Titolo della pagina -->
         <div class="general_title">
@@ -23,6 +23,6 @@ $stagioni = MeteoStagioni::getInstance();
 
         <div class="warning"> Funzione disabilitata.</div>
 
-        <div class="link_back"><a href="/main.php?page=uffici">Indietro</a> </div>
+        <div class="link_back"><a href="/main.php?page=uffici">Indietro</a></div>
     <?php } ?>
 </div>

@@ -1,9 +1,9 @@
 <?php
-if((is_numeric($_POST['mesi']) === true) && ($_POST['mesi'] >= 0) && ($_POST['mesi'] <= 12)) {
+if ( (is_numeric($_POST['mesi']) === true) && ($_POST['mesi'] >= 0) && ($_POST['mesi'] <= 12) ) {
     /*Eseguo l'aggiornamento*/
-    gdrcd_query("DELETE FROM messaggi WHERE DATE_SUB(NOW(), INTERVAL ".gdrcd_filter('num', $_POST['mesi'])." MONTH) > spedito");
+    gdrcd_query("DELETE FROM messaggi WHERE DATE_SUB(NOW(), INTERVAL " . gdrcd_filter('num', $_POST['mesi']) . " MONTH) > spedito");
     gdrcd_query("OPTIMIZE TABLE messaggi");
-    gdrcd_query("DELETE FROM backmessaggi WHERE DATE_SUB(NOW(), INTERVAL ".gdrcd_filter('num', $_POST['mesi'])." MONTH) > spedito");
+    gdrcd_query("DELETE FROM backmessaggi WHERE DATE_SUB(NOW(), INTERVAL " . gdrcd_filter('num', $_POST['mesi']) . " MONTH) > spedito");
     gdrcd_query("OPTIMIZE TABLE backmessaggi");
     ?>
     <!-- Conferma -->

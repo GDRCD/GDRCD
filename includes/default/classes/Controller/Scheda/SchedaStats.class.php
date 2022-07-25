@@ -10,7 +10,8 @@ class SchedaStats extends Scheda
      * @note Controlla se la scheda statistiche e' pubblica
      * @return bool
      */
-    public function isPublic():bool{
+    public function isPublic(): bool
+    {
         return Functions::get_constant('SCHEDA_STATS_PUBLIC');
     }
 
@@ -20,7 +21,8 @@ class SchedaStats extends Scheda
      * @param int $id_pg
      * @return bool
      */
-    public function isAccessible(int $id_pg):bool{
+    public function isAccessible(int $id_pg): bool
+    {
         return ($this->isPublic() || $this->permissionViewStats() || Personaggio::isMyPg($id_pg));
     }
 
@@ -32,9 +34,10 @@ class SchedaStats extends Scheda
      * @param string $op
      * @return string
      */
-    public function indexSchedaStats(string $op):string{
+    public function indexSchedaStats(string $op): string
+    {
 
-        switch ($op){
+        switch ( $op ) {
             case 'upgrade':
                 $page = 'upgrade';
                 break;
@@ -79,14 +82,13 @@ class SchedaStats extends Scheda
         $stats = PersonaggioStats::getInstance()->getPgAllStats($id_pg);
         $stats_data = [];
 
-
         $cells = [
             'Nome',
             'Grado',
-            'Comandi'
+            'Comandi',
         ];
 
-        foreach ($stats as $stat) {
+        foreach ( $stats as $stat ) {
 
             $id = Filters::int($stat['id']);
 
@@ -97,10 +99,9 @@ class SchedaStats extends Scheda
                 'descrizione' => Filters::text($stat['descrizione']),
                 'valore' => Filters::int($stat['valore']),
                 'upgrade_permission' => PersonaggioStats::permissionUpgradeStats() && PersonaggioStats::isPgStatUpgradable($id, $id_pg),
-                'downgrade_permission' => PersonaggioStats::permissionDowngradeStats() && PersonaggioStats::isPgStatDowngradable($id, $id_pg)
+                'downgrade_permission' => PersonaggioStats::permissionDowngradeStats() && PersonaggioStats::isPgStatDowngradable($id, $id_pg),
             ];
         }
-
 
         return [
             'body_rows' => $stats_data,
@@ -124,6 +125,5 @@ class SchedaStats extends Scheda
             $this->renderStatsPage($id_pg)
         );
     }
-
 
 }

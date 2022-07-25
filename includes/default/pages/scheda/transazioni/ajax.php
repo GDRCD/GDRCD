@@ -2,7 +2,7 @@
 Router::loadRequired();
 $schedaTransazioni = SchedaTransazioni::getInstance();
 
-switch ($_POST['action']) {
+switch ( $_POST['action'] ) {
 
     case 'add_exp':
         //Aggiunge un nuovo contatto al PG

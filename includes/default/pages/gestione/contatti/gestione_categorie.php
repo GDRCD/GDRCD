@@ -4,11 +4,11 @@ Router::loadRequired(); # Inserisco il required se non presente, per futuro spos
 
 $cls = ContattiCategorie::getInstance(); # Inizializzo classe
 
-if($cls->permissionManageCategories() ){ # Metodo di controllo per accesso alla pagina di gestione
+if ( $cls->permissionManageCategories() ) { # Metodo di controllo per accesso alla pagina di gestione
 
     ?>
     <div class="general_incipit">
-        <div class="title"> Gestione Categorie contatti </div>
+        <div class="title"> Gestione Categorie contatti</div>
         <div class="subtitle">Gestione dei dati riferiti alle categorie dei contatti</div>
 
         Da questa pagina e' possibile:
@@ -24,7 +24,8 @@ if($cls->permissionManageCategories() ){ # Metodo di controllo per accesso alla 
     <div class="form_container categories_management">
 
         <!-- INSERT -->
-        <form class="form ajax_form" action="gestione/contatti/gestione_categorie_ajax.php" data-callback="updateCategoriesList">
+        <form class="form ajax_form" action="gestione/contatti/gestione_categorie_ajax.php"
+              data-callback="updateCategoriesList">
 
             <div class="form_title">Crea categoria</div>
 
@@ -32,7 +33,7 @@ if($cls->permissionManageCategories() ){ # Metodo di controllo per accesso alla 
                 <div class="label">Nome</div>
                 <input type="text" name="nome" required>
             </div>
-            <input type="hidden" name="creato_da" value="<?=Functions::getInstance()->getMyId();?>" >
+            <input type="hidden" name="creato_da" value="<?= Functions::getInstance()->getMyId(); ?>">
 
 
             <div class="single_input">
@@ -43,7 +44,8 @@ if($cls->permissionManageCategories() ){ # Metodo di controllo per accesso alla 
         </form>
 
         <!-- EDIT -->
-        <form class="form edit_form ajax_form" action="gestione/contatti/gestione_categorie_ajax.php" data-callback="updateCategoriesList">
+        <form class="form edit_form ajax_form" action="gestione/contatti/gestione_categorie_ajax.php"
+              data-callback="updateCategoriesList">
 
             <div class="form_title">Modifica categoria</div>
 
@@ -68,7 +70,8 @@ if($cls->permissionManageCategories() ){ # Metodo di controllo per accesso alla 
         </form>
 
         <!-- DELETE -->
-        <form method="POST" class="form ajax_form" action="gestione/contatti/gestione_categorie_ajax.php" data-callback="updateCategoriesList">
+        <form method="POST" class="form ajax_form" action="gestione/contatti/gestione_categorie_ajax.php"
+              data-callback="updateCategoriesList">
 
             <div class="form_title">Elimina categoria</div>
 
@@ -89,9 +92,7 @@ if($cls->permissionManageCategories() ){ # Metodo di controllo per accesso alla 
 
     </div>
     <script src="<?= Router::getPagesLink('gestione/contatti/gestione_categorie.js'); ?>"></script>
-    <div class="link_back"><a href="/main.php?page=gestione">Indietro</a> </div>
-
-
+    <div class="link_back"><a href="/main.php?page=gestione">Indietro</a></div>
 
 
 <?php } ?>

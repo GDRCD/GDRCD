@@ -5,7 +5,6 @@ $contatti = Contatti::getInstance();
 $id_pg = Filters::int($_GET['id_pg']);
 $pg = Filters::out($_REQUEST['pg']);
 
-
 $op = Filters::out($_GET['op']);
 ?>
 <div class="gestione_incipit">

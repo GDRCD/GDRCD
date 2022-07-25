@@ -4,7 +4,7 @@ Router::loadRequired(); # Inserisco il required se non presente, per futuro spos
 
 $cls = ChatOpzioni::getInstance(); # Inizializzo classe
 
-if ($cls->permissionManageOptions()) { # Metodo di controllo per accesso alla pagina di gestione
+if ( $cls->permissionManageOptions() ) { # Metodo di controllo per accesso alla pagina di gestione
     ?>
 
     <div class="general_incipit">
@@ -21,7 +21,8 @@ if ($cls->permissionManageOptions()) { # Metodo di controllo per accesso alla pa
         <br>
 
 
-        E' importante sapere che i valori creati qui si auto-inseriscono nell'apposita pagina di modifica opzioni chat della scheda,
+        E' importante sapere che i valori creati qui si auto-inseriscono nell'apposita pagina di modifica opzioni chat
+        della scheda,
         ma che vanno poi collegate,
         <span class="highlight">all'interno del codice</span>, nel punto interessato.
     </div>

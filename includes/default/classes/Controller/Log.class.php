@@ -104,7 +104,6 @@ class Log extends BaseClass
 
     /*** RENDER ***/
 
-
     /**
      * @fn renderLogTable
      * @note Elabora e restituisce la tabella dei logs
@@ -114,7 +113,7 @@ class Log extends BaseClass
      * @param int $limit
      * @return array
      */
-    public function renderLogTable(int $id_pg, int $type, int $limit , string $title ): array
+    public function renderLogTable(int $id_pg, int $type, int $limit, string $title): array
     {
 
         $logs = Log::getInstance()->getAllLogsByDestinatarioAndType($id_pg, $type, $limit);
@@ -124,10 +123,10 @@ class Log extends BaseClass
             'Causale',
             'Destinatario',
             'Data',
-            'Autore'
+            'Autore',
         ];
 
-        foreach ($logs as $log) {
+        foreach ( $logs as $log ) {
 
             $id = Filters::int($log['id']);
             $autore = Filters::int($log['autore']);
@@ -143,15 +142,13 @@ class Log extends BaseClass
             ];
         }
 
-
         return [
             'body_rows' => $logs_data,
             'cells' => $cells,
-            'table_title' => $title
+            'table_title' => $title,
         ];
 
     }
-
 
     /**
      * @fn abilityPage

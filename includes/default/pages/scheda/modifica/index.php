@@ -1,9 +1,8 @@
 <?php
 
-
 $id_pg = Filters::in($_GET['id_pg']);
 
-if (Scheda::getInstance()->permissionUpdateCharacter($id_pg)) {
+if ( Scheda::getInstance()->permissionUpdateCharacter($id_pg) ) {
 
     $pg_data = Personaggio::getPgData($id_pg);
     ?>
@@ -61,7 +60,7 @@ if (Scheda::getInstance()->permissionUpdateCharacter($id_pg)) {
     </form>
 
 
-    <?php if (Scheda::getInstance()->permissionStatusCharacter()) { ?>
+    <?php if ( Scheda::getInstance()->permissionStatusCharacter() ) { ?>
 
         <div class="general_title">Status personaggio</div>
 
@@ -86,7 +85,7 @@ if (Scheda::getInstance()->permissionUpdateCharacter($id_pg)) {
 
     <?php } ?>
 
-    <?php if (Scheda::getInstance()->permissionBanCharacter()) { ?>
+    <?php if ( Scheda::getInstance()->permissionBanCharacter() ) { ?>
 
         <div class="general_title">Ban personaggio</div>
 

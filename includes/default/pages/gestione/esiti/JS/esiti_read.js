@@ -1,17 +1,17 @@
-$(function(){
+$(function () {
 
-    $('.answer_box .answer_list .single_answer .dice_result').on('click',function(){
+    $('.answer_box .answer_list .single_answer .dice_result').on('click', function () {
         $(this).find('.internal_text').slideToggle('fast');
     });
 
-    $('.give_answer form #cd_add').on('click',function(){
+    $('.give_answer form #cd_add').on('click', function () {
 
-        Ajax('gestione/esiti/esiti_ajax.php',{'action':'cd_add'},AddCD);
+        Ajax('gestione/esiti/esiti_ajax.php', {'action': 'cd_add'}, AddCD);
     });
 
-    function AddCD(data){
+    function AddCD(data) {
 
-        if(data != ''){
+        if (data != '') {
 
             let datas = JSON.parse(data);
 
@@ -23,12 +23,12 @@ $(function(){
     }
 });
 
-function refreshAnswers(data){
+function refreshAnswers(data) {
 
-    if(data){
+    if (data) {
         let datas = JSON.parse(data);
 
-        if(datas.response){
+        if (datas.response) {
             $('.answer_list').html(datas.new_view);
         }
     }

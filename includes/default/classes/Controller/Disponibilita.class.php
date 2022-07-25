@@ -64,14 +64,13 @@ class Disponibilita extends BaseClass
      */
     public function ajaxAvailabilityData(array $post)
     {
-        if ($this->permissionManageAvailabilities()) {
+        if ( $this->permissionManageAvailabilities() ) {
             $id = Filters::int($post['id']);
             return $this->getAvailability($id);
         }
     }
 
     /**** GESTIONE ****/
-
 
     /**
      * @fn newAvailability
@@ -82,7 +81,7 @@ class Disponibilita extends BaseClass
     public function newAvailability(array $post): array
     {
 
-        if ($this->permissionManageAvailabilities()) {
+        if ( $this->permissionManageAvailabilities() ) {
 
             $nome = Filters::in($post['nome']);
             $img = Filters::in($post['immagine']);
@@ -95,7 +94,7 @@ class Disponibilita extends BaseClass
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Disponibilita creata correttamente.',
                 'swal_type' => 'success',
-                'availabilities_list' => $this->listAvailabilities()
+                'availabilities_list' => $this->listAvailabilities(),
             ];
         } else {
 
@@ -103,7 +102,7 @@ class Disponibilita extends BaseClass
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -117,12 +116,11 @@ class Disponibilita extends BaseClass
     public function modAvailability(array $post): array
     {
 
-        if ($this->permissionManageAvailabilities()) {
+        if ( $this->permissionManageAvailabilities() ) {
 
             $id = Filters::int($post['id']);
             $nome = Filters::in($post['nome']);
             $img = Filters::in($post['immagine']);
-
 
             DB::query("UPDATE disponibilita SET nome='{$nome}',immagine='{$img}' WHERE id='{$id}' LIMIT 1");
 
@@ -131,7 +129,7 @@ class Disponibilita extends BaseClass
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Disponibilita modificata correttamente.',
                 'swal_type' => 'success',
-                'availabilities_list' => $this->listAvailabilities()
+                'availabilities_list' => $this->listAvailabilities(),
             ];
 
         } else {
@@ -140,7 +138,7 @@ class Disponibilita extends BaseClass
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -154,10 +152,9 @@ class Disponibilita extends BaseClass
     public function delAvailability(array $post): array
     {
 
-        if ($this->permissionManageAvailabilities()) {
+        if ( $this->permissionManageAvailabilities() ) {
 
             $shop = Filters::int($post['id']);
-
 
             DB::query("DELETE FROM disponibilita WHERE id='{$shop}'");
 
@@ -166,7 +163,7 @@ class Disponibilita extends BaseClass
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Disponibilita eliminata correttamente.',
                 'swal_type' => 'success',
-                'availabilities_list' => $this->listAvailabilities()
+                'availabilities_list' => $this->listAvailabilities(),
             ];
 
         } else {
@@ -174,7 +171,7 @@ class Disponibilita extends BaseClass
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
 

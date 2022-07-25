@@ -4,7 +4,7 @@ Router::loadRequired();
 
 $abiReq = AbilitaRequisiti::getInstance();
 
-switch ($_POST['action']) {
+switch ( $_POST['action'] ) {
     case 'get_requirement_data':
         echo json_encode($abiReq->ajaxReqData($_POST));
         break;

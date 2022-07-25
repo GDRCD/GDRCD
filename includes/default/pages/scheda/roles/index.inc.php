@@ -6,8 +6,7 @@ $mydate = date('Y-m-d H:i:s');
 $mesenow = date('m', strtotime($mydate));
 $yearnow = date('Y', strtotime($mydate));
 
-
-if (($_REQUEST['pg'] == $_SESSION['login']) || ($_SESSION['permessi'] >= ROLE_PERM)) { ?>
+if ( ($_REQUEST['pg'] == $_SESSION['login']) || ($_SESSION['permessi'] >= ROLE_PERM) ) { ?>
 
 
     <form action="main.php?page=scheda_roles&pg=<?php echo gdrcd_filter('in', $_REQUEST['pg']); ?>" method="post">
@@ -35,36 +34,34 @@ if (($_REQUEST['pg'] == $_SESSION['login']) || ($_SESSION['permessi'] >= ROLE_PE
 #PANNELLO RICERCA ROLES
 
 ################################################
-if (($_REQUEST['pg'] == $_SESSION['login']) || ($_SESSION['permessi'] >= ROLE_PERM)) { ?>
+if ( ($_REQUEST['pg'] == $_SESSION['login']) || ($_SESSION['permessi'] >= ROLE_PERM) ) { ?>
 
     <div class="search_bg">
         <form action="main.php?page=scheda_roles&pg=<?php echo gdrcd_filter('in', $_REQUEST['pg']); ?>" method="post">
-                <select name="type" class="searchsel">
-                    <option value="0">Per personaggio</option>
-                    <option value="1">Per tag</option>
-                    <option value="2">Per quest</option>
-                </select>
-                <input name="search" class="searchbar" placeholder="Inserisci la chiave di ricerca appropriata."
-                       type="text" value=""/>
+            <select name="type" class="searchsel">
+                <option value="0">Per personaggio</option>
+                <option value="1">Per tag</option>
+                <option value="2">Per quest</option>
+            </select>
+            <input name="search" class="searchbar" placeholder="Inserisci la chiave di ricerca appropriata."
+                   type="text" value=""/>
 
-                <input type="hidden"
-                       name="op"
-                       value="search"/>
-                <input type="hidden"
-                       name="pg"
-                       value="<?php echo gdrcd_filter('in', $_REQUEST['pg']); ?>"/>
-                <button type="submit" class="but_roles">Cerca</button>
+            <input type="hidden"
+                   name="op"
+                   value="search"/>
+            <input type="hidden"
+                   name="pg"
+                   value="<?php echo gdrcd_filter('in', $_REQUEST['pg']); ?>"/>
+            <button type="submit" class="but_roles">Cerca</button>
         </form>
     </div>
 <?php }
-
 
 ################################################
 
 #ELENCO ROLES
 
 ################################################
-
 
 $year = gdrcd_query("SELECT YEAR(data_inizio) as year FROM segnalazione_role 
     WHERE mittente = '" . gdrcd_filter('in', $pg) . "'
@@ -73,14 +70,14 @@ $year = gdrcd_query("SELECT YEAR(data_inizio) as year FROM segnalazione_role
 #PULSANTI SELEZIONE ANNO
 
 echo '<div style="display:flex; justify-content:center;margin-top:5px;overflow:auto;">';
-while ($ry = gdrcd_query($year, 'fetch')) {
+while ( $ry = gdrcd_query($year, 'fetch') ) {
     echo '<a class="buts_year" 
     href="main.php?page=scheda_roles&pg=' . gdrcd_filter('url', $_REQUEST['pg']) . '&y=' . $ry['year'] . '" >' . $ry['year'] . '
     </a>';
 }
 echo '</div>';
 
-if (isset($_GET['y'])) {
+if ( isset($_GET['y']) ) {
     $yearchosen = gdrcd_filter('in', $_GET['y']);
 } else {
     $yearchosen = $yearnow;
@@ -92,33 +89,32 @@ echo '<div class="page_title" ><h2>' . $yearchosen . '</h2></div>';
 $month = gdrcd_query("SELECT MONTH(data_inizio) as month FROM segnalazione_role 
     WHERE mittente = '" . gdrcd_filter('in', $pg) . "' AND YEAR(data_inizio) = '" . gdrcd_filter('num', $yearchosen) . "'
     ORDER BY data_inizio DESC", "result");
-while ($rm = gdrcd_query($month, 'fetch')) {
-    if ($rm['month'] == 1) {
+while ( $rm = gdrcd_query($month, 'fetch') ) {
+    if ( $rm['month'] == 1 ) {
         $mese = 'Gennaio';
-    } else if ($rm['month'] == 2) {
+    } else if ( $rm['month'] == 2 ) {
         $mese = 'Febbraio';
-    } else if ($rm['month'] == 3) {
+    } else if ( $rm['month'] == 3 ) {
         $mese = 'Marzo';
-    } else if ($rm['month'] == 4) {
+    } else if ( $rm['month'] == 4 ) {
         $mese = 'Aprile';
-    } else if ($rm['month'] == 5) {
+    } else if ( $rm['month'] == 5 ) {
         $mese = 'Maggio';
-    } else if ($rm['month'] == 6) {
+    } else if ( $rm['month'] == 6 ) {
         $mese = 'Giugno';
-    } else if ($rm['month'] == 7) {
+    } else if ( $rm['month'] == 7 ) {
         $mese = 'Luglio';
-    } else if ($rm['month'] == 8) {
+    } else if ( $rm['month'] == 8 ) {
         $mese = 'Agosto';
-    } else if ($rm['month'] == 9) {
+    } else if ( $rm['month'] == 9 ) {
         $mese = 'Settembre';
-    } else if ($rm['month'] == 10) {
+    } else if ( $rm['month'] == 10 ) {
         $mese = 'Ottobre';
-    } else if ($rm['month'] == 11) {
+    } else if ( $rm['month'] == 11 ) {
         $mese = 'Novembre';
-    } else if ($rm['month'] == 12) {
+    } else if ( $rm['month'] == 12 ) {
         $mese = 'Dicembre';
     }
-
 
     $query = gdrcd_query("SELECT * FROM segnalazione_role 
         WHERE YEAR(data_inizio) = '" . gdrcd_filter('num', $yearchosen) . "' 
@@ -130,7 +126,7 @@ while ($rm = gdrcd_query($month, 'fetch')) {
         AND conclusa = 1 ORDER BY data_inizio ASC, data_fine ASC ", "result");
     $num = gdrcd_query($numbers, 'num_rows');
     $totals = gdrcd_query($query, 'num_rows');
-    if ($totals > 0) { ?>
+    if ( $totals > 0 ) { ?>
 
         <div class="titolo_box"><?php echo gdrcd_filter('out', $mese); ?></div>
         <div id="<?php echo $rm['month'] . '' . $yearchosen; ?>">
@@ -175,7 +171,7 @@ while ($rm = gdrcd_query($month, 'fetch')) {
                                     Stato
                                 </div>
                             </td>
-                            <?php if (($pg == $_SESSION['login'] && $row['conclusa'] == 1) || ($_SESSION['permessi'] >= ROLE_PERM)) { ?>
+                            <?php if ( ($pg == $_SESSION['login'] && $row['conclusa'] == 1) || ($_SESSION['permessi'] >= ROLE_PERM) ) { ?>
                                 <td class="casella_titolo">
                                     <div class="titoli_elenco">
 
@@ -189,7 +185,7 @@ while ($rm = gdrcd_query($month, 'fetch')) {
                                 WHERE id = " . gdrcd_filter('num', $row['stanza']) . " ", "result");
                             $r_chat = gdrcd_query($chat, 'fetch');
 
-                            if ($row['conclusa'] == 0) {
+                            if ( $row['conclusa'] == 0 ) {
                                 $num_az = 0;
                             } else {
                                 $azioni = gdrcd_query("SELECT chat.id FROM chat INNER JOIN mappa 
@@ -208,10 +204,11 @@ while ($rm = gdrcd_query($month, 'fetch')) {
                             $mydate = date('Y-m-d H:i:s');
                             ?>
                             <td>
-                                <?php if ((($new_time > $mydate) && $pg == $_SESSION['login'] && $row['conclusa'] == 1)
-                                    || ($_SESSION['permessi'] >= EDIT_PERM && $row['conclusa'] == 1)) { ?>
-                                    <form action="main.php?page=scheda_roles&pg=<?php echo gdrcd_filter('in', $_REQUEST['pg']); ?>"
-                                          method="post">
+                                <?php if ( (($new_time > $mydate) && $pg == $_SESSION['login'] && $row['conclusa'] == 1)
+                                    || ($_SESSION['permessi'] >= EDIT_PERM && $row['conclusa'] == 1) ) { ?>
+                                    <form
+                                        action="main.php?page=scheda_roles&pg=<?php echo gdrcd_filter('in', $_REQUEST['pg']); ?>"
+                                        method="post">
                                         <input type="hidden"
                                                name="op"
                                                value="edit"/>
@@ -257,18 +254,19 @@ while ($rm = gdrcd_query($month, 'fetch')) {
                             </td>
                             <td class="casella_titolo">
                                 <div class="elementi_elencoroles">
-                                    <?php if ($row['conclusa'] == 1) {
+                                    <?php if ( $row['conclusa'] == 1 ) {
                                         echo 'Conclusa';
                                     } else {
                                         echo 'In corso';
                                     } ?>
                                 </div>
                             </td>
-                            <?php if (($pg == $_SESSION['login'] && $row['conclusa'] == 1) || ($_SESSION['permessi'] >= ROLE_PERM && $row['conclusa'] == 1)) { ?>
+                            <?php if ( ($pg == $_SESSION['login'] && $row['conclusa'] == 1) || ($_SESSION['permessi'] >= ROLE_PERM && $row['conclusa'] == 1) ) { ?>
                                 <td>
-                                    <?php  if ($_SESSION['permessi'] >= LOG_PERM) { ?>
-                                        <form action="main.php?page=scheda_roles&pg=<?php echo gdrcd_filter('in', $_REQUEST['pg']); ?>"
-                                              method="post">
+                                    <?php if ( $_SESSION['permessi'] >= LOG_PERM ) { ?>
+                                        <form
+                                            action="main.php?page=scheda_roles&pg=<?php echo gdrcd_filter('in', $_REQUEST['pg']); ?>"
+                                            method="post">
                                             <input type="hidden"
                                                    name="op"
                                                    value="log"/>
@@ -278,10 +276,11 @@ while ($rm = gdrcd_query($month, 'fetch')) {
                                             <button type="submit" class="but_roles">Log chat</button>
 
                                         </form>
-                                    <?php  }
-                                    if (SEND_GM) { ?>
-                                        <form action="main.php?page=scheda_roles&pg=<?php echo gdrcd_filter('in', $_REQUEST['pg']); ?>"
-                                              method="post">
+                                    <?php }
+                                    if ( SEND_GM ) { ?>
+                                        <form
+                                            action="main.php?page=scheda_roles&pg=<?php echo gdrcd_filter('in', $_REQUEST['pg']); ?>"
+                                            method="post">
                                             <input type="hidden"
                                                    name="op"
                                                    value="segnala"/>
@@ -291,12 +290,13 @@ while ($rm = gdrcd_query($month, 'fetch')) {
                                             <button type="submit" class="but_roles">Segnala ai Master</button>
 
                                         </form>
-                                    <?php  }
-                                        if ($pg == $_SESSION['login'] && $row['conclusa'] == 1 && SAVE_ROLE) { ?>
-                                            <a href="pages/scheda/roles/save.proc.php?id=<?php echo $row['id']; ?>" target="_blank">
-                                                Scarica giocata
-                                            </a>
-                                    <?php  } ?>
+                                    <?php }
+                                    if ( $pg == $_SESSION['login'] && $row['conclusa'] == 1 && SAVE_ROLE ) { ?>
+                                        <a href="pages/scheda/roles/save.proc.php?id=<?php echo $row['id']; ?>"
+                                           target="_blank">
+                                            Scarica giocata
+                                        </a>
+                                    <?php } ?>
                                 </td>
                             <?php } ?>
                         </tr>
@@ -307,4 +307,4 @@ while ($rm = gdrcd_query($month, 'fetch')) {
         </div>
     <?php } #num rows
 } ?>
-    </div>
+</div>

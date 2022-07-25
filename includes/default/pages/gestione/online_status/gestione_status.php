@@ -4,7 +4,7 @@ Router::loadRequired(); # Inserisco il required se non presente, per futuro spos
 
 $cls = OnlineStatus::getInstance(); # Inizializzo classe
 
-if ($cls->manageStatusPermission()) { # Metodo di controllo per accesso alla pagina di gestione
+if ( $cls->manageStatusPermission() ) { # Metodo di controllo per accesso alla pagina di gestione
 
     ?>
 

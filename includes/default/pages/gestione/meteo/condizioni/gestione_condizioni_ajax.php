@@ -4,7 +4,7 @@ Router::loadRequired();
 
 $metoCond = MeteoCondizioni::getInstance();
 
-switch ($_POST['action']) {
+switch ( $_POST['action'] ) {
     case 'get_condition_data':
         echo json_encode($metoCond->ajaxCondData($_POST));
         break;

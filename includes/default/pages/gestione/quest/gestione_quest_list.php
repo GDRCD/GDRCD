@@ -18,4 +18,4 @@ $page = Filters::int($_REQUEST['offset']);
     <?= $quest->getQuestsPageNumbers(Filters::int($_REQUEST['offset'])); ?>
 </div>
 
-<script src="<?=Router::getPagesLink('gestione/quest/JS/gestione_quest_list.js');?>"></script>
+<script src="<?= Router::getPagesLink('gestione/quest/JS/gestione_quest_list.js'); ?>"></script>

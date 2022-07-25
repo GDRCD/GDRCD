@@ -19,7 +19,7 @@ $id_contatto = Filters::int($_REQUEST['id']);
           data-reset="false"
           data-callback="goBackNoteContatto">
 
-        <?php if (!$contatti->contactPublic()) { ?>
+        <?php if ( !$contatti->contactPublic() ) { ?>
             <div class="single_input">
                 <div class='label'>
                     Pubblica

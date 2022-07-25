@@ -12,7 +12,6 @@ class GruppiFondi extends Gruppi
         $this->active_founds = Functions::get_constant('GROUPS_FOUNDS');
     }
 
-
     /*** CONFIG ***/
 
     public function activeFounds()
@@ -104,7 +103,7 @@ class GruppiFondi extends Gruppi
     {
         $intervals = [
             ["id" => 'months', 'nome' => "Mesi"],
-            ["id" => 'days', 'nome' => "Giorni"]
+            ["id" => 'days', 'nome' => "Giorni"],
         ];
 
         return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $intervals);
@@ -133,7 +132,7 @@ class GruppiFondi extends Gruppi
      */
     public function NewFound(array $post): array
     {
-        if ($this->permissionManageFounds()) {
+        if ( $this->permissionManageFounds() ) {
 
             $nome = Filters::in($post['nome']);
             $group = Filters::int($post['gruppo']);
@@ -150,14 +149,14 @@ class GruppiFondi extends Gruppi
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Fondo creato.',
                 'swal_type' => 'success',
-                'founds_list' => $this->listFounds()
+                'founds_list' => $this->listFounds(),
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -170,14 +169,13 @@ class GruppiFondi extends Gruppi
      */
     public function ModFound(array $post): array
     {
-        if ($this->permissionManageFounds()) {
+        if ( $this->permissionManageFounds() ) {
             $id = Filters::in($post['id']);
             $nome = Filters::in($post['nome']);
             $group = Filters::int($post['gruppo']);
             $denaro = Filters::int($post['denaro']);
             $interval = Filters::int($post['interval']);
             $interval_type = Filters::in($post['interval_type']);
-
 
             DB::query("UPDATE  gruppi_fondi 
                 SET `nome` = '{$nome}', 
@@ -192,14 +190,14 @@ class GruppiFondi extends Gruppi
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Fondo modificato.',
                 'swal_type' => 'success',
-                'founds_list' => $this->listFounds()
+                'founds_list' => $this->listFounds(),
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -212,7 +210,7 @@ class GruppiFondi extends Gruppi
      */
     public function DelFound(array $post): array
     {
-        if ($this->permissionManageFounds()) {
+        if ( $this->permissionManageFounds() ) {
 
             $id = Filters::in($post['id']);
 
@@ -223,14 +221,14 @@ class GruppiFondi extends Gruppi
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Fondo eliminato.',
                 'swal_type' => 'success',
-                'founds_list' => $this->listFounds()
+                'founds_list' => $this->listFounds(),
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -246,12 +244,12 @@ class GruppiFondi extends Gruppi
     public function assignFounds()
     {
 
-        if($this->activeFounds()) {
+        if ( $this->activeFounds() ) {
 
             $groups = $this->getAllGroups();
 
             // Per ogni gruppo
-            foreach ($groups as $group) {
+            foreach ( $groups as $group ) {
                 $total_given = 0;
                 $group_id = Filters::int($group['id']);
                 $group_name = Filters::in($group['nome']);
@@ -260,14 +258,14 @@ class GruppiFondi extends Gruppi
                 $founds = $this->getAllFoundsByGroup($group_id);
 
                 // Per ogni fondo
-                foreach ($founds as $found) {
+                foreach ( $founds as $found ) {
                     $found_id = Filters::int($found['id']);
                     $interval = Filters::int($found['interval']);
                     $interval_type = Filters::out($found['interval_type']);
                     $last_exec = Filters::out($found['last_exec']);
 
                     // Se devo assegnare il fondo
-                    if (CarbonWrapper::needExec($interval, $interval_type, $last_exec)) {
+                    if ( CarbonWrapper::needExec($interval, $interval_type, $last_exec) ) {
                         var_dump(1);
                         $denaro = Filters::int($found['denaro']);
                         $total_given += $denaro;
@@ -276,11 +274,11 @@ class GruppiFondi extends Gruppi
                     }
                 }
 
-                if($total_given > 0){
+                if ( $total_given > 0 ) {
 
                     $capi = GruppiRuoli::getInstance()->getAllGroupBoss($group_id);
 
-                    foreach ($capi as $capo) {
+                    foreach ( $capi as $capo ) {
                         // TODO Sostituire pg name con pg id all'invio messaggio
                         $pg = Filters::in($capo['nome']);
 
@@ -288,7 +286,6 @@ class GruppiFondi extends Gruppi
                         $testo = Filters::in("Il gruppo '{$group_name}' ha ricevuto un totale di '{$total_given}' dollari.");
                         DB::query("INSERT INTO messaggi(mittente,destinatario,tipo,oggetto,testo) VALUES('System','{$pg}',0,'{$titolo}','{$testo}') ");
                     }
-
 
                 }
 

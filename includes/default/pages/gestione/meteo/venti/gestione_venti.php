@@ -4,7 +4,7 @@ Router::loadRequired(); # Inserisco il required se non presente, per futuro spos
 
 $cls = MeteoVenti::getInstance(); # Inizializzo classe
 
-if ($cls->permissionManageWeather()) { # Metodo di controllo per accesso alla pagina di gestione
+if ( $cls->permissionManageWeather() ) { # Metodo di controllo per accesso alla pagina di gestione
     ?>
 
     <div class="general_incipit">
@@ -52,7 +52,7 @@ if ($cls->permissionManageWeather()) { # Metodo di controllo per accesso alla pa
             <div class="single_input">
                 <div class="label">Venti</div>
                 <select name="id" required>
-                    <?=$cls->listWinds();?>
+                    <?= $cls->listWinds(); ?>
                 </select>
             </div>
 
@@ -95,7 +95,7 @@ if ($cls->permissionManageWeather()) { # Metodo di controllo per accesso alla pa
 
     </div>
 
-    <script src="<?=Router::getPagesLink('gestione/meteo/venti/gestione_venti.js');?>"></script>
+    <script src="<?= Router::getPagesLink('gestione/meteo/venti/gestione_venti.js'); ?>"></script>
 
 
 <?php } ?>

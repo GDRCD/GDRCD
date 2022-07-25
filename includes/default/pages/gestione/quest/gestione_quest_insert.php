@@ -4,7 +4,7 @@ Router::loadRequired();
 
 $quest = Quest::getInstance();
 
-if ($quest->manageQuestPermission()) {
+if ( $quest->manageQuestPermission() ) {
 
     ?>
     <div class="panels_box form_container">
@@ -30,7 +30,7 @@ if ($quest->manageQuestPermission()) {
                 <textarea name="descrizione"></textarea>
             </div>
 
-            <?php if ($quest->trameEnabled() && $quest->manageTramePermission()) { ?>
+            <?php if ( $quest->trameEnabled() && $quest->manageTramePermission() ) { ?>
                 <div class="single_input">
                     <div class='label'>
                         Trama di riferimento
@@ -62,7 +62,7 @@ if ($quest->manageQuestPermission()) {
         </form>
     </div>
 
-    <script src="<?=Router::getPagesLink('gestione/quest/JS/gestione_quest_insert.js');?>"></script>
+    <script src="<?= Router::getPagesLink('gestione/quest/JS/gestione_quest_insert.js'); ?>"></script>
 
 <?php } ?>
 

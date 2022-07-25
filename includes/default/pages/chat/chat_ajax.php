@@ -5,7 +5,7 @@ Router::loadRequired();
 $action = Filters::in($_POST['action']);
 $chat = Chat::getInstance();
 
-switch ($action) {
+switch ( $action ) {
     # Invio azione
     case 'send_action':
         echo json_encode($chat->send($_POST));

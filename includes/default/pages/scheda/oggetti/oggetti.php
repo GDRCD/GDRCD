@@ -7,10 +7,9 @@ $id_pg = Filters::int($_GET['id_pg']);
 $pg_name = Filters::out($_GET['pg']);
 $id_obj = Filters::int($_GET['id_obj']);
 
+if ( $scheda_class->available($id_pg) ) {
 
-if ($scheda_class->available($id_pg)) {
-
-    if ($scheda_class->isAccessible($id_pg)) { ?>
+    if ( $scheda_class->isAccessible($id_pg) ) { ?>
         <div class="scheda_oggetti">
             <div class="dummy">
                 <img src="/imgs/avatars/inventory_m.png">asd

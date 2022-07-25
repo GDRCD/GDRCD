@@ -4,7 +4,7 @@ Router::loadRequired(); # Inserisco il required se non presente, per futuro spos
 
 $cls = Mercato::getInstance(); # Inizializzo classe
 
-if ($cls->manageShopObjectsPermission()) { # Metodo di controllo per accesso alla pagina di gestione
+if ( $cls->manageShopObjectsPermission() ) { # Metodo di controllo per accesso alla pagina di gestione
 
     $obj_class = Oggetti::getInstance();
 
@@ -14,7 +14,8 @@ if ($cls->manageShopObjectsPermission()) { # Metodo di controllo per accesso all
         <div class="title"> Gestione Oggetti Mercato</div>
         <div class="subtitle">Gestione degli oggetti presenti nel mercato</div>
 
-        <div class="highlight"> Pagina di gestione degli oggetti del mercato. </div><br>
+        <div class="highlight"> Pagina di gestione degli oggetti del mercato.</div>
+        <br>
 
         La pagina gestisce solo gli oggetti assegnati al mercato. Per gestire gli oggetti,
         serve modificarli dalla pagina Gestione Oggetti.
@@ -32,7 +33,7 @@ if ($cls->manageShopObjectsPermission()) { # Metodo di controllo per accesso all
 
     <div class="form_container gestione_negozi_oggetti">
 
-        <?php if (isset($resp)) { # Se ho inviato il form e ricevuto una risposta ?>
+        <?php if ( isset($resp) ) { # Se ho inviato il form e ricevuto una risposta ?>
 
             <div class="warning"><?= $resp['mex']; ?></div>
             <div class="link_back">
@@ -145,7 +146,7 @@ if ($cls->manageShopObjectsPermission()) { # Metodo di controllo per accesso all
 
     </div>
 
-    <script src="/<?=Router::getPagesLink('gestione/mercato/gestione_mercato_oggetti.js');?>"></script>
+    <script src="/<?= Router::getPagesLink('gestione/mercato/gestione_mercato_oggetti.js'); ?>"></script>
 
     <div class="link_back"><a href="/main.php?page=gestione">Indietro</a></div>
 

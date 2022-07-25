@@ -1,6 +1,7 @@
 <?php
 
-class Gestione extends BaseClass{
+class Gestione extends BaseClass
+{
 
     /*** GENERICO */
 
@@ -19,7 +20,7 @@ class Gestione extends BaseClass{
         $name = Filters::out($name);
         $val = Filters::out($val);
 
-        switch ($type){
+        switch ( $type ) {
             case 'bool':
                 $checked = ($val == 1) ? 'checked' : '';
                 $html = "<input type='checkbox' name='{$name}' {$checked} />";
@@ -57,31 +58,31 @@ class Gestione extends BaseClass{
      * @note Creazione della sezione della gestione delle costanti
      * @return string
      */
-    public function constantList():string{
+    public function constantList(): string
+    {
 
         $html = '';
 
-        $const_category = DB::query('SELECT section FROM config WHERE editable = 1 GROUP BY section ','result');
+        $const_category = DB::query('SELECT section FROM config WHERE editable = 1 GROUP BY section ', 'result');
 
-        foreach ($const_category as $category) {
+        foreach ( $const_category as $category ) {
             $section = Filters::out($category['section']);
 
             $html .= "<div class='single_section'>";
             $html .= "<div class='form_title'>{$section}</div>";
             $html .= "<div class='box_input'>";
 
-            $const_list = DB::query("SELECT const_name,label,val,type,description FROM config WHERE section='{$section}' AND editable=1 ORDER BY label",'result');
+            $const_list = DB::query("SELECT const_name,label,val,type,description FROM config WHERE section='{$section}' AND editable=1 ORDER BY label", 'result');
 
-            foreach ($const_list as $const){
+            foreach ( $const_list as $const ) {
                 $name = Filters::out($const['const_name']);
                 $label = Filters::out($const['label']);
                 $val = Filters::out($const['val']);
                 $type = Filters::out($const['type']);
 
-
                 $html .= "<div class='single_input w-33'>";
                 $html .= "<div class='label'>{$label}</div>";
-                $html .= $this->inputByType($name,$val,$type);
+                $html .= $this->inputByType($name, $val, $type);
                 $html .= "</div>";
             }
 
@@ -100,57 +101,53 @@ class Gestione extends BaseClass{
      */
     public final function updateConstants(array $post): array
     {
-        if($this->constantsPermission()) {
+        if ( $this->constantsPermission() ) {
 
             $const_list = DB::query("SELECT * FROM config WHERE editable=1 ORDER BY label", 'result');
             $empty_const = [];
 
-
-            foreach ($const_list as $const) {
-                if (($post[$const['const_name']] == '') && ($const['type'] != 'bool')) {
+            foreach ( $const_list as $const ) {
+                if ( ($post[$const['const_name']] == '') && ($const['type'] != 'bool') ) {
                     $empty_const[] = $const['const_name'];
                 }
             }
 
-            if (empty($empty_const)) {
+            if ( empty($empty_const) ) {
 
-                foreach ($const_list as $const) {
+                foreach ( $const_list as $const ) {
                     $type = Filters::out($const['type']);
                     $const_name = Filters::out($const['const_name']);
                     $val = Filters::in($post[$const_name]);
 
                     $save_resp = $this->saveConstant($const_name, $type, $val);
 
-                    if (!$save_resp) {
+                    if ( !$save_resp ) {
                         $empty_const[] = $const_name;
                     }
 
-
                 }
 
-                if (!empty($empty_const)) {
+                if ( !empty($empty_const) ) {
                     return $this->errorConstant($empty_const, 'save');
                 } else {
                     return [
-                        'response'=> true,
+                        'response' => true,
                         'swal_title' => 'Operazione riuscita!',
-                        'swal_message'=>'Costanti salvate con successo.',
-                        'swal_type' => 'success'
+                        'swal_message' => 'Costanti salvate con successo.',
+                        'swal_type' => 'success',
                     ];
                 }
-
 
             } else {
                 return $this->errorConstant($empty_const, 'empty');
             }
 
-        }
-        else{
+        } else {
             return [
-                'response'=> false,
+                'response' => false,
                 'swal_title' => 'Operazione fallita!',
-                'swal_message'=>'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error',
             ];
         }
     }
@@ -163,21 +160,21 @@ class Gestione extends BaseClass{
      * @param mixed $val
      * @return bool|int|mixed|string
      */
-    private final function saveConstant(string $name, string $type, $val){
+    private final function saveConstant(string $name, string $type, $val)
+    {
 
         $name = Filters::in($name);
         $type = Filters::out($type);
 
-        switch ($type){
+        switch ( $type ) {
             case 'bool':
                 $val = !empty($val) ? 1 : 0;
                 break;
 
             case 'int':
-                if(!is_numeric($val) || is_float($val)){
+                if ( !is_numeric($val) || is_float($val) ) {
                     return false;
-                }
-                else{
+                } else {
                     $val = Filters::int($val);
                 }
                 break;
@@ -201,7 +198,7 @@ class Gestione extends BaseClass{
     private final function errorConstant(array $consts, string $type): array
     {
 
-        switch ($type){
+        switch ( $type ) {
             case 'empty':
                 $resp = 'Le costanti devono essere tutte. Costanti mancanti nel form: ';
                 break;
@@ -210,16 +207,16 @@ class Gestione extends BaseClass{
                 break;
         }
 
-        foreach ($consts as $e){
+        foreach ( $consts as $e ) {
 
             $resp .= " {$e},";
         }
 
         return [
-            'response'=>false,
-            'swal_title'=>'Operazione fallita!',
-            'swal_message'=>$resp,
-            'swal_type'=>'error'
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => $resp,
+            'swal_type' => 'error',
         ];
     }
 }

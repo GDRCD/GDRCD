@@ -12,7 +12,7 @@ class Filters extends BaseClass
     public static function gdrcd_filter($type, $val)
     {
 
-        switch (strtolower($type)) {
+        switch ( strtolower($type) ) {
             case 'in':
             case 'get':
                 $val = addslashes(str_replace('\\', '', $val));
@@ -54,10 +54,10 @@ class Filters extends BaseClass
                     "#(<object.*?>.*?(<\/object>)?)#is" => "Contenuti multimediali non consentiti",
                     "#(<embed.*?\/?>.*?(<\/embed>)?)#is" => "Contenuti multimediali non consentiti",
                     "#([o,O][N,n](.*?)=(.*?)\"?'?[^\s\"']+'?\"?)#is" => " ",
-                    "#(javascript:[^\s\"']+)#is" => ""
+                    "#(javascript:[^\s\"']+)#is" => "",
                 ];
 
-                if ($GLOBALS['PARAMETERS']['settings']['html'] == HTML_FILTER_HIGH) {
+                if ( $GLOBALS['PARAMETERS']['settings']['html'] == HTML_FILTER_HIGH ) {
                     $notAllowed = array_merge($notAllowed, [
                         "#(<img.*?\/?>)#is" => "Immagini non consentite",
                         "#(url\(.*?\))#is" => "none",
@@ -183,7 +183,7 @@ class Filters extends BaseClass
      */
     public static function date(string $val, string $format): string
     {
-        if (!empty($val)) {
+        if ( !empty($val) ) {
             return date($format, strtotime($val));
         }
 
@@ -209,6 +209,6 @@ class Filters extends BaseClass
      */
     public static function string(string $val): string
     {
-        return self::gdrcd_filter('string',$val);
+        return self::gdrcd_filter('string', $val);
     }
 }

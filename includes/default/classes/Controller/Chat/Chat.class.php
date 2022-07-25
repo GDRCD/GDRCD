@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * @class Chat
  * @note Classe che gestisce la chat
@@ -33,7 +32,6 @@ class Chat extends BaseClass
 
     public
         $chat_notify;
-
 
     /**** BASE ****/
 
@@ -167,13 +165,13 @@ class Chat extends BaseClass
         $luogo_pvt = DB::query("SELECT privata FROM mappa WHERE id='{$this->luogo}' LIMIT 1")['privata'];
 
         # Se e' privata e l'assegnazione privata e' attivo, oppure non e' privata
-        if (($luogo_pvt && $this->chat_pvt_exp) || (!$luogo_pvt)) {
+        if ( ($luogo_pvt && $this->chat_pvt_exp) || (!$luogo_pvt) ) {
 
             # Se la lunghezza del testo supera il minimo caratteri neccesari all'assegnazione exp
-            if ($lunghezza_testo >= $this->chat_exp_min) {
+            if ( $lunghezza_testo >= $this->chat_exp_min ) {
 
                 # In base al tipo scelgo quanta exp assegnare
-                switch ($tipo) {
+                switch ( $tipo ) {
                     case 'A':
                     case 'P':
                         $exp = $this->chat_exp_azione;
@@ -187,7 +185,7 @@ class Chat extends BaseClass
                 }
 
                 # Se per quel tipo e' segnato un valore di exp, lo assegno, altrimenti no
-                if ($exp > 0) {
+                if ( $exp > 0 ) {
                     DB::query("UPDATE personaggio SET esperienza=esperienza+'{$exp}' WHERE nome='{$this->me}' LIMIT 1");
                 }
             }
@@ -227,13 +225,13 @@ class Chat extends BaseClass
         $scadenza = Filters::out($data['scadenza']);
 
         # Se non e' privata, allora di default e' accessibile
-        if (!$privata) {
+        if ( !$privata ) {
             $resp = true;
         } # Se e' privata
         else {
 
             # Se faccio parte degli invitat o sono il proprietario  e la stanza non e' scaduta
-            if ($this->pvtInvited($proprietario, $invitati) && $this->pvtClosed($scadenza)) {
+            if ( $this->pvtInvited($proprietario, $invitati) && $this->pvtClosed($scadenza) ) {
 
                 # Allora e' accessibile
                 $resp = true;
@@ -294,7 +292,7 @@ class Chat extends BaseClass
      */
     public function printChat(): string
     {
-        if ($this->chatAccess()) {
+        if ( $this->chatAccess() ) {
             # Inizializzo le variabili necessarie
             $html = '';
 
@@ -302,7 +300,7 @@ class Chat extends BaseClass
             $azioni = $this->getActions();
 
             # Per ogni azione creo il suo html in base al tipo
-            foreach ($azioni as $azione) {
+            foreach ( $azioni as $azione ) {
                 $html .= $this->Filter($azione);
             }
 
@@ -350,7 +348,7 @@ class Chat extends BaseClass
         $html = "<div class='singola_azione chat_row_{$tipo}'>";
 
         # Creo l'html in base al tipo indicato
-        switch ($tipo) {
+        switch ( $tipo ) {
             case 'A':
             case 'P':
                 $html .= $this->htmlAzione($azione);
@@ -416,7 +414,6 @@ class Chat extends BaseClass
         # Filtro il mittente passato
         $mittente = Filters::int($mittente);
 
-
         $icons = [];
 
         # Ritorno le sue icone estratte
@@ -426,20 +423,20 @@ class Chat extends BaseClass
                 LEFT JOIN razze ON (razze.id = personaggio.razza)
                 WHERE personaggio.id = '{$mittente}'", 'result');
 
-        foreach ($races as $race){
+        foreach ( $races as $race ) {
             $icons[] = [
                 "Title" => Filters::out($race['nome_razza']),
-                "Img" => 'races/'.Filters::out($race['icon'])
+                "Img" => 'races/' . Filters::out($race['icon']),
             ];
         }
 
-        if(Gruppi::getInstance()->activeGroupIconChat()){
+        if ( Gruppi::getInstance()->activeGroupIconChat() ) {
             $roles = PersonaggioRuolo::getInstance()->getAllCharacterRolesWithRoleData($mittente);
 
-            foreach ($roles as $role){
+            foreach ( $roles as $role ) {
                 $icons[] = [
                     "Title" => Filters::out($role['nome']),
-                    "Img" => 'groups/'.Filters::out($role['immagine'])
+                    "Img" => 'groups/' . Filters::out($role['immagine']),
                 ];
             }
         }
@@ -461,7 +458,7 @@ class Chat extends BaseClass
 
         # Filtro le variabili necessarie
         $mittente = Filters::int($azione['mittente']);
-        $mittente_data = Personaggio::getPgData($mittente,'nome');
+        $mittente_data = Personaggio::getPgData($mittente, 'nome');
         $mittente_nome = Filters::out($mittente_data['nome']);
         $tag = Filters::out($azione['destinatario']);
         $img_chat = Filters::out($azione['url_img_chat']);
@@ -482,7 +479,7 @@ class Chat extends BaseClass
         $testo = $this->formattedText($testo, $colore_parlato);
 
         # Se le icone in chat sono abilitate
-        if ($this->chat_icone) {
+        if ( $this->chat_icone ) {
 
             # Estraggo le icone
             $data_imgs = $this->getIcons($mittente);
@@ -491,18 +488,17 @@ class Chat extends BaseClass
             $html = "<span class='chat_icons'>";
 
             # Se l'avatar e' abilitato, aggiungo l'html dell'avatar
-            if ($this->chat_avatar) {
+            if ( $this->chat_avatar ) {
                 $html .= " <img class='chat_ico' src='{$img_chat}' class='chat_avatar'> ";
             }
 
-            foreach ($data_imgs as $data_img) {
-                $link = Router::getImgsDir().$data_img['Img'];
+            foreach ( $data_imgs as $data_img ) {
+                $link = Router::getImgsDir() . $data_img['Img'];
                 $html .= "<img class='chat_ico' src='{$link}' title='{$data_img['Title']}'> ";
             }
 
             $html .= "</span>";
         }
-
 
         # Creo il corpo azione
         $html .= "<span class='chat_time'>{$ora}</span> ";
@@ -532,12 +528,11 @@ class Chat extends BaseClass
         $destinatario = Filters::int($azione['destinatario']);
         $testo = Filters::string($azione['testo']);
 
-
-        $mittente_data = Personaggio::getPgData($mittente,'nome');
+        $mittente_data = Personaggio::getPgData($mittente, 'nome');
         $mittente_nome = Filters::out($mittente_data['nome']);
 
         // TODO Cambiare campo libero destinatario sussurro con select personaggi
-        $destinatario_data = Personaggio::getPgData($destinatario,'nome');
+        $destinatario_data = Personaggio::getPgData($destinatario, 'nome');
         $destinatario_nome = Filters::out($destinatario_data['nome']);
 
         # Customizzazioni
@@ -552,18 +547,18 @@ class Chat extends BaseClass
         $testo = $this->formattedText($testo, '');
 
         # Se sono io il mittente
-        if ($this->me_id == $mittente) {
+        if ( $this->me_id == $mittente ) {
             $intestazione = "Hai sussurrato a {$destinatario_nome}: ";
         } # Se sono io il destinatario
-        else if ($this->me_id == $destinatario) {
+        else if ( $this->me_id == $destinatario ) {
             $intestazione = "{$mittente_nome} ti ha sussurrato: ";
         } # Se non sono nessuno di entrambi ma sono uno staffer
-        else if ($this->permission > MODERATOR) {
+        else if ( $this->permission > MODERATOR ) {
             $intestazione = "{$mittente_nome} ha sussurrato a {$destinatario_nome}";
         }
 
         # Se l'intestazione non e' vuota, significa che posso leggere il messaggio e lo stampo
-        if ($intestazione != '') {
+        if ( $intestazione != '' ) {
             $html .= "<span class='chat_time'>{$ora}</span> ";
             $html .= "<span class='chat_name'>{$intestazione}</span> ";
             $html .= "<span class='chat_msg' style='color:{$colore_parlato};font-size:{$size};'>{$testo}</span> ";
@@ -586,7 +581,7 @@ class Chat extends BaseClass
         $ora = gdrcd_format_time($azione['ora']);
         $testo = Filters::string($azione['testo']);
 
-        $mittente_data = Personaggio::getPgData($mittente,'nome');
+        $mittente_data = Personaggio::getPgData($mittente, 'nome');
         $mittente_nome = Filters::out($mittente_data['nome']);
 
         # Customizzazioni
@@ -620,7 +615,6 @@ class Chat extends BaseClass
         $destinatario = Filters::out($azione['destinatario']);
         $testo = Filters::string($azione['testo']);
 
-
         # Customizzazioni
         $colore_testo_parlato = PersonaggioChatOpzioni::getInstance()->getOptionValue('png_color_talk', $this->me_id);
         $colore_parlato = Filters::out($colore_testo_parlato['valore']);
@@ -639,7 +633,6 @@ class Chat extends BaseClass
         $html = "<span class='chat_time'>{$ora}</span> ";
         $html .= "<span class='chat_name'>{$destinatario}</span> ";
         $html .= "<span class='chat_msg' style='color:{$colore_descr};font-size:{$size};'>{$testo}</span> ";
-
 
         # Ritorno l'html dell'azione
         return $html;
@@ -766,7 +759,7 @@ class Chat extends BaseClass
      */
     public function send(array $post): array
     {
-        if ($this->chatAccess()) {
+        if ( $this->chatAccess() ) {
             # Inizializzo le variabili necessarie
             $resp = [];
 
@@ -774,7 +767,7 @@ class Chat extends BaseClass
             $tipo = Filters::in($post['tipo']);
 
             # In base al tipo mando l'azione con diversi permessi
-            switch ($tipo) {
+            switch ( $tipo ) {
                 case 'A':
                 case 'P':
                 case 'F':
@@ -793,7 +786,7 @@ class Chat extends BaseClass
             }
 
             # Se l'exp e' attiva assegno l'exp
-            if ($this->chat_exp) {
+            if ( $this->chat_exp ) {
                 $this->assignExp($post);
             }
 
@@ -802,7 +795,7 @@ class Chat extends BaseClass
         } else {
             return [
                 'response' => false,
-                'error' => 'Permesso negato.'
+                'error' => 'Permesso negato.',
             ];
         }
     }
@@ -820,7 +813,7 @@ class Chat extends BaseClass
         $permission = Filters::int($permission);
 
         # Se i permessi sono superiori a quelli necessari
-        if ($this->permission >= $permission) {
+        if ( $this->permission >= $permission ) {
 
             # Salvo l'azione in db
             $this->saveAction($post);
@@ -834,7 +827,7 @@ class Chat extends BaseClass
             # Setto il responso come fallito
             $response = [
                 'response' => false,
-                'error' => 'Non hai i permessi per questo tipo di azione.'
+                'error' => 'Non hai i permessi per questo tipo di azione.',
             ];
         }
 
@@ -854,13 +847,11 @@ class Chat extends BaseClass
         $luogo = $this->luogo;
         $sussurraA = Filters::int($post['whispTo']);
 
-
         # Controllo che il personaggio a cui sussurro sia nella mia stessa chat
         $count = DB::query("SELECT count(id) AS total FROM personaggio WHERE id='{$sussurraA}' AND ultimo_luogo='{$luogo}' LIMIT 1");
 
-
         # Se e' nella mia stessa chat
-        if (Filters::int($count['total']) > 0) {
+        if ( Filters::int($count['total']) > 0 ) {
 
             $post['tag'] = $sussurraA;
 
@@ -874,7 +865,7 @@ class Chat extends BaseClass
         else {
             $response = [
                 'response' => false,
-                'error' => 'Personaggio non presente in chat.'
+                'error' => 'Personaggio non presente in chat.',
             ];
         }
 
@@ -924,7 +915,6 @@ class Chat extends BaseClass
                                         ", 'result');
     }
 
-
     /**
      * # TODO Modificare con nuovo sistema oggetti
      * @fn calcAllObjsBonus
@@ -942,7 +932,7 @@ class Chat extends BaseClass
         $extra_query = '';
         $total_bonus = 0;
 
-        if (!empty($excluded)) {
+        if ( !empty($excluded) ) {
             $implode = implode(',', $excluded);
             $extra_query = " AND personaggio_oggetto.id NOT IN ({$implode})";
         }
@@ -959,7 +949,7 @@ class Chat extends BaseClass
                                         ", 'result');
 
         # Per ogni oggetto equipaggiato
-        foreach ($objects as $object) {
+        foreach ( $objects as $object ) {
             # Aggiungo il suo bonus al totale
             $total_bonus += Filters::int($object["bonus_car{$car}"]);
         }
@@ -983,12 +973,12 @@ class Chat extends BaseClass
         $objects = $this->getPgAllObjects($this->me_id, $this->chat_equip_equipped, 'personaggio_oggetto.id,oggetto.id AS obj_id,oggetto.nome');
 
         # Per ogni oggetto creo una option per la select
-        foreach ($objects as $object) {
+        foreach ( $objects as $object ) {
             $id = Filters::int($object['id']);
             $id_obj = Filters::int($object['obj_id']);
             $nome = Filters::out($object['nome']);
 
-            if ($obj_class->existObject($id_obj)) {
+            if ( $obj_class->existObject($id_obj) ) {
                 $html .= "<option value='{$id}'>{$nome}</option>";
             }
         }
@@ -1010,7 +1000,7 @@ class Chat extends BaseClass
         $chats = DB::query("SELECT * FROM mappa WHERE privata = 0 ORDER BY nome", 'result');
 
         # Per ogni oggetto creo una option per la select
-        foreach ($chats as $chat) {
+        foreach ( $chats as $chat ) {
             $id = Filters::int($chat['id']);
             $nome = Filters::out($chat['nome']);
 
@@ -1031,7 +1021,7 @@ class Chat extends BaseClass
      */
     public function roll(array $post): array
     {
-        if ($this->chatAccess()) {
+        if ( $this->chatAccess() ) {
             # Inizializzo le variabili necessarie
             $abi_nome = '';
             $abi_dice = '';
@@ -1047,7 +1037,7 @@ class Chat extends BaseClass
             $obj = Filters::int($post['oggetto']);
 
             # Se ho selezionato l'abilita'
-            if ($abi != 0) {
+            if ( $abi != 0 ) {
 
                 # Estraggo i dati dell'abilita' scelta
                 $abi_roll = $this->rollAbility($abi);
@@ -1057,16 +1047,15 @@ class Chat extends BaseClass
                 $abi_nome = Filters::in($abi_roll['abi_nome']);
 
                 # Se non ho selezionato nessuna caratteristica utilizzo quella base dell'abilita'
-                if ($car == 0) {
+                if ( $car == 0 ) {
                     # Imposto la stat dell'abilita' come caratteristica richiesta in caso di utilizzo oggetti
                     $car_name = Filters::out($abi_roll['car_name']);
                     $car = Filters::int($abi_roll['car']);
                 }
             }
 
-
             # Se ho selezionato una caratteristica (abbinata o meno ad un'abilita')
-            if ($car != 0) {
+            if ( $car != 0 ) {
 
                 # Estraggo i dati riguardo la statistica
                 $car_roll = $this->rollCar($car, $obj);
@@ -1076,7 +1065,7 @@ class Chat extends BaseClass
                 $car_name = Filters::out($car_roll['car_name']);
 
                 # Se devo aggiungere anche il valore dell'equipaggiamento alla stat
-                if ($this->chat_equip_bonus) {
+                if ( $this->chat_equip_bonus ) {
 
                     # Valorizzo il campo bonus equip stat per la stampa del testo
                     $car_bonus = Filters::int($car_roll['car_bonus']);
@@ -1084,7 +1073,7 @@ class Chat extends BaseClass
             }
 
             # Se ho selezionato l'utilizzo di un oggetto e di una tra abilita' o stat
-            if (($obj != 0) && ($car != 0)) {
+            if ( ($obj != 0) && ($car != 0) ) {
 
                 # Estraggo i dati dell'oggetto
                 $obj_roll = $this->rollObj($obj, $car);
@@ -1106,7 +1095,7 @@ class Chat extends BaseClass
                 'car_name' => $car_name,
                 'obj_nome' => $obj_nome,
                 'obj_dice' => $obj_dice,
-                'car_bonus' => $car_bonus
+                'car_bonus' => $car_bonus,
             ];
 
             # Formo il testo e lo salvo in database
@@ -1179,7 +1168,7 @@ class Chat extends BaseClass
         return [
             'car_dice' => $stat_val,
             'car_bonus' => $total_bonus,
-            'car_name' => $stat_name
+            'car_name' => $stat_name,
         ];
     }
 
@@ -1234,7 +1223,7 @@ class Chat extends BaseClass
         $total = 0;
         $diced = 0;
 
-        while ($diced < $num) {
+        while ( $diced < $num ) {
             $total += rand(1, $face);
             $diced++;
         }
@@ -1265,7 +1254,7 @@ class Chat extends BaseClass
         $html = "{$this->me} ha lanciato:";
 
         # Se ho lanciato un'abilita' ne aggiungo il testo
-        if ($abi_nome != '') {
+        if ( $abi_nome != '' ) {
             $html .= "{$abi_nome} {$abi_dice},";
             $total += $abi_dice;
         }
@@ -1275,19 +1264,19 @@ class Chat extends BaseClass
         $total += $car_dice;
 
         # Se ho selezionato la possibilita' di aggiungere i bonus equipaggiamento al totale della stat
-        if ($car_bonus !== '') {
+        if ( $car_bonus !== '' ) {
             $html .= "Bonus Equip Stat {$car_bonus},";
             $total += $car_bonus;
         }
 
         # Se ho lanciato un oggetto ne aggiungo il testo
-        if ($obj_nome != '') {
+        if ( $obj_nome != '' ) {
             $html .= "{$obj_nome} {$obj_dice},";
             $total += $obj_dice;
         }
 
         # Aggiungo il valore del dado al testo
-        if ($this->chat_dice) {
+        if ( $this->chat_dice ) {
             $html .= "Dado: {$dice},";
             $total += $dice;
         }
@@ -1311,8 +1300,7 @@ class Chat extends BaseClass
     public function rollEsito(array $post): array
     {
 
-        if ($this->chatAccess()) {
-
+        if ( $this->chatAccess() ) {
 
             $esiti = Esiti::getInstance();
             $esiti->rollEsito($post);
@@ -1326,6 +1314,5 @@ class Chat extends BaseClass
         }
 
     }
-
 
 }

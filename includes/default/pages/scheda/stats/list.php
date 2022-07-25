@@ -9,7 +9,7 @@ $id_pg = Filters::int($_GET['id_pg']);
 <div class="stats_list">
 
     <div class="fake-table scheda_stat_table">
-        <?=SchedaStats::getInstance()->statsPage($id_pg);?>
+        <?= SchedaStats::getInstance()->statsPage($id_pg); ?>
     </div>
 
     <div class="form_info">
@@ -22,6 +22,6 @@ $id_pg = Filters::int($_GET['id_pg']);
     <a href="/main.php?page=scheda/index&id_pg=<?= $id_pg ?>">Torna indietro</a>
 </div>
 
-<script src="<?=Router::getPagesLink('scheda/stats/list.js');?>"></script>
+<script src="<?= Router::getPagesLink('scheda/stats/list.js'); ?>"></script>
 
 

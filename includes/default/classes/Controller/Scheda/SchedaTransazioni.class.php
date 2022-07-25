@@ -58,15 +58,14 @@ class SchedaTransazioni extends Scheda
         $logs = Log::getInstance()->getAllLogsByDestinatarioAndType($pg, PX, 10);
         $logs_data = [];
 
-
         $cells = [
             'Causale',
             'Destinatario',
             'Data',
-            'Autore'
+            'Autore',
         ];
 
-        foreach ($logs as $log) {
+        foreach ( $logs as $log ) {
 
             $id = Filters::int($log['id']);
             $autore = Filters::int($log['autore']);
@@ -107,14 +106,14 @@ class SchedaTransazioni extends Scheda
 
     public function addManualExp(array $post): array
     {
-        if ($this->manageExpPermission()) {
+        if ( $this->manageExpPermission() ) {
 
             $pg = Filters::in($post['pg']);
             $pg_name = Personaggio::nameFromId($pg);
             $causale = Filters::in($post['causale']);
             $px = Filters::int($post['px']);
 
-            if (!empty($causale) && ($px != 0) && !empty($pg)) {
+            if ( !empty($causale) && ($px != 0) && !empty($pg) ) {
 
                 Personaggio::updatePgData($pg, "esperienza = esperienza + '{$px}'");
 
@@ -130,14 +129,14 @@ class SchedaTransazioni extends Scheda
                     'swal_title' => 'Operazione riuscita!',
                     'swal_message' => 'Esperienza assegnata correttamente.',
                     'swal_type' => 'success',
-                    'new_template' => Log::getInstance()->logTable($pg, PX, 10, 'Esperienza')
+                    'new_template' => Log::getInstance()->logTable($pg, PX, 10, 'Esperienza'),
                 ];
             } else {
                 return [
                     'response' => false,
                     'swal_title' => 'Operazione fallita!',
                     'swal_message' => 'Compila tutti i campi.',
-                    'swal_type' => 'error'
+                    'swal_type' => 'error',
                 ];
             }
 
@@ -146,7 +145,7 @@ class SchedaTransazioni extends Scheda
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
 

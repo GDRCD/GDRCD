@@ -1,6 +1,5 @@
 <?php
 
-
 class PersonaggioAbilita extends Personaggio
 {
     private $abi_class,
@@ -130,20 +129,20 @@ class PersonaggioAbilita extends Personaggio
         $count = 1;
 
         # Per ogni abilita del pg
-        foreach ($abi_pg as $row_pg) {
+        foreach ( $abi_pg as $row_pg ) {
 
             # Estraggo i dati dell'abilita
             $grado = Filters::int($row_pg['grado']);
             $abi_id = Filters::int($row_pg['id_abilita']);
 
             # Per ogni livello dell'abilita
-            while ($count <= $grado) {
+            while ( $count <= $grado ) {
 
                 # Estraggo il costo
                 $extra = $this->extra_class->getAbilitaExtra($abi_id, $count, 'costo');
 
                 # Se non c'e' un costo, calcolo quello di default per quel livello
-                if ($this->abi_class->extraActive() && !empty($extra['costo']) && ($extra['costo'] > 0)) {
+                if ( $this->abi_class->extraActive() && !empty($extra['costo']) && ($extra['costo'] > 0) ) {
                     $px_abi = Filters::int($extra['costo']);
                 } else {
                     $px_abi = $this->abi_class->defaultCalcUp($count);
@@ -157,7 +156,6 @@ class PersonaggioAbilita extends Personaggio
             # Restarto il counter per la prossima abilita
             $count = 1;
         }
-
 
         # Ritorno la differenza tra l'esperienza del pg e quella spesa
         return round($exp_pg - $px_spesi);
@@ -176,18 +174,18 @@ class PersonaggioAbilita extends Personaggio
         $abi_pg = $this->getPgAbility($abi, $pg, 'personaggio_abilita.grado');
         $grado = Filters::int($abi_pg['grado']);
 
-        if ($this->permissionUpgradeAbilita($pg, $grado)) {
+        if ( $this->permissionUpgradeAbilita($pg, $grado) ) {
 
             $new_grado = Filters::int(($grado + 1));
 
-            if ($this->req_class->requirementControl($pg, $abi, $new_grado)) {
+            if ( $this->req_class->requirementControl($pg, $abi, $new_grado) ) {
                 $exp_remained = $this->RemainedExp($pg);
 
-                if ($this->abi_class->extraActive()) {
+                if ( $this->abi_class->extraActive() ) {
 
                     $extra = $this->extra_class->getAbilitaExtra($abi, $new_grado, 'costo');
 
-                    if (!empty($extra['costo']) && ($extra['costo'] > 0)) {
+                    if ( !empty($extra['costo']) && ($extra['costo'] > 0) ) {
                         $costo = Filters::int($extra['costo']);
                     } else {
                         $costo = $this->abi_class->defaultCalcUp($new_grado);
@@ -197,9 +195,9 @@ class PersonaggioAbilita extends Personaggio
                     $costo = $this->abi_class->defaultCalcUp($new_grado);
                 }
 
-                if ($exp_remained >= $costo) {
+                if ( $exp_remained >= $costo ) {
 
-                    if ($grado == 0) {
+                    if ( $grado == 0 ) {
                         DB::query("INSERT INTO personaggio_abilita(personaggio,abilita,grado) VALUES('{$pg}','{$abi}','{$new_grado}')");
                     } else {
                         DB::query("UPDATE personaggio_abilita SET grado='{$new_grado}' WHERE personaggio='{$pg}' AND abilita='{$abi}' LIMIT 1");
@@ -211,7 +209,7 @@ class PersonaggioAbilita extends Personaggio
                         'swal_message' => 'Abilità aumentata con successo.',
                         'swal_type' => 'success',
                         'new_template' => SchedaAbilita::getInstance()->abilityPage($pg),
-                        'remained_exp' => PersonaggioAbilita::getInstance()->RemainedExp($pg)
+                        'remained_exp' => PersonaggioAbilita::getInstance()->RemainedExp($pg),
                     ];
 
                 } else {
@@ -219,7 +217,7 @@ class PersonaggioAbilita extends Personaggio
                         'response' => false,
                         'swal_title' => 'Operazione negata!',
                         'swal_message' => 'Non hai abbastanza esperienza per l\'acquisto.',
-                        'swal_type' => 'error'
+                        'swal_type' => 'error',
                     ];
                 }
             } else {
@@ -227,7 +225,7 @@ class PersonaggioAbilita extends Personaggio
                     'response' => false,
                     'swal_title' => 'Operazione negata!',
                     'swal_message' => 'Non hai i requisiti necessari per questa abilita.',
-                    'swal_type' => 'error'
+                    'swal_type' => 'error',
                 ];
             }
         } else {
@@ -235,7 +233,7 @@ class PersonaggioAbilita extends Personaggio
                 'response' => false,
                 'swal_title' => 'Operazione negata!',
                 'swal_message' => 'Non hai i permessi per effettuare questa operazione.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
 
@@ -255,11 +253,11 @@ class PersonaggioAbilita extends Personaggio
         $abi_data = $this->getPgAbility($abi, $pg, 'grado');
         $grado = Filters::int($abi_data['grado']);
 
-        if ($this->permissionDowngradeAbilita($grado)) {
+        if ( $this->permissionDowngradeAbilita($grado) ) {
 
             $new_grado = ($grado - 1);
 
-            if ($new_grado == 0) {
+            if ( $new_grado == 0 ) {
                 DB::query("DELETE FROM personaggio_abilita WHERE personaggio='{$pg}' AND abilita='{$abi}' LIMIT 1");
             } else {
                 DB::query("UPDATE personaggio_abilita SET grado='{$new_grado}' WHERE personaggio='{$pg}' AND abilita='{$abi}' LIMIT 1");
@@ -271,7 +269,7 @@ class PersonaggioAbilita extends Personaggio
                 'swal_message' => 'Abilità diminuita correttamente.',
                 'swal_type' => 'success',
                 'new_template' => SchedaAbilita::getInstance()->abilityPage($pg),
-                'remained_exp' => PersonaggioAbilita::getInstance()->RemainedExp($pg)
+                'remained_exp' => PersonaggioAbilita::getInstance()->RemainedExp($pg),
 
             ];
         } else {
@@ -279,7 +277,7 @@ class PersonaggioAbilita extends Personaggio
                 'response' => false,
                 'swal_title' => 'Operazione negata!',
                 'swal_message' => 'Non hai i permessi per effettuare questa operazione.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
 
@@ -296,7 +294,7 @@ class PersonaggioAbilita extends Personaggio
 
         $mex = Filters::out($mex);
 
-        switch ($mex) {
+        switch ( $mex ) {
             case 'UpOk':
                 $text = 'Abilità aumentata con successo.';
                 break;

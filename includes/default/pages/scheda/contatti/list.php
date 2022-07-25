@@ -5,7 +5,7 @@ $contatti = Contatti::getInstance();
 $id_pg = Filters::int($_GET['id_pg']);
 $pg = Filters::in($_GET['pg']);
 
-if ($contatti->contactEnables()) { ?>
+if ( $contatti->contactEnables() ) { ?>
 
     <div class="fake-table contatti_list">
         <?= $contatti->ContactList($id_pg); ?>

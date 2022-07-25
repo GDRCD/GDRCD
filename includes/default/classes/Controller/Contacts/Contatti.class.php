@@ -55,7 +55,7 @@ class Contatti extends BaseClass
     {
         $op = Filters::out($op);
 
-        switch ($op) {
+        switch ( $op ) {
             default:
                 $page = 'list.php';
                 break;
@@ -243,7 +243,7 @@ class Contatti extends BaseClass
         $list = $this->getAllCharacterContact($id_pg, 'contatto, categoria, id');
         $row_data = [];
 
-        foreach ($list as $row) {
+        foreach ( $list as $row ) {
             $id = Filters::in($row['id']);
 
             $id_contatto = Filters::in($row['contatto']);
@@ -266,18 +266,18 @@ class Contatti extends BaseClass
                 'contatti_categories_staff' => $this->categoriesStaff(),
                 'pop_up_modifica' => $pop_up_modifica,
                 'id_pg' => $id_pg,
-                'pg' => Personaggio::nameFromId($id_pg)
+                'pg' => Personaggio::nameFromId($id_pg),
             ];
         }
 
         $cells = [
             'Nome',
             'Categoria',
-            'Controlli'
+            'Controlli',
         ];
         $links = [
             ['href' => "/main.php?page=scheda/index&op=contatti_new&id_pg={$id_pg}", 'text' => 'Nuovo contatto', 'separator' => true],
-            ['href' => "/main.php?page=scheda/index&id_pg={$id_pg}", 'text' => ' Torna indietro']
+            ['href' => "/main.php?page=scheda/index&id_pg={$id_pg}", 'text' => ' Torna indietro'],
         ];
 
         return [
@@ -326,7 +326,7 @@ class Contatti extends BaseClass
         $pg = Filters::int($pg);
         $tot = $this->getAllCharacterContact($pg, 'contatto');
         $contatti_presenti = "";
-        foreach ($tot as $con) {
+        foreach ( $tot as $con ) {
             $contatti_presenti .= "{$con['contatto']},";
         }
         return rtrim($contatti_presenti, ",");
@@ -361,14 +361,14 @@ class Contatti extends BaseClass
         $creato_da = Filters::int($post['id_pg']);
         $categoria = Filters::int($post['categoria']);
 
-        if (Personaggio::isMyPg($personaggio)) {
+        if ( Personaggio::isMyPg($personaggio) ) {
             DB::query("INSERT INTO contatti(personaggio, contatto, categoria, creato_da, creato_il) VALUES('{$personaggio}', '{$contatto}', {$categoria},'{$creato_da}', NOW())");
 
             return [
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Contatto creato con successo.',
-                'swal_type' => 'success'
+                'swal_type' => 'success',
             ];
 
         } else {
@@ -376,7 +376,7 @@ class Contatti extends BaseClass
                 'response' => false,
                 'swal_title' => 'Permesso negato!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -395,21 +395,21 @@ class Contatti extends BaseClass
         $contact_data = $this->getContact($id, 'personaggio');
         $owner = Filters::int($contact_data['personaggio']);
 
-        if ($this->contactUpdate($owner)) {
+        if ( $this->contactUpdate($owner) ) {
 
             DB::query("UPDATE contatti SET categoria = '{$categoria}'  WHERE id= {$id}");
             return [
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Contatto modificato con successo.',
-                'swal_type' => 'success'
+                'swal_type' => 'success',
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Permesso negato!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -426,7 +426,7 @@ class Contatti extends BaseClass
 
         $contact_data = $this->getContact($id, 'personaggio');
         $owner = Filters::int($contact_data['personaggio']);
-        if ($this->contactUpdate($owner)) {
+        if ( $this->contactUpdate($owner) ) {
 
             DB::query("DELETE FROM contatti WHERE id = '{$id}' LIMIT 1"); //Cancello il contatto
             return [
@@ -434,14 +434,14 @@ class Contatti extends BaseClass
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Contatto rimosso correttamente.',
                 'swal_type' => 'success',
-                'contatti_list' => $this->ContactList($owner)
+                'contatti_list' => $this->ContactList($owner),
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Permesso negato!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }

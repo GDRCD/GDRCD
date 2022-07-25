@@ -2,15 +2,15 @@
 $pg = $_REQUEST['pg'];
 
 #Numero di risultati
-if ($_POST['type'] == 0) {
+if ( $_POST['type'] == 0 ) {
     $total = gdrcd_query("SELECT * FROM segnalazione_role WHERE  mittente = '" . gdrcd_filter('in', $pg) . "' 
         AND partecipanti LIKE '%" . gdrcd_filter('in', $_POST['search']) . "%' AND conclusa = 1 ", "result");
     $type = 'personaggio';
-} else if ($_POST['type'] == 1) {
+} else if ( $_POST['type'] == 1 ) {
     $total = gdrcd_query("SELECT * FROM segnalazione_role WHERE  mittente = '" . gdrcd_filter('in', $pg) . "' 
         AND tags LIKE '%" . gdrcd_filter('in', $_POST['search']) . "%' AND conclusa = 1 ", "result");
     $type = 'tag';
-} else if ($_POST['type'] == 2) {
+} else if ( $_POST['type'] == 2 ) {
     $total = gdrcd_query("SELECT * FROM segnalazione_role WHERE  mittente = '" . gdrcd_filter('in', $pg) . "' 
         AND quest LIKE '%" . gdrcd_filter('in', $_POST['search']) . "%' AND conclusa = 1 ", "result");
     $type = 'quest';
@@ -25,41 +25,41 @@ $totale = gdrcd_query($total, 'num_rows');
 
 <? $year = gdrcd_query("SELECT YEAR(data_inizio) as year FROM segnalazione_role 
     WHERE mittente = '" . gdrcd_filter('in', $pg) . "' GROUP BY YEAR(data_inizio) ORDER BY data_inizio DESC", "result");
-while ($ry = gdrcd_query($year, 'fetch')) {
+while ( $ry = gdrcd_query($year, 'fetch') ) {
     echo '<div class="page_title" ><h2 style="font-family: Aileron;">' . $ry['year'] . '</h2></div>';
     $month = gdrcd_query("SELECT MONTH(data_inizio) as month FROM segnalazione_role 
     WHERE mittente = '" . gdrcd_filter('in', $pg) . "' GROUP BY MONTH(data_inizio) ORDER BY data_inizio DESC", "result");
-    while ($rm = gdrcd_query($month, 'fetch')) {
-        if ($rm['month'] == 1) {
+    while ( $rm = gdrcd_query($month, 'fetch') ) {
+        if ( $rm['month'] == 1 ) {
             $mese = 'Gennaio';
-        } else if ($rm['month'] == 2) {
+        } else if ( $rm['month'] == 2 ) {
             $mese = 'Febbraio';
-        } else if ($rm['month'] == 3) {
+        } else if ( $rm['month'] == 3 ) {
             $mese = 'Marzo';
-        } else if ($rm['month'] == 4) {
+        } else if ( $rm['month'] == 4 ) {
             $mese = 'Aprile';
-        } else if ($rm['month'] == 5) {
+        } else if ( $rm['month'] == 5 ) {
             $mese = 'Maggio';
-        } else if ($rm['month'] == 6) {
+        } else if ( $rm['month'] == 6 ) {
             $mese = 'Giugno';
-        } else if ($rm['month'] == 7) {
+        } else if ( $rm['month'] == 7 ) {
             $mese = 'Luglio';
-        } else if ($rm['month'] == 8) {
+        } else if ( $rm['month'] == 8 ) {
             $mese = 'Agosto';
-        } else if ($rm['month'] == 9) {
+        } else if ( $rm['month'] == 9 ) {
             $mese = 'Settembre';
-        } else if ($rm['month'] == 10) {
+        } else if ( $rm['month'] == 10 ) {
             $mese = 'Ottobre';
-        } else if ($rm['month'] == 12) {
+        } else if ( $rm['month'] == 12 ) {
             $mese = 'Novembre';
-        } else if ($rm['month'] == 12) {
+        } else if ( $rm['month'] == 12 ) {
             $mese = 'Dicembre';
         }
 
         #Inserisco le condizioni di ricerca
 
         # [0] Ricerca per giocatore
-        if ($_POST['type'] == 0) {
+        if ( $_POST['type'] == 0 ) {
             $query = gdrcd_query("SELECT * FROM segnalazione_role 
                 WHERE YEAR(data_inizio) = '" . gdrcd_filter('num', $ry['year']) . "' 
                 AND MONTH(data_inizio) = '" . gdrcd_filter('num', $rm['month']) . "' 
@@ -73,7 +73,7 @@ while ($ry = gdrcd_query($year, 'fetch')) {
                 AND partecipanti LIKE '%" . gdrcd_filter('in', $_POST['search']) . "%' 
                 AND conclusa = 1 ORDER BY data_inizio , data_fine ", "result");
         } # [1] Ricerca per abilita
-        else if ($_POST['type'] == 1) {
+        else if ( $_POST['type'] == 1 ) {
             $query = gdrcd_query("SELECT * FROM segnalazione_role 
                 WHERE YEAR(data_inizio) = '" . gdrcd_filter('num', $ry['year']) . "' 
                 AND MONTH(data_inizio) = '" . gdrcd_filter('num', $rm['month']) . "' 
@@ -87,7 +87,7 @@ while ($ry = gdrcd_query($year, 'fetch')) {
                 AND tags LIKE '%" . gdrcd_filter('in', $_POST['search']) . "%' 
                 AND conclusa = 1 ORDER BY data_inizio , data_fine ", "result");
         } # [2] Ricerca per quest
-        else if ($_POST['type'] == 2) {
+        else if ( $_POST['type'] == 2 ) {
             $query = gdrcd_query("SELECT * FROM segnalazione_role 
                 WHERE YEAR(data_inizio) = '" . gdrcd_filter('num', $ry['year']) . "' 
                 AND MONTH(data_inizio) = '" . gdrcd_filter('num', $rm['month']) . "' 
@@ -104,7 +104,7 @@ while ($ry = gdrcd_query($year, 'fetch')) {
         ####
 
         $num = gdrcd_query($numbers, 'num_rows');
-        if ($num > 0) {
+        if ( $num > 0 ) {
             echo '<div class="titolo_box">' . $mese . '</div>'; ?>
             <div class="elenco_record_gioco" id="<? echo $rm['month'] . '' . $ry['year'] ?>">
                 <table>
@@ -154,7 +154,7 @@ while ($ry = gdrcd_query($year, 'fetch')) {
                                 <?php echo 'Stato'; ?>
                             </div>
                         </td>
-                        <? if (($pg == $_SESSION['login'] && $row['conclusa'] == 1) || ($_SESSION['permessi'] >= MODERATOR)) { ?>
+                        <? if ( ($pg == $_SESSION['login'] && $row['conclusa'] == 1) || ($_SESSION['permessi'] >= MODERATOR) ) { ?>
                             <td class="casella_titolo" style="width: 100px;">
                                 <div class="titoli_elenco">
 
@@ -192,7 +192,7 @@ while ($ry = gdrcd_query($year, 'fetch')) {
                         </td>
                         <td class="casella_titolo">
                             <div class="elementi_elenco">
-                                <?php if ($row['data_fine'] !== NULL) {
+                                <?php if ( $row['data_fine'] !== NULL ) {
                                     echo gdrcd_format_time($row['data_fine']);
                                 } ?>
                             </div>
@@ -224,18 +224,19 @@ while ($ry = gdrcd_query($year, 'fetch')) {
                         </td>
                         <td class="casella_titolo">
                             <div class="elementi_elenco">
-                                <?php if ($row['conclusa'] == 1) {
+                                <?php if ( $row['conclusa'] == 1 ) {
                                     echo 'Conclusa';
                                 } else {
                                     echo 'In corso';
                                 } ?>
                             </div>
                         </td>
-                        <? if (($pg == $_SESSION['login'] && $row['conclusa'] == 1) || ($_SESSION['permessi'] >= MODERATOR)) { ?>
+                        <? if ( ($pg == $_SESSION['login'] && $row['conclusa'] == 1) || ($_SESSION['permessi'] >= MODERATOR) ) { ?>
                             <td class="casella_titolo" style="width: 100px;">
                                 <div class="elementi_elenco">
-                                    <form action="main.php?page=scheda_roles&pg=<?php echo gdrcd_filter('in', $_REQUEST['pg']); ?>"
-                                          method="post">
+                                    <form
+                                        action="main.php?page=scheda_roles&pg=<?php echo gdrcd_filter('in', $_REQUEST['pg']); ?>"
+                                        method="post">
                                         <input type="hidden"
                                                name="op"
                                                value="log"/>

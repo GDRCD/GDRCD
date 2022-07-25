@@ -4,28 +4,30 @@ Router::loadRequired(); # Inserisco il required se non presente, per futuro spos
 
 $cls = Gruppi::getInstance(); # Inizializzo classe
 
-if($cls->permissionManageGroups() && $cls->activeGroups()){ # Metodo di controllo per accesso alla pagina di gestione
+if ( $cls->permissionManageGroups() && $cls->activeGroups() ) { # Metodo di controllo per accesso alla pagina di gestione
 
-?>
-        <div class="general_incipit">
-            <div class="title"> Gestione gruppi </div>
-            <div class="subtitle">Gestione dei dati riferiti ai gruppi</div>
+    ?>
+    <div class="general_incipit">
+        <div class="title"> Gestione gruppi</div>
+        <div class="subtitle">Gestione dei dati riferiti ai gruppi</div>
 
-            Da questa pagina e' possibile:
-            <ul>
-                <li>Creare un gruppo</li>
-                <li>Modificare un gruppo</li>
-                <li>Eliminare un gruppo</li>
-            </ul>
+        Da questa pagina e' possibile:
+        <ul>
+            <li>Creare un gruppo</li>
+            <li>Modificare un gruppo</li>
+            <li>Eliminare un gruppo</li>
+        </ul>
 
-            L'eliminazione di un gruppo include anche l'eliminazione di <span class="highlight">tutti i suoi ruoli e la dissociazione dei ruoli da tutti ipersonaggi</span> ed e' irreversibile.
+        L'eliminazione di un gruppo include anche l'eliminazione di <span class="highlight">tutti i suoi ruoli e la dissociazione dei ruoli da tutti ipersonaggi</span>
+        ed e' irreversibile.
 
-        </div>
+    </div>
 
     <div class="form_container group_management">
 
         <!-- INSERT -->
-        <form class="form ajax_form" action="gestione/gruppi/gruppi/gestione_gruppi_ajax.php" data-callback="updateGroupsList">
+        <form class="form ajax_form" action="gestione/gruppi/gruppi/gestione_gruppi_ajax.php"
+              data-callback="updateGroupsList">
 
             <div class="form_title">Crea gruppo</div>
 
@@ -74,7 +76,8 @@ if($cls->permissionManageGroups() && $cls->activeGroups()){ # Metodo di controll
         </form>
 
         <!-- EDIT -->
-        <form class="form edit_form ajax_form" action="gestione/gruppi/gruppi/gestione_gruppi_ajax.php" data-callback="updateGroupsList">
+        <form class="form edit_form ajax_form" action="gestione/gruppi/gruppi/gestione_gruppi_ajax.php"
+              data-callback="updateGroupsList">
 
             <div class="form_title">Modifica gruppo</div>
 
@@ -130,7 +133,8 @@ if($cls->permissionManageGroups() && $cls->activeGroups()){ # Metodo di controll
         </form>
 
         <!-- DELETE -->
-        <form method="POST" class="form ajax_form" action="gestione/gruppi/gruppi/gestione_gruppi_ajax.php" data-callback="updateGroupsList">
+        <form method="POST" class="form ajax_form" action="gestione/gruppi/gruppi/gestione_gruppi_ajax.php"
+              data-callback="updateGroupsList">
 
             <div class="form_title">Elimina gruppo</div>
 
@@ -151,7 +155,7 @@ if($cls->permissionManageGroups() && $cls->activeGroups()){ # Metodo di controll
     </div>
 
     <script src="<?= Router::getPagesLink('gestione/gruppi/gruppi/gestione_gruppi.js'); ?>"></script>
-    <div class="link_back"><a href="/main.php?page=gestione">Indietro</a> </div>
+    <div class="link_back"><a href="/main.php?page=gestione">Indietro</a></div>
 
 
 <?php } ?>

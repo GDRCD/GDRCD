@@ -4,7 +4,7 @@ Router::loadRequired();
 
 $cls = Disponibilita::getInstance();
 
-switch ($_POST['action']) {
+switch ( $_POST['action'] ) {
     case 'get_availability_data':
         echo json_encode($cls->ajaxAvailabilityData($_POST));
         break;

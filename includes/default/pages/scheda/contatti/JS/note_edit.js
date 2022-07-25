@@ -2,9 +2,9 @@ $(function () {
 
 });
 
-function closeNoteContatto(){
-    setTimeout(()=>{
-        top.$( "#dialog-note_edit" ).remove( );
+function closeNoteContatto() {
+    setTimeout(() => {
+        top.$("#dialog-note_edit").remove();
 
-    },2000)
+    }, 2000)
 }

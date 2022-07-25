@@ -70,14 +70,13 @@ class Razze extends BaseClass
      */
     public function ajaxRaceData(array $post)
     {
-        if ($this->permissionManageRaces()) {
+        if ( $this->permissionManageRaces() ) {
             $id = Filters::int($post['id']);
             return $this->getRace($id);
         }
     }
 
     /**** GESTIONE ****/
-
 
     /**
      * @fn newRace
@@ -88,7 +87,7 @@ class Razze extends BaseClass
     public function newRace(array $post): array
     {
 
-        if ($this->permissionManageRaces()) {
+        if ( $this->permissionManageRaces() ) {
 
             $nome = Filters::in($post['nome']);
             $sing_m = Filters::in($post['sing_m']);
@@ -107,7 +106,7 @@ class Razze extends BaseClass
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Razza creata correttamente.',
                 'swal_type' => 'success',
-                'races_list' => $this->listRaces()
+                'races_list' => $this->listRaces(),
             ];
         } else {
 
@@ -115,7 +114,7 @@ class Razze extends BaseClass
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -129,7 +128,7 @@ class Razze extends BaseClass
     public function modRace(array $post): array
     {
 
-        if ($this->permissionManageRaces()) {
+        if ( $this->permissionManageRaces() ) {
 
             $id = Filters::int($post['id']);
             $nome = Filters::in($post['nome']);
@@ -142,7 +141,6 @@ class Razze extends BaseClass
             $iscrizione = Filters::checkbox($post['iscrizione']);
             $visibile = Filters::checkbox($post['visibile']);
 
-
             DB::query("UPDATE razze SET nome='{$nome}', sing_m='{$sing_m}', sing_f='{$sing_f}', descrizione='{$descrizione}', immagine='{$immagine}', icon='{$icon}', url_site='{$url_site}', iscrizione='{$iscrizione}', visibile='{$visibile}' WHERE id='{$id}'");
 
             return [
@@ -150,7 +148,7 @@ class Razze extends BaseClass
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Razza modificata correttamente.',
                 'swal_type' => 'success',
-                'races_list' => $this->listRaces()
+                'races_list' => $this->listRaces(),
             ];
 
         } else {
@@ -159,7 +157,7 @@ class Razze extends BaseClass
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -173,10 +171,9 @@ class Razze extends BaseClass
     public function delRace(array $post): array
     {
 
-        if ($this->permissionManageRaces()) {
+        if ( $this->permissionManageRaces() ) {
 
             $id = Filters::int($post['id']);
-
 
             DB::query("DELETE FROM razze WHERE id='{$id}'");
 
@@ -185,7 +182,7 @@ class Razze extends BaseClass
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Razza eliminata correttamente.',
                 'swal_type' => 'success',
-                'races_list' => $this->listRaces()
+                'races_list' => $this->listRaces(),
             ];
 
         } else {
@@ -193,7 +190,7 @@ class Razze extends BaseClass
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
 

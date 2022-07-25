@@ -1,6 +1,5 @@
 <?php
 
-
 $stagione_id = Filters::int($_REQUEST['id']);
 $stagione_data = MeteoStagioni::getInstance()->getSeason($stagione_id);
 $stagione_name = Filters::out($stagione_data['nome']);

@@ -4,7 +4,7 @@ Router::loadRequired();
 
 $chatOpt = ChatOpzioni::getInstance();
 
-switch ($_POST['action']) {
+switch ( $_POST['action'] ) {
     case 'get_option_data':
         echo json_encode($chatOpt->ajaxOptionData($_POST));
         break;

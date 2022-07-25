@@ -1,9 +1,9 @@
 <?php
 
-CONST ROOT = __DIR__.'/../';
+const ROOT = __DIR__ . '/../';
 
 /*Livelli di accesso utente*/
-define('SUPERUSER',5) ;
+define('SUPERUSER', 5);
 define('MODERATOR', 4);
 define('GAMEMASTER', 3);
 define('GUILDMODERATOR', 2);
@@ -62,7 +62,7 @@ define('HTML_FILTER_HIGH', 1);
  * Impostazioni registrazioni giocate
  */
 //Azioni minime per poter registrare una giocata
-CONST REG_MIN_AZIONI = 4;
+const REG_MIN_AZIONI = 4;
 
 //Attiva o disattiva il pacchetto intero (default: true)
 const REG_ROLE = true;
@@ -87,7 +87,7 @@ const EDIT_PERM = GAMEMASTER;
  */
 
 //Attiva o disattiva il diario del PG
-CONST PG_DIARY_ENABLED = true;
+const PG_DIARY_ENABLED = true;
 
 //definisce quali permessi possono modificare le registrazioni (default: gamemaster)
 const PERMESSI_DIARIO = MODERATOR;
@@ -98,8 +98,6 @@ const PERMESSI_DIARIO = MODERATOR;
 //Attiva le fasi lunari
 const MOON = true;
 
-
-
 /*Vettori globali dei parametri*/
-$PARAMETER = array();
-$MESSAGES = array();
+$PARAMETER = [];
+$MESSAGES = [];

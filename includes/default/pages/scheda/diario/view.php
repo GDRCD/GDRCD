@@ -3,7 +3,7 @@
 $id_pg = Filters::int($_GET['id_pg']);
 $id = Filters::int($_GET['id']);
 
-if (SchedaDiario::getInstance()->diaryActive()) {
+if ( SchedaDiario::getInstance()->diaryActive() ) {
 
     ?>
     <div class="panels_box">

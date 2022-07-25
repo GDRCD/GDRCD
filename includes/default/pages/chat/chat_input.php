@@ -4,7 +4,7 @@
 Router::loadRequired();
 
 # Se la classe "chat" non esiste la inizializzo (necessario per i caricamenti in ajax che perdono i file inizializzati via include)
-if (!isset($chat)) {
+if ( !isset($chat) ) {
     $chat = Chat::getInstance();
     $chat->resetClass();
 }
@@ -29,12 +29,12 @@ $chat_abi_class = ChatAbilita::getInstance();
                     <option value="S">Sussurro</option>
                     <option value="F">Sussurro globale</option>
 
-                    <?php if ($_SESSION['permessi'] >= GAMEMASTER) { ?>
+                    <?php if ( $_SESSION['permessi'] >= GAMEMASTER ) { ?>
                         <option value="N">PNG</option>
                         <option value="M">Master</option>
                     <?php } ?>
 
-                    <?php if ($_SESSION['permessi'] >= MODERATOR) { ?>
+                    <?php if ( $_SESSION['permessi'] >= MODERATOR ) { ?>
                         <option value="MOD">Moderazione</option>
                     <?php } ?>
 
@@ -100,7 +100,7 @@ $chat_abi_class = ChatAbilita::getInstance();
             Registra role
         </button>
         <?php
-        if ($esiti_chat && $esiti) { ?>
+        if ( $esiti_chat && $esiti ) { ?>
             <button name="esiti"
                     onclick="modalWindow('esiti', 'Esiti in chat', 'popup.php?page=chat_pannelli_index&pannello=esiti_chat')">
                 Esiti

@@ -5,7 +5,7 @@ Router::loadRequired();
 $chat = Chat::getInstance();
 $esiti = Esiti::getInstance();
 
-if ($esiti->esitiEnabled() && $esiti->esitiTiriEnabled()) {
+if ( $esiti->esitiEnabled() && $esiti->esitiTiriEnabled() ) {
     ?>
 
     <div class="pagina_chat">
@@ -22,12 +22,12 @@ if ($esiti->esitiEnabled() && $esiti->esitiTiriEnabled()) {
                 <div class="td">Abilità</div>
                 <div class="td">Controlli</div>
             </div>
-            <?=$esiti->esitiChatList();?>
+            <?= $esiti->esitiChatList(); ?>
         </div>
 
     </div>
 
-    <script src="<?=Router::getPagesLink('chat/JS/chat_dadi.js');?>"></script>
+    <script src="<?= Router::getPagesLink('chat/JS/chat_dadi.js'); ?>"></script>
 
 <?php } else { ?>
     <div class="warning">Permesso negato</div>

@@ -4,7 +4,7 @@ Router::loadRequired();
 
 $quest = Quest::getInstance();
 
-switch ($_POST['action']){
+switch ( $_POST['action'] ) {
     case 'insert_trama':
         echo json_encode($quest->insertTrama($_POST));
         break;

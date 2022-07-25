@@ -95,7 +95,7 @@ class AbilitaRequisiti extends Abilita
     public function requirementControl(string $pg, int $abi, int $grado): bool
     {
 
-        if ($this->requirementActive()) {
+        if ( $this->requirementActive() ) {
 
             $pg = Filters::int($pg);
             $abi = Filters::int($abi);
@@ -104,24 +104,23 @@ class AbilitaRequisiti extends Abilita
             $requisiti = $this->getRequisitiByGrado($abi, $grado);
             $esito = true;
 
-            foreach ($requisiti as $requisito) {
+            foreach ( $requisiti as $requisito ) {
                 $tipo = Filters::int($requisito['tipo']);
                 $rif = Filters::int($requisito['id_riferimento']);
                 $rif_lvl = Filters::int($requisito['liv_riferimento']);
 
-                switch (true) {
+                switch ( true ) {
                     case $this->isTypeAbilita($tipo):
-                        if (!$this->pgRequisitoAbilitaControl($rif, $pg, $rif_lvl)) {
+                        if ( !$this->pgRequisitoAbilitaControl($rif, $pg, $rif_lvl) ) {
                             $esito = false;
                         }
                         break;
                     case $this->isTypeStat($tipo):
-                        if (!$this->pgRequisitoStatControl($rif, $pg, $rif_lvl)) {
+                        if ( !$this->pgRequisitoStatControl($rif, $pg, $rif_lvl) ) {
                             $esito = false;
                         }
                         break;
                 }
-
 
             }
 
@@ -184,9 +183,8 @@ class AbilitaRequisiti extends Abilita
 
         $abi_req_abi = $this->getRequisitiByType($this->requisito_abi);
 
-
         $html .= '<optgroup label="Abilita">';
-        foreach ($abi_req_abi as $new) {
+        foreach ( $abi_req_abi as $new ) {
             $id = Filters::int($new['id']);
             $id_riferimento = Filters::int($new['id_riferimento']);
             $lvl_rif = Filters::int($new['liv_riferimento']);
@@ -204,7 +202,7 @@ class AbilitaRequisiti extends Abilita
 
         $html .= '<optgroup label="Caratteristiche">';
 
-        foreach ($abi_req_stat as $new) {
+        foreach ( $abi_req_stat as $new ) {
             $id = Filters::int($new['id']);
 
             $id_riferimento = Filters::int($new['id_riferimento']);
@@ -248,7 +246,7 @@ class AbilitaRequisiti extends Abilita
     public function ajaxReqData(array $post)
     {
 
-        if ($this->permissionManageAbiRequirement()) {
+        if ( $this->permissionManageAbiRequirement() ) {
             $id = Filters::int($post['id']);
 
             $data = $this->getRequisitiByRow($id);
@@ -265,7 +263,7 @@ class AbilitaRequisiti extends Abilita
                 'grado' => $grado,
                 'tipo' => $tipo,
                 'id_rif' => $id_rif,
-                'lvl_rif' => $lvl_rif
+                'lvl_rif' => $lvl_rif,
             ];
 
         }
@@ -277,9 +275,9 @@ class AbilitaRequisiti extends Abilita
      * @note Estrae i dati di un requisito abilita
      * @return array
      */
-    public function ajaxReqList():array
+    public function ajaxReqList(): array
     {
-        return ['List'=>$this->listRequisiti()];
+        return ['List' => $this->listRequisiti()];
     }
 
     /***** GESTIONE  ****/
@@ -292,7 +290,7 @@ class AbilitaRequisiti extends Abilita
      */
     public function NewAbiRequisito(array $post): array
     {
-        if ($this->permissionManageAbiRequirement()) {
+        if ( $this->permissionManageAbiRequirement() ) {
             $abi = Filters::int($post['abilita']);
             $grado = Filters::int($post['grado']);
             $tipo = Filters::int($post['tipo']);
@@ -305,14 +303,14 @@ class AbilitaRequisiti extends Abilita
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Nuovo requisito abilità creato.',
-                'swal_type' => 'success'
+                'swal_type' => 'success',
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -326,7 +324,7 @@ class AbilitaRequisiti extends Abilita
     public function ModAbiRequisito(array $post): array
     {
 
-        if ($this->permissionManageAbiRequirement()) {
+        if ( $this->permissionManageAbiRequirement() ) {
             $id = Filters::int($post['requisito']);
             $abi = Filters::int($post['abilita']);
             $grado = Filters::int($post['grado']);
@@ -336,19 +334,18 @@ class AbilitaRequisiti extends Abilita
 
             DB::query("UPDATE abilita_requisiti SET abilita='{$abi}',grado='{$grado}',tipo='{$tipo}',id_riferimento='{$id_rif}',liv_riferimento='{$lvl_rif}' WHERE id='{$id}' LIMIT 1");
 
-
             return [
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Requisito abilità modificato.',
-                'swal_type' => 'success'
+                'swal_type' => 'success',
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -361,7 +358,7 @@ class AbilitaRequisiti extends Abilita
      */
     public function DelAbiRequisito(array $post): array
     {
-        if ($this->permissionManageAbiRequirement()) {
+        if ( $this->permissionManageAbiRequirement() ) {
 
             $id = Filters::int($post['requisito']);
             DB::query("DELETE FROM abilita_requisiti WHERE id='{$id}' LIMIT 1");
@@ -370,14 +367,14 @@ class AbilitaRequisiti extends Abilita
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Requisito abilità eliminato.',
-                'swal_type' => 'success'
+                'swal_type' => 'success',
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }

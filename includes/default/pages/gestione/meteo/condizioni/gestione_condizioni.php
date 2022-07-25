@@ -4,7 +4,7 @@ Router::loadRequired(); # Inserisco il required se non presente, per futuro spos
 
 $cls = MeteoCondizioni::getInstance(); # Inizializzo classe
 
-if ($cls->permissionManageWeatherConditions()) { # Metodo di controllo per accesso alla pagina di gestione
+if ( $cls->permissionManageWeatherConditions() ) { # Metodo di controllo per accesso alla pagina di gestione
     ?>
 
     <div class="general_incipit">

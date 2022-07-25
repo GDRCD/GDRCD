@@ -4,9 +4,9 @@ Router::loadRequired();
 
 $gruppi = GruppiLavori::getInstance();
 
-if ($gruppi->activeWorks()) { ?>
+if ( $gruppi->activeWorks() ) { ?>
     <div class="groups_page">
-        <?php if (true) { ?>
+        <?php if ( true ) { ?>
 
             <!-- Titolo della pagina -->
             <div class="general_title">

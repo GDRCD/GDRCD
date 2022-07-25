@@ -7,7 +7,7 @@ $(function () {
             path = form.attr('action'),
             func = form.data('callback'),
             reset = form.data('reset'),
-            swal= form.data('swal');
+            swal = form.data('swal');
 
         new Form().onSubmit({
             form: this,
@@ -19,16 +19,16 @@ $(function () {
     })
 })
 
-function refreshActualPage(){
-    setTimeout(()=>{
+function refreshActualPage() {
+    setTimeout(() => {
         window.location.reload();
-    },2000)
+    }, 2000)
 }
 
-function goBackHistory(){
-    setTimeout(()=> {
+function goBackHistory() {
+    setTimeout(() => {
         history.back();
-    },2000);
+    }, 2000);
 }
 
 
@@ -100,7 +100,7 @@ class Form {
                     let callback = eval(success)
 
                     if (typeof callback === "function") {
-                        callback.call(this,data);
+                        callback.call(this, data);
                     }
                 }
 

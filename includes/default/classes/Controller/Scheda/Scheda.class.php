@@ -1,9 +1,7 @@
 <?php
 
-
 class Scheda extends BaseClass
 {
-
 
     /**
      * @fn __construct
@@ -62,7 +60,6 @@ class Scheda extends BaseClass
         return Permissions::permission('SCHEDA_BAN');
     }
 
-
     /**
      * @fn permissionAdministrationCharacter
      * @note Controlla se le info fondamentali di un personaggio possono essere modificate.
@@ -70,7 +67,7 @@ class Scheda extends BaseClass
      */
     public function permissionAdministrationCharacter(): bool
     {
-        return  Permissions::permission('SCHEDA_ADMINISTRATION_MANAGE');
+        return Permissions::permission('SCHEDA_ADMINISTRATION_MANAGE');
     }
 
     /**** INDEX ****/
@@ -85,7 +82,7 @@ class Scheda extends BaseClass
     {
         $op = Filters::out($op);
 
-        switch ($op) {
+        switch ( $op ) {
             default:
                 $page = 'main.php';
                 break;
@@ -175,7 +172,6 @@ class Scheda extends BaseClass
 
     /**** RENDER ****/
 
-
     /**
      * @fn getGroupIcons
      * @note Funzione che si occupa dell'estrazione delle icone della scheda
@@ -189,10 +185,10 @@ class Scheda extends BaseClass
 
         $icons = '';
 
-        if (Gruppi::getInstance()->activeGroupIconChat()) {
+        if ( Gruppi::getInstance()->activeGroupIconChat() ) {
             $roles = PersonaggioRuolo::getInstance()->getAllCharacterRolesWithRoleData($pg_id);
 
-            foreach ($roles as $role) {
+            foreach ( $roles as $role ) {
                 $link = Router::getImgsDir() . $role['immagine'];
                 $icons .= "<img src='{$link}' title='{$role['gruppo_nome']} - {$role['nome']}'>";
             }
@@ -238,9 +234,8 @@ class Scheda extends BaseClass
             'groups_icons' => $this->getGroupIcons($id_pg),
             'race_icon' => $this->getRaceIcon($id_pg),
             'registration_day' => Filters::date($character_data['data_iscrizione'], 'd/m/Y'),
-            'last_login' => Filters::date($character_data['ora_entrata'], 'd/m/Y')
+            'last_login' => Filters::date($character_data['ora_entrata'], 'd/m/Y'),
         ];
-
 
         return $data;
     }
@@ -272,7 +267,7 @@ class Scheda extends BaseClass
     {
         $id_pg = Filters::int($post['pg']);
 
-        if ($this->permissionUpdateCharacter($id_pg)) {
+        if ( $this->permissionUpdateCharacter($id_pg) ) {
 
             $cognome = Filters::in($post['cognome']);
             $url_img = Filters::in($post['url_img']);
@@ -283,21 +278,20 @@ class Scheda extends BaseClass
             $url_media = Filters::in($post['url_media']);
             $blocca_media = Filters::checkbox($post['blocca_media']);
 
-
             DB::query("UPDATE personaggio SET cognome = '{$cognome}', url_img = '{$url_img}', url_img_chat = '{$url_img_chat}', online_status = '{$online_status}', descrizione = '{$descrizione}', storia = '{$storia}', url_media = '{$url_media}', blocca_media = '{$blocca_media}' WHERE id = '{$id_pg}'");
 
             return [
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Modifica effettuata correttamente.',
-                'swal_type' => 'success'
+                'swal_type' => 'success',
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
 
@@ -312,7 +306,7 @@ class Scheda extends BaseClass
     public function updateCharacterStatus(array $post): array
     {
 
-        if ($this->permissionStatusCharacter()) {
+        if ( $this->permissionStatusCharacter() ) {
 
             $id_pg = Filters::int($post['pg']);
             $stato = Filters::in($post['stato']);
@@ -324,14 +318,14 @@ class Scheda extends BaseClass
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Modifica stato effettuata correttamente.',
-                'swal_type' => 'success'
+                'swal_type' => 'success',
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
 
@@ -346,7 +340,7 @@ class Scheda extends BaseClass
     public function updateAdministrationCharacter(array $post): array
     {
 
-        if ($this->permissionAdministrationCharacter()) {
+        if ( $this->permissionAdministrationCharacter() ) {
 
             $id_pg = Filters::int($post['pg']);
             $sesso = Filters::int($post['sesso']);
@@ -354,21 +348,20 @@ class Scheda extends BaseClass
             $banca = Filters::int($post['banca']);
             $soldi = Filters::int($post['soldi']);
 
-
             DB::query("UPDATE personaggio SET sesso = '{$sesso}', razza = '{$razza}', banca = '{$banca}', soldi = '{$soldi}' WHERE id = '{$id_pg}'");
 
             return [
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Modifica amministrazione effettuata correttamente.',
-                'swal_type' => 'success'
+                'swal_type' => 'success',
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
 
@@ -383,7 +376,7 @@ class Scheda extends BaseClass
     public function banCharacter(array $post): array
     {
 
-        if ($this->permissionBanCharacter()) {
+        if ( $this->permissionBanCharacter() ) {
 
             $id_pg = Filters::int($post['pg']);
             $esilio = Filters::in($post['esilio']);
@@ -395,18 +388,17 @@ class Scheda extends BaseClass
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Ban effettuato correttamente.',
-                'swal_type' => 'success'
+                'swal_type' => 'success',
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
 
     }
-
 
 }

@@ -4,31 +4,30 @@ Router::loadRequired(); # Inserisco il required se non presente, per futuro spos
 
 $cls = Oggetti::getInstance(); # Inizializzo classe
 
-if($cls->permissionManageObjectsType()){ # Metodo di controllo per accesso alla pagina di gestione
+if ( $cls->permissionManageObjectsType() ) { # Metodo di controllo per accesso alla pagina di gestione
 
-
-    if(isset($_POST['op'])){ # Se ho richiesto un'operazione
-        switch ($_POST['op']){ # In base al tipo di operazione eseguo insert/edit/delete/altro
+    if ( isset($_POST['op']) ) { # Se ho richiesto un'operazione
+        switch ( $_POST['op'] ) { # In base al tipo di operazione eseguo insert/edit/delete/altro
 
         }
     }
 
+    ?>
 
-?>
+    <div class="general_incipit">
+        <div class="title"> Gestione Tipologia oggetti</div>
+        <div class="subtitle"> Sezione per la gestione delle tipologie di oggetti</div>
+        <br>
 
-        <div class="general_incipit">
-            <div class="title"> Gestione Tipologia oggetti </div>
-            <div class="subtitle"> Sezione per la gestione delle tipologie di oggetti</div> <br>
 
+        Da questa pagina e' possibile:
+        <ul>
+            <li>Creare una tipologia oggetto</li>
+            <li>Modificare una tipologia oggetto</li>
+            <li>Eliminare una tipologia oggetto</li>
+        </ul>
 
-            Da questa pagina e' possibile:
-            <ul>
-                <li>Creare una tipologia oggetto</li>
-                <li>Modificare una tipologia oggetto</li>
-                <li>Eliminare una tipologia oggetto</li>
-            </ul>
-
-        </div>
+    </div>
 
 
     <div class="form_container gestione_oggetti_tipo">
@@ -70,7 +69,7 @@ if($cls->permissionManageObjectsType()){ # Metodo di controllo per accesso alla 
             <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
                 <div class="label">Tipo</div>
                 <select name="tipo">
-                    <?=$cls->listObjectTypes();?>
+                    <?= $cls->listObjectTypes(); ?>
                 </select>
             </div>
 
@@ -104,7 +103,7 @@ if($cls->permissionManageObjectsType()){ # Metodo di controllo per accesso alla 
             <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
                 <div class="label">Tipo</div>
                 <select name="tipo">
-                    <?=$cls->listObjectTypes();?>
+                    <?= $cls->listObjectTypes(); ?>
                 </select>
             </div>
 
@@ -117,7 +116,7 @@ if($cls->permissionManageObjectsType()){ # Metodo di controllo per accesso alla 
 
     </div>
 
-    <script src="<?=Router::getPagesLink('gestione/oggetti/gestione_oggetti_tipo.js');?>"></script>
+    <script src="<?= Router::getPagesLink('gestione/oggetti/gestione_oggetti_tipo.js'); ?>"></script>
 
     <div class="link_back"><a href="/main.php?page=gestione">Indietro</a></div>
 

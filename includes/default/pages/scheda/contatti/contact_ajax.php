@@ -1,9 +1,9 @@
 <?php
 Router::loadRequired();
 $contatti = Contatti::getInstance();
-$contatti_nota=ContattiNote::getInstance();
+$contatti_nota = ContattiNote::getInstance();
 
-switch ($_POST['action']) {
+switch ( $_POST['action'] ) {
 
     case 'contact_new':
         //Aggiunge un nuovo contatto al PG

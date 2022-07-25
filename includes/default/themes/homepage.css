@@ -123,11 +123,11 @@ div.subtitle {
 
 /** * Stili del form di login
 */
-div.login_form{
-	float:right;
-	width:230px;
-	padding:20px 10px;
-	margin-top: 20px;
+div.login_form {
+    float: right;
+    width: 230px;
+    padding: 20px 10px;
+    margin-top: 20px;
 }
 
 /** * stile che ingloba i gruppi label/input
@@ -147,9 +147,10 @@ div.login_form input {
     width: 145px;
     margin: 0;
 }
-div.login_form input[type=checkbox]{
-	width: auto;
-	vertical-align: middle;
+
+div.login_form input[type=checkbox] {
+    width: auto;
+    vertical-align: middle;
 }
 
 /** * Stile per il bottone del login

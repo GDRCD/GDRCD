@@ -168,7 +168,7 @@ class Oggetti extends BaseClass
     public function ajaxObjectData(array $post)
     {
 
-        if ($this->permissionManageObjects()) {
+        if ( $this->permissionManageObjects() ) {
 
             $id = Filters::int($post['id']);
 
@@ -180,7 +180,7 @@ class Oggetti extends BaseClass
                 'descrizione' => Filters::out($data['descrizione']),
                 'immagine' => Filters::out($data['immagine']),
                 'indossabile' => (bool)Filters::int($data['indossabile']),
-                'cariche' => Filters::int($data['cariche'])
+                'cariche' => Filters::int($data['cariche']),
             ];
         }
     }
@@ -194,7 +194,7 @@ class Oggetti extends BaseClass
     public function ajaxObjectTypeData(array $post)
     {
 
-        if ($this->permissionManageObjectsType()) {
+        if ( $this->permissionManageObjectsType() ) {
 
             $id = Filters::int($post['id']);
 
@@ -202,7 +202,7 @@ class Oggetti extends BaseClass
 
             return [
                 'nome' => Filters::out($data['nome']),
-                'descrizione' => Filters::out($data['descrizione'])
+                'descrizione' => Filters::out($data['descrizione']),
             ];
         }
     }
@@ -216,7 +216,7 @@ class Oggetti extends BaseClass
     public function ajaxObjectPositionData(array $post)
     {
 
-        if ($this->permissionManageObjectsType()) {
+        if ( $this->permissionManageObjectsType() ) {
 
             $id = Filters::int($post['id']);
 
@@ -225,7 +225,7 @@ class Oggetti extends BaseClass
             return [
                 'nome' => Filters::out($data['nome']),
                 'immagine' => Filters::out($data['immagine']),
-                'numero' => Filters::out($data['numero'])
+                'numero' => Filters::out($data['numero']),
             ];
         }
     }
@@ -241,7 +241,7 @@ class Oggetti extends BaseClass
     public function listObjectTypes(): string
     {
         $list = $this->getAllObjectTypes('id,nome');
-        return Template::getInstance()->startTemplate()->renderSelect('id','nome','',$list);
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $list);
     }
 
     /**
@@ -253,7 +253,7 @@ class Oggetti extends BaseClass
     public function listObjectPositions(): string
     {
         $list = $this->getAllObjectPositions('id,nome');
-        return Template::getInstance()->startTemplate()->renderSelect('id','nome','',$list);
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $list);
     }
 
     /**
@@ -265,7 +265,7 @@ class Oggetti extends BaseClass
     public function listObjects(int $selected = 0): string
     {
         $list = $this->getAllObjects('id,nome');
-        return Template::getInstance()->startTemplate()->renderSelect('id','nome',$selected,$list);
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', $selected, $list);
     }
 
     /*** FUNCTIONS */
@@ -308,7 +308,7 @@ class Oggetti extends BaseClass
     public function insertObject(array $post): array
     {
 
-        if ($this->permissionManageObjects()) {
+        if ( $this->permissionManageObjects() ) {
 
             $tipo = Filters::int($post['tipo']);
             $nome = Filters::in($post['nome']);
@@ -318,23 +318,22 @@ class Oggetti extends BaseClass
             $cariche = Filters::int($post['cariche']);
             $creato_da = Filters::int($this->me_id);
 
-
             DB::query("INSERT INTO oggetto(tipo, nome, descrizione, immagine, indossabile, cariche,creatore_da) 
                             VALUES('{$tipo}','{$nome}','{$descrizione}','{$immagine}','{$indossabile}','{$cariche}','{$creato_da}')");
 
             return [
-                'response'=> true,
+                'response' => true,
                 'swal_title' => 'Operazione riuscita!',
-                'swal_message'=>'Oggetto inserito correttamente.',
+                'swal_message' => 'Oggetto inserito correttamente.',
                 'swal_type' => 'success',
-                'obj_list'=>$this->listObjects()
+                'obj_list' => $this->listObjects(),
             ];
         } else {
             return [
-                'response'=> false,
+                'response' => false,
                 'swal_title' => 'Operazione fallita!',
-                'swal_message'=>'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error',
             ];
         }
     }
@@ -348,7 +347,7 @@ class Oggetti extends BaseClass
     public function editObject(array $post): array
     {
 
-        if ($this->permissionManageObjects()) {
+        if ( $this->permissionManageObjects() ) {
 
             $id = Filters::int($post['oggetto']);
             $tipo = Filters::int($post['tipo']);
@@ -368,14 +367,14 @@ class Oggetti extends BaseClass
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Oggetto modificato correttamente.',
                 'swal_type' => 'success',
-                'obj_list' => $this->listObjects()
+                'obj_list' => $this->listObjects(),
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -389,25 +388,25 @@ class Oggetti extends BaseClass
     public function deleteObject(array $post): array
     {
 
-        if ($this->permissionManageObjects()) {
+        if ( $this->permissionManageObjects() ) {
 
             $id = Filters::int($post['oggetto']);
 
             DB::query("DELETE FROM oggetto WHERE id='{$id}'");
 
             return [
-                'response'=> true,
+                'response' => true,
                 'swal_title' => 'Operazione riuscita!',
-                'swal_message'=>'Oggetto eliminato correttamente.',
+                'swal_message' => 'Oggetto eliminato correttamente.',
                 'swal_type' => 'success',
-                'obj_list'=>$this->listObjects()
+                'obj_list' => $this->listObjects(),
             ];
         } else {
             return [
-                'response'=> false,
+                'response' => false,
                 'swal_title' => 'Operazione fallita!',
-                'swal_message'=>'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error',
             ];
         }
     }
@@ -423,7 +422,7 @@ class Oggetti extends BaseClass
     public function insertObjectType(array $post): array
     {
 
-        if ($this->permissionManageObjectsType()) {
+        if ( $this->permissionManageObjectsType() ) {
 
             $nome = Filters::in($post['nome']);
             $descrizione = Filters::in($post['descrizione']);
@@ -432,18 +431,18 @@ class Oggetti extends BaseClass
                             VALUES('{$nome}','{$descrizione}')");
 
             return [
-                'response'=> true,
+                'response' => true,
                 'swal_title' => 'Operazione riuscita!',
-                'swal_message'=>'Tipo Oggetto inserito correttamente.',
+                'swal_message' => 'Tipo Oggetto inserito correttamente.',
                 'swal_type' => 'success',
-                'obj_type_list'=>$this->listObjectTypes()
+                'obj_type_list' => $this->listObjectTypes(),
             ];
         } else {
             return [
-                'response'=> false,
+                'response' => false,
                 'swal_title' => 'Operazione fallita!',
-                'swal_message'=>'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error',
             ];
         }
     }
@@ -457,7 +456,7 @@ class Oggetti extends BaseClass
     public function editObjectType(array $post): array
     {
 
-        if ($this->permissionManageObjectsType()) {
+        if ( $this->permissionManageObjectsType() ) {
 
             $id = Filters::int($post['tipo']);
             $nome = Filters::in($post['nome']);
@@ -468,18 +467,18 @@ class Oggetti extends BaseClass
                             WHERE id='{$id}' LIMIT 1");
 
             return [
-                'response'=> true,
+                'response' => true,
                 'swal_title' => 'Operazione riuscita!',
-                'swal_message'=>'Tipo Oggetto modificato correttamente.',
+                'swal_message' => 'Tipo Oggetto modificato correttamente.',
                 'swal_type' => 'success',
-                'obj_type_list'=>$this->listObjectTypes()
+                'obj_type_list' => $this->listObjectTypes(),
             ];
         } else {
             return [
-                'response'=> false,
+                'response' => false,
                 'swal_title' => 'Operazione fallita!',
-                'swal_message'=>'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error',
             ];
         }
     }
@@ -493,25 +492,25 @@ class Oggetti extends BaseClass
     public function deleteObjectType(array $post): array
     {
 
-        if ($this->permissionManageObjectsType()) {
+        if ( $this->permissionManageObjectsType() ) {
 
             $id = Filters::int($post['tipo']);
 
             DB::query("DELETE FROM oggetto_tipo WHERE id='{$id}'");
 
             return [
-                'response'=> true,
+                'response' => true,
                 'swal_title' => 'Operazione riuscita!',
-                'swal_message'=>'Tipo Oggetto eliminato correttamente.',
+                'swal_message' => 'Tipo Oggetto eliminato correttamente.',
                 'swal_type' => 'success',
-                'obj_type_list'=>$this->listObjectTypes()
+                'obj_type_list' => $this->listObjectTypes(),
             ];
         } else {
             return [
-                'response'=> false,
+                'response' => false,
                 'swal_title' => 'Operazione fallita!',
-                'swal_message'=>'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error',
             ];
         }
     }
@@ -527,7 +526,7 @@ class Oggetti extends BaseClass
     public function insertObjectPosition(array $post): array
     {
 
-        if ($this->permissionManageObjectsPositions()) {
+        if ( $this->permissionManageObjectsPositions() ) {
 
             $nome = Filters::in($post['nome']);
             $img = Filters::in($post['immagine']);
@@ -537,18 +536,18 @@ class Oggetti extends BaseClass
                             VALUES('{$nome}','{$img}','{$numero}')");
 
             return [
-                'response'=> true,
+                'response' => true,
                 'swal_title' => 'Operazione riuscita!',
-                'swal_message'=>'Posizione Oggetto inserita correttamente.',
+                'swal_message' => 'Posizione Oggetto inserita correttamente.',
                 'swal_type' => 'success',
-                'obj_position_list'=>$this->listObjectPositions()
+                'obj_position_list' => $this->listObjectPositions(),
             ];
         } else {
             return [
-                'response'=> false,
+                'response' => false,
                 'swal_title' => 'Operazione fallita!',
-                'swal_message'=>'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error',
             ];
         }
     }
@@ -562,7 +561,7 @@ class Oggetti extends BaseClass
     public function editObjectPosition(array $post): array
     {
 
-        if ($this->permissionManageObjectsPositions()) {
+        if ( $this->permissionManageObjectsPositions() ) {
 
             $id = Filters::int($post['id']);
             $nome = Filters::in($post['nome']);
@@ -574,18 +573,18 @@ class Oggetti extends BaseClass
                             WHERE id='{$id}' LIMIT 1");
 
             return [
-                'response'=> true,
+                'response' => true,
                 'swal_title' => 'Operazione riuscita!',
-                'swal_message'=>'Posizione Oggetto modificata correttamente.',
+                'swal_message' => 'Posizione Oggetto modificata correttamente.',
                 'swal_type' => 'success',
-                'obj_position_list'=>$this->listObjectPositions()
+                'obj_position_list' => $this->listObjectPositions(),
             ];
         } else {
             return [
-                'response'=> false,
+                'response' => false,
                 'swal_title' => 'Operazione fallita!',
-                'swal_message'=>'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error',
             ];
         }
     }
@@ -599,25 +598,25 @@ class Oggetti extends BaseClass
     public function deleteObjectPosition(array $post): array
     {
 
-        if ($this->permissionManageObjectsPositions()) {
+        if ( $this->permissionManageObjectsPositions() ) {
 
             $id = Filters::int($post['id']);
 
             DB::query("DELETE FROM oggetto_posizioni WHERE id='{$id}'");
 
             return [
-                'response'=> true,
+                'response' => true,
                 'swal_title' => 'Operazione riuscita!',
-                'swal_message'=>'Posizione Oggetto eliminata correttamente.',
+                'swal_message' => 'Posizione Oggetto eliminata correttamente.',
                 'swal_type' => 'success',
-                'obj_position_list'=>$this->listObjectPositions()
+                'obj_position_list' => $this->listObjectPositions(),
             ];
         } else {
             return [
-                'response'=> false,
+                'response' => false,
                 'swal_title' => 'Operazione fallita!',
-                'swal_message'=>'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error',
             ];
         }
     }

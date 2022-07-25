@@ -4,7 +4,7 @@ Router::loadRequired();
 
 $cls = Sessi::getInstance();
 
-switch ($_POST['action']) {
+switch ( $_POST['action'] ) {
     case 'get_gender_data':
         echo json_encode($cls->ajaxGenderData($_POST));
         break;

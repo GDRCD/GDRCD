@@ -4,7 +4,7 @@ Router::loadRequired(); # Inserisco il required se non presente, per futuro spos
 
 $cls = Oggetti::getInstance(); # Inizializzo classe
 
-if ($cls->permissionManageObjects()) { # Metodo di controllo per accesso alla pagina di gestione
+if ( $cls->permissionManageObjects() ) { # Metodo di controllo per accesso alla pagina di gestione
 
     ?>
 
@@ -79,7 +79,8 @@ if ($cls->permissionManageObjects()) { # Metodo di controllo per accesso alla pa
         </form>
 
         <!-- EDIT -->
-        <form class="form ajax_form edit-form" action="gestione/oggetti/gestione_oggetti_ajax.php" data-callback="refreshObjectList">
+        <form class="form ajax_form edit-form" action="gestione/oggetti/gestione_oggetti_ajax.php"
+              data-callback="refreshObjectList">
 
             <div class="form_title">Modifica oggetto</div>
 
@@ -138,7 +139,8 @@ if ($cls->permissionManageObjects()) { # Metodo di controllo per accesso alla pa
         </form>
 
         <!-- DELETE -->
-        <form class="form ajax_form" action="gestione/oggetti/gestione_oggetti_ajax.php" data-callback="refreshObjectList">
+        <form class="form ajax_form" action="gestione/oggetti/gestione_oggetti_ajax.php"
+              data-callback="refreshObjectList">
 
             <div class="form_title">Elimina Oggetto</div>
 

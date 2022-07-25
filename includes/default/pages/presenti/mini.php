@@ -11,6 +11,6 @@
         <?= Presenti::getInstance()->listMiniPresences(); ?>
     </div>
 
-    <script src="<?=Router::getPagesLink('presenti/mini.js');?>"></script>
+    <script src="<?= Router::getPagesLink('presenti/mini.js'); ?>"></script>
 
 </div>

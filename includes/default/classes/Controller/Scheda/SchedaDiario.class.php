@@ -51,7 +51,8 @@ class SchedaDiario extends Scheda
      * @note Restituisce se il diario è attivo
      * @return false|mixed
      */
-    public function diaryActive(){
+    public function diaryActive()
+    {
         return $this->diary_active;
     }
 
@@ -93,8 +94,7 @@ class SchedaDiario extends Scheda
 
         $pg = Filters::int($post['pg']);
 
-
-        if($this->permessiUpdateDiary($pg)) {
+        if ( $this->permessiUpdateDiary($pg) ) {
 
             $titolo = Filters::in($post['titolo']);
             $date = Filters::in($post['data']);
@@ -109,15 +109,15 @@ class SchedaDiario extends Scheda
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Nota aggiunta correttamente.',
-                'swal_type' => 'success'
+                'swal_type' => 'success',
             ];
 
-        } else{
+        } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -135,8 +135,7 @@ class SchedaDiario extends Scheda
         $diary_data = $this->getDiary($id);
         $owner = Filters::int($diary_data['personaggio']);
 
-
-        if($this->permessiUpdateDiary($owner)) {
+        if ( $this->permessiUpdateDiary($owner) ) {
 
             $titolo = Filters::in($post['titolo']);
             $date = Filters::in($post['data']);
@@ -153,15 +152,15 @@ class SchedaDiario extends Scheda
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Nota modifica correttamente.',
-                'swal_type' => 'success'
+                'swal_type' => 'success',
             ];
 
-        } else{
+        } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -175,10 +174,10 @@ class SchedaDiario extends Scheda
     public function deleteDiary(array $post): array
     {
         $id = Filters::int($post['id']);
-        $diary_data = $this->getDiary($id,'personaggio');
+        $diary_data = $this->getDiary($id, 'personaggio');
         $owner = Filters::int($diary_data['personaggio']);
 
-        if($this->permessiUpdateDiary($owner)) {
+        if ( $this->permessiUpdateDiary($owner) ) {
             DB::query("DELETE FROM diario WHERE id='{$id}' LIMIT 1");
 
             return [
@@ -186,15 +185,15 @@ class SchedaDiario extends Scheda
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Nota eliminata correttamente.',
                 'swal_type' => 'success',
-                'new_template' => $this->diaryList($owner)
+                'new_template' => $this->diaryList($owner),
             ];
 
-        } else{
+        } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -212,7 +211,7 @@ class SchedaDiario extends Scheda
     {
         $private = false;
 
-        if ($this->permessiViewPrivateDiary($id_pg)) {
+        if ( $this->permessiViewPrivateDiary($id_pg) ) {
             $private = true;
         }
 
@@ -222,12 +221,12 @@ class SchedaDiario extends Scheda
             'Data',
             'Titolo',
             'Visibile',
-            'Comandi'
+            'Comandi',
         ];
 
         $diary_data = [];
 
-        foreach ($data as $diary) {
+        foreach ( $data as $diary ) {
             $diary_data[] = [
                 "id_pg" => $id_pg,
                 "id" => Filters::int($diary['id']),
@@ -286,7 +285,7 @@ class SchedaDiario extends Scheda
         return [
             'data' => $diary_data,
             'table_title' => $title,
-            "footer_text" => $footer_text
+            "footer_text" => $footer_text,
         ];
 
     }

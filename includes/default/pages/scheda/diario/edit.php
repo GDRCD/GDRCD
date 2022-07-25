@@ -4,7 +4,7 @@ $id_pg = Filters::int($_GET['id_pg']);
 $id_diario = Filters::int($_GET['id']);
 $diary_data = SchedaDiario::getInstance()->getDiary($id_diario);
 
-if (SchedaDiario::getInstance()->diaryActive()) {
+if ( SchedaDiario::getInstance()->diaryActive() ) {
 
     ?>
 

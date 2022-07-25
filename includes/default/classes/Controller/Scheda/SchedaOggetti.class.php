@@ -82,25 +82,24 @@ class SchedaOggetti extends Scheda
         $obj_data = PersonaggioOggetti::getPgObject($id_obj);
         $owner = Filters::int($obj_data['personaggio']);
 
-
-        if ($this->permissionEquipObjects($owner)) {
+        if ( $this->permissionEquipObjects($owner) ) {
 
             $indossato = Filters::int($obj_data['indossato']);
             $obj_position = Filters::int($obj_data['posizione']);
             $position_data = $obj_class->getObjectPosition($obj_position);
             $indossato_text = ($indossato) ? 'rimosso' : 'indossato';
 
-            if (!$indossato) {
+            if ( !$indossato ) {
                 $max_number = Filters::int($position_data['numero']);
                 $equipped = PersonaggioOggetti::getPgObjectsByPosition($owner, $obj_position, $max_number);
                 $equipped_number = DB::rowsNumber($equipped);
 
-                if ($equipped_number >= $max_number) {
+                if ( $equipped_number >= $max_number ) {
                     return [
                         'response' => false,
                         'swal_title' => 'Errore!',
                         'swal_message' => 'Raggiunto numero massimo per questa parte del corpo.',
-                        'swal_type' => 'error'
+                        'swal_type' => 'error',
                     ];
                 }
             }
@@ -113,7 +112,7 @@ class SchedaOggetti extends Scheda
                 'swal_message' => "Oggetto {$indossato_text} correttamente.",
                 'swal_type' => 'success',
                 'new_equip' => $this->renderPgEquipment($owner),
-                'new_inventory' => $this->renderPgInventory($owner)
+                'new_inventory' => $this->renderPgInventory($owner),
             ];
 
         } else {
@@ -121,7 +120,7 @@ class SchedaOggetti extends Scheda
                 'response' => false,
                 'swal_title' => 'Errore!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
 
@@ -140,7 +139,7 @@ class SchedaOggetti extends Scheda
         $obj_data = PersonaggioOggetti::getPgObject($id_obj);
         $owner = Filters::int($obj_data['personaggio']);
 
-        if ($this->permissionRemoveObjects($owner)) {
+        if ( $this->permissionRemoveObjects($owner) ) {
 
             Oggetti::removeObjectFromPg($id_obj, $owner);
 
@@ -150,14 +149,14 @@ class SchedaOggetti extends Scheda
                 'swal_message' => "Oggetto rimosso correttamente.",
                 'swal_type' => 'success',
                 'new_equip' => $this->renderPgEquipment($owner),
-                'new_inventory' => $this->renderPgInventory($owner)
+                'new_inventory' => $this->renderPgInventory($owner),
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Errore!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
 
@@ -181,8 +180,7 @@ class SchedaOggetti extends Scheda
 
         $list = $obj_class->getAllObjectPositions();
 
-
-        foreach ($list as $position) {
+        foreach ( $list as $position ) {
 
             $position_id = Filters::int($position['id']);
             $position_limit = Filters::int($position['numero']);
@@ -192,7 +190,7 @@ class SchedaOggetti extends Scheda
 
             $html .= $this->renderObjects($objs);
 
-            while ($obj_num < $position_limit) {
+            while ( $obj_num < $position_limit ) {
 
                 $data = [
                     "nome" => Filters::out($position['nome']),
@@ -244,11 +242,10 @@ class SchedaOggetti extends Scheda
         $pg = Filters::int($obj_data['personaggio']);
         $type_data = $obj_class->getObjectType(Filters::int($obj_data['tipo']));
 
-
-        if ($obj_class->existObject($object) && $this->permissionViewObjects($pg)) {
+        if ( $obj_class->existObject($object) && $this->permissionViewObjects($pg) ) {
 
             $data = [
-                "id"=>$obj,
+                "id" => $obj,
                 "id_obj" => $object,
                 "immagine" => Filters::out($obj_data['immagine']),
                 "nome" => Filters::out($obj_data['nome']),
@@ -257,7 +254,7 @@ class SchedaOggetti extends Scheda
                 "tipo" => Filters::out($type_data['nome']),
                 "indossato" => (Filters::bool($obj_data['indossato'])) ? 'Rimuovi' : 'Equipaggia',
                 "equip_permission" => $this->permissionEquipObjects($pg),
-                "remove_permission" => $this->permissionRemoveObjects($pg)
+                "remove_permission" => $this->permissionRemoveObjects($pg),
             ];
 
             return
@@ -265,7 +262,7 @@ class SchedaOggetti extends Scheda
                     Template::getInstance()->startTemplate()->render(
                         'scheda/oggetti/obj_info',
                         $data
-                    )
+                    ),
                 ];
 
         }
@@ -285,12 +282,12 @@ class SchedaOggetti extends Scheda
 
         $html = '';
 
-        foreach ($objs as $obj) {
+        foreach ( $objs as $obj ) {
 
             $data = [
                 "id" => Filters::int($obj['id']),
                 "nome" => Filters::out($obj['nome']),
-                "immagine" => Router::getImgsDir() . Filters::out($obj['immagine'])
+                "immagine" => Router::getImgsDir() . Filters::out($obj['immagine']),
             ];
 
             $html .= Template::getInstance()->startTemplate()->render(

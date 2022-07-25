@@ -2,7 +2,7 @@
 Router::loadRequired();
 $scheda_class = Scheda::getInstance();
 
-switch ($_POST['action']) {
+switch ( $_POST['action'] ) {
 
     case 'update_character_data':
         echo json_encode($scheda_class->updateCharacterData($_POST));

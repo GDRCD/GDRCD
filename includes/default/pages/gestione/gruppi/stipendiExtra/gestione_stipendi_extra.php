@@ -4,26 +4,27 @@ Router::loadRequired(); # Inserisco il required se non presente, per futuro spos
 
 $cls = GruppiStipendiExtra::getInstance(); # Inizializzo classe
 
-if($cls->permissionServiceGroups() && $cls->activeExtraEarn()){ # Metodo di controllo per accesso alla pagina di gestione
+if ( $cls->permissionServiceGroups() && $cls->activeExtraEarn() ) { # Metodo di controllo per accesso alla pagina di gestione
 
-?>
-        <div class="general_incipit">
-            <div class="title"> Gestione Stipendi extra </div>
-            <div class="subtitle">Gestione degli stipendi extra dai gruppi ai personaggi</div>
+    ?>
+    <div class="general_incipit">
+        <div class="title"> Gestione Stipendi extra</div>
+        <div class="subtitle">Gestione degli stipendi extra dai gruppi ai personaggi</div>
 
-            Da questa pagina e' possibile:
-            <ul>
-                <li>Creare uno stipendio extra per un personaggio</li>
-                <li>Modificare uno stipendio extra per un personaggio</li>
-                <li>Eliminare uno stipendio extra per un personaggio</li>
-            </ul>
+        Da questa pagina e' possibile:
+        <ul>
+            <li>Creare uno stipendio extra per un personaggio</li>
+            <li>Modificare uno stipendio extra per un personaggio</li>
+            <li>Eliminare uno stipendio extra per un personaggio</li>
+        </ul>
 
-        </div>
+    </div>
 
     <div class="form_container group_earn_extra_management">
 
         <!-- INSERT -->
-        <form class="form ajax_form" action="gestione/gruppi/stipendiExtra/gestione_stipendi_extra_ajax.php" data-callback="updateFounds">
+        <form class="form ajax_form" action="gestione/gruppi/stipendiExtra/gestione_stipendi_extra_ajax.php"
+              data-callback="updateFounds">
 
             <div class="form_title">Crea fondo gruppo</div>
 
@@ -77,7 +78,8 @@ if($cls->permissionServiceGroups() && $cls->activeExtraEarn()){ # Metodo di cont
         </form>
 
         <!-- EDIT -->
-        <form class="form edit_form ajax_form" action="gestione/gruppi/stipendiExtra/gestione_stipendi_extra_ajax.php" data-callback="updateFounds">
+        <form class="form edit_form ajax_form" action="gestione/gruppi/stipendiExtra/gestione_stipendi_extra_ajax.php"
+              data-callback="updateFounds">
 
             <div class="form_title">Modifica fondo gruppo</div>
 
@@ -132,7 +134,8 @@ if($cls->permissionServiceGroups() && $cls->activeExtraEarn()){ # Metodo di cont
         </form>
 
         <!-- DELETE -->
-        <form method="POST" class="form ajax_form" action="gestione/gruppi/stipendiExtra/gestione_stipendi_extra_ajax.php" data-callback="updateFounds">
+        <form method="POST" class="form ajax_form"
+              action="gestione/gruppi/stipendiExtra/gestione_stipendi_extra_ajax.php" data-callback="updateFounds">
 
             <div class="form_title">Elimina fondo gruppo</div>
 
@@ -153,7 +156,7 @@ if($cls->permissionServiceGroups() && $cls->activeExtraEarn()){ # Metodo di cont
     </div>
 
     <script src="<?= Router::getPagesLink('gestione/gruppi/stipendiExtra/gestione_stipendi_extra.js'); ?>"></script>
-    <div class="link_back"><a href="/main.php?page=gestione">Indietro</a> </div>
+    <div class="link_back"><a href="/main.php?page=gestione">Indietro</a></div>
 
 
 <?php } ?>

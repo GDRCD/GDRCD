@@ -8,15 +8,16 @@
         </div>
         <div class='form_field'>
             <select name="mesi" ?>
-                <?php for($i = 0; $i <= 12; $i++) { ?>
-                    <option value="<?php echo $i; ?>"><?php echo $i.' '.gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['months']); ?></option>
+                <?php for ( $i = 0; $i <= 12; $i++ ) { ?>
+                    <option
+                        value="<?php echo $i; ?>"><?php echo $i . ' ' . gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['months']); ?></option>
                 <?php } ?>
             </select>
         </div>
         <!-- bottoni -->
         <div class='form_submit'>
             <input type="hidden" name="op" value="old_log">
-            <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>" />
+            <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>"/>
         </div>
     </form>
 </div>
@@ -28,15 +29,16 @@
         </div>
         <div class='form_field'>
             <select name="mesi" ?>
-                <?php for($i = 0; $i <= 12; $i++) { ?>
-                    <option value="<?php echo $i; ?>"><?php echo $i.' '.gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['months']); ?></option>
+                <?php for ( $i = 0; $i <= 12; $i++ ) { ?>
+                    <option
+                        value="<?php echo $i; ?>"><?php echo $i . ' ' . gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['months']); ?></option>
                 <?php } ?>
             </select>
         </div>
         <!-- bottoni -->
         <div class='form_submit'>
             <input type="hidden" name="op" value="old_chat">
-            <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>" />
+            <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>"/>
         </div>
     </form>
 </div>
@@ -48,8 +50,9 @@
         </div>
         <div class='form_field'>
             <select name="mesi" ?>
-                <?php for($i = 0; $i <= 12; $i++) { ?>
-                    <option value="<?php echo $i; ?>"><?php echo $i.' '.gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['months']); ?></option>
+                <?php for ( $i = 0; $i <= 12; $i++ ) { ?>
+                    <option
+                        value="<?php echo $i; ?>"><?php echo $i . ' ' . gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['months']); ?></option>
                 <?php } ?>
             </select>
         </div>
@@ -59,7 +62,7 @@
         <!-- bottoni -->
         <div class='form_submit'>
             <input type="hidden" name="op" value="old_messages">
-            <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>" />
+            <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>"/>
         </div>
     </form>
 </div>
@@ -75,7 +78,7 @@
         <!-- bottoni -->
         <div class='form_submit'>
             <input type="hidden" name="op" value="deleted">
-            <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>" />
+            <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>"/>
         </div>
     </form>
 </div>
@@ -90,8 +93,9 @@
         <div class='form_field'>
             <select name="mesi" ?>
                 <?php
-                for($i = 1; $i <= 12; $i++) { ?>
-                    <option value="<?php echo $i; ?>"><?php echo $i.' '.gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['months']); ?></option>
+                for ( $i = 1; $i <= 12; $i++ ) { ?>
+                    <option
+                        value="<?php echo $i; ?>"><?php echo $i . ' ' . gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['months']); ?></option>
                 <?php } ?>
             </select>
         </div>
@@ -101,7 +105,7 @@
         <!-- bottoni -->
         <div class='form_submit'>
             <input type="hidden" name="op" value="missing">
-            <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>" />
+            <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>"/>
         </div>
     </form>
 </div>
@@ -117,7 +121,7 @@
         <!-- bottoni -->
         <div class='form_submit'>
             <input type="hidden" name="op" value="blacklisted">
-            <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>" />
+            <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>"/>
         </div>
     </form>
 </div>

@@ -4,26 +4,27 @@ Router::loadRequired(); # Inserisco il required se non presente, per futuro spos
 
 $cls = GruppiRuoli::getInstance(); # Inizializzo classe
 
-if($cls->permissionManageRoles() && $cls->activeGroups()){ # Metodo di controllo per accesso alla pagina di gestione
+if ( $cls->permissionManageRoles() && $cls->activeGroups() ) { # Metodo di controllo per accesso alla pagina di gestione
 
-?>
-        <div class="general_incipit">
-            <div class="title"> Gestione gruppi </div>
-            <div class="subtitle">Gestione dei dati riferiti ai gruppi</div>
+    ?>
+    <div class="general_incipit">
+        <div class="title"> Gestione gruppi</div>
+        <div class="subtitle">Gestione dei dati riferiti ai gruppi</div>
 
-            Da questa pagina e' possibile:
-            <ul>
-                <li>Creare un gruppo</li>
-                <li>Modificare un gruppo</li>
-                <li>Eliminare un gruppo</li>
-            </ul>
+        Da questa pagina e' possibile:
+        <ul>
+            <li>Creare un gruppo</li>
+            <li>Modificare un gruppo</li>
+            <li>Eliminare un gruppo</li>
+        </ul>
 
-        </div>
+    </div>
 
     <div class="form_container group_roles_management">
 
         <!-- INSERT -->
-        <form class="form ajax_form" action="gestione/gruppi/ruoli/gestione_ruoli_ajax.php" data-callback="updateRolesList">
+        <form class="form ajax_form" action="gestione/gruppi/ruoli/gestione_ruoli_ajax.php"
+              data-callback="updateRolesList">
 
             <div class="form_title">Crea ruolo gruppo</div>
 
@@ -62,7 +63,8 @@ if($cls->permissionManageRoles() && $cls->activeGroups()){ # Metodo di controllo
         </form>
 
         <!-- EDIT -->
-        <form class="form edit_form ajax_form" action="gestione/gruppi/ruoli/gestione_ruoli_ajax.php" data-callback="updateRolesList">
+        <form class="form edit_form ajax_form" action="gestione/gruppi/ruoli/gestione_ruoli_ajax.php"
+              data-callback="updateRolesList">
 
             <div class="form_title">Modifica ruolo gruppo</div>
 
@@ -108,7 +110,8 @@ if($cls->permissionManageRoles() && $cls->activeGroups()){ # Metodo di controllo
         </form>
 
         <!-- DELETE -->
-        <form method="POST" class="form ajax_form" action="gestione/gruppi/ruoli/gestione_ruoli_ajax.php" data-callback="updateRolesList">
+        <form method="POST" class="form ajax_form" action="gestione/gruppi/ruoli/gestione_ruoli_ajax.php"
+              data-callback="updateRolesList">
 
             <div class="form_title">Elimina ruolo gruppo</div>
 
@@ -129,7 +132,7 @@ if($cls->permissionManageRoles() && $cls->activeGroups()){ # Metodo di controllo
     </div>
 
     <script src="<?= Router::getPagesLink('gestione/gruppi/ruoli/gestione_ruoli.js'); ?>"></script>
-    <div class="link_back"><a href="/main.php?page=gestione">Indietro</a> </div>
+    <div class="link_back"><a href="/main.php?page=gestione">Indietro</a></div>
 
 
 <?php } ?>

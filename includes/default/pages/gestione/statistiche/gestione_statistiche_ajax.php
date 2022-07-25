@@ -4,7 +4,7 @@ Router::loadRequired();
 
 $cls = Statistiche::getInstance();
 
-switch ($_POST['action']) {
+switch ( $_POST['action'] ) {
     case 'get_stat_data':
         echo json_encode($cls->ajaxStatData($_POST));
         break;

@@ -13,7 +13,7 @@ class SchedaContatti extends Scheda
      */
     public function isAccessible(int $pg): bool
     {
-        return ( Contatti::getInstance()->contactPublic() ||  Contatti::getInstance()->contactView($pg) );
+        return (Contatti::getInstance()->contactPublic() || Contatti::getInstance()->contactView($pg));
     }
 
 }

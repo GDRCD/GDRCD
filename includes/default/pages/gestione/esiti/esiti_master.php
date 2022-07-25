@@ -5,7 +5,7 @@ Router::loadRequired();
 $esiti = Esiti::getInstance();
 $id_record = Filters::int($_GET['id_record']);
 
-if ($esiti->esitoMembersPermission($id_record)) {
+if ( $esiti->esitoMembersPermission($id_record) ) {
 
     $data = $esiti->getEsito($id_record);
     $master = Filters::int($data['master']);
@@ -13,14 +13,14 @@ if ($esiti->esitoMembersPermission($id_record)) {
     ?>
 
 
-    <?php if (isset($resp)) { ?>
+    <?php if ( isset($resp) ) { ?>
         <div class="warning"><?= $resp['mex']; ?></div>
     <?php } ?>
 
-    <?php if ($master > 0) {
+    <?php if ( $master > 0 ) {
         $master_name = Personaggio::nameFromId($master); ?>
         <div class="gestione_incipit">
-            Master attuale : <?=$master_name;?>
+            Master attuale : <?= $master_name; ?>
         </div>
     <?php } ?>
 
@@ -45,7 +45,7 @@ if ($esiti->esitoMembersPermission($id_record)) {
         </form>
     </div>
 
-    <script src="<?=Router::getPagesLink('gestione/esiti/JS/esiti_master.js');?>"></script>
+    <script src="<?= Router::getPagesLink('gestione/esiti/JS/esiti_master.js'); ?>"></script>
 
 
 <?php } else { ?>

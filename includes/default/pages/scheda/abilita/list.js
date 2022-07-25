@@ -1,4 +1,4 @@
-$(function(){
+$(function () {
 
     $('.abilita_scheda_nome').on('click', function (e) {
         e.stopImmediatePropagation();

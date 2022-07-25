@@ -89,7 +89,7 @@ class ChatOpzioni extends BaseClass
     public function ajaxOptionData(array $post): array
     {
 
-        if ($this->permissionManageOptions()) {
+        if ( $this->permissionManageOptions() ) {
             $id = Filters::int($post['id']);
 
             $data = $this->getOption($id);
@@ -104,7 +104,7 @@ class ChatOpzioni extends BaseClass
                 'nome' => $nome,
                 'titolo' => $titolo,
                 'descrizione' => $descr,
-                'tipo' => $tipo
+                'tipo' => $tipo,
             ];
 
         }
@@ -122,12 +122,11 @@ class ChatOpzioni extends BaseClass
      */
     public function NewOption(array $post): array
     {
-        if ($this->permissionManageOptions()) {
+        if ( $this->permissionManageOptions() ) {
             $nome = Filters::in($post['nome']);
             $descr = Filters::in($post['descrizione']);
             $tipo = Filters::in($post['tipo']);
             $titolo = Filters::in($post['titolo']);
-
 
             DB::query("INSERT INTO chat_opzioni(nome,titolo,descrizione,tipo,creato_da) VALUES('{$nome}','{$titolo}','{$descr}','{$tipo}','{$this->me_id}')");
 
@@ -136,18 +135,17 @@ class ChatOpzioni extends BaseClass
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Opzione chat creata',
                 'swal_type' => 'success',
-                "options_list" => $this->listOptions()
+                "options_list" => $this->listOptions(),
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
-
 
     /**
      * @fn ModOption
@@ -157,13 +155,12 @@ class ChatOpzioni extends BaseClass
      */
     public function ModOption(array $post): array
     {
-        if($this->permissionManageOptions()){
-            $id=Filters::in($post['id']);
-            $nome = Filters::in( $post['nome']);
+        if ( $this->permissionManageOptions() ) {
+            $id = Filters::in($post['id']);
+            $nome = Filters::in($post['nome']);
             $descr = Filters::in($post['descrizione']);
             $tipo = Filters::in($post['tipo']);
             $titolo = Filters::in($post['titolo']);
-
 
             DB::query("UPDATE  chat_opzioni 
                 SET nome = '{$nome}',titolo='{$titolo}',descrizione='{$descr}', tipo='{$tipo}' WHERE id='{$id}'");
@@ -173,18 +170,17 @@ class ChatOpzioni extends BaseClass
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Opzione chat modificata.',
                 'swal_type' => 'success',
-                'options_list'=>$this->listOptions()
+                'options_list' => $this->listOptions(),
             ];
-        } else{
+        } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
-
 
     /**
      * @fn DelOption
@@ -192,9 +188,9 @@ class ChatOpzioni extends BaseClass
      * @param array $post
      * @return array
      */
-    public function DelOption(array $post):array
+    public function DelOption(array $post): array
     {
-        if($this->permissionManageOptions()) {
+        if ( $this->permissionManageOptions() ) {
 
             $id = Filters::in($post['id']);
 
@@ -206,14 +202,14 @@ class ChatOpzioni extends BaseClass
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Condizione meteo eliminata.',
                 'swal_type' => 'success',
-                'options_list'=>$this->listOptions()
+                'options_list' => $this->listOptions(),
             ];
-        } else{
+        } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }

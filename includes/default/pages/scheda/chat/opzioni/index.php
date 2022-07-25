@@ -6,9 +6,9 @@ $pg_chat_options = SchedaChatOpzioni::getInstance();
 $id_pg = Filters::int($_GET['id_pg']);
 $op = Filters::out($_GET['op']);
 
-if ($pg_chat_options->available($id_pg)) {
+if ( $pg_chat_options->available($id_pg) ) {
 
-    if ($pg_chat_options->isAccessible($id_pg)) { ?>
+    if ( $pg_chat_options->isAccessible($id_pg) ) { ?>
 
 
         <div class="pagina_scheda pagina_scheda_chat_opzioni">

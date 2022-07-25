@@ -10,7 +10,8 @@ class Cronjob extends BaseClass
         parent::__construct();
     }
 
-    public  function inlineCronjob(){
+    public function inlineCronjob()
+    {
         return Functions::get_constant('INLINE_CRONJOB');
     }
 
@@ -36,7 +37,7 @@ class Cronjob extends BaseClass
      */
     public function getAllCrons(string $val = '*')
     {
-        return DB::query("SELECT {$val} FROM cronjob WHERE 1",'result');
+        return DB::query("SELECT {$val} FROM cronjob WHERE 1", 'result');
     }
 
     /*** CONTROLS ***/
@@ -67,22 +68,22 @@ class Cronjob extends BaseClass
         $interval_type = Filters::out($data['interval_type']);
 
         // Se non e' mai stato eseguito, lo eseguo
-        if (empty($last_exec)) {
+        if ( empty($last_exec) ) {
             return true;
         } else {
             // Altrimenti estraggo la differenza in base al tipo
-            switch ($interval_type) {
+            switch ( $interval_type ) {
                 case 'months':
-                    $diff = CarbonWrapper::DatesDifferenceMonths(date('Y-m-d'), Filters::date($last_exec,'Y-m-d'));
+                    $diff = CarbonWrapper::DatesDifferenceMonths(date('Y-m-d'), Filters::date($last_exec, 'Y-m-d'));
                     break;
                 case 'days':
-                    $diff = CarbonWrapper::DatesDifferenceDays(date('Y-m-d'), Filters::date($last_exec,'Y-m-d'));
+                    $diff = CarbonWrapper::DatesDifferenceDays(date('Y-m-d'), Filters::date($last_exec, 'Y-m-d'));
                     break;
                 case 'hours':
-                    $diff = CarbonWrapper::DatesDifferenceHours(date('Y-m-d H:i:s'), Filters::date($last_exec,'Y-m-d H:i:s'));
+                    $diff = CarbonWrapper::DatesDifferenceHours(date('Y-m-d H:i:s'), Filters::date($last_exec, 'Y-m-d H:i:s'));
                     break;
                 case 'minutes':
-                    $diff = CarbonWrapper::DatesDifferenceMinutes(date('Y-m-d H:i:s'), Filters::date($last_exec,'Y-m-d H:i:s'));
+                    $diff = CarbonWrapper::DatesDifferenceMinutes(date('Y-m-d H:i:s'), Filters::date($last_exec, 'Y-m-d H:i:s'));
                     break;
                 default:
                     $diff = 0;
@@ -100,7 +101,7 @@ class Cronjob extends BaseClass
      * @param int $id
      * @return void
      */
-    public function startExec(int $id):void
+    public function startExec(int $id): void
     {
         DB::query("UPDATE cronjob SET in_exec=1 WHERE id='{$id}' LIMIT 1");
     }
@@ -111,7 +112,7 @@ class Cronjob extends BaseClass
      * @param int $id
      * @return void
      */
-    public function endExec(int $id):void
+    public function endExec(int $id): void
     {
         DB::query("UPDATE cronjob SET in_exec=0,last_exec=NOW() WHERE id='{$id}' LIMIT 1");
     }
@@ -128,19 +129,18 @@ class Cronjob extends BaseClass
 
         $crons = $this->getAllCrons();
 
-        foreach ($crons as $cron){
+        foreach ( $crons as $cron ) {
             $id = Filters::out($cron['id']);
             $name = Filters::out($cron['name']);
             $class = Filters::out($cron['class']);
             $function = Filters::out($cron['function']);
 
-            if ($this->needExec($id) && !$this->isInExec($id)) {
-                if(method_exists($class,$function)) {
+            if ( $this->needExec($id) && !$this->isInExec($id) ) {
+                if ( method_exists($class, $function) ) {
                     $this->startExec($id);
                     $class::getInstance()->$function();
                     $this->endExec($id);
-                }
-                else{
+                } else {
                     die("La funzione <span style='color:red; font-weight: bold;'>{$function}</span> del Cronjob <span style='color:red; font-weight: bold;'>{$name}</span> non esiste.");
                 }
             }

@@ -2,7 +2,7 @@
 Router::loadRequired();
 $scheda_chat_opzioni = SchedaChatOpzioni::getInstance();
 
-switch ($_POST['action']) {
+switch ( $_POST['action'] ) {
 
     case 'save_options':
         //Aggiunge un nuovo contatto al PG

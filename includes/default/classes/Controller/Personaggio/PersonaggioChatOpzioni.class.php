@@ -37,15 +37,16 @@ class PersonaggioChatOpzioni extends Personaggio
      */
     public function getAllOptionsValues(int $pg, string $val = '*')
     {
-        return DB::query("SELECT {$val} FROM personaggio_chat_opzioni WHERE personaggio='{$pg}'",'result');
+        return DB::query("SELECT {$val} FROM personaggio_chat_opzioni WHERE personaggio='{$pg}'", 'result');
     }
 
-    public function getAllOptionsWithValues(int $pg, string $val = 'chat_opzioni.*,personaggio_chat_opzioni.*'){
+    public function getAllOptionsWithValues(int $pg, string $val = 'chat_opzioni.*,personaggio_chat_opzioni.*')
+    {
 
         return DB::query("SELECT {$val} FROM chat_opzioni 
                 LEFT JOIN personaggio_chat_opzioni ON chat_opzioni.nome = personaggio_chat_opzioni.opzione AND personaggio_chat_opzioni.personaggio='{$pg}'
                 WHERE 1
-                ",'result' );
+                ", 'result');
     }
 
 }

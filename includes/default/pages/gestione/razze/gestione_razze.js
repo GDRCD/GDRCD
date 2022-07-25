@@ -1,4 +1,4 @@
-$(function(){
+$(function () {
 
     let editForm = $('.edit_form');
 
@@ -17,8 +17,8 @@ $(function(){
                     editForm.find('input[name="immagine"]').val(datas.immagine);
                     editForm.find('input[name="icon"]').val(datas.icon);
                     editForm.find('input[name="url_site"]').val(datas.url_site);
-                    editForm.find('input[name="visibile"]').prop("checked",datas.visibile == 1);
-                    editForm.find('input[name="iscrizione"]').prop("checked",datas.iscrizione == 1);
+                    editForm.find('input[name="visibile"]').prop("checked", datas.visibile == 1);
+                    editForm.find('input[name="iscrizione"]').prop("checked", datas.iscrizione == 1);
 
                 }
             }

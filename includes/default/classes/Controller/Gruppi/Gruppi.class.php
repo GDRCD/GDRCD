@@ -85,7 +85,7 @@ class Gruppi extends BaseClass
     public function haveGroupPower(int $id = 0): int
     {
 
-        if ($id) {
+        if ( $id ) {
             $extra_query = "AND gruppi_ruoli.gruppo = '{$id}'";
         }
 
@@ -179,7 +179,6 @@ class Gruppi extends BaseClass
         return Filters::int($sql['TOT']);
     }
 
-
     /**
      * @fn getAvailableGroups
      * @note Estrae i gruppi che un personaggio puo' gestire
@@ -194,7 +193,7 @@ class Gruppi extends BaseClass
 
         $groups_list = [];
 
-        foreach ($groups as $group) {
+        foreach ( $groups as $group ) {
             $groups_list[] = $group['gruppo'];
         }
 
@@ -233,7 +232,7 @@ class Gruppi extends BaseClass
      */
     public function listAvailableGroups(): string
     {
-        if ($this->permissionManageGroups()) {
+        if ( $this->permissionManageGroups() ) {
             $roles = $this->getAllGroups();
         } else {
             $groups = $this->getAvailableGroups();
@@ -269,7 +268,7 @@ class Gruppi extends BaseClass
     {
         $op = Filters::out($op);
 
-        switch ($op) {
+        switch ( $op ) {
             case 'storage':
                 $page = 'storage.php';
                 break;
@@ -295,8 +294,7 @@ class Gruppi extends BaseClass
     {
         $op = Filters::out($op);
 
-
-        switch ($op) {
+        switch ( $op ) {
             case 'view_extra_earn':
                 $page = 'view_extra_earn.php';
                 break;
@@ -322,10 +320,10 @@ class Gruppi extends BaseClass
         $types = GruppiTipi::getInstance()->getAllTypes();
         $list = [];
 
-        foreach ($types as $type) {
+        foreach ( $types as $type ) {
             $typeId = Filters::int($type['id']);
             $groups = $this->getAllGroupsByType($typeId);
-            foreach ($groups as $group) {
+            foreach ( $groups as $group ) {
                 $groupId = Filters::int($group['id']);
                 $group['member_number'] = $this->getGroupPeopleNumber($groupId);
                 array_push($list, $group);
@@ -348,14 +346,14 @@ class Gruppi extends BaseClass
     {
         $row_data = [];
 
-        foreach ($list as $row) {
+        foreach ( $list as $row ) {
 
             $array = [
                 'id' => Filters::int($row['id']),
                 'name' => Filters::out($row['nome']),
                 'member_number' => Filters::int($row['member_number']),
                 'tipo' => Filters::out($row['tipo_name']),
-                'storage_permission' => GruppiOggetto::getInstance()->permissionViewStorage($row['id'])
+                'storage_permission' => GruppiOggetto::getInstance()->permissionViewStorage($row['id']),
             ];
 
             $row_data[] = $array;
@@ -368,12 +366,12 @@ class Gruppi extends BaseClass
             'Comandi',
         ];
         $links = [
-            ['href' => "/main.php?page=uffici", 'text' => 'Indietro']
+            ['href' => "/main.php?page=uffici", 'text' => 'Indietro'],
         ];
         return [
             'body_rows' => $row_data,
             'cells' => $cells,
-            'links' => $links
+            'links' => $links,
         ];
     }
 
@@ -387,7 +385,7 @@ class Gruppi extends BaseClass
      */
     public function NewGroup(array $post): array
     {
-        if ($this->permissionManageGroups()) {
+        if ( $this->permissionManageGroups() ) {
 
             $nome = Filters::in($post['nome']);
             $tipo = Filters::int($post['tipo']);
@@ -397,7 +395,6 @@ class Gruppi extends BaseClass
             $denaro = Filters::int($post['denaro']);
             $visibile = Filters::checkbox($post['visibile']);
 
-
             DB::query("INSERT INTO gruppi (nome,tipo,immagine,url,statuto,denaro,visibile )  VALUES ('{$nome}','{$tipo}','{$img}','{$url}','{$statuto}','{$denaro}','{$visibile}') ");
 
             return [
@@ -405,14 +402,14 @@ class Gruppi extends BaseClass
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Gruppo creato.',
                 'swal_type' => 'success',
-                'groups_list' => $this->listGroups()
+                'groups_list' => $this->listGroups(),
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -425,7 +422,7 @@ class Gruppi extends BaseClass
      */
     public function ModGroup(array $post): array
     {
-        if ($this->permissionManageGroups()) {
+        if ( $this->permissionManageGroups() ) {
             $id = Filters::in($post['id']);
             $nome = Filters::in($post['nome']);
             $tipo = Filters::int($post['tipo']);
@@ -435,7 +432,6 @@ class Gruppi extends BaseClass
             $denaro = Filters::int($post['denaro']);
             $visibile = Filters::checkbox($post['visibile']);
 
-
             DB::query("UPDATE  gruppi 
                 SET nome = '{$nome}',tipo='{$tipo}', immagine='{$img}',url='{$url}',statuto='{$statuto}',denaro='{$denaro}',visibile='{$visibile}' WHERE id='{$id}'");
 
@@ -444,14 +440,14 @@ class Gruppi extends BaseClass
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Gruppo modificato.',
                 'swal_type' => 'success',
-                'groups_list' => $this->listGroups()
+                'groups_list' => $this->listGroups(),
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -464,7 +460,7 @@ class Gruppi extends BaseClass
      */
     public function DelGroup(array $post): array
     {
-        if ($this->permissionManageGroups()) {
+        if ( $this->permissionManageGroups() ) {
 
             $id = Filters::in($post['id']);
 
@@ -476,14 +472,14 @@ class Gruppi extends BaseClass
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Gruppo eliminato.',
                 'swal_type' => 'success',
-                'groups_list' => $this->listGroups()
+                'groups_list' => $this->listGroups(),
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -500,7 +496,7 @@ class Gruppi extends BaseClass
 
         $pgs = Personaggio::getInstance()->getAllPg();
 
-        foreach ($pgs as $pg) {
+        foreach ( $pgs as $pg ) {
             $id = Filters::int($pg['id']);
 
             //**! Tenere divisi i totali di ogni singola categoria, per poter inviare messaggi
@@ -511,17 +507,17 @@ class Gruppi extends BaseClass
 
             // STIPENDI DA RUOLI
             $ruoli = GruppiRuoli::getInstance()->getCharacterRolesSalaries($id);
-            foreach ($ruoli as $ruolo) {
+            foreach ( $ruoli as $ruolo ) {
                 $group_id = Filters::int($ruolo['id']);
                 $group_name = Filters::out($ruolo['nome']);
                 $corp_money = Filters::int($ruolo['denaro']);
                 $stipendio = Filters::int($ruolo['stipendio']);
 
-                if (!Gruppi::getInstance()->payFromMoney()) {
+                if ( !Gruppi::getInstance()->payFromMoney() ) {
                     $totale_ruoli += Filters::int($stipendio);
                 } else {
 
-                    if ($corp_money && ($corp_money >= $stipendio)) {
+                    if ( $corp_money && ($corp_money >= $stipendio) ) {
                         $totale_ruoli += Filters::int($stipendio);
                         DB::query("UPDATE gruppi SET denaro=denaro-'{$stipendio}' WHERE id='{$group_id}' LIMIT 1");
                     } else {
@@ -537,14 +533,14 @@ class Gruppi extends BaseClass
 
             // STIPENDI DA LAVORI
             $lavori = GruppiLavori::getInstance()->getCharacterWorksSalaries($id);
-            foreach ($lavori as $lavoro) {
+            foreach ( $lavori as $lavoro ) {
                 $totale_lavori += Filters::int($lavoro['stipendio']);
             }
 
             //STIPENDI EXTRA
-            if (GruppiStipendiExtra::getInstance()->activeExtraEarn()) {
+            if ( GruppiStipendiExtra::getInstance()->activeExtraEarn() ) {
                 $extra = GruppiStipendiExtra::getInstance()->getPgExtraEarns($id, 'gruppi_stipendi_extra.*,gruppi.denaro,gruppi.nome AS group_name');
-                foreach ($extra as $extra_earn) {
+                foreach ( $extra as $extra_earn ) {
                     $extra_id = Filters::int($extra_earn['id']);
                     $last_exec = Filters::out($extra_earn['last_exec']);
                     $interval = Filters::int($extra_earn['interval']);
@@ -554,12 +550,12 @@ class Gruppi extends BaseClass
                     $corp_money = Filters::int($extra_earn['denaro']);
                     $group_name = Filters::out($extra_earn['group_name']);
 
-                    if (CarbonWrapper::needExec($interval, $interval_type, $last_exec)) {
+                    if ( CarbonWrapper::needExec($interval, $interval_type, $last_exec) ) {
 
-                        if (!Gruppi::getInstance()->payFromMoney()) {
+                        if ( !Gruppi::getInstance()->payFromMoney() ) {
                             $totale_extra += Filters::int($extra_val);
                         } else {
-                            if ($corp_money && ($corp_money >= $extra_val)) {
+                            if ( $corp_money && ($corp_money >= $extra_val) ) {
                                 $totale_extra += Filters::int($extra_val);
                                 DB::query("UPDATE gruppi SET denaro=denaro-'{$extra_val}' WHERE id='{$group_id}' LIMIT 1");
                             } else {
@@ -574,7 +570,6 @@ class Gruppi extends BaseClass
                     }
                 }
             }
-
 
             // TOTALE COMPLESSIVO
             $totale = ($totale_lavori + $totale_ruoli + $totale_extra);

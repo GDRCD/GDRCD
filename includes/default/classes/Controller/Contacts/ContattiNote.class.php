@@ -19,14 +19,14 @@ class ContattiNote extends Contatti
      */
     public function getAllNote(int $id, int $id_pg)
     {
-        if ($this->contactEnables()) {
-            if ($this->contactView($id_pg)) {
+        if ( $this->contactEnables() ) {
+            if ( $this->contactView($id_pg) ) {
                 //se sei il proprietario, visualizzi le tue note
                 return DB::query("SELECT * FROM contatti_nota WHERE id_contatto={$id} AND eliminato=0", 'result');
-            } else if ($this->contactSecret() && (Permissions::permission('VIEW_CONTACTS'))) {
+            } else if ( $this->contactSecret() && (Permissions::permission('VIEW_CONTACTS')) ) {
                 //se le note sono segrete e hai il permesso di visualizzarle
                 return DB::query("SELECT * FROM contatti_nota WHERE id_contatto={$id} AND eliminato=0", 'result');
-            } else if ($this->contactPublic()) {
+            } else if ( $this->contactPublic() ) {
                 //se la configurazione è impostata su pubblico
                 return DB::query("SELECT * FROM contatti_nota WHERE id_contatto={$id} AND eliminato=0", 'result');
             } else {
@@ -67,7 +67,7 @@ class ContattiNote extends Contatti
         $list = $this->getAllNote($id_contatto, $id_pg);
         $row_data = [];
 
-        foreach ($list as $row) {
+        foreach ( $list as $row ) {
             $id = Filters::in($row['id']);
 
             $array = [
@@ -82,7 +82,7 @@ class ContattiNote extends Contatti
                 'pg_name' => Personaggio::nameFromId($id_pg),
                 'creato_il' => Filters::date($row['creato_il'], 'd/m/Y'),
                 'creato_da' => Personaggio::nameFromId($row['creato_da']),
-                'pop_up_modifica' => 'javascript:modalWindow("note_edit", "Modifica nota","popup.php?page=scheda/contatti/index_popup&id=' . $id . '&op=note_edit") '
+                'pop_up_modifica' => 'javascript:modalWindow("note_edit", "Modifica nota","popup.php?page=scheda/contatti/index_popup&id=' . $id . '&op=note_edit") ',
             ];
 
             $row_data[] = $array;
@@ -91,7 +91,7 @@ class ContattiNote extends Contatti
         $cells = [
             'Titolo',
             'Nota',
-            'Controlli'
+            'Controlli',
         ];
         $links = [
             ['href' => "/main.php?page=scheda/index&op=contatti_nota_new&id_pg={$id_pg}&id={$id_contatto}", 'text' => 'Nuova nota', 'separator' => true],
@@ -107,7 +107,7 @@ class ContattiNote extends Contatti
             'body_rows' => $row_data,
             'cells' => $cells,
             'links' => $links,
-            'table_title' => $table_title
+            'table_title' => $table_title,
         ];
     }
 
@@ -146,25 +146,24 @@ class ContattiNote extends Contatti
         $contact_data = $this->getContact($id_contatto, 'personaggio');
         $owner = Filters::int($contact_data['personaggio']);
 
-        if (Personaggio::isMyPg($owner)) {
+        if ( Personaggio::isMyPg($owner) ) {
 
             DB::query("INSERT INTO contatti_nota(id_contatto,titolo, nota, pubblica, creato_da, creato_il) VALUES('{$id_contatto}', '{$titolo}','{$nota}', '{$pubblica}','{$creato_da}', NOW())");
             return [
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Nota creata con successo.',
-                'swal_type' => 'success'
+                'swal_type' => 'success',
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Permesso negato!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
-
 
     /**
      * @fn editNota
@@ -184,20 +183,20 @@ class ContattiNote extends Contatti
         $contact_data = $this->getContact($contact_id, 'personaggio');
         $owner = Filters::int($contact_data['personaggio']);
 
-        if ($this->contactUpdate($owner)) {
+        if ( $this->contactUpdate($owner) ) {
             DB::query("UPDATE contatti_nota SET titolo = '{$titolo}', nota='{$nota}', pubblica='{$pubblica}' WHERE id= {$id}");
             return [
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Nota modificata con successo.',
-                'swal_type' => 'success'
+                'swal_type' => 'success',
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Permesso negato!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
 
@@ -218,7 +217,7 @@ class ContattiNote extends Contatti
         $contact_data = $this->getContact($contact_id, 'personaggio');
         $owner = Filters::int($contact_data['personaggio']);
 
-        if ($this->contactUpdate($owner)) {
+        if ( $this->contactUpdate($owner) ) {
             DB::query("UPDATE contatti_nota SET eliminato = '1' WHERE id = '{$id}' LIMIT 1");
 
             return [
@@ -226,14 +225,14 @@ class ContattiNote extends Contatti
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Nota rimossa correttamente.',
                 'swal_type' => 'success',
-                'note_list' => $this->NoteList($contact_id)
+                'note_list' => $this->NoteList($contact_id),
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Permesso negato!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }

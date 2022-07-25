@@ -4,25 +4,26 @@ Router::loadRequired(); # Inserisco il required se non presente, per futuro spos
 
 $cls = GruppiLavori::getInstance(); # Inizializzo classe
 
-if($cls->permissionManageWorks() && $cls->activeWorks()){ # Metodo di controllo per accesso alla pagina di gestione
+if ( $cls->permissionManageWorks() && $cls->activeWorks() ) { # Metodo di controllo per accesso alla pagina di gestione
 
-?>
-        <div class="general_incipit">
-            <div class="title"> Gestione lavori </div>
-            <div class="subtitle">Gestione dei dati riferiti ai lavori</div>
+    ?>
+    <div class="general_incipit">
+        <div class="title"> Gestione lavori</div>
+        <div class="subtitle">Gestione dei dati riferiti ai lavori</div>
 
-            Da questa pagina e' possibile:
-            <ul>
-                <li>Creare un lavoro</li>
-                <li>Modificare un lavoro</li>
-                <li>Eliminare un lavoro</li>
-            </ul>
-        </div>
+        Da questa pagina e' possibile:
+        <ul>
+            <li>Creare un lavoro</li>
+            <li>Modificare un lavoro</li>
+            <li>Eliminare un lavoro</li>
+        </ul>
+    </div>
 
     <div class="form_container works_management">
 
         <!-- INSERT -->
-        <form class="form ajax_form" action="gestione/gruppi/lavori/gestione_lavori_ajax.php" data-callback="updateWorksList">
+        <form class="form ajax_form" action="gestione/gruppi/lavori/gestione_lavori_ajax.php"
+              data-callback="updateWorksList">
 
             <div class="form_title">Crea lavoro</div>
 
@@ -54,7 +55,8 @@ if($cls->permissionManageWorks() && $cls->activeWorks()){ # Metodo di controllo 
         </form>
 
         <!-- EDIT -->
-        <form class="form edit_form ajax_form" action="gestione/gruppi/lavori/gestione_lavori_ajax.php" data-callback="updateWorksList">
+        <form class="form edit_form ajax_form" action="gestione/gruppi/lavori/gestione_lavori_ajax.php"
+              data-callback="updateWorksList">
 
             <div class="form_title">Modifica gruppo</div>
 
@@ -93,7 +95,8 @@ if($cls->permissionManageWorks() && $cls->activeWorks()){ # Metodo di controllo 
         </form>
 
         <!-- DELETE -->
-        <form method="POST" class="form ajax_form" action="gestione/gruppi/lavori/gestione_lavori_ajax.php" data-callback="updateWorksList">
+        <form method="POST" class="form ajax_form" action="gestione/gruppi/lavori/gestione_lavori_ajax.php"
+              data-callback="updateWorksList">
 
             <div class="form_title">Elimina gruppo</div>
 
@@ -114,7 +117,7 @@ if($cls->permissionManageWorks() && $cls->activeWorks()){ # Metodo di controllo 
     </div>
 
     <script src="<?= Router::getPagesLink('gestione/gruppi/lavori/gestione_lavori.js'); ?>"></script>
-    <div class="link_back"><a href="/main.php?page=gestione">Indietro</a> </div>
+    <div class="link_back"><a href="/main.php?page=gestione">Indietro</a></div>
 
 
 <?php } ?>
