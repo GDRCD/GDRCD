@@ -10,7 +10,7 @@
         <div class="form_info">
             <?php echo $MESSAGE['interface']['esiti']['pg_page']; ?>
         </div>
-            <a class="but_newd" href='main.php?page=servizi_esitinew&op=first' target="_blank">
+            <a class="but_newd" href='main.php?page=servizi_esitinew&op=first'>
                 Apri una nuova serie di esiti
             </a>
 
@@ -43,8 +43,7 @@
                     <?php if ($tit['closed']==0) { ?>
                         <div class="titolo_box">
                             <a class="link_new"
-                               href='main.php?page=servizi_esitinew&op=new&blocco=<?php echo gdrcd_filter('num',$id);?>'
-                               target="_blank">
+                               href='main.php?page=servizi_esitinew&op=new&blocco=<?php echo gdrcd_filter('num',$id);?>'>
                                 Invia una nuova richiesta di esito
                             </a>
                         </div>
