@@ -59,7 +59,7 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
                     ?>
                         | <a class="link_new"
                              href='main.php?page=gestione_segnalazioni&segn=esito_index&op=newchat&blocco=<?=gdrcd_filter('num',$blocco['id']);?>'>
-                             href='main.php?page=gestione_segnalazioni&segn=esito_index&op=newchat&blocco=<?=gdrcd_filter('num',$blocco['id']);?>'>
+
                             Invia un esito in chat
                         </a>
                     <?php  } ?>

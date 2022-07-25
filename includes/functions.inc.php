@@ -263,13 +263,27 @@ function gdrcd_mysql_error($details = false)
 {
     $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 50);
 
-    $error_msg = '<strong>GDRCD MySQLi Error</strong> [File: ' . basename($backtrace[1]['file']) . '; Line: ' . $backtrace[1]['line'] . ']<br>' . '<strong>Error Code</strong>: ' . mysqli_errno(gdrcd_connect()) . '<br>' . '<strong>Error String</strong>: ' . mysqli_error(gdrcd_connect());
-
+	foreach($backtrace as $v) {
+		if($v['function'] == 'gdrcd_query') {
+			$base = $v;
+		}
+		$history .= '<strong>FILE: </strong>: ' . $v['file'] . ' - '; 
+		$history .= '<strong>LINE: </strong>: ' . $v['line'] . '</br />';		
+	}    
+	$error_msg  = '<div class="error mysql">';
+    $error_msg .= '<strong>GDRCD MySQLi Error</strong>:</br>'; 
     if ($details !== false) {
-        $error_msg .= '<br><br><strong>Error Detail</strong>: ' . $details;
-    }
-
-    return $error_msg;
+        $error_msg .= '<strong>QUERY: </strong>: ' . $details . '</br>';
+    }	
+	$error_msg .= '<strong>ERROR [' . mysqli_errno(gdrcd_connect()) . ']</strong>: ' . mysqli_error(gdrcd_connect()) .'<br />';
+    $error_msg .= '<strong>FILE: </strong>: ' . $base['file'] . ' - '; 
+	$error_msg .= '<strong>LINE: </strong>: ' . $base['line'] . '<br />';
+ 	$error_msg .= '<details>';	
+	$error_msg .= '<summary>Dettagli</summary>';
+	$error_msg .= $history;	
+    $error_msg .= '</details>';	    
+	$error_msg .= '</div>';
+	return $error_msg;
 }
 
 /**
@@ -473,6 +487,46 @@ function gdrcd_controllo_esilio($pg)
 function gdrcd_controllo_permessi($permesso)
 {
     return (bool)$_SESSION['permessi'] >= $permesso;
+}
+
+/**
+ * Funzione controllo permessi forum
+ * @param int $tipo
+ * @param mixed $proprietari
+ * @return bool
+ */
+function gdrcd_controllo_permessi_forum($tipo, $proprietari = '')
+{
+    $tipo = gdrcd_filter('num', $tipo);
+    $perm = gdrcd_filter('num', $_SESSION['permessi']);
+    $razza = gdrcd_filter('num', $_SESSION['id_razza']);
+    $gilda = gdrcd_filter('out', $_SESSION['gilda']);
+
+    switch ($tipo) {
+        case PERTUTTI:
+        case INGIOCO:
+            return true;
+
+        case SOLORAZZA:
+            return (($razza == $proprietari) || ($perm >= MODERATOR));
+
+        case SOLOGILDA:
+
+            if (empty($proprietari)) {
+                return false;
+            } else {
+                return (strpos($gilda, '*' . $proprietari . '*') || ($perm >= MODERATOR));
+            }
+
+        case SOLOMASTERS:
+            return ($perm >= GAMEMASTER);
+
+        case SOLOMODERATORS:
+            return ($perm >= MODERATOR);
+
+        default:
+            return ($perm >= SUPERUSER);
+    }
 }
 
 /**
@@ -777,7 +831,7 @@ function gdrcd_redirect($url, $tempo = false)
 /**
  * Sostituisce eventuali parentesi angolari in coppia in una stringa con parentesi quadre
  * @param string $str : la stringa da controllare
- * @return $str con la coppie di parentesi angolari sostituite con parentesi quadre
+ * @return string $str con la coppie di parentesi angolari sostituite con parentesi quadre
  */
 function gdrcd_angs($str)
 {
