@@ -47,19 +47,23 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
             if (!isset($tit['closed'])) { ?>
                 <div class="titolo_box">
                     <a class="link_new"
-                       href='main.php?page=gestione_segnalazioni&segn=esito_index&op=edit&id=<?=gdrcd_filter('num',$blocco['id']);?>'>
+
+                       href='main.php?page=gestione_segnalazioni&segn=esito_index&op=edit&id=<?=gdrcd_filter('num',$blocco['id']);?>'
+                    >
                         Modifica
                     </a> |
                     <a class="link_new"
-                       href='main.php?page=gestione_segnalazioni&segn=esito_index&op=new&blocco=<?=gdrcd_filter('num',$blocco['id']);?>'>
+                       href='main.php?page=gestione_segnalazioni&segn=esito_index&op=new&blocco=<?=gdrcd_filter('num',$blocco['id']);?>'
+                            >
                             Invia un nuovo esito
                     </a>
                     <?php
                     if (ESITI_CHAT){
                     ?>
                         | <a class="link_new"
-                             href='main.php?page=gestione_segnalazioni&segn=esito_index&op=newchat&blocco=<?=gdrcd_filter('num',$blocco['id']);?>'>
-                             href='main.php?page=gestione_segnalazioni&segn=esito_index&op=newchat&blocco=<?=gdrcd_filter('num',$blocco['id']);?>'>
+
+                             href='main.php?page=gestione_segnalazioni&segn=esito_index&op=newchat&blocco=<?=gdrcd_filter('num',$blocco['id']);?>'
+                             >
                             Invia un esito in chat
                         </a>
                     <?php  } ?>

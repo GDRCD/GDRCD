@@ -10,7 +10,7 @@
         <div class="form_info">
             <?php echo $MESSAGE['interface']['esiti']['pg_page']; ?>
         </div>
-            <a class="but_newd" href='main.php?page=servizi_esitinew&op=first' >
+            <a class="but_newd" href='main.php?page=servizi_esitinew&op=first'>
                 Apri una nuova serie di esiti
             </a>
 
