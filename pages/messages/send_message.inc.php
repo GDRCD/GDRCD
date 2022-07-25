@@ -55,7 +55,6 @@ switch($opRequest) {
             if(isset($queryInsert)){
                 $query = gdrcd_query("INSERT INTO messaggi (mittente, destinatario, spedito, tipo, oggetto, testo) VALUES ".implode(",", $queryInsert));
                 $query = gdrcd_query("INSERT INTO backmessaggi (mittente, destinatario, spedito, tipo, oggetto, testo) VALUES ".implode(",", $queryInsert));
-            //    gdrcd_query($query, 'free');
             }
 
 
