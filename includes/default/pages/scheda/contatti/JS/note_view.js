@@ -1,4 +1,4 @@
-$(function(){
+$(function () {
 
     $('body').on('click', '.note_list .commands a.ajax_link', async function (e) {
         e.preventDefault();

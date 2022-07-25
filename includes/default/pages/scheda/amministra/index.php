@@ -1,9 +1,8 @@
 <?php
 
-
 $id_pg = Filters::in($_GET['id_pg']);
 
-if (Scheda::getInstance()->permissionAdministrationCharacter()) {
+if ( Scheda::getInstance()->permissionAdministrationCharacter() ) {
 
     $pg_data = Personaggio::getPgData($id_pg);
     ?>

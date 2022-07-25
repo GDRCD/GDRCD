@@ -1,5 +1,5 @@
-function closeNoteContatto(){
-    setTimeout(()=>{
-        top.$( "#dialog-edit" ).remove( );
-    },2000)
+function closeNoteContatto() {
+    setTimeout(() => {
+        top.$("#dialog-edit").remove();
+    }, 2000)
 }

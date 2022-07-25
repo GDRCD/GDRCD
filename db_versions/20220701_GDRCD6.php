@@ -108,7 +108,6 @@ class GDRCD6 extends DbMigration
                 ('CONTACT_CATEGORIES_STAFF_ONLY', 0, 'Contatti', 'Se abilitato, solo lo staff può assegnare le categorie di contatto', 'Se abilitato, solo lo staff può assegnare le categorie di contatto', 'bool', 1);"
         );
 
-
         DB::query("
             INSERT INTO `chat_opzioni` (`nome`,`titolo`,`descrizione`,`tipo`,`creato_da`) VALUES
                 ('action_size','Dimensione Azione','','int','1'),

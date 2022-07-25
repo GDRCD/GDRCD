@@ -1,7 +1,6 @@
 <?php
 
-
-require_once(__DIR__.'/../required.php');
+require_once(__DIR__ . '/../required.php');
 
 $cron = Cronjob::getInstance();
 

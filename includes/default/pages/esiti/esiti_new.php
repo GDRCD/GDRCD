@@ -7,14 +7,13 @@ $id_record = Filters::int($_GET['id_record']);
 
 $op = Filters::out($_POST['op']);
 
-switch ($op) {
+switch ( $op ) {
     case 'new':
         $resp = $esiti->newEsitoPlayer($_POST);
         break;
 }
 
-
-if ($esiti->esitiFromPlayerEnabled()) {
+if ( $esiti->esitiFromPlayerEnabled() ) {
     ?>
 
     <div class="gestione_incipit">
@@ -23,7 +22,7 @@ if ($esiti->esitiFromPlayerEnabled()) {
 
     <div class="form_container">
 
-        <?php if (isset($resp)) { ?>
+        <?php if ( isset($resp) ) { ?>
             <div class="warning"><?= $resp['mex']; ?></div>
             <div class="link_back"><a href="/main.php?page=servizi_esiti">Indietro</a></div>
             <?php

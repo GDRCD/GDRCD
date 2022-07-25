@@ -4,7 +4,7 @@ Router::loadRequired();
 
 $cls = GruppiFondi::getInstance();
 
-switch ($_POST['action']) {
+switch ( $_POST['action'] ) {
     case 'get_found_data':
         echo json_encode($cls->ajaxFoundData($_POST));
         break;

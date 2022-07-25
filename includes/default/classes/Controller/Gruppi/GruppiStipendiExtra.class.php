@@ -1,6 +1,5 @@
 <?php
 
-
 class GruppiStipendiExtra extends Gruppi
 {
     private
@@ -11,7 +10,6 @@ class GruppiStipendiExtra extends Gruppi
         parent::__construct();
         $this->active_extra_earn = Functions::get_constant('GROUPS_EXTRA_EARNS');
     }
-
 
     /*** CONFIG ***/
 
@@ -155,7 +153,7 @@ class GruppiStipendiExtra extends Gruppi
      */
     public function NewExtraEarn(array $post): array
     {
-        if ($this->permissionMangeExtraEarn()) {
+        if ( $this->permissionMangeExtraEarn() ) {
 
             $nome = Filters::text($post['nome']);
             $pg = Filters::int($post['personaggio']);
@@ -165,7 +163,6 @@ class GruppiStipendiExtra extends Gruppi
             $interval_type = Filters::in($post['interval_type']);
             $last_exec = Filters::in($post['last_exec']);
 
-
             DB::query("INSERT INTO gruppi_stipendi_extra (`nome`, `personaggio`, `gruppo`, `valore`, `interval`, `interval_type`, `last_exec`)
                             VALUES ('{$nome}', '{$pg}', '{$group}', '{$valore}', '{$interval}', '{$interval_type}', '{$last_exec}')");
 
@@ -174,14 +171,14 @@ class GruppiStipendiExtra extends Gruppi
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Stipendio extra assegnato.',
                 'swal_type' => 'success',
-                'earns_list' => $this->listExtraEarns()
+                'earns_list' => $this->listExtraEarns(),
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -194,7 +191,7 @@ class GruppiStipendiExtra extends Gruppi
      */
     public function ModExtraEarn(array $post): array
     {
-        if ($this->permissionMangeExtraEarn()) {
+        if ( $this->permissionMangeExtraEarn() ) {
 
             $id = Filters::in($post['id']);
             $nome = Filters::text($post['nome']);
@@ -203,7 +200,6 @@ class GruppiStipendiExtra extends Gruppi
             $valore = Filters::int($post['denaro']);
             $interval = Filters::int($post['interval']);
             $interval_type = Filters::in($post['interval_type']);
-
 
             DB::query("UPDATE gruppi_stipendi_extra 
                             SET `nome` = '{$nome}', `personaggio` = '{$pg}', `gruppo` = '{$group}', 
@@ -215,14 +211,14 @@ class GruppiStipendiExtra extends Gruppi
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Stipendio extra modificato.',
                 'swal_type' => 'success',
-                'earns_list' => $this->listExtraEarns()
+                'earns_list' => $this->listExtraEarns(),
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -235,7 +231,7 @@ class GruppiStipendiExtra extends Gruppi
      */
     public function DelExtraEarn(array $post): array
     {
-        if ($this->permissionMangeExtraEarn()) {
+        if ( $this->permissionMangeExtraEarn() ) {
 
             $id = Filters::in($post['id']);
 
@@ -246,14 +242,14 @@ class GruppiStipendiExtra extends Gruppi
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Stipendio extra eliminato.',
                 'swal_type' => 'success',
-                'earns_list' => $this->listExtraEarns()
+                'earns_list' => $this->listExtraEarns(),
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -270,7 +266,7 @@ class GruppiStipendiExtra extends Gruppi
     {
         $group = Filters::int($post['gruppo']);
 
-        if ($this->haveGroupPower($group)) {
+        if ( $this->haveGroupPower($group) ) {
 
             $id = Filters::in($post['id']);
             $nome = Filters::text($post['nome']);
@@ -281,7 +277,6 @@ class GruppiStipendiExtra extends Gruppi
             $interval_type = Filters::in($post['interval_type']);
             $last_exec = Filters::in($post['last_exec']);
 
-
             DB::query("INSERT INTO gruppi_stipendi_extra (`nome`, `personaggio`, `gruppo`, `valore`, `interval`, `interval_type`, `last_exec`)
                             VALUES ('{$nome}', '{$pg}', '{$group}', '{$valore}', '{$interval}', '{$interval_type}', '{$last_exec}')");
 
@@ -290,14 +285,14 @@ class GruppiStipendiExtra extends Gruppi
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Stipendio extra creato.',
                 'swal_type' => 'success',
-                'earns_list' => $this->listAvailableExtraEarns()
+                'earns_list' => $this->listAvailableExtraEarns(),
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -313,7 +308,7 @@ class GruppiStipendiExtra extends Gruppi
         $id = Filters::in($post['id']);
         $group = Filters::int($post['gruppo']);
 
-        if ($this->permissionMangeSpecificEarn($id) && $this->haveGroupPower($group)) {
+        if ( $this->permissionMangeSpecificEarn($id) && $this->haveGroupPower($group) ) {
 
             $nome = Filters::text($post['nome']);
             $pg = Filters::int($post['personaggio']);
@@ -331,14 +326,14 @@ class GruppiStipendiExtra extends Gruppi
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Stipendio extra modificato.',
                 'swal_type' => 'success',
-                'earns_list' => $this->listAvailableExtraEarns()
+                'earns_list' => $this->listAvailableExtraEarns(),
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -353,7 +348,7 @@ class GruppiStipendiExtra extends Gruppi
     {
         $id = Filters::in($post['id']);
 
-        if ($this->permissionMangeSpecificEarn($id)) {
+        if ( $this->permissionMangeSpecificEarn($id) ) {
 
             DB::query("DELETE FROM gruppi_stipendi_extra WHERE id = '{$id}'");
 
@@ -362,14 +357,14 @@ class GruppiStipendiExtra extends Gruppi
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Stipendio extra eliminato.',
                 'swal_type' => 'success',
-                'earns_list' => $this->listAvailableExtraEarns()
+                'earns_list' => $this->listAvailableExtraEarns(),
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }

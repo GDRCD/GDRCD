@@ -613,7 +613,7 @@ div.innertube {
     font-size: 15px;
 }
 
-.fake-table .header .header-title{
+.fake-table .header .header-title {
     background: #23272a !important;
     color: #ccc !important;
     font-size: 15px;
@@ -1279,19 +1279,19 @@ div.innertube {
 .groups_storage_container .group_objects_info .single_object_info .object_info .object_sub_info .info_box {
     height: 100%;
     display: inline-block;
-    border:1px solid black;
+    border: 1px solid black;
     vertical-align: top;
 }
 
-.groups_storage_container .group_objects_info .single_object_info .object_info .object_sub_info .info_box.info_left{
+.groups_storage_container .group_objects_info .single_object_info .object_info .object_sub_info .info_box.info_left {
     width: 50%;
 }
 
-.groups_storage_container .group_objects_info .single_object_info .object_info .object_sub_info .info_box.info_center{
+.groups_storage_container .group_objects_info .single_object_info .object_info .object_sub_info .info_box.info_center {
     width: 43%;
 }
 
-.groups_storage_container .group_objects_info .single_object_info .object_info .object_sub_info .info_box.info_right{
+.groups_storage_container .group_objects_info .single_object_info .object_info .object_sub_info .info_box.info_right {
     width: 5%;
     text-align: center;
 }

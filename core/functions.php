@@ -58,7 +58,7 @@ function gdrcd_check_pass($str)
  */
 function gdrcd_controllo_sessione()
 {
-    if (empty($_SESSION['login'])) {
+    if ( empty($_SESSION['login']) ) {
         echo '<div class="error">', $GLOBALS['MESSAGE']['error']['session_expired'], '<br />', $GLOBALS['MESSAGE']['warning']['please_login_again'], '<a href="', $GLOBALS['PARAMETERS']['info']['site_url'], '">Homepage</a></div>';
         die();
     }
@@ -73,7 +73,7 @@ function gdrcd_controllo_esilio($pg)
 {
     $exiled = gdrcd_query("SELECT autore_esilio, esilio, motivo_esilio FROM personaggio WHERE nome='" . gdrcd_filter('in', $pg) . "' LIMIT 1");
 
-    if (strtotime($exiled['esilio']) > time()) {
+    if ( strtotime($exiled['esilio']) > time() ) {
         echo '<div class="error">', Filters::out($pg), ' ', Filters::out($GLOBALS['MESSAGE']['warning']['character_exiled']), ' ', gdrcd_format_date($exiled['esilio']), ' (', $exiled['motivo_esilio'], ' - ', $exiled['autore_esilio'], ')</div>';
 
         return true;
@@ -92,9 +92,9 @@ function gdrcd_check_time($time)
     $time_hours = date('H', strtotime($time));
     $time_minutes = date('i', strtotime($time));
 
-    if ($time_hours == date('H')) {
+    if ( $time_hours == date('H') ) {
         return date('i') - $time_minutes;
-    } elseif ($time_hours == (date('H') - 1) || $time_hours == (strftime('H') + 11)) {
+    } else if ( $time_hours == (date('H') - 1) || $time_hours == (strftime('H') + 11) ) {
         return date('i') - $time_minutes + 60;
     }
 
@@ -124,13 +124,13 @@ function gdrcd_load_modules($page, $params = [])
         // Controllo la tipologia di informazione passata (file o page) e poi determino il percorso del modulo
         $modulePath = is_file($page) ? $page : gdrcd_pages_path($page);
 
-        if (!file_exists($modulePath)) {
+        if ( !file_exists($modulePath) ) {
             throw new Exception($MESSAGE['interface']['layout_not_found']);
         }
 
         // Includo il modulo
         include($modulePath);
-    } catch (Exception $e) {
+    } catch ( Exception $e ) {
         echo $e->getMessage();
     }
 }
@@ -161,7 +161,7 @@ function gdrcd_pages_path($page)
     global $MESSAGE;
 
     // Controllo che sia stato attribuito un valore a page
-    if (empty($page)) {
+    if ( empty($page) ) {
         throw new Exception($MESSAGE['interface']['page_missing']);
     }
 
@@ -172,28 +172,28 @@ function gdrcd_pages_path($page)
     // Imposto i possibili percorsi che posso caricare
     $routes = [
         '.inc.php',
-        DIRECTORY_SEPARATOR . 'index.inc.php'
+        DIRECTORY_SEPARATOR . 'index.inc.php',
     ];
 
     // Inizializzo la variabile contenitore dei moduli
     $modules = [];
 
     // Scorro i percorsi impostati per individuare corrispondenze
-    foreach ($routes as $route) {
+    foreach ( $routes as $route ) {
         $file = implode(DIRECTORY_SEPARATOR, [$pagesPath, $pageFormatted . $route]);
         // Se esiste la corrispondenza, allora inserisco
-        if (file_exists($file)) {
+        if ( file_exists($file) ) {
             $modules[] = $file;
         }
     }
 
     // Controllo che sia stata trovata almeno una corrispondenza
-    if (empty($modules)) {
+    if ( empty($modules) ) {
         throw new Exception($MESSAGE['interface']['page_not_found']);
     }
 
     // Se sono state trovate piu corrispondenze, blocco il caricamento
-    if (count($modules) > 1) {
+    if ( count($modules) > 1 ) {
         throw new Exception($MESSAGE['interface']['multiple_page_found']);
     }
 
@@ -273,7 +273,7 @@ function gdrcd_safe_name($word)
 function gdrcd_genera_pass()
 {
     $pass = '';
-    for ($i = 0; $i < 8; ++$i) {
+    for ( $i = 0; $i < 8; ++$i ) {
         $pass .= chr(mt_rand(0, 24) + ord("A"));
     }
 
@@ -306,7 +306,7 @@ function gdrcd_bbcoder($str)
         '#\[color=(.+?)\](.+?)\[\/color\]#is',
         '#\[quote(?::\w+)?\]#i',
         '#\[quote=(?:&quot;|"|\')?(.*?)["\']?(?:&quot;|"|\')?\]#i',
-        '#\[/quote(?::\w+)?\]#si'
+        '#\[/quote(?::\w+)?\]#si',
     ];
     $replace = [
         '<br />',
@@ -321,7 +321,7 @@ function gdrcd_bbcoder($str)
         '<span style="color: $1;">$2</span>',
         '<div class="bb-quote">' . $MESSAGE['interface']['forums']['link']['quote'] . ':<blockquote class="bb-quote-body">',
         '<div class="bb-quote"><div class="bb-quote-name">$1 ha scritto:</div><blockquote class="bb-quote-body">',
-        '</blockquote></div>'
+        '</blockquote></div>',
     ];
 
     return preg_replace($search, $replace, $str);
@@ -336,15 +336,15 @@ function gdrcd_bbcoder($str)
  */
 function gdrcd_close_tags($tag, $body)
 {
-    if (is_array($tag)) {
-        foreach ($tag as $value) {
+    if ( is_array($tag) ) {
+        foreach ( $tag as $value ) {
             $body = gdrcd_close_tags($value, $body);
         }
     } else {
         $opentags = preg_match_all('/\[' . $tag . '/i', $body);
         $closed = preg_match_all('/\[\/' . $tag . '\]/i', $body);
         $unclosed = $opentags - $closed;
-        for ($i = 0; $i < $unclosed; $i++) {
+        for ( $i = 0; $i < $unclosed; $i++ ) {
             $body .= '[/' . $tag . ']';
         }
     }
@@ -359,12 +359,12 @@ function gdrcd_close_tags($tag, $body)
  */
 function gdrcd_redirect($url, $tempo = false)
 {
-    if (!headers_sent() && $tempo == false) {
+    if ( !headers_sent() && $tempo == false ) {
         header('Location:' . $url);
-    } elseif (!headers_sent() && $tempo != false) {
+    } else if ( !headers_sent() && $tempo != false ) {
         header('Refresh:' . $tempo . ';' . $url);
     } else {
-        if ($tempo == false) {
+        if ( $tempo == false ) {
             $tempo = 0;
         }
         echo "<meta http-equiv=\"refresh\" content=\"" . $tempo . ";" . $url . "\">";
@@ -422,7 +422,7 @@ function gdrcd_chatcolor($str, $colore_parlato)
 function gdrcd_chatme($user, $str, $master = false)
 {
     $search = "|\\b" . preg_quote($user, "|") . "\\b|si";
-    if (!$master) {
+    if ( !$master ) {
         $replace = '<span class="chat_me">' . gdrcd_filter('out', $user) . '</span>';
     } else {
         $replace = '<span class="chat_me_master">' . gdrcd_filter('out', $user) . '</span>';
@@ -438,13 +438,13 @@ function gdrcd_chatme($user, $str, $master = false)
  */
 function gdrcd_list($str)
 {
-    switch (strtolower($str)) {
+    switch ( strtolower($str) ) {
         case 'personaggi':
             $list = '<datalist id="personaggi">';
             $query = "SELECT nome FROM personaggio ORDER BY nome";
             $characters = gdrcd_query($query, 'result');
 
-            while ($option = gdrcd_query($characters, 'fetch')) {
+            while ( $option = gdrcd_query($characters, 'fetch') ) {
                 $list .= '<option value="' . $option['nome'] . '" />';//TODO escape HTMl del nome!
             }
             gdrcd_query($characters, 'free');
@@ -476,7 +476,7 @@ function gdrcd_dump($object)
 function gdrcd_debug($args)
 {
     $args = func_get_args();
-    foreach ($args as $arg) {
+    foreach ( $args as $arg ) {
         gdrcd_dump($arg);
     }
 }
@@ -490,7 +490,7 @@ function gdrcd_debug($args)
 function gdrcd_brute_debug($args)
 {
     $args = func_get_args();
-    foreach ($args as $arg) {
+    foreach ( $args as $arg ) {
         gdrcd_dump($arg);
     }
     die('FINE');

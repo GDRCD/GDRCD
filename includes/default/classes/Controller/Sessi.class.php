@@ -70,14 +70,13 @@ class Sessi extends BaseClass
      */
     public function ajaxGenderData(array $post)
     {
-        if ($this->permissionManageGenders()) {
+        if ( $this->permissionManageGenders() ) {
             $id = Filters::int($post['id']);
             return $this->getGender($id);
         }
     }
 
     /**** GESTIONE ****/
-
 
     /**
      * @fn newGender
@@ -88,7 +87,7 @@ class Sessi extends BaseClass
     public function newGender(array $post): array
     {
 
-        if ($this->permissionManageGenders()) {
+        if ( $this->permissionManageGenders() ) {
 
             $nome = Filters::in($post['nome']);
             $img = Filters::in($post['immagine']);
@@ -101,7 +100,7 @@ class Sessi extends BaseClass
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Sesso creato correttamente.',
                 'swal_type' => 'success',
-                'genders_list' => $this->listGenders()
+                'genders_list' => $this->listGenders(),
             ];
         } else {
 
@@ -109,7 +108,7 @@ class Sessi extends BaseClass
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -123,12 +122,11 @@ class Sessi extends BaseClass
     public function modGender(array $post): array
     {
 
-        if ($this->permissionManageGenders()) {
+        if ( $this->permissionManageGenders() ) {
 
             $id = Filters::int($post['id']);
             $nome = Filters::in($post['nome']);
             $img = Filters::in($post['immagine']);
-
 
             DB::query("UPDATE sessi SET nome='{$nome}',immagine='{$img}' WHERE id='{$id}' LIMIT 1");
 
@@ -137,7 +135,7 @@ class Sessi extends BaseClass
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Sesso modificato correttamente.',
                 'swal_type' => 'success',
-                'genders_list' => $this->listGenders()
+                'genders_list' => $this->listGenders(),
             ];
 
         } else {
@@ -146,7 +144,7 @@ class Sessi extends BaseClass
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -160,10 +158,9 @@ class Sessi extends BaseClass
     public function delGender(array $post): array
     {
 
-        if ($this->permissionManageGenders()) {
+        if ( $this->permissionManageGenders() ) {
 
             $shop = Filters::int($post['id']);
-
 
             DB::query("DELETE FROM sessi WHERE id='{$shop}'");
 
@@ -172,7 +169,7 @@ class Sessi extends BaseClass
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Sesso eliminato correttamente.',
                 'swal_type' => 'success',
-                'genders_list' => $this->listGenders()
+                'genders_list' => $this->listGenders(),
             ];
 
         } else {
@@ -180,7 +177,7 @@ class Sessi extends BaseClass
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
 

@@ -4,7 +4,6 @@
 </div>
 <?php
 
-
 if (isset($_SESSION['login'])) {
 
 //Condizione per cui seleziona la facciata "principale" del pannello
@@ -14,7 +13,7 @@ $log = gdrcd_query("SELECT * FROM segnalazione_role WHERE mittente='" . gdrcd_fi
 $row = gdrcd_query($log, 'fetch');
 $num_log = gdrcd_query($log, 'num_rows');
 
-if ($num_log > 0 && ($row['stanza'] !== $_SESSION['luogo']) && (isset($_POST['op']) === FALSE)) { ?>
+if ( $num_log > 0 && ($row['stanza'] !== $_SESSION['luogo']) && (isset($_POST['op']) === false) ) { ?>
     <div class="warning" style="width: auto;">Stai ancora giocando altrove</div>
     <form action="popup.php?page=chat_pannelli_index&pannello=segnalazione_role" method="post">
         <!--- Segnalazione giocate ---->
@@ -30,7 +29,7 @@ if ($num_log > 0 && ($row['stanza'] !== $_SESSION['luogo']) && (isset($_POST['op
                    value="Cancella la registrazione precedente"/>
         </div>
     </form>
-<?php } else if ($num_log == 0 && (isset($_POST['op']) === FALSE)) {
+<?php } else if ( $num_log == 0 && (isset($_POST['op']) === false) ) {
 
     $mydate = date('Y-m-d H:i:s');
     $mesenow = date('m', strtotime($mydate));
@@ -44,7 +43,7 @@ if ($num_log > 0 && ($row['stanza'] !== $_SESSION['luogo']) && (isset($_POST['op
 
         <div class="form_info"><b>Attenzione:</b> Ogni giocatore deve inviare una propria registrazione della role.
             La registrazione deve essere avviata all'inizio della giocata e chiusa alla fine per essere valida.
-            Giocate con un numero di azioni inferiori a <?=REG_MIN_AZIONI;?>
+            Giocate con un numero di azioni inferiori a <?= REG_MIN_AZIONI; ?>
             non saranno considerate segnalabili. La giocata sarà salvata e farà fede per eventuali segnalazioni ai
             Master.
         </div>
@@ -77,39 +76,39 @@ if ($num_log > 0 && ($row['stanza'] !== $_SESSION['luogo']) && (isset($_POST['op
                 </div>
                 <br>
                 Data: <select name="day" class="day">
-                    <?php for ($i = 1; $i <= 31; $i++) { ?>
-                        <option value="<?php echo $i; ?>" <?php if ($i == $giornonow) {
+                    <?php for ( $i = 1; $i <= 31; $i++ ) { ?>
+                        <option value="<?php echo $i; ?>" <?php if ( $i == $giornonow ) {
                             echo 'selected';
                         } ?> ><?php echo $i; ?></option>
                     <?php }//for ?>
                 </select>
                 <!-- Mese -->
                 <select name="month" class="month">
-                    <?php for ($i = 1; $i <= 12; $i++) { ?>
-                        <option value="<?php echo $i; ?>" <?php if ($i == $mesenow) {
+                    <?php for ( $i = 1; $i <= 12; $i++ ) { ?>
+                        <option value="<?php echo $i; ?>" <?php if ( $i == $mesenow ) {
                             echo 'selected';
                         } ?> ><?php echo $i; ?></option>
                     <?php }//for ?>
                 </select>
                 <!-- Anno -->
                 <select name="year" class="year">
-                    <?php for ($i = 2021; $i <= strftime('%Y') + 20; $i++) { ?>
-                        <option value="<?php echo $i; ?>" <?php if ($i == $annonow) {
+                    <?php for ( $i = 2021; $i <= strftime('%Y') + 20; $i++ ) { ?>
+                        <option value="<?php echo $i; ?>" <?php if ( $i == $annonow ) {
                             echo 'selected';
                         } ?>><?php echo $i; ?></option>
                     <?php }//for ?>
                 </select> <br>
                 <!-- Ora -->
                 Ora: <select name="hour" class="month">
-                    <?php for ($i = 0; $i <= 23; $i++) { ?>
-                        <option value="<?php echo $i; ?>" <?php if ($i == $oranow) {
+                    <?php for ( $i = 0; $i <= 23; $i++ ) { ?>
+                        <option value="<?php echo $i; ?>" <?php if ( $i == $oranow ) {
                             echo 'selected';
                         } ?> ><?php echo sprintf('%02s', $i); ?></option>
                     <?php }//for ?>
                 </select>:
                 <!-- Minuto -->
                 <select name="minut" class="month">
-                    <?php for ($i = 0; $i <= 60; $i += 5) { ?>
+                    <?php for ( $i = 0; $i <= 60; $i += 5 ) { ?>
                         <option value="<?php echo $i; ?>"><?php echo sprintf('%02s', $i); ?></option>
                     <?php }//for ?>
                 </select>
@@ -124,7 +123,7 @@ if ($num_log > 0 && ($row['stanza'] !== $_SESSION['luogo']) && (isset($_POST['op
             </div>
         </form>
     </div>
-<?php } else if ($num_log > 0 && ($row['stanza'] == $_SESSION['luogo']) && (isset($_POST['op']) === FALSE)) {
+<?php } else if ( $num_log > 0 && ($row['stanza'] == $_SESSION['luogo']) && (isset($_POST['op']) === false) ) {
     $chat = $_SESSION['luogo'];
 
     $name = gdrcd_query(" SELECT nome FROM mappa WHERE id = " . gdrcd_filter('num', $chat) . "", 'result');
@@ -162,7 +161,7 @@ if ($num_log > 0 && ($row['stanza'] !== $_SESSION['luogo']) && (isset($_POST['op
                 <div class="reg_titolo">Conferma i <b>Partecipanti:</b></div>
                 <div class="form_info">
                     <?php
-                    while ($prow = gdrcd_query($query, 'fetch')) {
+                    while ( $prow = gdrcd_query($query, 'fetch') ) {
                         ?>
                         &nbsp; &nbsp; &raquo; <?php echo gdrcd_filter('out', $prow['mittente']); ?>
                         <input checked type="checkbox"
@@ -214,7 +213,7 @@ if ($num_log > 0 && ($row['stanza'] !== $_SESSION['luogo']) && (isset($_POST['op
     <?php
 }
 #Chiusura registrazione aperta
-if ($_POST['op'] == 'leave') {
+if ( $_POST['op'] == 'leave' ) {
     gdrcd_query("UPDATE segnalazione_role SET data_fine = NOW(), conclusa = 2 WHERE id = 
                 " . gdrcd_filter('num', $row['id']) . " LIMIT 1");
     /*Confermo l'operazione*/
@@ -224,7 +223,7 @@ if ($_POST['op'] == 'leave') {
 
 }
 #Apertura nuova segnalazione
-if ($_POST['op'] == 'start_segn') {
+if ( $_POST['op'] == 'start_segn' ) {
     /*Invio la segnalazione giocata */
     gdrcd_query("INSERT INTO segnalazione_role (data_inizio, mittente, stanza, conclusa ) 
 	VALUES 
@@ -236,7 +235,7 @@ if ($_POST['op'] == 'start_segn') {
 		<div class="link_back"> <a href="popup.php?page=chat_pannelli_index&pannello=segnalazione_role">Torna indietro</a></div>';
 
 } #Apertura nuova segnalazione
-else if ($_POST['op'] == 'start_ret') {
+else if ( $_POST['op'] == 'start_ret' ) {
 
     $mydate = date('Y-m-d H:i:s');
     $date = gdrcd_filter('num', $_POST['year']) . '-' . sprintf('%02s', gdrcd_filter('num', $_POST['month'])) . '-' . sprintf('%02s', gdrcd_filter('num', $_POST['day'])) . ' ' . sprintf('%02s', gdrcd_filter('num', $_POST['hour'])) . ':' . sprintf('%02s', gdrcd_filter('num', $_POST['minut'])) . ':00';
@@ -259,11 +258,10 @@ else if ($_POST['op'] == 'start_ret') {
 		AND (tipo = 'A' || tipo = 'P' || tipo = 'M' || tipo = 'N') ORDER BY ora LIMIT 1 ", 'result');
     $rts = gdrcd_query($time_start, 'fetch');
 
-
-    if ($date < $start_time) {
+    if ( $date < $start_time ) {
         /*Imposto il messaggio*/
         $message = 'Non è possibile selezionare un orario più lontano di sei ore';
-    } else if ($num_az == 0) {
+    } else if ( $num_az == 0 ) {
         /*Imposto il messaggio*/
         $message = 'Non hai inviato alcuna azione a partire dall\'orario segnalato';
     } else {
@@ -281,8 +279,7 @@ else if ($_POST['op'] == 'start_ret') {
 
 			<div class="link_back"> <a href="popup.php?page=chat_pannelli_index&pannello=segnalazione_role">Torna indietro</a></div>';
 
-
-} else if ($_POST['op'] == 'send_segn') {
+} else if ( $_POST['op'] == 'send_segn' ) {
 
     $listapart = join(',', $_POST['parte']);
     $total = count($_POST['parte']);
@@ -310,25 +307,25 @@ else if ($_POST['op'] == 'start_ret') {
     $mydate = date('Y-m-d H:i:s');
 
     #Condizione 1: Ci deve essere una giocata in corso
-    if ($_POST['parte'] == NULL) {
+    if ( $_POST['parte'] == NULL ) {
         /*Imposto il messaggio*/
         $message = 'Non c\'è nessuna giocata in corso';
     } #Condizione 2: chi segnala deve essere nella giocata
-    else if ($singolo == 0) {
+    else if ( $singolo == 0 ) {
         /*Imposto il messaggio*/
         $message = 'Non puoi segnalare questa giocata';
     } #Condizione: giocata fatta da un solo giocatore.
-    else if ($total == 1) {
+    else if ( $total == 1 ) {
         /*Imposto il messaggio*/
         $message = 'Non puoi segnalare una giocata con un solo partecipante';
 
     } #Minimo 5 azioni
-    else if ($num_az < REG_MIN_AZIONI) {
+    else if ( $num_az < REG_MIN_AZIONI ) {
         /*Imposto il messaggio*/
         $message = 'Non hai inviato azioni sufficienti ad una registrazione';
 
     } #Segnalazione valida entro due ore dall'ultima azione
-    else if ($mydate > $end_time) {
+    else if ( $mydate > $end_time ) {
         /*Aggiorno e chiudo la segnalazione giocata */
         gdrcd_query("UPDATE segnalazione_role SET data_fine = '" . gdrcd_filter('in', $rte['ora']) . "', 
         conclusa = 1, partecipanti = '" . gdrcd_filter('in', $listapart) . "', tags = '" . gdrcd_filter('in', $_POST['ab']) . "', 
@@ -337,7 +334,7 @@ else if ($_POST['op'] == 'start_ret') {
         /*Imposto il messaggio*/
         $message = 'La registrazione è stata salvata sulla base della tua ultima azione in chat';
     } #Procedo
-    else if ($total > 1) {
+    else if ( $total > 1 ) {
         /*Aggiorno e chiudo la segnalazione giocata */
         gdrcd_query("UPDATE segnalazione_role SET data_fine = NOW(), conclusa = 1, 
                              partecipanti = '" . gdrcd_filter('in', $listapart) . "', 

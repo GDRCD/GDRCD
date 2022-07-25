@@ -1,7 +1,7 @@
 <?php
-if ($_SESSION['permessi'] >= EDIT_PERM || $_REQUEST['pg'] == $_SESSION['login']) {
+if ( $_SESSION['permessi'] >= EDIT_PERM || $_REQUEST['pg'] == $_SESSION['login'] ) {
     #Inserimento modifiche edit
-    if ($_POST['op'] == 'send_edit') {
+    if ( $_POST['op'] == 'send_edit' ) {
         gdrcd_query("UPDATE segnalazione_role SET tags = '" . gdrcd_filter('in', $_POST['ab']) . "', 
         quest = '" . gdrcd_filter('in', $_POST['quest']) . "' WHERE id = " . gdrcd_filter('num', $_POST['id']) . " ");
 
@@ -9,14 +9,14 @@ if ($_SESSION['permessi'] >= EDIT_PERM || $_REQUEST['pg'] == $_SESSION['login'])
         echo '<div class="warning">Registrazione modificata con successo</div>
         <div class="link_back">
             <a href="main.php?page=scheda_roles&pg=' . gdrcd_filter('in', $_REQUEST['pg']) . '">
-            '. gdrcd_filter('out',
-            $MESSAGE['interface']['sheet']['link']['back_roles']).'
+            ' . gdrcd_filter('out',
+                $MESSAGE['interface']['sheet']['link']['back_roles']) . '
             </a>
         </div>';
     }
 
     #FORM di modifica dei campi quest e tag
-    if ($_POST['op'] == 'edit') {
+    if ( $_POST['op'] == 'edit' ) {
         $query = gdrcd_query("SELECT * FROM segnalazione_role WHERE id = " . $_POST['id'] . " ", "result");
         $row = gdrcd_query($query, 'fetch');
         ?>

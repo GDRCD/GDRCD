@@ -18,7 +18,8 @@ class AbilitaExtra extends Abilita
      * @param string $val
      * @return bool|int|mixed|string
      */
-    public function getAbilitaExtra(int $id, int $grado, string $val = '*'){
+    public function getAbilitaExtra(int $id, int $grado, string $val = '*')
+    {
         return DB::query("SELECT {$val} FROM abilita_extra WHERE abilita = '{$id}' AND grado ='{$grado}' LIMIT 1");
     }
 
@@ -45,13 +46,13 @@ class AbilitaExtra extends Abilita
     public function ajaxExtraData(array $post): array
     {
 
-        if ($_SESSION['permessi'] >= GAMEMASTER) {
+        if ( $_SESSION['permessi'] >= GAMEMASTER ) {
             $abi = Filters::int($post['abilita']);
             $grado = Filters::int($post['grado']);
 
             $data = DB::query("SELECT * FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
 
-            if (!empty($data['abilita'])) {
+            if ( !empty($data['abilita']) ) {
                 $descr = Filters::in($data['descrizione']);
                 $costo = Filters::int($data['costo']);
 
@@ -76,7 +77,7 @@ class AbilitaExtra extends Abilita
     public function NewAbiExtra(array $post): array
     {
 
-        if ($this->permissionManageAbiExtra()) {
+        if ( $this->permissionManageAbiExtra() ) {
             $abi = Filters::int($post['abilita']);
             $grado = Filters::int($post['grado']);
             $descr = Filters::in($post['descr']);
@@ -84,22 +85,22 @@ class AbilitaExtra extends Abilita
 
             $contr = DB::query("SELECT count(id) as TOT FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
 
-            if ($contr['TOT'] == 0) {
+            if ( $contr['TOT'] == 0 ) {
                 DB::query("INSERT INTO abilita_extra(abilita,grado,descrizione,costo) VALUES('{$abi}','{$grado}','{$descr}','{$costo}')");
             }
 
             return [
-                'response'=> true,
+                'response' => true,
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Dati extra abilità creati.',
-                'swal_type' => 'success'
+                'swal_type' => 'success',
             ];
         } else {
             return [
-                'response'=>false,
+                'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -113,7 +114,7 @@ class AbilitaExtra extends Abilita
     public function ModAbiExtra(array $post): array
     {
 
-        if ($this->permissionManageAbiExtra()) {
+        if ( $this->permissionManageAbiExtra() ) {
             $abi = Filters::int($post['abilita']);
             $grado = Filters::int($post['grado']);
             $descr = Filters::in($post['descr']);
@@ -122,17 +123,17 @@ class AbilitaExtra extends Abilita
             DB::query("UPDATE abilita_extra SET abilita='{$abi}',grado='{$grado}',descrizione='{$descr}',costo='{$costo}' WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
 
             return [
-                'response'=>true,
+                'response' => true,
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Dati extra abilità modificati.',
-                'swal_type' => 'success'
+                'swal_type' => 'success',
             ];
         } else {
             return [
-                'response'=>false,
+                'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -146,24 +147,24 @@ class AbilitaExtra extends Abilita
     public function DelAbiExtra(array $post): array
     {
 
-        if ($this->permissionManageAbiExtra()) {
+        if ( $this->permissionManageAbiExtra() ) {
             $abi = Filters::int($post['abilita']);
             $grado = Filters::int($post['grado']);
 
             DB::query("DELETE FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
 
             return [
-                'response'=>true,
+                'response' => true,
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Dati extra abilità eliminati.',
-                'swal_type' => 'success'
+                'swal_type' => 'success',
             ];
         } else {
             return [
-                'response'=>false,
+                'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }

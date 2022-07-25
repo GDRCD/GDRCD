@@ -4,7 +4,7 @@ Router::loadRequired();
 
 $cls = GruppiTipi::getInstance();
 
-switch ($_POST['action']) {
+switch ( $_POST['action'] ) {
     case 'get_type_data':
         echo json_encode($cls->ajaxTypeData($_POST));
         break;

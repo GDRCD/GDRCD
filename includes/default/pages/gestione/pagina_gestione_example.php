@@ -4,23 +4,23 @@ Router::loadRequired(); # Inserisco il required se non presente, per futuro spos
 
 $cls = Example::getInstance(); # Inizializzo classe
 
-if($cls->managePermission()){ # Metodo di controllo per accesso alla pagina di gestione
+if ( $cls->managePermission() ) { # Metodo di controllo per accesso alla pagina di gestione
 
-?>
-        <div class="general_incipit">
-            <div class="title"> Un titolo </div>
-            <div class="subtitle">Un sottotitolo</div>
+    ?>
+    <div class="general_incipit">
+        <div class="title"> Un titolo</div>
+        <div class="subtitle">Un sottotitolo</div>
 
-            Testo testo <span class="highlight"> Un testo che si nota nel testo </span> test test
+        Testo testo <span class="highlight"> Un testo che si nota nel testo </span> test test
 
-            <ul>
-                <li>Elemento 1</li>
-                <li>Elemento 2</li>
-                <li>Elemento 3</li>
-                <li>Elemento 4</li>
-            </ul>
+        <ul>
+            <li>Elemento 1</li>
+            <li>Elemento 2</li>
+            <li>Elemento 3</li>
+            <li>Elemento 4</li>
+        </ul>
 
-        </div>
+    </div>
 
     <div class="form_container">
 

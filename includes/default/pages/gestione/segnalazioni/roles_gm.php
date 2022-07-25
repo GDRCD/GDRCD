@@ -33,10 +33,10 @@
         <!-- Paginatore elenco -->
         <div class="pager">
             <?php
-            if ($totaleresults > $PARAMETERS['settings']['posts_per_page']) {
+            if ( $totaleresults > $PARAMETERS['settings']['posts_per_page'] ) {
                 echo gdrcd_filter('out', $MESSAGE['interface']['pager']['pages_name']);
-                for ($i = 0; $i <= floor($totaleresults / $PARAMETERS['settings']['posts_per_page']); $i++) {
-                    if ($i != $_REQUEST['offset']) {
+                for ( $i = 0; $i <= floor($totaleresults / $PARAMETERS['settings']['posts_per_page']); $i++ ) {
+                    if ( $i != $_REQUEST['offset'] ) {
                         ?>
                         <a href="popup.php?page=esiti&offset=<?php echo $i; ?>"><?php echo $i + 1; ?></a>
                         <?php
@@ -77,7 +77,7 @@
                     </td>
                 </tr>
                 <!-- Record -->
-                <?php while ($row = gdrcd_query($result, 'fetch')) {
+                <?php while ( $row = gdrcd_query($result, 'fetch') ) {
                     $roles = "SELECT * FROM segnalazione_role WHERE id = " . $row['role_reg'] . " ";
                     $res_roles = gdrcd_query($roles, 'result');
                     $roles_f = gdrcd_query($res_roles, 'fetch');
@@ -123,9 +123,10 @@
                         <td class="casella_controlli"><!-- Iconcine dei controlli -->
                             <!-- Vai a -->
                             <div class="controllo_elenco">
-                                <form action="popup.php?page=scheda_roles&pg=<?php echo gdrcd_filter('in', $row['autore']); ?>"
-                                      target="_blank"
-                                      method="post">
+                                <form
+                                    action="popup.php?page=scheda_roles&pg=<?php echo gdrcd_filter('in', $row['autore']); ?>"
+                                    target="_blank"
+                                    method="post">
                                     <input type="hidden"
                                            name="op"
                                            value="log"/>
@@ -151,4 +152,4 @@
         </div>
 <?php
 }
-    ?>
+?>

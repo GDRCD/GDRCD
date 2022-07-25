@@ -2,7 +2,7 @@
 
 $id_pg = Filters::int($_GET['id_pg']);
 
-if (SchedaDiario::getInstance()->diaryActive()) {
+if ( SchedaDiario::getInstance()->diaryActive() ) {
     ?>
 
     <div class="fake-table scheda_diario_table">

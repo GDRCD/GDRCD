@@ -1,6 +1,5 @@
 <?php
 
-
 class Presenti extends BaseClass
 {
 
@@ -100,7 +99,7 @@ class Presenti extends BaseClass
         $characters = $this->getPresentiFromCurrentPosition();
         $compiled_characters = [];
 
-        foreach ($characters as $character) {
+        foreach ( $characters as $character ) {
 
             $gender_data = Sessi::getInstance()->getGender($character['sesso']);
             $availability_data = Disponibilita::getInstance()->getAvailability($character['disponibile']);
@@ -146,7 +145,7 @@ class Presenti extends BaseClass
         $invisible_character = [];
         $last_position = 0;
 
-        foreach ($characters as $character) {
+        foreach ( $characters as $character ) {
 
             $position = Filters::int($character['ultimo_luogo']);
             $gender_data = Sessi::getInstance()->getGender($character['sesso']);
@@ -165,10 +164,10 @@ class Presenti extends BaseClass
                 'invisible' => Filters::bool($character['is_invisible']),
             ];
 
-            if ($position != $last_position) {
+            if ( $position != $last_position ) {
                 $last_position = $position;
                 // TODO sostiture query con funzione get di classe Mappa, quando sarà disponibile
-                if ($position > 0) {
+                if ( $position > 0 ) {
                     $location_data = DB::query("SELECT * FROM `mappa` WHERE `id` = '{$position}' LIMIT 1",);
                     $data['position'] = Filters::out($location_data['nome']);
                 } else {
@@ -176,8 +175,7 @@ class Presenti extends BaseClass
                 }
             }
 
-
-            if (Filters::bool($character['is_invisible'])) {
+            if ( Filters::bool($character['is_invisible']) ) {
                 $invisible_character[] = $data;
             } else {
                 $compiled_characters[] = $data;

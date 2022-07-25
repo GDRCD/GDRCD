@@ -4,12 +4,12 @@ Router::loadRequired();
 
 $gruppi = GruppiLavori::getInstance();
 
-if ($gruppi->activeWorks() && $gruppi->permissionManageWorks()) {
+if ( $gruppi->activeWorks() && $gruppi->permissionManageWorks() ) {
     ?>
 
     <div class="general_title">Aggiunta lavoro</div>
 
-    <form class="ajax_form"  action="gestione/gruppi/lavori/gestione_lavori_ajax.php">
+    <form class="ajax_form" action="gestione/gruppi/lavori/gestione_lavori_ajax.php">
 
         <div class="single_input">
             <div class="label">Personaggio</div>
@@ -34,7 +34,7 @@ if ($gruppi->activeWorks() && $gruppi->permissionManageWorks()) {
 
     <div class="general_title">Rimuovi lavoro</div>
 
-    <form class="ajax_form"  action="gestione/gruppi/lavori/gestione_lavori_ajax.php">
+    <form class="ajax_form" action="gestione/gruppi/lavori/gestione_lavori_ajax.php">
 
         <div class="single_input">
             <div class="label">Personaggio</div>

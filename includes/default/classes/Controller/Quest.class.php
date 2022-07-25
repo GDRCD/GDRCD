@@ -46,7 +46,6 @@ class Quest extends BaseClass
     {
         $html = '';
 
-
         $html .= "<div class='form_subtitle'>Partecipante</div>";
         $html .= '<div class="single_input">';
 
@@ -222,11 +221,10 @@ class Quest extends BaseClass
     public function loadManagementQuestPage(string $op = ''): string
     {
 
-        if ($this->quest_enabled) {
+        if ( $this->quest_enabled ) {
             $op = Filters::out($op);
 
-
-            switch ($op) {
+            switch ( $op ) {
 
                 default: //Form di manutenzione
                     $url = 'gestione_quest_list.php';
@@ -243,7 +241,6 @@ class Quest extends BaseClass
                 case 'delete_quest':
                     $url = 'gestione_quest_delete.php';
                     break;
-
 
             }
         } else {
@@ -262,10 +259,10 @@ class Quest extends BaseClass
     public function loadManagementTramePage(string $op = ''): string
     {
 
-        if ($this->trame_enabled) {
+        if ( $this->trame_enabled ) {
             $op = Filters::out($op);
 
-            switch ($op) {
+            switch ( $op ) {
 
                 default: //Form di manutenzione
                     $url = 'gestione_trame_list.php';
@@ -306,7 +303,7 @@ class Quest extends BaseClass
         $selected = Filters::int($selected);
         $list = DB::query("SELECT * FROM quest_trama ORDER BY titolo", 'result');
 
-        foreach ($list as $item) {
+        foreach ( $list as $item ) {
             $name = Filters::out($item['titolo']);
             $id = Filters::int($item['id']);
             $sel = ($selected == $id) ? 'selected' : '';
@@ -330,7 +327,7 @@ class Quest extends BaseClass
         $selected = Filters::int($selected);
         $array = [0 => 'In Corso', 1 => 'Chiusa'];
 
-        foreach ($array as $index => $item) {
+        foreach ( $array as $index => $item ) {
             $sel = ($selected == $index) ? 'selected' : '';
 
             $html .= "<option value='{$index}' {$sel}>{$item}</option>";
@@ -353,7 +350,6 @@ class Quest extends BaseClass
         $pageend = 10;
         $quests = $this->getAllQuests($pagebegin, $pageend);
 
-
         $html .= '
                 <div class="tr header">
                     <div class="td">
@@ -368,7 +364,7 @@ class Quest extends BaseClass
                     <div class="td">
                         Partecipanti
                     </div>';
-        if ($this->viewTramePermission()) {
+        if ( $this->viewTramePermission() ) {
             $html .= '<div class="td">
                     Trama
                 </div>';
@@ -386,8 +382,7 @@ class Quest extends BaseClass
                 </div>
                 </div>';
 
-
-        foreach ($quests as $row) {
+        foreach ( $quests as $row ) {
 
             $id = Filters::int($row['id']);
             $date = Filters::date($row['data'], 'd/m/Y');
@@ -413,7 +408,7 @@ class Quest extends BaseClass
                         </div>
     ";
 
-            if ($this->viewTramePermission()) {
+            if ( $this->viewTramePermission() ) {
                 $data = $this->getTrama(Filters::int($row['trama']));
                 $subtitle = (!empty($data['titolo'])) ? Filters::out($data['titolo']) : 'Nessuna';
 
@@ -460,12 +455,10 @@ class Quest extends BaseClass
     {
         $html = '';
 
-
         $pagebegin = (int)$_REQUEST['offset'] * 10;
         $pageend = 10;
 
         $trame = $this->getAllTrame($pagebegin, $pageend);
-
 
         $html .= '<div class="tr header">
                 <div class="td">
@@ -494,8 +487,7 @@ class Quest extends BaseClass
                 </div>
             </div>';
 
-
-        foreach ($trame as $trama) {
+        foreach ( $trame as $trama ) {
 
             $id = Filters::int($trama['id']);
             $data = Filters::date($trama['data'], 'd/m/Y');
@@ -505,7 +497,6 @@ class Quest extends BaseClass
             $status = $this->getTramaStatusText(Filters::int($trama['stato']));
             $autore_modifica = (!empty($trama['autore_modifica'])) ? Filters::out($trama['autore_modifica']) : '';
             $data_modifica = (!empty($trama['ultima_modifica'])) ? Filters::date($trama['ultima_modifica'], 'd/m/Y') : '';
-
 
             $html .= "<div class='tr'>
                     <div class='td'>
@@ -541,10 +532,9 @@ class Quest extends BaseClass
                 </div>";
         }
 
-
         $html .= '<div class="tr footer">';
 
-        if ($this->manageTramePermission()) {
+        if ( $this->manageTramePermission() ) {
             $html .= '<a href="main.php?page=gestione_trame&op=insert_trama">
                 Registra nuova trama
             </a> |';
@@ -598,8 +588,8 @@ class Quest extends BaseClass
         $total = $this->getTotalQuestsNumber();
         $offset = Filters::int($offset);
 
-        if ($total > $this->result_for_page) {
-            for ($i = 0; $i <= floor($total / $this->result_for_page); $i++) {
+        if ( $total > $this->result_for_page ) {
+            for ( $i = 0; $i <= floor($total / $this->result_for_page); $i++ ) {
                 $html .= ($i != $offset) ? "<a href='main.php?page=gestione_trame&offset={$i}'>" . ($i + 1) .
                     "</a>" : ' ' . ($i + 1) . ' ';
             }
@@ -618,7 +608,7 @@ class Quest extends BaseClass
     {
         $stato = Filters::int($stato);
 
-        switch ($stato) {
+        switch ( $stato ) {
             default:
             case 0:
                 $text = 'In corso';
@@ -671,8 +661,8 @@ class Quest extends BaseClass
         $total = $this->getTotalQuestsNumber();
         $offset = Filters::int($offset);
 
-        if ($total > $this->result_for_page) {
-            for ($i = 0; $i <= floor($total / $this->result_for_page); $i++) {
+        if ( $total > $this->result_for_page ) {
+            for ( $i = 0; $i <= floor($total / $this->result_for_page); $i++ ) {
                 $html .= ($i != $offset) ? "<a href='main.php?page=gestione_quest&offset={$i}'>" . ($i + 1) .
                     "</a>" : ' ' . ($i + 1) . ' ';
             }
@@ -693,7 +683,7 @@ class Quest extends BaseClass
         $id = Filters::int($id);
         $members = $this->getQuestMembers($id);
 
-        foreach ($members as $member) {
+        foreach ( $members as $member ) {
 
             $pg_id = Filters::in($member['personaggio']);
             $px = Filters::int($member['px_assegnati']);
@@ -745,7 +735,7 @@ class Quest extends BaseClass
         $list = explode(',', $members);
         $array = [];
 
-        foreach ($list as $member) {
+        foreach ( $list as $member ) {
 
             $array[] = Personaggio::nameFromId(Filters::int($member));
         }
@@ -758,7 +748,7 @@ class Quest extends BaseClass
     public function insertTrama($post)
     {
 
-        if ($this->manageTramePermission()) {
+        if ( $this->manageTramePermission() ) {
 
             $titolo = Filters::in($post['titolo']);
             $descr = Filters::in($post['descrizione']);
@@ -771,7 +761,7 @@ VALUES('{$titolo}','{$descr}',NOW(),'{$this->me_id}','{$stato}') ");
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Trama creata con successo.',
-                'swal_type' => 'success'
+                'swal_type' => 'success',
             ];
 
         } else {
@@ -779,10 +769,9 @@ VALUES('{$titolo}','{$descr}',NOW(),'{$this->me_id}','{$stato}') ");
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
-
 
     }
 
@@ -793,8 +782,8 @@ VALUES('{$titolo}','{$descr}',NOW(),'{$this->me_id}','{$stato}') ");
 
         $id_trama = Filters::int($post['trama']);
 
-        if ($this->manageTramePermission()) {
-            if ($this->tramaExist($id_trama)) {
+        if ( $this->manageTramePermission() ) {
+            if ( $this->tramaExist($id_trama) ) {
 
                 $titolo = Filters::in($post['titolo']);
                 $descr = Filters::in($post['descrizione']);
@@ -807,7 +796,7 @@ VALUES('{$titolo}','{$descr}',NOW(),'{$this->me_id}','{$stato}') ");
                     'response' => true,
                     'swal_title' => 'Operazione riuscita!',
                     'swal_message' => 'Trama modificata con successo.',
-                    'swal_type' => 'success'
+                    'swal_type' => 'success',
                 ];
 
             } else {
@@ -815,7 +804,7 @@ VALUES('{$titolo}','{$descr}',NOW(),'{$this->me_id}','{$stato}') ");
                     'response' => false,
                     'swal_title' => 'Operazione fallita!',
                     'swal_message' => 'Trama inesistente.',
-                    'swal_type' => 'error'
+                    'swal_type' => 'error',
                 ];
             }
         } else {
@@ -823,7 +812,7 @@ VALUES('{$titolo}','{$descr}',NOW(),'{$this->me_id}','{$stato}') ");
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -841,8 +830,8 @@ VALUES('{$titolo}','{$descr}',NOW(),'{$this->me_id}','{$stato}') ");
         $id_trama = Filters::int($post['id']);
         $page = Filters::int($post['page']);
 
-        if ($this->manageTramePermission()) {
-            if ($this->tramaExist($id_trama)) {
+        if ( $this->manageTramePermission() ) {
+            if ( $this->tramaExist($id_trama) ) {
 
                 DB::query("DELETE FROM quest_trama WHERE id='{$id_trama}' LIMIT 1");
                 DB::query("UPDATE quest SET trama=0 WHERE trama='{$id_trama}'");
@@ -852,7 +841,7 @@ VALUES('{$titolo}','{$descr}',NOW(),'{$this->me_id}','{$stato}') ");
                     'swal_title' => 'Operazione riuscita!',
                     'swal_message' => 'Trama eliminata con successo.',
                     'swal_type' => 'success',
-                    'trame_list' => $this->renderTrameList($page)
+                    'trame_list' => $this->renderTrameList($page),
                 ];
 
             } else {
@@ -860,7 +849,7 @@ VALUES('{$titolo}','{$descr}',NOW(),'{$this->me_id}','{$stato}') ");
                     'response' => false,
                     'swal_title' => 'Operazione fallita!',
                     'swal_message' => 'Trama inesistente.',
-                    'swal_type' => 'error'
+                    'swal_type' => 'error',
                 ];
             }
         } else {
@@ -868,7 +857,7 @@ VALUES('{$titolo}','{$descr}',NOW(),'{$this->me_id}','{$stato}') ");
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -884,8 +873,7 @@ VALUES('{$titolo}','{$descr}',NOW(),'{$this->me_id}','{$stato}') ");
     public function insertQuest(array $post): array
     {
 
-
-        if ($this->manageQuestPermission()) {
+        if ( $this->manageQuestPermission() ) {
 
             $titolo = Filters::in($post['titolo']);
             $descr = Filters::in($post['descrizione']);
@@ -897,11 +885,10 @@ VALUES('{$titolo}','','{$descr}','{$trama}',NOW(),'{$this->me_id}')");
 
             $last_quest = DB::query("SELECT max(id) AS id FROM quest WHERE 1 LIMIT 1");
 
-            if (!empty($partecipanti)) {
+            if ( !empty($partecipanti) ) {
                 $quest_id = Filters::int($last_quest['id']);
                 $data_exp = $this->assignExp($partecipanti, $titolo, $quest_id);
                 $assigned = Filters::in($data_exp['assigned']);
-
 
                 DB::query("UPDATE quest SET partecipanti = '{$assigned}' WHERE id= {$quest_id}");
             }
@@ -910,16 +897,15 @@ VALUES('{$titolo}','','{$descr}','{$trama}',NOW(),'{$this->me_id}')");
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Quest creata con successo.',
-                'swal_type' => 'success'
+                'swal_type' => 'success',
             ];
-
 
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -939,11 +925,9 @@ VALUES('{$titolo}','','{$descr}','{$trama}',NOW(),'{$this->me_id}')");
         $quest_id = Filters::int($quest_id);
         $titolo = Filters::in($titolo);
 
+        foreach ( $partecipanti['pg'] as $index => $id_pg ) {
 
-        foreach ($partecipanti['pg'] as $index => $id_pg) {
-
-
-            if (!in_array($id_pg, $assigned)) {
+            if ( !in_array($id_pg, $assigned) ) {
 
                 $pg_px = $partecipanti['px'][$index];
                 $pg_comm = $partecipanti['commento'][$index];
@@ -951,7 +935,6 @@ VALUES('{$titolo}','','{$descr}','{$trama}',NOW(),'{$this->me_id}')");
 
                 DB::query("INSERT INTO personaggio_quest(id_quest, personaggio, data, commento, px_assegnati, autore)
 VALUES('{$quest_id}','{$id_pg}',NOW(),'{$pg_comm}','{$pg_px}','{$this->me_id}')");
-
 
                 Personaggio::updatePgData($id_pg, "esperienza = esperienza + '{$pg_px}'");
 
@@ -962,7 +945,7 @@ VALUES('{$quest_id}','{$id_pg}',NOW(),'{$pg_comm}','{$pg_px}','{$this->me_id}')"
                     "testo" => Filters::in("Creata nuova quest '{$titolo}' ed assegnati '{$pg_px}' px a {$pg_name}"),
                 ]);
 
-                if ($this->notify_enabled) {
+                if ( $this->notify_enabled ) {
                     $notify_text = Filters::in("Creata nuova quest '{$titolo}");
                     $notify_title = Filters::in("Nuova quest");
                     DB::query("INSERT INTO messaggi (mittente, destinatario,oggetto, testo) VALUES ('Resoconti Quest','{$pg_name}','{$notify_title}','{$notify_text}')");
@@ -985,8 +968,8 @@ VALUES('{$quest_id}','{$id_pg}',NOW(),'{$pg_comm}','{$pg_px}','{$this->me_id}')"
      */
     public function editQuest(array $post): array
     {
-# Se ho i permessi di modifica
-        if ($this->manageQuestPermission()) {
+        # Se ho i permessi di modifica
+        if ( $this->manageQuestPermission() ) {
 
             $quest = Filters::int($post['quest']);
             $titolo = Filters::in($post['titolo']);
@@ -995,19 +978,18 @@ VALUES('{$quest_id}','{$id_pg}',NOW(),'{$pg_comm}','{$pg_px}','{$this->me_id}')"
             $partecipanti_new = $post['new_part'];
             $extra_set = '';
 
+            # Se la quest esiste
+            if ( $this->questExist($quest) ) {
 
-# Se la quest esiste
-            if ($this->questExist($quest)) {
-
-# Assegno l'esperienza
+                # Assegno l'esperienza
                 $this->updateQuestExp($post);
-                if (!empty($partecipanti_new)) {
+                if ( !empty($partecipanti_new) ) {
                     $this->assignExp($partecipanti_new, $titolo, $quest);
                 }
 
                 $partecipanti_id = (!empty($partecipanti)) ? $this->getIdsForMembers($partecipanti) : '';
 
-                if (Permissions::permission('MANAGE_TRAME')) {
+                if ( Permissions::permission('MANAGE_TRAME') ) {
                     $trama = Filters::in($post['trama']);
                     $extra_set = ",trama='{$trama}' ";
                 }
@@ -1024,14 +1006,14 @@ VALUES('{$quest_id}','{$id_pg}',NOW(),'{$pg_comm}','{$pg_px}','{$this->me_id}')"
                     'response' => true,
                     'swal_title' => 'Operazione riuscita!',
                     'swal_message' => 'Quest aggiornata con successo.',
-                    'swal_type' => 'success'
+                    'swal_type' => 'success',
                 ];
             } else {
                 return [
                     'response' => false,
                     'swal_title' => 'Operazione fallita!',
                     'swal_message' => 'Quest inesistente.',
-                    'swal_type' => 'error'
+                    'swal_type' => 'error',
                 ];
             }
 
@@ -1040,7 +1022,7 @@ VALUES('{$quest_id}','{$id_pg}',NOW(),'{$pg_comm}','{$pg_px}','{$this->me_id}')"
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -1055,7 +1037,7 @@ VALUES('{$quest_id}','{$id_pg}',NOW(),'{$pg_comm}','{$pg_px}','{$this->me_id}')"
     {
         $array = [];
 
-        foreach ($partecipanti as $id => $data) {
+        foreach ( $partecipanti as $id => $data ) {
             $array[] = $id;
         }
 
@@ -1076,7 +1058,7 @@ VALUES('{$quest_id}','{$id_pg}',NOW(),'{$pg_comm}','{$pg_px}','{$this->me_id}')"
         $partecipanti = $post['part'];
 
         # Per ogni partecipante scelto
-        foreach ($partecipanti as $id => $pg) {
+        foreach ( $partecipanti as $id => $pg ) {
 
             # Estraggoi dati dall'array dei partecipanti
             $pg_id = Filters::int($id);
@@ -1096,13 +1078,13 @@ VALUES('{$quest_id}','{$id_pg}',NOW(),'{$pg_comm}','{$pg_px}','{$this->me_id}')"
             $log_text = '';
 
             # Se il personaggio esiste
-            if (Personaggio::pgExist($pg_id)) {
+            if ( Personaggio::pgExist($pg_id) ) {
 
                 # Se il personaggio ha gia' un'assegnazione inerente alla quest
-                if (!empty($pg_quest_data['id'])) {
+                if ( !empty($pg_quest_data['id']) ) {
 
                     # Se l'esperienza e' cambiata
-                    if ($pg_px != $pg_original_exp) {
+                    if ( $pg_px != $pg_original_exp ) {
 
                         # Calcolo la nuova esperienza
                         $new_px = ($pg_px - $pg_original_exp);
@@ -1136,18 +1118,18 @@ VALUES('{$quest_id}','{$id_pg}',NOW(),'{$pg_comm}','{$pg_px}','{$this->me_id}')"
                 }
 
                 # Inserisco il log
-                if (isset($log_text)) {
+                if ( isset($log_text) ) {
                     Log::newLog([
                         "autore" => $this->me_id,
                         "destinatario" => $pg_id,
                         "tipo" => $this->px_code,
-                        "testo" => "{$log_text}"
+                        "testo" => "{$log_text}",
                     ]);
                 }
 
                 # Notifico l'utente
-                if ($notify) {
-                    if ($this->notify_enabled) {
+                if ( $notify ) {
+                    if ( $this->notify_enabled ) {
                         DB::query("INSERT INTO messaggi (mittente, destinatario,oggetto, testo) VALUES ('Resoconti Quest','{$pg_nome}','{$notify_title}','{$notify_text}')");
                     }
                 }
@@ -1170,9 +1152,8 @@ VALUES('{$quest_id}','{$id_pg}',NOW(),'{$pg_comm}','{$pg_px}','{$this->me_id}')"
         $quest_id = Filters::int($post['id']);
         $page = Filters::int($post['page']);
 
-        if ($this->manageQuestPermission()) {
-            if ($this->questExist($quest_id)) {
-
+        if ( $this->manageQuestPermission() ) {
+            if ( $this->questExist($quest_id) ) {
 
                 $quest_data = $this->getQuest($quest_id);
 
@@ -1185,14 +1166,14 @@ VALUES('{$quest_id}','{$id_pg}',NOW(),'{$pg_comm}','{$pg_px}','{$this->me_id}')"
                     'swal_title' => 'Operazione riuscita!',
                     'swal_message' => 'Quest eliminata con successo.',
                     'swal_type' => 'success',
-                    'quest_list' => $this->renderQuestList($page)
+                    'quest_list' => $this->renderQuestList($page),
                 ];
             } else {
                 return [
                     'response' => false,
                     'swal_title' => 'Operazione fallita!',
                     'swal_message' => 'Quest inesistente.',
-                    'swal_type' => 'info'
+                    'swal_type' => 'info',
                 ];
             }
         } else {
@@ -1200,7 +1181,7 @@ VALUES('{$quest_id}','{$id_pg}',NOW(),'{$pg_comm}','{$pg_px}','{$this->me_id}')"
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -1219,12 +1200,11 @@ VALUES('{$quest_id}','{$id_pg}',NOW(),'{$pg_comm}','{$pg_px}','{$this->me_id}')"
         $titolo = Filters::in($data['titolo']);
         $membri = explode(',', $partecipanti);
 
-        if (empty($membri)) {
+        if ( empty($membri) ) {
             return false;
         }
 
-
-        foreach ($membri as $membro) {
+        foreach ( $membri as $membro ) {
             $membro_id = Filters::int($membro);
             $data_quest = $this->getQuestMemberData($quest_id, $membro_id);
 
@@ -1241,10 +1221,10 @@ VALUES('{$quest_id}','{$id_pg}',NOW(),'{$pg_comm}','{$pg_px}','{$this->me_id}')"
                 "autore" => $this->me_id,
                 "destinatario" => $membro_id,
                 "tipo" => $this->px_code,
-                "testo" => $log_text
+                "testo" => $log_text,
             ]);
 
-            if ($this->notify_enabled) {
+            if ( $this->notify_enabled ) {
 
                 $notify_title = Filters::in('Cancellazione quest.');
                 $notify_text = Filters::in("La Quest '{$titolo}' è stata eliminata.");

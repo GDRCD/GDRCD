@@ -3,23 +3,23 @@
 $id_pg = Filters::int($_GET['id_pg']);
 $scheda_transactions = SchedaTransazioni::getInstance();
 
-if (Personaggio::isMyPg($id_pg) || $scheda_transactions->permissionViewTransactions($id_pg)) { ?>
+if ( Personaggio::isMyPg($id_pg) || $scheda_transactions->permissionViewTransactions($id_pg) ) { ?>
 
 
     <div class="fake-table log_table">
-        <?=Log::getInstance()->logTable($id_pg, BONIFICO, 10, 'Log Transazioni');?>
+        <?= Log::getInstance()->logTable($id_pg, BONIFICO, 10, 'Log Transazioni'); ?>
     </div>
 
 <?php }
 
-if (Personaggio::isMyPg($id_pg) || $scheda_transactions->viewExpPermission()) { ?>
+if ( Personaggio::isMyPg($id_pg) || $scheda_transactions->viewExpPermission() ) { ?>
     <div class="scheda_exp_box">
         <div class="fake-table log_table scheda_exp_table">
-            <?=Log::getInstance()->logTable($id_pg, PX, 10, 'Esperienza');?>
+            <?= Log::getInstance()->logTable($id_pg, PX, 10, 'Esperienza'); ?>
         </div>
     </div>
 
-    <?php if ($scheda_transactions->manageExpPermission()) { ?>
+    <?php if ( $scheda_transactions->manageExpPermission() ) { ?>
 
         <div class="form_container">
             <form class="form ajax_form"

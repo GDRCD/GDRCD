@@ -4,21 +4,21 @@ Router::loadRequired(); # Inserisco il required se non presente, per futuro spos
 
 $cls = Sessi::getInstance(); # Inizializzo classe
 
-if($cls->permissionManageGenders()){ # Metodo di controllo per accesso alla pagina di gestione
+if ( $cls->permissionManageGenders() ) { # Metodo di controllo per accesso alla pagina di gestione
 
-?>
-        <div class="general_incipit">
-            <div class="title"> Gestione Sessi </div>
-            <div class="subtitle">Gestione dei sessi presenti</div>
+    ?>
+    <div class="general_incipit">
+        <div class="title"> Gestione Sessi</div>
+        <div class="subtitle">Gestione dei sessi presenti</div>
 
-            Da questa pagina e' possibile:
-            <ul>
-                <li>Creare un nuovo sesso</li>
-                <li>Modificare un sesso esistente</li>
-                <li>Eliminare un sesso</li>
-            </ul>
+        Da questa pagina e' possibile:
+        <ul>
+            <li>Creare un nuovo sesso</li>
+            <li>Modificare un sesso esistente</li>
+            <li>Eliminare un sesso</li>
+        </ul>
 
-        </div>
+    </div>
 
     <div class="form_container manage_gender_container">
 
@@ -45,7 +45,8 @@ if($cls->permissionManageGenders()){ # Metodo di controllo per accesso alla pagi
         </form>
 
         <!-- EDIT -->
-        <form class="form ajax_form edit_form" action="gestione/sessi/gestione_sessi_ajax.php" data-callback="updateGenders">
+        <form class="form ajax_form edit_form" action="gestione/sessi/gestione_sessi_ajax.php"
+              data-callback="updateGenders">
 
             <div class="form_title">Modifica fondo gruppo</div>
 
@@ -82,9 +83,9 @@ if($cls->permissionManageGenders()){ # Metodo di controllo per accesso alla pagi
             <div class="single_input">
                 <div class="label">Sesso</div>
                 <select name="id" required>
-                        <?= $cls->listGenders(); ?>
-                    </select>
-                </div>
+                    <?= $cls->listGenders(); ?>
+                </select>
+            </div>
 
             <div class="single_input">
                 <input type="hidden" name="action" value="op_delete"> <!-- OP NEEDED -->
@@ -96,7 +97,7 @@ if($cls->permissionManageGenders()){ # Metodo di controllo per accesso alla pagi
     </div>
 
     <script src="<?= Router::getPagesLink('gestione/sessi/gestione_sessi.js'); ?>"></script>
-    <div class="link_back"><a href="/main.php?page=gestione">Indietro</a> </div>
+    <div class="link_back"><a href="/main.php?page=gestione">Indietro</a></div>
 
 
 <?php } ?>

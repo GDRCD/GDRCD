@@ -8,7 +8,7 @@ $mercato = Mercato::getInstance();
 
 
 <div class="shops_page">
-    <?php  if (true) { ?>
+    <?php if ( true ) { ?>
 
         <!-- Titolo della pagina -->
         <div class="general_title">
@@ -24,6 +24,6 @@ $mercato = Mercato::getInstance();
 
         <div class="warning"> Permessi insufficienti o funzione disabilitata.</div>
 
-        <div class="link_back"><a href="/main.php?page=gestione">Indietro</a> </div>
+        <div class="link_back"><a href="/main.php?page=gestione">Indietro</a></div>
     <?php } ?>
 </div>

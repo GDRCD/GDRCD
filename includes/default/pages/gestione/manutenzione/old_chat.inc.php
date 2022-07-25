@@ -1,7 +1,7 @@
 <?php
-if((is_numeric($_POST['mesi']) === true) && ($_POST['mesi'] >= 0) && ($_POST['mesi'] <= 12)) {
+if ( (is_numeric($_POST['mesi']) === true) && ($_POST['mesi'] >= 0) && ($_POST['mesi'] <= 12) ) {
     /*Eseguo l'aggiornamento*/
-    gdrcd_query("DELETE FROM chat WHERE DATE_SUB(NOW(), INTERVAL ".gdrcd_filter('num', $_POST['mesi'])." MONTH) > ora");
+    gdrcd_query("DELETE FROM chat WHERE DATE_SUB(NOW(), INTERVAL " . gdrcd_filter('num', $_POST['mesi']) . " MONTH) > ora");
     gdrcd_query("OPTIMIZE TABLE chat");
     ?>
     <!-- Conferma -->

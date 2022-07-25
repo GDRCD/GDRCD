@@ -69,7 +69,7 @@ class ContattiCategorie extends Contatti
      */
     public function NewCategory(array $post): array
     {
-        if ($this->permissionManageCategories()) {
+        if ( $this->permissionManageCategories() ) {
 
             $nome = Filters::in($post['nome']);
             $creato_il = date("Y-m-d H:i:s");
@@ -82,18 +82,17 @@ class ContattiCategorie extends Contatti
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Categoria creata.',
                 'swal_type' => 'success',
-                'categories_list' => $this->listCategories()
+                'categories_list' => $this->listCategories(),
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
-
 
     /**
      * @fn ModCategory
@@ -103,7 +102,7 @@ class ContattiCategorie extends Contatti
      */
     public function ModCategory(array $post): array
     {
-        if ($this->permissionManageCategories()) {
+        if ( $this->permissionManageCategories() ) {
             $id = Filters::int($post['id']);
             $nome = Filters::in($post['nome']);
 
@@ -114,14 +113,14 @@ class ContattiCategorie extends Contatti
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Categoria modificata.',
                 'swal_type' => 'success',
-                'categories_list' => $this->listCategories()
+                'categories_list' => $this->listCategories(),
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -134,7 +133,7 @@ class ContattiCategorie extends Contatti
      */
     public function DelCategory(array $post): array
     {
-        if ($this->permissionManageCategories()) {
+        if ( $this->permissionManageCategories() ) {
 
             $id = Filters::int($post['id']);
 
@@ -145,14 +144,14 @@ class ContattiCategorie extends Contatti
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Categoria eliminata.',
                 'swal_type' => 'success',
-                'categories_list' => $this->listCategories()
+                'categories_list' => $this->listCategories(),
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }

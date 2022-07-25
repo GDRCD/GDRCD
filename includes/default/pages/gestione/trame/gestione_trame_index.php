@@ -8,7 +8,7 @@ $quest = Quest::getInstance();
 
 
 <div class="gestione_pagina gestione_trame">
-    <?php if ($quest->trameEnabled() && $quest->viewTramePermission()) {
+    <?php if ( $quest->trameEnabled() && $quest->viewTramePermission() ) {
         ?>
         <!-- Titolo della pagina -->
         <div class="general_title">

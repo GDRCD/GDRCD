@@ -4,7 +4,7 @@ Router::loadRequired();
 
 $cls = GruppiStipendiExtra::getInstance();
 
-switch ($_POST['action']) {
+switch ( $_POST['action'] ) {
     case 'get_extra_earn_data':
         echo json_encode($cls->ajaxExtraEarnData($_POST));
         break;

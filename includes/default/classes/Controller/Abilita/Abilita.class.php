@@ -49,7 +49,8 @@ class Abilita extends BaseClass
      * @param string $val
      * @return bool|int|mixed|string
      */
-    public function getAbilita(int $id, string $val = '*'){
+    public function getAbilita(int $id, string $val = '*')
+    {
         return DB::query("SELECT {$val} FROM abilita WHERE id = '{$id}' LIMIT 1");
     }
 
@@ -71,7 +72,7 @@ class Abilita extends BaseClass
      * @param string $val
      * @return bool|int
      */
-    public function getAllAbilitaByRace(int $race,string $val = 'abilita.*')
+    public function getAllAbilitaByRace(int $race, string $val = 'abilita.*')
     {
         return DB::query("SELECT {$val} FROM abilita WHERE razza='{$race}' ORDER BY nome", 'result');
     }
@@ -98,7 +99,8 @@ class Abilita extends BaseClass
         return $this->abi_requirement;
     }
 
-    public function abiLevelCap():int{
+    public function abiLevelCap(): int
+    {
         return $this->abi_level_cap;
     }
 
@@ -114,7 +116,7 @@ class Abilita extends BaseClass
         $html = '<option value=""></option>';
         $abis = $this->getAllAbilita();
 
-        foreach ($abis as $abi) {
+        foreach ( $abis as $abi ) {
             $nome = Filters::out($abi['nome']);
             $id = Filters::int($abi['id']);
             $sel = ($id == $selected) ? 'selected' : '';

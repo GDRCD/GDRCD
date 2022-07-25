@@ -1,10 +1,10 @@
 <?php
-if ($_GET['op']=='first') { ?>
+if ( $_GET['op'] == 'first' ) { ?>
     <div class="page_title">
         <h2>Nuova serie di esiti</h2>
     </div>
     <div class="form_info">
-        <?php echo $MESSAGE['interface']['esitiserie']['intro'];?>
+        <?php echo $MESSAGE['interface']['esitiserie']['intro']; ?>
     </div>
     <form action="main.php?page=gestione_segnalazioni&segn=esito_index"
           method="post"
@@ -31,7 +31,7 @@ if ($_GET['op']=='first') { ?>
             <textarea name="contenuto"></textarea>
         </div>
 
-        <div class="form_info" >
+        <div class="form_info">
             Indicazioni sulle azioni ON da compiere/compiute.
         </div>
 
@@ -39,9 +39,9 @@ if ($_GET['op']=='first') { ?>
             Note OFF
         </div>
         <div class='form_field'>
-            <input name="note" value="" />
+            <input name="note" value=""/>
         </div>
-        <div class="form_info" >
+        <div class="form_info">
             Utilizzare solo per brevi chiarimenti
         </div>
         <!-- bottoni -->
@@ -50,7 +50,7 @@ if ($_GET['op']=='first') { ?>
                    name="op"
                    value="insert">
             <input type="submit"
-                   value="<?php echo gdrcd_filter('out',$MESSAGE['interface']['forms']['submit']);?>" />
+                   value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>"/>
         </div>
 
     </form>

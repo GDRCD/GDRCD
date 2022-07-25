@@ -4,7 +4,7 @@ Router::loadRequired();
 
 $works = GruppiLavori::getInstance();
 
-switch ($_POST['action']) {
+switch ( $_POST['action'] ) {
     case 'get_work':
         echo json_encode($works->autoAssignWork($_POST));
         break;

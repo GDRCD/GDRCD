@@ -4,9 +4,8 @@ Router::loadRequired();
 
 $mercato = Mercato::getInstance();
 
-
 ?>
 
 <div class="shops_box">
-    <?=$mercato->getShopVisual();?>
+    <?= $mercato->getShopVisual(); ?>
 </div>

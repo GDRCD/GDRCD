@@ -5,12 +5,12 @@ Router::loadRequired();
 $esiti = Esiti::getInstance();
 $id_record = Filters::int($_GET['id_record']);
 
-if ($esiti->esitoMembersPermission($id_record)) {
+if ( $esiti->esitoMembersPermission($id_record) ) {
 
     ?>
 
 
-    <?php if (isset($resp)) { ?>
+    <?php if ( isset($resp) ) { ?>
         <div class="warning"><?= $resp['mex']; ?></div>
     <?php } ?>
 
@@ -39,7 +39,7 @@ if ($esiti->esitoMembersPermission($id_record)) {
         </form>
     </div>
 
-    <script src="<?=Router::getPagesLink('gestione/esiti/JS/esiti_members.js');?>"></script>
+    <script src="<?= Router::getPagesLink('gestione/esiti/JS/esiti_members.js'); ?>"></script>
 
 <?php } else { ?>
     <div class="warning">Permesso negato.</div>

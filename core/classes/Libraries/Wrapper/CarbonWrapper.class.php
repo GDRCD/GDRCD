@@ -5,7 +5,8 @@ require ROOT . 'plugins/Carbon/autoload.php';
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
 
-class CarbonWrapper{
+class CarbonWrapper
+{
 
     public function __construct()
     {
@@ -21,7 +22,7 @@ class CarbonWrapper{
      */
     public static function SubtractDays(string $date, int $days): string
     {
-        $dt = Carbon::createFromFormat('Y-m-d',  $date);
+        $dt = Carbon::createFromFormat('Y-m-d', $date);
         return $dt->subDays($days)->format('Y-m-d H:i:s');
     }
 
@@ -34,8 +35,8 @@ class CarbonWrapper{
      */
     public static function AddDays(string $date, int $days): string
     {
-       $dt = Carbon::createFromFormat('Y-m-d',  $date);
-       return $dt->addDays($days)->format('Y-m-d H:i:s');
+        $dt = Carbon::createFromFormat('Y-m-d', $date);
+        return $dt->addDays($days)->format('Y-m-d H:i:s');
     }
 
     /**
@@ -45,11 +46,11 @@ class CarbonWrapper{
      * @param string $date2
      * @return int
      */
-    public static function DatesDifferenceMonths(string $date1,string $date2): int
+    public static function DatesDifferenceMonths(string $date1, string $date2): int
     {
-       $start = Carbon::createFromFormat('Y-m-d',  $date1);
-       $end = Carbon::createFromFormat('Y-m-d',  $date2);
-       return $start->diffInMonths($end);
+        $start = Carbon::createFromFormat('Y-m-d', $date1);
+        $end = Carbon::createFromFormat('Y-m-d', $date2);
+        return $start->diffInMonths($end);
     }
 
     /**
@@ -59,11 +60,11 @@ class CarbonWrapper{
      * @param string $date2
      * @return int
      */
-    public static function DatesDifferenceDays(string $date1,string $date2): int
+    public static function DatesDifferenceDays(string $date1, string $date2): int
     {
-       $start = Carbon::createFromFormat('Y-m-d',  $date1);
-       $end = Carbon::createFromFormat('Y-m-d',  $date2);
-       return $start->diffInDays($end);
+        $start = Carbon::createFromFormat('Y-m-d', $date1);
+        $end = Carbon::createFromFormat('Y-m-d', $date2);
+        return $start->diffInDays($end);
     }
 
     /**
@@ -73,11 +74,11 @@ class CarbonWrapper{
      * @param string $date2
      * @return int
      */
-    public static function DatesDifferenceHours(string $date1,string $date2): int
+    public static function DatesDifferenceHours(string $date1, string $date2): int
     {
-       $start = Carbon::createFromFormat('Y-m-d H:i:s',  $date1);
-       $end = Carbon::createFromFormat('Y-m-d H:i:s',  $date2);
-       return $start->diffInHours($end);
+        $start = Carbon::createFromFormat('Y-m-d H:i:s', $date1);
+        $end = Carbon::createFromFormat('Y-m-d H:i:s', $date2);
+        return $start->diffInHours($end);
     }
 
     /**
@@ -87,13 +88,12 @@ class CarbonWrapper{
      * @param string $date2
      * @return int
      */
-    public static function DatesDifferenceMinutes(string $date1,string $date2): int
+    public static function DatesDifferenceMinutes(string $date1, string $date2): int
     {
-       $start = Carbon::createFromFormat('Y-m-d H:i:s',  $date1);
-       $end = Carbon::createFromFormat('Y-m-d H:i:s',  $date2);
-       return $start->diffInMinutes($end);
+        $start = Carbon::createFromFormat('Y-m-d H:i:s', $date1);
+        $end = Carbon::createFromFormat('Y-m-d H:i:s', $date2);
+        return $start->diffInMinutes($end);
     }
-
 
     /**
      * @fn needExec
@@ -107,22 +107,22 @@ class CarbonWrapper{
     {
 
         // Se non e' mai stato eseguito, lo eseguo
-        if (empty($last_exec)) {
+        if ( empty($last_exec) ) {
             return true;
         } else {
             // Altrimenti estraggo la differenza in base al tipo
-            switch ($interval_type) {
+            switch ( $interval_type ) {
                 case 'months':
-                    $diff = CarbonWrapper::DatesDifferenceMonths(date('Y-m-d'), Filters::date($last_exec,'Y-m-d'));
+                    $diff = CarbonWrapper::DatesDifferenceMonths(date('Y-m-d'), Filters::date($last_exec, 'Y-m-d'));
                     break;
                 case 'days':
-                    $diff = CarbonWrapper::DatesDifferenceDays(date('Y-m-d'), Filters::date($last_exec,'Y-m-d'));
+                    $diff = CarbonWrapper::DatesDifferenceDays(date('Y-m-d'), Filters::date($last_exec, 'Y-m-d'));
                     break;
                 case 'hours':
-                    $diff = CarbonWrapper::DatesDifferenceHours(date('Y-m-d H:i:s'), Filters::date($last_exec,'Y-m-d H:i:s'));
+                    $diff = CarbonWrapper::DatesDifferenceHours(date('Y-m-d H:i:s'), Filters::date($last_exec, 'Y-m-d H:i:s'));
                     break;
                 case 'minutes':
-                    $diff = CarbonWrapper::DatesDifferenceMinutes(date('Y-m-d H:i:s'), Filters::date($last_exec,'Y-m-d H:i:s'));
+                    $diff = CarbonWrapper::DatesDifferenceMinutes(date('Y-m-d H:i:s'), Filters::date($last_exec, 'Y-m-d H:i:s'));
                     break;
                 default:
                     $diff = 0;

@@ -7,7 +7,7 @@ $quest = Quest::getInstance();
 $page = Filters::int($_REQUEST['offset']);
 
 # Lista delle quest visibili per questa pagina
- ?>
+?>
 
 
 <div class="fake-table quest_list trame_list">
@@ -19,4 +19,4 @@ $page = Filters::int($_REQUEST['offset']);
     <?= $quest->getTramePageNumbers(Filters::int($_REQUEST['offset'])); ?>
 </div>
 
-<script src="<?=Router::getPagesLink('gestione/trame/gestione_trame_list.js');?>"></script>
+<script src="<?= Router::getPagesLink('gestione/trame/gestione_trame_list.js'); ?>"></script>

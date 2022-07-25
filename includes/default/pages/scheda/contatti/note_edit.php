@@ -14,7 +14,7 @@ $nota = $contatti_note->getNota($id, 'titolo, nota, pubblica');
           data-callback="closeNoteContatto">
         <?php
 
-        if (!$contatti_note->contactPublic()) {
+        if ( !$contatti_note->contactPublic() ) {
             ?>
             <div class="single_input">
                 <div class='label'>

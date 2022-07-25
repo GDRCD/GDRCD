@@ -2,7 +2,7 @@
 
 $id_pg = Filters::int($_GET['id_pg']);
 
-if (Log::getInstance()->permissionViewLogs()) {
+if ( Log::getInstance()->permissionViewLogs() ) {
     ?>
 
 

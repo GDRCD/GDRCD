@@ -4,7 +4,7 @@ Router::loadRequired();
 
 $cls = Mercato::getInstance();
 
-switch ($_POST['action']){
+switch ( $_POST['action'] ) {
     case 'get_shop_data':
         echo json_encode($cls->ajaxGetShop($_POST));
         break;

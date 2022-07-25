@@ -1,7 +1,7 @@
 <?php
 
-
-class OnlineStatus extends BaseClass{
+class OnlineStatus extends BaseClass
+{
 
     /**
      * @var mixed
@@ -19,11 +19,13 @@ class OnlineStatus extends BaseClass{
 
     /*** GETTERS */
 
-    public function isEnabled(){
+    public function isEnabled()
+    {
         return $this->enabled;
     }
 
-    public function refreshOnLogin(){
+    public function refreshOnLogin()
+    {
         return $this->login_refresh;
     }
 
@@ -112,7 +114,7 @@ class OnlineStatus extends BaseClass{
     public function getAjaxStatusData($post)
     {
 
-        if ($this->manageStatusPermission()) {
+        if ( $this->manageStatusPermission() ) {
 
             $id = Filters::int($post['id']);
 
@@ -120,7 +122,7 @@ class OnlineStatus extends BaseClass{
 
             return [
                 'type' => Filters::int($data['type']),
-                'text' => Filters::out($data['text'])
+                'text' => Filters::out($data['text']),
             ];
         }
     }
@@ -128,7 +130,7 @@ class OnlineStatus extends BaseClass{
     public function getAjaxStatusTypeData($post)
     {
 
-        if ($this->manageStatusPermission()) {
+        if ( $this->manageStatusPermission() ) {
 
             $id = Filters::int($post['id']);
 
@@ -136,13 +138,12 @@ class OnlineStatus extends BaseClass{
 
             return [
                 'label' => Filters::out($data['label']),
-                'request' => Filters::out($data['request'])
+                'request' => Filters::out($data['request']),
             ];
         }
     }
 
     /**** RENDER ****/
-
 
     /**
      * @fn renderOnlineStatusOptions
@@ -155,18 +156,18 @@ class OnlineStatus extends BaseClass{
         $html = '';
         $types = $this->getStatusTypes();
 
-        foreach ($types as $type) {
+        foreach ( $types as $type ) {
             $type_id = Filters::int($type['id']);
             $type_request = Filters::out($type['request']);
 
             $list = $this->getStatysByType($type_id);
 
-            if (DB::rowsNumber($list) > 0) {
+            if ( DB::rowsNumber($list) > 0 ) {
 
                 $html .= "<div class='subtitle'>{$type_request}</div>";
                 $html .= "<ul>";
 
-                foreach ($list as $row) {
+                foreach ( $list as $row ) {
                     $id = Filters::int($row['id']);
                     $name = Filters::out($row['text']);
 
@@ -193,7 +194,7 @@ class OnlineStatus extends BaseClass{
         $html = '<option value=""></option>';
         $types = $this->getStatusTypes();
 
-        foreach ($types as $type) {
+        foreach ( $types as $type ) {
             $type_id = Filters::int($type['id']);
             $type_label = Filters::out($type['label']);
 
@@ -215,7 +216,7 @@ class OnlineStatus extends BaseClass{
         $html = '<option value=""></option>';
         $types = $this->getStatusTypes();
 
-        foreach ($types as $type) {
+        foreach ( $types as $type ) {
             $type_id = Filters::int($type['id']);
             $type_label = Filters::out($type['label']);
 
@@ -223,7 +224,7 @@ class OnlineStatus extends BaseClass{
 
             $html .= "<optgroup label='{$type_label}'>";
 
-            foreach ($list as $row) {
+            foreach ( $list as $row ) {
                 $id = Filters::int($row['id']);
                 $name = Filters::out($row['text']);
 
@@ -231,7 +232,6 @@ class OnlineStatus extends BaseClass{
             }
 
             $html .= "</optgroup>";
-
 
         }
 
@@ -253,13 +253,12 @@ class OnlineStatus extends BaseClass{
         $last_login = ($this->refreshOnLogin()) ? Filters::out($pg_data['ora_entrata']) : '';
         $types = $this->getStatusTypes();
 
-
-        foreach ($types as $type) {
+        foreach ( $types as $type ) {
             $type_id = Filters::int($type['id']);
             $type_label = Filters::out($type['label']);
 
             $list = $this->getPgStatus($pg, $type_id, $last_login, 'value');
-            if (!empty($list['value'])) {
+            if ( !empty($list['value']) ) {
                 $status_data = $this->getStatus(Filters::int($list['value']), 'text');
                 $status_text = Filters::out($status_data['text']);
             } else {
@@ -282,11 +281,11 @@ class OnlineStatus extends BaseClass{
      */
     public function setOnlineStatus(array $post): array
     {
-        if($this->isEnabled()){
+        if ( $this->isEnabled() ) {
 
             $online_status = $post['online_status'];
 
-            foreach ($online_status as $status_id => $value) {
+            foreach ( $online_status as $status_id => $value ) {
 
                 $value = Filters::int($value);
                 $split = explode('_', $status_id);
@@ -294,7 +293,7 @@ class OnlineStatus extends BaseClass{
 
                 $contr = $this->getPgStatus($this->me_id, $type);
 
-                if(isset($contr['id'])){
+                if ( isset($contr['id']) ) {
                     DB::query("UPDATE personaggio_online_status SET value='{$value}',last_refresh=NOW() WHERE personaggio='{$this->me_id}' AND type='{$type}' LIMIT 1");
                 } else {
                     DB::query("INSERT INTO personaggio_online_status(personaggio, type, value) VALUES('{$this->me_id}','{$type}','{$value}') ");
@@ -306,16 +305,16 @@ class OnlineStatus extends BaseClass{
 
             return [
                 'response' => true,
-                'swal_title'=> 'Operazione riuscita!',
+                'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Status online settato correttamente.',
-                'swal_type' => 'success'
+                'swal_type' => 'success',
             ];
         } else {
             return [
                 'response' => false,
-                'swal_title'=> 'Operazione fallita!',
+                'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Errore, funzione non abilitata.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
 
@@ -333,7 +332,7 @@ class OnlineStatus extends BaseClass{
     public function insertStatus(array $post): array
     {
 
-        if ($this->manageStatusPermission()) {
+        if ( $this->manageStatusPermission() ) {
 
             $type = Filters::int($post['type']);
             $text = Filters::in($post['text']);
@@ -342,18 +341,18 @@ class OnlineStatus extends BaseClass{
 
             return [
                 'response' => true,
-                'swal_title'=> 'Operazione riuscita!',
+                'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Stato inserito correttamente.',
                 'swal_type' => 'success',
-                'status_list' => $this->renderStatusList()
+                'status_list' => $this->renderStatusList(),
             ];
 
         } else {
             return [
                 'response' => false,
-                'swal_title'=> 'Operazione fallita!',
+                'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
 
@@ -368,7 +367,7 @@ class OnlineStatus extends BaseClass{
     public function editStatus(array $post): array
     {
 
-        if ($this->manageStatusPermission()) {
+        if ( $this->manageStatusPermission() ) {
 
             $id = Filters::int($post['id']);
             $type = Filters::int($post['type']);
@@ -378,18 +377,18 @@ class OnlineStatus extends BaseClass{
 
             return [
                 'response' => true,
-                'swal_title'=> 'Operazione riuscita!',
+                'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Stato modificato correttamente.',
                 'swal_type' => 'success',
-                'status_list' => $this->renderStatusList()
+                'status_list' => $this->renderStatusList(),
             ];
 
         } else {
             return [
                 'response' => false,
-                'swal_title'=> 'Operazione fallita!',
+                'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -403,7 +402,7 @@ class OnlineStatus extends BaseClass{
     public function deleteStatus(array $post): array
     {
 
-        if ($this->manageStatusPermission()) {
+        if ( $this->manageStatusPermission() ) {
 
             $id = Filters::int($post['id']);
 
@@ -411,22 +410,21 @@ class OnlineStatus extends BaseClass{
 
             return [
                 'response' => true,
-                'swal_title'=> 'Operazione riuscita!',
+                'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Stato eliminato correttamente.',
                 'swal_type' => 'success',
-                'status_list' => $this->renderStatusList()
+                'status_list' => $this->renderStatusList(),
             ];
 
         } else {
             return [
                 'response' => false,
-                'swal_title'=> 'Operazione fallita!',
+                'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
-
 
     /**
      * @fn insertStatusType
@@ -437,7 +435,7 @@ class OnlineStatus extends BaseClass{
     public function insertStatusType(array $post): array
     {
 
-        if ($this->manageStatusPermission()) {
+        if ( $this->manageStatusPermission() ) {
 
             $label = Filters::in($post['label']);
             $request = Filters::in($post['request']);
@@ -446,17 +444,17 @@ class OnlineStatus extends BaseClass{
 
             return [
                 'response' => true,
-                'swal_title'=> 'Operazione riuscita!',
+                'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Tipo di stato inserito correttamente.',
                 'swal_type' => 'success',
-                'status_list' => $this->renderStatusTypeList()
+                'status_list' => $this->renderStatusTypeList(),
             ];
         } else {
             return [
                 'response' => false,
-                'swal_title'=> 'Operazione fallita!',
+                'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -470,7 +468,7 @@ class OnlineStatus extends BaseClass{
     public function editStatusType(array $post): array
     {
 
-        if ($this->manageStatusPermission()) {
+        if ( $this->manageStatusPermission() ) {
 
             $id = Filters::int($post['id']);
             $label = Filters::in($post['label']);
@@ -480,17 +478,17 @@ class OnlineStatus extends BaseClass{
 
             return [
                 'response' => true,
-                'swal_title'=> 'Operazione riuscita!',
+                'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Tipo di stato modificato correttamente.',
                 'swal_type' => 'success',
-                'status_list' => $this->renderStatusTypeList()
+                'status_list' => $this->renderStatusTypeList(),
             ];
         } else {
             return [
                 'response' => false,
-                'swal_title'=> 'Operazione fallita!',
+                'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -504,7 +502,7 @@ class OnlineStatus extends BaseClass{
     public function deleteStatusType(array $post): array
     {
 
-        if ($this->manageStatusPermission()) {
+        if ( $this->manageStatusPermission() ) {
 
             $id = Filters::int($post['id']);
 
@@ -513,18 +511,18 @@ class OnlineStatus extends BaseClass{
 
             return [
                 'response' => true,
-                'swal_title'=> 'Operazione riuscita!',
+                'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Tipo di stato eliminato correttamente.',
                 'swal_type' => 'success',
-                'status_list' => $this->renderStatusTypeList()
+                'status_list' => $this->renderStatusTypeList(),
             ];
 
         } else {
             return [
                 'response' => false,
-                'swal_title'=> 'Operazione fallita!',
+                'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }

@@ -4,7 +4,7 @@ Router::loadRequired();
 
 $cls = Razze::getInstance();
 
-switch ($_POST['action']) {
+switch ( $_POST['action'] ) {
     case 'get_race_data':
         echo json_encode($cls->ajaxRaceData($_POST));
         break;

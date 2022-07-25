@@ -4,7 +4,7 @@ Router::loadRequired();
 
 $cls = GruppiRuoli::getInstance();
 
-switch ($_POST['action']) {
+switch ( $_POST['action'] ) {
     case 'get_role_data':
         echo json_encode($cls->ajaxRoleData($_POST));
         break;

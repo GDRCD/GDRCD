@@ -1,6 +1,5 @@
 <?php
 
-
 class Personaggio extends BaseClass
 {
 
@@ -15,7 +14,7 @@ class Personaggio extends BaseClass
     public static function getPgLocation(int $pg = 0): int
     {
 
-        if (empty($pg)) {
+        if ( empty($pg) ) {
             $pg = Functions::getInstance()->getMyId();
         }
 

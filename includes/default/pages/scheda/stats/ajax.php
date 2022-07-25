@@ -2,7 +2,7 @@
 Router::loadRequired();
 $pg_stats = PersonaggioStats::getInstance();
 
-switch ($_POST['action']) {
+switch ( $_POST['action'] ) {
 
     case 'upgrade_stat':
         echo json_encode(PersonaggioStats::upgradePgStat($_POST));

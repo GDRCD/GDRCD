@@ -38,7 +38,7 @@ class PersonaggioRuolo extends Personaggio
     {
         return DB::query("
              SELECT {$val} FROM personaggio_ruolo 
-             WHERE personaggio_ruolo.personaggio='{$pg}'",'result');
+             WHERE personaggio_ruolo.personaggio='{$pg}'", 'result');
     }
 
     /**
@@ -54,7 +54,7 @@ class PersonaggioRuolo extends Personaggio
              SELECT {$val} FROM personaggio_ruolo 
              LEFT JOIN gruppi_ruoli ON (gruppi_ruoli.id = personaggio_ruolo.ruolo) 
              LEFT JOIN gruppi ON (gruppi.id = gruppi_ruoli.gruppo) 
-             WHERE personaggio_ruolo.personaggio='{$pg}'",'result');
+             WHERE personaggio_ruolo.personaggio='{$pg}'", 'result');
     }
 
     /**

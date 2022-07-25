@@ -4,7 +4,7 @@ Router::loadRequired();
 
 $gruppi = GruppiStipendiExtra::getInstance();
 
-if ($gruppi->activeExtraEarn()) {
+if ( $gruppi->activeExtraEarn() ) {
     ?>
 
     <div class="group_extra_earn_container">
@@ -62,7 +62,8 @@ if ($gruppi->activeExtraEarn()) {
 
         <div class="general_title">Modifica Stipendio Extra</div>
 
-        <form class="ajax_form edit_form" action="servizi/amministrazioneGilde/ajax.php" data-callback="updateGroupEarns">
+        <form class="ajax_form edit_form" action="servizi/amministrazioneGilde/ajax.php"
+              data-callback="updateGroupEarns">
 
 
             <div class="single_input">
@@ -133,7 +134,7 @@ if ($gruppi->activeExtraEarn()) {
 
         </form>
 
-        <script src="<?=Router::getPagesLink('servizi/amministrazioneGilde/view_extra_earn.js');?>"></script>
+        <script src="<?= Router::getPagesLink('servizi/amministrazioneGilde/view_extra_earn.js'); ?>"></script>
 
         <div class="link_back">
             <a href="main.php?page=servizi/amministrazioneGilde/index">Torna indietro</a>

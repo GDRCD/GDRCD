@@ -4,21 +4,21 @@ Router::loadRequired(); # Inserisco il required se non presente, per futuro spos
 
 $cls = Razze::getInstance(); # Inizializzo classe
 
-if($cls->permissionManageRaces()){ # Metodo di controllo per accesso alla pagina di gestione
+if ( $cls->permissionManageRaces() ) { # Metodo di controllo per accesso alla pagina di gestione
 
-?>
-        <div class="general_incipit">
-            <div class="title"> Gestione Razze </div>
-            <div class="subtitle">Gestione delle razze presenti</div>
+    ?>
+    <div class="general_incipit">
+        <div class="title"> Gestione Razze</div>
+        <div class="subtitle">Gestione delle razze presenti</div>
 
-            Da questa pagina e' possibile:
-            <ul>
-                <li>Creare una nuova razza</li>
-                <li>Modificare una razza</li>
-                <li>Eliminare una razza</li>
-            </ul>
+        Da questa pagina e' possibile:
+        <ul>
+            <li>Creare una nuova razza</li>
+            <li>Modificare una razza</li>
+            <li>Eliminare una razza</li>
+        </ul>
 
-        </div>
+    </div>
 
     <div class="form_container manage_races_container">
 
@@ -85,7 +85,8 @@ if($cls->permissionManageRaces()){ # Metodo di controllo per accesso alla pagina
         </form>
 
         <!-- EDIT -->
-        <form class="form edit_form ajax_form" action="gestione/razze/gestione_razze_ajax.php" data-callback="updateRaces">
+        <form class="form edit_form ajax_form" action="gestione/razze/gestione_razze_ajax.php"
+              data-callback="updateRaces">
 
             <div class="form_title">Modifica razza</div>
 
@@ -176,7 +177,7 @@ if($cls->permissionManageRaces()){ # Metodo di controllo per accesso alla pagina
     </div>
 
     <script src="<?= Router::getPagesLink('gestione/razze/gestione_razze.js'); ?>"></script>
-    <div class="link_back"><a href="/main.php?page=gestione">Indietro</a> </div>
+    <div class="link_back"><a href="/main.php?page=gestione">Indietro</a></div>
 
 
 <?php } ?>

@@ -3,8 +3,7 @@
 $gruppi_oggetto = GruppiOggetto::getInstance();
 $group = Filters::int($_REQUEST['group']);
 
-
-if ($gruppi_oggetto->activeStorage() && $gruppi_oggetto->permissionViewStorage($group)) {
+if ( $gruppi_oggetto->activeStorage() && $gruppi_oggetto->permissionViewStorage($group) ) {
 
     $group_data = Gruppi::getInstance()->getGroup($group, 'nome');
     $group_name = Filters::out($group_data['nome']);

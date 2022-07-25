@@ -1,6 +1,5 @@
 <?php
 
-
 class PersonaggioStats extends Personaggio
 {
 
@@ -90,7 +89,7 @@ class PersonaggioStats extends Personaggio
 
         $stat_class = Statistiche::getInstance();
 
-        if (self::permissionUpgradeStats()) {
+        if ( self::permissionUpgradeStats() ) {
 
             $stat_data = $stat_class->getStat($id, 'max_val');
             $max_val = Filters::int($stat_data['max_val']);
@@ -98,10 +97,9 @@ class PersonaggioStats extends Personaggio
             $pg_stat_data = self::getPgStatByStatId($id, $pg);
             $pg_val = !empty($pg_stat_data) ? Filters::int($pg_stat_data['valore']) : 0;
 
-            if ($pg_val < $max_val) {
+            if ( $pg_val < $max_val ) {
                 return true;
             }
-
 
         }
 
@@ -122,7 +120,7 @@ class PersonaggioStats extends Personaggio
         $stat_class = Statistiche::getInstance();
         $res = false;
 
-        if (self::permissionUpgradeStats()) {
+        if ( self::permissionUpgradeStats() ) {
 
             $stat_data = $stat_class->getStat($id, 'min_val');
             $min_val = Filters::int($stat_data['min_val']);
@@ -130,10 +128,9 @@ class PersonaggioStats extends Personaggio
             $pg_stat_data = self::getPgStatByStatId($id, $pg);
             $pg_val = !empty($pg_stat_data) ? Filters::int($pg_stat_data['valore']) : 0;
 
-            if ($pg_val > $min_val) {
+            if ( $pg_val > $min_val ) {
                 return true;
             }
-
 
         }
 
@@ -169,13 +166,12 @@ class PersonaggioStats extends Personaggio
         $id = Filters::int($post['stat']);
         $pg = Filters::int($post['pg']);
 
-
-        if (self::isPgStatUpgradable($id, $pg)) {
-            if (self::existPgStat($id, $pg)) {
+        if ( self::isPgStatUpgradable($id, $pg) ) {
+            if ( self::existPgStat($id, $pg) ) {
                 DB::query("UPDATE personaggio_statistiche SET valore= valore+1 
                             WHERE personaggio_statistiche.statistica='{$id}' AND personaggio_statistiche.personaggio='{$pg}'");
             } else {
-                if (Statistiche::existStat($id)) {
+                if ( Statistiche::existStat($id) ) {
                     DB::query("INSERT INTO personaggio_statistiche(personaggio, statistica, valore) VALUES('{$pg}','{$id}',1)");
                 }
             }
@@ -191,7 +187,7 @@ class PersonaggioStats extends Personaggio
                 'response' => false,
                 'swal_title' => 'Operazione negata!',
                 'swal_message' => 'Statistica non aumentabile ulteriormente.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -207,8 +203,7 @@ class PersonaggioStats extends Personaggio
         $id = Filters::int($post['stat']);
         $pg = Filters::int($post['pg']);
 
-        if (self::isPgStatDowngradable($id, $pg) && Statistiche::existStat($id)) {
-
+        if ( self::isPgStatDowngradable($id, $pg) && Statistiche::existStat($id) ) {
 
             DB::query("UPDATE personaggio_statistiche SET valore= valore-1 
                             WHERE personaggio_statistiche.statistica='{$id}' AND personaggio_statistiche.personaggio='{$pg}'");
@@ -224,7 +219,7 @@ class PersonaggioStats extends Personaggio
                 'response' => false,
                 'swal_title' => 'Operazione negata!',
                 'swal_message' => 'Statistica non aumentabile ulteriormente.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
 

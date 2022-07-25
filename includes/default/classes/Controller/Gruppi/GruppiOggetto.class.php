@@ -12,7 +12,6 @@ class GruppiOggetto extends Gruppi
         $this->active_storage = Functions::get_constant('GROUPS_STORAGE');
     }
 
-
     /*** CONFIG ***/
 
     public function activeStorage()
@@ -144,7 +143,7 @@ class GruppiOggetto extends Gruppi
         $objects = $this->getAllObjectsDataByGroup($group);
         $compiled_objects = [];
 
-        foreach ($objects as $object) {
+        foreach ( $objects as $object ) {
 
             $compiled_objects[] = [
                 "id" => Filters::out($object['id']),
@@ -153,10 +152,8 @@ class GruppiOggetto extends Gruppi
             ];
         }
 
-
         return ['body_rows' => $compiled_objects];
     }
-
 
     /**
      * @fn objectListRender
@@ -194,7 +191,7 @@ class GruppiOggetto extends Gruppi
             "template" => Template::getInstance()->startTemplate()->render(
                 'oggetti/storage-single-object',
                 $object_data
-            )
+            ),
         ];
     }
 
@@ -215,17 +212,15 @@ class GruppiOggetto extends Gruppi
         $gruppi_oggetti = $this->getGroupObject($id);
         $group = Filters::int($gruppi_oggetti['gruppo']);
 
-        if ($this->permissionGetObjectFromStorage($group)) {
+        if ( $this->permissionGetObjectFromStorage($group) ) {
 
-
-            if ($this->existGroupObject($id)) {
+            if ( $this->existGroupObject($id) ) {
                 $oggetto = Filters::int($gruppi_oggetti['oggetto']);
                 $cariche = Filters::int($gruppi_oggetti['cariche']);
                 $commento = Filters::in($gruppi_oggetti['commento']);
 
                 DB::query("INSERT INTO personaggio_oggetto(`personaggio`,`oggetto`,`cariche`,`commento`) 
                             VALUES('{$this->me_id}','{$oggetto}','{$cariche}','{$commento}')");
-
 
                 DB::query("DELETE FROM gruppi_oggetto WHERE id='{$id}'");
 
@@ -234,14 +229,14 @@ class GruppiOggetto extends Gruppi
                     'swal_title' => 'Operazione riuscita!',
                     'swal_message' => 'Oggetto ritirato con successo.',
                     'swal_type' => 'success',
-                    'new_view' => $this->objectListRender($group)
+                    'new_view' => $this->objectListRender($group),
                 ];
             } else {
                 return [
                     'response' => false,
                     'swal_title' => 'Errore!',
                     'swal_message' => 'Oggetto non presente nel magazzino.',
-                    'swal_type' => 'error'
+                    'swal_type' => 'error',
                 ];
             }
         } else {
@@ -249,7 +244,7 @@ class GruppiOggetto extends Gruppi
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
 

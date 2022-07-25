@@ -4,7 +4,7 @@ Router::loadRequired();
 
 $cls = OnlineStatus::getInstance();
 
-switch ($_POST['action']){
+switch ( $_POST['action'] ) {
     case 'get_status_data':
         echo json_encode($cls->getAjaxStatusData($_POST));
         break;

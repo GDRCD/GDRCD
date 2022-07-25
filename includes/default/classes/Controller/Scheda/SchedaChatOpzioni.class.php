@@ -27,7 +27,7 @@ class SchedaChatOpzioni extends Scheda
     public function indexSchedaChatOpzioni(string $op): string
     {
 
-        switch ($op) {
+        switch ( $op ) {
             default:
                 $page = 'update.php';
                 break;
@@ -51,7 +51,7 @@ class SchedaChatOpzioni extends Scheda
 
         $options = PersonaggioChatOpzioni::getInstance()->getAllOptionsWithValues($pg);
 
-        foreach ($options as $option) {
+        foreach ( $options as $option ) {
             $name = Filters::out($option['nome']);
             $tipo = Filters::out($option['tipo']);
             $label = Filters::out($option['titolo']);
@@ -62,7 +62,6 @@ class SchedaChatOpzioni extends Scheda
             $html .= Gestione::getInstance()->inputByType($name, $val, $tipo);
             $html .= "</div>";
         }
-
 
         return $html;
     }
@@ -80,44 +79,41 @@ class SchedaChatOpzioni extends Scheda
 
         $pg = Filters::int($post['pg']);
 
-        if ($this->isAccessible($pg)) {
+        if ( $this->isAccessible($pg) ) {
 
             DB::query("DELETE FROM personaggio_chat_opzioni WHERE personaggio='{$pg}'");
 
             $options_list = ChatOpzioni::getInstance()->getAllOptions();
 
-            foreach ($options_list as $option) {
+            foreach ( $options_list as $option ) {
                 $type = Filters::out($option['tipo']);
                 $nome = Filters::out($option['nome']);
                 $val = Filters::in($post[$nome]);
 
-                $save_resp = $this->saveOption($nome, $type, $val,$pg);
+                $save_resp = $this->saveOption($nome, $type, $val, $pg);
 
-                if (!$save_resp) {
+                if ( !$save_resp ) {
                     $empty_const[] = $nome;
                 }
             }
 
-
-
-            if (!empty($empty_const)) {
+            if ( !empty($empty_const) ) {
                 return $this->errorOptions($empty_const, 'save');
             } else {
                 return [
                     'response' => true,
                     'swal_title' => 'Completato!',
                     'swal_message' => 'Opzioni modificate con successo!',
-                    'swal_type' => 'success'
+                    'swal_type' => 'success',
                 ];
             }
-
 
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Permesso negato!',
                 'swal_message' => 'Permesso negato!',
-                'swal_type' => 'success'
+                'swal_type' => 'success',
             ];
         }
     }
@@ -131,25 +127,26 @@ class SchedaChatOpzioni extends Scheda
      * @param int $pg
      * @return bool|int|mixed|string
      */
-    private final function saveOption(string $name, string $type, $val,int $pg){
+    private final function saveOption(string $name, string $type, $val, int $pg)
+    {
 
         $name = Filters::in($name);
         $type = Filters::out($type);
 
-        switch ($type){
+        switch ( $type ) {
             case 'bool':
                 $val = !empty($val) ? 1 : 0;
                 break;
 
             case 'int':
-                if($val) {
-                    if (!is_numeric($val) || is_float($val)) {
+                if ( $val ) {
+                    if ( !is_numeric($val) || is_float($val) ) {
                         return false;
                     } else {
                         $val = Filters::int($val);
                     }
                     break;
-                } else{
+                } else {
                     $val = '';
                 }
 
@@ -172,22 +169,22 @@ class SchedaChatOpzioni extends Scheda
     private final function errorOptions(array $consts, string $type): array
     {
 
-        switch ($type){
+        switch ( $type ) {
             case 'save':
                 $resp = 'Errore durante l\'update delle opzioni, controllare i valori di: ';
                 break;
         }
 
-        foreach ($consts as $e){
+        foreach ( $consts as $e ) {
 
             $resp .= " {$e},";
         }
 
         return [
-            'response'=>false,
-            'swal_title'=>'Operazione fallita!',
-            'swal_message'=>$resp,
-            'swal_type'=>'error'
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => $resp,
+            'swal_type' => 'error',
         ];
     }
 }

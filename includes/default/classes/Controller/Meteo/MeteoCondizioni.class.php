@@ -69,9 +69,9 @@ class MeteoCondizioni extends Meteo
      * @note Estrae la lista di condizioni
      * @return array
      */
-    public function ajaxCondList():array
+    public function ajaxCondList(): array
     {
-        return ['List'=>$this->listConditions()];
+        return ['List' => $this->listConditions()];
     }
 
     /**
@@ -83,7 +83,7 @@ class MeteoCondizioni extends Meteo
     public function ajaxCondData(array $post): array
     {
 
-        if ($this->permissionManageWeatherConditions()) {
+        if ( $this->permissionManageWeatherConditions() ) {
             $id = Filters::int($post['id']);
 
             $data = $this->getCondition($id);
@@ -94,14 +94,14 @@ class MeteoCondizioni extends Meteo
 
             return [
                 'response' => true,
-                'nome'=>$nome,
-                'img'=>$img,
-                'vento'=>$vento
+                'nome' => $nome,
+                'img' => $img,
+                'vento' => $vento,
             ];
 
         }
 
-        return ['response'=>false];
+        return ['response' => false];
     }
 
     /** GESTIONE */
@@ -114,12 +114,11 @@ class MeteoCondizioni extends Meteo
      */
     public function NewCondition(array $post): array
     {
-        if ($this->permissionManageWeather()) {
+        if ( $this->permissionManageWeather() ) {
 
             $nome = Filters::in($post['nome']);
             $vento = Filters::in(implode(",", $post['vento']));
             $img = Filters::in($post['immagine']);
-
 
             DB::query("INSERT INTO meteo_condizioni (nome,vento,img )  VALUES ('{$nome}', '{$vento}' , '{$img}') ");
 
@@ -128,14 +127,14 @@ class MeteoCondizioni extends Meteo
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Condizione meteo creata.',
                 'swal_type' => 'success',
-                'condition_list'=>$this->listConditions()
+                'condition_list' => $this->listConditions(),
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -148,12 +147,11 @@ class MeteoCondizioni extends Meteo
      */
     public function ModCondition(array $post): array
     {
-        if($this->permissionManageWeather()){
-            $nome = Filters::in( $post['nome']);
-            $vento = implode(",",$post['vento']);
-            $id=Filters::in( $post['id']);
-            $img = Filters::in( $post['immagine']);
-
+        if ( $this->permissionManageWeather() ) {
+            $nome = Filters::in($post['nome']);
+            $vento = implode(",", $post['vento']);
+            $id = Filters::in($post['id']);
+            $img = Filters::in($post['immagine']);
 
             DB::query("UPDATE  meteo_condizioni 
                 SET nome = '{$nome}',vento='{$vento}', img='{$img}' WHERE id='{$id}'");
@@ -163,14 +161,14 @@ class MeteoCondizioni extends Meteo
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Condizione meteo modificata.',
                 'swal_type' => 'success',
-                'condition_list'=>$this->listConditions()
+                'condition_list' => $this->listConditions(),
             ];
-        } else{
+        } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -181,9 +179,9 @@ class MeteoCondizioni extends Meteo
      * @param array $post
      * @return array
      */
-    public function DelCondition(array $post):array
+    public function DelCondition(array $post): array
     {
-        if($this->permissionManageWeather()) {
+        if ( $this->permissionManageWeather() ) {
 
             $id = Filters::in($post['id']);
 
@@ -194,14 +192,14 @@ class MeteoCondizioni extends Meteo
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Condizione meteo eliminata.',
                 'swal_type' => 'success',
-                'condition_list'=>$this->listConditions()
+                'condition_list' => $this->listConditions(),
             ];
-        } else{
+        } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }

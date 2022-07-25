@@ -5,7 +5,7 @@ Router::loadRequired();
 $action = Filters::in($_POST['action']);
 $gruppi_oggetto = GruppiOggetto::getInstance();
 
-switch ($action) {
+switch ( $action ) {
     # Invio azione
     case 'get_storage_object_info':
         echo json_encode($gruppi_oggetto->renderAjaxSingleObjectData($_POST));

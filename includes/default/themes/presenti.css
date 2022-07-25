@@ -60,17 +60,17 @@
     margin: 5px 0;
 }
 
-.presenti_estesi_container .single_presente .presente_info .presente_name img{
+.presenti_estesi_container .single_presente .presente_info .presente_name img {
     width: 10px;
     height: 10px;
 }
 
-.presenti_estesi_container .single_presente .presente_info .presente_commands{
+.presenti_estesi_container .single_presente .presente_info .presente_commands {
     margin-top: 10px;
     white-space: nowrap;
 }
 
-.presenti_estesi_container .single_presente .presente_info .presente_commands a{
+.presenti_estesi_container .single_presente .presente_info .presente_commands a {
     margin: 5px;
     color: #ccc;
 }

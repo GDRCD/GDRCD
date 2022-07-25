@@ -1,6 +1,7 @@
 <?php
 
-class ChatAbilita extends Chat {
+class ChatAbilita extends Chat
+{
 
     private $pg_class;
 
@@ -23,15 +24,15 @@ class ChatAbilita extends Chat {
         $ids = [];
 
         # Estraggo le abilita secondo i parametri
-        $abilita = $this->pg_class->getPgGenericAbility($this->me_id,'abilita.id,abilita.nome,personaggio_abilita.grado');
+        $abilita = $this->pg_class->getPgGenericAbility($this->me_id, 'abilita.id,abilita.nome,personaggio_abilita.grado');
 
         # Per ogni abilita' aggiungo il suo id all'array globale
-        foreach ($abilita as $abi) {
+        foreach ( $abilita as $abi ) {
             $id_abilita = Filters::int($abi['id']);
             $nome_abilita = Filters::out($abi['nome']);
             $grado = Filters::int($abi['grado']);
 
-            if ($grado > 0 || !$this->chat_skill_buyed) {
+            if ( $grado > 0 || !$this->chat_skill_buyed ) {
                 $ids[$id_abilita] = $nome_abilita;
             }
         }
@@ -49,15 +50,15 @@ class ChatAbilita extends Chat {
     private function getRaceAbilita(array $ids): array
     {
         # Estraggo le abilita secondo i parametri
-        $abilita = $this->pg_class->getPgRaceAbility($this->me_id,'abilita.id,abilita.nome,personaggio_abilita.grado');
+        $abilita = $this->pg_class->getPgRaceAbility($this->me_id, 'abilita.id,abilita.nome,personaggio_abilita.grado');
 
         # Per ogni abilita' aggiungo il suo id all'array globale
-        foreach ($abilita as $abi) {
+        foreach ( $abilita as $abi ) {
             $id_abilita = Filters::int($abi['id']);
             $nome_abilita = Filters::out($abi['nome']);
             $grado = Filters::int($abi['grado']);
 
-            if ($grado > 0 || !$this->chat_skill_buyed) {
+            if ( $grado > 0 || !$this->chat_skill_buyed ) {
                 $ids[$id_abilita] = $nome_abilita;
             }
         }
@@ -83,7 +84,7 @@ class ChatAbilita extends Chat {
         asort($ids, SORT_ASC);
 
         # Per ogni id creo una option per la select
-        foreach ($ids as $index => $value) {
+        foreach ( $ids as $index => $value ) {
             $id = Filters::int($index);
             $nome = Filters::out($value);
 

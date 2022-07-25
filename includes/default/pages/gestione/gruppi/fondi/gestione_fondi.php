@@ -4,26 +4,27 @@ Router::loadRequired(); # Inserisco il required se non presente, per futuro spos
 
 $cls = GruppiFondi::getInstance(); # Inizializzo classe
 
-if($cls->permissionManageFounds() && $cls->activeFounds()){ # Metodo di controllo per accesso alla pagina di gestione
+if ( $cls->permissionManageFounds() && $cls->activeFounds() ) { # Metodo di controllo per accesso alla pagina di gestione
 
-?>
-        <div class="general_incipit">
-            <div class="title"> Gestione fondi gruppi </div>
-            <div class="subtitle">Gestione dei fondi ricevuti temporalmente dai gruppi</div>
+    ?>
+    <div class="general_incipit">
+        <div class="title"> Gestione fondi gruppi</div>
+        <div class="subtitle">Gestione dei fondi ricevuti temporalmente dai gruppi</div>
 
-            Da questa pagina e' possibile:
-            <ul>
-                <li>Creare un fondo gruppo</li>
-                <li>Modificare un fondo gruppo</li>
-                <li>Eliminare un fondo gruppo</li>
-            </ul>
+        Da questa pagina e' possibile:
+        <ul>
+            <li>Creare un fondo gruppo</li>
+            <li>Modificare un fondo gruppo</li>
+            <li>Eliminare un fondo gruppo</li>
+        </ul>
 
-        </div>
+    </div>
 
     <div class="form_container group_found_managements">
 
         <!-- INSERT -->
-        <form class="form ajax_form" action="gestione/gruppi/fondi/gestione_fondi_ajax.php" data-callback="updateFounds">
+        <form class="form ajax_form" action="gestione/gruppi/fondi/gestione_fondi_ajax.php"
+              data-callback="updateFounds">
 
             <div class="form_title">Crea fondo gruppo</div>
 
@@ -70,7 +71,8 @@ if($cls->permissionManageFounds() && $cls->activeFounds()){ # Metodo di controll
         </form>
 
         <!-- EDIT -->
-        <form class="form edit_form ajax_form" action="gestione/gruppi/fondi/gestione_fondi_ajax.php" data-callback="updateFounds">
+        <form class="form edit_form ajax_form" action="gestione/gruppi/fondi/gestione_fondi_ajax.php"
+              data-callback="updateFounds">
 
             <div class="form_title">Modifica fondo gruppo</div>
 
@@ -118,7 +120,8 @@ if($cls->permissionManageFounds() && $cls->activeFounds()){ # Metodo di controll
         </form>
 
         <!-- DELETE -->
-        <form method="POST" class="form ajax_form" action="gestione/gruppi/fondi/gestione_fondi_ajax.php" data-callback="updateFounds">
+        <form method="POST" class="form ajax_form" action="gestione/gruppi/fondi/gestione_fondi_ajax.php"
+              data-callback="updateFounds">
 
             <div class="form_title">Elimina fondo gruppo</div>
 
@@ -139,7 +142,7 @@ if($cls->permissionManageFounds() && $cls->activeFounds()){ # Metodo di controll
     </div>
 
     <script src="<?= Router::getPagesLink('gestione/gruppi/fondi/gestione_fondi.js'); ?>"></script>
-    <div class="link_back"><a href="/main.php?page=gestione">Indietro</a> </div>
+    <div class="link_back"><a href="/main.php?page=gestione">Indietro</a></div>
 
 
 <?php } ?>

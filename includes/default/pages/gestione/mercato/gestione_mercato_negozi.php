@@ -4,14 +4,13 @@ Router::loadRequired();# Inserisco il required se non presente, per futuro spost
 
 $cls = Mercato::getInstance(); # Inizializzo classe
 
-if ($cls->manageShopPermission()) { # Metodo di controllo per accesso alla pagina di gestione
+if ( $cls->manageShopPermission() ) { # Metodo di controllo per accesso alla pagina di gestione
 
-    if (isset($_POST['op'])) { # Se ho richiesto un'operazione
-        switch ($_POST['op']) { # In base al tipo di operazione eseguo insert/edit/delete/altro
+    if ( isset($_POST['op']) ) { # Se ho richiesto un'operazione
+        switch ( $_POST['op'] ) { # In base al tipo di operazione eseguo insert/edit/delete/altro
 
         }
     }
-
 
     ?>
 
@@ -30,13 +29,15 @@ if ($cls->manageShopPermission()) { # Metodo di controllo per accesso alla pagin
             <li>Rimuovere un negozio</li>
         </ul>
         <br>
-        <div class="highlight"> Rimuovere un negozio NON sposta automaticamente gli oggetti al suo interno su un altro negozio e sara' necessario procedere manualmente allo spostamento. </div>
+        <div class="highlight"> Rimuovere un negozio NON sposta automaticamente gli oggetti al suo interno su un altro
+            negozio e sara' necessario procedere manualmente allo spostamento.
+        </div>
     </div>
 
 
     <div class="form_container gestione_negozi">
 
-        <?php if (isset($resp)) { # Se ho inviato il form e ricevuto una risposta ?>
+        <?php if ( isset($resp) ) { # Se ho inviato il form e ricevuto una risposta ?>
 
             <div class="warning"><?= $resp['mex']; ?></div>
             <div class="link_back">
@@ -50,7 +51,8 @@ if ($cls->manageShopPermission()) { # Metodo di controllo per accesso alla pagin
         } ?>
 
         <!-- INSERT -->
-        <form method="POST" class="form ajax_form" action="gestione/mercato/gestione_mercato_ajax.php" data-callback="refreshShopLists">
+        <form method="POST" class="form ajax_form" action="gestione/mercato/gestione_mercato_ajax.php"
+              data-callback="refreshShopLists">
 
             <div class="form_title">Aggiunta negozio</div>
 
@@ -78,14 +80,15 @@ if ($cls->manageShopPermission()) { # Metodo di controllo per accesso alla pagin
         </form>
 
         <!-- EDIT -->
-        <form method="POST" class="form edit-form ajax_form" action="gestione/mercato/gestione_mercato_ajax.php"  data-callback="refreshShopLists">
+        <form method="POST" class="form edit-form ajax_form" action="gestione/mercato/gestione_mercato_ajax.php"
+              data-callback="refreshShopLists">
 
             <div class="form_title">Modifica negozio</div>
 
             <div class="single_input">
                 <div class="label">Negozio</div>
                 <select name="id" required>
-                    <?=$cls->listShops();?>
+                    <?= $cls->listShops(); ?>
                 </select>
             </div>
 
@@ -112,7 +115,8 @@ if ($cls->manageShopPermission()) { # Metodo di controllo per accesso alla pagin
         </form>
 
         <!-- DELETE -->
-        <form method="POST" class="form ajax_form" action="gestione/mercato/gestione_mercato_ajax.php"  data-callback="refreshShopLists">
+        <form method="POST" class="form ajax_form" action="gestione/mercato/gestione_mercato_ajax.php"
+              data-callback="refreshShopLists">
 
             <div class="form_title">Elimina oggetto da negozio</div>
 
@@ -132,7 +136,7 @@ if ($cls->manageShopPermission()) { # Metodo di controllo per accesso alla pagin
 
     </div>
 
-    <script src="<?=Router::getPagesLink('gestione/mercato/gestione_mercato_negozi.js');?>"></script>
+    <script src="<?= Router::getPagesLink('gestione/mercato/gestione_mercato_negozi.js'); ?>"></script>
     <div class="link_back"><a href="/main.php?page=gestione">Indietro</a></div>
 
 
