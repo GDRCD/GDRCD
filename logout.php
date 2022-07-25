@@ -1,14 +1,14 @@
 <?php
 
 //Includio i parametri, la configurazione, la lingua e le funzioni
-require_once(__DIR__.'/core/required.php');
+require_once(__DIR__ . '/core/required.php');
 
 //Eseguo la connessione al database
 $handleDBConnection = DB::connect();
 
 /** * Aggiorno l'ora di uscita del pg
-* @author Blancks
-*/
+ * @author Blancks
+ */
 gdrcd_query("UPDATE personaggio SET ora_uscita = NOW() WHERE nome='" . gdrcd_filter('in', $_SESSION['login']) . "'");
 ?>
 <html>
@@ -18,16 +18,17 @@ gdrcd_query("UPDATE personaggio SET ora_uscita = NOW() WHERE nome='" . gdrcd_fil
     <link rel="shortcut icon" href="favicon.ico"/>
 </head>
 <body class="logout_body">
-    <div class="logout_box">
-        <span class="logout_text"><?php echo gdrcd_filter('out', $_SESSION['login']) . ' ' . $MESSAGE['logout']['confirmation']; ?></span>
-        <span class="logout_text">
+<div class="logout_box">
+    <span
+        class="logout_text"><?php echo gdrcd_filter('out', $_SESSION['login']) . ' ' . $MESSAGE['logout']['confirmation']; ?></span>
+    <span class="logout_text">
             <?php echo gdrcd_filter('out', $MESSAGE['logout']['logbackin']) . ' '; ?>
             <a href="index.php">
                 <?php echo gdrcd_filter('out', $PARAMETERS['info']['homepage_name']); ?>
             </a>
         </span>
-        <span class="logout_text"><?php echo gdrcd_filter('out', $MESSAGE['logout']['greeting']); ?></span>
-    </div>
+    <span class="logout_text"><?php echo gdrcd_filter('out', $MESSAGE['logout']['greeting']); ?></span>
+</div>
 </body>
 </html>
 <?php
@@ -35,8 +36,8 @@ gdrcd_query("UPDATE personaggio SET ora_uscita = NOW() WHERE nome='" . gdrcd_fil
 DB::disconnect($handleDBConnection);
 
 /** * Per ottimizzare le risorse impiegate le liberiamo dopo che non ne abbiamo più bisogno
-* @author Blancks
-*/
+ * @author Blancks
+ */
 unset($MESSAGE);
 unset($PARAMETERS);
 

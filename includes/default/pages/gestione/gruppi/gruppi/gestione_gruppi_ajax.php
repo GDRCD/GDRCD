@@ -4,7 +4,7 @@ Router::loadRequired();
 
 $cls = Gruppi::getInstance();
 
-switch ($_POST['action']) {
+switch ( $_POST['action'] ) {
     case 'get_group_data':
         echo json_encode($cls->ajaxGroupData($_POST));
         break;

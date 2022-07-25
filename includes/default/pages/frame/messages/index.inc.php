@@ -3,9 +3,8 @@
 //Includio i parametri, la configurazione, la lingua e le funzioni
 Router::loadRequired();
 
-
 // Determino il tema selezionato
-if(!empty($_SESSION['theme']) and array_key_exists($_SESSION['theme'], $PARAMETERS['themes']['available'])){
+if ( !empty($_SESSION['theme']) and array_key_exists($_SESSION['theme'], $PARAMETERS['themes']['available']) ) {
     $PARAMETERS['themes']['current_theme'] = $_SESSION['theme'];
 }
 
@@ -13,23 +12,23 @@ if(!empty($_SESSION['theme']) and array_key_exists($_SESSION['theme'], $PARAMETE
 $i_ref_time = Filters::get($_GET['ref']);
 
 // Nel caso in cui sia presente il controllo sui nuovi messaggi ottenuti, prevedo le operazioni
-if($PARAMETERS['mode']['check_messages'] === 'ON') {
+if ( $PARAMETERS['mode']['check_messages'] === 'ON' ) {
 
     /**
      * Controllo se rispetto all'ultimo messaggio visualizzato dall'utente ne sono stati inviati altri
      */
-    $messaggi_non_letti = gdrcd_query("SELECT id FROM messaggi WHERE destinatario = '".gdrcd_filter('in', $_SESSION['login'])."' AND destinatario_del = 0 AND letto = 0", 'result');
+    $messaggi_non_letti = gdrcd_query("SELECT id FROM messaggi WHERE destinatario = '" . gdrcd_filter('in', $_SESSION['login']) . "' AND destinatario_del = 0 AND letto = 0", 'result');
     $cntNewMessage = gdrcd_query($messaggi_non_letti, 'num_rows');
     $hasNewMessage = ($cntNewMessage > 0);
     gdrcd_query($messaggi_non_letti, 'free');
 
     // NO NUOVI MESSAGGI
-    if(!$hasNewMessage) {
+    if ( !$hasNewMessage ) {
 
         // Nel caso sia prevista una immagine, la preparo
-        if(empty ($PARAMETERS['names']['private_message']['image_file']) === false) {
+        if ( empty ($PARAMETERS['names']['private_message']['image_file']) === false ) {
             // L'immagine cambia sul click del mouse
-            if(($PARAMETERS['names']['private_message']['image_file_onclick']) === true) {
+            if ( ($PARAMETERS['names']['private_message']['image_file_onclick']) === true ) {
                 $img_up = $PARAMETERS['names']['private_message']['image_file'];
                 $img_down = $PARAMETERS['names']['private_message']['image_file'];
             } else {
@@ -42,10 +41,10 @@ if($PARAMETERS['mode']['check_messages'] === 'ON') {
                 <script type="text/javascript"> 
                     if (document.images) { 
                         var msg_button1_up = new Image(); 
-                        msg_button1_up.src = "../../../themes/'.$PARAMETERS['themes']['current_theme'].'/imgs/menu/'.$img_up.'"; 
+                        msg_button1_up.src = "../../../themes/' . $PARAMETERS['themes']['current_theme'] . '/imgs/menu/' . $img_up . '"; 
                         
                         var msg_button1_over = new Image(); 
-                        msg_button1_over.src = "../../../themes/'.$PARAMETERS['themes']['current_theme'].'/imgs/menu/'.$img_down.'";
+                        msg_button1_over.src = "../../../themes/' . $PARAMETERS['themes']['current_theme'] . '/imgs/menu/' . $img_down . '";
                     } 
                     
                     function msg_over_button() { 
@@ -62,43 +61,39 @@ if($PARAMETERS['mode']['check_messages'] === 'ON') {
                 </script>';
             // Inserisco l'immagine
             $textMessages .= '<a onMouseOver="msg_over_button()" onMouseOut="msg_up_button()" href="../../../../../main.php?page=messages_center&offset=0"  target="_top">
-                                    <img src="../../../themes/' .$PARAMETERS['themes']['current_theme'].'/imgs/menu/'.$PARAMETERS['names']['private_message']['image_file'].'" alt="'.gdrcd_filter('out', $PARAMETERS['names']['private_message']['plur']).'" title="'.gdrcd_filter('out', $PARAMETERS['names']['private_message']['plur']).'" name="msg_buttonOne" />
+                                    <img src="../../../themes/' . $PARAMETERS['themes']['current_theme'] . '/imgs/menu/' . $PARAMETERS['names']['private_message']['image_file'] . '" alt="' . gdrcd_filter('out', $PARAMETERS['names']['private_message']['plur']) . '" title="' . gdrcd_filter('out', $PARAMETERS['names']['private_message']['plur']) . '" name="msg_buttonOne" />
                               </a>';
-        }
-        // Testo normale
+        } // Testo normale
         else {
             $textMessages = gdrcd_filter('out', $PARAMETERS['names']['private_message']['plur']);
         }
 
         // Preparo il modulo
-        $linkMessages = '<a href="../../../../../main.php?page=messages_center&offset=0" target="_top">' .$textMessages.'</a>';
-        $cntMessagesFrame = '<div class="messaggio_forum">'.$linkMessages.'</div>';
+        $linkMessages = '<a href="../../../../../main.php?page=messages_center&offset=0" target="_top">' . $textMessages . '</a>';
+        $cntMessagesFrame = '<div class="messaggio_forum">' . $linkMessages . '</div>';
 
-    }
-    // NUOVI MESSAGGI
+    } // NUOVI MESSAGGI
     else {
 
         // Determino se costruire una immagine
-        if(empty($PARAMETERS['names']['private_message']['image_file_new']) === false) {
-            $textMessages = '<img src="../../../themes/'.$PARAMETERS['themes']['current_theme'].'/imgs/menu/'.$PARAMETERS['names']['private_message']['image_file_new'].'" alt="'.gdrcd_filter('out', $PARAMETERS['names']['private_message']['plur']).'" title="'.gdrcd_filter('out', $PARAMETERS['names']['private_message']['plur']).'" />';
-        }
-        // Altrimenti preparo il testo
+        if ( empty($PARAMETERS['names']['private_message']['image_file_new']) === false ) {
+            $textMessages = '<img src="../../../themes/' . $PARAMETERS['themes']['current_theme'] . '/imgs/menu/' . $PARAMETERS['names']['private_message']['image_file_new'] . '" alt="' . gdrcd_filter('out', $PARAMETERS['names']['private_message']['plur']) . '" title="' . gdrcd_filter('out', $PARAMETERS['names']['private_message']['plur']) . '" />';
+        } // Altrimenti preparo il testo
         else {
-            $textMessages = gdrcd_filter('out', $PARAMETERS['names']['private_message']['plur']) . ' ['.$cntNewMessage.']';
+            $textMessages = gdrcd_filter('out', $PARAMETERS['names']['private_message']['plur']) . ' [' . $cntNewMessage . ']';
         }
 
         // Preparo il modulo
-        $linkMessages = '<a href="../../../../../main.php?page=messages_center&offset=0" target="_top">' .$textMessages.'</a>';
-        $cntMessagesFrame = '<div class="messaggio_forum_nuovo">'.$linkMessages.'</div>';
+        $linkMessages = '<a href="../../../../../main.php?page=messages_center&offset=0" target="_top">' . $textMessages . '</a>';
+        $cntMessagesFrame = '<div class="messaggio_forum_nuovo">' . $linkMessages . '</div>';
 
-
-        if($PARAMETERS['mode']['allow_audio'] == 'ON' && $_SESSION['blocca_media'] != 1 && ! empty($PARAMETERS['settings']['audio_new_messagges'])) {
+        if ( $PARAMETERS['mode']['allow_audio'] == 'ON' && $_SESSION['blocca_media'] != 1 && !empty($PARAMETERS['settings']['audio_new_messagges']) ) {
             $ext = explode('.', $PARAMETERS['settings']['audio_new_messagges']);
 
-            if(isset($PARAMETERS['settings']['audiotype']['.'.strtolower(end($ext))])) {
+            if ( isset($PARAMETERS['settings']['audiotype']['.' . strtolower(end($ext))]) ) {
                 $cntMessagesFrame .= '
                     <audio autoplay preload="none">
-                        <source src="../../../sounds/'.$PARAMETERS['settings']['audio_new_messagges'].'" type="'.$PARAMETERS['settings']['audiotype']['.'.strtolower(end($ext))].'">
+                        <source src="../../../sounds/' . $PARAMETERS['settings']['audio_new_messagges'] . '" type="' . $PARAMETERS['settings']['audiotype']['.' . strtolower(end($ext))] . '">
                         Your browser does not support the audio element.
                     </audio>';
             }
@@ -112,15 +107,18 @@ if($PARAMETERS['mode']['check_messages'] === 'ON') {
     <!--meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"-->
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="refresh" content="<?php echo $i_ref_time; ?>">
-    <link rel="stylesheet" href="../../../themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/presenti.css" TYPE="text/css">
-    <link rel="stylesheet" href="../../../themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/main.css" TYPE="text/css">
-    <link rel="stylesheet" href="../../../themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/chat.css" TYPE="text/css">
+    <link rel="stylesheet" href="../../../themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/presenti.css"
+          TYPE="text/css">
+    <link rel="stylesheet" href="../../../themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/main.css"
+          TYPE="text/css">
+    <link rel="stylesheet" href="../../../themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/chat.css"
+          TYPE="text/css">
     <title>Messaggi</title>
 </head>
 <body class="transparent_body">
-    <script type="text/javascript">
-        var mediaElementChat = parent.document.getElementById("sound_player_chat");
-        mediaElementChat.play();
-    </script>
+<script type="text/javascript">
+    var mediaElementChat = parent.document.getElementById("sound_player_chat");
+    mediaElementChat.play();
+</script>
 
-    <div class="box_messages"><?=isset($cntMessagesFrame) ? $cntMessagesFrame : '';?></div>
+<div class="box_messages"><?= isset($cntMessagesFrame) ? $cntMessagesFrame : ''; ?></div>

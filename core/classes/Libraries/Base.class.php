@@ -36,7 +36,7 @@ abstract class BaseClass
     {
         $className = get_called_class();
 
-        if (!($className::$_instance instanceof $className)) {
+        if ( !($className::$_instance instanceof $className) ) {
             $className::$_instance = new $className();
         }
 

@@ -4,7 +4,7 @@ Router::loadRequired(); # Inserisco il required se non presente, per futuro spos
 
 $cls = Oggetti::getInstance(); # Inizializzo classe
 
-if ($cls->permissionManageObjectsType()) { # Metodo di controllo per accesso alla pagina di gestione
+if ( $cls->permissionManageObjectsType() ) { # Metodo di controllo per accesso alla pagina di gestione
     ?>
 
     <div class="general_incipit">
@@ -26,7 +26,7 @@ if ($cls->permissionManageObjectsType()) { # Metodo di controllo per accesso all
         <ul>
             <li>Nome posizione</li>
             <li>Immagine di default, per oggetti mancanti in posizione. Il percorso di default e' <span
-                        class="highlight"> "themes/advanced/imgs/body"</span></li>
+                    class="highlight"> "themes/advanced/imgs/body"</span></li>
             <li>Numero di oggetti indossabili per ogni posizione</li>
         </ul>
 
@@ -38,7 +38,7 @@ if ($cls->permissionManageObjectsType()) { # Metodo di controllo per accesso all
         <!-- INSERT -->
         <form class="form ajax_form"
               action="gestione/oggetti/gestione_oggetti_ajax.php"
-        data-callback="refreshObjPosList">
+              data-callback="refreshObjPosList">
 
             <div class="form_title">Creazione posizione oggetto</div>
 
@@ -133,7 +133,7 @@ if ($cls->permissionManageObjectsType()) { # Metodo di controllo per accesso all
 
     </div>
 
-    <script src="<?=Router::getPagesLink('gestione/oggetti/gestione_oggetti_posizioni.js');?>"></script>
+    <script src="<?= Router::getPagesLink('gestione/oggetti/gestione_oggetti_posizioni.js'); ?>"></script>
     <div class="link_back"><a href="/main.php?page=gestione">Indietro</a></div>
 
 

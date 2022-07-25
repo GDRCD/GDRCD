@@ -4,7 +4,7 @@ Router::loadRequired();
 
 $cls = Oggetti::getInstance();
 
-switch ($_POST['action']){
+switch ( $_POST['action'] ) {
     case 'get_object_data':
         echo json_encode($cls->ajaxObjectData($_POST));
         break;

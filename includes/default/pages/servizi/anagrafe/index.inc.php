@@ -1,38 +1,37 @@
 <?php
 
 // Avvio l'operazione di ricerca nel caso sia stato inviato il form
-if ($_POST['action'] == "searchPersonaggio") {
+if ( $_POST['action'] == "searchPersonaggio" ) {
 
-    if (!empty($_REQUEST['nome']) || !empty($_REQUEST['genere']) || !empty($_REQUEST['razza'])) {
+    if ( !empty($_REQUEST['nome']) || !empty($_REQUEST['genere']) || !empty($_REQUEST['razza']) ) {
         // Ottengo i filtri inviati dal FORM
-        if (gdrcd_filter('get', $_REQUEST['nome'])) {
+        if ( gdrcd_filter('get', $_REQUEST['nome']) ) {
             $whereFilters[] = "personaggio.nome LIKE '%" . gdrcd_filter('get', $_REQUEST['nome']) . "%'";
         }
 
-        if (gdrcd_filter('get', $_REQUEST['genere'])) {
+        if ( gdrcd_filter('get', $_REQUEST['genere']) ) {
             $whereFilters[] = "personaggio.sesso = '" . gdrcd_filter('get', $_REQUEST['genere']) . "'";
         }
 
-        if (gdrcd_filter('get', $_REQUEST['razza'])) {
-            $whereFilters[] = "personaggio.id_razza = '" . gdrcd_filter('get', $_REQUEST['razza']) . "'";
+        if ( gdrcd_filter('get', $_REQUEST['razza']) ) {
+            $whereFilters[] = "personaggio.razza = '" . gdrcd_filter('get', $_REQUEST['razza']) . "'";
         }
 
         $limit_val = gdrcd_filter('num', $_REQUEST['limit']);
 
         $limit = (isset($_REQUEST['limit']) && ($_REQUEST['limit'] > 0)) ? " LIMIT {$_REQUEST['limit']} " : '';
 
-
         // Costruisco la query
         $querySearch = "SELECT personaggio.url_img_chat, personaggio.nome, personaggio.cognome, personaggio.sesso, 
                                razza.nome_razza 
                         FROM personaggio 
-                        LEFT JOIN razza ON personaggio.id_razza = razza.id_razza 
+                        LEFT JOIN razza ON personaggio.razza = razza.id 
                         WHERE 1 " . (isset($whereFilters) ? ' AND ' . implode(' AND ', $whereFilters) : NULL) . '
-                        ORDER BY nome DESC '.$limit;
+                        ORDER BY nome DESC ' . $limit;
         $resultSearch = gdrcd_query($querySearch, 'result');
 
         // Se ottengo dei risultati, costruisco la tabella
-        if (gdrcd_query($resultSearch, 'num_rows') > 0) {
+        if ( gdrcd_query($resultSearch, 'num_rows') > 0 ) {
 
             // Costruisco le intestazioni
             $trs[] = '<tr>
@@ -44,7 +43,7 @@ if ($_POST['action'] == "searchPersonaggio") {
                      </tr>';
 
             // Scorro i risultati
-            while ($rowSearch = gdrcd_query($resultSearch, 'fetch')) {
+            while ( $rowSearch = gdrcd_query($resultSearch, 'fetch') ) {
                 // Aggiungo le celle con i dettagli del personaggio
                 $tds[] = '<td class="casella_elemento">
                             <div class="elementi_elenco">
@@ -55,26 +54,26 @@ if ($_POST['action'] == "searchPersonaggio") {
                 $tds[] = '<td class="casella_elemento">
                             <div class="elementi_elenco">
                                 <a href="main.php?page=scheda&pg=' . gdrcd_filter('out', $rowSearch['nome']) . '">' .
-                                    gdrcd_filter('out', $rowSearch['nome']) . ' ' . gdrcd_filter('out', $rowSearch['cognome']) . '
+                    gdrcd_filter('out', $rowSearch['nome']) . ' ' . gdrcd_filter('out', $rowSearch['cognome']) . '
                                 </a>
                             </div>                        
                          </td>';
                 $tds[] = '<td class="casella_elemento">
                             <div class="elementi_elenco">' .
-                                gdrcd_filter('out', $MESSAGE['register']['fields']['gender_' . $rowSearch['sesso']]) . '
+                    gdrcd_filter('out', $MESSAGE['register']['fields']['gender_' . $rowSearch['sesso']]) . '
                             </div>
                          </td>';
                 $tds[] = '<td class="casella_elemento">
                             <div class="elementi_elenco">' .
-                                gdrcd_filter('out', $rowSearch['nome_razza']) . '
+                    gdrcd_filter('out', $rowSearch['nome_razza']) . '
                             </div>                     
                          </td>';
                 $tds[] = '<td class="casella_elemento">
                             <div class="controllo_elenco">
                                 <form action="main.php?page=messages_center&op=create" method="post">
-                                    <input type="hidden" name="destinatario" value="'.$rowSearch['nome'].'" />
-                                    <input type="image" src="imgs/icons/reply.png" value="submit" alt="'.gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']).'"
-                                           title="'.gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']).'" />
+                                    <input type="hidden" name="destinatario" value="' . $rowSearch['nome'] . '" />
+                                    <input type="image" src="imgs/icons/reply.png" value="submit" alt="' . gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']) . '"
+                                           title="' . gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']) . '" />
                                 </form>
                             </div>
                            </td>';
@@ -85,7 +84,6 @@ if ($_POST['action'] == "searchPersonaggio") {
                 // Rimuovo le celle
                 unset($tds);
             }
-
 
             // Finalizzo la costruzione della tabella
             $tableSearch =
@@ -102,12 +100,11 @@ if ($_POST['action'] == "searchPersonaggio") {
     }
 }
 
-
 // Ottengo le razze per costruire le opzioni
 $result = gdrcd_query("SELECT id_razza, nome_razza FROM razza ORDER BY nome_razza", 'result');
 // Scorro i risultati e inserisco le opzioni
 $optionsRazze = [];
-while ($razza = gdrcd_query($result, 'fetch')) {
+while ( $razza = gdrcd_query($result, 'fetch') ) {
     $isSelected = gdrcd_filter('get', $_REQUEST['razza']) == $razza['id_razza'] ? 'selected' : NULL;
     $optionsRazze[] = '<option value="' . $razza['id_razza'] . '" ' . $isSelected . '>' . gdrcd_filter('out', $razza['nome_razza']) . '</option>';
 }
@@ -116,7 +113,7 @@ while ($razza = gdrcd_query($result, 'fetch')) {
 $genders = ['m', 'f'];
 // Scorro i risultati e inserisco le opzioni
 $optionsGenders = [];
-foreach ($genders as $gender) {
+foreach ( $genders as $gender ) {
     $isSelected = gdrcd_filter('get', $_REQUEST['genere']) == $gender ? 'selected' : NULL;
     $optionsGenders[] = '<option value="' . $gender . '" ' . $isSelected . '>' . gdrcd_filter('out', $MESSAGE['register']['fields']['gender_' . $gender]) . '</option>';
 }
@@ -173,6 +170,6 @@ foreach ($genders as $gender) {
     <!-- FINE CREA-->
 
     <!-- RISULTATO -->
-<?php if (isset($tableSearch)) {
+<?php if ( isset($tableSearch) ) {
     echo $tableSearch;
 }

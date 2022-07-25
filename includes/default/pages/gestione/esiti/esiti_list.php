@@ -13,5 +13,5 @@ $esiti = Esiti::getInstance();
     <?= $esiti->esitiListManagement(); ?>
 </div>
 
-<script src="<?=Router::getPagesLink('gestione/esiti/JS/esiti_list.js');?>"></script>
+<script src="<?= Router::getPagesLink('gestione/esiti/JS/esiti_list.js'); ?>"></script>
 

@@ -1,13 +1,17 @@
-$(function(){
+$(function () {
 
     let form = $('.edit-form');
 
-    form.find('#fake-extraction').on('click',function(){
+    form.find('#fake-extraction').on('click', function () {
 
         let abi = $('#ModAbiExtraForm select[name="abilita"]').val(),
             grado = $('#ModAbiExtraForm select[name="grado"]').val();
 
-        Ajax('gestione/abilita/Extra/gestione_abilita_ajax.php',{'action':'get_extra_data','abilita':abi,'grado':grado},function(data) {
+        Ajax('gestione/abilita/Extra/gestione_abilita_ajax.php', {
+            'action': 'get_extra_data',
+            'abilita': abi,
+            'grado': grado
+        }, function (data) {
 
             if (data != '') {
 

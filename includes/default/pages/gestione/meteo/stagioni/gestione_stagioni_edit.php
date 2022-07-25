@@ -17,32 +17,38 @@ $stagione = $stagioni->getSeason($id);
                    value="<?php echo Filters::out($stagione['nome']); ?>">
         </div>
         <div class="single_input">
-            <div class="label"><?php echo Filters::out($MESSAGE['interface']['administration']['meteo_season']['min']); ?></div>
+            <div
+                class="label"><?php echo Filters::out($MESSAGE['interface']['administration']['meteo_season']['min']); ?></div>
             <input type="number" name="minima" id="minima" class="form_input"
                    value="<?php echo Filters::out($stagione['minima']); ?>">
         </div>
         <div class="single_input">
-            <div class="label"><?php echo Filters::out($MESSAGE['interface']['administration']['meteo_season']['max']); ?></div>
+            <div
+                class="label"><?php echo Filters::out($MESSAGE['interface']['administration']['meteo_season']['max']); ?></div>
             <input type="number" name="massima" id="massima" class="form_input"
                    value="<?php echo Filters::out($stagione['massima']); ?>">
         </div>
         <div class="single_input">
-            <div class="label"><?php echo Filters::out($MESSAGE['interface']['administration']['meteo_season']['date_start']); ?></div>
+            <div
+                class="label"><?php echo Filters::out($MESSAGE['interface']['administration']['meteo_season']['date_start']); ?></div>
             <input type="date" name="data_inizio" id="data_inizio" class="form_input"
                    value="<?php echo Filters::out($stagione['data_inizio']); ?>">
         </div>
         <div class="single_input">
-            <div class="label"><?php echo Filters::out($MESSAGE['interface']['administration']['meteo_season']['date_end']); ?></div>
+            <div
+                class="label"><?php echo Filters::out($MESSAGE['interface']['administration']['meteo_season']['date_end']); ?></div>
             <input type="date" name="data_fine" id="data_fine" class="form_input"
                    value="<?php echo Filters::out($stagione['data_fine']); ?>">
         </div>
         <div class="single_input">
-            <div class="label"><?php echo Filters::out($MESSAGE['interface']['administration']['meteo_season']['sunrise']); ?></div>
+            <div
+                class="label"><?php echo Filters::out($MESSAGE['interface']['administration']['meteo_season']['sunrise']); ?></div>
             <input type="time" name="alba" id="alba" class="form_input"
                    value="<?php echo Filters::out($stagione['alba']); ?>">
         </div>
         <div class="single_input">
-            <div class="label"><?php echo Filters::out($MESSAGE['interface']['administration']['meteo_season']['sunset']); ?></div>
+            <div
+                class="label"><?php echo Filters::out($MESSAGE['interface']['administration']['meteo_season']['sunset']); ?></div>
             <input type="time" name="tramonto" id="tramonto" class="form_input"
                    value="<?php echo Filters::out($stagione['tramonto']); ?>">
         </div>

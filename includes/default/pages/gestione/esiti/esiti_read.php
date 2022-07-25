@@ -7,12 +7,12 @@ $abi = Abilita::getInstance();
 $chat = new Chat();
 $id_record = Filters::int($_GET['id_record']);
 
-if ($esiti->esitoViewPermission($id_record) && $esiti->esitoExist($id_record)) {
+if ( $esiti->esitoViewPermission($id_record) && $esiti->esitoExist($id_record) ) {
 
     $esitoData = $esiti->getEsito($id_record, 'titolo');
     $titolo = Filters::out($esitoData['titolo']);
 
-    if (isset($resp)) { ?>
+    if ( isset($resp) ) { ?>
         <div class="warning"><?= $resp['mex']; ?></div>
         <div class="link_back"><a href="/main.php?page=gestione/esiti/esiti_index">Indietro</a></div>
         <?php
@@ -26,14 +26,15 @@ if ($esiti->esitoViewPermission($id_record) && $esiti->esitoExist($id_record)) {
             <div style="height: 1px;clear: both"></div>
         </div>
         <div class="give_answer form_container">
-            <form method="POST" class="form ajax_form" action="gestione/esiti/esiti_ajax.php" data-callback="refreshAnswers">
+            <form method="POST" class="form ajax_form" action="gestione/esiti/esiti_ajax.php"
+                  data-callback="refreshAnswers">
 
                 <div class="single_input">
                     <div class="label">Risposta</div>
                     <textarea name="contenuto" required></textarea>
                 </div>
 
-                <?php if ($esiti->esitiTiriEnabled()) { ?>
+                <?php if ( $esiti->esitiTiriEnabled() ) { ?>
                     <div class="single_input w-33">
                         <div class="label">Numero dadi</div>
                         <input type="number" name="dadi_num">
@@ -45,13 +46,13 @@ if ($esiti->esitoViewPermission($id_record) && $esiti->esitoExist($id_record)) {
                     <div class="single_input w-33">
                         <div class="label">Abilità</div>
                         <select name="abilita">
-                            <?=$abi->listAbilita();?>
+                            <?= $abi->listAbilita(); ?>
                         </select>
                     </div>
                     <div class="single_input w-33">
                         <div class="label">Chat</div>
                         <select name="chat">
-                            <?=$chat->chatList();?>
+                            <?= $chat->chatList(); ?>
                         </select>
                     </div>
 
@@ -59,7 +60,9 @@ if ($esiti->esitoViewPermission($id_record) && $esiti->esitoExist($id_record)) {
 
                     </div>
 
-                    <div id="cd_add"><button type="button">Aggiungi cd</button> </div>
+                    <div id="cd_add">
+                        <button type="button">Aggiungi cd</button>
+                    </div>
 
                 <?php } ?>
 
@@ -73,7 +76,7 @@ if ($esiti->esitoViewPermission($id_record) && $esiti->esitoExist($id_record)) {
         </div>
     </div>
 
-    <script src="<?=Router::getPagesLink('gestione/esiti/JS/esiti_read.js');?>"></script>
+    <script src="<?= Router::getPagesLink('gestione/esiti/JS/esiti_read.js'); ?>"></script>
 
 
 <?php } else { ?>

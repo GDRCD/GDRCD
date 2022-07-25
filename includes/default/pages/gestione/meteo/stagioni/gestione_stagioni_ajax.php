@@ -4,7 +4,7 @@ Router::loadRequired();
 
 $meteoCond = MeteoStagioni::getInstance();
 
-switch ($_POST['action']) {
+switch ( $_POST['action'] ) {
     case 'op_insert':
         echo json_encode($meteoCond->NewSeason($_POST));
         break;
@@ -16,8 +16,7 @@ switch ($_POST['action']) {
     case 'op_delete':
         echo json_encode($meteoCond->DelSeason($_POST));
         break;
-        
-        
+
     case 'op_assign_condition':
         echo json_encode($meteoCond->AssignCondition($_POST));
         break;

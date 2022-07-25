@@ -7,21 +7,20 @@ $obj_class = Oggetti::getInstance();
 
 $shop = Filters::int($_GET['shop']);
 
-if (!empty($shop)) {
+if ( !empty($shop) ) {
     $shop_data = $mercato->getShop($shop, 'nome');
     $shop_objects = $mercato->getAllShopObjects($shop);
 
+    if ( isset($_POST['op']) ) {
 
-    if (isset($_POST['op'])) {
-
-        switch ($_POST['op']) {
+        switch ( $_POST['op'] ) {
             case 'buy':
                 $resp = $mercato->buyObject($_POST);
                 break;
         }
     }
 
-    if (isset($resp)) {
+    if ( isset($resp) ) {
         ?>
         <div class='warning'><?= $resp['mex']; ?></div>
         <div class='link_back'>
@@ -39,7 +38,7 @@ if (!empty($shop)) {
 
         <div class="objects_box">
 
-            <?php foreach ($shop_objects as $object) {
+            <?php foreach ( $shop_objects as $object ) {
 
                 $id = Filters::int($object['id']);
                 $id_obj = Filters::in($object['oggetto']);

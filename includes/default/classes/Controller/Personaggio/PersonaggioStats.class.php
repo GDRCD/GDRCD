@@ -1,6 +1,5 @@
 <?php
 
-
 class PersonaggioStats extends Personaggio
 {
 
@@ -89,9 +88,8 @@ class PersonaggioStats extends Personaggio
     {
 
         $stat_class = Statistiche::getInstance();
-        $res = false;
 
-        if (self::permissionUpgradeStats()) {
+        if ( self::permissionUpgradeStats() ) {
 
             $stat_data = $stat_class->getStat($id, 'max_val');
             $max_val = Filters::int($stat_data['max_val']);
@@ -99,14 +97,13 @@ class PersonaggioStats extends Personaggio
             $pg_stat_data = self::getPgStatByStatId($id, $pg);
             $pg_val = !empty($pg_stat_data) ? Filters::int($pg_stat_data['valore']) : 0;
 
-            if ($pg_val < $max_val) {
+            if ( $pg_val < $max_val ) {
                 return true;
             }
 
-
         }
 
-        return $res;
+        return false;
 
     }
 
@@ -123,7 +120,7 @@ class PersonaggioStats extends Personaggio
         $stat_class = Statistiche::getInstance();
         $res = false;
 
-        if (self::permissionUpgradeStats()) {
+        if ( self::permissionUpgradeStats() ) {
 
             $stat_data = $stat_class->getStat($id, 'min_val');
             $min_val = Filters::int($stat_data['min_val']);
@@ -131,10 +128,9 @@ class PersonaggioStats extends Personaggio
             $pg_stat_data = self::getPgStatByStatId($id, $pg);
             $pg_val = !empty($pg_stat_data) ? Filters::int($pg_stat_data['valore']) : 0;
 
-            if ($pg_val > $min_val) {
+            if ( $pg_val > $min_val ) {
                 return true;
             }
-
 
         }
 
@@ -162,64 +158,70 @@ class PersonaggioStats extends Personaggio
     /**
      * @fn upgradePgStat
      * @note Aumenta una statistica di un personaggio
-     * @param int $id
-     * @param int $pg
+     * @param array $post
      * @return array
      */
-    public static function upgradePgStat(int $id, int $pg): array
+    public static function upgradePgStat(array $post): array
     {
+        $id = Filters::int($post['stat']);
+        $pg = Filters::int($post['pg']);
 
-        $response = [
-            'mex' => Filters::out('Permesso negato.'),
-            'response' => false
-        ];
-
-        if (self::isPgStatUpgradable($id, $pg)) {
-
-
-            if (self::existPgStat($id, $pg)) {
+        if ( self::isPgStatUpgradable($id, $pg) ) {
+            if ( self::existPgStat($id, $pg) ) {
                 DB::query("UPDATE personaggio_statistiche SET valore= valore+1 
                             WHERE personaggio_statistiche.statistica='{$id}' AND personaggio_statistiche.personaggio='{$pg}'");
             } else {
-                if(Statistiche::existStat($id)) {
+                if ( Statistiche::existStat($id) ) {
                     DB::query("INSERT INTO personaggio_statistiche(personaggio, statistica, valore) VALUES('{$pg}','{$id}',1)");
                 }
             }
-            $response = [
-                'mex' => Filters::out('Stastistica aumentata con successo.'),
-                'response' => true
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Statistica aumentata con successo.',
+                'swal_type' => 'success',
+                'new_template' => SchedaStats::getInstance()->statsPage($pg),
+            ];
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione negata!',
+                'swal_message' => 'Statistica non aumentabile ulteriormente.',
+                'swal_type' => 'error',
             ];
         }
-
-        return $response;
     }
 
     /**
      * @fn downgradePgStat
      * @note Diminuisce una statistica di un personaggio
-     * @param int $id
-     * @param int $pg
+     * @param array $post
      * @return array
      */
-    public static function downgradePgStat(int $id, int $pg): array
+    public static function downgradePgStat(array $post): array
     {
-        $response = [
-            'mex' => Filters::out('Permesso negato.'),
-            'response' => false
-        ];
+        $id = Filters::int($post['stat']);
+        $pg = Filters::int($post['pg']);
 
-        if (self::isPgStatDowngradable($id, $pg) && Statistiche::existStat($id)) {
-
+        if ( self::isPgStatDowngradable($id, $pg) && Statistiche::existStat($id) ) {
 
             DB::query("UPDATE personaggio_statistiche SET valore= valore-1 
                             WHERE personaggio_statistiche.statistica='{$id}' AND personaggio_statistiche.personaggio='{$pg}'");
 
-            $response = [
-                'mex' => Filters::out('Stastistica diminuita con successo.'),
-                'response' => true
+            return ['response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Statistica diminuita con successo.',
+                'swal_type' => 'success',
+                'new_template' => SchedaStats::getInstance()->statsPage($pg),
+            ];
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione negata!',
+                'swal_message' => 'Statistica non aumentabile ulteriormente.',
+                'swal_type' => 'error',
             ];
         }
 
-        return $response;
     }
 }

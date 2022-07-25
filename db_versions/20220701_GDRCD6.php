@@ -77,6 +77,7 @@ class GDRCD6 extends DbMigration
                 ('ESITI_CHAT',1,'Esiti','Attiva esiti in chat','Abilitare la funzione di lancio degli esiti in chat?','bool',1),
                 ('ESITI_TIRI',1,'Esiti','Lancio di dadi negli esiti','Abilitare la possibilità di lanciare dadi all''interno del pannello esiti?','bool',1),
                 ('ESITI_FROM_PLAYER',1,'Esiti','Esiti dai player','Abilitare richiesta esiti da parte dei player?','bool',1),
+                ('DIARY_ENABLED',1,'Diario','Diari attivi','Abilitare diari in scheda pg?','bool',1),
                 ('QUEST_ENABLED',1,'Quest','Attivazione Quest migliorate','Gestione quest migliorata, attiva?','bool',1),
                 ('QUEST_VIEW',2,'Quest','Permessi visual quest','Permesso minimo per visualizzazione delle quest','permission',1),
                 ('QUEST_SUPER_PERMISSION',3,'Quest','Permessi speciali','Permesso minimo per modificare qualsiasi parte del pacchetto','int',1),
@@ -90,6 +91,12 @@ class GDRCD6 extends DbMigration
                 ('SCHEDA_ABI_PUBLIC',1,'Scheda Abilita','Scheda Abilita pubblica','Pagina abilita pubblica?','bool',1),
                 ('GROUPS_ACTIVE',1,'Gruppi','Gruppi attivi','Gruppi attivi?','bool',1),
                 ('GROUPS_MAX_ROLES',3,'Gruppi','Massimo ruoli','Numero massimo di ruoli','int',1),
+                ('GROUPS_PAY_FROM_MONEY',1,'Gruppi','Stipendi da possedimento gruppi','Stipendi da possedimento gruppi','bool',1),
+                ('GROUPS_FOUNDS',1,'Gruppi','Fondi Gruppo','Introiti automatizzati per gruppi','bool',1),
+                ('GROUPS_EXTRA_EARNS',1,'Gruppi','Stipendi extra Gruppo','Introiti extra per personaggi da gruppi','bool',1),
+                ('GROUPS_ICON_CHAT',1,'Gruppi','Icone gruppo in chat','Icone gruppi in chat','bool',1),
+                ('GROUPS_ICON_PRESENT',1,'Gruppi','Icone gruppo nei presenti','Icone gruppi in chat','bool',1),
+                ('GROUPS_STORAGE',1,'Gruppi','Magazzini gruppi attivi','Magazzini gruppi attivi','bool',1),
                 ('WORKS_ACTIVE',1,'Gruppi','Lavori attivi','Lavori attivi?','bool',1),
                 ('WORKS_DIMISSIONS_DAYS',1,'Gruppi','Giorni per dimissioni','Giorni per dimissioni','bool',1),
                 ('WORKS_MAX',3,'Gruppi','Massimo lavori liberi','Numero massimo di lavori liberi','int',1),
@@ -101,27 +108,54 @@ class GDRCD6 extends DbMigration
                 ('PRESTAVOLTO_BEGIN_EDIT', '0', 'Possibilità di modificare appena iscritto il Prestavolto', 'Prestavolto', 'attiva/disattiva la possibilità di modificare il PV dopo liscrizione', 'bool', 1),
                 ('PRESTAVOLTO_BEGIN_EDIT_TIMER', '0', 'Tempo a disposizione per modificare appena iscritto il Prestavolto', 'Prestavolto', 'indica entro quanto tempo (ore o giorni) è possibile effettuare una modifica sulla scelta del PV', 'int', 1),
                 ('PRESTAVOLTO_AUTO_REMOVE', '0', 'Rimozione automatica Prestavolto', 'Prestavolto', 'abilita/disabilita la rimozione automatica dei PV dopo X tempo di inattività', 'bool', 1),
-                ('PRESTAVOLTO_AUTO_REMOVE_TIMER', '0', 'Tempo di inattività per rimuovere un prestavolto', 'Prestavolto', 'se abilitato, specifica dopo quanto tempo di inattività un prestavolto viene considerato rimosso dal personaggio', 'int', 1);"
+                ('PRESTAVOLTO_AUTO_REMOVE_TIMER', '0', 'Tempo di inattività per rimuovere un prestavolto', 'Prestavolto', 'se abilitato, specifica dopo quanto tempo di inattività un prestavolto viene considerato rimosso dal personaggio', 'int', 1),
+                ('CONTACTS_ENABLED', 1, 'Contatti','Abilita/Disabilita la sezione contatti',  'Abilita/disabilita i contatti', 'bool', 1),
+                ('CONTACT_PUBLIC', 1, 'Contatti','Abilita/Disabilita la visualizzazione pubblica dei contatti',  'Abilita/Disabilita la visualizzazione pubblica dei contatti', 'bool', 1),
+                ('CONTACT_SECRETS', 1, 'Contatti','Abilita/Disabilita la scelta di nascondere le note',  'Abilita/Disabilita la scelta di nascondere le note', 'bool', 1),
+                ('CONTACT_CATEGORIES', 1, 'Contatti','Abilita/Disabilita le categorie',  'Abilita/Disabilita le categorie', 'bool', 1),
+                ('CONTACT_CATEGORIES_PUBLIC', 1, 'Contatti','Se abilitato, tutti vedono le categorie',  'Se abilitato, tutti vedono le categorie', 'bool', 1),
+                ('CONTACT_CATEGORIES_STAFF_ONLY', 0, 'Contatti', 'Se abilitato, solo lo staff può assegnare le categorie di contatto', 'Se abilitato, solo lo staff può assegnare le categorie di contatto', 'bool', 1);"
         );
 
+        DB::query("
+            INSERT INTO `chat_opzioni` (`nome`,`titolo`,`descrizione`,`tipo`,`creato_da`) VALUES
+                ('action_size','Dimensione Azione','','int','1'),
+                ('action_color_talk','Colore Parlato Azione','','string','1'),
+                ('action_color_descr','Colore Descrizione Azione','','string','1'),
+                ('master_size','Dimensione MasterScreen','','int','1'),
+                ('master_color_talk','Colore Parlato MasterScreen','','string','1'),
+                ('master_color_descr','Colore Descrizione MasterScreen','','string','1'),
+                ('sussurro_size','Dimensione Sussurro','','int','1'),
+                ('sussurro_color','Colore Sussurro','','string','1'),
+                ('sussurro_globale_size','Dimensione Sussurro Globale','','int','1'),
+                ('sussurro_globale_color','Colore Sussurro Globale','','string','1'),
+                ('png_size','Dimensione azione PNG','','int','1'),
+                ('png_color_talk','Colore Parlato PNG','','string','1'),
+                ('png_color_descr','Colore Descrizione PNG','','string','1'),
+                ('mod_size','Dimensione Moderazione','','int','1'),
+                ('mod_color','Colore Moderazione','','string','1'),
+                ('other_size','Dimensione Dadi/Oggetti/Altro','','string','1'),
+                ('other_color','Colore Dadi/Oggetti/Altro','','string','1');"
+        );
 
         DB::query("
             INSERT INTO `cronjob` (`name`,`last_exec`,`in_exec`,`interval`,`interval_type`,`class`,`function`) VALUES
                 ('meteo_update',NULL,false,'60','minutes','Meteo','generateGlobalWeather'),
+                ('fondi_assign',NULL,false,'1','days','GruppiFondi','assignFounds'),
                 ('stipendi_assign',NULL,false,'1','days','Gruppi','cronSalaries');"
         );
 
         DB::query("
             INSERT INTO `gruppi` (`nome`, `tipo`, `immagine`, `url`, `statuto`, `visibile`) VALUES
-                ('Guardia cittadina', '1', 'standard_gilda.png', 'test', 'Statuto fasullo', 1);"
+                ('Guardia cittadina', '1', 'groups/standard_gilda.png', 'test', 'Statuto fasullo', 1);"
         );
 
         DB::query("
             INSERT INTO `gruppi_ruoli` (`gruppo`, `nome`, `immagine`, `stipendio`, `poteri`) VALUES
-                (1, 'Capitano della guardia', 'standard_gilda.png', 100, 1),
-                (1, 'Ufficiale della guardia', 'standard_gilda.png', 70, 0),
-                (1, 'Soldato della guardia', 'standard_gilda.png', 40, 0),
-                (1, 'Recluta della guardia', 'standard_gilda.png', 15, 0);"
+                (1, 'Capitano della guardia', 'groups/standard_gilda.png', 100, 1),
+                (1, 'Ufficiale della guardia', 'groups/standard_gilda.png', 70, 0),
+                (1, 'Soldato della guardia', 'groups/standard_gilda.png', 40, 0),
+                (1, 'Recluta della guardia', 'groups/standard_gilda.png', 15, 0);"
         );
 
         DB::query("
@@ -146,15 +180,18 @@ class GDRCD6 extends DbMigration
               ('Gestione', 'Razze', 'Gestione Razze', 'gestione_razze', 'MANAGE_RACES'),
               ('Gestione', 'Bacheche', 'Gestione Bacheche', 'gestione_bacheche', 'MANAGE_FORUMS'),
               ('Gestione', 'Gruppi', 'Gestione Gruppi', 'gestione/gruppi/gruppi/gestione_gruppi', 'MANAGE_GROUPS'),
-              ('Gestione', 'Gruppi', 'Gestione Ruoli', 'gestione/gruppi/ruoli/gestione_ruoli', 'MANAGE_GROUPS'),
-              ('Gestione', 'Gruppi', 'Gestione Tipi', 'gestione/gruppi/tipi/gestione_tipi', 'MANAGE_GROUPS'),
+              ('Gestione', 'Gruppi', 'Gestione Gruppi Ruoli', 'gestione/gruppi/ruoli/gestione_ruoli', 'MANAGE_GROUPS'),
+              ('Gestione', 'Gruppi', 'Gestione Gruppi Tipi', 'gestione/gruppi/tipi/gestione_tipi', 'MANAGE_GROUPS'),
               ('Gestione', 'Gruppi', 'Gestione Lavori', 'gestione/gruppi/lavori/gestione_lavori', 'MANAGE_WORKS'),
               ('Gestione', 'Gruppi', 'Assegna/Rimuovi lavori', 'gestione/gruppi/lavori/assign_lavori', 'MANAGE_WORKS'),
+              ('Gestione', 'Gruppi', 'Gestione Gruppi Fondi', 'gestione/gruppi/fondi/gestione_fondi', 'MANAGE_GROUPS_FOUNDS'),
+              ('Gestione', 'Gruppi', 'Gestione Stipendi Extra', 'gestione/gruppi/stipendiExtra/gestione_stipendi_extra', 'MANAGE_GROUPS_EXTRA_EARN'),
               ('Gestione', 'Gestione', 'Gestione Costanti', 'gestione/costanti/gestione_costanti_box', 'MANAGE_CONSTANTS'),
               ('Gestione', 'Gestione', 'Gestione Versioni Database', 'gestione_db_migrations', 'MANAGE_DB_MIGRATIONS'),
               ('Gestione', 'Permessi', 'Gestione Permessi', 'gestione_permessi', 'MANAGE_PERMISSIONS'),
               ('Gestione', 'Gestione', 'Manutenzione', 'gestione_manutenzione', 'MANAGE_MANUTENTIONS'),
-              ('Gestione', 'Chat', 'Giocate Segnalate', 'gestione/segnalazioni/esito_index', 'MANAGE_REPORTS'),
+              ('Gestione', 'Chat', 'Giocate Segnalate', 'gestione/segnalazioni/esito_index', 'MANAGE_REPORTS'),            
+              ('Gestione', 'Chat', 'Opzioni Chat', 'gestione/chat/opzioni/gestione_chat_opzioni', 'MANAGE_CHAT_OPTIONS'),
               ('Gestione', 'Meteo', 'Gestione condizioni', 'gestione/meteo/condizioni/gestione_condizioni', 'MANAGE_WEATHER_CONDITIONS'),
               ('Gestione', 'Meteo', 'Gestione stagioni', 'gestione/meteo/stagioni/gestione_stagioni_index', 'MANAGE_WEATHER_SEASONS'),
               ('Gestione', 'Meteo', 'Gestione venti', 'gestione/meteo/venti/gestione_venti', 'MANAGE_WEATHER'),
@@ -168,7 +205,11 @@ class GDRCD6 extends DbMigration
               ('Gestione', 'Oggetti', 'Gestione posizioni oggetto', 'gestione/oggetti/gestione_oggetti_posizioni', 'MANAGE_OBJECTS_POSITIONS'),
               ('Gestione', 'Mercato', 'Gestione Oggetti Mercato', 'gestione/mercato/gestione_mercato_oggetti', 'MANAGE_SHOPS_OBJECTS'),
               ('Gestione', 'Mercato', 'Gestione Negozi Mercato', 'gestione/mercato/gestione_mercato_negozi', 'MANAGE_SHOPS'),
-              ('Gestione', 'Statistiche', 'Gestione Statistiche', 'gestione/statistiche/gestione_statistiche', 'MANAGE_STATS');"
+              ('Gestione', 'Statistiche', 'Gestione Statistiche', 'gestione/statistiche/gestione_statistiche', 'MANAGE_STATS'),
+              ('Gestione', 'Extra', 'Gestione Disponibilita', 'gestione/disponibilita/gestione_disponibilita', 'MANAGE_AVAILABILITIES'),
+              ('Gestione', 'Extra', 'Gestione Sessi', 'gestione/sessi/gestione_sessi', 'MANAGE_GENDERS'),
+              ('Gestione', 'Extra', 'Gestione Razze', 'gestione/razze/gestione_razze', 'MANAGE_RACES'),
+              ('Gestione', 'Contatti', 'Gestione Categorie', 'gestione/contatti/gestione_categorie', 'MANAGE_CONTACTS_CATEGORIES');"
         );
 
         DB::query("
@@ -230,7 +271,7 @@ class GDRCD6 extends DbMigration
         );
 
         DB::query("
-            INSERT INTO `permessi_custom` (`permission_name`, `description`) VALUES
+            INSERT INTO `permessi_custom`(`permission_name`, `description`) VALUES
                 ('LOG_CHAT', 'Permesso visualizzazione log chat'),
                 ('LOG_EVENTI', 'Permesso visualizzazione log evento'),
                 ('LOG_MESSAGGI', 'Permesso visualizzazione log messaggi'),
@@ -246,6 +287,9 @@ class GDRCD6 extends DbMigration
                 ('MANAGE_RACES', 'Permesso per la gestione delle razze'),
                 ('MANAGE_FORUMS', 'Permesso per la gestione delle bacheche'),
                 ('MANAGE_GROUPS', 'Permesso per la gestione dei gruppi'),
+                ('MANAGE_GROUPS_FOUNDS', 'Permesso per la gestione degli introiti dei gruppi'),
+                ('MANAGE_GROUPS_EXTRA_EARN', 'Permesso per la gestione degli introiti dei gruppi'),
+                ('MANAGE_GROUPS_STORAGES', 'Permesso per la gestione dei magazzini dei gruppi'),
                 ('MANAGE_WORKS', 'Permesso per la gestione dei lavori liberi'),
                 ('MANAGE_PERMISSIONS', 'Permesso per la gestione dei permessi'),
                 ('MANAGE_MANUTENTIONS', 'Permesso per la gestione della manutenzione del db'),
@@ -263,6 +307,14 @@ class GDRCD6 extends DbMigration
                 ('MANAGE_TRAME_OTHER','Permesso per la modifica delle trame degli altri'),
                 ('SCHEDA_EXP_VIEW','Permesso per la visualizzazione della pagina esperienza in scheda'),
                 ('SCHEDA_EXP_MANAGE','Permesso per la visualizzazione della pagina esperienza in scheda'),
+                ('SCHEDA_VIEW_LOGS','Permesso per la visione dei logs'),
+                ('SCHEDA_VIEW_TRANSACTIONS','Permesso per la visione delle transazioni altrui'),
+                ('SCHEDA_DIARY_VIEW','Permesso per la visione dei diari privati altrui'),
+                ('SCHEDA_DIARY_EDIT','Permesso per la modifica dei diari altrui'),
+                ('SCHEDA_UPDATE','Permesso per la modifica dei dati personaggio altrui'),
+                ('SCHEDA_STATUS_MANAGE','Permesso per la modifica dei dati status altrui'),
+                ('SCHEDA_BAN','Permesso per il ban di un personaggio dalla scheda'),
+                ('SCHEDA_ADMINISTRATION_MANAGE','Permesso per la pagina amministrazione della scheda'),
                 ('MANAGE_OBJECTS','Permesso per la gestione degli oggetti'),
                 ('MANAGE_OBJECTS_TYPES','Permesso per la gestione delle tipologie di oggetti'),
                 ('MANAGE_OBJECTS_POSITIONS','Permesso per la gestione delle posizioni oggetti'),
@@ -280,7 +332,17 @@ class GDRCD6 extends DbMigration
                 ('DOWNGRADE_SCHEDA_ABI','Permesso per la diminuzione abilita in schede altrui'),
                 ('VIEW_SCHEDA_ABI','Permesso per la visualizzazione abilita in schede altrui'),
                 ('PRESTAVOLTO_EDIT','Permesso per modificare un prestavolto altrui'),
-                ('PRESTAVOLTO_DELETE','Permesso per rimuovere un prestavolto altrui');"
+                ('PRESTAVOLTO_DELETE','Permesso per rimuovere un prestavolto altrui'),
+                ('VIEW_CONTACTS','Permesso per la visualizzazione dei contatti in schede altrui'),
+                ('UPDATE_CONTACTS','Permesso per la modifica dei contatti in schede altrui'),
+                ('DELETE_CONTACTS','Permesso per la eliminazione dei contatti in schede altrui'),
+                ('VIEW_CONTACTS_CATEGORIES','Permesso per la visualizzazione delle categorie contatti in schede altrui'),
+                ('MANAGE_CONTACTS_CATEGORIES','Permesso per la gestione delle categorie contatti'),
+                ('MANAGE_CHAT_OPTIONS','Permesso per la gestione delle opzioni personalizzabili in chat'),
+                ('MANAGE_AVAILABILITIES','Permesso per la gestione delle disponibilita'),
+                ('MANAGE_RACES','Permesso per la gestione delle razze'),
+                ('MANAGE_GENDERS','Permesso per la gestione dei sessi')
+               ;"
         );
 
         DB::query("
@@ -297,14 +359,27 @@ class GDRCD6 extends DbMigration
         );
 
         DB::query("
-            INSERT INTO `personaggio` (`id`,`nome`, `cognome`, `pass`, `ultimo_cambiopass`, `data_iscrizione`, `email`, `permessi`, `ultima_mappa`, `ultimo_luogo`, `esilio`, `data_esilio`, `motivo_esilio`, `autore_esilio`, `sesso`, `id_razza`, `descrizione`, `affetti`, `stato`, `online_status`, `disponibile`, `url_img`, `url_img_chat`, `url_media`, `blocca_media`, `esperienza`, `car0`, `car1`, `car2`, `car3`, `car4`, `car5`, `salute`, `salute_max`, `data_ultima_gilda`, `soldi`, `banca`, `ultimo_stipendio`, `last_ip`, `is_invisible`, `ultimo_refresh`, `ora_entrata`, `ora_uscita`, `posizione`) VALUES
-                (1,'Super', 'User', '\$P\$BcH1cP941XHOf0X61wVWWjzXqcCi2a/', NULL, '2011-06-04 00:47:48', '\$P\$BNZYtz9JOQE.O4Tv7qZyl3SzIoZzzR.', 5, 1, -1, '2009-01-01', '2009-01-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 7, 8, 6, 5, 6, 5, 100, 100, '2009-01-01 00:00:00', 300, 50000, '2009-01-01', '127.0.0.1', 0, '2021-10-08 00:28:13', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1),
-                (2,'Test', 'Di FunzionaliÃ ', '\$P\$BUoa19QUuXsgIDlhGC3chR/3Q7hoRy0', NULL, '2011-06-04 00:47:48', '\$P\$Bd1amPCKkOF9GdgYsibZ96U92D5CtR0', 0, 1, -1, '2009-01-01', '2009-01-01', '', '', 'm', 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 7, 8, 6, 5, 6, 5, 100, 100, '2009-01-01 00:00:00', 50, 50, '2009-01-01', '127.0.0.1', 0, '2009-01-01 00:00:00', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1);"
+            INSERT INTO `personaggio` (`id`,`nome`, `cognome`, `pass`, `ultimo_cambiopass`, `data_iscrizione`, `email`, `permessi`, `ultima_mappa`, `ultimo_luogo`, `esilio`, `data_esilio`, `motivo_esilio`, `autore_esilio`, `sesso`, `razza`, `descrizione`, `affetti`, `stato`, `online_status`, `disponibile`, `url_img`, `url_img_chat`, `url_media`, `blocca_media`, `esperienza`, `salute`, `salute_max`, `soldi`, `banca`, `last_ip`, `is_invisible`, `ultimo_refresh`, `ora_entrata`, `ora_uscita`, `posizione`) VALUES
+                (1,'Super', 'User', '\$P\$BcH1cP941XHOf0X61wVWWjzXqcCi2a/', NULL, '2011-06-04 00:47:48', '\$P\$BNZYtz9JOQE.O4Tv7qZyl3SzIoZzzR.', 5, 1, -1, '2009-01-01', '2009-01-01', '', '', 1, 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 100, 100, 300, 50000,  '127.0.0.1', 0, '2021-10-08 00:28:13', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1),
+                (2,'Test', 'Di FunzionaliÃ ', '\$P\$BUoa19QUuXsgIDlhGC3chR/3Q7hoRy0', NULL, '2011-06-04 00:47:48', '\$P\$Bd1amPCKkOF9GdgYsibZ96U92D5CtR0', 0, 1, -1, '2009-01-01', '2009-01-01', '', '', 1, 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000',  100, 100, 50, 50, '127.0.0.1', 0, '2009-01-01 00:00:00', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1);"
         );
 
         DB::query("
-            INSERT INTO `razza` (`id_razza`, `nome_razza`, `sing_m`, `sing_f`, `descrizione`, `bonus_car0`, `bonus_car1`, `bonus_car2`, `bonus_car3`, `bonus_car4`, `bonus_car5`, `immagine`, `icon`, `url_site`, `iscrizione`, `visibile`) VALUES
-                (1000, 'Umani', 'Umano', 'Umana', '', 0, 0, 0, 0, 0, 0, 'standard_razza.png', 'standard_razza.png', '', 1, 1);"
+            INSERT INTO `razze` (`id`, `nome`, `sing_m`, `sing_f`, `descrizione`, `immagine`, `icon`, `url_site`, `iscrizione`, `visibile`) VALUES
+                (1000, 'Umani', 'Umano', 'Umana', '', 'races/standard_razza.png', 'races/standard_razza.png', '', 1, 1);"
+        );
+
+        DB::query("
+            INSERT INTO disponibilita(`nome`,`immagine`) VALUES
+            ('Disponibile','availability/disponibile.png'),
+            ('Non Disponibile','availability/non_disponibile.png'),
+            ('Occupato','availability/in_lavorazione.png');"
+        );
+
+        DB::query("
+            INSERT INTO sessi(`nome`,`immagine`) VALUES
+            ('Maschio','gender/m.png'),
+            ('Femmina','gender/f.png');"
         );
 
     }

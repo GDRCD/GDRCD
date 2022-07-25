@@ -4,7 +4,7 @@ Router::loadRequired();
 
 $venti = MeteoVenti::getInstance();
 
-switch ($_POST['action']) {
+switch ( $_POST['action'] ) {
     case 'get_vento_data':
         echo json_encode($venti->ajaxWindData($_POST));
         break;

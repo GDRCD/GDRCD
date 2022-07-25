@@ -1,15 +1,15 @@
-$(function(){
+$(function () {
 
 });
 
 
-function refreshMembers(data){
+function refreshMembers(data) {
 
-    if(data){
+    if (data) {
 
         let datas = JSON.parse(data);
 
-        if(datas.response){
+        if (datas.response) {
             $('.esiti_members').html(datas.members_list)
         }
     }

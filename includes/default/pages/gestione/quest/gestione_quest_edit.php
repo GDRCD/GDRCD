@@ -4,12 +4,11 @@ Router::loadRequired();
 
 $quest = Quest::getInstance();
 
-
-if ($quest->manageQuestPermission()) {
+if ( $quest->manageQuestPermission() ) {
 
     $quest_id = Filters::int($_GET['id_record']);
 
-    if ($quest->questExist($quest_id)) {
+    if ( $quest->questExist($quest_id) ) {
 
         $loaded_record = $quest->getQuest($quest_id); ?>
 
@@ -36,7 +35,7 @@ if ($quest->manageQuestPermission()) {
                     <textarea name="descrizione"><?= Filters::out($loaded_record['descrizione']); ?></textarea>
                 </div>
 
-                <?php if ($quest->trameEnabled() && $quest->manageTramePermission()) { ?>
+                <?php if ( $quest->trameEnabled() && $quest->manageTramePermission() ) { ?>
                     <div class="single_input">
                         <div class='label'>
                             Trama di riferimento
@@ -70,7 +69,7 @@ if ($quest->manageQuestPermission()) {
             </form>
         </div>
 
-        <script src="<?=Router::getPagesLink('gestione/quest/JS/gestione_quest_edit.js');?>"></script>
+        <script src="<?= Router::getPagesLink('gestione/quest/JS/gestione_quest_edit.js'); ?>"></script>
 
         <!-- Link di ritorno alla visualizzazione di base -->
     <?php } else { ?>

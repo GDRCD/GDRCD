@@ -1,19 +1,19 @@
 <?php
-$postID = (int) $_POST['id_record'];
-$postData = gdrcd_query("SELECT id_messaggio_padre AS padre, autore FROM messaggioaraldo WHERE id_messaggio=".$postID);
+$postID = (int)$_POST['id_record'];
+$postData = gdrcd_query("SELECT id_messaggio_padre AS padre, autore FROM messaggioaraldo WHERE id_messaggio=" . $postID);
 
-if((int) $postData['padre'] == -1 && ($_SESSION['permessi'] >= MODERATOR || $postData['autore'] == $_SESSION['login'])) {
+if ( (int)$postData['padre'] == -1 && ($_SESSION['permessi'] >= MODERATOR || $postData['autore'] == $_SESSION['login']) ) {
     /*Cancello un topic da admin*/
-    gdrcd_query("DELETE FROM araldo_letto WHERE thread_id = ".$postID);
-    $query = "DELETE FROM messaggioaraldo WHERE id_messaggio_padre= ".$postID." OR id_messaggio= ".$postID;
+    gdrcd_query("DELETE FROM araldo_letto WHERE thread_id = " . $postID);
+    $query = "DELETE FROM messaggioaraldo WHERE id_messaggio_padre= " . $postID . " OR id_messaggio= " . $postID;
     $back = 'forum';
-} elseif((int) $postData['padre'] != -1 && ($_SESSION['permessi'] >= MODERATOR || $postData['autore'] == $_SESSION['login'])) {
+} else if ( (int)$postData['padre'] != -1 && ($_SESSION['permessi'] >= MODERATOR || $postData['autore'] == $_SESSION['login']) ) {
     /*Cancello un post da admin*/
-    $query = "DELETE FROM messaggioaraldo WHERE id_messaggio = ".$postID;
-    $back = 'forum&op=read&what='.(int) $postData['padre'];
+    $query = "DELETE FROM messaggioaraldo WHERE id_messaggio = " . $postID;
+    $back = 'forum&op=read&what=' . (int)$postData['padre'];
 }
 
-if( ! empty($query)) {
+if ( !empty($query) ) {
     gdrcd_query($query);
     ?>
     <div class="warning">
@@ -26,5 +26,5 @@ if( ! empty($query)) {
     </div>
     <?php
 } else {
-    echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['error']['not_allowed']).'</div>';
+    echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['error']['not_allowed']) . '</div>';
 }

@@ -3,7 +3,6 @@
 class MeteoVenti extends Meteo
 {
 
-
     /*** PERMESSI ****/
 
     /**
@@ -72,9 +71,9 @@ class MeteoVenti extends Meteo
      * @note Estrae la lista di venti
      * @return array
      */
-    public function ajaxWindList():array
+    public function ajaxWindList(): array
     {
-        return ['List'=>$this->listWinds()];
+        return ['List' => $this->listWinds()];
     }
 
     /**
@@ -86,7 +85,7 @@ class MeteoVenti extends Meteo
     public function ajaxWindData(array $post): array
     {
 
-        if ($this->permissionManageWeatherWinds()) {
+        if ( $this->permissionManageWeatherWinds() ) {
             $id = Filters::int($post['id']);
 
             $data = $this->getWind($id);
@@ -95,12 +94,12 @@ class MeteoVenti extends Meteo
 
             return [
                 'response' => true,
-                'nome'=>$nome
+                'nome' => $nome,
             ];
 
         }
 
-        return ['response'=>false];
+        return ['response' => false];
     }
 
     /** GESTIONE */
@@ -113,7 +112,7 @@ class MeteoVenti extends Meteo
      */
     public function NewWind(array $post): array
     {
-        if ($this->permissionManageWeatherWinds()) {
+        if ( $this->permissionManageWeatherWinds() ) {
 
             $nome = Filters::in($post['nome']);
 
@@ -124,14 +123,14 @@ class MeteoVenti extends Meteo
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Vento creato.',
                 'swal_type' => 'success',
-                'meteo_venti'=>$this->listWinds()
+                'meteo_venti' => $this->listWinds(),
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -144,9 +143,9 @@ class MeteoVenti extends Meteo
      */
     public function ModWind(array $post): array
     {
-        if($this->permissionManageWeatherWinds()){
-            $id=Filters::in( $post['id']);
-            $nome = Filters::in( $post['nome']);
+        if ( $this->permissionManageWeatherWinds() ) {
+            $id = Filters::in($post['id']);
+            $nome = Filters::in($post['nome']);
 
             DB::query("UPDATE  meteo_venti 
                 SET nome = '{$nome}' WHERE id='{$id}'");
@@ -156,15 +155,15 @@ class MeteoVenti extends Meteo
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Vento modificato.',
                 'swal_type' => 'success',
-                'meteo_venti'=>$this->listWinds()
+                'meteo_venti' => $this->listWinds(),
 
             ];
-        } else{
+        } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -177,7 +176,7 @@ class MeteoVenti extends Meteo
      */
     public function DelWind(array $post): array
     {
-        if($this->permissionManageWeatherWinds()) {
+        if ( $this->permissionManageWeatherWinds() ) {
 
             $id = Filters::in($post['id']);
 
@@ -188,14 +187,14 @@ class MeteoVenti extends Meteo
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Vento eliminato.',
                 'swal_type' => 'success',
-                'meteo_venti'=>$this->listWinds()
+                'meteo_venti' => $this->listWinds(),
             ];
-        } else{
+        } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }

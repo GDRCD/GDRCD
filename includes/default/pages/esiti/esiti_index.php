@@ -7,7 +7,7 @@ $esiti = Esiti::getInstance();
 ?>
 
 <div class="servizi_pagina esiti_pagina">
-    <?php  if ($esiti->esitiEnabled()) { ?>
+    <?php if ( $esiti->esitiEnabled() ) { ?>
 
         <!-- Titolo della pagina -->
         <div class="general_title">
@@ -23,6 +23,6 @@ $esiti = Esiti::getInstance();
 
         <div class="warning"> Funzione disabilitata.</div>
 
-        <div class="link_back"><a href="/main.php?page=uffici">Indietro</a> </div>
+        <div class="link_back"><a href="/main.php?page=uffici">Indietro</a></div>
     <?php } ?>
 </div>

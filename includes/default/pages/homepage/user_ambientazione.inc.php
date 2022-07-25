@@ -8,7 +8,7 @@
         <div class="panels_box">
             <div class="elenco_record_gioco">
                 <table>
-                    <?php while($row = gdrcd_query($result, 'fetch')) { ?>
+                    <?php while ( $row = gdrcd_query($result, 'fetch') ) { ?>
                         <tr>
                             <td class="casella_titolo">
                                 <div class="elementi_elenco"><?php echo gdrcd_filter('out', $row['capitolo']); ?></div>
@@ -19,7 +19,8 @@
                         </tr>
                         <tr>
                             <td colspan="2" class="casella_elemento">
-                                <div class="elementi_elenco"><?php echo gdrcd_bbcoder(gdrcd_filter('out', $row['testo'])); ?></div>
+                                <div
+                                    class="elementi_elenco"><?php echo gdrcd_bbcoder(gdrcd_filter('out', $row['testo'])); ?></div>
                             </td>
                         </tr>
                     <?php }//while

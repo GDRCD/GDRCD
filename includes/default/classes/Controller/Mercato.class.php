@@ -23,7 +23,7 @@ class Mercato extends BaseClass
     {
         $op = Filters::out($op);
 
-        switch ($op) {
+        switch ( $op ) {
             case 'objects':
                 $page = 'mercato_objects.php';
                 break;
@@ -134,7 +134,7 @@ class Mercato extends BaseClass
      */
     public function ajaxGetShop(array $post): array
     {
-        if ($this->manageShopPermission()) {
+        if ( $this->manageShopPermission() ) {
             $shop = Filters::int($post['shop']);
 
             return $this->getShop($shop);
@@ -183,7 +183,7 @@ class Mercato extends BaseClass
         $html = '<option value=""></option>';
         $list = $this->getAllShops('id,nome');
 
-        foreach ($list as $row) {
+        foreach ( $list as $row ) {
             $id = Filters::int($row['id']);
             $nome = Filters::in($row['nome']);
             $sel = ($selected == $id) ? 'selected' : '';
@@ -208,7 +208,7 @@ class Mercato extends BaseClass
         $html = '';
         $list = $this->getAllShops();
 
-        foreach ($list as $shop) {
+        foreach ( $list as $shop ) {
             $id = Filters::int($shop['id']);
             $nome = Filters::out($shop['nome']);
             $img = Filters::out($shop['immagine']);
@@ -240,22 +240,22 @@ class Mercato extends BaseClass
         $object = Filters::int($post['object']);
         $shop = Filters::int($post['shop']);
 
-        if ($obj_class->existObject($object) && $this->existObject($object, $shop)) {
+        if ( $obj_class->existObject($object) && $this->existObject($object, $shop) ) {
 
             $mercato_data = $this->getObject($object, $shop);
 
             $costo = Filters::int($mercato_data['costo']);
             $quantita = Filters::Int($mercato_data['quantity']);
 
-            if ($quantita > 0) {
+            if ( $quantita > 0 ) {
                 $personaggio = Personaggio::getPgData($this->me_id, 'soldi,banca');
                 $soldi = Filters::int($personaggio['soldi']);
                 $banca = Filters::int($personaggio['banca']);
 
-                if ($costo <= $soldi) {
+                if ( $costo <= $soldi ) {
                     $cell = 'soldi';
                     $text = 'Portafoglio';
-                } elseif ($costo <= $banca) {
+                } else if ( $costo <= $banca ) {
                     $cell = 'banca';
                     $text = 'Banca';
                 } else {
@@ -265,7 +265,7 @@ class Mercato extends BaseClass
                 Personaggio::updatePgData($this->me_id, "{$cell}={$cell}-{$costo}");
                 Oggetti::addObjectToPg($object, $this->me_id);
 
-                if ($quantita > 1) {
+                if ( $quantita > 1 ) {
                     DB::query("UPDATE mercato SET quantity = quantity - 1 WHERE oggetto='{$object}' LIMIT 1");
                 } else {
                     DB::query("DELETE FROM mercato WHERE oggetto='{$object}'");
@@ -293,14 +293,14 @@ class Mercato extends BaseClass
     public function insertShopObj(array $post): array
     {
 
-        if ($this->manageShopObjectsPermission()) {
+        if ( $this->manageShopObjectsPermission() ) {
 
             $shop = Filters::int($post['negozio']);
             $obj = Filters::int($post['oggetto']);
             $quantity = Filters::int($post['quantity']);
             $costo = Filters::int($post['costo']);
 
-            if (!$this->existObject($obj, $shop)) {
+            if ( !$this->existObject($obj, $shop) ) {
 
                 DB::query("INSERT INTO mercato(oggetto, negozio, quantity,costo) 
                             VALUES ('{$obj}','{$shop}','{$quantity}','{$costo}')");
@@ -309,7 +309,7 @@ class Mercato extends BaseClass
                     'response' => true,
                     'swal_title' => 'Operazione riuscita!',
                     'swal_message' => 'Oggetto inserito correttamente in negozio.',
-                    'swal_type' => 'success'
+                    'swal_type' => 'success',
                 ];
             } else {
 
@@ -317,7 +317,7 @@ class Mercato extends BaseClass
                     'response' => false,
                     'swal_title' => 'Operazione fallita!',
                     'swal_message' => 'Oggetto già presente in negozio. Procedere alla modifica o alla sua eliminazione.',
-                    'swal_type' => 'error'
+                    'swal_type' => 'error',
                 ];
             }
 
@@ -326,7 +326,7 @@ class Mercato extends BaseClass
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -340,14 +340,14 @@ class Mercato extends BaseClass
     public function editShopObj(array $post): array
     {
 
-        if ($this->manageShopObjectsPermission()) {
+        if ( $this->manageShopObjectsPermission() ) {
 
             $shop = Filters::int($post['negozio']);
             $obj = Filters::int($post['oggetto']);
             $quantity = Filters::int($post['quantity']);
             $costo = Filters::int($post['costo']);
 
-            if ($this->existObject($obj, $shop)) {
+            if ( $this->existObject($obj, $shop) ) {
 
                 DB::query("UPDATE mercato SET quantity='{$quantity}',costo='{$costo}' WHERE oggetto='{$obj}' AND negozio='{$shop}' LIMIT 1");
 
@@ -355,14 +355,14 @@ class Mercato extends BaseClass
                     'response' => true,
                     'swal_title' => 'Operazione riuscita!',
                     'swal_message' => 'Oggetto modificato correttamente.',
-                    'swal_type' => 'success'
+                    'swal_type' => 'success',
                 ];
             } else {
                 return [
                     'response' => false,
                     'swal_title' => 'Operazione fallita!',
                     'swal_message' => 'Oggetto non presente in negozio. Procedere al suo inserimento.',
-                    'swal_type' => 'error'
+                    'swal_type' => 'error',
                 ];
             }
 
@@ -372,7 +372,7 @@ class Mercato extends BaseClass
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -386,28 +386,27 @@ class Mercato extends BaseClass
     public function deleteShopObj(array $post): array
     {
 
-        if ($this->manageShopObjectsPermission()) {
+        if ( $this->manageShopObjectsPermission() ) {
 
             $shop = Filters::int($post['negozio']);
             $obj = Filters::int($post['oggetto']);
 
-            if ($this->existObject($obj, $shop)) {
+            if ( $this->existObject($obj, $shop) ) {
 
                 DB::query("DELETE FROM mercato WHERE oggetto='{$obj}' AND negozio='{$shop}'");
-
 
                 return [
                     'response' => true,
                     'swal_title' => 'Operazione riuscita!',
                     'swal_message' => 'Oggetto eliminato correttamente.',
-                    'swal_type' => 'success'
+                    'swal_type' => 'success',
                 ];
             } else {
                 return [
                     'response' => false,
                     'swal_title' => 'Operazione fallita!',
                     'swal_message' => 'Oggetto non presente in negozio. Procedere al suo inserimento.',
-                    'swal_type' => 'error'
+                    'swal_type' => 'error',
                 ];
             }
         } else {
@@ -415,7 +414,7 @@ class Mercato extends BaseClass
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
 
@@ -430,7 +429,7 @@ class Mercato extends BaseClass
     public function insertShop(array $post): array
     {
 
-        if ($this->manageShopPermission()) {
+        if ( $this->manageShopPermission() ) {
 
             $nome = Filters::in($post['nome']);
             $descr = Filters::in($post['descrizione']);
@@ -444,7 +443,7 @@ class Mercato extends BaseClass
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Negozio creato correttamente.',
                 'swal_type' => 'success',
-                'shop_list' => $this->listShops()
+                'shop_list' => $this->listShops(),
             ];
         } else {
 
@@ -452,7 +451,7 @@ class Mercato extends BaseClass
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -466,14 +465,14 @@ class Mercato extends BaseClass
     public function editShop(array $post): array
     {
 
-        if ($this->manageShopPermission()) {
+        if ( $this->manageShopPermission() ) {
 
             $shop = Filters::int($post['id']);
             $nome = Filters::in($post['nome']);
             $descr = Filters::in($post['descrizione']);
             $img = Filters::in($post['immagine']);
 
-            if ($this->existShop($shop)) {
+            if ( $this->existShop($shop) ) {
 
                 DB::query("UPDATE mercato_negozi SET nome='{$nome}',descrizione='{$descr}',immagine='{$img}' WHERE id='{$shop}' LIMIT 1");
 
@@ -482,7 +481,7 @@ class Mercato extends BaseClass
                     'swal_title' => 'Operazione riuscita!',
                     'swal_message' => 'Negozio modificato correttamente.',
                     'swal_type' => 'success',
-                    'shop_list' => $this->listShops()
+                    'shop_list' => $this->listShops(),
                 ];
             } else {
 
@@ -490,7 +489,7 @@ class Mercato extends BaseClass
                     'response' => false,
                     'swal_title' => 'Operazione fallita!',
                     'swal_message' => 'Negozio inesistente',
-                    'swal_type' => 'error'
+                    'swal_type' => 'error',
                 ];
             }
 
@@ -500,7 +499,7 @@ class Mercato extends BaseClass
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -514,11 +513,11 @@ class Mercato extends BaseClass
     public function deleteShop(array $post): array
     {
 
-        if ($this->manageShopPermission()) {
+        if ( $this->manageShopPermission() ) {
 
             $shop = Filters::int($post['id']);
 
-            if ($this->existShop($shop)) {
+            if ( $this->existShop($shop) ) {
 
                 DB::query("DELETE FROM mercato_negozi WHERE id='{$shop}'");
 
@@ -527,14 +526,14 @@ class Mercato extends BaseClass
                     'swal_title' => 'Operazione riuscita!',
                     'swal_message' => 'Negozio eliminato correttamente.',
                     'swal_type' => 'success',
-                    'shop_list' => $this->listShops()
+                    'shop_list' => $this->listShops(),
                 ];
             } else {
                 return [
                     'response' => false,
                     'swal_title' => 'Operazione fallita!',
                     'swal_message' => 'Negozio inesistente',
-                    'swal_type' => 'error'
+                    'swal_type' => 'error',
                 ];
             }
         } else {
@@ -542,7 +541,7 @@ class Mercato extends BaseClass
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
 

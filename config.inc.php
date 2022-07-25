@@ -181,7 +181,7 @@ $PARAMETERS['left_column']['box']['link_menu']['page'] = 'link_menu'; //Menu' de
 
 /*COLONNA DESTRA*/
 $PARAMETERS['right_column']['box']['frame_presenti']['class'] = 'presenti';
-$PARAMETERS['right_column']['box']['frame_presenti']['page'] = 'frame_presenti'; //Presenti.
+$PARAMETERS['right_column']['box']['frame_presenti']['page'] = 'presenti/mini'; //Presenti mini.
 
 
 /* NOMI CHIAVE DEL GIOCO */
@@ -604,7 +604,7 @@ $PARAMETERS['menu']['map']['image_file'] = '';
 $PARAMETERS['menu']['map']['image_file_onclick'] = '';
 
 $PARAMETERS['menu']['profile']['text'] = 'Scheda';
-$PARAMETERS['menu']['profile']['url'] = 'main.php?page=scheda&pg='.$_SESSION['login'].'&id_pg='.Functions::getInstance()->getMyId();
+$PARAMETERS['menu']['profile']['url'] = 'main.php?page=scheda/index&id_pg='.Functions::getInstance()->getMyId();
 /*Esempio di link nel caso si volesse aprire come scheda modale
 $PARAMETERS['menu']['profile']['url']="javascript:modalWindow('scheda', 'Scheda di ". $_SESSION['login'] ."', 'popup.php?page=scheda&pg=". $_SESSION['login'] ."');";
 */
@@ -665,7 +665,7 @@ $PARAMETERS['office']['guilds']['access_level'] = USER;
 $PARAMETERS['office']['market']['text'] = 'Mercato';
 $PARAMETERS['office']['market']['url'] = 'main.php?page=servizi_mercato';
 $PARAMETERS['office']['market']['access_level'] = USER;
-if (Functions::get_constant('ESITI_ENABLE')) {
+if (Functions::get_constant('ESITI_ENABLE', false)) {
     $PARAMETERS['office']['esiti']['text'] = 'Pannello esiti';
     $PARAMETERS['office']['esiti']['url'] = 'main.php?page=servizi_esiti';
     $PARAMETERS['office']['esiti']['access_level'] = USER;

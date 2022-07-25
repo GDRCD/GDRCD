@@ -4,7 +4,7 @@ Router::loadRequired();
 
 $cls = GruppiLavori::getInstance();
 
-switch ($_POST['action']) {
+switch ( $_POST['action'] ) {
     case 'get_works_data':
         echo json_encode($cls->ajaxWorkData($_POST));
         break;

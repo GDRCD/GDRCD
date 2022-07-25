@@ -6,6 +6,8 @@ $(function () {
         aggiornaChat()
         controllachat();
     }, 20000);
+
+    Chosen.init('.whisp-chosen')
 });
 
 

@@ -2,16 +2,16 @@
 $dont_check = true;
 require 'core/required.php';
 
-if (!DbMigrationEngine::dbNeedsInstallation()) {
-    $development = Filters::bool(Functions::get_constant('DEVELOPING'));
+if ( !DbMigrationEngine::dbNeedsInstallation() ) {
+    $development = Filters::bool(Functions::get_constant('DEVELOPING', false));
 
-    if ($development) {
+    if ( $development || !DbMigrationEngine::dbConfigExist() ) {
         ?>
         <div class="pagina_ambientazione">
             <?php
 
-            if (isset($_POST['do_update'])) {
-                switch ($_POST['do_update']) {
+            if ( isset($_POST['do_update']) ) {
+                switch ( $_POST['do_update'] ) {
                     case 'Reset':
                         DbMigrationEngine::resetDB();
                         ?>

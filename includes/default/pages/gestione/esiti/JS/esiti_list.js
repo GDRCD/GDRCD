@@ -1,30 +1,30 @@
-$(function(){
+$(function () {
 
 
-    $('body').on('click','.td.commands .ajax_link',function(e){
+    $('body').on('click', '.td.commands .ajax_link', function (e) {
         e.preventDefault();
 
         let main = $(this),
             action = main.data('action'),
             id = main.data('id');
 
-        Ajax('gestione/esiti/esiti_ajax.php',{
+        Ajax('gestione/esiti/esiti_ajax.php', {
             action: action,
             id: id
-        },refreshList)
+        }, refreshList)
 
     })
 
-    function refreshList(data){
+    function refreshList(data) {
 
-        if(data){
+        if (data) {
 
             let datas = JSON.parse(data);
 
-            if(datas.response){
+            if (datas.response) {
                 $('.esiti_list').html(datas.esiti_list)
 
-                Swal.fire(datas.swal_title,datas.swal_message,datas.swal_type)
+                Swal.fire(datas.swal_title, datas.swal_message, datas.swal_type)
 
             }
 

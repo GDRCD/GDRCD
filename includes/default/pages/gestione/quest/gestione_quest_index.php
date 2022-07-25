@@ -8,7 +8,7 @@ $quest = Quest::getInstance();
 
 
 <div class="gestione_pagina gestione_quest">
-    <?php if ($quest->questEnabled() && $quest->manageQuestPermission()) {
+    <?php if ( $quest->questEnabled() && $quest->manageQuestPermission() ) {
         ?>
         <!-- Titolo della pagina -->
         <div class="general_title">

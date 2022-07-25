@@ -1,9 +1,9 @@
-$(function(){
+$(function () {
 
 });
 
-function goBackTrame(){
-    setTimeout(()=>{
+function goBackTrame() {
+    setTimeout(() => {
         window.location.href = 'main.php?page=gestione_trame';
-    },2000)
+    }, 2000)
 }

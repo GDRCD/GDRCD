@@ -4,7 +4,7 @@ Router::loadRequired();
 
 $gestione = Gestione::getInstance();
 
-if ($gestione->constantsPermission()) {
+if ( $gestione->constantsPermission() ) {
 
     ?>
 
@@ -18,7 +18,7 @@ if ($gestione->constantsPermission()) {
             l'utilizzo di alcuni moduli.
         </div>
 
-        <?php if (isset($resp)) { ?>
+        <?php if ( isset($resp) ) { ?>
             <div class="warning">
                 <?= $resp; ?>
             </div>
@@ -43,8 +43,8 @@ if ($gestione->constantsPermission()) {
 
     </div>
 
-    <script src="<?=Router::getPagesLink('gestione/costanti/gestione_costanti_box.js');?>"></script>
-<?php } else {?>
+    <script src="<?= Router::getPagesLink('gestione/costanti/gestione_costanti_box.js'); ?>"></script>
+<?php } else { ?>
 
     <div class="warning">Permesso negato.</div>
 

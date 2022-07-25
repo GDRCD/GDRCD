@@ -13,4 +13,4 @@ $gruppi = GruppiLavori::getInstance();
     <?= $gruppi->worksList(); ?>
 </div>
 
-<script src="<?=Router::getPagesLink('servizi/lavori/view.js');?>"></script>
+<script src="<?= Router::getPagesLink('servizi/lavori/view.js'); ?>"></script>

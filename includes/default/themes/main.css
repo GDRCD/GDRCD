@@ -33,7 +33,6 @@ a, a:visited {
 
 a:hover {
     color: #222;
-    font-weight: bolder;
     text-decoration: underline;
 }
 
@@ -161,8 +160,8 @@ div.meteo, div.meteo_date {
     font-size: 12px;
 }
 
-div.meteo_luna img{
-    margin:0 auto;
+div.meteo_luna img {
+    margin: 0 auto;
     width: 30px;
     height: 30px;
     display: block;
@@ -410,11 +409,11 @@ div.innertube {
 }
 
 /** MENU DEFAULT **/
-.menu_box .single_menu{
+.menu_box .single_menu {
     margin: 10px auto !important;
 }
 
-.menu_box .single_section .section_title{
+.menu_box .single_section .section_title {
     cursor: pointer;
     font-size: 15px;
     font-weight: bold;
@@ -425,18 +424,18 @@ div.innertube {
     clear: both;
 }
 
-.menu_box .single_section .box_input{
-    display:none;
+.menu_box .single_section .box_input {
+    display: none;
     background: lightgrey;
-    border:1px solid black;
+    border: 1px solid black;
     width: 98%;
     margin: 0 auto;
 }
 
-.menu_box .box_input .single_menu{
+.menu_box .box_input .single_menu {
     margin: 10px auto !important;
     background: grey;
-    border:1px solid black;
+    border: 1px solid black;
     border-radius: 5px;
     width: 300px;
     padding: 5px 0;
@@ -445,28 +444,28 @@ div.innertube {
 /**
  GESTIONE COSTANTI
  */
-.gestione_costanti .single_input{
+.gestione_costanti .single_input {
     margin: 10px auto !important;
 }
 
-.gestione_costanti .single_section .gestione_form_title{
+.gestione_costanti .single_section .gestione_form_title {
     cursor: pointer;
 }
 
-.gestione_costanti .single_section .box_input{
+.gestione_costanti .single_section .box_input {
     display: none;
 }
 
 /** GESTIONE PERMESSI **/
-.gestione_permessi #permessi_gerarchia{
+.gestione_permessi #permessi_gerarchia {
     list-style: none;
 }
 
-.gestione_permessi #permessi_gerarchia li{
+.gestione_permessi #permessi_gerarchia li {
     width: 50%;
     margin: 5px auto;
     background: grey;
-    border:1px solid black;
+    border: 1px solid black;
     color: white;
 }
 
@@ -477,13 +476,13 @@ div.innertube {
  */
 .gestione_pagina .gestione_incipit,
 .servizi_pagina .servizi_incipit,
-.general_incipit{
+.general_incipit {
     background: grey;
     padding: 10px;
-    color:black;
-    border:1px solid black;
+    color: black;
+    border: 1px solid black;
     width: 80%;
-    margin:5px auto;
+    margin: 5px auto;
     font-size: 13px;
 }
 
@@ -510,34 +509,34 @@ div.innertube {
 
 .gestione_pagina .gestione_incipit ul,
 .servizi_pagina .servizi_incipit ul,
-.general_incipit ul{
+.general_incipit ul {
     width: 80%;
-    margin:0 auto;
+    margin: 0 auto;
 }
 
 .gestione_pagina .gestione_incipit ul li,
 .servizi_pagina .servizi_incipit ul li,
-.general_incipit ul li{
+.general_incipit ul li {
     padding: 5px 0;
     text-align: left;
 }
 
-.form_container{
+.form_container {
     width: 90%;
     margin: 5px auto;
 }
 
-.form_container .form{
+.form_container .form {
     width: 100%;
 }
 
-.form_container .form_info{
+.form_container .form_info {
     font-size: 12px;
     font-style: italic;
 }
 
 .form_container .form .form_title,
-.general_title{
+.general_title {
     font-size: 15px;
     font-weight: bold;
     border: solid black;
@@ -549,7 +548,7 @@ div.innertube {
 }
 
 .form_container .form .form_subtitle,
-.general_subtitle{
+.general_subtitle {
     font-size: 13px;
     font-weight: bold;
     margin: 10px 0;
@@ -557,31 +556,31 @@ div.innertube {
     clear: both;
 }
 
-.form_container .form .single_input{
+.form_container .form .single_input {
     width: 100%;
     margin: 5px;
 }
 
-.form_container .form .single_input .label{
+.form_container .form .single_input .label {
     font-size: 13px;
     font-weight: bold;
 }
 
 .form_container .form .single_input input,
 .form_container .form .single_input textarea,
-.form_container .form .single_input select{
+.form_container .form .single_input select {
     margin: 0 !important;
     max-width: 500px;
     border: 1px solid grey;
 }
 
-.single_input.w-33{
+.single_input.w-33 {
     width: 32% !important;
     display: inline-block;
     vertical-align: top;
 }
 
-.single_input.w-25{
+.single_input.w-25 {
     width: 25% !important;
     display: inline-block;
     vertical-align: top;
@@ -590,22 +589,22 @@ div.innertube {
 
 /*** FAKE-TABLE ***/
 
-.fake-table{
+.fake-table {
     margin: 10px 0;
     width: 100%;
     text-align: center;
 }
 
-.fake-table .header{
+.fake-table .header {
     border-radius: 5px 5px 0 0;
 }
 
-.fake-table .footer{
+.fake-table .footer {
     border-radius: 0 0 5px 5px;
 }
 
 .fake-table .footer,
-.fake-table .header{
+.fake-table .header {
     background: #23272a !important;
     color: #ccc !important;
     font-weight: bold;
@@ -614,14 +613,23 @@ div.innertube {
     font-size: 15px;
 }
 
+.fake-table .header .header-title {
+    background: #23272a !important;
+    color: #ccc !important;
+    font-size: 15px;
+    margin-top: 0;
+    padding-top: 0;
+    border-bottom: 1px solid #4d5259;
+    margin-bottom: 5px;
+}
 
 .fake-table .footer a,
-.fake-table .header a{
+.fake-table .header a {
     color: #ccc !important;
 }
 
 
-.fake-table .tr{
+.fake-table .tr {
     width: 100%;
     height: auto;
     padding: 5px;
@@ -632,11 +640,11 @@ div.innertube {
     border-width: 0 1px 1px 1px;
 }
 
-.fake-table .tr:nth-child(2){
-    border-top:none;
+.fake-table .tr:nth-child(2) {
+    border-top: none;
 }
 
-.fake-table .tr .td{
+.fake-table .tr .td {
     display: inline-block;
     vertical-align: top;
     border-right: 1px solid #4d5259;
@@ -644,7 +652,7 @@ div.innertube {
 }
 
 .fake-table .tr .td img,
-.fake-table .tr .td input[type="image"]{
+.fake-table .tr .td input[type="image"] {
     width: 25px;
     height: 25px;
     display: inline-block;
@@ -652,50 +660,50 @@ div.innertube {
 }
 
 .fake-table .tr .td button,
-.fake-table .tr .td a{
+.fake-table .tr .td a {
     color: #ccc;
     text-decoration: none;
     background: none;
-    border:none;
+    border: none;
     cursor: pointer;
 }
 
 .fake-table .tr .td button:hover,
-.fake-table .tr .td a:hover{
+.fake-table .tr .td a:hover {
     color: #fff;
 }
 
-.fake-table .tr .td:last-child{
+.fake-table .tr .td:last-child {
     border-right: none;
 }
 
-.fake-table .open_text span{
+.fake-table .open_text span {
     cursor: pointer;
 }
 
-.fake-table .open_text span:hover{
+.fake-table .open_text span:hover {
     color: black;
     font-weight: bold;
 }
 
-.fake-table .hidden_text{
+.fake-table .hidden_text {
     display: none;
 }
 
-.fake-table .hidden_text .td{
+.fake-table .hidden_text .td {
     width: 100% !important;
 }
 
-.fake-table .table-subtitle{
+.fake-table .table-subtitle {
     font-size: 15px;
     font-weight: bold;
     padding: 5px 0;
 }
 
-.fake-table .table-text{
-    margin:5px 0;
+.fake-table .table-text {
+    margin: 5px 0;
     text-align: left;
-    border:1px solid black;
+    border: 1px solid black;
     background-color: #4d5259;
     color: #ccc;
     width: 100%;
@@ -706,43 +714,53 @@ div.innertube {
 
 /** GESTIONE QUEST **/
 
-.quest_list .td{
-    width: calc( (100% / 8) - 10px);
+.quest_list .td {
+    width: calc((100% / 8) - 10px);
 }
 
-.quest_insert_form #new_member{
+.quest_insert_form #new_member {
     margin: 20px auto;
+}
+
+/*** GESTIONE CONTATTI ***/
+
+.pagina_scheda_contatti .contatti_list .header .td {
+    width: 32%;
+}
+
+.pagina_scheda_contatti .contatti_list .td {
+    width: 32%;
 }
 
 /*** GESTIONE ESITI ***/
 
-.gestione_esiti .esiti_list .header .td{
+.gestione_esiti .esiti_list .header .td {
     width: 130px;
 }
 
-.gestione_esiti .esiti_list .td{
+.gestione_esiti .esiti_list .td {
     width: 135px;
 }
 
-.gestione_esiti .esiti_list .closed{
+.gestione_esiti .esiti_list .closed {
     background: #435595;
 }
 
-.gestione_esiti .esiti_list .closed .td{
+.gestione_esiti .esiti_list .closed .td {
     border-color: black !important;
 }
 
-.gestione_esiti .esiti_members{
+.gestione_esiti .esiti_members {
     width: 400px;
-    margin:0 auto;
+    margin: 0 auto;
 }
 
-.gestione_esiti .answer_box{
+.gestione_esiti .answer_box {
     width: 100%;
-    border:1px solid black;
+    border: 1px solid black;
 }
 
-.gestione_esiti .answer_box .titolo_box{
+.gestione_esiti .answer_box .titolo_box {
     font-size: 18px;
     font-weight: bold;
     background: #4d5259;
@@ -752,82 +770,82 @@ div.innertube {
     color: #ccc;
 }
 
-.gestione_esiti .answer_box .answer_list{
+.gestione_esiti .answer_box .answer_list {
     width: 100%;
     margin: 5px 0;
     padding: 5px;
     box-sizing: border-box;
-    border-bottom:1px solid black;
+    border-bottom: 1px solid black;
     height: 450px;
     overflow: auto;
 }
 
-.gestione_esiti .answer_box .answer_list .single_answer{
+.gestione_esiti .answer_box .answer_list .single_answer {
     width: 52%;
-    border:1px solid black;
+    border: 1px solid black;
     border-radius: 5px;
     clear: both;
     margin: 3px 0;
     text-align: left;
 }
 
-.gestione_esiti .answer_box .answer_list .single_answer.mine{
+.gestione_esiti .answer_box .answer_list .single_answer.mine {
     float: left;
     background: #4d5259;
     color: #ccc;
 }
 
-.gestione_esiti .answer_box .answer_list .single_answer.other{
+.gestione_esiti .answer_box .answer_list .single_answer.other {
     float: right;
     background: #7289da;
 }
 
-.gestione_esiti .answer_box .answer_list .single_answer .text{
+.gestione_esiti .answer_box .answer_list .single_answer .text {
     padding: 5px;
     box-sizing: border-box;
     font-size: 13px;
 }
 
-.gestione_esiti .answer_box .answer_list .single_answer .dice{
+.gestione_esiti .answer_box .answer_list .single_answer .dice {
     text-align: center;
     background: black;
     width: 100%;
     color: #ce5a6a;
-    border-bottom:1px solid #ccc;
+    border-bottom: 1px solid #ccc;
     padding: 3px 0;
     font-size: 13px;
 }
 
-.gestione_esiti .answer_box .answer_list .single_answer .dice a{
+.gestione_esiti .answer_box .answer_list .single_answer .dice a {
     color: #d98692;
     text-decoration: none;
     font-weight: normal;
 }
 
-.gestione_esiti .answer_box .answer_list .single_answer .dice a:hover{
+.gestione_esiti .answer_box .answer_list .single_answer .dice a:hover {
     color: #ccc;
 }
 
-.gestione_esiti .answer_box .answer_list .single_answer .dice_result{
+.gestione_esiti .answer_box .answer_list .single_answer .dice_result {
     text-align: center;
     background: black;
     width: 100%;
     color: #7289da;
-    border-bottom:1px solid #ccc;
+    border-bottom: 1px solid #ccc;
     padding: 3px 0;
     font-size: 13px;
 }
 
-.gestione_esiti .answer_box .answer_list .single_answer .dice_result:hover{
+.gestione_esiti .answer_box .answer_list .single_answer .dice_result:hover {
     color: #b6bed9;
     cursor: pointer;
 }
 
-.gestione_esiti .answer_box .answer_list .single_answer .dice_result .internal_text{
+.gestione_esiti .answer_box .answer_list .single_answer .dice_result .internal_text {
     display: none;
 }
 
-.gestione_esiti .answer_box .answer_list .single_answer .sub_text{
+.gestione_esiti .answer_box .answer_list .single_answer .sub_text {
     text-align: center;
     background: black;
     width: 100%;
@@ -839,13 +857,13 @@ div.innertube {
 
 /**** MERCATO ***/
 
-.shops_page{
+.shops_page {
     width: 100%;
     height: 100%;
     text-align: left;
 }
 
-.shops_page .single_shop{
+.shops_page .single_shop {
     height: 235px;
     display: inline-block;
     vertical-align: top;
@@ -856,54 +874,54 @@ div.innertube {
     border: 1px solid black;
 }
 
-.shops_page .single_shop .shop_img{
+.shops_page .single_shop .shop_img {
     width: 200px;
     margin: 5px;
     height: 200px;
-    border:1px solid black;
+    border: 1px solid black;
 }
 
-.shops_page .single_shop .shop_img img{
+.shops_page .single_shop .shop_img img {
     width: 100%;
     height: 100%;
 }
 
-.shops_page .single_shop .shop_name a{
+.shops_page .single_shop .shop_name a {
     color: #ccc;
     font-size: 15px;
 }
 
-.shops_page .single_shop_object{
+.shops_page .single_shop_object {
     width: 98%;
     height: 232px;
     margin: 5px auto;
     border-radius: 5px;
     background-color: #4d5259;
-    border:1px solid black;
+    border: 1px solid black;
     max-width: 800px;
     color: #ccc;
 }
 
-.shops_page .single_shop_object .object_img{
+.shops_page .single_shop_object .object_img {
     width: 220px;
     height: 220px;
     margin: 5px;
-    border:1px solid black;
+    border: 1px solid black;
     display: inline-block;
     vertical-align: top;
 }
 
 
-.shops_page .single_shop_object .object_img img{
+.shops_page .single_shop_object .object_img img {
     width: 100%;
     height: 100%;
 }
 
-.shops_page .single_shop_object .object_data{
+.shops_page .single_shop_object .object_data {
     width: calc(100% - 250px);
     display: inline-block;
     vertical-align: top;
-    border:1px solid black;
+    border: 1px solid black;
     background-color: #23272a;
     height: 220px;
     margin: 5px;
@@ -912,70 +930,70 @@ div.innertube {
 }
 
 
-.shops_page .single_shop_object .object_data .object_name{
+.shops_page .single_shop_object .object_data .object_name {
     text-align: center;
     font-size: 15px;
     font-weight: bold;
 }
 
-.shops_page .single_shop_object .object_data .object_descr{
+.shops_page .single_shop_object .object_data .object_descr {
     height: 90px;
     overflow: auto;
-    border:1px solid #ccc;
+    border: 1px solid #ccc;
     padding: 5px;
     box-sizing: border-box;
     width: 98%;
-    margin:5px auto;
+    margin: 5px auto;
     border-radius: 5px;
 }
 
 
-.shops_page .single_shop_object .object_data .object_info{
+.shops_page .single_shop_object .object_data .object_info {
     text-align: left;
     font-size: 13px;
     padding-left: 5px;
     box-sizing: border-box;
 }
 
-.shops_page .single_shop_object .object_data .object_commands{
+.shops_page .single_shop_object .object_data .object_commands {
     text-align: right;
     padding: 0 5px;
     box-sizing: border-box;
 }
 
 
-.shops_page .single_shop_object .object_data .object_commands button{
+.shops_page .single_shop_object .object_data .object_commands button {
     background-color: #7289da;
     color: white;
-    border:1px solid black;
+    border: 1px solid black;
     padding: 0 10px;
     cursor: pointer;
 }
 
 /*** SERVIZI ESITI ***/
 
-.esiti_pagina .esiti_list .header .td{
+.esiti_pagina .esiti_list .header .td {
     width: 145px;
 }
 
-.esiti_pagina .esiti_list .td{
+.esiti_pagina .esiti_list .td {
     width: 150px;
 }
 
-.esiti_pagina .esiti_list .closed{
+.esiti_pagina .esiti_list .closed {
     background: #435595;
 }
 
-.esiti_pagina .esiti_list .closed .td{
+.esiti_pagina .esiti_list .closed .td {
     border-color: black !important;
 }
 
-.esiti_pagina .answer_box{
+.esiti_pagina .answer_box {
     width: 100%;
-    border:1px solid black;
+    border: 1px solid black;
 }
 
-.esiti_pagina .answer_box .titolo_box{
+.esiti_pagina .answer_box .titolo_box {
     font-size: 18px;
     font-weight: bold;
     background: #4d5259;
@@ -985,82 +1003,82 @@ div.innertube {
     color: #ccc;
 }
 
-.esiti_pagina .answer_box .answer_list{
+.esiti_pagina .answer_box .answer_list {
     width: 100%;
     margin: 5px 0;
     padding: 5px;
     box-sizing: border-box;
-    border-bottom:1px solid black;
+    border-bottom: 1px solid black;
     height: 450px;
     overflow: auto;
 }
 
-.esiti_pagina .answer_box .answer_list .single_answer{
+.esiti_pagina .answer_box .answer_list .single_answer {
     width: 52%;
-    border:1px solid black;
+    border: 1px solid black;
     border-radius: 5px;
     clear: both;
     margin: 3px 0;
     text-align: left;
 }
 
-.esiti_pagina .answer_box .answer_list .single_answer.mine{
+.esiti_pagina .answer_box .answer_list .single_answer.mine {
     float: left;
     background: #4d5259;
     color: #ccc;
 }
 
-.esiti_pagina .answer_box .answer_list .single_answer.other{
+.esiti_pagina .answer_box .answer_list .single_answer.other {
     float: right;
     background: #7289da;
 }
 
-.esiti_pagina .answer_box .answer_list .single_answer .text{
+.esiti_pagina .answer_box .answer_list .single_answer .text {
     padding: 5px;
     box-sizing: border-box;
     font-size: 13px;
 }
 
-.esiti_pagina .answer_box .answer_list .single_answer .dice{
+.esiti_pagina .answer_box .answer_list .single_answer .dice {
     text-align: center;
     background: black;
     width: 100%;
     color: #ce5a6a;
-    border-bottom:1px solid #ccc;
+    border-bottom: 1px solid #ccc;
     padding: 3px 0;
     font-size: 13px;
 }
 
-.esiti_pagina .answer_box .answer_list .single_answer .dice a{
+.esiti_pagina .answer_box .answer_list .single_answer .dice a {
     color: #d98692;
     text-decoration: none;
     font-weight: normal;
 }
 
-.esiti_pagina .answer_box .answer_list .single_answer .dice a:hover{
+.esiti_pagina .answer_box .answer_list .single_answer .dice a:hover {
     color: #ccc;
 }
 
-.esiti_pagina .answer_box .answer_list .single_answer .dice_result{
+.esiti_pagina .answer_box .answer_list .single_answer .dice_result {
     text-align: center;
     background: black;
     width: 100%;
     color: #7289da;
-    border-bottom:1px solid #ccc;
+    border-bottom: 1px solid #ccc;
     padding: 3px 0;
     font-size: 13px;
 }
 
-.esiti_pagina .answer_box .answer_list .single_answer .dice_result:hover{
+.esiti_pagina .answer_box .answer_list .single_answer .dice_result:hover {
     color: #b6bed9;
     cursor: pointer;
 }
 
-.esiti_pagina .answer_box .answer_list .single_answer .dice_result .internal_text{
+.esiti_pagina .answer_box .answer_list .single_answer .dice_result .internal_text {
     display: none;
 }
 
-.esiti_pagina .answer_box .answer_list .single_answer .sub_text{
+.esiti_pagina .answer_box .answer_list .single_answer .sub_text {
     text-align: center;
     background: black;
     width: 100%;
@@ -1071,13 +1089,13 @@ div.innertube {
 
 /** ONLINE STATUS ***/
 
-.floating_box_status{
+.floating_box_status {
     position: absolute;
-    top:20px;
+    top: 20px;
     right: 20px;
     width: 200px;
     background: grey;
-    border:1px solid black;
+    border: 1px solid black;
     border-radius: 15px;
     min-height: 150px;
     z-index: 999;
@@ -1086,18 +1104,18 @@ div.innertube {
     text-align: center;
 }
 
-.floating_box_status.minimized{
+.floating_box_status.minimized {
     width: 20px !important;
     height: 20px !important;
     overflow: hidden;
     min-height: 0;
 }
 
-.floating_box_status.minimized > *{
+.floating_box_status.minimized > * {
     display: none;
 }
 
-.floating_box_status .change-dimension{
+.floating_box_status .change-dimension {
     display: block !important;
     cursor: pointer;
     background: white;
@@ -1111,13 +1129,13 @@ div.innertube {
     line-height: 20px;
 }
 
-.floating_box_status .subtitle{
+.floating_box_status .subtitle {
     margin-top: 5px;
     font-size: 13px;
     font-weight: bold;
 }
 
-.floating_box_status ul{
+.floating_box_status ul {
     list-style: none;
     text-align: left;
     margin-top: 5px;
@@ -1127,31 +1145,31 @@ div.innertube {
 
 }
 
-.floating_box_status ul li input{
+.floating_box_status ul li input {
     width: 20px;
 }
 
-#form_meteo_edit{
+#form_meteo_edit {
     text-align: center;
 }
 
-.gruppi_list .td{
+.gruppi_list .td {
     width: 24%;
 }
 
-.roles_list .td{
+.roles_list .td {
     width: 24%;
 }
 
-.members_list .td{
+.members_list .td {
     width: 32%;
 }
 
-.works_list .td{
+.works_list .td {
     width: 24%;
 }
 
-.group_rules{
+.group_rules {
     width: 90%;
     border: 1px solid black;
     background: #7289da;
@@ -1159,15 +1177,121 @@ div.innertube {
     padding: 5px;
     box-sizing: border-box;
     min-height: 200px;
-    margin:0 auto;
+    margin: 0 auto;
     text-align: left;
 }
-
-
 
 .group_rules img,
 .roles_list img,
 .works_list img,
-.members_list img{
+.members_list img {
     max-height: 15px;
+}
+
+.groups_storage_container {
+    text-align: left;
+}
+
+.groups_storage_container .group_objects_container {
+    width: 98%;
+    border: 1px solid black;
+    background: #7289da;
+    border-radius: 10px;
+    padding: 5px;
+    box-sizing: border-box;
+    height: 200px;
+    margin: 10px auto;
+    text-align: left;
+    overflow: auto;
+}
+
+.groups_storage_container .group_objects_container .single_object {
+    width: 55px;
+    height: 56px;
+    float: left;
+    border: 1px solid black;
+    background: #555555;
+    border-radius: 10px;
+    box-sizing: border-box;
+    margin: 3px;
+    overflow: hidden;
+}
+
+.groups_storage_container .group_objects_container .single_object img {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+}
+
+.groups_storage_container .group_objects_info {
+    width: 98%;
+    border-radius: 10px;
+    box-sizing: border-box;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.groups_storage_container .group_objects_info .single_object_info {
+    width: 100%;
+    border: 1px solid black;
+    background: #555555;
+    border-radius: 10px;
+    padding: 5px;
+    box-sizing: border-box;
+    height: 165px;
+}
+
+.groups_storage_container .group_objects_info .single_object_info .object_image {
+    width: 150px;
+    height: 150px;
+    display: inline-block;
+    border-radius: 5px;
+    overflow: hidden;
+    border: 1px solid black;
+    vertical-align: middle;
+}
+
+.groups_storage_container .group_objects_info .single_object_info .object_image img {
+    width: 100%;
+    height: 100%;
+}
+
+.groups_storage_container .group_objects_info .single_object_info .object_info {
+    display: inline-block;
+    width: calc(100% - 170px);
+    margin-left: 5px;
+    vertical-align: top;
+    height: 100%;
+}
+
+.groups_storage_container .group_objects_info .single_object_info .object_info .object_name {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    height: 30px;
+}
+
+.groups_storage_container .group_objects_info .single_object_info .object_info .object_sub_info {
+    width: 100%;
+    height: calc(100% - 30px);
+}
+
+.groups_storage_container .group_objects_info .single_object_info .object_info .object_sub_info .info_box {
+    height: 100%;
+    display: inline-block;
+    border: 1px solid black;
+    vertical-align: top;
+}
+
+.groups_storage_container .group_objects_info .single_object_info .object_info .object_sub_info .info_box.info_left {
+    width: 50%;
+}
+
+.groups_storage_container .group_objects_info .single_object_info .object_info .object_sub_info .info_box.info_center {
+    width: 43%;
+}
+
+.groups_storage_container .group_objects_info .single_object_info .object_info .object_sub_info .info_box.info_right {
+    width: 5%;
+    text-align: center;
 }

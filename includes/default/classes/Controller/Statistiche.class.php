@@ -1,7 +1,7 @@
 <?php
 
-class Statistiche extends BaseClass{
-
+class Statistiche extends BaseClass
+{
 
     /**
      * @fn __construct
@@ -35,7 +35,7 @@ class Statistiche extends BaseClass{
      */
     public function getStats(string $val = '*')
     {
-        return DB::query("SELECT {$val} FROM statistiche WHERE 1 ORDER BY nome",'result');
+        return DB::query("SELECT {$val} FROM statistiche WHERE 1 ORDER BY nome", 'result');
     }
 
     /*** AJAX ***/
@@ -49,7 +49,7 @@ class Statistiche extends BaseClass{
     public function ajaxStatData(array $post)
     {
 
-        if ($this->permissionManageStatistics()) {
+        if ( $this->permissionManageStatistics() ) {
 
             $id = Filters::int($post['id']);
 
@@ -104,7 +104,7 @@ class Statistiche extends BaseClass{
         $html = '<option value=""></option>';
         $list = $this->getStats('id,nome');
 
-        foreach ($list as $row) {
+        foreach ( $list as $row ) {
             $id = Filters::int($row['id']);
             $nome = Filters::in($row['nome']);
             $sel = ($selected == $id) ? 'selected' : '';
@@ -126,7 +126,7 @@ class Statistiche extends BaseClass{
     public function insertStat(array $post): array
     {
 
-        if ($this->permissionManageStatistics()) {
+        if ( $this->permissionManageStatistics() ) {
 
             $nome = Filters::in($post['nome']);
             $descrizione = Filters::in($post['descr']);
@@ -135,23 +135,22 @@ class Statistiche extends BaseClass{
             $iscr = Filters::checkbox($post['iscrizione']);
             $creato_da = Filters::int($this->me_id);
 
-
             DB::query("INSERT INTO statistiche(nome, max_val, min_val, descrizione,iscrizione,creato_da) 
                             VALUES('{$nome}','{$max}','{$min}','{$descrizione}','{$iscr}','{$creato_da}')");
 
             return [
-                'response'=> true,
+                'response' => true,
                 'swal_title' => 'Operazione riuscita!',
-                'swal_message'=>'Statistica inserita correttamente.',
+                'swal_message' => 'Statistica inserita correttamente.',
                 'swal_type' => 'success',
-                'stat_list' => $this->listStats()
+                'stat_list' => $this->listStats(),
             ];
         } else {
             return [
-                'response'=> false,
+                'response' => false,
                 'swal_title' => 'Operazione fallita!',
-                'swal_message'=>'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error',
             ];
         }
     }
@@ -165,7 +164,7 @@ class Statistiche extends BaseClass{
     public function editStat(array $post): array
     {
 
-        if ($this->permissionManageStatistics()) {
+        if ( $this->permissionManageStatistics() ) {
 
             $id = Filters::int($post['stat']);
             $nome = Filters::in($post['nome']);
@@ -181,18 +180,18 @@ class Statistiche extends BaseClass{
                             WHERE id='{$id}' LIMIT 1");
 
             return [
-            'response'=> true,
+                'response' => true,
                 'swal_title' => 'Operazione riuscita!',
-                'swal_message'=>'Statistica modificata correttamente.',
+                'swal_message' => 'Statistica modificata correttamente.',
                 'swal_type' => 'success',
-                'stat_list' => $this->listStats()
+                'stat_list' => $this->listStats(),
             ];
         } else {
             return [
-                'response'=> false,
+                'response' => false,
                 'swal_title' => 'Operazione fallita!',
-                'swal_message'=>'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error',
             ];
         }
     }
@@ -206,25 +205,25 @@ class Statistiche extends BaseClass{
     public function deleteStat(array $post): array
     {
 
-        if ($this->permissionManageStatistics()) {
+        if ( $this->permissionManageStatistics() ) {
 
             $id = Filters::int($post['stat']);
 
             DB::query("DELETE FROM statistiche WHERE id='{$id}'");
 
             return [
-                'response'=> true,
+                'response' => true,
                 'swal_title' => 'Operazione riuscita!',
-                'swal_message'=>'Statistica eliminata correttamente.',
+                'swal_message' => 'Statistica eliminata correttamente.',
                 'swal_type' => 'success',
-                'stat_list' => $this->listStats()
+                'stat_list' => $this->listStats(),
             ];
         } else {
             return [
-                'response'=> false,
+                'response' => false,
                 'swal_title' => 'Operazione fallita!',
-                'swal_message'=>'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error',
             ];
         }
     }

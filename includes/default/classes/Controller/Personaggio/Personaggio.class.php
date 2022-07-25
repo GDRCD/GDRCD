@@ -1,6 +1,5 @@
 <?php
 
-
 class Personaggio extends BaseClass
 {
 
@@ -15,7 +14,7 @@ class Personaggio extends BaseClass
     public static function getPgLocation(int $pg = 0): int
     {
 
-        if (empty($pg)) {
+        if ( empty($pg) ) {
             $pg = Functions::getInstance()->getMyId();
         }
 
@@ -50,14 +49,13 @@ class Personaggio extends BaseClass
     }
 
     /**
-     * @fn getAllPg
-     * @note Estrae tutti i personaggi
-     * @param string $val
-     * @return bool|int|mixed|string
+     * @fn listPG
+     * @note Ritorna la lista dei pg registrati escludendo quelli già presenti fra i contatti e l'utente stesso
+     * @return mixed
      */
-    public function getAllPg(string $val = '*')
+    function getAllPG(string $val = '*', string $where = '1', string $order = '')
     {
-        return DB::query("SELECT {$val} FROM personaggio WHERE 1", 'result');
+        return DB::query("SELECT {$val} FROM personaggio  WHERE {$where} {$order}", 'result');
     }
 
     /**** CONTROLS ****/
@@ -89,14 +87,13 @@ class Personaggio extends BaseClass
         return ($pg == $me);
     }
 
-
     /*** FUNCTIONS  ***/
 
     /**
      * @fn nameFromId
      * @note Estrae il nome del pg dall'id
-     * @var int $id
      * @return string
+     * @var int $id
      */
     public static function nameFromId(int $id): string
     {
@@ -104,6 +101,20 @@ class Personaggio extends BaseClass
         $data = DB::query("SELECT nome FROM personaggio WHERE id='{$id}' LIMIT 1");
 
         return Filters::out($data['nome']);
+    }
+
+    /**
+     * @fn IdFromName
+     * @note Estrae l'id del pg dal nome
+     * @param string $nome
+     * @return string
+     */
+    public static function IdFromName(string $nome): string
+    {
+        $nome = Filters::in($nome);
+        $data = DB::query("SELECT id FROM personaggio WHERE nome='{$nome}' LIMIT 1");
+
+        return Filters::out($data['id']);
     }
 
     /**
@@ -119,6 +130,8 @@ class Personaggio extends BaseClass
     }
 
 
+    /***** LISTS *****/
+
     /**
      * @fn listPgs
      * @note Genera gli option per i personaggi
@@ -126,7 +139,9 @@ class Personaggio extends BaseClass
      */
     public function listPgs(): string
     {
-        $roles = $this->getAllPg();
-        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $roles);
+        $pgs = $this->getAllPg();
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $pgs);
+
     }
+
 }

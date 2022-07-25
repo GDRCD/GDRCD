@@ -4,7 +4,7 @@ Router::loadRequired(); # Inserisco il required se non presente, per futuro spos
 
 $cls = Statistiche::getInstance(); # Inizializzo classe
 
-if ($cls->permissionManageStatistics()) { # Metodo di controllo per accesso alla pagina di gestione
+if ( $cls->permissionManageStatistics() ) { # Metodo di controllo per accesso alla pagina di gestione
     ?>
 
     <div class="general_incipit">

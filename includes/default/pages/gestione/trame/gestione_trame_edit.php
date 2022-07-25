@@ -1,15 +1,14 @@
 <?php /*Form di inserimento/modifica*/
 
-
 Router::loadRequired();
 
 $quest = Quest::getInstance();
 
-if ($quest->manageTramePermission()) {
+if ( $quest->manageTramePermission() ) {
 
     $id_trama = Filters::int($_GET['id_record']);
 
-    if ($quest->tramaExist($id_trama)) {
+    if ( $quest->tramaExist($id_trama) ) {
 
         $trama_data = $quest->getTrama($id_trama);
 

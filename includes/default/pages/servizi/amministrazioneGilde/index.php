@@ -3,10 +3,11 @@
 Router::loadRequired();
 
 $gruppi = Gruppi::getInstance();
+$op = Filters::out($_GET['op']);
 
-if ($gruppi->permissionServiceGroups()) { ?>
+if ( $gruppi->permissionServiceGroups() ) { ?>
     <div class="groups_page">
-        <?php if (true) { ?>
+        <?php if ( true ) { ?>
 
             <!-- Titolo della pagina -->
             <div class="general_title">
@@ -15,7 +16,7 @@ if ($gruppi->permissionServiceGroups()) { ?>
 
             <!-- Corpo della pagina -->
             <div class="page_body">
-                <?php Router::loadPages('servizi/amministrazioneGilde/view.php'); ?>
+                <?php Router::loadPages('servizi/amministrazioneGilde/' . $gruppi->loadGroupAdministrationPage($op)); ?>
             </div>
 
         <?php } else { ?>

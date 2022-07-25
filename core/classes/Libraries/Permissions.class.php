@@ -84,7 +84,7 @@ class Permissions extends BaseClass
         # EDIT_CONSTANTS
         $permission = Filters::out($permission);
 
-        if (self::permissionExist($permission)) {
+        if ( self::permissionExist($permission) ) {
 
             $pg_id = ($pg == 0) ? Functions::getInstance()->getMyId() : $pg;
 
@@ -97,7 +97,6 @@ class Permissions extends BaseClass
                 self::getInstance()->permissionExistInCharacter($pg_id, $perm_id) ||
                 self::getInstance()->isSuperUser($perm_groups)
             );
-
 
         } else {
             die("Permesso {$permission} inesistente.");
@@ -117,10 +116,10 @@ class Permissions extends BaseClass
         $resp = false;
         $permission = Filters::int($permission);
 
-        foreach ($groups as $group) {
+        foreach ( $groups as $group ) {
             $group_id = Filters::int($group['group_id']);
 
-            if ($this->permissionExistInGroup($permission, $group_id)) {
+            if ( $this->permissionExistInGroup($permission, $group_id) ) {
                 $resp = true;
                 break;
             }
@@ -139,12 +138,12 @@ class Permissions extends BaseClass
     {
 
         $resp = false;
-        foreach ($groups as $group) {
+        foreach ( $groups as $group ) {
             $group_id = Filters::int($group['group_id']);
 
             $data = DB::query("SELECT superuser FROM permessi_group WHERE id='{$group_id}' LIMIT 1");
 
-            if (Filters::int($data['superuser'])) {
+            if ( Filters::int($data['superuser']) ) {
                 $resp = true;
                 break;
             }
@@ -165,15 +164,15 @@ class Permissions extends BaseClass
         $pg_list = Functions::getAllPgs();
         $pg_array = [];
 
-        foreach ($pg_list as $pg) {
+        foreach ( $pg_list as $pg ) {
             $pg_id = Filters::int($pg['id']);
 
-            if (!in_array($pg_id, $pg_array)) {
-                foreach ($permissions as $permission) {
+            if ( !in_array($pg_id, $pg_array) ) {
+                foreach ( $permissions as $permission ) {
 
                     $permission = Filters::in($permission);
 
-                    if (self::permission($permission, $pg_id)) {
+                    if ( self::permission($permission, $pg_id) ) {
                         array_push($pg_array, $pg_id);
                     }
                 }

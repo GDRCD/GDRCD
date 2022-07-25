@@ -1,7 +1,7 @@
 <?php
 
-
-class PersonaggioOggetti extends Personaggio{
+class PersonaggioOggetti extends Personaggio
+{
 
     /**** TABLES HELPERS ***/
 
@@ -83,7 +83,7 @@ class PersonaggioOggetti extends Personaggio{
      * @param int $pg
      * @return bool
      */
-    public static function isPgObject(int $obj,int $pg): bool
+    public static function isPgObject(int $obj, int $pg): bool
     {
         $data = PersonaggioOggetti::getPgObject($obj, 'personaggio_oggetto.personaggio');
         $personaggio = Filters::int($data['personaggio']);

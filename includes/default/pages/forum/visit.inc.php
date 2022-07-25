@@ -1,10 +1,10 @@
 <?php
 //Permessi
-$row = gdrcd_query("SELECT tipo, proprietari FROM araldo WHERE id_araldo = ".gdrcd_filter('num', $_REQUEST['what'])."");
+$row = gdrcd_query("SELECT tipo, proprietari FROM araldo WHERE id_araldo = " . gdrcd_filter('num', $_REQUEST['what']) . "");
 
-if((($row['tipo'] == SOLORAZZA) && ($_SESSION['id_razza'] != $row['proprietari']) && ($_SESSION['permessi'] < MODERATOR)) || (($row['tipo'] == SOLOGILDA) && (strpos($_SESSION['gilda'], '*'.$row['proprietari'].'*') === false) && ($_SESSION['permessi'] < MODERATOR)) || (($row['tipo'] >= SOLOMASTERS) && ($_SESSION['permessi'] < GAMEMASTER)) || (($row['tipo'] >= SOLOMODERATORS) && ($_SESSION['permessi'] < MODERATOR))) {
+if ( (($row['tipo'] == SOLORAZZA) && ($_SESSION['id_razza'] != $row['proprietari']) && ($_SESSION['permessi'] < MODERATOR)) || (($row['tipo'] == SOLOGILDA) && (strpos($_SESSION['gilda'], '*' . $row['proprietari'] . '*') === false) && ($_SESSION['permessi'] < MODERATOR)) || (($row['tipo'] >= SOLOMASTERS) && ($_SESSION['permessi'] < GAMEMASTER)) || (($row['tipo'] >= SOLOMODERATORS) && ($_SESSION['permessi'] < MODERATOR)) ) {
     /*Restrizione di visualizzazione solo master e admin*/
-    echo '<div class="error">'.gdrcd_filter('out', $MESSAGE['error']['not_allowed']).'</div>';
+    echo '<div class="error">' . gdrcd_filter('out', $MESSAGE['error']['not_allowed']) . '</div>';
     ?>
     <div class="link_back">
         <a href="main.php?page=forum">
@@ -17,19 +17,19 @@ if((($row['tipo'] == SOLORAZZA) && ($_SESSION['id_razza'] != $row['proprietari']
      * Procedure messaggi importanti e chiusi
      * @author Blancks <s.rotondo90@gmail.com>
      */
-    if($_SESSION['permessi'] >= MODERATOR) {
-        switch($_POST['ops']) {
+    if ( $_SESSION['permessi'] >= MODERATOR ) {
+        switch ( $_POST['ops'] ) {
             case 'important':
-                $id_record = (int) $_POST['id_record'];
-                $status_imp = (int) $_POST['status_imp'];
+                $id_record = (int)$_POST['id_record'];
+                $status_imp = (int)$_POST['status_imp'];
 
                 gdrcd_query("UPDATE messaggioaraldo SET importante = $status_imp WHERE id_messaggio = $id_record") or die(mysql_error());
 
                 break;
 
             case 'close':
-                $id_record = (int) $_POST['id_record'];
-                $status_cls = (int) $_POST['status_cls'];
+                $id_record = (int)$_POST['id_record'];
+                $status_cls = (int)$_POST['status_cls'];
 
                 gdrcd_query("UPDATE messaggioaraldo SET chiuso = $status_cls WHERE id_messaggio = $id_record") or die(mysql_error());
 
@@ -40,18 +40,18 @@ if((($row['tipo'] == SOLORAZZA) && ($_SESSION['id_razza'] != $row['proprietari']
      *  Fine Procedura per topic importanti/chiusi
      */
     //Determinazione pagina (paginazione)
-    $pagebegin = (int) $_REQUEST['offset'] * $PARAMETERS['settings']['posts_per_page'];
+    $pagebegin = (int)$_REQUEST['offset'] * $PARAMETERS['settings']['posts_per_page'];
     $pageend = $pagebegin + $PARAMETERS['settings']['posts_per_page'];
 
     //Conteggio record totali
-    $record_globale = gdrcd_query("SELECT COUNT(*) FROM messaggioaraldo WHERE id_messaggio_padre = -1 AND id_araldo = ".gdrcd_filter('num', $_REQUEST['what']));
+    $record_globale = gdrcd_query("SELECT COUNT(*) FROM messaggioaraldo WHERE id_messaggio_padre = -1 AND id_araldo = " . gdrcd_filter('num', $_REQUEST['what']));
     $totaleresults = $record_globale['COUNT(*)'];
 
     /*Carico l'elenco dei forum*/
-    $result = gdrcd_query("SELECT MA.id_messaggio, MA.titolo, MA.autore, MA.data_messaggio, MA.data_ultimo_messaggio, MA.importante, MA.chiuso, AL.id AS new_msg FROM messaggioaraldo AS MA LEFT JOIN araldo_letto AS AL ON MA.id_messaggio=AL.thread_id AND AL.nome='".$_SESSION['login']."' WHERE MA.id_messaggio_padre = -1 AND MA.id_araldo = ".gdrcd_filter('num', $_REQUEST['what'])." ORDER BY MA.importante DESC, MA.data_ultimo_messaggio DESC LIMIT ".$pagebegin.", ".$PARAMETERS['settings']['posts_per_page']."", 'result');
+    $result = gdrcd_query("SELECT MA.id_messaggio, MA.titolo, MA.autore, MA.data_messaggio, MA.data_ultimo_messaggio, MA.importante, MA.chiuso, AL.id AS new_msg FROM messaggioaraldo AS MA LEFT JOIN araldo_letto AS AL ON MA.id_messaggio=AL.thread_id AND AL.nome='" . $_SESSION['login'] . "' WHERE MA.id_messaggio_padre = -1 AND MA.id_araldo = " . gdrcd_filter('num', $_REQUEST['what']) . " ORDER BY MA.importante DESC, MA.data_ultimo_messaggio DESC LIMIT " . $pagebegin . ", " . $PARAMETERS['settings']['posts_per_page'] . "", 'result');
 
-    if(gdrcd_query($result, 'num_rows') == 0) {
-        echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['interface']['forums']['warning']['no_topic']).'</div>';
+    if ( gdrcd_query($result, 'num_rows') == 0 ) {
+        echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['interface']['forums']['warning']['no_topic']) . '</div>';
     } else {
         ?>
         <!-- Elenco forum -->
@@ -59,12 +59,12 @@ if((($row['tipo'] == SOLORAZZA) && ($_SESSION['id_razza'] != $row['proprietari']
             <div class="elenco_record_gioco">
                 <table>
                     <tr><!-- Intestazione tabella -->
-                        <?php if($_SESSION['permessi'] >= MODERATOR) {
+                        <?php if ($_SESSION['permessi'] >= MODERATOR) {
                         ?>
                         <td colspan="4">
-                        <?php } else  { ?>
+                            <?php } else  { ?>
                         <td colspan="3">
-                        <?php } ?>
+                            <?php } ?>
                             <div class="capitolo_elenco">
                                 <?php echo gdrcd_filter('get', $_REQUEST['nome']); ?>
                             </div>
@@ -87,7 +87,7 @@ if((($row['tipo'] == SOLORAZZA) && ($_SESSION['id_razza'] != $row['proprietari']
                             </div>
                         </td>
                         <?php
-                        if($_SESSION['permessi'] >= MODERATOR) {  ?>
+                        if ( $_SESSION['permessi'] >= MODERATOR ) { ?>
                             <td class="casella_titolo">
                                 <div class="capitolo_elenco">
                                     <?php echo '&nbsp;'; ?>
@@ -97,8 +97,8 @@ if((($row['tipo'] == SOLORAZZA) && ($_SESSION['id_razza'] != $row['proprietari']
                         } ?>
                     </tr>
                     <?php
-                    while($row = gdrcd_query($result, 'fetch')) {
-                        $readinfo = gdrcd_query("SELECT MAX(data_messaggio) AS latest, COUNT(*) AS replies FROM messaggioaraldo WHERE id_messaggio_padre = ".gdrcd_filter('get', $row['id_messaggio']));
+                    while ( $row = gdrcd_query($result, 'fetch') ) {
+                        $readinfo = gdrcd_query("SELECT MAX(data_messaggio) AS latest, COUNT(*) AS replies FROM messaggioaraldo WHERE id_messaggio_padre = " . gdrcd_filter('get', $row['id_messaggio']));
                         $lastupdate = $readinfo['latest'];
                         $postsnumber = $readinfo['replies'];
                         ?>
@@ -112,13 +112,13 @@ if((($row['tipo'] == SOLORAZZA) && ($_SESSION['id_razza'] != $row['proprietari']
                                             /**    * Topic importante
                                              * @author Blancks <s.rotondo90@gmail.com>
                                              */
-                                            echo ($row['importante']) ? $MESSAGE['interface']['administration']['ops']['important'].': ' : '';
+                                            echo ($row['importante']) ? $MESSAGE['interface']['administration']['ops']['important'] . ': ' : '';
                                             /**    * Fine
                                              */
                                             echo gdrcd_filter('out', $row['titolo']);
 
-                                            if($row['new_msg'] == 0) {
-                                                echo '('.$MESSAGE['interface']['forums']['topic']['new_posts']['plur'].')';
+                                            if ( $row['new_msg'] == 0 ) {
+                                                echo '(' . $MESSAGE['interface']['forums']['topic']['new_posts']['plur'] . ')';
                                             }
                                             ?>
                                         </div>
@@ -127,11 +127,12 @@ if((($row['tipo'] == SOLORAZZA) && ($_SESSION['id_razza'] != $row['proprietari']
                                     /**    * Topic Chiuso
                                      * @author Blancks <s.rotondo90@gmail.com>
                                      */
-                                    echo ($row['chiuso']) ? '<div class="forum_column">'.$MESSAGE['interface']['forums']['topic']['title'].' '.$MESSAGE['interface']['administration']['ops']['close'].'</div>' : '';
+                                    echo ($row['chiuso']) ? '<div class="forum_column">' . $MESSAGE['interface']['forums']['topic']['title'] . ' ' . $MESSAGE['interface']['administration']['ops']['close'] . '</div>' : '';
                                     /**    * Fine
                                      */
                                     ?>
-                                    <div class="forum_date_big"><?php echo gdrcd_format_date($row['data_messaggio']).' '.gdrcd_format_time($row['data_messaggio']); ?></div>
+                                    <div
+                                        class="forum_date_big"><?php echo gdrcd_format_date($row['data_messaggio']) . ' ' . gdrcd_format_time($row['data_messaggio']); ?></div>
                                 </div>
                             </td>
                             <td class="casella_elemento">
@@ -143,16 +144,16 @@ if((($row['tipo'] == SOLORAZZA) && ($_SESSION['id_razza'] != $row['proprietari']
                             </td>
                             <td class="casella_elemento">
                                 <div class="elementi_elenco"><!-- Data -->
-                                    <?php echo $postsnumber.' '.gdrcd_filter('out', $MESSAGE['interface']['forums']['topic']['posts']); ?>
+                                    <?php echo $postsnumber . ' ' . gdrcd_filter('out', $MESSAGE['interface']['forums']['topic']['posts']); ?>
                                     <div class="forum_date_big">
-                                        <?php if($postsnumber > 0) {
-                                            echo gdrcd_filter('out', $MESSAGE['interface']['forums']['topic']['last_post']).':   '.gdrcd_format_date($lastupdate).' '.gdrcd_format_time($lastupdate);
+                                        <?php if ( $postsnumber > 0 ) {
+                                            echo gdrcd_filter('out', $MESSAGE['interface']['forums']['topic']['last_post']) . ':   ' . gdrcd_format_date($lastupdate) . ' ' . gdrcd_format_time($lastupdate);
                                         } ?>
                                     </div>
                                 </div>
                             </td>
                             <?php
-                            if($_SESSION['permessi'] >= MODERATOR) {
+                            if ( $_SESSION['permessi'] >= MODERATOR ) {
                                 /**    * Topic importanti/chiusi
                                  * @author Blancks <s.rotondo90@gmail.com>
                                  */
@@ -171,38 +172,42 @@ if((($row['tipo'] == SOLORAZZA) && ($_SESSION['id_razza'] != $row['proprietari']
                                 <td class="casella_titolo">
                                     <div class="controlli_elenco"><!-- controlli -->
 
-                                                                  <!--
-                                                                  /**	* Topic importanti/chiusi
-                                                                      * @author Blancks <s.rotondo90@gmail.com>
-                                                                  */
-                                                                  -->
+                                        <!--
+                                        /**	* Topic importanti/chiusi
+                                            * @author Blancks <s.rotondo90@gmail.com>
+                                        */
+                                        -->
 
-                                                                  <!-- Importante -->
+                                        <!-- Importante -->
                                         <div class="controllo_elenco">
-                                            <form action="main.php?<?php echo $_SERVER['QUERY_STRING']; ?>" method="post">
-                                                <input type="hidden" name="id_record" value="<?php echo $row['id_messaggio'] ?>" />
-                                                <input type="hidden" name="status_imp" value="<?php echo $set_imp; ?>" />
-                                                <input type="hidden" name="ops" value="important" />
+                                            <form action="main.php?<?php echo $_SERVER['QUERY_STRING']; ?>"
+                                                  method="post">
+                                                <input type="hidden" name="id_record"
+                                                       value="<?php echo $row['id_messaggio'] ?>"/>
+                                                <input type="hidden" name="status_imp" value="<?php echo $set_imp; ?>"/>
+                                                <input type="hidden" name="ops" value="important"/>
                                                 <input type="image" src="imgs/icons/<?php echo $img_imp; ?>"
                                                        alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops'][$label_imp]); ?>"
-                                                       title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops'][$label_imp]); ?>" />
+                                                       title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops'][$label_imp]); ?>"/>
                                             </form>
                                         </div>
-                                                                  <!-- Topic Chiuso -->
+                                        <!-- Topic Chiuso -->
                                         <div class="controllo_elenco">
-                                            <form action="main.php?<?php echo $_SERVER['QUERY_STRING']; ?>" method="post">
-                                                <input type="hidden" name="id_record" value="<?php echo $row['id_messaggio'] ?>" />
-                                                <input type="hidden" name="status_cls" value="<?php echo $set_cls; ?>" />
-                                                <input type="hidden" name="ops" value="close" />
+                                            <form action="main.php?<?php echo $_SERVER['QUERY_STRING']; ?>"
+                                                  method="post">
+                                                <input type="hidden" name="id_record"
+                                                       value="<?php echo $row['id_messaggio'] ?>"/>
+                                                <input type="hidden" name="status_cls" value="<?php echo $set_cls; ?>"/>
+                                                <input type="hidden" name="ops" value="close"/>
                                                 <input type="image" src="imgs/icons/<?php echo $img_cls; ?>"
                                                        alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops'][$label_cls]); ?>"
-                                                       title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops'][$label_cls]); ?>" />
+                                                       title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops'][$label_cls]); ?>"/>
                                             </form>
                                         </div>
-                                                                  <!-- Elimina -->
+                                        <!-- Elimina -->
                                         <div class="controllo_elenco">
                                             <a href="main.php?page=forum&op=delete_conf&id_record=<?php echo $row['id_messaggio']; ?>&padre=-1">
-                                                <img src="imgs/icons/erase.png" alt="Elimina" width="15" />
+                                                <img src="imgs/icons/erase.png" alt="Elimina" width="15"/>
                                             </a>
                                         </div>
                                     </div>
@@ -222,16 +227,16 @@ if((($row['tipo'] == SOLORAZZA) && ($_SESSION['id_razza'] != $row['proprietari']
     <!-- Paginatore elenco -->
     <div class="pager">
         <?php
-        if($totaleresults > $PARAMETERS['settings']['posts_per_page']) {
+        if ( $totaleresults > $PARAMETERS['settings']['posts_per_page'] ) {
             echo gdrcd_filter('out', $MESSAGE['interface']['pager']['pages_name']);
-            for($i = 0; $i <= floor($totaleresults / $PARAMETERS['settings']['posts_per_page']); $i++) {
-                if($i != $_REQUEST['offset']) {
+            for ( $i = 0; $i <= floor($totaleresults / $PARAMETERS['settings']['posts_per_page']); $i++ ) {
+                if ( $i != $_REQUEST['offset'] ) {
                     ?>
                     <a href="main.php?page=forum&op=visit&what=<?php echo gdrcd_filter('num', $_REQUEST['what']
                     ) ?>&offset=<?php echo $i; ?>"><?php echo $i + 1; ?></a>
                     <?php
                 } else {
-                    echo ' '.($i + 1).' ';
+                    echo ' ' . ($i + 1) . ' ';
                 }
             } //for
         }//if
@@ -242,7 +247,7 @@ if((($row['tipo'] == SOLORAZZA) && ($_SESSION['id_razza'] != $row['proprietari']
     <div class="link_back">
         <a href="main.php?page=forum&op=composer&what=-1&where=<?php echo gdrcd_filter('num', $_REQUEST['what']); ?>">
             <?php echo gdrcd_filter('out', $MESSAGE['interface']['forums']['link']['new_topic']); ?>
-        </a><br />
+        </a><br/>
         <a href="main.php?page=forum">
             <?php echo gdrcd_filter('out', $MESSAGE['interface']['forums']['link']['back']); ?>
         </a>

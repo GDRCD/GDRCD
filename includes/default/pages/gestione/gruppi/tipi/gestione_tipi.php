@@ -4,28 +4,30 @@ Router::loadRequired(); # Inserisco il required se non presente, per futuro spos
 
 $cls = GruppiTipi::getInstance(); # Inizializzo classe
 
-if($cls->permissionManageTypes() && $cls->activeGroups()){ # Metodo di controllo per accesso alla pagina di gestione
+if ( $cls->permissionManageTypes() && $cls->activeGroups() ) { # Metodo di controllo per accesso alla pagina di gestione
 
-?>
-        <div class="general_incipit">
-            <div class="title"> Gestione gruppi </div>
-            <div class="subtitle">Gestione dei dati riferiti ai gruppi</div>
+    ?>
+    <div class="general_incipit">
+        <div class="title"> Gestione gruppi</div>
+        <div class="subtitle">Gestione dei dati riferiti ai gruppi</div>
 
-            Da questa pagina e' possibile:
-            <ul>
-                <li>Creare un gruppo</li>
-                <li>Modificare un gruppo</li>
-                <li>Eliminare un gruppo</li>
-            </ul>
+        Da questa pagina e' possibile:
+        <ul>
+            <li>Creare un gruppo</li>
+            <li>Modificare un gruppo</li>
+            <li>Eliminare un gruppo</li>
+        </ul>
 
-            L'eliminazione di un gruppo include anche l'eliminazione di <span class="highlight">tutti i suoi ruoli e la dissociazione dei ruoli da tutti ipersonaggi</span> ed e' irreversibile.
+        L'eliminazione di un gruppo include anche l'eliminazione di <span class="highlight">tutti i suoi ruoli e la dissociazione dei ruoli da tutti ipersonaggi</span>
+        ed e' irreversibile.
 
-        </div>
+    </div>
 
     <div class="form_container group_types_management">
 
         <!-- INSERT -->
-        <form class="form ajax_form" action="gestione/gruppi/tipi/gestione_tipi_ajax.php" data-callback="updateTypesList">
+        <form class="form ajax_form" action="gestione/gruppi/tipi/gestione_tipi_ajax.php"
+              data-callback="updateTypesList">
 
             <div class="form_title">Crea tipo gruppo</div>
 
@@ -47,7 +49,8 @@ if($cls->permissionManageTypes() && $cls->activeGroups()){ # Metodo di controllo
         </form>
 
         <!-- EDIT -->
-        <form class="form edit_form ajax_form" action="gestione/gruppi/tipi/gestione_tipi_ajax.php" data-callback="updateTypesList">
+        <form class="form edit_form ajax_form" action="gestione/gruppi/tipi/gestione_tipi_ajax.php"
+              data-callback="updateTypesList">
 
             <div class="form_title">Modifica tipo gruppo</div>
 
@@ -76,7 +79,8 @@ if($cls->permissionManageTypes() && $cls->activeGroups()){ # Metodo di controllo
         </form>
 
         <!-- DELETE -->
-        <form method="POST" class="form ajax_form" action="gestione/gruppi/tipi/gestione_tipi_ajax.php" data-callback="updateTypesList">
+        <form method="POST" class="form ajax_form" action="gestione/gruppi/tipi/gestione_tipi_ajax.php"
+              data-callback="updateTypesList">
 
             <div class="form_title">Elimina tipo gruppo</div>
 
@@ -97,7 +101,7 @@ if($cls->permissionManageTypes() && $cls->activeGroups()){ # Metodo di controllo
     </div>
 
     <script src="<?= Router::getPagesLink('gestione/gruppi/tipi/gestione_tipi.js'); ?>"></script>
-    <div class="link_back"><a href="/main.php?page=gestione">Indietro</a> </div>
+    <div class="link_back"><a href="/main.php?page=gestione">Indietro</a></div>
 
 
 <?php } ?>

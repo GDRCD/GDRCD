@@ -73,7 +73,7 @@ class MeteoStagioni extends Meteo
     {
         $op = Filters::out($op);
 
-        switch ($op) {
+        switch ( $op ) {
             default:
                 $page = 'gestione_stagioni_view.php';
                 break;
@@ -119,7 +119,7 @@ class MeteoStagioni extends Meteo
     {
         $row_data = [];
 
-        foreach ($list as $row) {
+        foreach ( $list as $row ) {
 
             $array = [
                 'id' => Filters::int($row['id']),
@@ -129,7 +129,7 @@ class MeteoStagioni extends Meteo
                 'date_start' => Filters::date($row['data_inizio'], 'd/m/Y'),
                 'sunrise' => Filters::date($row['alba'], 'H:i'),
                 'sunset' => Filters::date($row['tramonto'], 'H:i'),
-                'meteo_season_permission' => $this->permissionManageSeasons()
+                'meteo_season_permission' => $this->permissionManageSeasons(),
             ];
 
             $row_data[] = $array;
@@ -142,17 +142,17 @@ class MeteoStagioni extends Meteo
             'Data Inizio',
             'Alba',
             'Tramonto',
-            'Controlli'
+            'Controlli',
         ];
         $links = [
             ['href' => "/main.php?page=gestione/meteo/stagioni/gestione_stagioni_index&op=new", 'text' => 'Nuova stagione'],
-            ['href' => "/main.php?page=gestione/meteo/stagioni/gestione_stagioni_index", 'text' => 'Indietro']
+            ['href' => "/main.php?page=gestione/meteo/stagioni/gestione_stagioni_index", 'text' => 'Indietro'],
         ];
         return [
             'body' => 'gestione/meteo/stagioni/list',
             'body_rows' => $row_data,
             'cells' => $cells,
-            'links' => $links
+            'links' => $links,
         ];
     }
 
@@ -183,7 +183,7 @@ class MeteoStagioni extends Meteo
 
         $row_data = [];
 
-        foreach ($list as $row) {
+        foreach ( $list as $row ) {
 
             $array = [
                 'name' => Filters::out($row['nome']),
@@ -195,17 +195,17 @@ class MeteoStagioni extends Meteo
 
         $cells = [
             'Nome',
-            'Percentuale'
+            'Percentuale',
         ];
         $links = [
             ['href' => "/main.php?page=gestione_meteo_stagioni&op=new", 'text' => 'Nuova stagione'],
-            ['href' => "/main.php?page=gestione_meteo_stagioni", 'text' => 'Indietro']
+            ['href' => "/main.php?page=gestione_meteo_stagioni", 'text' => 'Indietro'],
         ];
         return [
             'body' => 'gestione/meteo/stagioni/condition_list',
             'body_rows' => $row_data,
             'cells' => $cells,
-            'links' => $links
+            'links' => $links,
         ];
     }
 
@@ -221,9 +221,9 @@ class MeteoStagioni extends Meteo
     {
         $option = "";
         $stagioni = MeteoStagioni::getInstance()->getAllSeason();
-        foreach ($stagioni as $item) {
+        foreach ( $stagioni as $item ) {
             $option .= "<div class='form_field'>";
-            if (in_array($item['id'], $array)) {
+            if ( in_array($item['id'], $array) ) {
                 $option .= "<input type='checkbox' name='stagioni[]' checked value='{$item['id']}'></div>";
             } else {
                 $option .= "<input type='checkbox' name='stagioni[]' value='{$item['id']}'></div>";
@@ -245,7 +245,7 @@ class MeteoStagioni extends Meteo
     public function NewSeason(array $post): array
     {
 
-        if ($this->permissionManageSeasons()) {
+        if ( $this->permissionManageSeasons() ) {
             $nome = Filters::in($post['nome']);
             $minima = Filters::in($post['minima']);
             $massima = Filters::in($post['massima']);
@@ -260,14 +260,14 @@ class MeteoStagioni extends Meteo
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Stagione creata.',
-                'swal_type' => 'success'
+                'swal_type' => 'success',
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -280,7 +280,7 @@ class MeteoStagioni extends Meteo
      */
     public function ModSeason(array $post): array
     {
-        if ($this->permissionManageSeasons()) {
+        if ( $this->permissionManageSeasons() ) {
             $id = Filters::in($post['id']);
 
             $nome = Filters::in($post['nome']);
@@ -297,14 +297,14 @@ class MeteoStagioni extends Meteo
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Stagione modificata.',
-                'swal_type' => 'success'
+                'swal_type' => 'success',
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
 
@@ -318,7 +318,7 @@ class MeteoStagioni extends Meteo
      */
     public function DelSeason(array $post): array
     {
-        if ($this->permissionManageSeasons()) {
+        if ( $this->permissionManageSeasons() ) {
 
             $id = Filters::in($post['id']);
             DB::query("DELETE FROM meteo_stagioni WHERE id='{$id}'");
@@ -328,14 +328,14 @@ class MeteoStagioni extends Meteo
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Stagione eliminata.',
                 'swal_type' => 'success',
-                'stagioni_list' => $this->seasonListManagement()
+                'stagioni_list' => $this->seasonListManagement(),
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
     }
@@ -349,7 +349,7 @@ class MeteoStagioni extends Meteo
     public function AssignCondition(array $post): array
     {
 
-        if ($this->permissionManageSeasons()) {
+        if ( $this->permissionManageSeasons() ) {
 
             $id = Filters::int($post['id']);
             $condizione = Filters::int($post['condizione']);
@@ -363,17 +363,16 @@ class MeteoStagioni extends Meteo
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Condizione associata.',
                 'swal_type' => 'success',
-                'stagioni_conditions' => $this->seasonConditionsManageList($id)
+                'stagioni_conditions' => $this->seasonConditionsManageList($id),
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
-
 
     }
 
@@ -386,7 +385,7 @@ class MeteoStagioni extends Meteo
     public function RemoveCondition(array $post): array
     {
 
-        if ($this->permissionManageSeasons()) {
+        if ( $this->permissionManageSeasons() ) {
 
             $id = Filters::int($post['id']);
             $condizione = Filters::int($post['condizione']);
@@ -398,17 +397,16 @@ class MeteoStagioni extends Meteo
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Condizione rimossa.',
                 'swal_type' => 'success',
-                'stagioni_conditions' => $this->seasonConditionsManageList($id)
+                'stagioni_conditions' => $this->seasonConditionsManageList($id),
             ];
         } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
                 'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error'
+                'swal_type' => 'error',
             ];
         }
-
 
     }
 

@@ -15,11 +15,11 @@ $stat_cls = Statistiche::getInstance();
         Questa sezione serve ad inserire eventuali requisiti per l'acquisto di abilità. <br>
         <br>
         L'attivazione avviene tramite la voce <span class="highlight">"ABI_REQUIREMENT"</span> settata sul valore <span
-                class="highlight">true</span>. La voce si trova nel file
+            class="highlight">true</span>. La voce si trova nel file
         `/includes/constant_values.inc.php`.<br>
         <br>
         Il requisito viene applicato solo su un <span
-                class="highlight">DETERMINATO LIVELLO DI UNA DETERMINATA ABILITA'</span>.<br><br>
+            class="highlight">DETERMINATO LIVELLO DI UNA DETERMINATA ABILITA'</span>.<br><br>
         I requisiti sono di due tipi:
         <ul>
             <li>
@@ -57,7 +57,7 @@ $stat_cls = Statistiche::getInstance();
                 <div class="label">Grado</div>
                 <select name="grado" required>
                     <option value=""></option>
-                    <?php for ($i = 1; $i <= $abiReq->abiLevelCap(); $i++) { ?>
+                    <?php for ( $i = 1; $i <= $abiReq->abiLevelCap(); $i++ ) { ?>
                         <option value="<?= $i; ?>"><?= $i; ?></option>
                     <?php } ?>
                 </select>
@@ -68,7 +68,7 @@ $stat_cls = Statistiche::getInstance();
                 <div class="label">Tipo di requisito</div>
                 <select name="tipo" required>
                     <option value=""></option>
-                    <?=$abiReq->listRequisitiType();?>
+                    <?= $abiReq->listRequisitiType(); ?>
                 </select>
             </div>
 
@@ -81,7 +81,7 @@ $stat_cls = Statistiche::getInstance();
                         <?= $abiReq->listAbilita(); ?>
                     </optgroup>
                     <optgroup label="Caratteristiche">
-                        <?=$stat_cls->listStats();?>
+                        <?= $stat_cls->listStats(); ?>
                     </optgroup>
                 </select>
             </div>
@@ -132,7 +132,7 @@ $stat_cls = Statistiche::getInstance();
                 <div class="label">Grado</div>
                 <select name="grado" required>
                     <option value=""></option>
-                    <?php for ($i = 1; $i <= $abiReq->abiLevelCap(); $i++) { ?>
+                    <?php for ( $i = 1; $i <= $abiReq->abiLevelCap(); $i++ ) { ?>
                         <option value="<?= $i; ?>"><?= $i; ?></option>
                     <?php } ?>
                 </select>
@@ -143,7 +143,7 @@ $stat_cls = Statistiche::getInstance();
                 <div class="label">Tipo di requisito</div>
                 <select name="tipo" required>
                     <option value=""></option>
-                    <?=$abiReq->listRequisitiType();?>
+                    <?= $abiReq->listRequisitiType(); ?>
                 </select>
             </div>
 
@@ -156,7 +156,7 @@ $stat_cls = Statistiche::getInstance();
                         <?= $abiReq->listAbilita(); ?>
                     </optgroup>
                     <optgroup label="Caratteristiche">
-                        <?=$stat_cls->listStats();?>
+                        <?= $stat_cls->listStats(); ?>
                     </optgroup>
                 </select>
             </div>
@@ -198,5 +198,5 @@ $stat_cls = Statistiche::getInstance();
     </div>
 
     <!-- JS per caricamento dati requisiti -->
-    <script src="<?=Router::getPagesLink('gestione/abilita/Requisiti/gestione_requisiti.js');?>"></script>
+    <script src="<?= Router::getPagesLink('gestione/abilita/Requisiti/gestione_requisiti.js'); ?>"></script>
 </div>

@@ -7,18 +7,18 @@ $id_record = Filters::int($_GET['id_record']);
 
 $op = Filters::out($_POST['op']);
 
-switch ($op) {
+switch ( $op ) {
     case 'answer':
         $resp = $esiti->newAnswer($_POST);
         break;
 }
 
-if ($esiti->esitoViewPermission($id_record) && $esiti->esitoExist($id_record)) {
+if ( $esiti->esitoViewPermission($id_record) && $esiti->esitoExist($id_record) ) {
 
     $esitoData = $esiti->getEsito($id_record, 'titolo');
     $titolo = Filters::out($esitoData['titolo']);
 
-    if (isset($resp)) { ?>
+    if ( isset($resp) ) { ?>
         <div class="warning"><?= $resp['mex']; ?></div>
         <div class="link_back"><a href="/main.php?page=servizi_esiti">Indietro</a></div>
         <?php
@@ -31,7 +31,7 @@ if ($esiti->esitoViewPermission($id_record) && $esiti->esitoExist($id_record)) {
             <?= $esiti->renderEsitoAnswers($id_record); ?>
             <div style="height: 1px;clear: both"></div>
         </div>
-        <?php if (!$esiti->esitoClosed($id_record)) { ?>
+        <?php if ( !$esiti->esitoClosed($id_record) ) { ?>
             <div class="give_answer form_container">
                 <form method="POST" class="form">
 

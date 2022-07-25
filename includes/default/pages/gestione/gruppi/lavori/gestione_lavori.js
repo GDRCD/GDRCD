@@ -1,4 +1,4 @@
-$(function(){
+$(function () {
 
     let editForm = $('.edit_form');
 
@@ -18,7 +18,7 @@ $(function(){
             }
         )
     });
-    
+
 })
 
 

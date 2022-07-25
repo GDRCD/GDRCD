@@ -11,23 +11,38 @@ class Functions extends BaseClass
      * @fn get_constant
      * @note Funzione di estrazione delle costanti dal db
      * @param string $name
+     * @param bool $die_on_fail
      * @return mixed
      */
-    public static function get_constant(string $name)
+    public static function get_constant(string $name, bool $die_on_fail = true)
     {
 
-        $name = gdrcd_filter('in', $name);
+        $name = Filters::in($name);
 
-        $search = gdrcd_query("SELECT const_name,val FROM config WHERE const_name='{$name}'", 'result');
-        $num = gdrcd_query($search, 'num_rows');
+        $search = DB::query("SELECT const_name,val FROM config WHERE const_name='{$name}'", 'result', $die_on_fail);
+        $num = DB::rowsNumber($search);
 
-        if ($num == 0) {
-            die("Costante {$name} inesistente nella tabella config.");
-        } else if ($num > 1) {
-            die("Esistono più costanti con il nome '{$name}'. Correggere e riprovare.");
+        if ( $num == 0 ) {
+            $message = "Costante {$name} inesistente nella tabella config.";
+
+            if ( $die_on_fail ) {
+                die($message);
+            } else {
+                var_dump($message);
+                return false;
+            }
+        } else if ( $num > 1 ) {
+            $message = "Esistono più costanti con il nome '{$name}'. Correggere e riprovare.";
+
+            if ( $die_on_fail ) {
+                die($message);
+            } else {
+                var_dump($message);
+                return false;
+            }
         } else {
-            $row = gdrcd_query($search, 'fetch');
-            return gdrcd_filter('out', $row['val']);
+            $row = DB::query($search, 'fetch', $die_on_fail);
+            return Filters::out($row['val']);
         }
     }
 
@@ -46,9 +61,9 @@ class Functions extends BaseClass
         $search = gdrcd_query("SELECT const_name,val FROM config WHERE const_name='{$name}'", 'result');
         $num = gdrcd_query($search, 'num_rows');
 
-        if ($num == 0) {
+        if ( $num == 0 ) {
             die("Costante {$name} inesistente nella tabella config.");
-        } else if ($num > 1) {
+        } else if ( $num > 1 ) {
             die("Esistono più costanti con il nome '{$name}'. Correggere e riprovare.");
         } else {
             DB::query("UPDATE config SET val = '{$val}' WHERE const_name='{$name}'");
@@ -68,7 +83,6 @@ class Functions extends BaseClass
         $data = DB::query("SELECT id FROM personaggio WHERE nome='{$pg}' LIMIT 1");
         return Filters::int($data['id']);
     }
-
 
     /**
      * @fn getPermission
@@ -112,7 +126,7 @@ class Functions extends BaseClass
         $selected = Filters::int($selected);
         $data = DB::query("SELECT id,nome FROM personaggio WHERE 1 ORDER BY nome", 'result');
 
-        foreach ($data as $row) {
+        foreach ( $data as $row ) {
             $id = Filters::int($row['id']);
             $nome = Filters::out($row['nome']);
             $sel = ($selected == $id) ? 'selected' : '';
@@ -142,12 +156,12 @@ class Functions extends BaseClass
      */
     public static function redirect(string $url, $tempo = false): void
     {
-        if (!headers_sent() && $tempo == false) {
+        if ( !headers_sent() && $tempo == false ) {
             header('Location:' . $url);
-        } elseif (!headers_sent() && $tempo != false) {
+        } else if ( !headers_sent() && $tempo != false ) {
             header('Refresh:' . $tempo . ';' . $url);
         } else {
-            if ($tempo == false) {
+            if ( $tempo == false ) {
                 $tempo = 0;
             }
             echo "<meta http-equiv=\"refresh\" content=\"" . $tempo . ";" . $url . "\">";

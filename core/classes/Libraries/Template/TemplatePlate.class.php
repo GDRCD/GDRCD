@@ -8,5 +8,4 @@ class TemplatePlate extends BaseClass
         return $this;
     }
 
-
 }

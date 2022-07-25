@@ -14,7 +14,7 @@ class Template extends BaseClass
     {
         $this->engine = Functions::get_constant('TEMPLATE_ENGINE');
 
-        switch ($this->engine) {
+        switch ( $this->engine ) {
             case 'Smarty':
                 $this->used_class = TemplateSmarty::getInstance()->startTemplate();
                 break;
@@ -39,19 +39,21 @@ class Template extends BaseClass
         return $this->used_class->renderSelect($value_cell, $name_cell, $selected, $data);
     }
 
-    public function renderTable($body_file,$data){
-        return $this->used_class->renderTable($body_file,$data);
+    public function renderTable($body_file, $data)
+    {
+        return $this->used_class->renderTable($body_file, $data);
     }
 
-    public function addValues($container,$values){
-        return $this->used_class->addValues($container,$values);
+    public function addValues($container, $values)
+    {
+        return $this->used_class->addValues($container, $values);
     }
 
     protected function renderRaw($file_name, $data)
     {
         $base_dir = __DIR__ . '/../../../themes/advanced/view/raw/templates/';
 
-        if(file_exists($base_dir.$file_name)) {
+        if ( file_exists($base_dir . $file_name) ) {
             // Start output buffering
             ob_start();
 
@@ -60,7 +62,7 @@ class Template extends BaseClass
 
             // End buffering and return its contents
             return ob_get_clean();
-        } else{
+        } else {
             die('TEMPLATE_NOT_EXIST');
         }
     }
