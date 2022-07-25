@@ -536,11 +536,16 @@ function gdrcd_controllo_permessi_forum($tipo, $proprietari = '')
  */
 function gdrcd_check_time($time)
 {
-    $start=gdrcd_format_datetime_timestamp($time);
-    $now=gdrcd_format_datetime_timestamp(date('H:i'));
+    $time_hours = date('H', strtotime($time));
+    $time_minutes = date('i', strtotime($time));
 
+    if ($time_hours == date('H')) {
+        return date('i') - $time_minutes;
+    } elseif ($time_hours == (date('H') - 1) || $time_hours == (strftime('H') + 11)) {
+        return date('i') - $time_minutes + 60;
+    }
 
-    return $now-$start;
+    return 61;
 }
 
 /**
