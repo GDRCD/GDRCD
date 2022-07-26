@@ -263,27 +263,27 @@ function gdrcd_mysql_error($details = false)
 {
     $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 50);
 
-	foreach($backtrace as $v) {
-		if($v['function'] == 'gdrcd_query') {
-			$base = $v;
-		}
-		$history .= '<strong>FILE: </strong>: ' . $v['file'] . ' - '; 
-		$history .= '<strong>LINE: </strong>: ' . $v['line'] . '</br />';		
-	}    
-	$error_msg  = '<div class="error mysql">';
-    $error_msg .= '<strong>GDRCD MySQLi Error</strong>:</br>'; 
+    foreach($backtrace as $v) {
+        if($v['function'] == 'gdrcd_query') {
+            $base = $v;
+        }
+        $history .= '<strong>FILE: </strong>: ' . $v['file'] . ' - ';
+        $history .= '<strong>LINE: </strong>: ' . $v['line'] . '</br />';
+    }
+    $error_msg  = '<div class="error mysql">';
+    $error_msg .= '<strong>GDRCD MySQLi Error</strong>:</br>';
     if ($details !== false) {
         $error_msg .= '<strong>QUERY: </strong>: ' . $details . '</br>';
-    }	
-	$error_msg .= '<strong>ERROR [' . mysqli_errno(gdrcd_connect()) . ']</strong>: ' . mysqli_error(gdrcd_connect()) .'<br />';
-    $error_msg .= '<strong>FILE: </strong>: ' . $base['file'] . ' - '; 
-	$error_msg .= '<strong>LINE: </strong>: ' . $base['line'] . '<br />';
- 	$error_msg .= '<details>';	
-	$error_msg .= '<summary>Dettagli</summary>';
-	$error_msg .= $history;	
-    $error_msg .= '</details>';	    
-	$error_msg .= '</div>';
-	return $error_msg;
+    }
+    $error_msg .= '<strong>ERROR [' . mysqli_errno(gdrcd_connect()) . ']</strong>: ' . mysqli_error(gdrcd_connect()) .'<br />';
+    $error_msg .= '<strong>FILE: </strong>: ' . $base['file'] . ' - ';
+    $error_msg .= '<strong>LINE: </strong>: ' . $base['line'] . '<br />';
+    $error_msg .= '<details>';
+    $error_msg .= '<summary>Dettagli</summary>';
+    $error_msg .= $history;
+    $error_msg .= '</details>';
+    $error_msg .= '</div>';
+    return $error_msg;
 }
 
 /**
@@ -347,7 +347,7 @@ function gdrcd_filter($what, $str)
             break;
 
         case 'out':
-            $str = html_entity_decode($str, ENT_HTML5, 'utf-8');
+            $str = gdrcd_html_filter(htmlentities($str, ENT_QUOTES, "UTF-8"));
             break;
 
         case 'addslashes':
@@ -427,11 +427,11 @@ function gdrcd_filter_url($str)
 function gdrcd_html_filter($str)
 {
     $notAllowed = [
-        "#(<script.*?>.*?(<\/script>)?)#is" => "Script non consentiti",
+        "#<script(.*?)>(.*?)</script>#is" => "Script non consentiti",
         "#(<iframe.*?\/?>.*?(<\/iframe>)?)#is" => "Frame non consentiti",
         "#(<object.*?>.*?(<\/object>)?)#is" => "Contenuti multimediali non consentiti",
         "#(<embed.*?\/?>.*?(<\/embed>)?)#is" => "Contenuti multimediali non consentiti",
-        "#([o,O][N,n](.*?)=(.*?)\"?'?[^\s\"']+'?\"?)#is" => " ",
+        "#\bon([a-z]*?)=(['|\"])(.*?)\\2#mi" => " ",
         "#(javascript:[^\s\"']+)#is" => ""
     ];
 
@@ -528,7 +528,6 @@ function gdrcd_controllo_permessi_forum($tipo, $proprietari = '')
             return ($perm >= SUPERUSER);
     }
 }
-
 
 /**
  * Controlla se l'utente è loggato da pochi minuti. Utile per l'icona entra/esce
@@ -677,7 +676,7 @@ function gdrcd_format_time($time_in)
 /**
  * Funzione di formattazione data completa nel formato italiano
  * @param $datetime_in : la data e ora in formato leggibile da strtotime()
- * @return la data/ora nel formato DD/MM/YYYY hh:mm
+ * @return string la data/ora nel formato DD/MM/YYYY hh:mm
  */
 function gdrcd_format_datetime($datetime_in)
 {
@@ -686,8 +685,8 @@ function gdrcd_format_datetime($datetime_in)
 
 /**
  * Funzione di formattazione data completa nel formato standard del database
- * @param $datetime_in : la data e ora in formato leggibile da strtotime()
- * @return la data/ora nel formato YYYY-MM-DD hh:mm
+ * @param string $datetime_in : la data e ora in formato leggibile da strtotime()
+ * @return string la data/ora nel formato YYYY-MM-DD hh:mm
  */
 function gdrcd_format_datetime_standard($datetime_in)
 {
@@ -884,7 +883,7 @@ function gdrcd_chatme($user, $str, $master = false)
 /**
  * Crea un campo di autocompletamento HTML5 (<datalist>) per vari contenuti
  * @param string $str : specifica il soggetto di cui creare la lista. Attualmente è supportato solo 'personaggi', che crea una lista di tutti gli utenti del gdr
- * @return il tag html <datalist> già pronto per essere stampato sulla pagina
+ * @return string il tag html <datalist> già pronto per essere stampato sulla pagina
  */
 function gdrcd_list($str)
 {

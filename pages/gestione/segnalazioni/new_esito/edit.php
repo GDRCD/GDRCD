@@ -46,6 +46,11 @@ if ($_GET['op']=='edit' && ($_SESSION['permessi']>=ESITI_PERM)) {  ?>
             </div>
 
         </form>
-    <?php }
-}
-?>
+    <?php } ?>
+    <!-- link pié di pagina -->
+    <div class="link_back">
+        <a href='main.php?page=gestione_segnalazioni&segn=esiti_master'>
+            Torna alla lista
+        </a>
+    </div>
+<?php } ?>

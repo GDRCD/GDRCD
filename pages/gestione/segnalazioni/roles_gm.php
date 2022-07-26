@@ -126,7 +126,6 @@
                             <!-- Vai a -->
                             <div class="controllo_elenco">
                                 <form action="popup.php?page=scheda_roles&pg=<?php echo gdrcd_filter('in', $row['autore']); ?>"
-                                      target="_blank"
                                       method="post">
                                     <input type="hidden"
                                            name="op"

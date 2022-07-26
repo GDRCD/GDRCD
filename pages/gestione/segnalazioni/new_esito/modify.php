@@ -9,5 +9,6 @@ if ($_POST['op']=='modify') {
     echo '<div class="warning">';
     echo gdrcd_filter('out',$MESSAGE['warning']['inserted']);
     echo '</div>';
+    echo '<br><a href="main.php?page=gestione_segnalazioni&segn=esiti_master">Torna indietro</a>';
 }
 ?>

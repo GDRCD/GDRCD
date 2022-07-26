@@ -424,7 +424,7 @@ $PARAMETERS['settings']['bbd']['images_ext'][] = 'gif';
  * HTML_FILTER_BASE: filtra solo le cose più pericolose, come gli iframe, gli object e javascript
  * HTML_FILTER_HIGH: filtra anche tutte le immagini
  */
-$PARAMETERS['settings']['html'] = HTML_FILTER_HIGH;
+$PARAMETERS['settings']['html'] = HTML_FILTER_BASE;
 
 /** * Avviso periodico di cambio pass, funzione pel ready (H)
  * @author Blancks
