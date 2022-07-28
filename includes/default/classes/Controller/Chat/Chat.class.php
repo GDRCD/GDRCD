@@ -418,7 +418,7 @@ class Chat extends BaseClass
 
         # Ritorno le sue icone estratte
         $races = DB::query("
-                SELECT razza.icon,razza.nome_razza,personaggio.sesso
+                SELECT razze.icon,razze.nome AS nome_razza,personaggio.sesso
                 FROM personaggio 
                 LEFT JOIN razze ON (razze.id = personaggio.razza)
                 WHERE personaggio.id = '{$mittente}'", 'result');
