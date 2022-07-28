@@ -70,7 +70,7 @@ class PersonaggioAbilita extends Personaggio
     public function getPgRaceAbility(int $pg, string $val = 'abilita.*,personaggio_abilita.*')
     {
         # Estaggo la razza del pg
-        $pg_data = Personaggio::getPgData($this->me_id, 'id_razza');
+        $pg_data = Personaggio::getPgData($this->me_id, 'razza AS id_razza');
         $race = Filters::int($pg_data['id_razza']);
 
         return DB::query("SELECT {$val} FROM personaggio_abilita 
