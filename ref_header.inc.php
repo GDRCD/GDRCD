@@ -44,10 +44,9 @@ if((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) 
                     $chat_dice_msg = '';
                     $die = 0;
                 }
-                $car=gdrcd_filter('num', $car['car_now']) + gdrcd_filter('num',$racial_bonus['racial_bonus']);
+                $car_value=gdrcd_filter('num', $car['car_now']) + gdrcd_filter('num',$racial_bonus['racial_bonus']);
                 $carr=gdrcd_filter('num', $car['car_now']) + gdrcd_filter('num',$racial_bonus['racial_bonus']) + gdrcd_filter('num', $die) +gdrcd_filter('num', $rank['grado']) + gdrcd_filter('num', $bonus['bonus']);
-                $testo="{$_SESSION['login']} ".gdrcd_filter('in', $MESSAGE['chat']['commands']['use_skills']['uses'])." <b>". gdrcd_filter('in', $skill['nome']).":</b> ".gdrcd_filter('in', $PARAMETERS['names']['stats']['car'.$skill['car'].'']) ." {$car}, {$chat_dice_msg} ". gdrcd_filter('in', $MESSAGE['chat']['commands']['use_skills']['ramk']). " " .gdrcd_filter('num', $rank['grado']) .", ". gdrcd_filter('in', $MESSAGE['chat']['commands']['use_skills']['items']). " " . gdrcd_filter('num', $bonus['bonus']) . ", ". gdrcd_filter('in', $MESSAGE['chat']['commands']['use_skills']['sum']) . " {$carr}"   ;
-
+                $testo="{$_SESSION['login']} ".gdrcd_filter('in', $MESSAGE['chat']['commands']['use_skills']['uses'])." ". gdrcd_filter('in', $skill['nome']).":".gdrcd_filter('in', $PARAMETERS['names']['stats']['car'.$skill['car'].'']) ." {$car_value}, {$chat_dice_msg} ". gdrcd_filter('in', $MESSAGE['chat']['commands']['use_skills']['ramk']). " " .gdrcd_filter('num', $rank['grado']) .", ". gdrcd_filter('in', $MESSAGE['chat']['commands']['use_skills']['items']). " " . gdrcd_filter('num', $bonus['bonus']) . ", ". gdrcd_filter('in', $MESSAGE['chat']['commands']['use_skills']['sum']) . " {$carr}"   ;
                 gdrcd_query("INSERT INTO chat ( stanza, imgs, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", '".$_SESSION['sesso'].";".$_SESSION['img_razza']."', '".$_SESSION['login']."', '', NOW(), 'C', '{$testo}')");
             } else {
                 gdrcd_query("INSERT INTO chat ( stanza, imgs, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", '".$_SESSION['sesso'].";".$_SESSION['img_razza']."', '".$_SESSION['login']."', '".gdrcd_capital_letter(gdrcd_filter('in', $_SESSION['login'])."', NOW(), 'S', '".gdrcd_filter('in', $MESSAGE['status_pg']['exausted'])."')"));
@@ -66,9 +65,10 @@ if((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) 
             $car = gdrcd_query("SELECT car".gdrcd_filter('num', $id_stats[1])." AS car_now FROM personaggio WHERE nome = '".$_SESSION['login']."' LIMIT 1");
 
             $racial_bonus = gdrcd_query("SELECT bonus_car".gdrcd_filter('num', $id_stats[1])." AS racial_bonus FROM razza WHERE id_razza IN (SELECT id_razza FROM personaggio WHERE nome='".$_SESSION['login']."')");
-            $car=gdrcd_filter('num', $car['car_now'] + $racial_bonus['racial_bonus']);
+            $car_value=gdrcd_filter('num', $car['car_now'] + $racial_bonus['racial_bonus']);
             $carr=gdrcd_filter('num', $car['car_now'] + $racial_bonus['racial_bonus']) + gdrcd_filter('num', $die) ;
-            $testo="{$_SESSION['login']} ".gdrcd_filter('in', $MESSAGE['chat']['commands']['use_skills']['uses'])." ".gdrcd_filter('in', $PARAMETERS['names']['stats']['car'.$id_stats[1]]).": ".gdrcd_filter('in', $PARAMETERS['names']['stats']['car'.$id_stats[1].''])." {$car}, ".gdrcd_filter('in', $MESSAGE['chat']['commands']['use_skills']['die'])." " .gdrcd_filter('num', $die).", ".gdrcd_filter('in', $MESSAGE['chat']['commands']['use_skills']['sum'])."{$carr}";
+
+            $testo="{$_SESSION['login']} ".gdrcd_filter('in', $MESSAGE['chat']['commands']['use_skills']['uses'])." ".gdrcd_filter('in', $PARAMETERS['names']['stats']['car'.$id_stats[1]]).": ".gdrcd_filter('in', $PARAMETERS['names']['stats']['car'.$id_stats[1].''])." {$car_value}, ".gdrcd_filter('in', $MESSAGE['chat']['commands']['use_skills']['die'])." " .gdrcd_filter('num', $die).", ".gdrcd_filter('in', $MESSAGE['chat']['commands']['use_skills']['sum'])."{$carr}";
 
             gdrcd_query("INSERT INTO chat ( stanza, imgs, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", '".$_SESSION['sesso'].";".$_SESSION['img_razza']."', '".$_SESSION['login']."', '', NOW(), 'C', '{$testo}')");
 
