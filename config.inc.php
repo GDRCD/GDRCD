@@ -33,7 +33,7 @@ if( ! empty($_SESSION['login'])) {
 }
 
 /* INFORMAZIONI SU GDRCD */
-$PARAMETERS['info']['GDRCD'] = '5.6.0.4'; //versione di GDRCD
+$PARAMETERS['info']['GDRCD'] = '5.6.0.5'; //versione di GDRCD
 
 /* PARAMETRI DI CONNESSIONE */
 $PARAMETERS['database']['username'] = 'gdrcd';            //nome utente del database
@@ -45,7 +45,7 @@ $PARAMETERS['database']['url'] = 'localhost';        //indirizzo ip del database
 /* HELP: Sostituire le diciture inserite tra le virgolette con i parametri di connessione al Database del proprio dominio. Essi sono forniti al momento della registrazione. Se non si e' in possesso di tali parametri consultare le FAQ della homepage dell'host che fornisce il dominio. Se non le si trovano li contattare lo staff dell'host. */
 
 /* INFORMAZIONI SUL SITO */
-$PARAMETERS['info']['site_name'] = 'GDRCD 5.6.0.4'; //nome del gioco
+$PARAMETERS['info']['site_name'] = 'GDRCD 5.6.0.5'; //nome del gioco
 $PARAMETERS['info']['site_url'] = 'http://gdrcd.test/'; //indirizzo URL del gioco
 $PARAMETERS['info']['webmaster_name'] = 'Webmaster'; //nome e cognome del responsabile del sito
 $PARAMETERS['info']['webmaster_email'] = 'webmaster@gdrhost.it'; //email ufficiale del webmaster (è visibile in homepage)
