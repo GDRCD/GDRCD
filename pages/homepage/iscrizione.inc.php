@@ -545,7 +545,7 @@
 
                             if ($PARAMETERS['mode']['emailconfirmation'] == 'ON') {
                                 echo '<div class="page_title"><h2>' . gdrcd_filter('out', $MESSAGE['register']['welcome']['message']['ok']) . '</h2></div>';
-                                echo '<div class="panels_box"><div class="welcome_message">' . gdrcd_filter('out', $MESSAGE['register']['welcome']['message'][0]) . ' <b>' . gdrcd_filter('out', $PARAMETERS['info']['site_name']) . '</b> ' . gdrcd_filter('out', $MESSAGE['register']['welcome']['message'][1]) . '</div><div class="welcome_message">&nbsp;</div><div class="username">' . gdrcd_filter('out', $MESSAGE['register']['welcome']['message'][3]) . ' <b>' . $email . '</b></div>';
+                                echo '<div class="panels_box"><div class="welcome_message">' . gdrcd_filter('out', $MESSAGE['register']['welcome']['message'][0]) . ' <b>' . gdrcd_filter('out', $PARAMETERS['info']['site_name']) . '</b> ' . gdrcd_filter('out', $MESSAGE['register']['welcome']['message'][1]) . '</div><div class="welcome_message">&nbsp;</div><div class="username">' . gdrcd_filter('out', $MESSAGE['register']['welcome']['message'][3]) . ' <b>' . $email . '</b></div></div>';
 
                                 $text = $MESSAGE['register']['welcome']['message'][0] . ' ' . $PARAMETERS['info']['site_name'] . "\n\n " . $MESSAGE['register']['welcome']['message'][1] . "\n     " . $MESSAGE['register']['welcome']['message'][2] . "\n\n    " . $MESSAGE['register']['welcome']['message']['user'] . ' ' . gdrcd_safe_name($_POST['nome']) . "\n" . $MESSAGE['register']['welcome']['message']['pass'] . ' ' . $pass . "\n\n    " . $PARAMETERS['info']['webmaster_name'];
 
