@@ -1,6 +1,6 @@
 <?php
 /**
- * Descrive il riferimento di una query generata dalla clase DB
+ * Descrive il riferimento di una query generata dalla classe DB
  * Questo riferimento permette di accedere a tutte le informazioni
  * relative alla query sql per cui è stato generato, ma generalmente
  * è pensato per essere passato ai diversi metodi della classe DB
@@ -192,7 +192,7 @@ class DB extends BaseClass
             self::error($e);
         }
 
-        return new class($sql, $stmt) implements DBQueryInterface, ArrayAccess, Iterator {
+        return new class($sql, $stmt) implements DBQueryInterface, ArrayAccess, Countable, Iterator {
             private int $iteratorIndex = 0;
             private int $numRows = 0;
             private int $affectedRows = 0;
@@ -264,6 +264,16 @@ class DB extends BaseClass
             public function offsetUnset(mixed $offset): void {
                 unset($this->data[$this->iteratorIndex][$offset]);
             }
+
+            /*
+             * Countable Interface
+             * Questa implementazione permette di usare la funzione count()
+             * per conoscere il numero di records recuperati
+             */
+             
+             public function count(): int {
+                 return $this->getNumRows();
+             }
 
             /*
              * Iterator Interface
