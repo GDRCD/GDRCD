@@ -109,11 +109,11 @@ class GDRCD6 extends DbMigration
         );
 
         DB::query("
-            INSERT INTO config_options(section,value) VALUES 
-                ('Template','TemplateSmarty'),
-                ('ImageExtensions','png'),
-                ('ImageExtensions','jpg'),
-                ('ImageExtensions','gif');
+            INSERT INTO config_options(section,label,value) VALUES 
+                ('Template','Smarty','TemplateSmarty'),
+                ('ImageExtensions','.png','png'),
+                ('ImageExtensions','.jpg','jpg'),
+                ('ImageExtensions','.gif','gif');
         ");
 
         DB::query("

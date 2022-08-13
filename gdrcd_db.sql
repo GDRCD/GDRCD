@@ -273,6 +273,7 @@ CREATE TABLE IF NOT EXISTS `config` (
 CREATE TABLE IF NOT EXISTS `config_options` (
   `id` int NOT NULL AUTO_INCREMENT,
   `section` varchar(255) NOT NULL,
+  `label` varchar(255) NOT NULL,
   `value` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
