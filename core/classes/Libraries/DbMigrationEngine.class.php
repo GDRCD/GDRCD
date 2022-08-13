@@ -104,11 +104,11 @@ class DbMigrationEngine extends BaseClass
         $migrationsToApply = self::getMigrationsToApply($migrations, $lastApplied, $migration_id, $directionUp);
 
         $applied = 0;
-        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);//Necessario per le transazioni
-        $connection = DB::connect();
+        DB::errorMode(DB::ERROR_EXCEPTION);
+
         foreach ( $migrationsToApply as $m ) {
             try {
-                $connection->begin_transaction();
+                DB::beginTransaction();
                 if ( $directionUp ) {
                     $m->up();
                     self::trackAppliedMigration($m->getMigrationId());
@@ -116,16 +116,17 @@ class DbMigrationEngine extends BaseClass
                     $m->down();
                     self::untrackAppliedMigration($m->getMigrationId());
                 }
-                $connection->commit();
+                DB::commit();
                 $applied++;
-            } catch ( Exception $e ) {
+            } catch ( Throwable $e ) {
                 //Attenzione questa è una misura di sicurezza debole: le DDL (CREATE TABLE, ALTER TABLE...) provocano
                 // dei commit automatici, a questo punto in realtà non è già più possibile fare rollback
-                $connection->rollback();
+                DB::rollback();
                 throw new Exception("Aggiornamento del database fallito: " . $e->getMessage(), 0, $e);
             }
         }
 
+        DB::errorMode(DB::ERROR_STANDARD);
         return $applied;
     }
 
