@@ -11,14 +11,17 @@ class Gestione extends BaseClass
      * @param string $name
      * @param mixed $val
      * @param string $type
+     * @param string $options
      * @return string
+     * @throws Throwable
      */
-    public final function inputByType(string $name, $val, string $type): string
+    public function inputByType(string $name, $val, string $type, string $options = ''): string
     {
 
         $type = Filters::out($type);
         $name = Filters::out($name);
         $val = Filters::out($val);
+        $options = Filters::out($options);
 
         switch ( $type ) {
             case 'bool':
@@ -28,6 +31,14 @@ class Gestione extends BaseClass
 
             case 'int':
                 $html = "<input type='number' name='{$name}' value='{$val}' />";
+                break;
+
+            case 'select':
+                $options_list = $this->getOptions($options);
+
+                $html = "<select name='{$name}'>";
+                $html .= Template::getInstance()->startTemplate()->renderSelect('value', 'label', $val, $options_list);
+                $html .= "</select>";
                 break;
 
             default:
@@ -40,6 +51,14 @@ class Gestione extends BaseClass
         return $html;
     }
 
+    /*** QUERY HELPER ****
+     * @throws Throwable
+     */
+
+    public function getOptions($section): DBQueryInterface
+    {
+        return DB::queryStmt("SELECT * FROM config_options WHERE `section`=:section", [':section' => $section]);
+    }
 
     /*** COSTANTI */
 
@@ -72,17 +91,18 @@ class Gestione extends BaseClass
             $html .= "<div class='form_title'>{$section}</div>";
             $html .= "<div class='box_input'>";
 
-            $const_list = DB::query("SELECT const_name,label,val,type,description FROM config WHERE section='{$section}' AND editable=1 ORDER BY label", 'result');
+            $const_list = DB::query("SELECT const_name,label,val,type,options,description FROM config WHERE section='{$section}' AND editable=1 ORDER BY label", 'result');
 
             foreach ( $const_list as $const ) {
                 $name = Filters::out($const['const_name']);
                 $label = Filters::out($const['label']);
                 $val = Filters::out($const['val']);
                 $type = Filters::out($const['type']);
+                $options = Filters::out($const['options']);
 
                 $html .= "<div class='single_input w-33'>";
                 $html .= "<div class='label'>{$label}</div>";
-                $html .= $this->inputByType($name, $val, $type);
+                $html .= $this->inputByType($name, $val, $type, $options);
                 $html .= "</div>";
             }
 
@@ -160,7 +180,7 @@ class Gestione extends BaseClass
      * @param mixed $val
      * @return bool|int|mixed|string
      */
-    private final function saveConstant(string $name, string $type, $val)
+    private function saveConstant(string $name, string $type, $val)
     {
 
         $name = Filters::in($name);
@@ -195,7 +215,7 @@ class Gestione extends BaseClass
      * @param string $type
      * @return array
      */
-    private final function errorConstant(array $consts, string $type): array
+    private function errorConstant(array $consts, string $type): array
     {
 
         switch ( $type ) {
