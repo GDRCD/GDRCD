@@ -43,9 +43,10 @@ class MeteoStagioni extends Meteo
      * @note Estrae tutte le condizioni meteo di una stagione
      * @param int $id
      * @param string $val
+     * # TODO - Da rivedere
      * @return array
      */
-    public function getAllSeasonCondition(int $id, string $val = 'meteo_stagioni_condizioni.*, meteo_condizioni.*')
+    public function getAllSeasonCondition(int $id, string $val = 'meteo_stagioni_condizioni.*, meteo_condizioni.*'): array
     {
         $output = [];
         $stmt = DB::query("SELECT {$val} FROM meteo_stagioni_condizioni LEFT JOIN meteo_condizioni ON meteo_stagioni_condizioni.condizione = meteo_condizioni.id WHERE meteo_stagioni_condizioni.stagione='{$id}'", 'result');
