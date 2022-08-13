@@ -175,3 +175,4 @@ includes/config-overrides.php
 .directory
 .user.ini
 **/compiled
+php_errors.log

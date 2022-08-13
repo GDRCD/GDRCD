@@ -68,7 +68,7 @@ class Router
      * @return bool
      * @throws Exception
      */
-    private final function loadLibraries(string $className): bool
+    private function loadLibraries(string $className): bool
     {
 
         $path = ROOT . '/core/classes';
@@ -96,7 +96,7 @@ class Router
      * @return void
      * @throws Exception
      */
-    private final function loadController(string $className)
+    private function loadController(string $className)
     {
         $path = ROOT . '/includes/default/classes';
         $roots = $this->dirList($path);
@@ -128,7 +128,7 @@ class Router
      * @param array $results
      * @return array
      */
-    private final function dirList(string $dir, array &$results = []): array
+    private function dirList(string $dir, array &$results = []): array
     {
 
         $files = scandir($dir);

@@ -418,7 +418,7 @@ class Chat extends BaseClass
 
         # Ritorno le sue icone estratte
         $races = DB::query("
-                SELECT razza.icon,razza.nome_razza,personaggio.sesso
+                SELECT razze.icon,razze.nome AS nome_razza,personaggio.sesso
                 FROM personaggio 
                 LEFT JOIN razze ON (razze.id = personaggio.razza)
                 WHERE personaggio.id = '{$mittente}'", 'result');
@@ -1240,14 +1240,14 @@ class Chat extends BaseClass
     private function saveDice(array $array): void
     {
         # Filtro le variabili necessarie
-        $dice = Filters::in($array['dice']);
+        $dice = Filters::int($array['dice']);
         $abi_nome = Filters::in($array['abi_nome']);
-        $abi_dice = Filters::in($array['abi_dice']);
-        $car_dice = Filters::in($array['car_dice']);
+        $abi_dice = Filters::int($array['abi_dice']);
+        $car_dice = Filters::int($array['car_dice']);
         $car_name = Filters::in($array['car_name']);
-        $car_bonus = Filters::in($array['car_bonus']);
+        $car_bonus = Filters::int($array['car_bonus']);
         $obj_nome = Filters::in($array['obj_nome']);
-        $obj_dice = Filters::in($array['obj_dice']);
+        $obj_dice = Filters::int($array['obj_dice']);
         $total = 0;
 
         # Inizializzo il testo con una parte comune
@@ -1264,7 +1264,7 @@ class Chat extends BaseClass
         $total += $car_dice;
 
         # Se ho selezionato la possibilita' di aggiungere i bonus equipaggiamento al totale della stat
-        if ( $car_bonus !== '' ) {
+        if ( $car_bonus ) {
             $html .= "Bonus Equip Stat {$car_bonus},";
             $total += $car_bonus;
         }
