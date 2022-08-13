@@ -866,3 +866,15 @@ div.scheda_exp_table .tr .td {
 .log_table .tr .td {
     width: 23% !important;
 }
+
+/**** REGISTRAZIONI ****/
+
+.scheda_registrazioni_table .tr .td {
+    width: 19% !important;
+}
+
+.scheda_registrazioni_table .commands a,
+.scheda_registrazioni_table .commands form {
+    display: inline-block;
+    width: 20px;
+}

@@ -15,7 +15,7 @@ if ( $perm && $esiti ) {
     </div>
 
     <div class="form_info">
-        <? echo $MESSAGE['interface']['esiti']['gm_page']; ?>
+        <?php echo $MESSAGE['interface']['esiti']['gm_page']; ?>
     </div>
     <a class="but_newd" href='main.php?page=gestione_segnalazioni&segn=esito_index&op=first' target="_blank">
         Apri una nuova serie di esiti
@@ -44,27 +44,27 @@ if ( $perm && $esiti ) {
         <div class="fate_frame">
             <div class="titolo_box">
                 <h2>
-                    <b><? echo $tit; ?> - <? echo $pg; ?></b>
+                    <b><?php echo $tit; ?> - <?php echo $pg; ?></b>
                     <a class="link_new"
-                       href='main.php?page=gestione_segnalazioni&segn=newesito&op=edit&id=<? echo gdrcd_filter('num', $blocco['id']); ?>'
+                       href='main.php?page=gestione_segnalazioni&segn=newesito&op=edit&id=<?php echo gdrcd_filter('num', $blocco['id']); ?>'
                        target="_blank">
                         Modifica serie di esiti
                     </a>
                 </h2>
             </div>
 
-            <? $quer = "SELECT * FROM esiti WHERE id_blocco = " . gdrcd_filter('num', $blocco['id']) . " ORDER BY data DESC";
+            <?php $quer = "SELECT * FROM esiti WHERE id_blocco = " . gdrcd_filter('num', $blocco['id']) . " ORDER BY data DESC";
             $res = gdrcd_query($quer, 'result'); ?>
 
-            <? if ( $tit['closed'] == 0 ) { ?>
+            <?php if ( $tit['closed'] == 0 ) { ?>
                 <div class="titolo_box">
                     <a class="link_new"
-                       href='main.php?page=gestione_segnalazioni&segn=esito_index&op=edit&id=<? echo gdrcd_filter('num', $blocco['id']); ?>'
+                       href='main.php?page=gestione_segnalazioni&segn=esito_index&op=edit&id=<?php echo gdrcd_filter('num', $blocco['id']); ?>'
                        target="_blank">
                         Modifica
                     </a> |
                     <a class="link_new"
-                       href='main.php?page=gestione_segnalazioni&segn=esito_index&op=new&blocco=<? echo gdrcd_filter('num', $blocco['id']); ?>'
+                       href='main.php?page=gestione_segnalazioni&segn=esito_index&op=new&blocco=<?php echo gdrcd_filter('num', $blocco['id']); ?>'
                        target="_blank">
                         Invia un nuovo esito
                     </a>
@@ -72,18 +72,18 @@ if ( $perm && $esiti ) {
                     if ( $esiti_chat ) {
                         ?>
                         | <a class="link_new"
-                             href='main.php?page=gestione_segnalazioni&segn=esito_index&op=newchat&blocco=<? echo gdrcd_filter('num', $blocco['id']); ?>'
+                             href='main.php?page=gestione_segnalazioni&segn=esito_index&op=newchat&blocco=<?php echo gdrcd_filter('num', $blocco['id']); ?>'
                              target="_blank">
                             Invia un esito in chat
                         </a>
-                    <? } ?>
+                    <?php } ?>
                 </div>
-            <? }
+            <?php }
             while ( $row = gdrcd_query($res, 'fetch') ) {
                 $abilita = gdrcd_query("SELECT nome FROM abilita WHERE id_abilita = " . $row['id_ab'] . " ");
                 $chat = gdrcd_query("SELECT nome FROM mappa WHERE id = " . $row['chat'] . " "); ?>
                 <div class="title_esi">
-                    Autore:<b><? echo $row['autore'] . '</b> | Creato il: ' . gdrcd_format_date($row['data']) . ' alle
+                    Autore:<b><?php echo $row['autore'] . '</b> | Creato il: ' . gdrcd_format_date($row['data']) . ' alle
                      ' . gdrcd_format_time($row['data']); ?>
                 </div>
 
@@ -134,123 +134,6 @@ if ( $perm && $esiti ) {
 
         $blocco = gdrcd_query($query, 'result');
 
-        if ( gdrcd_query($blocco, 'num_rows') == 0 ) {
-            echo '<div class="fate_frame">';
-            echo 'Nessuna serie di esiti aperta';
-            echo '</div>';
-        } else { ?>
-
-            <!-- Paginatore elenco -->
-            <div class="pager">
-                <?php
-                if ( $totaleresults > $PARAMETERS['settings']['posts_per_page'] ) {
-                    echo gdrcd_filter('out', $MESSAGE['interface']['pager']['pages_name']);
-                    for ( $i = 0; $i <= floor($totaleresults / $PARAMETERS['settings']['posts_per_page']); $i++ ) {
-                        if ( $i != $_REQUEST['offset'] ) {
-                            ?>
-                            <a href="main.php?page=gestione_segnalazioni&segn=esiti_master&offset=<?php echo $i; ?>"><?php echo $i + 1; ?></a>
-                            <?php
-                        } else {
-                            echo ' ' . ($i + 1) . ' ';
-                        }
-                    } //for
-                }//if
-                ?>
-            </div>
-            <div class="elenco_record_gioco">
-                <table>
-                    <tr class="titles_table">
-                        <td class="casella_titolo">
-                            <div class="titoli_elenco">
-                                Data
-                            </div>
-                        </td>
-                        <td class="casella_titolo">
-                            <div class="titoli_elenco">
-                                Nome pg richiedente
-                            </div>
-                        </td>
-                        <td class="casella_titolo">
-                            <div class="titoli_elenco">
-                                Stato
-                            </div>
-                        </td>
-                        <td class="casella_titolo">
-                            <div class="titoli_elenco">
-                                Titolo
-                            </div>
-                        </td>
-                        <td class="casella_titolo">
-                            <div class="titoli_elenco">
-                                Numero esiti
-                            </div>
-                        </td>
-                        <td class="casella_titolo" style="width: 100px;">
-                            <div class="titoli_elenco">
-
-                            </div>
-                        </td>
-                    </tr>
-                    <?php while ( $rec = gdrcd_query($blocco, 'fetch') ) {
-                        $num = gdrcd_query(gdrcd_query("SELECT * FROM esiti WHERE id_blocco = " . gdrcd_filter('num', $rec['id']) . " 
-                    AND autore != '" . $rec['pg'] . "' ORDER BY master, data DESC", 'result'), 'num_rows');
-                        $new = gdrcd_query(gdrcd_query("SELECT * FROM esiti WHERE id_blocco = " . gdrcd_filter('num', $rec['id']) . " 
-                    AND letto_master = 0 ", 'result'), 'num_rows');
-                        ?>
-
-                        <tr>
-                            <td class="casella_titolo">
-                                <div class="elementi_elenco">
-                                    <?php echo gdrcd_filter('out', gdrcd_format_date($rec['data'])); ?>
-                                </div>
-                            </td>
-                            <td class="casella_titolo">
-                                <div class="elementi_elenco">
-                                    <?php echo gdrcd_filter('out', $rec['pg']); ?>
-                                </div>
-                            </td>
-                            <td class="casella_titolo">
-                                <div class="elementi_elenco">
-                                    <?php if ( $rec['master'] == '0' ) {
-                                        echo '<u>In attesa di risposta</u>';
-                                    } else {
-                                        echo 'Presa in carico';
-                                    } ?>
-                                </div>
-                            </td>
-                            <td class="casella_titolo">
-                                <div class="elementi_elenco">
-                                    <?php echo gdrcd_filter('out', $rec['titolo']); ?>
-                                </div>
-                            </td>
-                            <td class="casella_titolo">
-                                <div class="elementi_elenco">
-                                    <?php echo gdrcd_filter('num', $num);
-                                    if ( $new > 0 ) {
-                                        echo ' - Nuovo messaggio';
-                                    }
-                                    ?>
-                                </div>
-                            </td>
-                            <td>
-                                <form action="main.php?page=gestione_segnalazioni&segn=esiti_master" method="post">
-                                    <input type="hidden"
-                                           name="op"
-                                           value="list"/>
-                                    <input type="hidden"
-                                           name="id"
-                                           value="<?php echo $rec['id']; ?>"/>
-                                    <input type="submit" name="submit" class="submitroles" value="Apri serie"/>
-                                </form>
-                            </td>
-                        </tr>
-                    <?php } #Fine blocco  ?>
-                </table>
-            </div>
-            <?php
-        }
     }
-} else {
-    echo '<div class="warning">Non hai i permessi per visualizzare questa sezione</div>';
 }
 ?>

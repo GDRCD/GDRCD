@@ -6,11 +6,11 @@ class Menu extends BaseClass
     /**
      * @fn costantList
      * @note Creazione della sezione della gestione delle costanti
+     * # TODO da rifare con i template engine
      * @return string
      */
     public function createMenu($menu): string
     {
-
         $html = '<div class="menu_box">';
         $page = Filters::in($menu);
 

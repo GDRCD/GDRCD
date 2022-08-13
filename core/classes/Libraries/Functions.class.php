@@ -13,6 +13,7 @@ class Functions extends BaseClass
      * @param string $name
      * @param bool $die_on_fail
      * @return mixed
+     * #TODO Rivedere die on fail
      */
     public static function get_constant(string $name, bool $die_on_fail = true)
     {
@@ -28,7 +29,6 @@ class Functions extends BaseClass
             if ( $die_on_fail ) {
                 die($message);
             } else {
-                var_dump($message);
                 return false;
             }
         } else if ( $num > 1 ) {
@@ -37,7 +37,6 @@ class Functions extends BaseClass
             if ( $die_on_fail ) {
                 die($message);
             } else {
-                var_dump($message);
                 return false;
             }
         } else {
@@ -87,9 +86,9 @@ class Functions extends BaseClass
     /**
      * @fn getPermission
      * @note Estrae i permessi del personaggio specificato
-     * @return false|int|mixed
+     * @return int
      */
-    public function getPermission()
+    public function getPermission():int
     {
         return $this->permission;
     }
@@ -107,9 +106,9 @@ class Functions extends BaseClass
     /**
      * @fn getMe
      * @note Estrae il nome del pg collegato
-     * @return false|int|mixed
+     * @return int
      */
-    public function getMyId()
+    public function getMyId(): int
     {
         return $this->me_id;
     }
@@ -117,6 +116,7 @@ class Functions extends BaseClass
     /**
      * @fn getPgList
      * @note Crea la select dei personaggi in land
+     * @param int $selected
      * @return string
      */
     public static function getPgList(int $selected = 0): string

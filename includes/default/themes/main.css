@@ -1295,3 +1295,16 @@ div.innertube {
     width: 5%;
     text-align: center;
 }
+
+
+/**** REGISTRAZIONI GESTIONE ****/
+
+.manage_registrazioni_table .tr .td {
+    width: 15% !important;
+}
+
+.manage_registrazioni_table .commands a,
+.manage_registrazioni_table .commands form {
+    display: inline-block;
+    width: 20px;
+}

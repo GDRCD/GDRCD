@@ -165,6 +165,19 @@ class Scheda extends BaseClass
                 $page = 'amministra/index.php';
                 break;
 
+            //REGISTRAZIONI
+            case 'registrazioni':
+                $page = 'registrazioni/index.php';
+                break;
+
+            case 'registrazioni_new':
+                $page = 'registrazioni/new.php';
+                break;
+
+            case 'registrazioni_edit':
+                $page = 'registrazioni/edit.php';
+                break;
+
         }
 
         return $page;

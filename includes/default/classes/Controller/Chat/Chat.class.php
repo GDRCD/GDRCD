@@ -990,14 +990,17 @@ class Chat extends BaseClass
     /**
      * @fn chatList
      * @note Crea la lista delle chat
+     * @param bool $privata
      * @return string
      */
-    public function chatList(): string
+    public function chatList(bool $privata = false): string
     {
         $html = '<option value=""></option>';
 
+        $extraQuery = !($privata) ? 'AND mappa.privata = 0' : '';
+
         # Estraggo gli oggetti secondo i parametri
-        $chats = DB::query("SELECT * FROM mappa WHERE privata = 0 ORDER BY nome", 'result');
+        $chats = DB::query("SELECT * FROM mappa WHERE 1 {$extraQuery} ORDER BY nome", 'result');
 
         # Per ogni oggetto creo una option per la select
         foreach ( $chats as $chat ) {
@@ -1011,6 +1014,17 @@ class Chat extends BaseClass
         return $html;
     }
 
+    /**
+     * @fn listChats
+     * @note Genera gli option per i fondi
+     * @param int $selected
+     * @return string
+     */
+    public function listChats(int $selected = -1): string
+    {
+        $chats = DB::query("SELECT * FROM mappa WHERE 1 ORDER BY nome", 'result');
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', $selected, $chats);
+    }
     /**** LANCIO DADI ****/
 
     /**

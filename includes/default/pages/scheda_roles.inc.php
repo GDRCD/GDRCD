@@ -13,27 +13,27 @@
          */
         switch(Filters::get($_POST['op'])) {
             case 'search': //Ricerca role fra quelle registrate
-                include('scheda/roles/search.inc.php');
+                include('scheda/registrazioni/search.inc.php');
                 break;
             case 'send_edit':
             case 'edit': //Modifica dati registrazione
-                include('scheda/roles/edit.inc.php');
+                include('scheda/registrazioni/edit.inc.php');
                 break;
             case 'register': //Inserimento nuova registrazione in scheda
-                include('scheda/roles/register.inc.php');
+                include('scheda/registrazioni/register.inc.php');
                 break;
             case 'send_segn': //Inserimento nuova registrazione in scheda
-                include('scheda/roles/send_reg.inc.php');
+                include('scheda/registrazioni/send_reg.inc.php');
                 break;
             case 'log': //Apertura log
-                include('scheda/roles/log.inc.php');
+                include('scheda/registrazioni/log.inc.php');
                 break;
             case 'segnala_send':
             case 'segnala': //Segnalazione ai Master
-                include('scheda/roles/segnala.inc.php');
+                include('scheda/registrazioni/segnala.inc.php');
                 break;
             default:
-                include('scheda/roles/index.inc.php');
+                include('scheda/registrazioni/index.inc.php');
                 break;
         }
 
