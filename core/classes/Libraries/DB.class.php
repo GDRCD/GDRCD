@@ -1,44 +1,48 @@
 <?php
 /**
- * Descrive il riferimento di una query generata dalla classe DB
- * Questo riferimento permette di accedere a tutte le informazioni
- * relative alla query sql per cui è stato generato, ma generalmente
- * è pensato per essere passato ai diversi metodi della classe DB
- * di modo da effettuare le varie operazioni richieste.
+ * @interface DBQueryInterface
+ * @note This interface is implemented by all DBQuery classes.
  */
 interface DBQueryInterface {
+
     /**
-     * Ritorna la stringa SQL usata per formulare la query al db
+     * @fn getSQL
+     * @note Ritorna la stringa SQL usata per formulare la query al db
      * @return string
      */
     public function getSQL(): string;
 
     /**
-     * Ritorna il numero di righe coinvolte nella query di INSERT/UPDATE/DELETE eseguita
+     * @fn getAffectedRows
+     * @note Ritorna il numero di righe coinvolte nella query di INSERT/UPDATE/DELETE eseguita
      * @return int
      */
     public function getAffectedRows(): int;
 
     /**
-     * Ritorna il numero di righe trovate dalla query di SELECT eseguita
+     * @fn getNumRows
+     * @note Ritorna il numero di righe trovate dalla query di SELECT eseguita
      * @return int
      */
     public function getNumRows(): int;
 
     /**
-     * Ritorna l'ultimo id autoincrementante generato per la query di INSERT eseguita
+     * @fn getInsertId
+     * @note Ritorna l'ultimo id autoincrementante generato per la query di INSERT eseguita
      * @return string|false
      */
     public function getInsertId(): string|false;
 
     /**
-     * Ritorna tutte le righe recuperate dall'ultima query di select come array multidimensionale
+     * @fn getData
+     * @note Ritorna tutte le righe recuperate dall'ultima query di select come array multidimensionale
      * @return array
      */
     public function getData(): array;
 
     /**
-     * Permette di eseguire la query di riferimento popolando gli eventuali placeholder con i nuovi parametri forniti
+     * @fn execute
+     * @note Permette di eseguire la query di riferimento popolando gli eventuali placeholder con i nuovi parametri forniti
      * @param array|null $params
      * @return void
      */
@@ -46,61 +50,57 @@ interface DBQueryInterface {
 }
 
 /**
- * Fornisce i metodi necessari per le operazioni col database.
- * Non è necessario istanziare esplicitamente la connessione,
- * se un metodo ha bisogno di usare il database chiederà in
- * autonomia di connettersi.
- *
- * Nota: Per il corretto funzionamento è importante aggiornare
- * i dati di connessione nel file ./core/db_config.php
+ * @class DB
+ * @note Classe che gestisce le connessioni al database
  */
 class DB extends BaseClass
 {
     /**
-     * @var int Questo flag indica di usare la modalità di segnalazione
-     * errori standard di GDRCD. Al primo errore la classe terminerà
-     * l'esecuzione inviando in output l'errore formattato in html
+     * @var int ERROR_STANDARD
+     * @note Questo flag indica di usare la modalità di segnalazione errori standard di GDRCD. Al primo errore la classe terminerà
+     * l'esecuzione inviando in uscita l'errore formattato in html
      */
     const ERROR_STANDARD = 0;
 
     /**
-     * @var int Questo flag indica di lanciare tutti gli errori del
-     * database come eccezioni di modo che possano essere gestite
+     * @var int ERROR_EXCEPTION
+     * @note Questo flag indica di lanciare tutti gli errori del
+     * Database come eccezioni di modo che possano essere gestite
      * dall'esterno e senza interrompere forzatamente lo script.
      */
     const ERROR_EXCEPTION = 1;
 
     /**
-     * @var PDO|null Istanza della classe che viene utilizzata per le
-     * richieste al database.
+     * @var PDO|null
+     * @note Istanza della classe che viene utilizzata per le richieste al database.
      */
     private static ?PDO $PDO = null;
 
-    /** @var int Contiene la modalità scelta per il report errori */
+    /**
+     * @var int
+     * @note Contiene la modalità scelta per il report errori
+     */
     private static int $currentErrorMode = self::ERROR_STANDARD;
 
     /**
-     * Apre la connessione al database mysql di GDRCD.
-     * Nota: Non è necessario usare questo metodo esplicitamente per
-     * creare la connessione. Alla prima query che si cercherà di
-     * fare sarà chiamato in maniera automatica.
-     * @return PDO istanza della classe PDO utilizzata internamente
-     * @throws Throwable in caso la connessione fallisca questo
-     * metodo puà produrre un eccezione se la modalità errori è
-     * configurata per questo comportamento
+     * @fn connect
+     * @note Apre la connessione al database mysql di GDRCD.
+     * @note Se la connessione non è ancora aperta, la crea.
+     * @return PDO Istanza della classe PDO utilizzata internamente
+     * @throws Throwable Se la connessione non è possibile
      */
     public static function connect(): PDO
     {
         if (is_null(self::$PDO))
         {
-            /*
-             * Nota: la codifica utf8 di PHP utilizza gruppi di 4 byte, mentre "utf8" di mysql ne utilizza 3.
+            /**
+             * TODO: le tabelle del db devono essere in utf8mb4 (e preferibilmente innoDB). Anche la connessione dovrà usare lo stesso charset
+             * @note la codifica utf8 di PHP utilizza gruppi di 4 byte, mentre "utf8" di mysql ne utilizza 3.
              * Per essere al riparo in maniera certa da qualsiasi potenziale errore di codifica, quella
              * corretta in mysql dovrebbe essere "utf8mb4", ma al momento le tabelle del db vengono dichiarate
              * in "utf8". Dal momento che avere un set di caratteri differente tra connessione e tabelle è
              * tendenzialmente più problematico, la connessione per il momento verrà istanziata in codifica
              * "utf8" a 3 byte.
-             * TODO: le tabelle del db devono essere in utf8mb4 (e preferibilmente innoDB). Anche la connessione dovrà usare lo stesso charset
              */
             $db_charset = 'utf8';
             $db_port = 3306;
@@ -151,7 +151,8 @@ class DB extends BaseClass
     }
 
     /**
-     * Chiude la connessione al database
+     * @fn disconnect
+     * @note Chiude la connessione al database
      * @return void
      */
     public static function disconnect(): void
@@ -160,9 +161,10 @@ class DB extends BaseClass
     }
 
     /**
-     * Ritorna il nome del database usato per la connessione
-     * @return false|string Se il nome del database non è definito da
-     * configurazione, questo metodo può ritornare il booleano FALSE
+     * @fn getDbName
+     * @note Ritorna il nome del database usato per la connessione
+     * @note Se il nome del database non è definito da configurazione, questo metodo può ritornare false
+     * @return false|string
      */
     public static function getDbName(): false|string
     {
@@ -174,13 +176,12 @@ class DB extends BaseClass
     }
 
     /**
-     * Crea un nuovo prepared statement.
-     * Nella query, gli elementi variabili possono essere indicati con dei placeholder
-     * appositi che sono indicati dal simbolo ":" usato come prefisso.
+     * @fn prepare
+     * @note Esegue una query preparata al database
+     * @note Nella query, gli elementi variabili possono essere indicati con dei placeholder appositi che sono indicati dal simbolo ":" usato come prefisso.
      * @param string $sql la query sql con tanto di placeholder da preparare
      * @return DBQueryInterface Riferimento della query appena preparata
-     * @throws Throwable se la gestione errori è configurata per lanciare eccezioni
-     * questo metodo può farlo in caso di problemi
+     * @throws Throwable Se la gestione errori è configurata per lanciare eccezioni questo metodo può farlo in caso di problemi
      */
     public static function prepare(string $sql): DBQueryInterface
     {
@@ -210,26 +211,57 @@ class DB extends BaseClass
              * DBQueryReference Interface
              */
 
+            /**
+             * @fn getSQL
+             * @note Ritorna la stringa sql inserita
+             * @return string
+             */
             public function getSQL(): string {
                 return $this->sql;
             }
 
+            /**
+             * @fn getAffectedRows
+             * @note Ritorna il numero di righe affette dalla query
+             * @return int
+             */
             public function getAffectedRows(): int {
                 return $this->affectedRows;
             }
 
+            /**
+             * @fn getNumRows
+             * @note Ottieni il numero di righe
+             * @return int
+             */
             public function getNumRows(): int {
                 return $this->numRows;
             }
 
+            /**
+             * @fn getInsertId
+             * @note Ottieni l'id della riga appena inserita
+             * @return string|false
+             */
             public function getInsertId(): string|false {
                 return $this->insertId;
             }
 
+            /**
+             * @fn getData
+             * @note Ottieni i dati contenuti nella query
+             * @return array
+             */
             public function getData(): array {
                 return $this->data;
             }
 
+            /**
+             * @fn execute
+             * @note Esegui la query
+             * @param array|null $params
+             * @return void
+             */
             public function execute(?array $params = null): void {
                 $this->PDOStatement->execute($params);
                 $this->affectedRows = $this->PDOStatement->rowCount();
@@ -241,7 +273,7 @@ class DB extends BaseClass
 
             /*
              * ArrayAccess Interface
-             * Questa implementazione rappresenta una piccola furbata per permettere
+             * Questa implementazione permette
              * di accedere direttamente ai nodi dati di un recordset multidimensionale
              * permettendo di fatto in casi dove si recupera una singola riga di
              * accedere direttamente alle key della seconda dimensione omettendone
@@ -249,18 +281,43 @@ class DB extends BaseClass
              * usato per soddisfare l'interfaccia Iterator
              */
 
+            /**
+             * @fn offsetExists
+             * @note Controlla se una chiave esiste
+             * @param mixed $offset
+             * @return bool
+             */
             public function offsetExists(mixed $offset): bool {
                 return isset($this->data[$this->iteratorIndex][$offset]);
             }
 
+            /**
+             * @fn offsetGet
+             * @note Ottieni il valore di una chiave
+             * @param mixed $offset
+             * @return mixed
+             */
             public function offsetGet(mixed $offset): mixed {
                 return $this->data[$this->iteratorIndex][$offset];
             }
 
+            /**
+             * @fn offsetSet
+             * @note Imposta il valore di una chiave
+             * @param mixed $offset
+             * @param mixed $value
+             * @return void
+             */
             public function offsetSet(mixed $offset, mixed $value): void {
                 $this->data[$this->iteratorIndex][$offset] = $value;
             }
 
+            /**
+             * @fn offsetUnset
+             * @note Cancella una chiave
+             * @param mixed $offset
+             * @return void
+             */
             public function offsetUnset(mixed $offset): void {
                 unset($this->data[$this->iteratorIndex][$offset]);
             }
@@ -270,7 +327,12 @@ class DB extends BaseClass
              * Questa implementazione permette di usare la funzione count()
              * per conoscere il numero di records recuperati
              */
-             
+
+            /**
+             * @fn count
+             * @note Ottieni il numero di records recuperati
+             * @return int
+             */
              public function count(): int {
                  return $this->getNumRows();
              }
@@ -282,22 +344,47 @@ class DB extends BaseClass
              * un oggetto di tipo DBQueryInterface
              */
 
+            /**
+             * @fn current
+             * @note Ottieni il valore della riga corrente
+             * @return mixed
+             */
             public function current(): mixed {
                 return $this->data[$this->iteratorIndex]?? null;
             }
 
+            /**
+             * @fn next
+             * @note Ottieni il valore della riga successiva
+             * @return void
+             */
             public function next(): void {
                 ++$this->iteratorIndex;
             }
 
+            /**
+             * @fn key
+             * @note Ottieni la chiave della riga corrente
+             * @return mixed
+             */
             public function key(): mixed {
                 return $this->iteratorIndex;
             }
 
+            /**
+             * @fn valid
+             * @note Controlla se la riga corrente è valida
+             * @return bool
+             */
             public function valid(): bool {
                 return isset($this->data[$this->iteratorIndex]);
             }
 
+            /**
+             * @fn rewind
+             * @note Riavvia l'iterazione
+             * @return void
+             */
             public function rewind(): void {
                 $this->iteratorIndex = 0;
             }
@@ -305,14 +392,12 @@ class DB extends BaseClass
     }
 
     /**
-     * Chiede al database di eseguire lo statement con i parametri indicati e ne ritorna i risultati
-     * @param DBQueryInterface $stmt lo statement preparato in precedenza tramite DB::prepare()
-     * @param array|null $params se la query dello statement prevede dei parametri questi
-     * possono essere specificati qui sotto forma di array associativo.
-     * Ad esempio: ['nomeparametro' => $valoreparametro]
-     * @return DBQueryInterface ritorna il riferimento dello statement eseguito e permette l'accesso ai dati
-     * @throws Throwable se la gestione errori è configurata per lanciare eccezioni
-     * questo metodo può farlo in caso di problemi
+     * @fn execute
+     * @note Esegui una query con statement
+     * @param DBQueryInterface $stmt Lo statement preparato in precedenza tramite DB::prepare()
+     * @param array|null $params Parametri da passare alla query
+     * @return DBQueryInterface Lo statement eseguito
+     * @throws Throwable Se la query non è stata eseguita con successo
      */
     public static function execute(DBQueryInterface $stmt, ?array $params = null): DBQueryInterface
     {
@@ -326,17 +411,12 @@ class DB extends BaseClass
     }
 
     /**
-     * Esegue una query al database permettendo di formulare l'istruzione con dei placeholder
-     * che verranno poi sostituiti dai valori passati in params.
-     * @param string $sql una query sql con placeholder per i parametri variabili. I placeholder
-     * sono sempre preceduti dal prefisso : (due punti) e una parola per identificarli. Es:
-     * SELECT * FROM table WHERE column = :datoricerca
-     * @param array|null $params se la query dello statement prevede dei parametri questi
-     * possono essere specificati qui sotto forma di array associativo.
-     * Ad esempio: ['datoricerca' => $valoreparametro]
-     * @return DBQueryInterface Ritorna il riferimento della query che può essere direttamente
-     * iterato per recuperare i dati in caso di una query di SELECT
-     * @throws Throwable
+     * @fn queryStmt
+     * @note Esegue una query di tipo statement
+     * @param string $sql
+     * @param array|null $params
+     * @return DBQueryInterface Lo statement eseguito
+     * @throws Throwable Se la query non è stata eseguita con successo
      */
     public static function queryStmt(string $sql, ?array $params = null): DBQueryInterface
     {
@@ -345,26 +425,28 @@ class DB extends BaseClass
     }
 
     /**
-     * Ritorna il numero di righe coinvolte nell'ultima operazione di INSERT/DELETE/UPDATE
-     * eseguita dal riferimento passato in input
-     * @param DBQueryInterface $stmt
-     * @return int
+     * @fn queryAffectedRows
+     * @note Ritorna il numero di righe coinvolte nell'ultima operazione
+     * @param DBQueryInterface $stmt Lo statement eseguito
+     * @return int Il numero di righe coinvolte
      */
     public static function queryAffectedRows(DBQueryInterface $stmt): int {
         return $stmt->getAffectedRows();
     }
 
     /**
-     * Ritorna l'id autoincrementante generato per l'ultima query di INSERT eseguita
-     * @return string|false
-     * @throws Throwable
+     * @fn queryLastId
+     * @note Ritorna l'id dell'ultimo record inserito
+     * @return string|false L'id dell'ultimo record inserito
+     * @throws Throwable Se la query non è stata eseguita con successo
      */
     public static function queryLastId(): string|false {
         return self::connect()->lastInsertId();
     }
 
     /**
-     * Disattiva il commit automatico delle query e permette di realizzare una transazione sql
+     * @fn beginTransaction
+     * @note Inizia una transazione
      * @return void
      * @throws Throwable
      */
@@ -373,8 +455,8 @@ class DB extends BaseClass
     }
 
     /**
-     * Effettua il commit simultaneo delle query accumulate nella transazione sql,
-     * convalidando tutte le modifiche
+     * @fn commit
+     * @note Effettua il commit della transazione
      * @return void
      * @throws Throwable
      */
@@ -383,8 +465,8 @@ class DB extends BaseClass
     }
 
     /**
-     * Effettua il rollback simultaneo delle query accumulate nella transazione sql,
-     * annullando ogni cambiamento
+     * @fn rollback
+     * @note Annulla il commit della transazione
      * @return void
      * @throws Throwable
      */
@@ -393,36 +475,26 @@ class DB extends BaseClass
     }
 
     /**
-     * Chiede al database di eseguire diverse operazioni a seconda del $mode indicato
-     * @param string|DBQueryInterface $sql La query SQL da eseguire o il riferimento di una chiamata
-     * a questo metodo col risultato di una query
+     * @fn query
+     * @note Chiede al database di eseguire diverse operazioni a seconda del $mode indicato
+     * @param string|DBQueryInterface $sql La query da eseguire
      * @param string $mode A seconda del valore passato il metodo si comporta in modo differente:
      *
-     *  . query: Default. Esegue la query sql fornita come primo parametro e ritorna la prima
-     *           riga utile letta dal database. Se la query non è di SELECT, ritorna il riferimento
-     *           tramite cui è possibile chiedere 'last_id' (in caso di query INSERT) e 'affected'.
+     *  - query: Default. Esegue la query e ritorna il risultato
      *
-     *  . result: Esegue la query sql fornita come primo parametro e ritorna il riferimento della
-     *            richiesta. Tale riferimento puà essere usato per richiedere in loop una quantità
-     *            indefinita di righe dal database con i mode 'fetch', 'assoc' e 'object'.
+     *  - result: Ritorna il risultato della query
      *
-     *  . num_rows: Dato il riferimento di una query di tipo SELECT ritorna il numero di righe
-     *              recuperate dal database per quella query.
+     *  - num_rows: Ritorna il numero di righe coinvolte nella query
      *
-     *  . fetch: Dato il riferimento di una query di tipo SELECT recupera la prossima riga disponibile
-     *           dal database. E' pensato per poter essere iterato in un loop al fine di recuperare
-     *           tutte le righe disponibili quando non si conosce arbitrariamente il numero.
-     *           Le righe recuperate sono sotto forma di array associativi.
+     *  - fetch: Ritorna il primo record della query
      *
-     *  . assoc: Alias di 'fetch'.
+     *  - assoc: Ritorna il primo record della query come array associativo
      *
-     *  . object: Agisce come 'fetch' ma le righe recuperate vengono passate come oggetto
+     *  - object: Ritorna il primo record della query come oggetto
      *
-     *  . last_id: Fornito in ingresso il riferimento di una query di tipo INSERT ritorna l'ultimo
-     *             id autoincrementante generato dalla query
+     *  - last_id: Ritorna l'id dell'ultimo record inserito
      *
-     *  . affected: Fornito in ingresso il riferimento di una query di tipo INSERT/DELETE/UPDATE
-     *              ritorna il numero di righe coinvolte dall'operazione richiesta.
+     *  - affected: Ritorna il numero di righe coinvolte nella query
      *
      * @return mixed
      * @throws Throwable
@@ -469,7 +541,8 @@ class DB extends BaseClass
     }
 
     /**
-     * Ritorna il numero di risultati dell'array estratto dal db
+     * @fn rowsNumber
+     * @note Ritorna il numero di righe estratte dalla query
      * @param array|DBQueryInterface $array
      * @return int
      */
@@ -483,7 +556,8 @@ class DB extends BaseClass
     }
 
     /**
-     * Creazione di un grafico in array del db
+     * @gn checkTable
+     * @note Creazione di un grafico in array del db
      * @param string $table
      * @return array
      * @throws Throwable
@@ -537,11 +611,11 @@ class DB extends BaseClass
     }
 
     /**
-     * Cambia il modo in cui la classe DB comunica un errore
+     * @fn errorMode
+     * @note Cambia il modo in cui la classe DB comunica un errore
      * @see DB::ERROR_STANDARD
      * @see DB::ERROR_EXCEPTION
-     * @param int $flag accetta in ingresso una qualsiasi tra le
-     * due costanti DB::ERROR_STANDARD e DB::ERROR_EXCEPTION
+     * @param int $flag DB::ERROR_STANDARD, DB::ERROR_EXCEPTION
      * @return void
      */
     public static function errorMode(int $flag): void
@@ -554,12 +628,12 @@ class DB extends BaseClass
     }
 
     /**
-     * Si occupa della gestione degli errori in base alla modalità scelta
-     * @param Throwable $e l'istanza di un eccezione rappresentante l'errore
-     * @param string|null $details eventuali dettagli aggiuntivi utili al debug
+     * @fn error
+     * @note Si occupa della gestione degli errori in base alla modalità scelta
+     * @param Throwable $e L'istanza di un eccezione rappresentante l'errore
+     * @param string|null $details Eventuali dettagli aggiuntivi utili al debug
      * @return void
-     * @throws Throwable se configurato in proposito, questo metodo rilancia
-     * l'eccezione ricevuta in input all'esterno
+     * @throws Throwable
      */
     protected static function error(Throwable $e, ?string $details = null): void
     {
