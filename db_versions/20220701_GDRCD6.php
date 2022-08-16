@@ -29,11 +29,17 @@ class GDRCD6 extends DbMigration
                 (4, 3, 'Ordini alla Guardia', 1);"
         );
 
+        // Argon2 potrebbe non essere sempre disponibile. Nel qual caso usiamo Blowfish come default
+        $defaultPasswordCrypter = defined('PASSWORD_ARGON2ID')?
+            'CrypterPasswordArgon2,argon2id'
+            : 'CrypterPaswordBlowfish,2y';
+
         DB::query("
             INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,`editable`,`options`) VALUES
                 ('DEVELOPING',1,'Engine','Gdr in sviluppo?','','bool',1,NULL),
                 ('STANDARD_ENGINE','default','Engine','Engine utilizzato. Non modificare se non necessario.','','string',1,NULL),
                 ('TEMPLATE_ENGINE','TemplateSmarty','Template','Template utilizzato. Non modificare se non necessario.','','select',1,'Template'),
+                ('SECURITY_PASSWORD_CRYPTER','$defaultPasswordCrypter','Sicurezza','Algoritmo di Hashing delle Password. Non modificare se non necessario.','','select',1,'PasswordHash'),
                 ('INLINE_CRONJOB',1,'Engine','Cronjob inline','Cronjob inline nell header?','bool',1,NULL),
                 ('ABI_LEVEL_CAP',5,'Abilita','Level cap Abilità','Livello massimo abilità','int',1,NULL),
                 ('DEFAULT_PX_PER_LVL',10,'Abilita','Costo default Abilità','Moltiplicatore costo abilità, se non specificato','int',1,NULL),
@@ -111,6 +117,10 @@ class GDRCD6 extends DbMigration
         DB::query("
             INSERT INTO config_options(section,label,value) VALUES 
                 ('Template','Smarty','TemplateSmarty'),
+                ('PasswordHash','Argon2','CrypterPasswordArgon2,argon2id'),
+                ('PasswordHash','Blowfish','CrypterPasswordBlowfish,2y'),
+                ('PasswordHash','SHA-512','CrypterPasswordSha512,sha512'),
+                ('PasswordHash','SHA-256','CrypterPasswordSha256,sha256'),
                 ('ImageExtensions','.png','png'),
                 ('ImageExtensions','.jpg','jpg'),
                 ('ImageExtensions','.gif','gif');
