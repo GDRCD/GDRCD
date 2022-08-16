@@ -135,9 +135,12 @@ final class Password extends BaseClass {
      * @note indica se i criteri di sicurezza della password risultano obsoleti
      * @param string $hash
      * @return bool true se la password usa criteri di sicurezza non aggiornati, false se tutto nella norma
+     * @throws Throwable
      */
     public static function needsRehash(string $hash): bool
     {
+        self::init();
+
         if (self::getProperCrypter($hash) === self::$Crypter) {
             return self::$Crypter->needsNewEncryption($hash);
         }
