@@ -1,9 +1,8 @@
 <?php
 /**
- * Implementa l'algoritmo Argon2 per la classe Crypter
- * Questo algoritmo è specifico per la generazione di hash
- * ad uso archiviazione e confronto password per sistemi di
- * autenticazione.
+ * @class CrypterPasswordArgon2
+ * @note Implementa l'algoritmo Argon2 per la classe Crypter
+ * @note Questo algoritmo è specifico per la creazione di hash di password adatti all'archiviazione
  */
 class CrypterPasswordArgon2 extends BaseClass implements CrypterAlgo
 {
@@ -17,7 +16,8 @@ class CrypterPasswordArgon2 extends BaseClass implements CrypterAlgo
     }
 
     /**
-     * Ritorna un array con la regolazione dei criteri di sicurezza dell'algoritmo
+     * @fn options
+     * @note Ritorna un array con la regolazione dei criteri di sicurezza dell'algoritmo
      * @return array
      */
     private function options(): array {
