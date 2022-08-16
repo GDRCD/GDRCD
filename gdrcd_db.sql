@@ -259,7 +259,22 @@ CREATE TABLE IF NOT EXISTS `config` (
   `section` varchar(255) NOT NULL,
   `description` text DEFAULT NULL,
   `type` varchar(255) DEFAULT 'String',
+  `options` varchar(255) DEFAULT NULL,
   `editable` tinyint(1) DEFAULT 1,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `config`
+--
+
+CREATE TABLE IF NOT EXISTS `config_options` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `section` varchar(255) NOT NULL,
+  `label` varchar(255) NOT NULL,
+  `value` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

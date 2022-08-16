@@ -14,16 +14,8 @@ class Template extends BaseClass
     {
         $this->engine = Functions::get_constant('TEMPLATE_ENGINE');
 
-        switch ( $this->engine ) {
-            case 'Smarty':
-                $this->used_class = TemplateSmarty::getInstance()->startTemplate();
-                break;
-            case 'Plate':
-                $this->used_class = TemplatePlate::getInstance()->startTemplate();
-                break;
-            default:
-                die('TEMPLATE_ENGINE_NOT_EXIST');
-                break;
+        if ( class_exists($this->engine) ) {
+            $this->used_class = $this->engine::getInstance()->startTemplate();
         }
 
         return $this;
