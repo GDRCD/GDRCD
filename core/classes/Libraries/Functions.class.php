@@ -185,4 +185,21 @@ class Functions extends BaseClass
         $interval = date_diff($datetime1, $datetime2);
         return $interval->format($format);
     }
+
+    /**
+     * @gn isBlacklistedIp
+     * @note Ritorna true se l'ip fornito risulta essere in blacklist
+     * @param string $ip
+     * @return bool
+     * @throws Throwable
+     */
+    public static function isBlacklistedIp(string $ip): bool
+    {
+        return !!count(
+            DB::queryStmt(
+                'SELECT * FROM blacklist WHERE ip = :address AND granted = 0',
+                ['address' => $ip]
+            )
+        );
+    }
 }
