@@ -20,6 +20,15 @@ class Session extends BaseClass
     }
 
     /**
+     * @fn reset
+     * @note Ripristina nei dati in sessione i valori che erano presenti all'avvio
+     * @return void
+     */
+    public static function reset(): void {
+        session_reset();
+    }
+
+    /**
      * @fn commit
      * @note salva eventuali modifiche appese, rilascia il lock e chiude la sessione
      * @return void
@@ -29,9 +38,18 @@ class Session extends BaseClass
     }
 
     /**
+     * @fn abort
+     * @note scarta le modifiche locali, rilascia il lock e chiude la sessione
+     * @return void
+     */
+    public static function abort(): void {
+        session_abort();
+    }
+
+    /**
      * @fn read
      * @note legge e riorna il valore in sessione associato alla chiave indicata
-     * @param string|null $key
+     * @param string|null $key se non specificata alcuna chiave ritorna l'intero contenuto in sessione come array
      * @return mixed
      */
     public static function read(?string $key = null): mixed {
@@ -40,31 +58,74 @@ class Session extends BaseClass
 
     /**
      * @fn save
-     * @note memorizza localmente le modifiche in sessione (fino quado non viene esplicitamente chiamato un ::commit())
+     * @note memorizza localmente le modifiche in sessione
      * @param string $key
      * @param mixed $value
      * @return void
      */
-    public static function save(string $key, mixed $value): void {
+    public static function store(string $key, mixed $value): void {
         $_SESSION[$key] = $value;
     }
 
     /**
-     * @fn isHttpsRequest
-     * @note indica se la richiesta corrente sta avvenendo sotto protocollo https
+     * @fn canLogin
+     * @note Verifica che la coppia $username e $password sia valida e prevalorizza le informazioni in sessione
+     * @param string $username la username proveniente dal form di login
+     * @param string $password
      * @return bool
+     * @throws Throwable
      */
-    private static function isHttpsRequest(): bool
+    public static function canLogin(string $username, string $password): bool
     {
-        $isHttps = $_SERVER['HTTPS']
-            ?? $_SERVER['REQUEST_SCHEME']
-            ?? $_SERVER['HTTP_X_FORWARDED_PROTO']
-            ?? null;
+        $User = DB::queryStmt(
+            'SELECT personaggio.id, 
+                    personaggio.nome, 
+                    personaggio.cognome,
+                    personaggio.sesso,
+                    personaggio.razza,
+                    personaggio.pass, 
+                    personaggio.permessi,
+                    personaggio.ora_entrata,
+                    personaggio.ora_uscita,
+                    personaggio.posizione,
+                    personaggio.ultima_mappa,
+                    personaggio.ultimo_luogo,
+                    razze.sing_f,
+                    razze.sing_m,
+                    razze.icon AS icona_razza
 
-        return $isHttps && (
-            strcasecmp('on', $isHttps) == 0
-            || strcasecmp('https', $isHttps) == 0
+            FROM personaggio 
+                LEFT JOIN razze ON(personaggio.razza = razze.id)
+
+            WHERE personaggio.nome = :username',
+            ['username' => $username]
         );
+
+        if (count($User)) {
+            if (Password::verify($User['pass'], $password, $User['id'])) {
+                // Valorizzo la sessione se tutto ok
+                self::store('login', $User['nome']);
+                self::store('login_id', $User['id']);
+                self::store('cognome', $User['cognome']);
+                self::store('permessi', $User['permessi']);
+                self::store('sesso', $User['sesso']);
+                self::store('blocca_media', $User['blocca_media']);
+                self::store('ultima_entrata', $User['ora_entrata']);
+                self::store('ultima_uscita', $User['ora_uscita']);
+                self::store('razza', $User['sing_'. $User['sesso']]?? $User['sing_m']);
+                self::store('img_razza', $User['icona_razza']);
+                self::store('id_razza', $User['razza']);
+                self::store('posizione', $User['posizione']);
+                self::store('mappa', empty($User['ultima_mappa'])? 1 : $User['ultima_mappa']);
+                self::store('luogo', empty($User['ultimo_luogo'])? -1 : $User['ultimo_luogo']);
+                self::store('tag', '');
+                self::store('last_message', 0);
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
