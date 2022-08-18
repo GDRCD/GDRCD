@@ -3,7 +3,7 @@
  * @interface DBQueryInterface
  * @note This interface is implemented by all DBQuery classes.
  */
-interface DBQueryInterface {
+interface DBQueryInterface extends ArrayAccess, Countable, Iterator {
 
     /**
      * @fn getSQL
@@ -193,7 +193,7 @@ class DB extends BaseClass
             self::error($e);
         }
 
-        return new class($sql, $stmt) implements DBQueryInterface, ArrayAccess, Countable, Iterator {
+        return new class($sql, $stmt) implements DBQueryInterface {
             private int $iteratorIndex = 0;
             private int $numRows = 0;
             private int $affectedRows = 0;
