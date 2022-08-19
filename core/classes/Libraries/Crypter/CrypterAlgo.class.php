@@ -56,15 +56,13 @@ class CrypterAlgo extends BaseClass
     protected CrypterInterface $CrypterAlgo;
 
     /**
-     * @fn __construct
-     * @note Inizializza la classe con l'algoritmo selezionato
+     * @fn init
+     * @note Seleziona l'algoritmo di criptazione da utilizzare
      * @param string $CrypterAlgo Il nome dell'algoritmo da usare
      * @return void
      */
-    public function __construct(string $CrypterAlgo)
+    public function init(string $CrypterAlgo): void
     {
-        parent::__construct();
-
         try {
             $this->CrypterAlgo = $CrypterAlgo::getInstance();
         } catch ( Throwable $e ) {
@@ -81,7 +79,9 @@ class CrypterAlgo extends BaseClass
      */
     public static function withAlgo(string $CrypterAlgo): CrypterAlgo
     {
-        return new CrypterAlgo($CrypterAlgo);
+        $Crypter = new CrypterAlgo();
+        $Crypter->init($CrypterAlgo);
+        return $Crypter;
     }
 
     /**
