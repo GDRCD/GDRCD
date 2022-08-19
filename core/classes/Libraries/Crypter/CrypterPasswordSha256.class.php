@@ -9,13 +9,13 @@ class CrypterPasswordSha256 extends CrypterPasswordSha512
 {
     /**
      * @var string
-     * @note il nome interno usato da php per riconoscere la funzione di hashing
+     * @note Il nome interno usato da php per riconoscere la funzione di hashing
      */
     const ALGO = 'sha256';
 
     /**
      * @var int
-     * @note rappresenta il numero di rounds di criptazione per garantire la sicurezza dell'hash
+     * @note Rappresenta il numero di rounds di criptazione per garantire la sicurezza dell'hash
      */
     const COST = 310_000;
 }
