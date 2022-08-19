@@ -7,8 +7,8 @@
 const SESSION_LOCK = true;
 require_once __DIR__ . '/core/required.php';
 
-$login = $_POST['login'];
-$pass = $_POST['pass'];
+$login = $_POST['login']?? '';
+$pass = $_POST['pass']?? '';
 $wasAlreadyLoggedIn = Session::isLogged();
 
 
