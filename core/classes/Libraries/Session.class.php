@@ -8,9 +8,8 @@ class Session extends BaseClass
     /**
      * @fn start
      * @note Inizializza la sessione e popola i dati di
-     * @note sessione eventualmente associati all'utente connessso
-     * @param bool $readAndClose Default false. Se posto su true
-     * la sessione rilascierà il lock immediatamente dopo esser stata letta
+     * @note Sessione eventualmente associati all'utente connesso
+     * @param bool $readAndClose Se true chiude la sessione dopo averla letta
      * @return void
      */
     public static function start(bool $readAndClose = false): void
@@ -30,7 +29,7 @@ class Session extends BaseClass
 
     /**
      * @fn commit
-     * @note salva eventuali modifiche appese, rilascia il lock e chiude la sessione
+     * @note Salva eventuali modifiche appese, rilascia il lock e chiude la sessione
      * @return void
      */
     public static function commit(): void {
@@ -39,7 +38,7 @@ class Session extends BaseClass
 
     /**
      * @fn abort
-     * @note scarta le modifiche locali, rilascia il lock e chiude la sessione
+     * @note Scarta le modifiche locali, rilascia il lock e chiude la sessione
      * @return void
      */
     public static function abort(): void {
@@ -48,8 +47,8 @@ class Session extends BaseClass
 
     /**
      * @fn read
-     * @note legge e riorna il valore in sessione associato alla chiave indicata
-     * @param string|null $key se non specificata alcuna chiave ritorna l'intero contenuto in sessione come array
+     * @note Legge e ritorna il valore in sessione associato alla chiave indicata
+     * @param string|null $key Se non specificata alcuna chiave ritorna l'intero contenuto in sessione come array
      * @return mixed
      */
     public static function read(?string $key = null): mixed {
@@ -58,7 +57,7 @@ class Session extends BaseClass
 
     /**
      * @fn save
-     * @note memorizza localmente le modifiche in sessione
+     * @note Memorizza localmente le modifiche in sessione
      * @param string $key
      * @param mixed $value
      * @return void
@@ -69,8 +68,8 @@ class Session extends BaseClass
 
     /**
      * @fn canLogin
-     * @note Verifica che la coppia $username e $password sia valida e prevalorizza le informazioni in sessione
-     * @param string $username la username proveniente dal form di login
+     * @note Verifica che la coppia $username e $password sia valida e valorizza le informazioni in sessione
+     * @param string $username La username proveniente dal form di login
      * @param string $password
      * @return bool
      * @throws Throwable
@@ -130,8 +129,7 @@ class Session extends BaseClass
 
     /**
      * @fn secureSessionConfiguraton
-     * @note si occupa di impostare correttamente tutti i valori di
-     * @note configurazione per garantire la sicurezza delle sessioni
+     * @note Si occupa d'impostare correttamente tutti i valori di configurazione per garantire la sicurezza delle sessioni
      * @return void
      */
     private static function secureSessionConfiguraton(): void

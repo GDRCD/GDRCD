@@ -5,26 +5,26 @@
  */
 final class Password extends BaseClass {
     /**
-     * @var Crypter
-     * @note istanza della classe Crypter configurata con l'algoritmo scelto da configurazione
+     * @var CrypterAlgo
+     * @note Istanza della classe Crypter configurata con l'algoritmo scelto da configurazione
      */
-    private static Crypter $Crypter;
+    private static CrypterAlgo $Crypter;
 
     /**
      * @var array
-     * @note elenco degli algoritmi di hashing disponibili
+     * @note Elenco degli algoritmi di hashing disponibili
      */
-    private static array $availableAlgos = [];
+    private static array $availableAlgo = [];
 
     /**
      * @var string|null
-     * @note contiene l'algoritmo di hashing attualmente selezionato per il criptaggio delle password
+     * @note Contiene l'algoritmo di hashing attualmente selezionato per il criptaggio delle password
      */
     private static ?string $algorithm = null;
 
     /**
      * @fn init
-     * @note inizializza le proprietà essenziali al funzionamento della classe se necessario
+     * @note Inizializza le proprietà essenziali al funzionamento della classe se necessario
      * @return void
      * @throws Throwable
      */
@@ -37,7 +37,7 @@ final class Password extends BaseClass {
 
             foreach (Gestione::getInstance()->getOptions('PasswordHash') as $option) {
                 [$CrypterName, $hashId] = explode(',', $option['value'], 2);
-                self::$availableAlgos[$CrypterName] = $hashId;
+                self::$availableAlgo[$CrypterName] = $hashId;
             }
         }
     }
@@ -65,7 +65,7 @@ final class Password extends BaseClass {
     {
         self::init();
 
-        if (!isset(self::$availableAlgos[$algo])) {
+        if (!isset(self::$availableAlgo[$algo])) {
             throw new InvalidArgumentException('Algoritmo di hashing sconosciuto "'. $algo .'"');
         }
 
@@ -74,20 +74,20 @@ final class Password extends BaseClass {
     }
 
     /**
-     * @fn getAvailableAlgos
+     * @fn getAvailableAlgo
      * @note Ritorna l'elenco degli algoritmi di hashing disponibili per il criptaggio delle password
      * @return array
      * @throws Throwable
      */
-    public static function getAvailableAlgos(): array
+    public static function getAvailableAlgo(): array
     {
         self::init();
-        return array_keys(self::$availableAlgos);
+        return array_keys(self::$availableAlgo);
     }
 
     /**
      * @fn hash
-     * @note Genera l'hash della password fornita come parametro e la ritona
+     * @note Genera l'hash della password fornita come parametro e la ritorna
      * @param string $password
      * @return string
      * @throws Throwable
@@ -103,9 +103,7 @@ final class Password extends BaseClass {
      * @note Confronta l'hash con la password in chiaro e indica se c'è un riscontro
      * @param string $hash la stringa rappresentante la password criptata
      * @param string $password la password in chiaro fornita al login
-     * @param int|null $idPersonaggio se specificato l'id di un personaggio la classe
-     * si occuperà in autonomia di aggiornare i criteri di sicurezza della sua password
-     * qualora obsoleti e solo in caso di verifica positiva
+     * @param int|null $idPersonaggio l'id del personaggio che sta effettuando il login
      * @return bool true se la password coincide con l'hash, false altriemnti
      * @throws Throwable
      */
@@ -132,9 +130,9 @@ final class Password extends BaseClass {
 
     /**
      * @fn needsRehash
-     * @note indica se i criteri di sicurezza della password risultano obsoleti
+     * @note Indica se i criteri di sicurezza della password risultano obsoleti
      * @param string $hash
-     * @return bool true se la password usa criteri di sicurezza non aggiornati, false se tutto nella norma
+     * @return bool True se i criteri di sicurezza della password risultano obsoleti, false altrimenti
      * @throws Throwable
      */
     public static function needsRehash(string $hash): bool
@@ -150,15 +148,15 @@ final class Password extends BaseClass {
 
     /**
      * @fn getProperCrypter
-     * @note identifica l'algoritmo Crypter usato per generare l'hash e lo ritorna
+     * @note Identifica l'algoritmo Crypter usato per generare l'hash e lo ritorna
      * @param string $hash
-     * @return Crypter
+     * @return CrypterAlgo
      */
-    private static function getProperCrypter(string $hash): Crypter
+    private static function getProperCrypter(string $hash): CrypterAlgo
     {
         $Crypter = self::$Crypter;
         $hashId = strtok($hash, '$');
-        $CrypterAlgo = array_search($hashId, self::$availableAlgos, true);
+        $CrypterAlgo = array_search($hashId, self::$availableAlgo, true);
 
         if ($CrypterAlgo !== false && self::$algorithm !== $CrypterAlgo) {
             $Crypter = Crypter::withAlgo($CrypterAlgo);

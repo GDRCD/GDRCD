@@ -418,7 +418,7 @@ class DB extends BaseClass
      * @return DBQueryInterface Lo statement eseguito
      * @throws Throwable Se la query non è stata eseguita con successo
      */
-    public static function queryStmt(string $sql, ?array $params = null): DBQueryInterface
+    public static function  queryStmt(string $sql, ?array $params = null): DBQueryInterface
     {
         $stmt = self::prepare($sql);
         return self::execute($stmt, $params);
