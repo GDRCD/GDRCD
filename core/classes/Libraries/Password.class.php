@@ -5,10 +5,10 @@
  */
 final class Password extends BaseClass {
     /**
-     * @var CrypterAlgo
+     * @var null|CrypterAlgo
      * @note Istanza della classe Crypter configurata con l'algoritmo scelto da configurazione
      */
-    private static CrypterAlgo $Crypter;
+    private static ?CrypterAlgo $Crypter = null;
 
     /**
      * @var array
@@ -33,7 +33,7 @@ final class Password extends BaseClass {
         if (is_null(self::$Crypter)) {
             $DefaultCrypterAlgo = strtok(Functions::get_constant('SECURITY_PASSWORD_CRYPTER'), ',');
             self::$algorithm = $DefaultCrypterAlgo;
-            self::$Crypter = Crypter::withAlgo($DefaultCrypterAlgo);
+            self::$Crypter = CrypterAlgo::withAlgo($DefaultCrypterAlgo);
 
             foreach (Gestione::getInstance()->getOptions('PasswordHash') as $option) {
                 [$CrypterName, $hashId] = explode(',', $option['value'], 2);
@@ -70,7 +70,7 @@ final class Password extends BaseClass {
         }
 
         self::$algorithm = $algo;
-        self::$Crypter = Crypter::withAlgo($algo);
+        self::$Crypter = CrypterAlgo::withAlgo($algo);
     }
 
     /**
@@ -159,7 +159,7 @@ final class Password extends BaseClass {
         $CrypterAlgo = array_search($hashId, self::$availableAlgo, true);
 
         if ($CrypterAlgo !== false && self::$algorithm !== $CrypterAlgo) {
-            $Crypter = Crypter::withAlgo($CrypterAlgo);
+            $Crypter = CrypterAlgo::withAlgo($CrypterAlgo);
         }
 
         return $Crypter;
