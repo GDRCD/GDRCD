@@ -96,7 +96,8 @@ class Session extends BaseClass
             FROM personaggio 
                 LEFT JOIN razze ON(personaggio.razza = razze.id)
 
-            WHERE personaggio.nome = :username',
+            WHERE personaggio.nome = :username
+                AND personaggio.permessi > -1',
             ['username' => $username]
         );
 
