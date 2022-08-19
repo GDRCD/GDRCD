@@ -202,4 +202,20 @@ class Functions extends BaseClass
             )
         );
     }
+
+    /**
+     * @fn isAccountBanned
+     * @note Permette di sapere se il personaggio è stato bannato
+     * @param string $username lo username del personaggio da verificare
+     * @return false|array false se il personaggio non è stato esiliato, altrimenti un array con i dettagli del ban
+     * @throws Throwable
+     */
+    public static function isAccountBanned(string $username): false|array {
+        $result = DB::queryStmt(
+            'SELECT autore_esilio AS autore, esilio, motivo_esilio AS motivo FROM personaggio WHERE nome = :username',
+            ['username' => $username]
+        );
+
+        return !count($result)? false : $result->current();
+    }
 }
