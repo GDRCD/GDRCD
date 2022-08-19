@@ -9,6 +9,7 @@ require_once __DIR__ . '/core/required.php';
 
 $login = $_POST['login'];
 $pass = $_POST['pass'];
+$wasAlreadyLoggedIn = Session::isLogged();
 
 
 if (Functions::isBlacklistedIp($_SERVER['REMOTE_ADDR'])) {
@@ -16,7 +17,7 @@ if (Functions::isBlacklistedIp($_SERVER['REMOTE_ADDR'])) {
     die('ip-blacklist');
 }
 
-if (!Session::login($login, $pass)) {
+if (!$wasAlreadyLoggedIn && !Session::login($login, $pass)) {
     // TODO: reindirizzamento a template che ci spieghi in modo adeguato la situazione (Account non trovato o pass errata)
     die('wrong-account-or-password');
 }
@@ -40,8 +41,9 @@ if (Functions::isAccountBanned($login)) {
 }
 
 if (
-    strtotime(Session::read('ultima_entrata')) >= strtotime(Session::read('ultima_uscita'))
-    && strtotime(Session::read('ultimo_refresh'))+120 <= time()
+    !$wasAlreadyLoggedIn
+    && strtotime(Session::read('ultima_entrata')) > strtotime(Session::read('ultima_uscita'))
+    && strtotime(Session::read('ultimo_refresh'))+120 > time()
 ) {
     // TODO: reindirizzamento a template che ci spieghi in modo adeguato la situazione (Personaggio già connesso)
     Session::abort();
