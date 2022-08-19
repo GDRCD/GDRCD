@@ -131,6 +131,15 @@ class Session extends BaseClass
     }
 
     /**
+     * @fn isLogged
+     * @note indica se la sessione esiste ed è attualmente attiva
+     * @return bool
+     */
+    public static function isLogged(): bool {
+        return !is_null(self::read('login'));
+    }
+
+    /**
      * @fn secureSessionConfiguraton
      * @note Si occupa d'impostare correttamente tutti i valori di configurazione per garantire la sicurezza delle sessioni
      * @return void
@@ -159,7 +168,7 @@ class Session extends BaseClass
         ini_set('session.cookie_httponly', 'On');
 
         // permette al cookie di sessione di essere letto soltanto sotto connessione sicura (https)
-        ini_set('session.cookie_secure', 'On');
+        ini_set('session.cookie_secure', 'Off');
 
         // agisce come un controllo CSRF, non accettando cookie di richieste che non provengano dallo stesso dominio
         ini_set('session.cookie_samesite', 'SameSite');
