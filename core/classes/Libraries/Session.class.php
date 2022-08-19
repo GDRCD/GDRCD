@@ -3,7 +3,7 @@
  * @class Session
  * @note Classe responsabile per la gestione della sessione utente nel sito
  */
-class Session extends BaseClass
+class Session
 {
     /**
      * @fn start
