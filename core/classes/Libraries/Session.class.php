@@ -19,6 +19,31 @@ class Session
     }
 
     /**
+     * @fn destroy
+     * @note distrugge la sessione corrente
+     * @return void
+     */
+    public static function destroy(): void
+    {
+        $_SESSION = [];
+
+        if (ini_get("session.use_cookies")) {
+            $params = session_get_cookie_params();
+            setcookie(
+                session_name(),
+                '',
+                time() - 86400,
+                $params["path"],
+                $params["domain"],
+                $params["secure"],
+                $params["httponly"]
+            );
+        }
+
+        session_destroy();
+    }
+
+    /**
      * @fn reset
      * @note Ripristina nei dati in sessione i valori che erano presenti all'avvio
      * @return void
