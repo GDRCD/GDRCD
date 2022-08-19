@@ -67,14 +67,14 @@ class Session extends BaseClass
     }
 
     /**
-     * @fn canLogin
+     * @fn login
      * @note Verifica che la coppia $username e $password sia valida e valorizza le informazioni in sessione
      * @param string $username La username proveniente dal form di login
      * @param string $password
      * @return bool
      * @throws Throwable
      */
-    public static function canLogin(string $username, string $password): bool
+    public static function login(string $username, string $password): bool
     {
         $User = DB::queryStmt(
             'SELECT personaggio.id, 
@@ -86,6 +86,7 @@ class Session extends BaseClass
                     personaggio.permessi,
                     personaggio.ora_entrata,
                     personaggio.ora_uscita,
+                    personaggio.ultimo_refresh,
                     personaggio.posizione,
                     personaggio.ultima_mappa,
                     personaggio.ultimo_luogo,
@@ -112,6 +113,7 @@ class Session extends BaseClass
                 self::store('blocca_media', $User['blocca_media']);
                 self::store('ultima_entrata', $User['ora_entrata']);
                 self::store('ultima_uscita', $User['ora_uscita']);
+                self::store('ultimo_refresh', $User['ultimo_refresh']);
                 self::store('razza', $User['sing_'. $User['sesso']]?? $User['sing_m']);
                 self::store('img_razza', $User['icona_razza']);
                 self::store('id_razza', $User['razza']);
