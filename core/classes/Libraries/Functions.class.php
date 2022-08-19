@@ -216,6 +216,6 @@ class Functions extends BaseClass
             ['username' => $username]
         );
 
-        return !count($result)? false : $result->current();
+        return strtotime($result['esilio']) > time()? $result->current() : false;
     }
 }
