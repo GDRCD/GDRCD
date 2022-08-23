@@ -15,7 +15,11 @@ class Session
     public static function start(bool $readAndClose = false): void
     {
         self::secureSessionConfiguraton();
-        session_start(['read_and_close' => $readAndClose]);
+        self::regenerateSessionIfNeeded();
+
+        if ($readAndClose) {
+            self::commit();
+        }
     }
 
     /**
@@ -92,6 +96,19 @@ class Session
     }
 
     /**
+     * @fn delete
+     * @note Elimina la chiave/i indicata dai parametri di sessione locali
+     * @param string ...$key
+     * @return void
+     */
+    public static function delete(string ...$key): void
+    {
+        foreach ($key as $k) {
+            unset($_SESSION[$k]);
+        }
+    }
+
+    /**
      * @fn login
      * @note Verifica che la coppia $username e $password sia valida e valorizza le informazioni in sessione
      * @param string $username La username proveniente dal form di login
@@ -162,6 +179,81 @@ class Session
      */
     public static function isLogged(): bool {
         return !is_null(self::read('login'));
+    }
+
+    /**
+     * @gn regenerateSessionIfNeeded
+     * @note Rigenera l'id di sessione se necessario ed effettua alcuni controlli di sicurezza
+     * @return void
+     */
+    private static function regenerateSessionIfNeeded(): void
+    {
+        session_start();
+
+        # Gestione sessioni scadute a causa di un network instabile
+        $destroyedTs = self::read('_destroyedts');
+        $newSessionId = self::read('_newsessionid');
+
+        if (!is_null($destroyedTs)) {
+            # Questa sessione è scaduta da troppo tempo
+            # potrebbe anche essere un attacco per quanto ne sappiamo
+            if ($destroyedTs <= time() - 200) {
+                $_SESSION = [];
+                self::commit();
+                return;
+            }
+
+            # Se siamo arrivati fin qui considero questo stato
+            # come frutto di un traffico di rete instabile e
+            # decido di ripristinare correttamente la sessione
+            if (!is_null($newSessionId)) {
+                self::regenerateId($newSessionId);
+            }
+        }
+
+        # Controllo di routine per aggiornare l'id di sessione ogni 5m
+        $createdTs = self::read('_createdts');
+
+        if (is_null($createdTs) || time() - $createdTs >= 300) {
+            self::regenerateId();
+        }
+    }
+
+    /**
+     * @fn regenerateId
+     * @note genera un nuovo id per la sessione corrente
+     * @param string|null $newSessionId
+     * @return void
+     */
+    private static function regenerateId(?string $newSessionId = null): void
+    {
+        /*
+         * PHP fornisce nativamente una funzione session_regenerate_id()
+         * che permette di rigenerare l'id della sessione corrente, ma
+         * per come questa è internamente implementata esiste il concreto
+         * rischio di causare una perdita di sessione quando si naviga
+         * da connessioni potenzialmente instabili come il traffico mobile
+         * o da rete wi-fi. Questo metodo dovrebbe permettere di generare
+         * un nuovo id per la sessione corrente evitando i problemi di
+         * perdita di sessione.
+         */
+
+        # Nuovo id di e marchiamo la vecchia sessione da cancellare
+        $newSessionId ??= session_create_id();
+        self::store('_newsessionid', $newSessionId);
+        self::store('_destroyedts', time());
+        self::commit();
+
+        # Re-Inizializziamo la sessione usando il nuovo id appena prodotto
+        ini_set('session.use_strict_mode', 'Off');
+        session_id($newSessionId);
+        session_start();
+
+        # La nuova sessione sta usando il $_SESSION valorizzato dalla precedente
+        # per questo motivo, ora che tutto è andato bene, rimuoviamo i dati
+        # provvisori che servono durante la transizione al nuovo id
+        self::delete('_newsessionid', '_destroyedts');
+        self::store('_createdts', time());
     }
 
     /**
