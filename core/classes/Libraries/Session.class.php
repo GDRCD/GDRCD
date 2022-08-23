@@ -198,6 +198,16 @@ class Session
             # Questa sessione è scaduta da troppo tempo
             # potrebbe anche essere un attacco per quanto ne sappiamo
             if ($destroyedTs <= time() - 200) {
+                if (!empty($_SESSION['login'])) {
+                    error_log(
+                        sprintf(
+                            '[Session] Tentativo di accesso su sessione scaduta! (PG: %s; IP: %s; UA: %s)',
+                            self::read('login'),
+                            $_SERVER['REMOTE_ADDR'],
+                            $_SERVER['HTTP_USER_AGENT']
+                        )
+                    );
+                }
                 $_SESSION = [];
                 self::commit();
                 return;
