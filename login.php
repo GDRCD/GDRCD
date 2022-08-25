@@ -13,18 +13,28 @@ $wasAlreadyLoggedIn = Session::isLogged();
 
 
 if (Functions::isBlacklistedIp($_SERVER['REMOTE_ADDR'])) {
-    // TODO: Reindirizziamo a template che ci spieghi in modo adeguato la situazione (IP Blacklist)
-    die('ip-blacklist');
+    echo Template::getInstance()->startTemplate()->render(
+        'login-error', [
+            'login_error_text' => $GLOBALS['MESSAGE']['warning']['blacklisted'],
+            'login_again_text' => $GLOBALS['MESSAGE']['warning']['please_login_again'],
+            'homepage_url' => $GLOBALS['PARAMETERS']['info']['site_url']
+        ]);
+    die();
 }
 
 if (!$wasAlreadyLoggedIn && !Session::login($login, $pass)) {
-    // TODO: reindirizzamento a template che ci spieghi in modo adeguato la situazione (Account non trovato o pass errata)
-    die('wrong-account-or-password');
+    echo Template::getInstance()->startTemplate()->render(
+        'login-error', [
+            'login_error_text' => $GLOBALS['MESSAGE']['error']['unknown_username'] ,
+            'login_again_text' => $GLOBALS['MESSAGE']['warning']['please_login_again'],
+            'homepage_url' => $GLOBALS['PARAMETERS']['info']['site_url']
+        ]);
+    die();
 }
 
 /*
  * Nota bene: dal momento che Session::login() è stata eseguita con successo
- * abbiamo al momento in una sessione "temporanea" i dati del personaggio.
+ * abbiamo in una sessione "temporanea" i dati del personaggio.
  * Se non si fa nulla o si lancia preventivamente un Session::commit() la
  * sessione verrà definitivamente salvata sul server e sarà operativa a tutti
  * gli effetti.
@@ -35,9 +45,14 @@ if (!$wasAlreadyLoggedIn && !Session::login($login, $pass)) {
  */
 
 if (Functions::isAccountBanned($login)) {
-    // TODO: reindirizzamento a template che ci spieghi in modo adeguato la situazione (Personaggio esiliato)
     Session::abort();
-    die('account-banned');
+    echo Template::getInstance()->startTemplate()->render(
+        'login-error', [
+            'login_error_text' => $GLOBALS['MESSAGE']['warning']['blacklisted'],
+            'login_again_text' => $GLOBALS['MESSAGE']['warning']['please_login_again'],
+            'homepage_url' => $GLOBALS['PARAMETERS']['info']['site_url']
+        ]);
+    die();
 }
 
 if (
@@ -45,9 +60,14 @@ if (
     && strtotime(Session::read('ultima_entrata')) > strtotime(Session::read('ultima_uscita'))
     && strtotime(Session::read('ultimo_refresh'))+120 > time()
 ) {
-    // TODO: reindirizzamento a template che ci spieghi in modo adeguato la situazione (Personaggio già connesso)
     Session::abort();
-    die('already-logged-in');
+    echo Template::getInstance()->startTemplate()->render(
+        'login-error', [
+            'login_error_text' => $GLOBALS['MESSAGE']['warning']['double_connection'],
+            'login_again_text' => $GLOBALS['MESSAGE']['warning']['please_login_again'],
+            'homepage_url' => $GLOBALS['PARAMETERS']['info']['site_url']
+        ]);
+    die();
 }
 
 // Arrivati fin qui è tutto OK: convalido la sessione!
