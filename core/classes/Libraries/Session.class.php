@@ -247,17 +247,19 @@ class Session
          * un nuovo id per la sessione corrente evitando i problemi di
          * perdita di sessione.
          */
-
         # Nuovo id di e marchiamo la vecchia sessione da cancellare
         $newSessionId ??= session_create_id();
         self::store('_newsessionid', $newSessionId);
         self::store('_destroyedts', time());
         self::commit();
 
+        $OldSessionData = self::read();
+
         # Re-Inizializziamo la sessione usando il nuovo id appena prodotto
         ini_set('session.use_strict_mode', 'Off');
         session_id($newSessionId);
         session_start();
+        $_SESSION = $OldSessionData;
 
         # La nuova sessione sta usando il $_SESSION valorizzato dalla precedente
         # per questo motivo, ora che tutto è andato bene, rimuoviamo i dati
