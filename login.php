@@ -8,7 +8,7 @@ const SESSION_LOCK = true;
 require_once __DIR__ . '/core/required.php';
 
 $login = Filters::in($_POST['login']);
-$pass = Filters::in($_POST['pass']);
+$pass = $_POST['pass'];
 
 try {
     Login::getInstance()->beforeLogin($login, $pass, $_SERVER['REMOTE_ADDR']);
