@@ -29,12 +29,19 @@ class GDRCD6 extends DbMigration
                 (4, 3, 'Ordini alla Guardia', 1);"
         );
 
+        // Argon2 potrebbe non essere sempre disponibile. Nel qual caso usiamo Blowfish come default
+        $defaultPasswordCrypter = defined('PASSWORD_ARGON2ID')?
+            'CrypterPasswordArgon2,argon2id'
+            : 'CrypterPaswordBlowfish,2y';
+
         DB::query("
             INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,`editable`,`options`) VALUES
                 ('DEVELOPING',1,'Engine','Gdr in sviluppo?','','bool',1,NULL),
                 ('STANDARD_ENGINE','default','Engine','Engine utilizzato. Non modificare se non necessario.','','string',1,NULL),
                 ('TEMPLATE_ENGINE','TemplateSmarty','Template','Template utilizzato. Non modificare se non necessario.','','select',1,'Template'),
+                ('SECURITY_PASSWORD_CRYPTER','$defaultPasswordCrypter','Sicurezza','Algoritmo di Hashing delle Password. Non modificare se non necessario.','','select',1,'PasswordHash'),
                 ('INLINE_CRONJOB',1,'Engine','Cronjob inline','Cronjob inline nell header?','bool',1,NULL),
+                ('LOGIN_BACK_LOCATION',0,'Login','Login in lcoazione','Login in vecchia location?','bool',1,NULL),
                 ('ABI_LEVEL_CAP',5,'Abilita','Level cap Abilità','Livello massimo abilità','int',1,NULL),
                 ('DEFAULT_PX_PER_LVL',10,'Abilita','Costo default Abilità','Moltiplicatore costo abilità, se non specificato','int',1,NULL),
                 ('ABI_REQUIREMENT',1,'Abilita','Requisiti Abilità','Abilitare requisiti abilità?','bool',1,NULL),
@@ -111,6 +118,10 @@ class GDRCD6 extends DbMigration
         DB::query("
             INSERT INTO config_options(section,label,value) VALUES 
                 ('Template','Smarty','TemplateSmarty'),
+                ('PasswordHash','Argon2','CrypterPasswordArgon2,argon2id'),
+                ('PasswordHash','Blowfish','CrypterPasswordBlowfish,2y'),
+                ('PasswordHash','SHA-512','CrypterPasswordSha512,sha512'),
+                ('PasswordHash','SHA-256','CrypterPasswordSha256,sha256'),
                 ('ImageExtensions','.png','png'),
                 ('ImageExtensions','.jpg','jpg'),
                 ('ImageExtensions','.gif','gif');
@@ -355,10 +366,14 @@ class GDRCD6 extends DbMigration
                 (1, 3, 1);"
         );
 
-        DB::query("
+        DB::queryStmt("
             INSERT INTO `personaggio` (`id`,`nome`, `cognome`, `pass`, `ultimo_cambiopass`, `data_iscrizione`, `email`, `permessi`, `ultima_mappa`, `ultimo_luogo`, `esilio`, `data_esilio`, `motivo_esilio`, `autore_esilio`, `sesso`, `razza`, `descrizione`, `affetti`, `stato`, `online_status`, `disponibile`, `url_img`, `url_img_chat`, `url_media`, `blocca_media`, `esperienza`, `salute`, `salute_max`, `soldi`, `banca`, `last_ip`, `is_invisible`, `ultimo_refresh`, `ora_entrata`, `ora_uscita`, `posizione`) VALUES
-                (1,'Super', 'User', '\$P\$BcH1cP941XHOf0X61wVWWjzXqcCi2a/', NULL, '2011-06-04 00:47:48', '\$P\$BNZYtz9JOQE.O4Tv7qZyl3SzIoZzzR.', 5, 1, -1, '2009-01-01', '2009-01-01', '', '', 1, 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 100, 100, 300, 50000,  '127.0.0.1', 0, '2021-10-08 00:28:13', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1),
-                (2,'Test', 'Di FunzionaliÃ ', '\$P\$BUoa19QUuXsgIDlhGC3chR/3Q7hoRy0', NULL, '2011-06-04 00:47:48', '\$P\$Bd1amPCKkOF9GdgYsibZ96U92D5CtR0', 0, 1, -1, '2009-01-01', '2009-01-01', '', '', 1, 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000',  100, 100, 50, 50, '127.0.0.1', 0, '2009-01-01 00:00:00', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1);"
+                (1,'Super', 'User', :superpassword, NULL, '2011-06-04 00:47:48', '\$P\$BNZYtz9JOQE.O4Tv7qZyl3SzIoZzzR.', 5, 1, -1, '2009-01-01', '2009-01-01', '', '', 1, 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 100, 100, 300, 50000,  '127.0.0.1', 0, '2021-10-08 00:28:13', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1),
+                (2,'Test', 'Di Funzionalità', :testpassword, NULL, '2011-06-04 00:47:48', '\$P\$Bd1amPCKkOF9GdgYsibZ96U92D5CtR0', 0, 1, -1, '2009-01-01', '2009-01-01', '', '', 1, 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000',  100, 100, 50, 50, '127.0.0.1', 0, '2009-01-01 00:00:00', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1);",
+            [
+                'superpassword' => Password::hash('super'),
+                'testpassword' => Password::hash('test')
+            ]
         );
 
         DB::query("

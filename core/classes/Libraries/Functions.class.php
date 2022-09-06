@@ -87,9 +87,9 @@ class Functions extends BaseClass
     /**
      * @fn getPermission
      * @note Estrae i permessi del personaggio specificato
-     * @return false|int|mixed
+     * @return int
      */
-    public function getPermission()
+    public function getPermission(): int
     {
         return $this->permission;
     }
@@ -97,9 +97,9 @@ class Functions extends BaseClass
     /**
      * @fn getMe
      * @note Estrae il nome del pg collegato
-     * @return false|int|mixed
+     * @return string
      */
-    public function getMe()
+    public function getMe(): string
     {
         return $this->me;
     }

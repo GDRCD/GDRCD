@@ -1,6 +1,4 @@
 <?php
-session_start();
-
 # Inizializzo funzioni necessarie
 require_once(dirname(__FILE__) . '/../core/functions.php');
 
@@ -19,11 +17,12 @@ require_once(dirname(__FILE__) . '/../plugins/smarty/libs/Smarty.class.php');
 
 # Inizializzo le classi fondamentali
 require_once(dirname(__FILE__) . '/classes/Libraries/Base.class.php');
+require_once(dirname(__FILE__) . '/classes/Libraries/Session.class.php');
 require_once(dirname(__FILE__) . '/classes/Libraries/Routing.class.php');
 require_once(dirname(__FILE__) . '/classes/Libraries/DB.class.php');
 
-# Creo la connessione
-$handleDBConnection = DB::connect();
+# Avvio la sessione
+Session::start(!defined('SESSION_LOCK') || !SESSION_LOCK);
 
 # Inclusione file classe tramite routing
 Router::startClasses();
@@ -39,4 +38,3 @@ if ( !DbMigrationEngine::dbNeedsInstallation() ) {
 
     require_once(dirname(__FILE__) . '/../vocabulary/' . $PARAMETERS['languages']['set'] . '.vocabulary.php');
 }
-

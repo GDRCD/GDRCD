@@ -1,18 +1,12 @@
 <?php
+const SESSION_LOCK = true;
+require_once __DIR__ . '/core/required.php';
 
-//Includio i parametri, la configurazione, la lingua e le funzioni
-require_once(__DIR__ . '/core/required.php');
 
-//Eseguo la connessione al database
-$handleDBConnection = DB::connect();
-
-/** * Aggiorno l'ora di uscita del pg
- * @author Blancks
- */
-gdrcd_query("UPDATE personaggio SET ora_uscita = NOW() WHERE nome='" . gdrcd_filter('in', $_SESSION['login']) . "'");
-?>
-<html>
+?><!doctype html>
+<html lang="it">
 <head>
+    <title>Logout</title>
     <meta http-equiv="Content-Type" content='text/html; charset=utf-8'>
     <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/main.css" type='text/css'>
     <link rel="shortcut icon" href="favicon.ico"/>
@@ -20,7 +14,7 @@ gdrcd_query("UPDATE personaggio SET ora_uscita = NOW() WHERE nome='" . gdrcd_fil
 <body class="logout_body">
 <div class="logout_box">
     <span
-        class="logout_text"><?php echo gdrcd_filter('out', $_SESSION['login']) . ' ' . $MESSAGE['logout']['confirmation']; ?></span>
+        class="logout_text"><?php Functions::getInstance()->getMe() . ' ' . $MESSAGE['logout']['confirmation']; ?></span>
     <span class="logout_text">
             <?php echo gdrcd_filter('out', $MESSAGE['logout']['logbackin']) . ' '; ?>
             <a href="index.php">
@@ -31,16 +25,5 @@ gdrcd_query("UPDATE personaggio SET ora_uscita = NOW() WHERE nome='" . gdrcd_fil
 </div>
 </body>
 </html>
-<?php
-/*Chiudo la connessione al database*/
-DB::disconnect($handleDBConnection);
 
-/** * Per ottimizzare le risorse impiegate le liberiamo dopo che non ne abbiamo più bisogno
- * @author Blancks
- */
-unset($MESSAGE);
-unset($PARAMETERS);
-
-session_unset();
-session_destroy();
-?>
+<?php Login::getInstance()->logout(); ?>
