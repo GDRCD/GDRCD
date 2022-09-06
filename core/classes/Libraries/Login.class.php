@@ -4,6 +4,39 @@ class Login extends BaseClass
 {
 
     /**
+     * @gn isBlacklistedIp
+     * @note Ritorna true se l'ip fornito risulta essere in blacklist
+     * @param string $ip
+     * @return bool
+     * @throws Throwable
+     */
+    public static function isBlacklistedIp(string $ip): bool
+    {
+        return !!count(
+            DB::queryStmt(
+                'SELECT * FROM blacklist WHERE ip = :address AND granted = 0',
+                ['address' => $ip]
+            )
+        );
+    }
+
+    /**
+     * @fn isAccountBanned
+     * @note Permette di sapere se il personaggio è stato bannato
+     * @param string $username lo username del personaggio da verificare
+     * @return false|array false se il personaggio non è stato esiliato, altrimenti un array con i dettagli del ban
+     * @throws Throwable
+     */
+    public static function isAccountBanned(string $username): false|array {
+        $result = DB::queryStmt(
+            'SELECT autore_esilio AS autore, esilio, motivo_esilio AS motivo FROM personaggio WHERE nome = :username',
+            ['username' => $username]
+        );
+
+        return strtotime($result['esilio']) > time()? $result->current() : false;
+    }
+
+    /**
      * @fn beforeLogin
      * @note Funzione di controllo dei dati di login
      * @param string $login
@@ -21,12 +54,12 @@ class Login extends BaseClass
         }
 
         // Controllo che l'indirizzo ip non sia bloccato
-        if ( Functions::isBlacklistedIp($ip) ) {
+        if ( self::isBlacklistedIp($ip) ) {
             throw new Exception($GLOBALS['MESSAGE']['warning']['blacklisted']);
         }
 
         // Controllo che l'account non sia bloccato
-        if ( Functions::isAccountBanned($login) ) {
+        if ( self::isAccountBanned($login) ) {
             throw new Exception($GLOBALS['MESSAGE']['warning']['blacklisted']);
         }
 

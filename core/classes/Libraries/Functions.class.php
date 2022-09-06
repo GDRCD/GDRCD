@@ -185,37 +185,4 @@ class Functions extends BaseClass
         $interval = date_diff($datetime1, $datetime2);
         return $interval->format($format);
     }
-
-    /**
-     * @gn isBlacklistedIp
-     * @note Ritorna true se l'ip fornito risulta essere in blacklist
-     * @param string $ip
-     * @return bool
-     * @throws Throwable
-     */
-    public static function isBlacklistedIp(string $ip): bool
-    {
-        return !!count(
-            DB::queryStmt(
-                'SELECT * FROM blacklist WHERE ip = :address AND granted = 0',
-                ['address' => $ip]
-            )
-        );
-    }
-
-    /**
-     * @fn isAccountBanned
-     * @note Permette di sapere se il personaggio è stato bannato
-     * @param string $username lo username del personaggio da verificare
-     * @return false|array false se il personaggio non è stato esiliato, altrimenti un array con i dettagli del ban
-     * @throws Throwable
-     */
-    public static function isAccountBanned(string $username): false|array {
-        $result = DB::queryStmt(
-            'SELECT autore_esilio AS autore, esilio, motivo_esilio AS motivo FROM personaggio WHERE nome = :username',
-            ['username' => $username]
-        );
-
-        return strtotime($result['esilio']) > time()? $result->current() : false;
-    }
 }
