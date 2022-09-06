@@ -38,5 +38,3 @@ if ( !DbMigrationEngine::dbNeedsInstallation() ) {
 
     require_once(dirname(__FILE__) . '/../vocabulary/' . $PARAMETERS['languages']['set'] . '.vocabulary.php');
 }
-
-# EOF
