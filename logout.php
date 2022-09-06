@@ -2,15 +2,6 @@
 const SESSION_LOCK = true;
 require_once __DIR__ . '/core/required.php';
 
-// leggo i dati della sessione prima di distruggerla
-$data = Session::read();
-Session::destroy();
-
-// aggiorno l'orario di uscita del pg
-DB::queryStmt(
-    "UPDATE personaggio SET ora_uscita = NOW() WHERE nome = :username",
-    ['username' => $data['login']]
-);
 
 ?><!doctype html>
 <html lang="it">
@@ -23,7 +14,7 @@ DB::queryStmt(
 <body class="logout_body">
 <div class="logout_box">
     <span
-        class="logout_text"><?php echo gdrcd_filter('out', $data['login']) . ' ' . $MESSAGE['logout']['confirmation']; ?></span>
+        class="logout_text"><?php Functions::getInstance()->getMe() . ' ' . $MESSAGE['logout']['confirmation']; ?></span>
     <span class="logout_text">
             <?php echo gdrcd_filter('out', $MESSAGE['logout']['logbackin']) . ' '; ?>
             <a href="index.php">
@@ -34,3 +25,5 @@ DB::queryStmt(
 </div>
 </body>
 </html>
+
+<?php Login::getInstance()->logout(); ?>

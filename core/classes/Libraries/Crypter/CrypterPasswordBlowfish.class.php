@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @class CrypterPasswordBlowfish
  * @note Implementa l'algoritmo Blowfish per la classe Crypter
@@ -14,7 +15,7 @@ class CrypterPasswordBlowfish extends CrypterAlgo implements CrypterInterface
     {
         parent::__construct();
 
-        if (!defined('PASSWORD_BCRYPT')) {
+        if ( !defined('PASSWORD_BCRYPT') ) {
             throw new RuntimeException('Blowfish non è disponibile');
         }
     }
@@ -24,7 +25,8 @@ class CrypterPasswordBlowfish extends CrypterAlgo implements CrypterInterface
      * @note Ritorna un array con la regolazione dei criteri di sicurezza dell'algoritmo
      * @return array
      */
-    private function options(): array {
+    private function options(): array
+    {
         return ['cost' => PASSWORD_BCRYPT_DEFAULT_COST];
     }
 
@@ -34,8 +36,9 @@ class CrypterPasswordBlowfish extends CrypterAlgo implements CrypterInterface
      * @param string $string
      * @return string
      */
-    private function normalizeInput(string $string): string {
-        return mb_strlen($string) <= 72? $string : base64_encode(hash('sha512', $string, true));
+    private function normalizeInput(string $string): string
+    {
+        return mb_strlen($string) <= 72 ? $string : base64_encode(hash('sha512', $string, true));
     }
 
     /**
@@ -46,7 +49,8 @@ class CrypterPasswordBlowfish extends CrypterAlgo implements CrypterInterface
      * @param bool $raw
      * @return string
      */
-    public function crypt(string $string, ?string $key = null, bool $raw = false): string {
+    public function crypt(string $string, ?string $key = null, bool $raw = false): string
+    {
         return password_hash($this->normalizeInput($string), PASSWORD_BCRYPT, $this->options());
     }
 
@@ -57,7 +61,8 @@ class CrypterPasswordBlowfish extends CrypterAlgo implements CrypterInterface
      * @param string $key
      * @return false|string
      */
-    public function decrypt(string $crypted, string $key): false|string {
+    public function decrypt(string $crypted, string $key): false|string
+    {
         return false;
     }
 
@@ -69,7 +74,8 @@ class CrypterPasswordBlowfish extends CrypterAlgo implements CrypterInterface
      * @param string|null $key
      * @return bool
      */
-    public function verify(string $crypted, string $string, ?string $key = null): bool {
+    public function verify(string $crypted, string $string, ?string $key = null): bool
+    {
         return password_verify($this->normalizeInput($string), $crypted);
     }
 
@@ -79,7 +85,8 @@ class CrypterPasswordBlowfish extends CrypterAlgo implements CrypterInterface
      * @param string $crypted
      * @return bool
      */
-    public function needsNewEncryption(string $crypted): bool {
+    public function needsNewEncryption(string $crypted): bool
+    {
         return password_needs_rehash($crypted, PASSWORD_BCRYPT, $this->options());
     }
 }

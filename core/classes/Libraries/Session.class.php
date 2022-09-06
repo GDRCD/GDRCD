@@ -1,9 +1,10 @@
 <?php
+
 /**
  * @class Session
  * @note Classe responsabile per la gestione della sessione utente nel sito
  */
-class Session
+class Session extends BaseClass
 {
     /**
      * @fn start
@@ -14,10 +15,10 @@ class Session
      */
     public static function start(bool $readAndClose = false): void
     {
-        self::secureSessionConfiguraton();
+        self::secureSessionConfiguration();
         self::regenerateSessionIfNeeded();
 
-        if ($readAndClose) {
+        if ( $readAndClose ) {
             self::commit();
         }
     }
@@ -31,7 +32,7 @@ class Session
     {
         $_SESSION = [];
 
-        if (ini_get("session.use_cookies")) {
+        if ( ini_get("session.use_cookies") ) {
             $params = session_get_cookie_params();
             setcookie(
                 session_name(),
@@ -52,7 +53,8 @@ class Session
      * @note Ripristina nei dati in sessione i valori che erano presenti all'avvio
      * @return void
      */
-    public static function reset(): void {
+    public static function reset(): void
+    {
         session_reset();
     }
 
@@ -61,7 +63,8 @@ class Session
      * @note Salva eventuali modifiche appese, rilascia il lock e chiude la sessione
      * @return void
      */
-    public static function commit(): void {
+    public static function commit(): void
+    {
         session_write_close();
     }
 
@@ -70,7 +73,8 @@ class Session
      * @note Scarta le modifiche locali, rilascia il lock e chiude la sessione
      * @return void
      */
-    public static function abort(): void {
+    public static function abort(): void
+    {
         session_abort();
     }
 
@@ -80,8 +84,9 @@ class Session
      * @param string|null $key Se non specificata alcuna chiave ritorna l'intero contenuto in sessione come array
      * @return mixed
      */
-    public static function read(?string $key = null): mixed {
-        return is_null($key)? $_SESSION : ($_SESSION[$key]?? null);
+    public static function read(?string $key = null): mixed
+    {
+        return is_null($key) ? $_SESSION : ($_SESSION[$key] ?? null);
     }
 
     /**
@@ -91,7 +96,8 @@ class Session
      * @param mixed $value
      * @return void
      */
-    public static function store(string $key, mixed $value): void {
+    public static function store(string $key, mixed $value): void
+    {
         $_SESSION[$key] = $value;
     }
 
@@ -103,7 +109,7 @@ class Session
      */
     public static function delete(string ...$key): void
     {
-        foreach ($key as $k) {
+        foreach ( $key as $k ) {
             unset($_SESSION[$k]);
         }
     }
@@ -144,8 +150,8 @@ class Session
             ['username' => $username]
         );
 
-        if (count($User)) {
-            if (Password::verify($User['pass'], $password, $User['id'])) {
+        if ( count($User) ) {
+            if ( Password::verify($User['pass'], $password, $User['id']) ) {
                 // Valorizzo la sessione se tutto ok
                 self::store('login', $User['nome']);
                 self::store('login_id', $User['id']);
@@ -156,12 +162,12 @@ class Session
                 self::store('ultima_entrata', $User['ora_entrata']);
                 self::store('ultima_uscita', $User['ora_uscita']);
                 self::store('ultimo_refresh', $User['ultimo_refresh']);
-                self::store('razza', $User['sing_'. $User['sesso']]?? $User['sing_m']);
+                self::store('razza', $User['sing_' . $User['sesso']] ?? $User['sing_m']);
                 self::store('img_razza', $User['icona_razza']);
                 self::store('id_razza', $User['razza']);
                 self::store('posizione', $User['posizione']);
-                self::store('mappa', empty($User['ultima_mappa'])? 1 : $User['ultima_mappa']);
-                self::store('luogo', empty($User['ultimo_luogo'])? -1 : $User['ultimo_luogo']);
+                self::store('mappa', empty($User['ultima_mappa']) ? 1 : $User['ultima_mappa']);
+                self::store('luogo', empty($User['ultimo_luogo']) ? -1 : $User['ultimo_luogo']);
                 self::store('tag', '');
                 self::store('last_message', 0);
 
@@ -174,10 +180,11 @@ class Session
 
     /**
      * @fn isLogged
-     * @note indica se la sessione esiste ed è attualmente attiva
+     * @note Indica se la sessione esiste ed è attualmente attiva
      * @return bool
      */
-    public static function isLogged(): bool {
+    public static function isLogged(): bool
+    {
         return !is_null(self::read('login'));
     }
 
@@ -194,11 +201,11 @@ class Session
         $destroyedTs = self::read('_destroyedts');
         $newSessionId = self::read('_newsessionid');
 
-        if (!is_null($destroyedTs)) {
+        if ( !is_null($destroyedTs) ) {
             # Questa sessione è scaduta da troppo tempo
             # potrebbe anche essere un attacco per quanto ne sappiamo
-            if ($destroyedTs <= time() - 200) {
-                if (!empty($_SESSION['login'])) {
+            if ( $destroyedTs <= time() - 200 ) {
+                if ( !empty($_SESSION['login']) ) {
                     error_log(
                         sprintf(
                             '[Session] Tentativo di accesso su sessione scaduta! (PG: %s; IP: %s; UA: %s)',
@@ -216,7 +223,7 @@ class Session
             # Se siamo arrivati fin qui considero questo stato
             # come frutto di un traffico di rete instabile e
             # decido di ripristinare correttamente la sessione
-            if (!is_null($newSessionId)) {
+            if ( !is_null($newSessionId) ) {
                 self::regenerateId($newSessionId);
             }
         }
@@ -224,14 +231,14 @@ class Session
         # Controllo di routine per aggiornare l'id di sessione ogni 5m
         $createdTs = self::read('_createdts');
 
-        if (is_null($createdTs) || time() - $createdTs >= 300) {
+        if ( is_null($createdTs) || time() - $createdTs >= 300 ) {
             self::regenerateId();
         }
     }
 
     /**
      * @fn regenerateId
-     * @note genera un nuovo id per la sessione corrente
+     * @note Genera un nuovo id per la sessione corrente
      * @param string|null $newSessionId
      * @return void
      */
@@ -269,11 +276,11 @@ class Session
     }
 
     /**
-     * @fn secureSessionConfiguraton
+     * @fn secureSessionConfiguration
      * @note Si occupa d'impostare correttamente tutti i valori di configurazione per garantire la sicurezza delle sessioni
      * @return void
      */
-    private static function secureSessionConfiguraton(): void
+    private static function secureSessionConfiguration(): void
     {
         /*
          * Le sicurezza delle sessioni dipende in larga parte da

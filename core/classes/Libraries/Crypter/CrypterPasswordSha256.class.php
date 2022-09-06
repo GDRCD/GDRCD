@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @class CrypterPasswordSha256
  * @note Implementa l'algoritmo sha256 col metodo PBKDF2 per la classe Crypter

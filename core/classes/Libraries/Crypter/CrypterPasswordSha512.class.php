@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @class CrypterPasswordSha512
  * @note Implementa l'algoritmo sha512 col metodo PBKDF2 per la classe Crypter
@@ -27,8 +28,8 @@ class CrypterPasswordSha512 extends CrypterAlgo implements CrypterInterface
     {
         parent::__construct();
 
-        if (!in_array(static::ALGO, hash_algos(), true)) {
-            throw new RuntimeException(static::ALGO .' non è disponibile');
+        if ( !in_array(static::ALGO, hash_algos(), true) ) {
+            throw new RuntimeException(static::ALGO . ' non è disponibile');
         }
     }
 
@@ -43,12 +44,13 @@ class CrypterPasswordSha512 extends CrypterAlgo implements CrypterInterface
      * @return string
      * @throws Exception
      */
-    private function pbkdf2(string $algo, string $password, ?string $salt = null, int $cost = 10_000): string {
+    private function pbkdf2(string $algo, string $password, ?string $salt = null, int $cost = 10_000): string
+    {
         $salt ??= random_bytes(32);
-        return '$'. $algo
-            .'$'. $cost
-            .'$'. bin2hex($salt)
-            .'$'. hash_pbkdf2($algo, $password, $salt, $cost, 128, false);
+        return '$' . $algo
+            . '$' . $cost
+            . '$' . bin2hex($salt)
+            . '$' . hash_pbkdf2($algo, $password, $salt, $cost, 128, false);
     }
 
     /**
@@ -60,7 +62,8 @@ class CrypterPasswordSha512 extends CrypterAlgo implements CrypterInterface
      * @return string
      * @throws Exception
      */
-    public function crypt(string $string, ?string $key = null, bool $raw = false): string {
+    public function crypt(string $string, ?string $key = null, bool $raw = false): string
+    {
         return $this->pbkdf2(static::ALGO, $string, null, static::COST);
     }
 
@@ -71,7 +74,8 @@ class CrypterPasswordSha512 extends CrypterAlgo implements CrypterInterface
      * @param string $key
      * @return false|string
      */
-    public function decrypt(string $crypted, string $key): false|string {
+    public function decrypt(string $crypted, string $key): false|string
+    {
         return false;
     }
 
@@ -84,7 +88,8 @@ class CrypterPasswordSha512 extends CrypterAlgo implements CrypterInterface
      * @return bool
      * @throws Exception
      */
-    public function verify(string $crypted, string $string, ?string $key = null): bool {
+    public function verify(string $crypted, string $string, ?string $key = null): bool
+    {
         $hashparts = explode('$', $crypted);
         $newHash = $this->pbkdf2($hashparts[1], $string, hex2bin($hashparts[3]), (int)$hashparts[2]);
         return hash_equals($crypted, $newHash);
@@ -96,7 +101,8 @@ class CrypterPasswordSha512 extends CrypterAlgo implements CrypterInterface
      * @param string $crypted
      * @return bool
      */
-    public function needsNewEncryption(string $crypted): bool {
+    public function needsNewEncryption(string $crypted): bool
+    {
         return (int)explode('$', $crypted)[2] < static::COST;
     }
 }

@@ -14,6 +14,17 @@ class CarbonWrapper
     }
 
     /**
+     * @fn getNow
+     * @note Ritorna la data e l'ora corrente
+     * @param string $format
+     * @return string
+     */
+    public static function getNow(string $format = 'Y-m-d H:i:s'): string
+    {
+        return Carbon::now()->format($format);
+    }
+
+    /**
      * @fn SubtractDays
      * @note Sottrae un numero specifico di giorni da una data
      * @param string $date
@@ -93,6 +104,20 @@ class CarbonWrapper
         $start = Carbon::createFromFormat('Y-m-d H:i:s', $date1);
         $end = Carbon::createFromFormat('Y-m-d H:i:s', $date2);
         return $start->diffInMinutes($end);
+    }
+
+    public static function greaterThan(string $greater, string $than): int
+    {
+        $date1 = Carbon::createFromFormat('Y-m-d H:i:s', $greater);
+        $date2 = Carbon::createFromFormat('Y-m-d H:i:s', $than);
+        return $date1->greaterThan($date2);
+    }
+
+    public static function lowerThan(string $greater, string $than): int
+    {
+        $date1 = Carbon::createFromFormat('Y-m-d H:i:s', $greater);
+        $date2 = Carbon::createFromFormat('Y-m-d H:i:s', $than);
+        return $date1->lessThan($date2);
     }
 
     /**
