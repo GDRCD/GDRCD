@@ -4,45 +4,45 @@ class Menu extends BaseClass
 {
 
     /**
-     * @fn costantList
-     * @note Creazione della sezione della gestione delle costanti
+     * @fn createMenu
+     * @note Crea un menu da database
+     * @param string $menu
      * @return string
+     * @throws Throwable
      */
-    public function createMenu($menu): string
+    public function createMenu(string $menu): string
     {
-
-        $html = '<div class="menu_box">';
         $page = Filters::in($menu);
 
-        $menu_category = DB::query("SELECT section FROM menu WHERE menu_name='{$menu}' GROUP BY section ORDER BY section", 'result');
+        $menu_category = DB::queryStmt("SELECT section FROM menu WHERE menu_name=:menu GROUP BY section ORDER BY section", ['menu' => $page]);
+
+        $categories = [];
 
         foreach ( $menu_category as $section ) {
             $section_name = Filters::out($section['section']);
+            $links = DB::queryStmt("SELECT * FROM menu WHERE section=:section ORDER BY name", ['section' => $section_name]);
 
-            $html .= "<div class='single_section'>";
-            $html .= "<div class='section_title'>{$section_name}</div>";
-            $html .= "<div class='box_input'>";
+            $data = [
+                "name" => $section_name,
+            ];
 
-            $menu_list = DB::query("SELECT * FROM menu WHERE section='{$section_name}' ORDER BY name", 'result');
-
-            foreach ( $menu_list as $menu_element ) {
-                $name = Filters::out($menu_element['name']);
-                $page = Filters::out($menu_element['page']);
-                $permission = Filters::out($menu_element['permission']);
+            foreach ( $links as $link ) {
+                $name = Filters::out($link['name']);
+                $page = Filters::out($link['page']);
+                $permission = Filters::out($link['permission']);
 
                 if ( empty($permission) || Permissions::permission($permission) ) {
-                    $html .= "<a href='main.php?page={$page}'>";
-                    $html .= "<div class='single_menu'>{$name}</div>";
-                    $html .= "</a>";
+                    $data['links'][] = [
+                        "page" => $page,
+                        "name" => $name,
+                    ];
                 }
             }
 
-            $html .= "</div>";
-            $html .= "</div>";
+            $categories[] = $data;
+
         }
 
-        $html .= "</div>";
-
-        return $html;
+        return Template::getInstance()->startTemplate()->render('menu', ['categories' => $categories]);
     }
 }
