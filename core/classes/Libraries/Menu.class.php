@@ -54,4 +54,39 @@ class Menu extends BaseClass
         // Renderizzo il menu'
         return Template::getInstance()->startTemplate()->render('menu', ['categories' => $categories]);
     }
+
+    /**
+     * @fn createMenuPlain
+     * @note Crea un menu da database senza divisione per categorie
+     * @param $menu
+     * @return mixed
+     * @throws Throwable
+     */
+    public function createMenuPlain($menu){
+        $links = DB::queryStmt("SELECT * FROM menu WHERE menu_name=:menu ORDER BY name",
+            [
+                'menu' => Filters::in($menu)
+            ]
+        );
+
+        $links_list = [];
+
+        // Creo i link
+        foreach ( $links as $link ) {
+            $name = Filters::out($link['name']);
+            $page = Filters::out($link['page']);
+            $permission = Filters::out($link['permission']);
+
+            // Se ho i permessi per vedere il link, lo aggiungo
+            if ( empty($permission) || Permissions::permission($permission) ) {
+                $links_list[] = [
+                    "page" => $page,
+                    "name" => $name,
+                ];
+            }
+        }
+
+        return Template::getInstance()->startTemplate()->render('menu_plain', ['links' => $links_list]);
+
+    }
 }

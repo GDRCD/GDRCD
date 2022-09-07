@@ -224,7 +224,7 @@ class GDRCD6 extends DbMigration
               ('Uffici', 'Lavoro', 'Amministrazione Gruppi', 'servizi/amministrazioneGilde/index', NULL),
               ('Uffici', 'Lavoro', 'Lavoro', 'servizi/lavori/index', NULL),
               ('Uffici', 'Gruppi', 'Gruppi', 'servizi/gruppi/index', NULL),
-              ('Uffici', 'Mercato', 'Mercato', 'servizi_mercato', NULL),
+              ('Uffici', 'Mercato', 'Mercato', 'servizi/mercato/mercato_index', NULL),
               ('Uffici', 'Esiti', 'Pannello esiti', 'servizi_esiti', NULL),
               ('Uffici', 'Stanze', 'Prenotazione stanze', 'servizi_prenotazioni', NULL),
               ('Uffici', 'Banca', 'Servizi bancari', 'servizi_banca', NULL),
@@ -235,7 +235,11 @@ class GDRCD6 extends DbMigration
               ('Utenti', 'Gestione Utente', 'Cambio nome', 'user_cambio_nome', 'MANAGE_NAMES'),
               ('Utenti', 'Gestione Utente', 'Cambio password', 'user_cambio_pass', NULL),
               ('Utenti', 'Gestione Utente', 'Cancella account', 'user_cancella_pg', NULL),
-              ('Utenti', 'Statistiche', 'Statistiche Sito', 'user_stats', NULL);"
+              ('Utenti', 'Statistiche', 'Statistiche Sito', 'user_stats', NULL),
+              ('Rapido', 'Scheda', 'Scheda', 'scheda/index', NULL),
+              ('Rapido', 'Gestione', 'Gestione', 'gestione', 'MANAGEMENT_MENU'),
+              ('Rapido', 'Servizi', 'Uffici', 'uffici', NULL),
+              ('Rapido', 'Menu utente', 'Utenti', 'utenti', NULL);"
         );
 
         DB::query("
@@ -366,7 +370,8 @@ class GDRCD6 extends DbMigration
                 ('MANAGE_AVAILABILITIES','Permesso per la gestione delle disponibilita'),
                 ('MANAGE_RACES','Permesso per la gestione delle razze'),
                 ('MANAGE_GENDERS','Permesso per la gestione dei sessi'),
-                ('MANAGE_NAMES','Permesso per la gestione dei nomi dei personaggi')
+                ('MANAGE_NAMES','Permesso per la gestione dei nomi dei personaggi'),
+                ('MANAGEMENT_MENU','Permesso per la pagina gestione')
                ;"
         );
 
