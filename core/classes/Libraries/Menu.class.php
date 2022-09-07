@@ -12,18 +12,15 @@ class Menu extends BaseClass
      */
     public function createMenu(string $menu): string
     {
-        $page = Filters::in($menu);
-
-        $menu_category = DB::queryStmt("SELECT section FROM menu WHERE menu_name=:menu GROUP BY section ORDER BY section", ['menu' => $page]);
+        $menu_category = DB::queryStmt("SELECT section FROM menu WHERE menu_name=:menu GROUP BY section ORDER BY section", ['menu' => Filters::in($menu)]);
 
         $categories = [];
 
         foreach ( $menu_category as $section ) {
-            $section_name = Filters::out($section['section']);
-            $links = DB::queryStmt("SELECT * FROM menu WHERE section=:section ORDER BY name", ['section' => $section_name]);
+            $links = DB::queryStmt("SELECT * FROM menu WHERE section=:section ORDER BY name", ['section' => Filters::out($section['section'])]);
 
             $data = [
-                "name" => $section_name,
+                "name" => Filters::out($section['section']),
             ];
 
             foreach ( $links as $link ) {
