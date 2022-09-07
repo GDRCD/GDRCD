@@ -25,7 +25,12 @@ class Menu extends BaseClass
             ];
 
             // Estraggo i link
-            $links = DB::queryStmt("SELECT * FROM menu WHERE section=:section ORDER BY name", ['section' => Filters::out($section['section'])]);
+            $links = DB::queryStmt("SELECT * FROM menu WHERE section=:section AND menu_name=:menu ORDER BY name",
+                [
+                    'section' => Filters::out($section['section']),
+                    'menu' => Filters::in($menu)
+                ]
+            );
 
             // Creo i link
             foreach ( $links as $link ) {
