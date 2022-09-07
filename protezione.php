@@ -79,7 +79,6 @@ function showLoginForm() {
 }
 
 // Auto create
-session_start();
 $protector = new Protector($PARAMETERS);
 $protector->login();
 ?>

@@ -34,12 +34,12 @@ $users = gdrcd_query("SELECT COUNT(nome) AS online FROM personaggio WHERE ora_en
                         <div>
                             <span class="form_label"><label
                                     for="username"><?php echo $MESSAGE['homepage']['forms']['username']; ?></label></span>
-                            <input type="text" id="username" name="login1"/>
+                            <input type="text" id="username" name="login"/>
                         </div>
                         <div>
                             <span class="form_label"><label
                                     for="password"><?php echo $MESSAGE['homepage']['forms']['password']; ?></label></span>
-                            <input type="password" id="password" name="pass1"/>
+                            <input type="password" id="password" name="pass"/>
                         </div>
                         <?php if ( !empty($PARAMETERS['themes']['available']) and count($PARAMETERS['themes']['available']) > 1 ): ?>
                             <div>

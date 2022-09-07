@@ -43,11 +43,20 @@ class MeteoStagioni extends Meteo
      * @note Estrae tutte le condizioni meteo di una stagione
      * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * # TODO - Da rivedere
+     * @return array
      */
-    public function getAllSeasonCondition(int $id, string $val = 'meteo_stagioni_condizioni.*, meteo_condizioni.*')
+    public function getAllSeasonCondition(int $id, string $val = 'meteo_stagioni_condizioni.*, meteo_condizioni.*'): array
     {
-        return DB::query("SELECT {$val} FROM meteo_stagioni_condizioni LEFT JOIN meteo_condizioni ON meteo_stagioni_condizioni.condizione = meteo_condizioni.id WHERE meteo_stagioni_condizioni.stagione='{$id}'", 'result');
+        $output = [];
+        $stmt = DB::query("SELECT {$val} FROM meteo_stagioni_condizioni LEFT JOIN meteo_condizioni ON meteo_stagioni_condizioni.condizione = meteo_condizioni.id WHERE meteo_stagioni_condizioni.stagione='{$id}'", 'result');
+
+        if (DB::query($stmt, 'num_rows')) {
+            while ($output[] = DB::query($stmt, 'fetch'));
+            DB::query($stmt,'free');
+        }
+
+        return $output;
     }
 
     /**
@@ -175,10 +184,10 @@ class MeteoStagioni extends Meteo
     /**
      * @fn renderSeasonList
      * @note Sotto-funzione per regole di renderizzazione della lista stagioni in gestione
-     * @param object $list
+     * @param array $list
      * @return array
      */
-    public function renderSeasonConditionList(object $list): array
+    public function renderSeasonConditionList(array $list): array
     {
 
         $row_data = [];

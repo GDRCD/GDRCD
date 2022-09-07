@@ -1,198 +1,577 @@
 <?php
+/**
+ * @interface DBQueryInterface
+ * @note This interface is implemented by all DBQuery classes.
+ */
+interface DBQueryInterface extends ArrayAccess, Countable, Iterator {
 
+    /**
+     * @fn getSQL
+     * @note Ritorna la stringa SQL usata per formulare la query al db
+     * @return string
+     */
+    public function getSQL(): string;
+
+    /**
+     * @fn getAffectedRows
+     * @note Ritorna il numero di righe coinvolte nella query di INSERT/UPDATE/DELETE eseguita
+     * @return int
+     */
+    public function getAffectedRows(): int;
+
+    /**
+     * @fn getNumRows
+     * @note Ritorna il numero di righe trovate dalla query di SELECT eseguita
+     * @return int
+     */
+    public function getNumRows(): int;
+
+    /**
+     * @fn getInsertId
+     * @note Ritorna l'ultimo id autoincrementante generato per la query di INSERT eseguita
+     * @return string|false
+     */
+    public function getInsertId(): string|false;
+
+    /**
+     * @fn getData
+     * @note Ritorna tutte le righe recuperate dall'ultima query di select come array multidimensionale
+     * @return array
+     */
+    public function getData(): array;
+
+    /**
+     * @fn execute
+     * @note Permette di eseguire la query di riferimento popolando gli eventuali placeholder con i nuovi parametri forniti
+     * @param array|null $params
+     * @return void
+     */
+    public function execute(?array $params = null): void;
+}
+
+/**
+ * @class DB
+ * @note Classe che gestisce le connessioni al database
+ */
 class DB extends BaseClass
 {
     /**
-     * @fn connect
-     * @note Funzione di connessione al db
-     * @return false|mysqli|null
+     * @var int ERROR_STANDARD
+     * @note Questo flag indica di usare la modalità di segnalazione errori standard di GDRCD. Al primo errore la classe terminerà
+     * l'esecuzione inviando in uscita l'errore formattato in html
      */
-    public static function connect()
-    {
-        static $db_link = false;
+    const ERROR_STANDARD = 0;
 
-        if ( $db_link === false ) {
+    /**
+     * @var int ERROR_EXCEPTION
+     * @note Questo flag indica di lanciare tutti gli errori del
+     * Database come eccezioni di modo che possano essere gestite
+     * dall'esterno e senza interrompere forzatamente lo script.
+     */
+    const ERROR_EXCEPTION = 1;
+
+    /**
+     * @var PDO|null
+     * @note Istanza della classe che viene utilizzata per le richieste al database.
+     */
+    private static ?PDO $PDO = null;
+
+    /**
+     * @var int
+     * @note Contiene la modalità scelta per il report errori
+     */
+    private static int $currentErrorMode = self::ERROR_STANDARD;
+
+    /**
+     * @fn connect
+     * @note Apre la connessione al database mysql di GDRCD.
+     * @note Se la connessione non è ancora aperta, la crea.
+     * @return PDO Istanza della classe PDO utilizzata internamente
+     * @throws Throwable Se la connessione non è possibile
+     */
+    public static function connect(): PDO
+    {
+        if (is_null(self::$PDO))
+        {
+            /**
+             * TODO: le tabelle del db devono essere in utf8mb4 (e preferibilmente innoDB). Anche la connessione dovrà usare lo stesso charset
+             * @note la codifica utf8 di PHP utilizza gruppi di 4 byte, mentre "utf8" di mysql ne utilizza 3.
+             * Per essere al riparo in maniera certa da qualsiasi potenziale errore di codifica, quella
+             * corretta in mysql dovrebbe essere "utf8mb4", ma al momento le tabelle del db vengono dichiarate
+             * in "utf8". Dal momento che avere un set di caratteri differente tra connessione e tabelle è
+             * tendenzialmente più problematico, la connessione per il momento verrà istanziata in codifica
+             * "utf8" a 3 byte.
+             */
+            $db_charset = 'utf8';
+            $db_port = 3306;
             $db_user = $GLOBALS['PARAMETERS']['database']['username'];
             $db_pass = $GLOBALS['PARAMETERS']['database']['password'];
             $db_name = $GLOBALS['PARAMETERS']['database']['database_name'];
             $db_host = $GLOBALS['PARAMETERS']['database']['url'];
-            $db_error = isset($GLOBALS['MESSAGE']['error']['db_not_found']) ? $GLOBALS['MESSAGE']['error']['db_not_found'] : 'Errore nel database';
 
-            #$db = mysql_connect($db_host, $db_user, $db_pass)or die(gdrcd_mysql_error());
-            #mysql_select_db($db_name)or die(gdrcd_mysql_error($db_error));
+            if (str_contains($db_host, ':')) {
+                [$db_host, $db_port] = explode(':', $db_host, 2);
+            }
 
-            $db_link = mysqli_connect($db_host, $db_user, $db_pass, $db_name);
+            try {
 
-            mysqli_set_charset($db_link, "utf8");
+                self::$PDO = new PDO(
+                    sprintf(
+                        'mysql:host=%s;port=%s;dbname=%s;charset=%s',
+                        $db_host,
+                        $db_port,
+                        $db_name,
+                        $db_charset
+                    ),
+                    $db_user,
+                    $db_pass,
+                    array(
+                        PDO::ATTR_EMULATE_PREPARES => false,
+                        PDO::ATTR_STRINGIFY_FETCHES => false,
+                        PDO::MYSQL_ATTR_INIT_COMMAND => "SET time_zone = '". date('P') ."'",
+                        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+                    )
+                );
 
-            if ( mysqli_connect_errno() ) {
-                self::error($db_error);
+            } catch (PDOException $e) {
+
+                self::error(
+                    new Exception(
+                        $GLOBALS['MESSAGE']['error']['db_not_found']?? 'Impossibile stabilire la connesione al database',
+                        0,
+                        $e
+                    )
+                );
+
             }
         }
-        return $db_link;
-    }
 
-    /**
-     * @fn connect
-     * @note Funzione di connessione al db
-     * @return false|mysqli|null
-     */
-    public static function getDbName()
-    {
-        if ( !empty($GLOBALS['PARAMETERS']['database']['database_name']) ) {
-            return $GLOBALS['PARAMETERS']['database']['database_name'];
-        } else {
-            return false;
-        }
+        return self::$PDO;
     }
 
     /**
      * @fn disconnect
-     * @note Funzione di disconnessione del db
-     * @param mysqli $db
+     * @note Chiude la connessione al database
+     * @return void
      */
-    public static function disconnect(mysqli $db)
+    public static function disconnect(): void
     {
-        mysqli_close($db);
+        self::$PDO = null;
+    }
+
+    /**
+     * @fn getDbName
+     * @note Ritorna il nome del database usato per la connessione
+     * @note Se il nome del database non è definito da configurazione, questo metodo può ritornare false
+     * @return false|string
+     */
+    public static function getDbName(): false|string
+    {
+        if (!empty($GLOBALS['PARAMETERS']['database']['database_name'])) {
+            return $GLOBALS['PARAMETERS']['database']['database_name'];
+        }
+
+        return false;
+    }
+
+    /**
+     * @fn prepare
+     * @note Esegue una query preparata al database
+     * @note Nella query, gli elementi variabili possono essere indicati con dei placeholder appositi che sono indicati dal simbolo ":" usato come prefisso.
+     * @param string $sql la query sql con tanto di placeholder da preparare
+     * @return DBQueryInterface Riferimento della query appena preparata
+     * @throws Throwable Se la gestione errori è configurata per lanciare eccezioni questo metodo può farlo in caso di problemi
+     */
+    public static function prepare(string $sql): DBQueryInterface
+    {
+        $stmt = null;
+
+        try {
+            $stmt = self::connect()->prepare($sql);
+        } catch (PDOException $e) {
+            self::error($e);
+        }
+
+        return new class($sql, $stmt) implements DBQueryInterface {
+            private int $iteratorIndex = 0;
+            private int $numRows = 0;
+            private int $affectedRows = 0;
+            private string|false $insertId = false;
+            private array $data = [];
+            private string $sql;
+            private PDOStatement $PDOStatement;
+
+            public function __construct(string $sql, PDOStatement $PDOStatement) {
+                $this->sql = $sql;
+                $this->PDOStatement = $PDOStatement;
+            }
+
+            /*
+             * DBQueryReference Interface
+             */
+
+            /**
+             * @fn getSQL
+             * @note Ritorna la stringa sql inserita
+             * @return string
+             */
+            public function getSQL(): string {
+                return $this->sql;
+            }
+
+            /**
+             * @fn getAffectedRows
+             * @note Ritorna il numero di righe affette dalla query
+             * @return int
+             */
+            public function getAffectedRows(): int {
+                return $this->affectedRows;
+            }
+
+            /**
+             * @fn getNumRows
+             * @note Ottieni il numero di righe
+             * @return int
+             */
+            public function getNumRows(): int {
+                return $this->numRows;
+            }
+
+            /**
+             * @fn getInsertId
+             * @note Ottieni l'id della riga appena inserita
+             * @return string|false
+             */
+            public function getInsertId(): string|false {
+                return $this->insertId;
+            }
+
+            /**
+             * @fn getData
+             * @note Ottieni i dati contenuti nella query
+             * @return array
+             */
+            public function getData(): array {
+                return $this->data;
+            }
+
+            /**
+             * @fn execute
+             * @note Esegui la query
+             * @param array|null $params
+             * @return void
+             */
+            public function execute(?array $params = null): void {
+                $this->PDOStatement->execute($params);
+                $this->affectedRows = $this->PDOStatement->rowCount();
+                $this->data = $this->PDOStatement->fetchAll()?? [];
+                $this->numRows = count($this->data);
+                $this->insertId = DB::connect()->lastInsertId();
+                $this->PDOStatement->closeCursor();
+            }
+
+            /*
+             * ArrayAccess Interface
+             * Questa implementazione permette
+             * di accedere direttamente ai nodi dati di un recordset multidimensionale
+             * permettendo di fatto in casi dove si recupera una singola riga di
+             * accedere direttamente alle key della seconda dimensione omettendone
+             * l'offset della prima, che viene implicitamente presa dall'indice interno
+             * usato per soddisfare l'interfaccia Iterator
+             */
+
+            /**
+             * @fn offsetExists
+             * @note Controlla se una chiave esiste
+             * @param mixed $offset
+             * @return bool
+             */
+            public function offsetExists(mixed $offset): bool {
+                return isset($this->data[$this->iteratorIndex][$offset]);
+            }
+
+            /**
+             * @fn offsetGet
+             * @note Ottieni il valore di una chiave
+             * @param mixed $offset
+             * @return mixed
+             */
+            public function offsetGet(mixed $offset): mixed {
+                return $this->data[$this->iteratorIndex][$offset];
+            }
+
+            /**
+             * @fn offsetSet
+             * @note Imposta il valore di una chiave
+             * @param mixed $offset
+             * @param mixed $value
+             * @return void
+             */
+            public function offsetSet(mixed $offset, mixed $value): void {
+                $this->data[$this->iteratorIndex][$offset] = $value;
+            }
+
+            /**
+             * @fn offsetUnset
+             * @note Cancella una chiave
+             * @param mixed $offset
+             * @return void
+             */
+            public function offsetUnset(mixed $offset): void {
+                unset($this->data[$this->iteratorIndex][$offset]);
+            }
+
+            /*
+             * Countable Interface
+             * Questa implementazione permette di usare la funzione count()
+             * per conoscere il numero di records recuperati
+             */
+
+            /**
+             * @fn count
+             * @note Ottieni il numero di records recuperati
+             * @return int
+             */
+             public function count(): int {
+                 return $this->getNumRows();
+             }
+
+            /*
+             * Iterator Interface
+             * Questa implementazione permette iterare gli statement eseguiti
+             * di una query di select come fosse un array pur rimanendo di base
+             * un oggetto di tipo DBQueryInterface
+             */
+
+            /**
+             * @fn current
+             * @note Ottieni il valore della riga corrente
+             * @return mixed
+             */
+            public function current(): mixed {
+                return $this->data[$this->iteratorIndex]?? null;
+            }
+
+            /**
+             * @fn next
+             * @note Ottieni il valore della riga successiva
+             * @return void
+             */
+            public function next(): void {
+                ++$this->iteratorIndex;
+            }
+
+            /**
+             * @fn key
+             * @note Ottieni la chiave della riga corrente
+             * @return mixed
+             */
+            public function key(): mixed {
+                return $this->iteratorIndex;
+            }
+
+            /**
+             * @fn valid
+             * @note Controlla se la riga corrente è valida
+             * @return bool
+             */
+            public function valid(): bool {
+                return isset($this->data[$this->iteratorIndex]);
+            }
+
+            /**
+             * @fn rewind
+             * @note Riavvia l'iterazione
+             * @return void
+             */
+            public function rewind(): void {
+                $this->iteratorIndex = 0;
+            }
+        };
+    }
+
+    /**
+     * @fn execute
+     * @note Esegui una query con statement
+     * @param DBQueryInterface $stmt Lo statement preparato in precedenza tramite DB::prepare()
+     * @param array|null $params Parametri da passare alla query
+     * @return DBQueryInterface Lo statement eseguito
+     * @throws Throwable Se la query non è stata eseguita con successo
+     */
+    public static function execute(DBQueryInterface $stmt, ?array $params = null): DBQueryInterface
+    {
+        try {
+            $stmt->execute($params);
+        } catch (PDOException $e) {
+            self::error($e);
+        }
+
+        return $stmt;
+    }
+
+    /**
+     * @fn queryStmt
+     * @note Esegue una query di tipo statement
+     * @param string $sql
+     * @param array|null $params
+     * @return DBQueryInterface Lo statement eseguito
+     * @throws Throwable Se la query non è stata eseguita con successo
+     */
+    public static function  queryStmt(string $sql, ?array $params = null): DBQueryInterface
+    {
+        $stmt = self::prepare($sql);
+        return self::execute($stmt, $params);
+    }
+
+    /**
+     * @fn queryAffectedRows
+     * @note Ritorna il numero di righe coinvolte nell'ultima operazione
+     * @param DBQueryInterface $stmt Lo statement eseguito
+     * @return int Il numero di righe coinvolte
+     */
+    public static function queryAffectedRows(DBQueryInterface $stmt): int {
+        return $stmt->getAffectedRows();
+    }
+
+    /**
+     * @fn queryLastId
+     * @note Ritorna l'id dell'ultimo record inserito
+     * @return string|false L'id dell'ultimo record inserito
+     * @throws Throwable Se la query non è stata eseguita con successo
+     */
+    public static function queryLastId(): string|false {
+        return self::connect()->lastInsertId();
+    }
+
+    /**
+     * @fn beginTransaction
+     * @note Inizia una transazione
+     * @return void
+     * @throws Throwable
+     */
+    public static function beginTransaction(): void {
+        self::connect()->beginTransaction();
+    }
+
+    /**
+     * @fn commit
+     * @note Effettua il commit della transazione
+     * @return void
+     * @throws Throwable
+     */
+    public static function commit(): void {
+        self::connect()->commit();
+    }
+
+    /**
+     * @fn rollback
+     * @note Annulla il commit della transazione
+     * @return void
+     * @throws Throwable
+     */
+    public static function rollback(): void {
+        self::connect()->rollBack();
     }
 
     /**
      * @fn query
-     * @note Funzione di esecuzione delle query
-     * @param mixed $sql
-     * @param string $mode
+     * @note Chiede al database di eseguire diverse operazioni a seconda del $mode indicato
+     * @param string|DBQueryInterface $sql La query da eseguire
+     * @param string $mode A seconda del valore passato il metodo si comporta in modo differente:
+     *
+     *  - query: Default. Esegue la query e ritorna il risultato
+     *
+     *  - result: Ritorna il risultato della query
+     *
+     *  - num_rows: Ritorna il numero di righe coinvolte nella query
+     *
+     *  - fetch: Ritorna il primo record della query
+     *
+     *  - assoc: Ritorna il primo record della query come array associativo
+     *
+     *  - object: Ritorna il primo record della query come oggetto
+     *
+     *  - last_id: Ritorna l'id dell'ultimo record inserito
+     *
+     *  - affected: Ritorna il numero di righe coinvolte nella query
+     *
      * @return mixed
+     * @throws Throwable
      */
-    public static function query($sql, string $mode = 'query', $die_on_fail = true)
+    public static function query(string|DBQueryInterface $sql, string $mode = 'query'): mixed
     {
-
-        $db_link = self::connect();
-
-        switch ( strtolower(trim($mode)) ) {
+        switch (strtolower(trim($mode))) {
             case 'query':
-                switch ( strtoupper(substr(trim($sql), 0, 6)) ) {
-                    case 'SELECT':
-                        $result = mysqli_query($db_link, $sql) or self::error($sql, $die_on_fail);
-                        $row = mysqli_fetch_array($result, MYSQLI_BOTH);
-                        mysqli_free_result($result);
-
-                        return $row;
-
-                    default:
-                        return mysqli_query($db_link, $sql) or self::error($sql, $die_on_fail);
+                $stmt = self::queryStmt($sql);
+                if (strtoupper(substr(trim($sql), 0, 6)) !== 'SELECT') {
+                    return $stmt;
                 }
+                return $stmt->current();
 
             case 'result':
-                $result = mysqli_query($db_link, $sql) or self::error($sql, $die_on_fail);
-
-                return $result;
+                return self::queryStmt($sql);
 
             case 'num_rows':
-                return (int)mysqli_num_rows($sql);
+                return self::rowsNumber($sql);
 
             case 'fetch':
-                return mysqli_fetch_array($sql);
-
             case 'assoc':
-                return mysqli_fetch_array($sql, MYSQLI_ASSOC);
+                $row = $sql->current();
+                $sql->next();
+                return $row;
 
             case 'object':
-                return mysqli_fetch_object($sql);
+                $row = $sql->current();
+                $sql->next();
+                return !is_null($row)? (object)$row : null;
 
             case 'free':
-                mysqli_free_result($sql);
+                /** Totalmente disabilitato, non serve con PDO */
                 break;
 
             case 'last_id':
-                return mysqli_insert_id($db_link);
+                return $sql->getInsertId();
 
             case 'affected':
-                return (int)mysqli_affected_rows($db_link);
-            default:
-                return '';
+                return self::queryAffectedRows($sql);
         }
+
+        return '';
     }
 
     /**
      * @fn rowsNumber
-     * @note Ritorna il numero di risultati dell'array estratto dal db
-     * @param array|object $array
+     * @note Ritorna il numero di righe estratte dalla query
+     * @param array|DBQueryInterface $array
      * @return int
      */
-    public static function rowsNumber($array): int
+    public static function rowsNumber(array|DBQueryInterface $array): int
     {
-        if ( gettype($array) == 'object' ) {
-            return self::query($array, 'num_rows');
-        } else if ( gettype($array) == 'array' ) {
-            return count($array);
-        } else {
-            return 0;
+        if ($array instanceof DBQueryInterface) {
+            return $array->getNumRows();
         }
+
+        return count($array);
     }
 
     /**
-     * @fn statement
-     * @note Statement delle query
-     * @param $sql
-     * @param array $binds
-     * @return false|mysqli_result|void
-     */
-    public static function statement($sql, array $binds = [])
-    {
-        $db_link = self::connect();
-
-        if ( $stmt = mysqli_prepare($db_link, $sql) ) {
-
-            if ( !empty($binds) ) {
-
-                #> E' necessario referenziare ogni parametro da passare alla query
-                #> MySqli è suscettibile in proposito.
-                $ref = [];
-
-                foreach ( $binds as $k => $v ) {
-                    if ( $k > 0 ) {
-                        $ref[$k] = &$binds[$k];
-                    } else {
-                        $ref[$k] = $v;
-                    }
-                }
-
-                array_unshift($ref, $stmt);
-                call_user_func_array('mysqli_stmt_bind_param', $ref);
-            }
-
-            mysqli_stmt_execute($stmt);
-            $result = mysqli_stmt_get_result($stmt);
-            $stmtError = mysqli_stmt_error($stmt);
-
-            if ( !empty($stmtError) )
-                die(self::error($stmtError));
-
-            mysqli_stmt_close($stmt);
-
-            return $result;
-
-        } else {
-            die(self::error('Failed when creating the statement.'));
-        }
-    }
-
-    /**
-     * @fn checkTable
+     * @gn checkTable
      * @note Creazione di un grafico in array del db
      * @param string $table
      * @return array
+     * @throws Throwable
      */
     public static function checkTable(string $table): array
     {
-        $result = self::query("SELECT * FROM $table LIMIT 1", 'result');
-        $describe = self::query("SHOW COLUMNS FROM $table", 'result');
+        $PDO = self::connect();
+        $result = $PDO->query("SELECT * FROM `$table` LIMIT 1");
+        $describe = self::query("SHOW COLUMNS FROM `$table`", 'result');
 
         $i = 0;
         $output = [];
-
         while ( $field = self::query($describe, 'object') ) {
-            $defInfo = mysqli_fetch_field_direct($result, $i);
+            $defInfo = $result->getColumnMeta($i);
 
             $field->auto_increment = (strpos($field->Extra, 'auto_increment') === false ? 0 : 1);
             $field->definition = $field->Type;
@@ -202,7 +581,7 @@ class DB extends BaseClass
             }
 
             if ( $field->Default ) {
-                $field->definition .= " DEFAULT '" . mysqli_real_escape_string(self::connect(), $field->Default) . "'";
+                $field->definition .= " DEFAULT '" . Filters::int($field->Default) . "'";
             }
 
             if ( $field->auto_increment ) {
@@ -221,33 +600,75 @@ class DB extends BaseClass
                     break;
             }
 
-            $field->len = $defInfo->length;
+            $field->len = $defInfo['len'];
             $output[$field->Field] = $field;
             ++$i;
 
             unset($defInfo);
         }
-        self::query($describe, 'free');
 
         return $output;
     }
 
     /**
-     * @fn error
-     * @note Visualizzazione intelligente degli errori
-     * @param string|false $details
-     * @return string
+     * @fn errorMode
+     * @note Cambia il modo in cui la classe DB comunica un errore
+     * @see DB::ERROR_STANDARD
+     * @see DB::ERROR_EXCEPTION
+     * @param int $flag DB::ERROR_STANDARD, DB::ERROR_EXCEPTION
+     * @return void
      */
-    public static function error($details = false, $die_on_fail = true): string
+    public static function errorMode(int $flag): void
     {
-        $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 50);
+        self::$currentErrorMode = match($flag) {
+            self::ERROR_STANDARD,
+            self::ERROR_EXCEPTION => $flag,
+            default => throw new InvalidArgumentException('[DB::errorMode] Parametro $flag invalido')
+        };
+    }
 
-        $error_msg = '<strong>GDRCD MySQLi Error</strong> [File: ' . basename($backtrace[1]['file']) . '; Line: ' . $backtrace[1]['line'] . ']<br>' . '<strong>Error Code</strong>: ' . mysqli_errno(self::connect()) . '<br>' . '<strong>Error String</strong>: ' . mysqli_error(self::connect());
-
-        if ( $details !== false ) {
-            $error_msg .= '<br><br><strong>Error Detail</strong>: ' . $details;
+    /**
+     * @fn error
+     * @note Si occupa della gestione degli errori in base alla modalità scelta
+     * @param Throwable $e L'istanza di un eccezione rappresentante l'errore
+     * @param string|null $details Eventuali dettagli aggiuntivi utili al debug
+     * @return void
+     * @throws Throwable
+     */
+    protected static function error(Throwable $e, ?string $details = null): void
+    {
+        //> Se il report errori è configurato per lanciare le eccezioni all'esterno è così che faremo
+        if (self::$currentErrorMode === self::ERROR_EXCEPTION) {
+            throw $e;
         }
 
-        return ($die_on_fail) ? die($error_msg) : $error_msg;
+        //> In primis, rendiamo partecipe PHP del problema. Che averne traccia su un file di log aiuta non poco
+        error_log(
+            sprintf(
+                'GDRCD Database Error: %s%s',
+                $e,
+                !is_null($details)? PHP_EOL . 'Context: '. $details : ''
+            )
+        );
+
+        //> A questo punto formattiamo il messaggio d'errore da mostrare all'esterno
+        $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 50);
+        $error_msg = sprintf(
+            '<strong>GDRCD Database Error</strong><br>'
+            . '<strong>Code</strong>: %s<br>'
+            . '<strong>Message</strong>: %s<br>'
+            . '<strong>From</strong>: %s:%s<br>',
+            $e->getCode(),
+            $e->getMessage(),
+            $backtrace[1]['file'],
+            $backtrace[1]['line']
+        );
+
+        if (!is_null($details)) {
+            $error_msg .= '<strong>Context</strong>: '. $details .'<br>';
+        }
+
+        $error_msg .= '<strong>Trace</strong>: '. $e->getTraceAsString() .'<br>';
+        die('<div>'. $error_msg .'</div>');
     }
 }

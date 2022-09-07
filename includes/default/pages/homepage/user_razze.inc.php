@@ -4,7 +4,7 @@
     </div>
     <div class="page_body">
         <?php /*HELP: */
-        $query = "SELECT nome_razza, sing_m, sing_f, descrizione, url_site, bonus_car0, bonus_car1, bonus_car2, bonus_car3, bonus_car4, bonus_car5, immagine, icon  FROM razza WHERE visibile = 1 ORDER BY nome_razza";
+        $query = "SELECT nome, sing_m, sing_f, descrizione, url_site, immagine, icon  FROM razze WHERE visibile = 1 ORDER BY nome";
         $result = gdrcd_query($query, 'result'); ?>
         <div class="panels_box">
             <div class="elenco_record_gioco">
@@ -14,11 +14,12 @@
                             <td colspan="2" class="casella_titolo">
                                 <div class="elementi_elenco">
                                     <img class="razza_icon"
+                                         alt="<?php echo gdrcd_filter('out', $row['nome']); ?>"
                                          src="themes/<?php echo $PARAMETERS['themes']['current_theme'] ?>/imgs/races/<?php echo $row['icon']; ?>"/>
                                     <?php if ( empty($row['url_site']) === true ) {
-                                        echo $row['nome_razza'] . ' (' . $row['sing_m'] . ', ' . $row['sing_f'] . ')';
+                                        echo $row['nome'] . ' (' . $row['sing_m'] . ', ' . $row['sing_f'] . ')';
                                     } else {
-                                        echo '<a href="http://' . $row['url_site'] . '">' . gdrcd_filter('out', $row['nome_razza']) . '</a> (' . gdrcd_filter('out', $row['sing_m']) . ', ' . gdrcd_filter('out', $row['sing_f']) . ')';
+                                        echo '<a href="http://' . $row['url_site'] . '">' . gdrcd_filter('out', $row['nome']) . '</a> (' . gdrcd_filter('out', $row['sing_m']) . ', ' . gdrcd_filter('out', $row['sing_f']) . ')';
                                     } ?>
                                 </div>
                             </td>
@@ -36,10 +37,8 @@
                             </td>
                             <td class="casella_elemento">
                                 <div class="elementi_elenco">
-                                    <?php echo gdrcd_bbcoder(gdrcd_filter('out', $row['descrizione'])); ?>
-                                </div>
-                                <div class="elementi_elenco">
-                                    <?php echo $MESSAGE['interface']['user']['races']['bonus'] . ': ' . $PARAMETERS['names']['stats']['car0'] . ' ' . $row['bonus_car0'] . ', ' . $PARAMETERS['names']['stats']['car1'] . ' ' . $row['bonus_car1'] . ', ' . $PARAMETERS['names']['stats']['car2'] . ' ' . $row['bonus_car2'] . ', ' . $PARAMETERS['names']['stats']['car3'] . ' ' . $row['bonus_car3'] . ', ' . $PARAMETERS['names']['stats']['car4'] . ' ' . $row['bonus_car4'] . ', ' . $PARAMETERS['names']['stats']['car5'] . ' ' . $row['bonus_car5'] . '.'; ?>
+                                    <h4>Descrizione:</h4>
+                                    <p><?=gdrcd_bbcoder(gdrcd_filter('out', $row['descrizione']));?></p>
                                 </div>
                             </td>
                         </tr>

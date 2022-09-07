@@ -745,7 +745,7 @@ $MESSAGE['warning']['blacklisted'] = 'Questa postazione è stata esclusa dal gio
 /** * Messaggio visualizzato in caso di connessioni multiple con lo stesso pg
  * @author Blancks
  */
-$MESSAGE['warning']['double_connection'] = 'Il personaggio con cui stai tentando l\'accesso in land è già connesso. Se non sei uscito correttamente usando il tastino esci dovrai aspettare circa 5 minuti prima di poter accedere.';
+$MESSAGE['warning']['double_connection'] = 'Il personaggio con cui stai tentando l\'accesso in land è già connesso. Se non sei uscito correttamente usando il tastino esci dovrai aspettare circa 2 minuti prima di poter accedere.';
 
 /** * Messaggio di avviso che è tempo di cambiare password perchè passati 6 mesi
  * @author Blancks
