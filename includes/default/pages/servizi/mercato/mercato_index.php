@@ -17,7 +17,7 @@ $mercato = Mercato::getInstance();
 
         <!-- Corpo della pagina -->
         <div class="page_body">
-            <?php Router::loadPages('mercato/' . $mercato->loadShopsPage(Filters::out($_GET['op']))); ?>
+            <?php Router::loadPages('servizi/mercato/' . $mercato->loadShopsPage(Filters::out($_GET['op']))); ?>
         </div>
 
     <?php } else { ?>

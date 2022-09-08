@@ -23,16 +23,10 @@ class Mercato extends BaseClass
     {
         $op = Filters::out($op);
 
-        switch ( $op ) {
-            case 'objects':
-                $page = 'mercato_objects.php';
-                break;
-            default:
-                $page = 'mercato_shops.php';
-                break;
-        }
-
-        return $page;
+        return match ($op) {
+            'objects' => 'mercato_objects.php',
+            default => 'mercato_shops.php',
+        };
     }
 
     /*** PERMISSIONS ***/
