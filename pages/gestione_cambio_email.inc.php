@@ -1,7 +1,7 @@
 <div class="pagina_gestione_cambio_email">
     <!-- Titolo della pagina -->
     <div class="page_title">
-        <h2><?php echo gdrcd_filter('out', $MESSAGE['interface']['user']['pass']['page_name']); ?></h2>
+        <h2><?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['email']['page_name']); ?></h2>
     </div>
     <!-- Box principale -->
     <div class="page_body">
@@ -25,7 +25,7 @@
             <?php }//else ?>
             <div class="link_back">
                 <a href="main.php?page=gestione_cambio_email">
-                    <?php echo gdrcd_filter('out', $MESSAGE['interface']['user']['link']['back']); ?>
+                    <?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['email']['link']['back']); ?>
                 </a>
             </div>
             <?php
@@ -39,19 +39,18 @@
                     <div class="form_gioco">
                         <form action="main.php?page=gestione_cambio_email" method="post">
                             <div class="form_label">
-                                <?php echo gdrcd_filter('out', $MESSAGE['interface']['user']['email']['email']); ?>
+                                <?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['email']['email']); ?>
                             </div>
                             <div class="form_field">
                                 <input name="new_email" required/>
                             </div>
 
                             <div class="form_label">
-                                <?php echo gdrcd_filter('out', $MESSAGE['interface']['user']['email']['new']); ?>
+                                <?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['email']['new']); ?>
                             </div>
                             <div class="form_field">
                                 <select name="account" required>
-                                    <option disabled
-                                            selected><?php echo gdrcd_filter('out', $MESSAGE['interface']['user']['pass']['change_to']); ?></option>
+                                    <option disabled selected><?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['email']['change_to']); ?></option>
                                     <?php while ($row = gdrcd_query($result, 'fetch')) { ?>
                                         <option value="<?php echo $row['nome']; ?>"><?php echo $row['nome']; ?></option>
                                     <?php }//while
@@ -62,7 +61,7 @@
                             <div class="form_submit">
                                 <input type="hidden" name="op" value="force"/>
                                 <input type="submit" name="nulla"
-                                       value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['user']['email']['submit']['user']); ?>"/>
+                                       value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['email']['submit']['user']); ?>"/>
                             </div>
                         </form>
                     </div>

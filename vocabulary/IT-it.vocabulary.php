@@ -646,6 +646,13 @@ $MESSAGE['interface']['administration']['log']['chat']['date'] = 'Data';
 $MESSAGE['interface']['administration']['log']['chat']['text'] = 'Testo';
 $MESSAGE['interface']['administration']['log']['chat']['room'] = 'Luogo';
 $MESSAGE['interface']['administration']['log']['chat']['sender'] = 'Personaggio';
+/*Email*/
+$MESSAGE['interface']['administration']['email']['page_name'] = 'Gestione email';
+$MESSAGE['interface']['administration']['email']['link']['back'] = 'Torna all\'elenco';
+$MESSAGE['interface']['administration']['email']['email'] = 'Inserire la nuova mail';
+$MESSAGE['interface']['administration']['email']['new'] = 'Selezionare personaggio';
+$MESSAGE['interface']['administration']['email']['submit']['user'] = 'Cambia email';
+$MESSAGE['interface']['administration']['email']['change_to'] = 'Cambia a...';
 /********** Pagine del menu' utente *********/
 /*Cambio pass*/
 $MESSAGE['interface']['user']['pass']['page_name'] = 'Cambio password';
@@ -654,12 +661,6 @@ $MESSAGE['interface']['user']['pass']['new'] = 'Inserire la nuova password';
 $MESSAGE['interface']['user']['pass']['force'] = 'Cambia password ad un account';
 $MESSAGE['interface']['user']['pass']['submit']['user'] = 'Salva';
 $MESSAGE['interface']['user']['pass']['change_to'] = 'Cambia a...';
-/*Cambio email*/
-$MESSAGE['interface']['user']['email']['page_name'] = 'Cambio password';
-$MESSAGE['interface']['user']['email']['email'] = 'Inserire la nuova mail';
-$MESSAGE['interface']['user']['email']['new'] = 'Selezionare personaggio';
-$MESSAGE['interface']['user']['email']['submit']['user'] = 'Cambia email';
-$MESSAGE['interface']['user']['email']['change_to'] = 'Cambia a...';
 /*Cancella account*/
 $MESSAGE['interface']['user']['delete']['page_name'] = 'Cancella account';
 $MESSAGE['interface']['user']['delete']['email'] = 'Inserire la EMail di registrazione per conferma';
