@@ -2,7 +2,7 @@
 
 $me = Filters::out($_SESSION['login']);
 $perm = Filters::out($_SESSION['permessi']);
-$id_pg = Filters::out($_GET['id_pg']);
+$id_pg = isset($_GET['id_pg']) ? Filters::out($_GET['id_pg']) : Functions::getInstance()->getMyId();
 
 ?>
 

@@ -4,45 +4,89 @@ class Menu extends BaseClass
 {
 
     /**
-     * @fn costantList
-     * @note Creazione della sezione della gestione delle costanti
+     * @fn createMenu
+     * @note Crea un menu da database
+     * @param string $menu
      * @return string
+     * @throws Throwable
      */
-    public function createMenu($menu): string
+    public function createMenu(string $menu): string
     {
+        $menu_category = DB::queryStmt("SELECT section FROM menu WHERE menu_name=:menu GROUP BY section ORDER BY section", ['menu' => Filters::in($menu)]);
 
-        $html = '<div class="menu_box">';
-        $page = Filters::in($menu);
+        $categories = [];
 
-        $menu_category = DB::query("SELECT section FROM menu WHERE menu_name='{$menu}' GROUP BY section ORDER BY section", 'result');
-
+        // Genero categorie
         foreach ( $menu_category as $section ) {
-            $section_name = Filters::out($section['section']);
 
-            $html .= "<div class='single_section'>";
-            $html .= "<div class='section_title'>{$section_name}</div>";
-            $html .= "<div class='box_input'>";
+            // Creo array base da aggiungere
+            $data = [
+                "name" => Filters::out($section['section']),
+            ];
 
-            $menu_list = DB::query("SELECT * FROM menu WHERE section='{$section_name}' ORDER BY name", 'result');
+            // Estraggo i link
+            $links = DB::queryStmt("SELECT * FROM menu WHERE section=:section AND menu_name=:menu ORDER BY name",
+                [
+                    'section' => Filters::out($section['section']),
+                    'menu' => Filters::in($menu)
+                ]
+            );
 
-            foreach ( $menu_list as $menu_element ) {
-                $name = Filters::out($menu_element['name']);
-                $page = Filters::out($menu_element['page']);
-                $permission = Filters::out($menu_element['permission']);
+            // Creo i link
+            foreach ( $links as $link ) {
+                $name = Filters::out($link['name']);
+                $page = Filters::out($link['page']);
+                $permission = Filters::out($link['permission']);
 
+                // Se ho i permessi per vedere il link, lo aggiungo
                 if ( empty($permission) || Permissions::permission($permission) ) {
-                    $html .= "<a href='main.php?page={$page}'>";
-                    $html .= "<div class='single_menu'>{$name}</div>";
-                    $html .= "</a>";
+                    $data['links'][] = [
+                        "page" => $page,
+                        "name" => $name,
+                    ];
                 }
             }
 
-            $html .= "</div>";
-            $html .= "</div>";
+            // Aggiungo l'array formato a quello generale
+            $categories[] = $data;
         }
 
-        $html .= "</div>";
+        // Renderizzo il menu'
+        return Template::getInstance()->startTemplate()->render('menu', ['categories' => $categories]);
+    }
 
-        return $html;
+    /**
+     * @fn createMenuPlain
+     * @note Crea un menu da database senza divisione per categorie
+     * @param $menu
+     * @return mixed
+     * @throws Throwable
+     */
+    public function createMenuPlain($menu){
+        $links = DB::queryStmt("SELECT * FROM menu WHERE menu_name=:menu ORDER BY name",
+            [
+                'menu' => Filters::in($menu)
+            ]
+        );
+
+        $links_list = [];
+
+        // Creo i link
+        foreach ( $links as $link ) {
+            $name = Filters::out($link['name']);
+            $page = Filters::out($link['page']);
+            $permission = Filters::out($link['permission']);
+
+            // Se ho i permessi per vedere il link, lo aggiungo
+            if ( empty($permission) || Permissions::permission($permission) ) {
+                $links_list[] = [
+                    "page" => $page,
+                    "name" => $name,
+                ];
+            }
+        }
+
+        return Template::getInstance()->startTemplate()->render('menu_plain', ['links' => $links_list]);
+
     }
 }

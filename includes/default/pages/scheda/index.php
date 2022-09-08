@@ -1,7 +1,7 @@
 <?php
 
 Router::loadRequired();
-$pg_id = Filters::int($_GET['id_pg']);
+$pg_id = isset($_GET['id_pg']) ? Filters::out($_GET['id_pg']) : Functions::getInstance()->getMyId();
 $pg_name = Personaggio::nameFromId($pg_id);
 $op = Filters::out($_GET['op']);
 
