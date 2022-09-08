@@ -17,8 +17,8 @@ class GDRCD6 extends DbMigration
     {
         DB::query("
             INSERT INTO `abilita` (`nome`, `statistica`, `descrizione`, `razza`) VALUES
-                ('Resistenza', 4, 'Il personaggio Ã¨ in grado di sopportare il dolore ed il disagio e sopporta minime dosi di agenti tossici nel proprio organismo. ', -1),
-                ('Sopravvivenza', 4, 'Il personaggio Ã¨ in grado di procurarsi cibo e riparo all''aperto, con mezzi minimi.', -1);
+                ('Resistenza', 4, 'Il personaggio è in grado di sopportare il dolore ed il disagio e sopporta minime dosi di agenti tossici nel proprio organismo. ', -1),
+                ('Sopravvivenza', 4, 'Il personaggio è in grado di procurarsi cibo e riparo all''aperto, con mezzi minimi.', -1);
         ");
 
         DB::query("
