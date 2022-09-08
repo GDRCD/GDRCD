@@ -669,8 +669,10 @@ $MESSAGE['interface']['administration']['log']['chat']['sender'] = 'Personaggio'
 /********** Pagine del menu' utente *********/
 /*Cambio pass*/
 $MESSAGE['interface']['user']['pass']['page_name'] = 'Cambio password';
-$MESSAGE['interface']['user']['pass']['email'] = 'Inserire la EMail di registrazione per conferma';
+$MESSAGE['interface']['user']['pass']['email'] = 'Inserire la Email di registrazione per conferma';
+$MESSAGE['interface']['user']['pass']['old'] = 'Inserire la vecchia password';
 $MESSAGE['interface']['user']['pass']['new'] = 'Inserire la nuova password';
+$MESSAGE['interface']['user']['pass']['repeat'] = 'Ripeti la nuova password';
 $MESSAGE['interface']['user']['pass']['force'] = 'Cambia password ad un account';
 $MESSAGE['interface']['user']['pass']['submit']['user'] = 'Salva';
 $MESSAGE['interface']['user']['pass']['change_to'] = 'Cambia a...';

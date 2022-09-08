@@ -1,4 +1,8 @@
-<?php /*HELP: */
+<?php
+
+echo ModificaPassword::render();
+
+/*HELP:
 $row = gdrcd_query("SELECT email FROM personaggio WHERE nome = '".$_SESSION['login']."'");
 $email = $row['email'];
 ?>
@@ -9,7 +13,7 @@ $email = $row['email'];
     </div>
     <!-- Box principale -->
     <div class="page_body">
-        <?php /*Cambio pass utenti*/
+        <?php /*Cambio pass utenti*
         if($_POST['op'] == 'new') {
             if((gdrcd_password_check(Filters::email($_POST['email']),$email)) && (gdrcd_check_pass($_POST['new_pass']) === true)) {
                 DB::queryStmt(
@@ -35,7 +39,7 @@ $email = $row['email'];
                 </a>
             </div>
         <?php }
-        /*Cambio pass admin*/
+        /*Cambio pass admin*
         if(gdrcd_filter('get', $_POST['op']) == 'force') {
             if(($_SESSION['permessi'] >= MODERATOR) && (gdrcd_check_pass($_POST['new_pass']) === true)) {
                 if($_SESSION['permessi'] == SUPERUSER) {
@@ -47,7 +51,7 @@ $email = $row['email'];
                     $query,
                     ['newpassword' => Password::hash($_POST['new_pass']), 'username' => $_POST['account']]
                 );
-                /*Registro l'evento */
+                /*Registro l'evento *
                 gdrcd_query("INSERT INTO log (destinatario, autore, creato_il, tipo, testo) VALUES ('".Filters::in($_POST['account'])."','".$_SESSION['login']."', NOW(), ".CHANGEDPASS." ,'".$_SERVER['REMOTE_ADDR']."')");
                 ?>
                 <div class="warning">
@@ -65,7 +69,7 @@ $email = $row['email'];
             </div>
             <?php
         }
-        /*Visualizzazione di base*/
+        /*Visualizzazione di base*
         if(isset($_POST['op']) === false) { ?>
             <div class="panels_box">
                 <div class="form_gioco">
@@ -124,3 +128,4 @@ $email = $row['email'];
         }//if ?>
     </div>
 </div><!-- Box principale -->
+<?php */
