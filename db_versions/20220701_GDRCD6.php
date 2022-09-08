@@ -396,9 +396,9 @@ class GDRCD6 extends DbMigration
                 (2,'Test', 'Di Funzionalità', :testpassword, NULL, '2011-06-04 00:47:48', :testemail, 0, 1, -1, '2009-01-01', '2009-01-01', '', '', 1, 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000',  100, 100, 50, 50, '127.0.0.1', 0, '2009-01-01 00:00:00', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1);",
             [
                 'superpassword' => Password::hash('super'),
-                'superemail' => $MailCrypter->crypt('super@gdrcd6'),
+                'superemail' => $MailCrypter->crypt('super@gdrcd6.land'),
                 'testpassword' => Password::hash('test'),
-                'testemail' => $MailCrypter->crypt('test@gdrcd6')
+                'testemail' => $MailCrypter->crypt('test@gdrcd6.land')
             ]
         );
 
