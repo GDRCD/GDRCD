@@ -62,7 +62,7 @@ if ( !empty($_POST['email']) ) {
                 <input type="text" name="email"/>
             </div>
             <div class="single_input">
-                <input type="hidden" name="action" value="update_password_external"/>
+                <input type="hidden" name="action" value="password_recovery"/>
                 <input type="submit" value="Invia password"/>
             </div>
         </form>

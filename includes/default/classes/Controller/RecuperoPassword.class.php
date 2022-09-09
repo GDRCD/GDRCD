@@ -84,4 +84,43 @@ class RecuperoPassword extends BaseClass
     {
         // ...
     }
+
+    /**
+     * @fn recoverPassword
+     * @note Verifica la correttezza delle informazioni immesse e aggiorna la password tramite email
+     * @param array $post
+     * @return array
+     * @throws Throwable
+     */
+    public function recoverPassword(array $post): array
+    {
+        $user_email = Filters::email($post['email']);
+
+        $user_data = DB::queryStmt(
+            'SELECT id FROM personaggio WHERE email = :user_email', [
+            'user_email' => CrypterAlgo::withAlgo('CrypterSha256')->crypt($user_email),
+        ]);
+
+        if(!isset($user_data['id'])){
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Nessuna mail corrisponde a quella di cui si è chiesta la modifica.',
+                'swal_type' => 'error',
+            ];
+        }
+
+        $user_id = Filters::int($user_data['id']);
+
+        // Generazione nuova password
+        // TODO: Generare token per inviare via mail
+
+        return [
+            'response' => true,
+            'swal_title' => 'Operazione riuscita!',
+            'swal_message' => 'Password modificata correttamente ed inviata alla mail indicata.',
+            'swal_type' => 'success',
+        ];
+
+    }
 }

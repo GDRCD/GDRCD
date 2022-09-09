@@ -31,13 +31,13 @@ class ModificaPassword extends BaseClass
     }
 
     /**
-     * @fn updateUserPassword
+     * @fn updatePassword
      * @note Verifica la correttezza delle informazioni immesse e aggiorna la password dell'utente connesso
      * @param array $post
      * @return array
      * @throws Throwable
      */
-    public function updateLoggedUserPassword(array $post): array
+    public function updatePassword(array $post): array
     {
         $user_email = Filters::email($post['email']);
         $old_password = $post['old_pass'];
@@ -111,44 +111,5 @@ class ModificaPassword extends BaseClass
             'swal_message' => 'Le password è stata modificata con successo.',
             'swal_type' => 'success',
         ];
-    }
-
-    /**
-     * @fn updateExternalUserPassword
-     * @note Verifica la correttezza delle informazioni immesse e aggiorna la password tramite email
-     * @param array $post
-     * @return array
-     * @throws Throwable
-     */
-    public function updateExternalUserPassword(array $post): array
-    {
-        $user_email = Filters::email($post['email']);
-
-        $user_data = DB::queryStmt(
-            'SELECT id FROM personaggio WHERE email = :user_email', [
-            'user_email' => CrypterAlgo::withAlgo('CrypterSha256')->crypt($user_email),
-        ]);
-
-        if(!isset($user_data['id'])){
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Nessuna mail corrisponde a quella di cui si è chiesta la modifica.',
-                'swal_type' => 'error',
-            ];
-        }
-
-        $user_id = Filters::int($user_data['id']);
-
-        // Generazione nuova password
-        // TODO: Generare token per inviare via mail
-
-        return [
-            'response' => true,
-            'swal_title' => 'Operazione riuscita!',
-            'swal_message' => 'Password modificata correttamente ed inviata alla mail indicata.',
-            'swal_type' => 'success',
-        ];
-
     }
 }

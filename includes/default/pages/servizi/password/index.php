@@ -37,7 +37,7 @@
                 </div>
 
                 <div class="single_input">
-                    <input type="hidden" name="action" value="update_password"/>
+                    <input type="hidden" name="action" value="password_update"/>
                     <input type="submit" name="nulla" value="Modifica"/>
                 </div>
             </form>

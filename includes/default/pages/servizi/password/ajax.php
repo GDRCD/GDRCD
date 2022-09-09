@@ -2,13 +2,11 @@
 
 Router::loadRequired();
 
-$pasword = ModificaPassword::getInstance();
-
 switch ( $_POST['action'] ) {
-    case 'update_password':
-        echo json_encode($pasword->updateLoggedUserPassword($_POST));
+    case 'password_update':
+        echo json_encode(ModificaPassword::getInstance()->updatePassword($_POST));
         break;
-    case 'update_password_external':
-        echo json_encode($pasword->updateExternalUserPassword($_POST));
+    case 'password_recovery':
+        echo json_encode(RecuperoPassword::getInstance()->recoverPassword($_POST));
         break;
 }
