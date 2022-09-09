@@ -233,7 +233,7 @@ class GDRCD6 extends DbMigration
               ('Utenti', 'Ambientazione', 'Razze', 'user_razze', NULL),
               ('Utenti', 'Regolamento', 'Regolamento', 'user_regolamento', NULL),
               ('Utenti', 'Gestione Utente', 'Cambio nome', 'user_cambio_nome', 'MANAGE_NAMES'),
-              ('Utenti', 'Gestione Utente', 'Cambio password', 'user_cambio_pass', NULL),
+              ('Utenti', 'Gestione Utente', 'Cambio password', 'servizi/password/index', NULL),
               ('Utenti', 'Gestione Utente', 'Cancella account', 'user_cancella_pg', NULL),
               ('Utenti', 'Statistiche', 'Statistiche Sito', 'user_stats', NULL),
               ('Rapido', 'Scheda', 'Scheda', 'scheda/index', NULL),

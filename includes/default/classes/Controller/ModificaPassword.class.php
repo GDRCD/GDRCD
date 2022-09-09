@@ -14,75 +14,102 @@ class ModificaPassword extends BaseClass
     public static function render(): string
     {
         return Template::getInstance()->startTemplate()->render(
-            'modificapassword/edit-form', [
-                'pagetitle' => $GLOBALS['MESSAGE']['interface']['user']['pass']['page_name'],
-                'formlabel' => [
-                    'email' => $GLOBALS['MESSAGE']['interface']['user']['pass']['email'],
-                    'oldpass' => $GLOBALS['MESSAGE']['interface']['user']['pass']['old'],
-                    'newpass' => $GLOBALS['MESSAGE']['interface']['user']['pass']['new'],
-                    'repeatpass' => $GLOBALS['MESSAGE']['interface']['user']['pass']['repeat'],
-                    'submit' => $GLOBALS['MESSAGE']['interface']['user']['pass']['submit']['user']
-                ],
-                'response' => [
-                    'success' => $GLOBALS['MESSAGE']['warning']['modified'],
-                    'error' => $GLOBALS['MESSAGE']['warning']['cant_do']
-                ]
+            'servizi/password/password_update', [
+            'pagetitle' => $GLOBALS['MESSAGE']['interface']['user']['pass']['page_name'],
+            'formlabel' => [
+                'email' => $GLOBALS['MESSAGE']['interface']['user']['pass']['email'],
+                'oldpass' => $GLOBALS['MESSAGE']['interface']['user']['pass']['old'],
+                'newpass' => $GLOBALS['MESSAGE']['interface']['user']['pass']['new'],
+                'repeatpass' => $GLOBALS['MESSAGE']['interface']['user']['pass']['repeat'],
+                'submit' => $GLOBALS['MESSAGE']['interface']['user']['pass']['submit']['user'],
+            ],
+            'response' => [
+                'success' => $GLOBALS['MESSAGE']['warning']['modified'],
+                'error' => $GLOBALS['MESSAGE']['warning']['cant_do'],
+            ],
         ]);
     }
 
     /**
      * @fn updateUserPassword
      * @note Verifica la correttezza delle informazioni immesse e aggiorna la password dell'utente connesso
-     * @param string $userEmail l'email di iscrizione fornita dall'utente per verificare che corrisponda
-     * @param string $oldPassword la password in questo momento associata alla user identificata dall'email
-     * @param string $newPassword la nuova password da aggiornare per la user
-     * @param string|null $repeatPassword se fornita, verifica che sia uguale a $newPassword
-     * @return void
+     * @param array $post
+     * @return array
      * @throws Throwable
      */
-    public static function updateLoggedUserPassword(
-        string $userEmail,
-        string $oldPassword,
-        string $newPassword,
-        ?string $repeatPassword = null
-    ): void
+    public function updateLoggedUserPassword(array $post): array
     {
-        $User = DB::queryStmt(
+        $user_email = Filters::email($post['email']);
+        $old_password = $post['old_pass'];
+        $new_password = $post['new_pass'];
+        $repeated_password = $post['repeat_pass'];
+
+
+        $user_data = DB::queryStmt(
             'SELECT email, pass FROM personaggio WHERE id = :userid', [
-                'userid' => Session::read('login_id')
+            'userid' => Session::read('login_id'),
         ]);
 
-        if (!count($User)) {
-            throw new Exception(
-                sprintf(
+        // Non esiste un pg in database
+        if ( !count($user_data) ) {
+            return [
+                'response' => false,
+                'swal_title' => sprintf(
                     'La user connessa non ha una riga corrispondente nel db! (login_id: %s; IP: %s; UA: %s)',
                     Session::read('login_id'),
                     $_SERVER['REMOTE_ADDR'],
                     $_SERVER['HTTP_USER_AGENT']
-                )
-            );
+                ),
+                'swal_message' => 'La mail non corrisponde.',
+                'swal_type' => 'error',
+            ];
         }
 
-        $MailCrypter = CrypterAlgo::withAlgo('CrypterSha256');
-
-        if (!$MailCrypter->verify($User['email'], $userEmail)) {
-            throw new Exception('La mail non corrisponde', -1);
+        // Controllo che la mail inserita sia corretta
+        if ( !CrypterAlgo::withAlgo('CrypterSha256')->verify($user_data['email'], $user_email) ) {
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'La mail non corrisponde.',
+                'swal_type' => 'error',
+            ];
         }
 
-        if (!Password::verify($User['pass'], $oldPassword)) {
-            throw new Exception('La vecchia password non corrisponde', -1);
+        // Controllo che la vecchia password inserita sia corretta
+        if ( !Password::verify($user_data['pass'], $old_password) ) {
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'La vecchia password non corrisponde.',
+                'swal_type' => 'error',
+            ];
         }
 
-        if (!is_null($repeatPassword) && $newPassword !== $repeatPassword) {
-            throw new Exception('La due password non corrispondono', -1);
+        // Controllo che la nuova password inserita corrisponda alla ripetizione
+        if ( !is_null($repeated_password) && $new_password !== $repeated_password ) {
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Le nuove password inserite non corrispondono.',
+                'swal_type' => 'error',
+            ];
         }
 
-        // Se sono arrivato fino a qui è tutto OK!
+
+
+        // Inserimento nuova password e risposta positiva
         DB::queryStmt(
-            'UPDATE personaggio SET pass = :userpassword WHERE id = :userid', [
-                'userpassword' => Password::hash($newPassword),
-                'userid' => Session::read('login_id')
+            'UPDATE personaggio SET pass = :user_password WHERE id = :user_id', [
+                'user_password' => Password::hash($repeated_password),
+                'user_id' => Session::read('login_id'),
             ]
         );
+
+        return [
+            'response' => true,
+            'swal_title' => 'Operazione riuscita!',
+            'swal_message' => 'Le password è stata modificata con successo.',
+            'swal_type' => 'success',
+        ];
     }
 }
