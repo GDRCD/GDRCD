@@ -112,4 +112,16 @@ class ModificaPassword extends BaseClass
             'swal_type' => 'success',
         ];
     }
+
+    /**
+     * @fn updateExternalUserPassword
+     * @note Verifica la correttezza delle informazioni immesse e aggiorna la password tramite email
+     * @param array $post
+     * @return array
+     * @throws Throwable
+     */
+    public function updateExternalUserPassword(array $post): array
+    {
+       // Update password da form esterno in homepage
+    }
 }

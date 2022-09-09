@@ -50,14 +50,11 @@ $content = (!empty($_GET['content'])) ? gdrcd_filter('include', $_GET['content']
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
         <link rel="shortcut icon" href="favicon.png" type="image/png"/>
         <link rel="stylesheet" href="<?= Router::getCssLink('homepage.css'); ?>"
-              type="text/css"/>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"/>
-        <title>
-            <?php echo $PARAMETERS['info']['site_name']; ?>
-        </title>
+              type="text/css"/>>
     </head>
     <body class="main_body">
 <?php
+require('header.inc.php'); /*Header comune*/
 
 // Includo la pagina
 gdrcd_load_modules($page, ['content' => $content]);

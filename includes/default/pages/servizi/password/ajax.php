@@ -8,4 +8,7 @@ switch ( $_POST['action'] ) {
     case 'update_password':
         echo json_encode($pasword->updateLoggedUserPassword($_POST));
         break;
+    case 'update_passowrd_external':
+        echo json_encode($pasword->updateExternalUserPassword($_POST));
+        break;
 }

@@ -51,13 +51,15 @@ if ( !empty($_POST['email']) ) {
 ?>
 <strong><?php echo gdrcd_filter('out', $MESSAGE['homepage']['forms']['forgot']); ?></strong>
 <div class="pass_rec">
-    <form action="index.php" method="post">
-        <div>
+    <div class="form_container">
+        <form class="form ajax_form" action="servizi/password/ajax.php">
+            <div>
             <span class="form_label"><label
                     for="passrecovery"><?php echo $MESSAGE['homepage']['forms']['email']; ?></label></span>
-            <input type="text" id="passrecovery" name="email"/>
-        </div>
-        <?= $feedback ?>
-        <input type="submit" value="<?php echo $MESSAGE['homepage']['forms']['new_pass']; ?>"/>
-    </form>
+                <input type="text" id="passrecovery" name="email"/>
+            </div>
+            <?= $feedback ?>
+            <input type="submit" value="<?php echo $MESSAGE['homepage']['forms']['new_pass']; ?>"/>
+        </form>
+    </div>
 </div>
