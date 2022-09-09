@@ -30,7 +30,7 @@ class GDRCD6 extends DbMigration
         );
 
         // Argon2 potrebbe non essere sempre disponibile. Nel qual caso usiamo Blowfish come default
-        $defaultPasswordCrypter = defined('PASSWORD_ARGON2ID')?
+        $defaultPasswordCrypter = defined('PASSWORD_ARGON2ID') ?
             'CrypterPasswordArgon2,argon2id'
             : 'CrypterPaswordBlowfish,2y';
 
@@ -221,7 +221,27 @@ class GDRCD6 extends DbMigration
               ('Gestione', 'Extra', 'Gestione Disponibilita', 'gestione/disponibilita/gestione_disponibilita', 'MANAGE_AVAILABILITIES'),
               ('Gestione', 'Extra', 'Gestione Sessi', 'gestione/sessi/gestione_sessi', 'MANAGE_GENDERS'),
               ('Gestione', 'Extra', 'Gestione Razze', 'gestione/razze/gestione_razze', 'MANAGE_RACES'),
-              ('Gestione', 'Contatti', 'Gestione Categorie', 'gestione/contatti/gestione_categorie', 'MANAGE_CONTACTS_CATEGORIES');"
+              ('Gestione', 'Contatti', 'Gestione Categorie', 'gestione/contatti/gestione_categorie', 'MANAGE_CONTACTS_CATEGORIES'),
+              ('Uffici', 'Anagrafe', 'Anagrafe', 'servizi_anagrafe', NULL),
+              ('Uffici', 'Lavoro', 'Amministrazione Gruppi', 'servizi/amministrazioneGilde/index', NULL),
+              ('Uffici', 'Lavoro', 'Lavoro', 'servizi/lavori/index', NULL),
+              ('Uffici', 'Gruppi', 'Gruppi', 'servizi/gruppi/index', NULL),
+              ('Uffici', 'Mercato', 'Mercato', 'servizi/mercato/mercato_index', NULL),
+              ('Uffici', 'Esiti', 'Pannello esiti', 'servizi_esiti', NULL),
+              ('Uffici', 'Stanze', 'Prenotazione stanze', 'servizi_prenotazioni', NULL),
+              ('Uffici', 'Banca', 'Servizi bancari', 'servizi_banca', NULL),
+              ('Utenti', 'Abilità', 'Abilità', 'user_abilita', NULL),
+              ('Utenti', 'Ambientazione', 'Ambientazione', 'user_ambientazione', NULL),
+              ('Utenti', 'Ambientazione', 'Razze', 'user_razze', NULL),
+              ('Utenti', 'Regolamento', 'Regolamento', 'user_regolamento', NULL),
+              ('Utenti', 'Gestione Utente', 'Cambio nome', 'user_cambio_nome', 'MANAGE_NAMES'),
+              ('Utenti', 'Gestione Utente', 'Cambio password', 'user_cambio_pass', NULL),
+              ('Utenti', 'Gestione Utente', 'Cancella account', 'user_cancella_pg', NULL),
+              ('Utenti', 'Statistiche', 'Statistiche Sito', 'user_stats', NULL),
+              ('Rapido', 'Scheda', 'Scheda', 'scheda/index', NULL),
+              ('Rapido', 'Gestione', 'Gestione', 'gestione', 'MANAGEMENT_MENU'),
+              ('Rapido', 'Servizi', 'Uffici', 'uffici', NULL),
+              ('Rapido', 'Menu utente', 'Utenti', 'utenti', NULL);"
         );
 
         DB::query("
@@ -353,7 +373,9 @@ class GDRCD6 extends DbMigration
                 ('MANAGE_CHAT_OPTIONS','Permesso per la gestione delle opzioni personalizzabili in chat'),
                 ('MANAGE_AVAILABILITIES','Permesso per la gestione delle disponibilita'),
                 ('MANAGE_RACES','Permesso per la gestione delle razze'),
-                ('MANAGE_GENDERS','Permesso per la gestione dei sessi')
+                ('MANAGE_GENDERS','Permesso per la gestione dei sessi'),
+                ('MANAGE_NAMES','Permesso per la gestione dei nomi dei personaggi'),
+                ('MANAGEMENT_MENU','Permesso per la pagina gestione')
                ;"
         );
 
@@ -376,7 +398,7 @@ class GDRCD6 extends DbMigration
                 (2,'Test', 'Di Funzionalità', :testpassword, NULL, '2011-06-04 00:47:48', '\$P\$Bd1amPCKkOF9GdgYsibZ96U92D5CtR0', 0, 1, -1, '2009-01-01', '2009-01-01', '', '', 1, 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000',  100, 100, 50, 50, '127.0.0.1', 0, '2009-01-01 00:00:00', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1);",
             [
                 'superpassword' => Password::hash('super'),
-                'testpassword' => Password::hash('test')
+                'testpassword' => Password::hash('test'),
             ]
         );
 
