@@ -6,15 +6,6 @@
  */
 class RecuperoPassword extends BaseClass
 {
-    /**
-     * @fn renderEmailForm
-     * @note renderizza il form in cui viene chiesto alla user di inserire la propria email di iscrizione
-     * @return string
-     */
-    public static function renderEmailForm(): string
-    {
-        // ...
-    }
 
     /**
      * @fn renderRecoveryMailSentStatus
@@ -46,18 +37,6 @@ class RecuperoPassword extends BaseClass
     {
         // Genera un token con makePasswordRecoveryToken() e invialo per email a $userEmail
         // magari il testo della mail può essere salvato in una configurazione da DB
-    }
-
-    /**
-     * @fn renderPasswordEditForm
-     * @note verifica la validità del token fornito e renderizza il form per salvare la nuova password
-     * @param string $recoveryToken
-     * @return string
-     * @throws Exception lancia un eccezione nel caso il token non sia valido
-     */
-    public static function renderPasswordEditForm(string $recoveryToken): string
-    {
-        // ...
     }
 
     /**

@@ -46,8 +46,8 @@ class ModificaPassword extends BaseClass
 
 
         $user_data = DB::queryStmt(
-            'SELECT email, pass FROM personaggio WHERE id = :userid', [
-            'userid' => Session::read('login_id'),
+            'SELECT email, pass FROM personaggio WHERE id = :user_id', [
+            'user_id' => Session::read('login_id'),
         ]);
 
         // Non esiste un pg in database
@@ -122,6 +122,33 @@ class ModificaPassword extends BaseClass
      */
     public function updateExternalUserPassword(array $post): array
     {
-       // Update password da form esterno in homepage
+        $user_email = Filters::email($post['email']);
+
+        $user_data = DB::queryStmt(
+            'SELECT id FROM personaggio WHERE email = :user_email', [
+            'user_email' => CrypterAlgo::withAlgo('CrypterSha256')->crypt($user_email),
+        ]);
+
+        if(!isset($user_data['id'])){
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Nessuna mail corrisponde a quella di cui si è chiesta la modifica.',
+                'swal_type' => 'error',
+            ];
+        }
+
+        $user_id = Filters::int($user_data['id']);
+
+        // Generazione nuova password
+        // TODO: Generare token per inviare via mail
+
+        return [
+            'response' => true,
+            'swal_title' => 'Operazione riuscita!',
+            'swal_message' => 'Password modificata correttamente ed inviata alla mail indicata.',
+            'swal_type' => 'success',
+        ];
+
     }
 }
