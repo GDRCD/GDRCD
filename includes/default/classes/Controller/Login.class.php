@@ -47,9 +47,10 @@ class Login extends BaseClass
      */
     public function beforeLogin(string $login, string $pass, string $ip): void
     {
+        $wasAlreadyLoggedIn = Session::isLogged();
 
         // Controllo che l'account esista
-        if ( !Session::isLogged() && !Session::login($login, $pass) ) {
+        if ( !$wasAlreadyLoggedIn && !Session::login($login, $pass) ) {
             throw new Exception($GLOBALS['MESSAGE']['error']['unknown_username']);
         }
 
@@ -65,7 +66,7 @@ class Login extends BaseClass
 
         // Controllo che l'account non sia già attivo
         if (
-            !Session::isLogged() &&
+            !$wasAlreadyLoggedIn &&
             CarbonWrapper::DatesDifferenceMinutes(Session::read('ultimo_refresh'), CarbonWrapper::getNow()) < 2 &&
             CarbonWrapper::greaterThan(Session::read('ultima_entrata'), Session::read('ultima_uscita'))
         ) {
