@@ -32,7 +32,7 @@ class ModificaPassword extends BaseClass
 
     /**
      * @fn updatePassword
-     * @note Verifica la correttezza delle informazioni immesse e aggiorna la password dell'utente connesso
+     * @note Update la password dell'utente
      * @param array $post
      * @return array
      * @throws Throwable

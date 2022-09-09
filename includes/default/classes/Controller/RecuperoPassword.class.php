@@ -87,7 +87,7 @@ class RecuperoPassword extends BaseClass
 
     /**
      * @fn recoverPassword
-     * @note Verifica la correttezza delle informazioni immesse e aggiorna la password tramite email
+     * @note Recupera la password dell'utente
      * @param array $post
      * @return array
      * @throws Throwable
