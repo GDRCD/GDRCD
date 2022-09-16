@@ -50,11 +50,27 @@ class Chat extends BaseClass
      * @note Estrae i dati di una chat
      * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return bool|array
+     * @throws Throwable
      */
-    public function getChatData(int $id, string $val = '*')
+    public function getChatData(int $id, string $val = '*'): bool|array
     {
-        return DB::query("SELECT {$val} FROM mappa WHERE id='{$id}' LIMIT 1");
+        return DB::queryStmt(
+            "SELECT {$val} FROM mappa WHERE id=:id LIMIT 1",
+            [
+                'id' => $id,
+            ]
+        )->getData();
+    }
+
+    /**
+     * @fn getActualChatId
+     * @note Ottiene l'id della chat attuale
+     * @return int
+     */
+    public function getActualChatId(): int
+    {
+        return $this->luogo;
     }
 
     /**
@@ -62,12 +78,12 @@ class Chat extends BaseClass
      * @note Funzione per il reset delle variabili necessarie
      * @return void
      */
-    public function resetClass()
+    public function resetClass(): void
     {
         # Variabili di sessione
-        $this->luogo = Filters::int($_SESSION['luogo']);
-        $this->last_action = Filters::int($_SESSION['last_action_id']);
-
+        $this->luogo = Filters::int(Session::read('luogo'));
+        $this->last_action = Filters::int(Session::read('last_action_id'));
+        
         # Ore di caricamento della chat
         $this->chat_time = Functions::get_constant('CHAT_TIME');
 
@@ -119,6 +135,7 @@ class Chat extends BaseClass
      * @note Controllo chat
      * @param $post
      * @return array
+     * @throws Throwable
      */
     public function controllaChat($post): array
     {
@@ -141,18 +158,19 @@ class Chat extends BaseClass
      */
     public function setLast(int $id): void
     {
-        $_SESSION['last_action_id'] = $id;
+        Session::store('last_action_id', $id);
         $this->last_action = $id;
     }
 
     /**
      * @fn assignExp
      * @note Assegna l'esperienza indicata al personaggio che ha inviato l'azione
-     * @param mixed $azione
+     * @param array $azione
      * @return void
      * # TODO globalizzare i valori
+     * @throws Throwable
      */
-    private function assignExp($azione): void
+    private function assignExp(array $azione): void
     {
         # Filtro i valori passati
         $tipo = Filters::in($azione['tipo']);
@@ -289,6 +307,7 @@ class Chat extends BaseClass
      * @fn printChat
      * @note Stampi le azioni in chat, funzione pubblica da richiamare per lo stamp
      * @return string
+     * @throws Throwable
      */
     public function printChat(): string
     {
@@ -304,7 +323,7 @@ class Chat extends BaseClass
                 $html .= $this->Filter($azione);
             }
 
-            # Ritorno l'html creato
+            # Ritorno html creato
             return $html;
         } else {
             return '';
@@ -314,22 +333,51 @@ class Chat extends BaseClass
     /**
      * @fn getActions
      * @note Estrai le azioni in chat che devono essere visualizzate
-     * @return mixed
+     * @return bool|array
+     * @throws Throwable
      */
-    private function getActions()
+    private function getActions(): bool|array
     {
-
         # Se l'ultima azione non e' 0 e quindi non sono appena entrato in chat
         $extra_query = ($this->last_action > 0) ? " AND chat.id > '{$this->last_action}' " : '';
 
         # Estraggo le azioni n base alle condizioni indicate
-        return DB::query("SELECT personaggio.nome,personaggio.url_img_chat,personaggio.sesso,chat.*
-                                    FROM chat 
-                                    LEFT JOIN personaggio
-                                    ON (personaggio.nome = chat.mittente)
-                                    WHERE chat.stanza ='{$this->luogo}' 
-                                      AND chat.ora > DATE_SUB(NOW(),INTERVAL {$this->chat_time} HOUR) {$extra_query} 
-                                      ORDER BY id", 'result');
+        return DB::queryStmt("
+            SELECT personaggio.nome,personaggio.url_img_chat,personaggio.sesso,chat.*  FROM chat 
+                LEFT JOIN personaggio ON (personaggio.nome = chat.mittente)
+                WHERE chat.stanza = :luogo AND chat.ora > DATE_SUB(NOW(), INTERVAL :chat_time HOUR) {$extra_query}
+                ORDER BY id",
+            [
+                'luogo' => $this->luogo,
+                'chat_time' => $this->chat_time,
+            ]
+        )->getData();
+    }
+
+    /**
+     * @fn getActions
+     * @note Estrai le azioni in chat che devono essere visualizzate
+     * @param int $chat
+     * @param string $start
+     * @param string $end
+     * @return array
+     * @throws Throwable
+     */
+    public function getActionsByTime(int $chat, string $start, string $end): array
+    {
+
+        $start = Filters::out($start);
+        $end = Filters::out($end);
+        $chat = Filters::in($chat);
+
+        # Estraggo le azioni n base alle condizioni indicate
+        return DB::queryStmt("
+        SELECT personaggio.nome,personaggio.url_img_chat,personaggio.sesso,chat.* FROM chat 
+            LEFT JOIN personaggio ON (personaggio.nome = chat.mittente)
+            WHERE chat.stanza = :chat AND chat.ora >= :start AND chat.ora <= :end
+            ORDER BY id",
+            ['chat' => $chat, 'start' => $start, 'end' => $end]
+        )->getData();
     }
 
     /**
@@ -338,7 +386,7 @@ class Chat extends BaseClass
      * @param array $azione
      * @return string
      */
-    private function Filter(array $azione): string
+    public function Filter(array $azione): string
     {
         # Filtro i dati passati
         $tipo = Filters::out($azione['tipo']);
@@ -455,60 +503,33 @@ class Chat extends BaseClass
      */
     private function htmlAzione(array $azione): string
     {
-
         # Filtro le variabili necessarie
         $mittente = Filters::int($azione['mittente']);
-        $mittente_data = Personaggio::getPgData($mittente, 'nome');
-        $mittente_nome = Filters::out($mittente_data['nome']);
-        $tag = Filters::out($azione['destinatario']);
-        $img_chat = Filters::out($azione['url_img_chat']);
+        $mittente_data = Personaggio::getPgData($mittente, 'nome,url_img_chat');
         $testo = Filters::string($azione['testo']);
 
         # Customizzazioni
         $colore_testo_parlato = PersonaggioChatOpzioni::getInstance()->getOptionValue('action_color_talk', $this->me_id);
         $colore_parlato = Filters::out($colore_testo_parlato['valore']);
-
         $colore_testo_descr = PersonaggioChatOpzioni::getInstance()->getOptionValue('action_color_descr', $this->me_id);
-        $colore_descr = Filters::out($colore_testo_descr['valore']);
-
         $testo_size = PersonaggioChatOpzioni::getInstance()->getOptionValue('action_size', $this->me_id);
-        $size = Filters::out($testo_size['valore']) ? Filters::out($testo_size['valore']) . 'px' : '';
 
-        # Formo i testi necessari
-        $ora = gdrcd_format_time($azione['ora']);
-        $testo = $this->formattedText($testo, $colore_parlato);
-
-        # Se le icone in chat sono abilitate
-        if ( $this->chat_icone ) {
-
-            # Estraggo le icone
-            $data_imgs = $this->getIcons($mittente);
-
-            # Aggiungo l'html delle icone
-            $html = "<span class='chat_icons'>";
-
-            # Se l'avatar e' abilitato, aggiungo l'html dell'avatar
-            if ( $this->chat_avatar ) {
-                $html .= " <img class='chat_ico' src='{$img_chat}' class='chat_avatar'> ";
-            }
-
-            foreach ( $data_imgs as $data_img ) {
-                $link = Router::getImgsDir() . $data_img['Img'];
-                $html .= "<img class='chat_ico' src='{$link}' title='{$data_img['Title']}'> ";
-            }
-
-            $html .= "</span>";
-        }
-
-        # Creo il corpo azione
-        $html .= "<span class='chat_time'>{$ora}</span> ";
-        $html .= "<span class='chat_name'><a href='#'>{$mittente_nome}</a></span> ";
-        $html .= "<span class='chat_tag'> [{$tag}]</span> ";
-        $html .= "<span class='chat_msg' style='color:{$colore_descr}; font-size:{$size};'>{$testo}</span> ";
-        $html .= '<br style="clear:both;" /> ';
+        $array = [
+            "img_chat" => Filters::out($mittente_data['url_img_chat']),
+            "chat_icone" => $this->chat_icone,
+            "data_imgs" => $this->getIcons($mittente),
+            "chat_avatar" => $this->chat_avatar,
+            "img_link" => Router::getImgsDir(),
+            "ora" => gdrcd_format_time($azione['ora']),
+            "testo" => $this->formattedText($testo, $colore_parlato),
+            "size" => Filters::out($testo_size['valore']) ? Filters::out($testo_size['valore']) . 'px' : '',
+            "colore_descr" => Filters::out($colore_testo_descr['valore']),
+            "mittente_nome" => Filters::out($mittente_data['nome']),
+            "tag" => Filters::out($azione['destinatario']),
+        ];
 
         # Ritorno l'html creato
-        return $html;
+        return Template::getInstance()->startTemplate()->render('chat/A', $array);
     }
 
     /**
@@ -521,7 +542,6 @@ class Chat extends BaseClass
     {
         # Inizializzo le variabili necessarie
         $intestazione = '';
-        $html = '';
 
         # Filtro le variabili necessarie
         $mittente = Filters::int($azione['mittente']);
@@ -531,7 +551,6 @@ class Chat extends BaseClass
         $mittente_data = Personaggio::getPgData($mittente, 'nome');
         $mittente_nome = Filters::out($mittente_data['nome']);
 
-        // TODO Cambiare campo libero destinatario sussurro con select personaggi
         $destinatario_data = Personaggio::getPgData($destinatario, 'nome');
         $destinatario_nome = Filters::out($destinatario_data['nome']);
 
@@ -558,14 +577,16 @@ class Chat extends BaseClass
         }
 
         # Se l'intestazione non e' vuota, significa che posso leggere il messaggio e lo stampo
-        if ( $intestazione != '' ) {
-            $html .= "<span class='chat_time'>{$ora}</span> ";
-            $html .= "<span class='chat_name'>{$intestazione}</span> ";
-            $html .= "<span class='chat_msg' style='color:{$colore_parlato};font-size:{$size};'>{$testo}</span> ";
-        }
+        $array = [
+            "intestazione" => $intestazione,
+            "ora" => $ora,
+            "colore_parlato" => $colore_parlato,
+            "size" => $size,
+            "testo" => $testo,
+        ];
 
         # Ritorno l'html stampato
-        return $html;
+        return Template::getInstance()->startTemplate()->render('chat/S', $array);
     }
 
     /**
@@ -594,13 +615,17 @@ class Chat extends BaseClass
         # Formo i testi necessari
         $testo = $this->formattedText($testo);
 
-        # Creo il corpo azione
-        $html = "<span class='chat_time'>{$ora}</span> ";
-        $html .= "<span class='chat_name'>{$mittente_nome} sussurra a tutti: </span> ";
-        $html .= "<span class='chat_msg' style='color:{$colore_parlato};font-size:{$size};'>{$testo}</span> ";
+        # Se l'intestazione non e' vuota, significa che posso leggere il messaggio e lo stampo
+        $array = [
+            "ora" => $ora,
+            "colore_parlato" => $colore_parlato,
+            "size" => $size,
+            "testo" => $testo,
+            "mittente_nome" => $mittente_nome,
+        ];
 
         # Ritorno l'html dell'azione
-        return $html;
+        return Template::getInstance()->startTemplate()->render('chat/F', $array);
     }
 
     /**
@@ -629,13 +654,16 @@ class Chat extends BaseClass
         $ora = gdrcd_format_time($azione['ora']);
         $testo = $this->formattedText($testo, $colore_parlato);
 
-        # Creo il corpo azione
-        $html = "<span class='chat_time'>{$ora}</span> ";
-        $html .= "<span class='chat_name'>{$destinatario}</span> ";
-        $html .= "<span class='chat_msg' style='color:{$colore_descr};font-size:{$size};'>{$testo}</span> ";
+        $array = [
+            "ora" => $ora,
+            "destinatario" => $destinatario,
+            "colore_descr" => $colore_descr,
+            "size" => $size,
+            "testo" => $testo,
+        ];
 
         # Ritorno l'html dell'azione
-        return $html;
+        return Template::getInstance()->startTemplate()->render('chat/N', $array);
     }
 
     /**
@@ -662,12 +690,15 @@ class Chat extends BaseClass
         $ora = gdrcd_format_time($azione['ora']);
         $testo = $this->formattedText($testo, $colore_parlato);
 
-        # Creo il corpo azione
-        $html = "<span class='chat_time'>{$ora}</span> ";
-        $html .= "<span class='chat_msg' style='color:{$colore_descr};font-size:{$size};'>{$testo}</span> ";
+        $array = [
+            "ora" => $ora,
+            "colore_descr" => $colore_descr,
+            "size" => $size,
+            "testo" => $testo,
+        ];
 
         # Ritorno l'html dell'azione
-        return $html;
+        return Template::getInstance()->startTemplate()->render('chat/M', $array);
     }
 
     /**
@@ -691,12 +722,15 @@ class Chat extends BaseClass
         $ora = gdrcd_format_time($azione['ora']);
         $testo = $this->formattedText($testo);
 
-        # Creo il corpo azione
-        $html = "<span class='chat_time'>{$ora}</span> ";
-        $html .= "<span class='chat_msg' style='color:{$colore_parlato};font-size:{$size};'>{$testo}</span> ";
+        $array = [
+            "ora" => $ora,
+            "colore_parlato" => $colore_parlato,
+            "size" => $size,
+            "testo" => $testo,
+        ];
 
         # Ritorno l'html dell'azione
-        return $html;
+        return Template::getInstance()->startTemplate()->render('chat/MOD', $array);
     }
 
     /**
@@ -720,12 +754,15 @@ class Chat extends BaseClass
         $ora = gdrcd_format_time($azione['ora']);
         $testo = $this->formattedText($testo);
 
-        # Creo il corpo azione
-        $html = "<span class='chat_time'>{$ora}</span> ";
-        $html .= "<span class='chat_msg' style='color:{$colore_parlato};font-size:{$size};'>{$testo}</span> ";
+        $array = [
+            "ora" => $ora,
+            "colore_parlato" => $colore_parlato,
+            "size" => $size,
+            "testo" => $testo,
+        ];
 
         # Ritorno l'html dell'azione
-        return $html;
+        return Template::getInstance()->startTemplate()->render('chat/text', $array);
     }
 
     /**
@@ -738,14 +775,15 @@ class Chat extends BaseClass
     {
         # Formo i testi necessari
         $ora = gdrcd_format_time($azione['ora']);
-        $url = Filters::url($azione['testo']);
+        $url = Filters::out($azione['testo']);
 
-        # Creo il corpo azione
-        $html = "<span class='chat_time'>{$ora}</span> ";
-        $html .= "<span class='chat_msg'><img src='{$url}'></span> ";
+        $array = [
+            "ora" => $ora,
+            "url" => $url,
+        ];
 
         # Ritorno l'html dell'azione
-        return $html;
+        return Template::getInstance()->startTemplate()->render('chat/I', $array);
     }
 
 
@@ -775,6 +813,7 @@ class Chat extends BaseClass
                     break;
                 case 'N':
                 case 'M':
+                case 'I':
                     $resp = $this->sendAction($post, GAMEMASTER);
                     break;
                 case 'MOD':
@@ -806,6 +845,7 @@ class Chat extends BaseClass
      * @param array $post
      * @param int $permission
      * @return array
+     * @throws Throwable
      */
     private function sendAction(array $post, int $permission): array
     {
@@ -877,6 +917,7 @@ class Chat extends BaseClass
      * @fn saveAction
      * @note Funzione che si occupa del salvataggio dell'azione in DB
      * @param array $post
+     * @throws Throwable
      */
     private function saveAction(array $post)
     {
@@ -1300,7 +1341,7 @@ class Chat extends BaseClass
 
         # Salvo il risultato in DB
         DB::query("INSERT INTO chat(stanza,mittente,destinatario,tipo,testo)
-                            VALUE('{$this->luogo}','{$this->me}','','C','{$html}')");
+                            VALUE('{$this->luogo}','{$this->me_id}','','C','{$html}')");
     }
 
     /*******  ESITI *******/
