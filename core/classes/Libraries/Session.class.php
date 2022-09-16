@@ -170,6 +170,7 @@ class Session extends BaseClass
                 self::store('luogo', empty($User['ultimo_luogo']) ? -1 : $User['ultimo_luogo']);
                 self::store('tag', '');
                 self::store('last_message', 0);
+                self::store('last_action_id', 0);
 
                 return true;
             }

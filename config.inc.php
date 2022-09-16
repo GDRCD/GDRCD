@@ -23,12 +23,11 @@ if (!empty($_SESSION['login'])) {
      * @author Blancks
      */
     if (isset($_REQUEST['map_id']) && is_numeric($_REQUEST['map_id'])) {
-        $_SESSION['luogo'] = -1;
-        $_SESSION['mappa'] = $_REQUEST['map_id'];
+        Session::store('mappa',$_REQUEST['map_id']);
     }
 
     if (isset($_REQUEST['dir']) && is_numeric($_REQUEST['dir'])) {
-        $_SESSION['luogo'] = $_REQUEST['dir'];
+        Session::store('luogo',$_REQUEST['dir']);
     }
 }
 

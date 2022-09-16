@@ -35,10 +35,12 @@ div.pagina_frame_chat div.page_body div.panels_box {
 	* @author Blancks
 */
 img.chat_avatar {
-    margin: 8px;
+    margin: 0 8px;
     display: block;
     float: left;
-    position: relative;
+    width: 35px;
+    height: 35px;
+    vertical-align: middle;
 }
 
 /***** testo della chat *****/
@@ -47,6 +49,10 @@ img.chat_avatar {
 
 div.chat_row_A {
     margin-top: 3px;
+}
+
+div.chat_row_A span{
+    vertical-align: middle;
 }
 
 div.chat_row_A span.color2 {
@@ -103,6 +109,10 @@ div.chat_row_I {
     text-align: center;
 }
 
+div.chat_row_I img {
+    max-width: 200px;
+}
+
 div.chat_row_S {
     margin-top: 3px;
 }
@@ -135,7 +145,25 @@ span.chat_name {
     color: #000;
 }
 
-span.chat_msg {
+.chat_top{
+    height: 40px;
+    margin-top: 20px;
+}
+
+.chat_top span{
+    vertical-align: top;
+}
+
+.chat_top img{
+    max-height: 40px;
+}
+
+.chat_msg {
+    color: #333;
+    font-size: 12px;
+}
+
+span.chat_tag {
     color: #333;
     font-size: 12px;
 }
@@ -192,8 +220,9 @@ div.chat_box .chat_azioni_box {
 }
 
 .chat_box .chat_azioni_box .chat_azioni .chat_ico {
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
+    margin-right: 5px;
 }
 
 .chat_box .chat_input_box {

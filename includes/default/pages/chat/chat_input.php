@@ -32,6 +32,7 @@ $chat_abi_class = ChatAbilita::getInstance();
                     <?php if ( $_SESSION['permessi'] >= GAMEMASTER ) { ?>
                         <option value="N">PNG</option>
                         <option value="M">Master</option>
+                        <option value="I">Immagine</option>
                     <?php } ?>
 
                     <?php if ( $_SESSION['permessi'] >= MODERATOR ) { ?>
@@ -58,6 +59,7 @@ $chat_abi_class = ChatAbilita::getInstance();
             <div class="input_container invia">
                 <input type="submit" value="Invia">
                 <input type="hidden" name="action" value="send_action">
+                <input type="hidden" name="dir" value="<?=$chat->getActualChatId();?>">
             </div>
         </div>
     </form>
@@ -90,6 +92,7 @@ $chat_abi_class = ChatAbilita::getInstance();
             <div class="input_container invia">
                 <input type="submit" value="Invia">
                 <input type="hidden" name="action" value="roll_dice">
+                <input type="hidden" name="dir" value="<?=$chat->getActualChatId();?>">
             </div>
 
         </div>
