@@ -120,6 +120,20 @@ class RegistrazioneGiocate extends BaseClass
         return Personaggio::isMyPg($id_pg) || Permissions::permission('SCHEDA_UPDATE_RECORDS');
     }
 
+    /**
+     * @fn permissionViewSingleRecord
+     * @note Controlla se l'utente può vedere la registrazione
+     * @param int $id
+     * @return bool
+     * @throws Throwable
+     */
+    public function permissionViewSingleRecord(int $id): bool
+    {
+        $record = $this->getRecord($id, 'autore');
+        return $this->permissionViewRecords(Filters::int($record['autore']));
+    }
+
+
     /*** RENDER ***/
 
     /**
@@ -184,6 +198,50 @@ class RegistrazioneGiocate extends BaseClass
         return Template::getInstance()->startTemplate()->renderTable(
             'scheda/registrazioni/index',
             $this->renderCharacterRecordsList($id)
+        );
+    }
+
+    /**
+     * @fn renderCharacterRecordView
+     * @note Renderizza la vista di una registrazione
+     * @param int $id
+     * @return string
+     * @throws Throwable
+     */
+    public function renderCharacterRecordView(int $id): string
+    {
+
+        $html = '';
+        $record_data = $this->getRecord($id, 'chat,inizio,fine');
+        $start = Filters::out($record_data['inizio']);
+        $end = Filters::out($record_data['fine']);
+        $chat = Filters::in($record_data['chat']);
+
+        $chat_data = Chat::getInstance()->getChatData($chat, 'nome');
+        $chat_name = Filters::out($chat_data['nome']);
+        $chat_messages = Chat::getInstance()->getActionsByTime($chat, $start, $end);
+
+        foreach ( $chat_messages as $message ) {
+            $html .= Chat::getInstance()->Filter($message);
+        }
+
+        return $html;
+    }
+
+    /**
+     * @fn renderRecord
+     * @note Restituisce i dati di una registrazione
+     * @param int $id
+     * @return string
+     * @throws Throwable
+     */
+    public function characterRecord(int $id): string
+    {
+        var_dump(1);
+
+        return Template::getInstance()->startTemplate()->renderTable(
+            'scheda/registrazioni/view',
+            $this->renderCharacterRecordView($id)
         );
     }
 

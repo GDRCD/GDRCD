@@ -178,6 +178,10 @@ class Scheda extends BaseClass
                 $page = 'registrazioni/edit.php';
                 break;
 
+            case 'registrazioni_view':
+                $page = 'registrazioni/view.php';
+                break;
+
         }
 
         return $page;
