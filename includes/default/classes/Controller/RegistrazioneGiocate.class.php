@@ -127,6 +127,7 @@ class RegistrazioneGiocate extends BaseClass
      * @note Restituisce la lista delle registrazioni giocate di un personaggio
      * @param int $id_pg
      * @return array
+     * @throws Throwable
      */
     public function renderCharacterRecordsList(int $id_pg): array
     {
@@ -181,7 +182,7 @@ class RegistrazioneGiocate extends BaseClass
     {
 
         return Template::getInstance()->startTemplate()->renderTable(
-            'scheda/registrazioni',
+            'scheda/registrazioni/index',
             $this->renderCharacterRecordsList($id)
         );
     }
@@ -191,6 +192,7 @@ class RegistrazioneGiocate extends BaseClass
      * @note Restituisce la lista delle registrazioni giocate di un personaggio
      * @param string $type
      * @return array
+     * @throws Throwable
      */
     public function renderAllRecordsList(string $type): array
     {

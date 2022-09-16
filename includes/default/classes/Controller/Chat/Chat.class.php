@@ -50,17 +50,17 @@ class Chat extends BaseClass
      * @note Estrae i dati di una chat
      * @param int $id
      * @param string $val
-     * @return bool|array
+     * @return DBQueryInterface
      * @throws Throwable
      */
-    public function getChatData(int $id, string $val = '*'): bool|array
+    public function getChatData(int $id, string $val = '*'): DBQueryInterface
     {
         return DB::queryStmt(
             "SELECT {$val} FROM mappa WHERE id=:id LIMIT 1",
             [
                 'id' => $id,
             ]
-        )->getData();
+        );
     }
 
     /**
