@@ -568,7 +568,7 @@ class Chat extends BaseClass
     public function printChat(): string
     {
         if ( $this->chatAccess() ) {
-            return $this->Filter($this->getActions()->getData());
+            return $this->Filter($this->getActions());
         } else {
             return '';
         }
@@ -603,20 +603,21 @@ class Chat extends BaseClass
     /**
      * @fn Filter
      * @ntoe Filtra il tipo dell'azione passata per decidere che html stampare
-     * @param array $azioni
+     * @param DBQueryInterface $azioni
      * @return string
      * @throws Throwable
      */
-    public function Filter(array $azioni): string
+    public function Filter(DBQueryInterface $azioni): string
     {
         $html = '';
+        $id = $this->last_action;
 
         foreach ( $azioni as $azione ) {
             # Filtro i dati passati
             $tipo = Filters::out($azione['tipo']);
             $id = Filters::out($azione['id']);
 
-            # Inizio l'html con una classe comune ed una di tipologia, uguale per tutte
+            # Inizio l'html con una classe comune e una di tipologia, uguale per tutte
             $html .= "<div class='singola_azione chat_row_{$tipo}'>";
 
             # Creo l'html in base al tipo indicato
@@ -654,10 +655,9 @@ class Chat extends BaseClass
             }
 
             $html .= "</div>";
-
-            # Setto quella analizzata come ultima azione analizzata
-            $this->setLast($id);
         }
+
+        $this->setLast($id);
 
         # Ritorno html creato
         return $html;
