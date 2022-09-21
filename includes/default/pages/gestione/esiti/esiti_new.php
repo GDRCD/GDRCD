@@ -64,7 +64,7 @@ $op = Filters::out($_POST['op']);
             <div class="single_input">
                 <div class="label">Chat</div>
                 <select name="chat">
-                    <?= $chat->chatList(); ?>
+                    <?= $chat->listChats(); ?>
                 </select>
             </div>
 

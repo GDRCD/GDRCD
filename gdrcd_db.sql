@@ -442,6 +442,27 @@ CREATE TABLE IF NOT EXISTS `lavori` (
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `giocate_registrate`
+--
+
+CREATE TABLE IF NOT EXISTS `giocate_registrate` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `autore` int NOT NULL,
+    `chat` int NOT NULL,
+    `titolo` varchar(255) NOT NULL,
+    `nota` text DEFAULT NULL,
+    `quest` int DEFAULT NULL ,
+    `inizio` datetime NOT NULL,
+    `fine` datetime NOT NULL,
+    `bloccata` tinyint(1) DEFAULT 0,
+    `controllata` tinyint(1) DEFAULT 0,
+    `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `gruppi`
 --
 
@@ -1193,25 +1214,6 @@ CREATE TABLE IF NOT EXISTS `regolamento` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `segnalazione_role`
---
-
-CREATE TABLE IF NOT EXISTS `segnalazione_role` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `stanza` int NOT NULL,
-  `conclusa` int NOT NULL DEFAULT '0',
-  `partecipanti` text CHARACTER SET utf8 COLLATE utf8_general_ci,
-  `mittente` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `data_inizio` datetime DEFAULT NULL,
-  `data_fine` datetime DEFAULT NULL,
-  `tags` text CHARACTER SET utf8 COLLATE utf8_general_ci,
-  `quest` text CHARACTER SET utf8 COLLATE utf8_general_ci,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Struttura della tabella `sessi`
 --
 
@@ -1231,9 +1233,9 @@ CREATE TABLE IF NOT EXISTS `sessi` (
 CREATE TABLE IF NOT EXISTS `send_GM` (
   `id` int NOT NULL AUTO_INCREMENT,
   `data` datetime NOT NULL,
-  `autore` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `autore` varchar(255) NOT NULL,
   `role_reg` int NOT NULL,
-  `note` text CHARACTER SET utf8 COLLATE utf8_general_ci,
+  `note` text DEFAULT NULL ,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 

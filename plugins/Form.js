@@ -132,6 +132,7 @@ class Form {
         $(form).find('input[type="file"]').val('');
         $(form).find('input[type="number"]').val('');
         $(form).find('input[type="text"]').val('');
+        $(form).find('input[type="datetime-local"]').val('');
         $(form).find('input[type="checkbox"]').prop('checked', false);
         $(form).find('select').val('');
         $(form).find('textarea').val('');

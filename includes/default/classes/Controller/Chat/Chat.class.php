@@ -404,14 +404,15 @@ class Chat extends BaseClass
     /**** LISTS ****/
 
     /**
-     * @fn chatList
+     * @fn listChats
      * @note Crea la lista delle chat
+     * @param int $selected
      * @return string
      * @throws Throwable
      */
-    public function chatList(): string
+    public function listChats(int $selected = -1): string
     {
-        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $this->getAllChats(), 'Chat');
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', $selected, $this->getAllChats(), 'Chat');
     }
 
 
@@ -583,7 +584,7 @@ class Chat extends BaseClass
      */
     public function printChatByTime(int $chat, string $start, string $end): string
     {
-        return ($this->chatAccess()) ? $this->Filter($this->getActionsByTime($chat, $start, $end)) : '';
+        return ($this->chatAccess($chat)) ? $this->Filter($this->getActionsByTime($chat, $start, $end)) : '';
     }
 
     /**

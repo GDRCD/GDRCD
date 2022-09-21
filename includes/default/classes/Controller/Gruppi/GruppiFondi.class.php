@@ -266,7 +266,6 @@ class GruppiFondi extends Gruppi
 
                     // Se devo assegnare il fondo
                     if ( CarbonWrapper::needExec($interval, $interval_type, $last_exec) ) {
-                        var_dump(1);
                         $denaro = Filters::int($found['denaro']);
                         $total_given += $denaro;
                         DB::query("UPDATE gruppi SET denaro=denaro+'{$denaro}' WHERE id='{$group_id}' LIMIT 1");

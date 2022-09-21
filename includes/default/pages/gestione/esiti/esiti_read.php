@@ -52,7 +52,7 @@ if ( $esiti->esitoViewPermission($id_record) && $esiti->esitoExist($id_record) )
                     <div class="single_input w-33">
                         <div class="label">Chat</div>
                         <select name="chat">
-                            <?= $chat->chatList(); ?>
+                            <?= $chat->listChats(); ?>
                         </select>
                     </div>
 

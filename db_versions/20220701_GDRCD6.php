@@ -112,7 +112,9 @@ class GDRCD6 extends DbMigration
                 ('CONTACT_SECRETS', 1, 'Contatti','Abilita/Disabilita la scelta di nascondere le note',  'Abilita/Disabilita la scelta di nascondere le note', 'bool', 1,NULL),
                 ('CONTACT_CATEGORIES', 1, 'Contatti','Abilita/Disabilita le categorie',  'Abilita/Disabilita le categorie', 'bool', 1,NULL),
                 ('CONTACT_CATEGORIES_PUBLIC', 1, 'Contatti','Se abilitato, tutti vedono le categorie',  'Se abilitato, tutti vedono le categorie', 'bool', 1,NULL),
-                ('CONTACT_CATEGORIES_STAFF_ONLY', 0, 'Contatti', 'Se abilitato, solo lo staff può assegnare le categorie di contatto', 'Se abilitato, solo lo staff può assegnare le categorie di contatto', 'bool', 1,NULL);"
+                ('CONTACT_CATEGORIES_STAFF_ONLY', 0, 'Contatti', 'Se abilitato, solo lo staff può assegnare le categorie di contatto', 'Se abilitato, solo lo staff può assegnare le categorie di contatto', 'bool', 1,NULL),
+                ('REGISTRAZIONI_ENABLED',1,'Registrazioni','Registrazioni attive','Registrazioni attive?','bool',1,NULL);"
+
         );
 
         DB::query("
@@ -200,7 +202,7 @@ class GDRCD6 extends DbMigration
               ('Gestione', 'Gestione', 'Gestione Versioni Database', 'gestione_db_migrations', 'MANAGE_DB_MIGRATIONS'),
               ('Gestione', 'Permessi', 'Gestione Permessi', 'gestione_permessi', 'MANAGE_PERMISSIONS'),
               ('Gestione', 'Gestione', 'Manutenzione', 'gestione_manutenzione', 'MANAGE_MANUTENTIONS'),
-              ('Gestione', 'Chat', 'Giocate Segnalate', 'gestione/segnalazioni/esito_index', 'MANAGE_REPORTS'),            
+              ('Gestione', 'Chat', 'Giocate Segnalate', 'gestione/registrazioni/index', 'MANAGE_REPORTS'),            
               ('Gestione', 'Chat', 'Opzioni Chat', 'gestione/chat/opzioni/gestione_chat_opzioni', 'MANAGE_CHAT_OPTIONS'),
               ('Gestione', 'Meteo', 'Gestione condizioni', 'gestione/meteo/condizioni/gestione_condizioni', 'MANAGE_WEATHER_CONDITIONS'),
               ('Gestione', 'Meteo', 'Gestione stagioni', 'gestione/meteo/stagioni/gestione_stagioni_index', 'MANAGE_WEATHER_SEASONS'),
@@ -344,6 +346,8 @@ class GDRCD6 extends DbMigration
                 ('SCHEDA_UPDATE','Permesso per la modifica dei dati personaggio altrui'),
                 ('SCHEDA_STATUS_MANAGE','Permesso per la modifica dei dati status altrui'),
                 ('SCHEDA_BAN','Permesso per il ban di un personaggio dalla scheda'),
+                ('SCHEDA_VIEW_RECORDS','Permesso per visualizzazione giocate registrate dei pg altrui'),
+                ('SCHEDA_UPDATE_RECORDS','Permesso per modificare giocate registrate dei pg altrui'),
                 ('SCHEDA_ADMINISTRATION_MANAGE','Permesso per la pagina amministrazione della scheda'),
                 ('MANAGE_OBJECTS','Permesso per la gestione degli oggetti'),
                 ('MANAGE_OBJECTS_TYPES','Permesso per la gestione delle tipologie di oggetti'),

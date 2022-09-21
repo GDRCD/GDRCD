@@ -18,7 +18,9 @@
         $pageend = $pagebegin + $PARAMETERS['settings']['posts_per_page'];
 
         //Conteggio record totali
-        $record_globale = gdrcd_query("SELECT COUNT(*) FROM send_GM ");
+        $record_globale = gdrcd_query("SELECT COUNT(*) FROM 
+
+                    send_GM ");
         $totaleresults = $record_globale['COUNT(*)'];
 
         $query = "SELECT * FROM send_GM ORDER BY data DESC LIMIT " . $pagebegin . ", " . $PARAMETERS['settings']['posts_per_page'] . "";
