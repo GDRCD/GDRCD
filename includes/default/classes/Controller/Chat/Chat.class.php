@@ -3,18 +3,17 @@
 /**
  * @class Chat
  * @note Classe che gestisce la chat
+ * TODO Quando si entra in chat dopo il login, il primo giro di stampe via ajax e' buggato, da risolvere
  */
 class Chat extends BaseClass
 {
 
     /**
-     * @note Inizializzo le variabili private della classe, per evitare di doverle richiamare ogni volta dalla sessione
-     *          ed evitando possibili imbrogli
-     * @var int $luogo
+     * @note Configurazioni di db
+     * @type int
      */
-    protected
+    protected int
         $luogo,
-        $last_action,
         $chat_time,
         $chat_exp,
         $chat_pvt_exp,
@@ -28,9 +27,7 @@ class Chat extends BaseClass
         $chat_skill_buyed,
         $chat_equip_bonus,
         $chat_equip_equipped,
-        $chat_esiti;
-
-    public
+        $chat_esiti,
         $chat_notify;
 
     /**** BASE ****/
@@ -46,27 +43,14 @@ class Chat extends BaseClass
     }
 
     /**
-     * @fn getChatData
-     * @note Estrae i dati di una chat
-     * @param int $id
-     * @param string $val
-     * @return bool|int|mixed|string
-     */
-    public function getChatData(int $id, string $val = '*')
-    {
-        return DB::query("SELECT {$val} FROM mappa WHERE id='{$id}' LIMIT 1");
-    }
-
-    /**
      * @fn resetClass
      * @note Funzione per il reset delle variabili necessarie
      * @return void
      */
-    public function resetClass()
+    public function resetClass(): void
     {
         # Variabili di sessione
-        $this->luogo = Filters::int($_SESSION['luogo']);
-        $this->last_action = Filters::int($_SESSION['last_action_id']);
+        $this->luogo = Filters::int(Session::read('luogo'));
 
         # Ore di caricamento della chat
         $this->chat_time = Functions::get_constant('CHAT_TIME');
@@ -114,109 +98,252 @@ class Chat extends BaseClass
         $this->chat_esiti = Functions::get_constant('ESITI_CHAT');
     }
 
+
+    /**** GETTER ****/
+
+    /**
+     * @fn actualChatId
+     * @note Ottiene l'id della chat attuale
+     * @return int
+     */
+    public function actualChatId(): int
+    {
+        return $this->luogo;
+    }
+
+    /**
+     * @fn equippedOnly
+     * @note Ottiene l'id della chat attuale
+     * @return bool
+     */
+    public function equippedOnly(): bool
+    {
+        return $this->chat_equip_equipped;
+    }
+
+    /**
+     * @fn activeNotify
+     * @note Controlla se il suono di notifica è attivo
+     * @return bool
+     */
+    public function activeNotify(): bool
+    {
+        return $this->chat_notify;
+    }
+
+    /**
+     * @fn setLastAction
+     * @note Imposta l'ultima azione
+     * @param int $id
+     * @return void
+     */
+    public function setLastAction(int $id): void
+    {
+        Session::store('last_action_id', $id);
+    }
+
+    /**** TABLE HELPERS ***/
+
+    /**
+     * @fn getAllChats
+     * @note Ottiene tutte le chat
+     * @param int $private
+     * @return DBQueryInterface
+     * @throws Throwable
+     */
+    public function getAllChats(int $private = 0): DBQueryInterface
+    {
+        return DB::queryStmt("SELECT * FROM mappa WHERE privata = :privata ORDER BY nome", ['privata' => $private]);
+    }
+
+    /**
+     * @fn getChatData
+     * @note Estrae i dati di una chat
+     * @param int $id
+     * @param string $val
+     * @return DBQueryInterface
+     * @throws Throwable
+     */
+    public function getChatData(int $id, string $val = '*'): DBQueryInterface
+    {
+        return DB::queryStmt(
+            "SELECT {$val} FROM mappa WHERE id=:id LIMIT 1",
+            [
+                'id' => $id,
+            ]
+        );
+    }
+
+    /**
+     * @fn getActions
+     * @note Estrai le azioni in chat che devono essere visualizzate
+     * @param int $chat
+     * @param string $start
+     * @param string $end
+     * @return DBQueryInterface
+     * @throws Throwable
+     */
+    public function getActionsByTime(int $chat, string $start, string $end): DBQueryInterface
+    {
+
+        $start = Filters::out($start);
+        $end = Filters::out($end);
+        $chat = Filters::in($chat);
+
+        # Estraggo le azioni n base alle condizioni indicate
+        return DB::queryStmt("
+        SELECT personaggio.nome,personaggio.url_img_chat,personaggio.sesso,chat.* FROM chat 
+            LEFT JOIN personaggio ON (personaggio.nome = chat.mittente)
+            WHERE chat.stanza = :chat AND chat.ora >= :start AND chat.ora <= :end
+            ORDER BY id",
+            ['chat' => $chat, 'start' => $start, 'end' => $end]
+        );
+    }
+
+    /**
+     * @fn getActions
+     * @note Estrai le azioni in chat che devono essere visualizzate
+     * @return DBQueryInterface
+     * @throws Throwable
+     */
+    private function getActions(): DBQueryInterface
+    {
+        # Estraggo l'ultimo id visto in chat
+        $last_action_id = Session::read('last_action_id');
+
+        # Se l'ultima azione non è zero e quindi non sono appena entrato in chat
+        $extra_query = ($last_action_id > 0) ? " AND chat.id > '{$last_action_id}' " : '';
+
+        # Estraggo le azioni n base alle condizioni indicate
+        # ! Lasciare extra_query in questo modo, altrimenti non funziona
+        return DB::queryStmt("
+            SELECT personaggio.nome,personaggio.url_img_chat,personaggio.sesso,chat.*  
+            FROM chat LEFT JOIN personaggio ON (personaggio.nome = chat.mittente)
+            WHERE chat.stanza = :stanza AND chat.ora > DATE_SUB(:now,INTERVAL :hours HOUR) {$extra_query}
+            ORDER BY id",
+            [
+                "now" => CarbonWrapper::getNow(),
+                "hours" => $this->chat_time,
+                "stanza" => $this->luogo,
+            ]
+        );
+    }
+
+    /**
+     * @fn isPgInChat
+     * @note Controlla se un pg è in chat
+     * @param int $pg
+     * @param int $luogo
+     * @return bool
+     * @throws Throwable
+     */
+    private function isPgInChat(int $pg, int $luogo): bool
+    {
+        $count = DB::queryStmt(
+            "SELECT count(id) AS total FROM personaggio WHERE id=:pg AND ultimo_luogo=:luogo LIMIT 1",
+            [
+                'pg' => $pg,
+                'luogo' => $luogo,
+            ]
+        );
+
+        return Filters::int($count['total']);
+    }
+
+    /**
+     * TODO Adattare con nuove statistiche oggetti
+     * @fn calcAllObjsBonus
+     * @note Calcola i bonus statistiche dell'oggetto
+     * @param int $pg
+     * @param int $car
+     * @param array $excluded
+     * @return int
+     * @throws Throwable
+     */
+    public static function calcAllObjsBonus(int $pg, int $car, array $excluded = []): int
+    {
+        # ! Terminare quando ci saranno statistiche oggetto, non funziona al momento
+        $extra_query = '';
+        $total_bonus = 0;
+
+        if ( !empty($excluded) ) {
+            $implode = implode(',', $excluded);
+            $extra_query = " AND personaggio_oggetto.id NOT IN ({$implode})";
+        }
+
+        # Estraggo i bonus di tutti gli oggetti equipaggiati
+        $objects = DB::query("SELECT oggetto.bonus_car{$car},personaggio_oggetto.id
+                                        FROM personaggio_oggetto 
+                                        LEFT JOIN oggetto 
+                                        ON (personaggio_oggetto.oggetto = oggetto.id)
+                                         
+                                        WHERE personaggio_oggetto.personaggio ='{$pg}' {$extra_query}
+                                        AND personaggio_oggetto.indossato > 0 AND oggetto.indossabile = 1
+
+                                        ", 'result');
+
+        # Per ogni oggetto equipaggiato
+        foreach ( $objects as $object ) {
+            # Aggiungo il suo bonus al totale
+            $total_bonus += Filters::int($object["bonus_car{$car}"]);
+        }
+
+        return $total_bonus;
+    }
+
+
+    /**** CONTROLS ****/
+
     /**
      * @fn controllaChat
      * @note Controllo chat
      * @param $post
      * @return array
+     * @throws Throwable
      */
-    public function controllaChat($post): array
+    public function chatPositionTrue($post): array
     {
-
+        // ID che arriva dalla chat in cui ci si trova
         $dir = Filters::int($post['dir']);
 
-        $luogo = DB::query("SELECT ultimo_luogo FROM personaggio WHERE nome='{$this->me}' LIMIT 1");
+        // Controllo la chat dove si trova da bg
+        $luogo = Personaggio::getPgData($this->me_id, 'ultimo_luogo');
         $luogo_id = Filters::int($luogo['ultimo_luogo']);
 
-        $response = ($dir == $luogo_id);
-
-        return ['response' => $response, 'newdir' => $luogo_id];
-    }
-
-    /**
-     * @fn setLast
-     * @note Imposta l'ultima azione
-     * @param int $id
-     * @return void
-     */
-    public function setLast(int $id): void
-    {
-        $_SESSION['last_action_id'] = $id;
-        $this->last_action = $id;
-    }
-
-    /**
-     * @fn assignExp
-     * @note Assegna l'esperienza indicata al personaggio che ha inviato l'azione
-     * @param mixed $azione
-     * @return void
-     * # TODO globalizzare i valori
-     */
-    private function assignExp($azione): void
-    {
-        # Filtro i valori passati
-        $tipo = Filters::in($azione['tipo']);
-        $testo = Filters::in($azione['testo']);
-
-        # Calcolo la lunghezza del testo
-        $lunghezza_testo = strlen($testo);
-
-        # Controllo se la chat e' privata
-        $luogo_pvt = DB::query("SELECT privata FROM mappa WHERE id='{$this->luogo}' LIMIT 1")['privata'];
-
-        # Se e' privata e l'assegnazione privata e' attivo, oppure non e' privata
-        if ( ($luogo_pvt && $this->chat_pvt_exp) || (!$luogo_pvt) ) {
-
-            # Se la lunghezza del testo supera il minimo caratteri neccesari all'assegnazione exp
-            if ( $lunghezza_testo >= $this->chat_exp_min ) {
-
-                # In base al tipo scelgo quanta exp assegnare
-                switch ( $tipo ) {
-                    case 'A':
-                    case 'P':
-                        $exp = $this->chat_exp_azione;
-                        break;
-                    case 'M':
-                        $exp = $this->chat_exp_master;
-                        break;
-                    default:
-                        $exp = 0;
-                        break;
-                }
-
-                # Se per quel tipo e' segnato un valore di exp, lo assegno, altrimenti no
-                if ( $exp > 0 ) {
-                    DB::query("UPDATE personaggio SET esperienza=esperienza+'{$exp}' WHERE nome='{$this->me}' LIMIT 1");
-                }
-            }
-        }
+        // Ritorno il risultato ed eventuale nuova direzione per redirect
+        return ['response' => ($dir == $luogo_id), 'newdir' => $luogo_id];
     }
 
     /**
      * @fn audioActivated
-     * @note Controlla se nella scheda pg l'audio e' segnato attivato o meno
+     * @note Controlla se nella scheda pg l'audio è segnato attivato o meno
      * @return bool
+     * @throws Throwable
      */
     public function audioActivated(): bool
     {
-        return DB::query("SELECT blocca_media FROM personaggio WHERE nome='{$this->me}' LIMIT 1")['blocca_media'];
+        $blocca_media = Personaggio::getPgData($this->me_id, 'blocca_media');
+        return Filters::bool($blocca_media['blocca_media']);
     }
 
     /**
      * @fn chatAccess
      * @note Si occupa di controllare che la chat sia accessibile (non pvt o pvt accessibile dal pg)
+     * @param int $id
      * @return bool
+     * @throws Throwable
+     * TODO Implementare controlli per eventuali chat di gruppo o altri tipi di chat
      */
-    public function chatAccess(): bool
+    public function chatAccess(int $id = 0): bool
     {
+        # Se non è stata passata una chat, prendo quella attuale
+        $id = (!$id) ? Filters::int($this->luogo) : Filters::int($id);
+
         # Inizializzo le variabili necessarie
         $resp = false;
 
-        # Filtro i dati passati
-        $id = Filters::int($this->luogo);
-
         # Estraggo i dati della chat
-        $data = DB::query("SELECT privata,proprietario,invitati,scadenza FROM mappa WHERE id='{$id}' LIMIT 1");
+        $data = $this->getChatData($id, 'privata,proprietario,invitati,scadenza');
 
         # Filtro i valori estratti
         $privata = Filters::int($data['privata']);
@@ -224,27 +351,24 @@ class Chat extends BaseClass
         $invitati = Filters::out($data['invitati']);
         $scadenza = Filters::out($data['scadenza']);
 
-        # Se non e' privata, allora di default e' accessibile
+        # Se non è privata di default è accessibile
         if ( !$privata ) {
             $resp = true;
-        } # Se e' privata
+        } # Se e' privata - TODO da testare per bene
         else {
-
-            # Se faccio parte degli invitat o sono il proprietario  e la stanza non e' scaduta
-            if ( $this->pvtInvited($proprietario, $invitati) && $this->pvtClosed($scadenza) ) {
-
-                # Allora e' accessibile
+            # Se faccio parte degli invitati o sono il proprietario e la stanza non è scaduta
+            if ( $this->pvtExpired($scadenza) && $this->pvtInvited($proprietario, $invitati) ) {
                 $resp = true;
             }
         }
 
-        # Ritorno il responso del controllo
+        # Ritorno il risultato
         return $resp;
     }
 
     /**
      * @fn pvtInvited
-     * @note Controlla se si fa parte degli invitati o se si e' il proprietario
+     * @note Controlla se si fa parte degli invitati o se si è il proprietario
      * @param string $proprietario
      * @param string $invitati
      * @return bool
@@ -266,128 +390,71 @@ class Chat extends BaseClass
     }
 
     /**
-     * @fn pvtClosed
-     * @note Controlla se la chat e' scaduta
+     * @fn pvtExpired
+     * @note Controlla se la chat è scaduta
      * @param string $scadenza
      * @return bool
      */
-    private function pvtClosed(string $scadenza): bool
+    private function pvtExpired(string $scadenza): bool
     {
-        # Filtro i dati passati
-        $scadenza = Filters::out($scadenza);
-
-        # Estraggo la data attuale
-        $now = date('Y-m-d H:i:s');
-
-        # Controllo se la chat non e' ancora scaduta
-        return ($now < $scadenza);
+        return CarbonWrapper::lowerThan($scadenza, CarbonWrapper::getNow());
     }
 
-    /**** STAMP AZIONE ****/
+
+    /**** LISTS ****/
 
     /**
-     * @fn printChat
-     * @note Stampi le azioni in chat, funzione pubblica da richiamare per lo stamp
+     * @fn chatList
+     * @note Crea la lista delle chat
      * @return string
+     * @throws Throwable
      */
-    public function printChat(): string
+    public function chatList(): string
     {
-        if ( $this->chatAccess() ) {
-            # Inizializzo le variabili necessarie
-            $html = '';
-
-            # Estraggo le azioni della chat
-            $azioni = $this->getActions();
-
-            # Per ogni azione creo il suo html in base al tipo
-            foreach ( $azioni as $azione ) {
-                $html .= $this->Filter($azione);
-            }
-
-            # Ritorno l'html creato
-            return $html;
-        } else {
-            return '';
-        }
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $this->getAllChats(), 'Chat');
     }
 
-    /**
-     * @fn getActions
-     * @note Estrai le azioni in chat che devono essere visualizzate
-     * @return mixed
-     */
-    private function getActions()
-    {
 
-        # Se l'ultima azione non e' 0 e quindi non sono appena entrato in chat
-        $extra_query = ($this->last_action > 0) ? " AND chat.id > '{$this->last_action}' " : '';
-
-        # Estraggo le azioni n base alle condizioni indicate
-        return DB::query("SELECT personaggio.nome,personaggio.url_img_chat,personaggio.sesso,chat.*
-                                    FROM chat 
-                                    LEFT JOIN personaggio
-                                    ON (personaggio.nome = chat.mittente)
-                                    WHERE chat.stanza ='{$this->luogo}' 
-                                      AND chat.ora > DATE_SUB(NOW(),INTERVAL {$this->chat_time} HOUR) {$extra_query} 
-                                      ORDER BY id", 'result');
-    }
+    /**** FUNCTIONS ****/
 
     /**
-     * @fn Filter
-     * @ntoe Filtra il tipo dell'azione passata per decidere che html stampare
+     * @fn assignExp
+     * @note Assegna l'esperienza indicata al personaggio che ha inviato l'azione
      * @param array $azione
-     * @return string
+     * @return void
+     * @throws Throwable
      */
-    private function Filter(array $azione): string
+    private function assignExp(array $azione): void
     {
-        # Filtro i dati passati
-        $tipo = Filters::out($azione['tipo']);
-        $id = Filters::out($azione['id']);
+        # Filtro i valori passati
+        $tipo = Filters::in($azione['tipo']);
+        $testo = Filters::in($azione['testo']);
 
-        # Inizio l'html con una classe comune ed una di tipologia, uguale per tutte
-        $html = "<div class='singola_azione chat_row_{$tipo}'>";
+        # Calcolo la lunghezza del testo
+        $lunghezza_testo = strlen($testo);
 
-        # Creo l'html in base al tipo indicato
-        switch ( $tipo ) {
-            case 'A':
-            case 'P':
-                $html .= $this->htmlAzione($azione);
-                break;
-            case 'S':
-                $html .= $this->htmlSussurro($azione);
-                break;
-            case 'F':
-                $html .= $this->htmlSussurroGlobale($azione);
-                break;
-            case 'N':
-                $html .= $this->htmlPNG($azione);
-                break;
-            case 'M':
-                $html .= $this->htmlMaster($azione);
-                break;
-            case 'MOD':
-                $html .= $this->htmlMod($azione);
-                break;
-            case 'I':
-                $html .= $this->htmlImage($azione);
-                break;
-            case 'C':
-            case 'D':
-            case 'O':
-                $html .= $this->htmlOnlyText($azione);
-                break;
-            default:
-                $html = '';
-                break;
+        # Controllo se la chat è privata
+        $luogo_pvt = $this->getChatData($this->luogo, 'privata');
+
+        # Se è privata e l'assegnazione privata è attivo, oppure non è privata
+        if ( ($luogo_pvt && $this->chat_pvt_exp) || (!$luogo_pvt) ) {
+
+            # Se la lunghezza del testo supera il minimo caratteri necessari all'assegnazione esperienza
+            if ( $lunghezza_testo >= $this->chat_exp_min ) {
+
+                # In base al tipo scelgo quanta esperienza assegnare
+                $exp = match ($tipo) {
+                    'A', 'P' => $this->chat_exp_azione,
+                    'M' => $this->chat_exp_master,
+                    default => 0,
+                };
+
+                # Assegno l'esperienza se è maggiore di zero
+                if ( $exp > 0 ) {
+                    Personaggio::updatePgData($this->me_id, "esperienza = esperienza + '{$exp}'");
+                }
+            }
         }
-
-        $html .= "</div>";
-
-        # Setto quella analizzata come ultima azione analizzata
-        $this->setLast($id);
-
-        # Ritorno l'html creato
-        return $html;
     }
 
     /**
@@ -395,27 +462,74 @@ class Chat extends BaseClass
      * @note Formatta il testo con le giuste funzioni di gdrcd
      * @param string $testo
      * @param string $colore_parlato
+     * @param bool $master
      * @return string
      */
-    private function formattedText(string $testo, string $colore_parlato = ''): string
+    private function formattedText(string $testo, string $colore_parlato = '', bool $master = false): string
     {
         # Evidenzio il mio nome e cambio il testo tra le variabili, ritorno il risultato
-        return gdrcd_chatme($this->me, gdrcd_chatcolor($testo, $colore_parlato));
+        return $this->chatMe($this->me, $this->chatColor($testo, $colore_parlato), $master);
     }
 
     /**
-     * @fn getIcons
+     * @fn chatMe
+     * @note Evidenzia il nome del pg che ha parlato
+     * @param string $user
+     * @param string $str
+     * @param bool $master
+     * @return string
+     */
+    private function chatMe(string $user, string $str, bool $master = false): string
+    {
+        $search = "|\\b" . preg_quote($user, "|") . "\\b|si";
+        if ( !$master ) {
+            $replace = '<span class="chat_me">' . Filters::out($user) . '</span>';
+        } else {
+            $replace = '<span class="chat_me_master">' . Filters::out($user) . '</span>';
+        }
+
+        return preg_replace($search, $replace, $str);
+    }
+
+    /**
+     * @fn chatColor
+     * @note Cambia il colore del testo per il parlato
+     * @param string $str
+     * @param string $colore_parlato
+     * @return string
+     */
+    private function chatColor(string $str, string $colore_parlato): string
+    {
+
+        $colore_parlato = ($colore_parlato) ?? '';
+
+        $search = [
+            '#\&lt;(.+?)\&gt;#is',
+            '#\[(.+?)\]#is',
+        ];
+        $replace = [
+            "<span class='color2' style='color:{$colore_parlato}'>&lt;$1&gt;</span>",
+            "<span class='color2' style='color:{$colore_parlato}'>&lt;$1&gt;</span>",
+        ];
+
+        return preg_replace($search, $replace, $str);
+    }
+
+    /**
+     * @fn chatIcons
      * @note Funzione che si occupa dell'estrazione delle icone chat
      * @param string $mittente
      * @return array
+     * @throws Throwable
      */
-    private function getIcons(string $mittente): array
+    private function chatIcons(string $mittente): array
     {
         # Filtro il mittente passato
         $mittente = Filters::int($mittente);
 
         $icons = [];
 
+        # TODO Aggiustare quando le razze saranno multiple con l'apposita classe
         # Ritorno le sue icone estratte
         $races = DB::query("
                 SELECT razze.icon,razze.nome AS nome_razza,personaggio.sesso
@@ -444,71 +558,133 @@ class Chat extends BaseClass
         return $icons;
     }
 
+
     /***** TIPOLOGIE HTML STAMP *****/
+
+    /**
+     * @fn printChat
+     * @note Stampi le azioni in chat, funzione pubblica da richiamare per lo stamp
+     * @return string
+     * @throws Throwable
+     */
+    public function printChat(): string
+    {
+        return ($this->chatAccess()) ? $this->Filter($this->getActions()) : '';
+    }
+
+    /**
+     * @fn printChatByTime
+     * @note Stampa le azioni in chat, ma solo quelle nel tempo indicato
+     * @param int $chat
+     * @param string $start
+     * @param string $end
+     * @return string
+     * @throws Throwable
+     */
+    public function printChatByTime(int $chat, string $start, string $end): string
+    {
+        return ($this->chatAccess()) ? $this->Filter($this->getActionsByTime($chat, $start, $end)) : '';
+    }
+
+    /**
+     * @fn Filter
+     * @ntoe Filtra il tipo dell'azione passata per decidere che html stampare
+     * @param DBQueryInterface $azioni
+     * @return string
+     * @throws Throwable
+     */
+    public function Filter(DBQueryInterface $azioni): string
+    {
+        $html = '';
+        $id = Session::read('last_action_id');
+
+        foreach ( $azioni as $azione ) {
+            # Filtro i dati passati
+            $tipo = Filters::out($azione['tipo']);
+            $id = Filters::out($azione['id']);
+
+            # Inizio l'html con una classe comune e una di tipologia, uguale per tutte
+            $html .= "<div class='singola_azione chat_row_{$tipo}'>";
+
+            # Creo l'html in base al tipo indicato
+            switch ( $tipo ) {
+                case 'A':
+                case 'P':
+                    $html .= $this->htmlAzione($azione);
+                    break;
+                case 'S':
+                    $html .= $this->htmlSussurro($azione);
+                    break;
+                case 'F':
+                    $html .= $this->htmlSussurroGlobale($azione);
+                    break;
+                case 'N':
+                    $html .= $this->htmlPNG($azione);
+                    break;
+                case 'M':
+                    $html .= $this->htmlMaster($azione);
+                    break;
+                case 'MOD':
+                    $html .= $this->htmlMod($azione);
+                    break;
+                case 'I':
+                    $html .= $this->htmlImage($azione);
+                    break;
+                case 'C':
+                case 'D':
+                case 'O':
+                    $html .= $this->htmlOnlyText($azione);
+                    break;
+                default:
+                    $html = '';
+                    break;
+            }
+
+            $html .= "</div>";
+        }
+
+        $this->setLastAction($id);
+
+        # Ritorno html creato
+        return $html;
+    }
 
     /**
      * @fn htmlAzione
      * @note Stampa html per il tipo 'A'.Azione ed il tipo 'P'.Parlato (per retrocompatibilita')
      * @param array $azione
      * @return string
-     *  # TODO aggiungere icone chat
+     * @throws Throwable
      */
     private function htmlAzione(array $azione): string
     {
-
         # Filtro le variabili necessarie
         $mittente = Filters::int($azione['mittente']);
-        $mittente_data = Personaggio::getPgData($mittente, 'nome');
-        $mittente_nome = Filters::out($mittente_data['nome']);
-        $tag = Filters::out($azione['destinatario']);
-        $img_chat = Filters::out($azione['url_img_chat']);
+        $mittente_data = Personaggio::getPgData($mittente, 'nome,url_img_chat');
         $testo = Filters::string($azione['testo']);
 
-        # Customizzazioni
+        # Customization
         $colore_testo_parlato = PersonaggioChatOpzioni::getInstance()->getOptionValue('action_color_talk', $this->me_id);
         $colore_parlato = Filters::out($colore_testo_parlato['valore']);
-
         $colore_testo_descr = PersonaggioChatOpzioni::getInstance()->getOptionValue('action_color_descr', $this->me_id);
-        $colore_descr = Filters::out($colore_testo_descr['valore']);
-
         $testo_size = PersonaggioChatOpzioni::getInstance()->getOptionValue('action_size', $this->me_id);
-        $size = Filters::out($testo_size['valore']) ? Filters::out($testo_size['valore']) . 'px' : '';
 
-        # Formo i testi necessari
-        $ora = gdrcd_format_time($azione['ora']);
-        $testo = $this->formattedText($testo, $colore_parlato);
+        $array = [
+            "img_chat" => Filters::out($mittente_data['url_img_chat']),
+            "chat_icone" => $this->chat_icone,
+            "data_imgs" => $this->chatIcons($mittente),
+            "chat_avatar" => $this->chat_avatar,
+            "img_link" => Router::getImgsDir(),
+            "ora" => CarbonWrapper::format($azione['ora'], 'H:i'),
+            "testo" => $this->formattedText($testo, $colore_parlato),
+            "size" => Filters::out($testo_size['valore']) ? Filters::out($testo_size['valore']) . 'px' : '',
+            "colore_descr" => Filters::out($colore_testo_descr['valore']),
+            "mittente_nome" => Filters::out($mittente_data['nome']),
+            "tag" => Filters::out($azione['destinatario']),
+        ];
 
-        # Se le icone in chat sono abilitate
-        if ( $this->chat_icone ) {
-
-            # Estraggo le icone
-            $data_imgs = $this->getIcons($mittente);
-
-            # Aggiungo l'html delle icone
-            $html = "<span class='chat_icons'>";
-
-            # Se l'avatar e' abilitato, aggiungo l'html dell'avatar
-            if ( $this->chat_avatar ) {
-                $html .= " <img class='chat_ico' src='{$img_chat}' class='chat_avatar'> ";
-            }
-
-            foreach ( $data_imgs as $data_img ) {
-                $link = Router::getImgsDir() . $data_img['Img'];
-                $html .= "<img class='chat_ico' src='{$link}' title='{$data_img['Title']}'> ";
-            }
-
-            $html .= "</span>";
-        }
-
-        # Creo il corpo azione
-        $html .= "<span class='chat_time'>{$ora}</span> ";
-        $html .= "<span class='chat_name'><a href='#'>{$mittente_nome}</a></span> ";
-        $html .= "<span class='chat_tag'> [{$tag}]</span> ";
-        $html .= "<span class='chat_msg' style='color:{$colore_descr}; font-size:{$size};'>{$testo}</span> ";
-        $html .= '<br style="clear:both;" /> ';
-
-        # Ritorno l'html creato
-        return $html;
+        # Ritorno html creato
+        return Template::getInstance()->startTemplate()->render('chat/A', $array);
     }
 
     /**
@@ -521,7 +697,6 @@ class Chat extends BaseClass
     {
         # Inizializzo le variabili necessarie
         $intestazione = '';
-        $html = '';
 
         # Filtro le variabili necessarie
         $mittente = Filters::int($azione['mittente']);
@@ -531,11 +706,10 @@ class Chat extends BaseClass
         $mittente_data = Personaggio::getPgData($mittente, 'nome');
         $mittente_nome = Filters::out($mittente_data['nome']);
 
-        // TODO Cambiare campo libero destinatario sussurro con select personaggi
         $destinatario_data = Personaggio::getPgData($destinatario, 'nome');
         $destinatario_nome = Filters::out($destinatario_data['nome']);
 
-        # Customizzazioni
+        # Customizations
         $colore_testo_parlato = PersonaggioChatOpzioni::getInstance()->getOptionValue('sussurro_color', $this->me_id);
         $colore_parlato = Filters::out($colore_testo_parlato['valore']);
 
@@ -543,8 +717,8 @@ class Chat extends BaseClass
         $size = Filters::out($testo_size['valore']) ? Filters::out($testo_size['valore']) . 'px' : '';
 
         # Formo i testi necessari
-        $ora = gdrcd_format_time($azione['ora']);
-        $testo = $this->formattedText($testo, '');
+        $ora = CarbonWrapper::format($azione['ora'], 'H:i');
+        $testo = $this->formattedText($testo);
 
         # Se sono io il mittente
         if ( $this->me_id == $mittente ) {
@@ -558,14 +732,16 @@ class Chat extends BaseClass
         }
 
         # Se l'intestazione non e' vuota, significa che posso leggere il messaggio e lo stampo
-        if ( $intestazione != '' ) {
-            $html .= "<span class='chat_time'>{$ora}</span> ";
-            $html .= "<span class='chat_name'>{$intestazione}</span> ";
-            $html .= "<span class='chat_msg' style='color:{$colore_parlato};font-size:{$size};'>{$testo}</span> ";
-        }
+        $array = [
+            "intestazione" => $intestazione,
+            "ora" => $ora,
+            "colore_parlato" => $colore_parlato,
+            "size" => $size,
+            "testo" => $testo,
+        ];
 
         # Ritorno l'html stampato
-        return $html;
+        return Template::getInstance()->startTemplate()->render('chat/S', $array);
     }
 
     /**
@@ -578,7 +754,7 @@ class Chat extends BaseClass
     {
         # Filtro i dati necessari
         $mittente = Filters::int($azione['mittente']);
-        $ora = gdrcd_format_time($azione['ora']);
+        $ora = CarbonWrapper::format($azione['ora'], 'H:i');
         $testo = Filters::string($azione['testo']);
 
         $mittente_data = Personaggio::getPgData($mittente, 'nome');
@@ -594,13 +770,17 @@ class Chat extends BaseClass
         # Formo i testi necessari
         $testo = $this->formattedText($testo);
 
-        # Creo il corpo azione
-        $html = "<span class='chat_time'>{$ora}</span> ";
-        $html .= "<span class='chat_name'>{$mittente_nome} sussurra a tutti: </span> ";
-        $html .= "<span class='chat_msg' style='color:{$colore_parlato};font-size:{$size};'>{$testo}</span> ";
+        # Se l'intestazione non e' vuota, significa che posso leggere il messaggio e lo stampo
+        $array = [
+            "ora" => $ora,
+            "colore_parlato" => $colore_parlato,
+            "size" => $size,
+            "testo" => $testo,
+            "mittente_nome" => $mittente_nome,
+        ];
 
         # Ritorno l'html dell'azione
-        return $html;
+        return Template::getInstance()->startTemplate()->render('chat/F', $array);
     }
 
     /**
@@ -626,16 +806,19 @@ class Chat extends BaseClass
         $size = Filters::out($testo_size['valore']) ? Filters::out($testo_size['valore']) . 'px' : '';
 
         # Formo i testi necessari
-        $ora = gdrcd_format_time($azione['ora']);
+        $ora = CarbonWrapper::format($azione['ora'], 'H:i');
         $testo = $this->formattedText($testo, $colore_parlato);
 
-        # Creo il corpo azione
-        $html = "<span class='chat_time'>{$ora}</span> ";
-        $html .= "<span class='chat_name'>{$destinatario}</span> ";
-        $html .= "<span class='chat_msg' style='color:{$colore_descr};font-size:{$size};'>{$testo}</span> ";
+        $array = [
+            "ora" => $ora,
+            "destinatario" => $destinatario,
+            "colore_descr" => $colore_descr,
+            "size" => $size,
+            "testo" => $testo,
+        ];
 
         # Ritorno l'html dell'azione
-        return $html;
+        return Template::getInstance()->startTemplate()->render('chat/N', $array);
     }
 
     /**
@@ -659,15 +842,18 @@ class Chat extends BaseClass
         $size = Filters::out($testo_size['valore']) ? Filters::out($testo_size['valore']) . 'px' : '';
 
         # Formo i testi necessari
-        $ora = gdrcd_format_time($azione['ora']);
-        $testo = $this->formattedText($testo, $colore_parlato);
+        $ora = CarbonWrapper::format($azione['ora'], 'H:i');
+        $testo = $this->formattedText($testo, $colore_parlato, true);
 
-        # Creo il corpo azione
-        $html = "<span class='chat_time'>{$ora}</span> ";
-        $html .= "<span class='chat_msg' style='color:{$colore_descr};font-size:{$size};'>{$testo}</span> ";
+        $array = [
+            "ora" => $ora,
+            "colore_descr" => $colore_descr,
+            "size" => $size,
+            "testo" => $testo,
+        ];
 
         # Ritorno l'html dell'azione
-        return $html;
+        return Template::getInstance()->startTemplate()->render('chat/M', $array);
     }
 
     /**
@@ -688,15 +874,18 @@ class Chat extends BaseClass
         $size = Filters::out($testo_size['valore']) ? Filters::out($testo_size['valore']) . 'px' : '';
 
         # Formo i testi necessari
-        $ora = gdrcd_format_time($azione['ora']);
+        $ora = CarbonWrapper::format($azione['ora'], 'H:i');
         $testo = $this->formattedText($testo);
 
-        # Creo il corpo azione
-        $html = "<span class='chat_time'>{$ora}</span> ";
-        $html .= "<span class='chat_msg' style='color:{$colore_parlato};font-size:{$size};'>{$testo}</span> ";
+        $array = [
+            "ora" => $ora,
+            "colore_parlato" => $colore_parlato,
+            "size" => $size,
+            "testo" => $testo,
+        ];
 
         # Ritorno l'html dell'azione
-        return $html;
+        return Template::getInstance()->startTemplate()->render('chat/MOD', $array);
     }
 
     /**
@@ -717,15 +906,18 @@ class Chat extends BaseClass
         $size = Filters::out($testo_size['valore']) ? Filters::out($testo_size['valore']) . 'px' : '';
 
         # Formo i testi necessari
-        $ora = gdrcd_format_time($azione['ora']);
+        $ora = CarbonWrapper::format($azione['ora'], 'H:i');
         $testo = $this->formattedText($testo);
 
-        # Creo il corpo azione
-        $html = "<span class='chat_time'>{$ora}</span> ";
-        $html .= "<span class='chat_msg' style='color:{$colore_parlato};font-size:{$size};'>{$testo}</span> ";
+        $array = [
+            "ora" => $ora,
+            "colore_parlato" => $colore_parlato,
+            "size" => $size,
+            "testo" => $testo,
+        ];
 
         # Ritorno l'html dell'azione
-        return $html;
+        return Template::getInstance()->startTemplate()->render('chat/text', $array);
     }
 
     /**
@@ -737,15 +929,16 @@ class Chat extends BaseClass
     private function htmlImage(array $azione): string
     {
         # Formo i testi necessari
-        $ora = gdrcd_format_time($azione['ora']);
-        $url = Filters::url($azione['testo']);
+        $ora = CarbonWrapper::format($azione['ora'], 'H:i');
+        $url = Filters::out($azione['testo']);
 
-        # Creo il corpo azione
-        $html = "<span class='chat_time'>{$ora}</span> ";
-        $html .= "<span class='chat_msg'><img src='{$url}'></span> ";
+        $array = [
+            "ora" => $ora,
+            "url" => $url,
+        ];
 
         # Ritorno l'html dell'azione
-        return $html;
+        return Template::getInstance()->startTemplate()->render('chat/I', $array);
     }
 
 
@@ -753,9 +946,10 @@ class Chat extends BaseClass
 
     /**
      * @fn send
-     * @note Funzione contenitore per smistamento tipi di invio in chat
+     * @note Funzione contenitore per smistamento tipi d'invio in chat
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function send(array $post): array
     {
@@ -775,6 +969,7 @@ class Chat extends BaseClass
                     break;
                 case 'N':
                 case 'M':
+                case 'I':
                     $resp = $this->sendAction($post, GAMEMASTER);
                     break;
                 case 'MOD':
@@ -785,7 +980,7 @@ class Chat extends BaseClass
                     break;
             }
 
-            # Se l'exp e' attiva assegno l'exp
+            # Se l'esperienza è attiva assegno l'esperienza
             if ( $this->chat_exp ) {
                 $this->assignExp($post);
             }
@@ -806,6 +1001,7 @@ class Chat extends BaseClass
      * @param array $post
      * @param int $permission
      * @return array
+     * @throws Throwable
      */
     private function sendAction(array $post, int $permission): array
     {
@@ -840,18 +1036,18 @@ class Chat extends BaseClass
      * @note Manda le azioni di tipo sussurro e relativi controlli
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     private function sendSussurro(array $post): array
     {
         # Filtro le variabili necessarie
-        $luogo = $this->luogo;
         $sussurraA = Filters::int($post['whispTo']);
 
         # Controllo che il personaggio a cui sussurro sia nella mia stessa chat
-        $count = DB::query("SELECT count(id) AS total FROM personaggio WHERE id='{$sussurraA}' AND ultimo_luogo='{$luogo}' LIMIT 1");
+        $count = $this->isPgInChat($sussurraA, $this->luogo);
 
-        # Se e' nella mia stessa chat
-        if ( Filters::int($count['total']) > 0 ) {
+        # Se è nella mia stessa chat
+        if ( $count > 0 ) {
 
             $post['tag'] = $sussurraA;
 
@@ -861,7 +1057,7 @@ class Chat extends BaseClass
             # Setto il responso riuscito
             $response = ['response' => true, 'error' => ''];
 
-        } # Se il personaggio non e' presente in chat, setto il responso come fallito
+        } # Se il personaggio non è presente in chat, setto il responso come fallito
         else {
             $response = [
                 'response' => false,
@@ -877,6 +1073,7 @@ class Chat extends BaseClass
      * @fn saveAction
      * @note Funzione che si occupa del salvataggio dell'azione in DB
      * @param array $post
+     * @throws Throwable
      */
     private function saveAction(array $post)
     {
@@ -885,131 +1082,23 @@ class Chat extends BaseClass
         $tipo = Filters::in($post['tipo']);
         $testo = Filters::in($post['testo']);
 
+        #Salvo il tag in sessione
+        Session::store('tag', $tag);
+
         # Salvo l'azione in DB
-        DB::query("INSERT INTO chat(stanza,imgs,mittente,destinatario,tipo,testo)
-                              VALUE('{$this->luogo}','test','{$this->me_id}','{$tag}','{$tipo}','{$testo}')");
+        DB::queryStmt(
+            "INSERT INTO chat(stanza,imgs,mittente,destinatario,tipo,testo)
+                    VALUE(:luogo,'test',:mittente,:tag,:tipo,:testo)",
+            [
+                "luogo" => $this->luogo,
+                'mittente' => $this->me_id,
+                "tag" => $tag,
+                "tipo" => $tipo,
+                "testo" => $testo,
+            ]
+        );
     }
 
-    /*** TABLE HELPERS ***/
-
-    /**
-     * @fn getPgAllObjects
-     * @note Estrae tutti gli oggetti di un personaggio
-     * @param int $pg
-     * @param bool $only_equipped
-     * @param string $val
-     * @return bool|int|mixed|string
-     */
-    public static function getPgAllObjects(int $pg, bool $only_equipped, $val = 'personaggio_oggetto.*,oggetto.*')
-    {
-
-        $pg = Filters::int($pg);
-
-        $extra_query = ($only_equipped) ? ' AND personaggio_oggetto.indossato != 0 AND oggetto.indossabile = 1 ' : '';
-
-        return DB::query("SELECT {$val}
-                                        FROM personaggio_oggetto 
-                                        LEFT JOIN oggetto 
-                                        ON (personaggio_oggetto.oggetto = oggetto.id)                         
-                                        WHERE personaggio_oggetto.personaggio ='{$pg}' {$extra_query}
-                                        ", 'result');
-    }
-
-    /**
-     * # TODO Modificare con nuovo sistema oggetti
-     * @fn calcAllObjsBonus
-     * @note Calcola i bonus statistiche dell'oggetto
-     * @param int $pg
-     * @param int $car
-     * @param array $excluded
-     * @return int
-     */
-    public static function calcAllObjsBonus(int $pg, int $car, array $excluded = []): int
-    {
-
-        //#TODO Adattare con le stat oggetto
-
-        $extra_query = '';
-        $total_bonus = 0;
-
-        if ( !empty($excluded) ) {
-            $implode = implode(',', $excluded);
-            $extra_query = " AND personaggio_oggetto.id NOT IN ({$implode})";
-        }
-
-        # Estraggo i bonus di tutti gli oggetti equipaggiati
-        $objects = DB::query("SELECT oggetto.bonus_car{$car},personaggio_oggetto.id
-                                        FROM personaggio_oggetto 
-                                        LEFT JOIN oggetto 
-                                        ON (personaggio_oggetto.oggetto = oggetto.id)
-                                         
-                                        WHERE personaggio_oggetto.personaggio ='{$pg}' {$extra_query}
-                                        AND personaggio_oggetto.indossato > 0 AND oggetto.indossabile = 1
-
-                                        ", 'result');
-
-        # Per ogni oggetto equipaggiato
-        foreach ( $objects as $object ) {
-            # Aggiungo il suo bonus al totale
-            $total_bonus += Filters::int($object["bonus_car{$car}"]);
-        }
-
-        return $total_bonus;
-    }
-
-    /********** LISTE ********/
-
-    /**
-     * @fn objectsList
-     * @note Crea la lista di oggetti utilizzabili in chat
-     * @return string
-     */
-    public function objectsList(): string
-    {
-        $html = '';
-        $obj_class = Oggetti::getInstance();
-
-        # Estraggo gli oggetti posseduti
-        $objects = $this->getPgAllObjects($this->me_id, $this->chat_equip_equipped, 'personaggio_oggetto.id,oggetto.id AS obj_id,oggetto.nome');
-
-        # Per ogni oggetto creo una option per la select
-        foreach ( $objects as $object ) {
-            $id = Filters::int($object['id']);
-            $id_obj = Filters::int($object['obj_id']);
-            $nome = Filters::out($object['nome']);
-
-            if ( $obj_class->existObject($id_obj) ) {
-                $html .= "<option value='{$id}'>{$nome}</option>";
-            }
-        }
-
-        # Ritorno le option per la select
-        return $html;
-    }
-
-    /**
-     * @fn chatList
-     * @note Crea la lista delle chat
-     * @return string
-     */
-    public function chatList(): string
-    {
-        $html = '<option value=""></option>';
-
-        # Estraggo gli oggetti secondo i parametri
-        $chats = DB::query("SELECT * FROM mappa WHERE privata = 0 ORDER BY nome", 'result');
-
-        # Per ogni oggetto creo una option per la select
-        foreach ( $chats as $chat ) {
-            $id = Filters::int($chat['id']);
-            $nome = Filters::out($chat['nome']);
-
-            $html .= "<option value='{$id}'>{$nome}</option>";
-        }
-
-        # Ritorno le option per la select
-        return $html;
-    }
 
     /**** LANCIO DADI ****/
 
@@ -1018,6 +1107,7 @@ class Chat extends BaseClass
      * @note Funzione contenitore del lancio dadi/abi/stat
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function roll(array $post): array
     {
@@ -1146,6 +1236,7 @@ class Chat extends BaseClass
      * @param int $car
      * @param int $obj
      * @return array
+     * @throws Throwable
      */
     private function rollCar(int $car, int $obj): array
     {
@@ -1178,7 +1269,8 @@ class Chat extends BaseClass
      * @param int $obj
      * @param int $car
      * @return array
-     * #TODO Adattare statistiche oggetto
+     * @throws Throwable
+     * TODO Adattare statistiche oggetto
      */
     private function rollObj(int $obj, int $car): array
     {
@@ -1236,6 +1328,7 @@ class Chat extends BaseClass
      * @note Funzione che si occupa di creare il testo e salvarlo in db
      * @param array $array
      * @return void
+     * @throws Throwable
      */
     private function saveDice(array $array): void
     {
@@ -1285,8 +1378,14 @@ class Chat extends BaseClass
         $html .= " Totale : {$total}";
 
         # Salvo il risultato in DB
-        DB::query("INSERT INTO chat(stanza,mittente,destinatario,tipo,testo)
-                            VALUE('{$this->luogo}','{$this->me}','','C','{$html}')");
+        DB::queryStmt('INSERT INTO chat(stanza,mittente,destinatario,tipo,testo)
+                            VALUE(:stanza,:mittente,:destinatario,:tipo,:testo)', [
+            'stanza' => $this->luogo,
+            'mittente' => $this->me_id,
+            'destinatario' => '',
+            'tipo' => 'C',
+            'testo' => $html,
+        ]);
     }
 
     /*******  ESITI *******/
@@ -1296,6 +1395,7 @@ class Chat extends BaseClass
      * @note Utilizzo di un esito in chat
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function rollEsito(array $post): array
     {
@@ -1307,7 +1407,7 @@ class Chat extends BaseClass
 
             return ['response' => true, 'error' => ''];
         } else {
-            $error = 'Non hai accesso all\'esito selezionato.';
+            $error = "Non hai accesso all'esito selezionato.";
 
             # Ritorno il risultato dell'invio ed eventuale messaggio di errore
             return ['response' => false, 'error' => $error];

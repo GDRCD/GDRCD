@@ -25,7 +25,7 @@ class Session extends BaseClass
 
     /**
      * @fn destroy
-     * @note distrugge la sessione corrente
+     * @note Distrugge la sessione corrente
      * @return void
      */
     public static function destroy(): void
@@ -90,13 +90,27 @@ class Session extends BaseClass
     }
 
     /**
-     * @fn save
+     * @fn store
      * @note Memorizza localmente le modifiche in sessione
      * @param string $key
      * @param mixed $value
      * @return void
      */
     public static function store(string $key, mixed $value): void
+    {
+        Session::start();
+        $_SESSION[$key] = $value;
+        Session::commit();
+    }
+
+    /**
+     * @fn save
+     * @note Memorizza localmente le modifiche in sessione
+     * @param string $key
+     * @param mixed $value
+     * @return void
+     */
+    public static function storeForCommit(string $key, mixed $value): void
     {
         $_SESSION[$key] = $value;
     }
@@ -153,23 +167,24 @@ class Session extends BaseClass
         if ( count($User) ) {
             if ( Password::verify($User['pass'], $password, $User['id']) ) {
                 // Valorizzo la sessione se tutto ok
-                self::store('login', $User['nome']);
-                self::store('login_id', $User['id']);
-                self::store('cognome', $User['cognome']);
-                self::store('permessi', $User['permessi']);
-                self::store('sesso', $User['sesso']);
-                self::store('blocca_media', $User['blocca_media']);
-                self::store('ultima_entrata', $User['ora_entrata']);
-                self::store('ultima_uscita', $User['ora_uscita']);
-                self::store('ultimo_refresh', $User['ultimo_refresh']);
-                self::store('razza', $User['sing_' . $User['sesso']] ?? $User['sing_m']);
-                self::store('img_razza', $User['icona_razza']);
-                self::store('id_razza', $User['razza']);
-                self::store('posizione', $User['posizione']);
-                self::store('mappa', empty($User['ultima_mappa']) ? 1 : $User['ultima_mappa']);
-                self::store('luogo', empty($User['ultimo_luogo']) ? -1 : $User['ultimo_luogo']);
-                self::store('tag', '');
-                self::store('last_message', 0);
+                self::storeForCommit('login', $User['nome']);
+                self::storeForCommit('login_id', $User['id']);
+                self::storeForCommit('cognome', $User['cognome']);
+                self::storeForCommit('permessi', $User['permessi']);
+                self::storeForCommit('sesso', $User['sesso']);
+                self::storeForCommit('blocca_media', $User['blocca_media']);
+                self::storeForCommit('ultima_entrata', $User['ora_entrata']);
+                self::storeForCommit('ultima_uscita', $User['ora_uscita']);
+                self::storeForCommit('ultimo_refresh', $User['ultimo_refresh']);
+                self::storeForCommit('razza', $User['sing_' . $User['sesso']] ?? $User['sing_m']);
+                self::storeForCommit('img_razza', $User['icona_razza']);
+                self::storeForCommit('id_razza', $User['razza']);
+                self::storeForCommit('posizione', $User['posizione']);
+                self::storeForCommit('mappa', empty($User['ultima_mappa']) ? 1 : $User['ultima_mappa']);
+                self::storeForCommit('luogo', empty($User['ultimo_luogo']) ? -1 : $User['ultimo_luogo']);
+                self::storeForCommit('tag', '');
+                self::storeForCommit('last_message', 0);
+                self::storeForCommit('last_action_id', 0);
 
                 return true;
             }
@@ -256,8 +271,8 @@ class Session extends BaseClass
          */
         # Nuovo id di e marchiamo la vecchia sessione da cancellare
         $newSessionId ??= session_create_id();
-        self::store('_newsessionid', $newSessionId);
-        self::store('_destroyedts', time());
+        self::storeForCommit('_newsessionid', $newSessionId);
+        self::storeForCommit('_destroyedts', time());
         self::commit();
 
         $OldSessionData = self::read();
@@ -272,7 +287,7 @@ class Session extends BaseClass
         # per questo motivo, ora che tutto è andato bene, rimuoviamo i dati
         # provvisori che servono durante la transizione al nuovo id
         self::delete('_newsessionid', '_destroyedts');
-        self::store('_createdts', time());
+        self::storeForCommit('_createdts', time());
     }
 
     /**

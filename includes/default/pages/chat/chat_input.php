@@ -32,6 +32,7 @@ $chat_abi_class = ChatAbilita::getInstance();
                     <?php if ( $_SESSION['permessi'] >= GAMEMASTER ) { ?>
                         <option value="N">PNG</option>
                         <option value="M">Master</option>
+                        <option value="I">Immagine</option>
                     <?php } ?>
 
                     <?php if ( $_SESSION['permessi'] >= MODERATOR ) { ?>
@@ -48,7 +49,7 @@ $chat_abi_class = ChatAbilita::getInstance();
             </div>
 
             <div class="input_container small">
-                <input type="text" name="tag" placeholder="Tag">
+                <input type="text" name="tag" placeholder="Tag" value="<?=Session::read('tag');?>">
             </div>
 
             <div class="input_container big">
@@ -58,6 +59,7 @@ $chat_abi_class = ChatAbilita::getInstance();
             <div class="input_container invia">
                 <input type="submit" value="Invia">
                 <input type="hidden" name="action" value="send_action">
+                <input type="hidden" name="dir" value="<?=$chat->actualChatId();?>">
             </div>
         </div>
     </form>
@@ -82,14 +84,14 @@ $chat_abi_class = ChatAbilita::getInstance();
 
             <div class="input_container small">
                 <select name="oggetto">
-                    <option value="">Oggetto</option>
-                    <?= $chat->objectsList(); ?>
+                    <?= PersonaggioOggetti::getInstance()->listPgEquipments(Functions::getInstance()->getMyId(),$chat->equippedOnly(),'Oggetti'); ?>
                 </select>
             </div>
 
             <div class="input_container invia">
                 <input type="submit" value="Invia">
                 <input type="hidden" name="action" value="roll_dice">
+                <input type="hidden" name="dir" value="<?=$chat->actualChatId();?>">
             </div>
 
         </div>
