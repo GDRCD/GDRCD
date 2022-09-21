@@ -2,7 +2,7 @@
 
 $id_pg = Filters::int($_GET['id_pg']);
 
-if ( RegistrazioneGiocate::getInstance()->activeRegistrazioni() ) { ?>
+if ( RegistrazioneGiocate::getInstance()->activeRegistrazioni() && RegistrazioneGiocate::getInstance()->permissionUpdateRecords($id_pg) ) { ?>
 
     <div class="form_container">
         <form class="form ajax_form"
@@ -44,9 +44,13 @@ if ( RegistrazioneGiocate::getInstance()->activeRegistrazioni() ) { ?>
     </div>
 
     <div class="link_back">
-        <a href="main.php?page=scheda/index&op=registrazioni&id_pg=<?=$id_pg;?>">
+        <a href="main.php?page=scheda/index&op=registrazioni&id_pg=<?= $id_pg; ?>">
             Torna indietro
         </a>
     </div>
+
+<?php } else { ?>
+
+    <div class="warning"> Permesso negato.</div>
 
 <?php } ?>

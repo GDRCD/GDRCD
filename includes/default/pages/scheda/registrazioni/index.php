@@ -18,4 +18,8 @@ if (RegistrazioneGiocate::getInstance()->activeRegistrazioni() && RegistrazioneG
     </div>
 
 
+<?php } else { ?>
+
+    <div class="warning">Permesso negato.</div>
+
 <?php } ?>

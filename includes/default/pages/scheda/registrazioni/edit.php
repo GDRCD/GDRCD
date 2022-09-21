@@ -56,4 +56,8 @@ if ( $class->activeRegistrazioni() && $class->permissionUpdateRecords($owner) ) 
         </a>
     </div>
 
+<?php } else { ?>
+
+    <div class="warning"> Permesso negato.</div>
+
 <?php } ?>

@@ -12,6 +12,14 @@
         <div class="td">
             {{$reg.fine}}
         </div>
+        <div class="td">
+            {if $reg.bloccata}
+                <span title="Bloccata"> <i class="fas fa-lock"></i>  </span>
+            {/if}
+            {if $reg.controllata}
+                <span title="Controllata"> <i class="fas fa-eye"></i>  </span>
+            {/if}
+        </div>
         <div class="td commands">
 
             {if $reg.view_permission}

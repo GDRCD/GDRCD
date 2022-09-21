@@ -130,15 +130,40 @@ class RegistrazioneGiocate extends BaseClass
 
     /**
      * @fn permissionViewSingleRecord
-     * @note Controlla se l'utente può vedere la registrazione
+     * @note Controlla se l'utente può vedere la registrazione richiesta
      * @param int $id
      * @return bool
      * @throws Throwable
      */
     public function permissionViewSingleRecord(int $id): bool
     {
-        $record = $this->getRecord($id, 'autore');
-        return $this->permissionViewRecords(Filters::int($record['autore']));
+        # Estraggo i dati della registrazione
+        $record = $this->getRecord($id, 'autore,controllata,bloccata');
+        $autore = Filters::int($record['autore']);
+        $controllata = Filters::bool($record['controllata']);
+        $bloccata = Filters::bool($record['bloccata']);
+
+        # Se la registrazione non è stata controllata o non sei l'autore, solo chi ha il permesso puo' vederla
+        return ($controllata && Personaggio::isMyPg($autore) && !$bloccata) || Permissions::permission('SCHEDA_VIEW_RECORDS');
+    }
+
+    /**
+     * @fn permissionViewSingleRecord
+     * @note Controlla se l'utente può vedere la registrazione richiesta
+     * @param int $id
+     * @return bool
+     * @throws Throwable
+     */
+    public function permissionUpdateSingleRecord(int $id): bool
+    {
+        # Estraggo i dati della registrazione
+        $record = $this->getRecord($id, 'autore,controllata,bloccata');
+        $autore = Filters::int($record['autore']);
+        $controllata = Filters::bool($record['controllata']);
+        $bloccata = Filters::bool($record['bloccata']);
+
+        # Se la registrazione non è stata controllata o non sei l'autore, solo chi ha il permesso puo' vederla
+        return ($controllata && Personaggio::isMyPg($autore) && !$bloccata) || Permissions::permission('SCHEDA_UPDATE_RECORDS');
     }
 
 
@@ -159,6 +184,7 @@ class RegistrazioneGiocate extends BaseClass
             'Chat',
             'Inizio',
             'Fine',
+            'Stato',
             'Comandi',
         ];
 
@@ -168,16 +194,19 @@ class RegistrazioneGiocate extends BaseClass
         foreach ( $regs as $reg ) {
 
             $chat_data = Chat::getInstance()->getChatData(Filters::int($reg['chat']), 'nome');
+            $reg_id = Filters::int($reg['id']);
 
             $records[] = [
-                "id" => Filters::int($reg['id']),
+                "id" => $reg_id,
                 "id_pg" => $id_pg,
                 "titolo" => Filters::out($reg['titolo']),
                 "chat" => Filters::out($chat_data['nome']),
-                "inizio" => Filters::date($reg['inizio'], 'h:i:s d/m/Y'),
-                "fine" => Filters::date($reg['fine'], 'h:i:s d/m/Y'),
-                "view_permission" => $this->activeRegistrazioni() && $this->permissionViewRecords($id_pg),
-                "update_permission" => $this->activeRegistrazioni() && $this->permissionUpdateRecords($id_pg) && !Filters::bool($reg['bloccata']) && !Filters::bool($reg['controllata']),
+                "inizio" => Filters::date($reg['inizio'], 'H:i d/m/Y'),
+                "fine" => Filters::date($reg['fine'], 'H:i d/m/Y'),
+                "bloccata" => Filters::bool($reg['bloccata']),
+                "controllata" => Filters::bool($reg['controllata']),
+                "view_permission" => $this->activeRegistrazioni() && $this->permissionViewSingleRecord($reg_id),
+                "update_permission" => $this->activeRegistrazioni() && $this->permissionUpdateSingleRecord($reg_id),
             ];
         }
 
@@ -219,22 +248,14 @@ class RegistrazioneGiocate extends BaseClass
      */
     public function renderCharacterRecordView(int $id): string
     {
-
-        $html = '';
+        # Ottieni i dati della registrazione
         $record_data = $this->getRecord($id, 'chat,inizio,fine');
         $start = Filters::out($record_data['inizio']);
         $end = Filters::out($record_data['fine']);
         $chat = Filters::in($record_data['chat']);
 
-        $chat_data = Chat::getInstance()->getChatData($chat, 'nome');
-        $chat_name = Filters::out($chat_data['nome']);
-        $chat_messages = Chat::getInstance()->getActionsByTime($chat, $start, $end);
-
-        foreach ( $chat_messages as $message ) {
-            $html .= Chat::getInstance()->Filter($message);
-        }
-
-        return $html;
+        # Stampiamo la chat
+        return Chat::getInstance()->printChatByTime($chat, $start, $end);
     }
 
     /**
@@ -246,10 +267,7 @@ class RegistrazioneGiocate extends BaseClass
      */
     public function characterRecord(int $id): string
     {
-        return Template::getInstance()->startTemplate()->renderTable(
-            'scheda/registrazioni/view',
-            $this->renderCharacterRecordView($id)
-        );
+        return ($this->permissionViewSingleRecord($id)) ? $this->renderCharacterRecordView($id) : '';
     }
 
     /**
