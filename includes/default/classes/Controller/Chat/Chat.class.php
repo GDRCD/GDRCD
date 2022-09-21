@@ -132,8 +132,6 @@ class Chat extends BaseClass
         return $this->chat_notify;
     }
 
-    /* ! test
-
     /**
      * @fn setLast
      * @note Imposta l'ultima azione
@@ -212,7 +210,7 @@ class Chat extends BaseClass
      */
     private function getActions(): DBQueryInterface
     {
-        # Se l'ultima azione non e' 0 e quindi non sono appena entrato in chat
+        # Se l'ultima azione non è zero e quindi non sono appena entrato in chat
         $extra_query = ($this->last_action > 0) ? " AND chat.id > '{$this->last_action}' " : '';
 
         # Estraggo le azioni n base alle condizioni indicate
@@ -223,7 +221,7 @@ class Chat extends BaseClass
             WHERE chat.stanza = :stanza AND chat.ora > DATE_SUB(:now,INTERVAL :hours HOUR) {$extra_query}
             ORDER BY id",
             [
-                "now" => CarbonWrapper::getNow('Y-m-d H:i:s'),
+                "now" => CarbonWrapper::getNow(),
                 "hours" => $this->chat_time,
                 "stanza" => $this->luogo,
             ]
@@ -585,7 +583,7 @@ class Chat extends BaseClass
      * @return string
      * @throws Throwable
      */
-    public function printChatByTime(int $chat, string $start, string $end)
+    public function printChatByTime(int $chat, string $start, string $end): string
     {
         # Inizializzo le variabili necessarie
         $html = '';
@@ -725,7 +723,7 @@ class Chat extends BaseClass
         $destinatario_data = Personaggio::getPgData($destinatario, 'nome');
         $destinatario_nome = Filters::out($destinatario_data['nome']);
 
-        # Customizzazioni
+        # Customizations
         $colore_testo_parlato = PersonaggioChatOpzioni::getInstance()->getOptionValue('sussurro_color', $this->me_id);
         $colore_parlato = Filters::out($colore_testo_parlato['valore']);
 
@@ -734,7 +732,7 @@ class Chat extends BaseClass
 
         # Formo i testi necessari
         $ora = CarbonWrapper::format($azione['ora'], 'H:i');
-        $testo = $this->formattedText($testo, '');
+        $testo = $this->formattedText($testo);
 
         # Se sono io il mittente
         if ( $this->me_id == $mittente ) {
