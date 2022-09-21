@@ -59,7 +59,7 @@ $chat_abi_class = ChatAbilita::getInstance();
             <div class="input_container invia">
                 <input type="submit" value="Invia">
                 <input type="hidden" name="action" value="send_action">
-                <input type="hidden" name="dir" value="<?=$chat->getActualChatId();?>">
+                <input type="hidden" name="dir" value="<?=$chat->actualChatId();?>">
             </div>
         </div>
     </form>
@@ -84,15 +84,14 @@ $chat_abi_class = ChatAbilita::getInstance();
 
             <div class="input_container small">
                 <select name="oggetto">
-                    <option value="">Oggetto</option>
-                    <?= $chat->objectsList(); ?>
+                    <?= PersonaggioOggetti::getInstance()->listPgEquipments(Functions::getInstance()->getMyId(),$chat->equippedOnly(),'Oggetti'); ?>
                 </select>
             </div>
 
             <div class="input_container invia">
                 <input type="submit" value="Invia">
                 <input type="hidden" name="action" value="roll_dice">
-                <input type="hidden" name="dir" value="<?=$chat->getActualChatId();?>">
+                <input type="hidden" name="dir" value="<?=$chat->actualChatId();?>">
             </div>
 
         </div>

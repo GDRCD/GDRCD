@@ -26,9 +26,9 @@ class Template extends BaseClass
         return $this->used_class->render($file_name, $data);
     }
 
-    public function renderSelect($value_cell, $name_cell, $selected, $data)
+    public function renderSelect($value_cell, $name_cell, $selected, $data, $label = '')
     {
-        return $this->used_class->renderSelect($value_cell, $name_cell, $selected, $data);
+        return $this->used_class->renderSelect($value_cell, $name_cell, $selected, $data, $label);
     }
 
     public function renderTable($body_file, $data)

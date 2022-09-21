@@ -16,7 +16,7 @@ $chat->resetClass();
 
     <?php if ( $chat->chatAccess() ) {
 
-        if ( $chat->chat_notify && $chat->audioActivated() ) { ?>
+        if ( $chat->activeNotify() && $chat->audioActivated() ) { ?>
             <audio src="/sounds/beep.wav" id="chat_audio"></audio>
         <?php } ?>
 

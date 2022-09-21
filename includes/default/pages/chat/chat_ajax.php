@@ -28,6 +28,6 @@ switch ( $action ) {
 
     # Controlla che la chat sia quella dichiarata
     case 'controllaChat':
-        echo json_encode($chat->controllaChat($_POST));
+        echo json_encode($chat->chatPositionTrue($_POST));
         break;
 }
