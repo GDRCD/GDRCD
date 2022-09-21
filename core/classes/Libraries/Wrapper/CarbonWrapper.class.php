@@ -14,6 +14,18 @@ class CarbonWrapper
     }
 
     /**
+     * @fn format
+     * @note Formatta una data in base al formato passato
+     * @param string $date
+     * @param string $format
+     * @return string
+     */
+    public static function format(string $date, string $format = 'd/m/Y H:i:s'): string
+    {
+        return Carbon::parse($date)->format($format);
+    }
+
+    /**
      * @fn getNow
      * @note Ritorna la data e l'ora corrente
      * @param string $format
@@ -106,6 +118,13 @@ class CarbonWrapper
         return $start->diffInMinutes($end);
     }
 
+    /**
+     * @fn greaterThan
+     * @note Verifica se una data è maggiore di un'altra
+     * @param string $greater
+     * @param string $than
+     * @return int
+     */
     public static function greaterThan(string $greater, string $than): int
     {
         $date1 = Carbon::createFromFormat('Y-m-d H:i:s', $greater);
@@ -113,9 +132,16 @@ class CarbonWrapper
         return $date1->greaterThan($date2);
     }
 
-    public static function lowerThan(string $greater, string $than): int
+    /**
+     * @fn lowerThan
+     * @note Verifica se una data è minore di un'altra
+     * @param string $lower
+     * @param string $than
+     * @return int
+     */
+    public static function lowerThan(string $lower, string $than): int
     {
-        $date1 = Carbon::createFromFormat('Y-m-d H:i:s', $greater);
+        $date1 = Carbon::createFromFormat('Y-m-d H:i:s', $lower);
         $date2 = Carbon::createFromFormat('Y-m-d H:i:s', $than);
         return $date1->lessThan($date2);
     }

@@ -68,10 +68,29 @@ class PersonaggioOggetti extends Personaggio
      */
     public static function getPgObject(int $id, string $val = 'oggetto.*,personaggio_oggetto.*')
     {
-        return DB::query("SELECT {$val}
-                                FROM personaggio_oggetto 
-                                LEFT JOIN oggetto ON (oggetto.id = personaggio_oggetto.oggetto)
-                                  WHERE personaggio_oggetto.id = '{$id}' LIMIT 1");
+        return DB::queryStmt(
+            "SELECT {$val} FROM personaggio_oggetto 
+                LEFT JOIN oggetto ON (oggetto.id = personaggio_oggetto.oggetto)
+                WHERE personaggio_oggetto.id = :id LIMIT 1",
+            [
+                "id" => $id,
+            ]
+        );
+    }
+
+    /**** LISTS ****/
+
+    /**
+     * @fn listPgEquipments
+     * @note Lista gli oggetti indossati dal personaggio
+     * @param int $id_pg
+     * @param bool $equipped
+     * @param string $label
+     * @return string
+     */
+    public function listPgEquipments(int $id_pg, bool $equipped, string $label = ''): string
+    {
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', self::getAllPgObjectsByEquipped($id_pg, $equipped), $label);
     }
 
     /*** CONTROLS ***/

@@ -3,20 +3,18 @@
 Router::loadRequired();
 
 $chat_id = Filters::int($_GET['dir']);
-$_SESSION['last_action_id'] = 0;
 
 $chat = Chat::getInstance();
 $chat->resetClass();
+$chat->setLastAction(0);
 
 ?>
-
-<script src="/plugins/Form.js"></script>
 
 <div class="chat_box">
 
     <?php if ( $chat->chatAccess() ) {
 
-        if ( $chat->chat_notify && $chat->audioActivated() ) { ?>
+        if ( $chat->activeNotify() && $chat->audioActivated() ) { ?>
             <audio src="/sounds/beep.wav" id="chat_audio"></audio>
         <?php } ?>
 

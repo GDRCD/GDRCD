@@ -46,9 +46,9 @@ class TemplateSmarty extends Template
         $this->smarty->assign($container, $old_val);
     }
 
-    public function renderSelect($value_cell, $name_cell, $selected, $data): string
+    public function renderSelect($value_cell, $name_cell, $selected, $data, $label = ''): string
     {
-        return $this->render('select', ['options' => $data, 'value_cell' => $value_cell, 'name_cell' => $name_cell, 'selected_value' => $selected]);
+        return $this->render('select', ['options' => $data, 'value_cell' => $value_cell, 'name_cell' => $name_cell, 'selected_value' => $selected,'label'=>$label]);
     }
 
     public function renderTable($body_file, $data): string

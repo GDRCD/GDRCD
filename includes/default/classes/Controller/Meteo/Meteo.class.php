@@ -104,6 +104,7 @@ class Meteo extends BaseClass
      * @note Controlla se il meteo della singola CHAT necessita di essere aggiornato
      * @param int $id
      * @return bool
+     * @throws Throwable
      */
     protected function weatherChatNeedRefresh(int $id): bool
     {

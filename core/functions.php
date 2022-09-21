@@ -414,27 +414,9 @@ function gdrcd_chatcolor($str, $colore_parlato)
 }
 
 /**
- * Sottolinea in HTML una stringa presente in un testo. Usata per sottolineare il proprio nome in chat
- * @param string $user : la stringa da sottolineare, in genere un nome utente
- * @param string $str : la stringa in cui cercare e sottolineare $user
- * @return $str con tutte le occorrenze di $user sottolineate
- */
-function gdrcd_chatme($user, $str, $master = false)
-{
-    $search = "|\\b" . preg_quote($user, "|") . "\\b|si";
-    if ( !$master ) {
-        $replace = '<span class="chat_me">' . gdrcd_filter('out', $user) . '</span>';
-    } else {
-        $replace = '<span class="chat_me_master">' . gdrcd_filter('out', $user) . '</span>';
-    }
-
-    return preg_replace($search, $replace, $str);
-}
-
-/**
  * Crea un campo di autocompletamento HTML5 (<datalist>) per vari contenuti
- * @param string $str : specifica il soggetto di cui creare la lista. Attualmente è supportato solo 'personaggi', che crea una lista di tutti gli utenti del gdr
- * @return il tag html <datalist> già pronto per essere stampato sulla pagina
+ * @param string $str  Specifica il soggetto di cui creare la lista. Attualmente è supportato solo 'personaggi', che crea una lista di tutti gli utenti del gdr
+ * @return string Il tag html <datalist> già pronto per essere stampato sulla pagina
  */
 function gdrcd_list($str)
 {
