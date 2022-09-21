@@ -18,9 +18,9 @@ class RegistrazioneGiocate extends BaseClass
     /**
      * @fn activeRegistrazioni
      * @note Restituisce se la registrazione è attiva
-     * @return false|mixed
+     * @return bool
      */
-    public function activeRegistrazioni()
+    public function activeRegistrazioni(): bool
     {
         return $this->registrazione_active;
     }
@@ -32,22 +32,24 @@ class RegistrazioneGiocate extends BaseClass
      * @note Ottieni una registrazione giocata dall'id
      * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getRecord(int $id, string $val = '*')
+    public function getRecord(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM giocate_registrate WHERE id='{$id}' LIMIT 1");
+        return DB::queryStmt("SELECT {$val} FROM giocate_registrate WHERE id=:id LIMIT 1", ['id' => $id]);
     }
 
     /**
      * @fn getAllRecords
      * @note Ottieni tutte le registrazioni giocate
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllRecords(string $val = '*')
+    public function getAllRecords(string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM giocate_registrate WHERE 1  ORDER BY creato_il DESC", 'result');
+        return DB::queryStmt("SELECT {$val} FROM giocate_registrate WHERE 1  ORDER BY creato_il DESC", []);
     }
 
     /**
@@ -55,44 +57,50 @@ class RegistrazioneGiocate extends BaseClass
      * @note Ottieni tutte le registrazioni giocate di un personaggio
      * @param int $pg
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllRecordsByCharacter(int $pg, string $val = '*')
+    public function getAllRecordsByCharacter(int $pg, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM giocate_registrate WHERE autore='{$pg}' ORDER BY creato_il DESC", 'result');
+        return DB::queryStmt("SELECT {$val} FROM giocate_registrate WHERE autore=:autore ORDER BY creato_il DESC",
+            ['autore' => $pg]
+        );
     }
 
     /**
      * @fn getAllNewRecords
      * @note Ottieni tutte le registrazioni giocate non ancora lette
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllNewRecords(string $val = '*')
+    public function getAllNewRecords(string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM giocate_registrate WHERE bloccata = 0 AND controllata = 0  ORDER BY creato_il DESC", 'result');
+        return DB::queryStmt("SELECT {$val} FROM giocate_registrate WHERE bloccata = 0 AND controllata = 0  ORDER BY creato_il DESC", []);
     }
 
     /**
      * @fn getAllBlockedRecords
      * @note Ottieni tutte le registrazioni giocate bloccate
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllBlockedRecords(string $val = '*')
+    public function getAllBlockedRecords(string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM giocate_registrate WHERE bloccata = 1 AND controllata = 0  ORDER BY creato_il DESC", 'result');
+        return DB::queryStmt("SELECT {$val} FROM giocate_registrate WHERE bloccata = 1 AND controllata = 0  ORDER BY creato_il DESC", []);
     }
 
     /**
      * @fn getAllControlledRecords
      * @note Ottieni tutte le registrazioni giocate controllate
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllControlledRecords(string $val = '*')
+    public function getAllControlledRecords(string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM giocate_registrate WHERE controllata = 1 ORDER BY creato_il DESC", 'result');
+        return DB::queryStmt("SELECT {$val} FROM giocate_registrate WHERE controllata = 1 ORDER BY creato_il DESC", []);
     }
 
 
@@ -191,6 +199,7 @@ class RegistrazioneGiocate extends BaseClass
      * @note Renderizza la lista delle registrazioni giocate di un personaggio
      * @param int $id
      * @return string
+     * @throws Throwable
      */
     public function characterRecords(int $id): string
     {
@@ -237,8 +246,6 @@ class RegistrazioneGiocate extends BaseClass
      */
     public function characterRecord(int $id): string
     {
-        var_dump(1);
-
         return Template::getInstance()->startTemplate()->renderTable(
             'scheda/registrazioni/view',
             $this->renderCharacterRecordView($id)
@@ -317,6 +324,7 @@ class RegistrazioneGiocate extends BaseClass
      * @note Renderizza la lista delle registrazioni giocate di un personaggio
      * @param string $type
      * @return string
+     * @throws Throwable
      */
     public function allRecords(string $type): string
     {
@@ -333,7 +341,9 @@ class RegistrazioneGiocate extends BaseClass
     /**
      * @fn newRegistrazione
      * @note Crea una nuova registrazione giocata
-     * @return void
+     * @param array $post
+     * @return array
+     * @throws Throwable
      */
     public function newRegistrazione(array $post): array
     {
@@ -369,7 +379,9 @@ class RegistrazioneGiocate extends BaseClass
     /**
      * @fn editRegistrazione
      * @note Modifica una registrazione giocata
-     * @return void
+     * @param array $post
+     * @return array
+     * @throws Throwable
      */
     public function editRegistrazione(array $post): array
     {
@@ -408,7 +420,9 @@ class RegistrazioneGiocate extends BaseClass
     /**
      * @fn deleteRegistrazione
      * @note Elimina una registrazione giocata
-     * @return void
+     * @param array $post
+     * @return array
+     * @throws Throwable
      */
     public function deleteRegistrazione(array $post): array
     {
@@ -446,6 +460,7 @@ class RegistrazioneGiocate extends BaseClass
      * @note Imposta una registrazione giocata come controllata
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function setControlledRegistrazione(array $post): array
     {
@@ -478,6 +493,7 @@ class RegistrazioneGiocate extends BaseClass
      * @note Imposta una registrazione giocata come bloccata
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function setBlockedRegistrazione(array $post): array
     {
