@@ -10,8 +10,6 @@ $chat->resetClass();
 
 ?>
 
-<script src="/plugins/Form.js"></script>
-
 <div class="chat_box">
 
     <?php if ( $chat->chatAccess() ) {

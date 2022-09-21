@@ -306,7 +306,7 @@ class Chat extends BaseClass
         $dir = Filters::int($post['dir']);
 
         // Controllo la chat dove si trova da bg
-        $luogo = Personaggio::getPgData($this->me, 'ultimo_luogo');
+        $luogo = Personaggio::getPgData($this->me_id, 'ultimo_luogo');
         $luogo_id = Filters::int($luogo['ultimo_luogo']);
 
         // Ritorno il risultato ed eventuale nuova direzione per redirect
