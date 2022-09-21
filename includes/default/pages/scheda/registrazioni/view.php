@@ -9,8 +9,6 @@ if ( RegistrazioneGiocate::getInstance()->activeRegistrazioni() && Registrazione
         <?= RegistrazioneGiocate::getInstance()->characterRecord($id); ?>
     </div>
 
-    <script src="<?= Router::getPagesLink('scheda/registrazioni/view.js'); ?>"></script>
-
     <div class="link_back">
         <a href="main.php?page=scheda/index&op=registrazioni&id_pg=<?= $id_pg; ?>">
             Torna indietro

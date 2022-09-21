@@ -135,7 +135,7 @@ class RegistrazioneGiocate extends BaseClass
      * @return bool
      * @throws Throwable
      */
-    public function permissionViewSingleRecord(int $id): bool
+    public function permissionViewSingleRecord(int $id = 0): bool
     {
         # Estraggo i dati della registrazione
         $record = $this->getRecord($id, 'autore,controllata,bloccata');
@@ -348,7 +348,7 @@ class RegistrazioneGiocate extends BaseClass
     {
 
         return Template::getInstance()->startTemplate()->renderTable(
-            'gestione/registrazioni',
+            'gestione/registrazioni/index',
             $this->renderAllRecordsList($type)
         );
     }

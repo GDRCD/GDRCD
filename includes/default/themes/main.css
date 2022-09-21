@@ -1308,3 +1308,10 @@ div.innertube {
     display: inline-block;
     width: 20px;
 }
+
+.gestione_registrazione{
+    height: 80% !important;
+    width: 800px !important;
+    margin: 0 auto;
+    overflow: auto;
+}

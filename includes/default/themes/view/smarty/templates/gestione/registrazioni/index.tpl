@@ -20,7 +20,7 @@
         <div class="td commands">
 
             {if $reg.view_permission}
-                <a href="main.php?page=scheda/index&id_pg={{$reg.id_autore}}">
+                <a href="main.php?page=gestione/registrazioni/view&id={{$reg.id}}">
                     <i class="fas fa-eye"></i>
                 </a>
             {/if}

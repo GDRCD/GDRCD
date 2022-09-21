@@ -6,9 +6,8 @@ $id_pg = Filters::int($_GET['id_pg']);
 $id = Filters::int($_GET['id']);
 
 $record_data = $class->getRecord($id);
-$owner = Filters::int($record_data['autore']);
 
-if ( $class->activeRegistrazioni() && $class->permissionUpdateRecords($owner) ) { ?>
+if ( $class->activeRegistrazioni() && $class->permissionUpdateRecords() ) { ?>
 
     <div class="form_container">
         <form class="form ajax_form"
@@ -55,5 +54,9 @@ if ( $class->activeRegistrazioni() && $class->permissionUpdateRecords($owner) ) 
             Torna indietro
         </a>
     </div>
+
+<?php } else { ?>
+
+    <div class="warning"> Permesso negato.</div>
 
 <?php } ?>
