@@ -49,7 +49,7 @@ $chat_abi_class = ChatAbilita::getInstance();
             </div>
 
             <div class="input_container small">
-                <input type="text" name="tag" placeholder="Tag">
+                <input type="text" name="tag" placeholder="Tag" value="<?=Session::read('tag');?>">
             </div>
 
             <div class="input_container big">

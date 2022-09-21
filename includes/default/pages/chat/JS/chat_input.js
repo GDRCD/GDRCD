@@ -19,6 +19,13 @@ function invioAzioneSuccess(data) {
             $('.chat_form_ajax select[name="tipo"]').val('A');
             $('.chat_form_ajax input[name="testo"]').val('');
         }
+        else{
+            Swal.fire(
+                'Invio azione fallito.',
+                datas.error,
+                'error'
+            )
+        }
     }
 }
 

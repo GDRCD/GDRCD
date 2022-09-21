@@ -3,10 +3,10 @@
 Router::loadRequired();
 
 $chat_id = Filters::int($_GET['dir']);
-$_SESSION['last_action_id'] = 0;
 
 $chat = Chat::getInstance();
 $chat->resetClass();
+$chat->setLastAction(0);
 
 ?>
 

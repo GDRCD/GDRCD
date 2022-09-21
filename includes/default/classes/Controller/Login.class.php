@@ -113,8 +113,8 @@ class Login extends BaseClass
      */
     public function afterLogin(): void
     {
-        if ( Functions::get_constant('LOGIN_BACK_LOCATION') ) {
-            Session::storeForCommit('luogo', -1);
+        if ( !Functions::get_constant('LOGIN_BACK_LOCATION') ) {
+            Session::store('luogo', -1);
             $redirectUrl = 'main.php?page=mappaclick&map_id=' . Session::read('mappa');
         } else {
             // Configuro la url più appropriata a cui reindirizzare l'utente

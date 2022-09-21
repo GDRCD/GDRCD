@@ -3,6 +3,7 @@
 /**
  * @class Chat
  * @note Classe che gestisce la chat
+ * TODO Quando si entra in chat dopo il login, il primo giro di stampe via ajax e' buggato, da risolvere
  */
 class Chat extends BaseClass
 {
@@ -13,7 +14,6 @@ class Chat extends BaseClass
      */
     protected int
         $luogo,
-        $last_action,
         $chat_time,
         $chat_exp,
         $chat_pvt_exp,
@@ -51,7 +51,6 @@ class Chat extends BaseClass
     {
         # Variabili di sessione
         $this->luogo = Filters::int(Session::read('luogo'));
-        $this->last_action = Filters::int(Session::read('last_action_id'));
 
         # Ore di caricamento della chat
         $this->chat_time = Functions::get_constant('CHAT_TIME');
@@ -133,15 +132,14 @@ class Chat extends BaseClass
     }
 
     /**
-     * @fn setLast
+     * @fn setLastAction
      * @note Imposta l'ultima azione
      * @param int $id
      * @return void
      */
-    public function setLast(int $id): void
+    public function setLastAction(int $id): void
     {
         Session::store('last_action_id', $id);
-        $this->last_action = $id;
     }
 
     /**** TABLE HELPERS ***/
@@ -182,10 +180,10 @@ class Chat extends BaseClass
      * @param int $chat
      * @param string $start
      * @param string $end
-     * @return array
+     * @return DBQueryInterface
      * @throws Throwable
      */
-    public function getActionsByTime(int $chat, string $start, string $end): array
+    public function getActionsByTime(int $chat, string $start, string $end): DBQueryInterface
     {
 
         $start = Filters::out($start);
@@ -199,7 +197,7 @@ class Chat extends BaseClass
             WHERE chat.stanza = :chat AND chat.ora >= :start AND chat.ora <= :end
             ORDER BY id",
             ['chat' => $chat, 'start' => $start, 'end' => $end]
-        )->getData();
+        );
     }
 
     /**
@@ -210,11 +208,14 @@ class Chat extends BaseClass
      */
     private function getActions(): DBQueryInterface
     {
+        # Estraggo l'ultimo id visto in chat
+        $last_action_id = Session::read('last_action_id');
+
         # Se l'ultima azione non è zero e quindi non sono appena entrato in chat
-        $extra_query = ($this->last_action > 0) ? " AND chat.id > '{$this->last_action}' " : '';
+        $extra_query = ($last_action_id > 0) ? " AND chat.id > '{$last_action_id}' " : '';
 
         # Estraggo le azioni n base alle condizioni indicate
-        # ! Lasciare il now in questo modo per essere sicuri che la data sia giusta
+        # ! Lasciare extra_query in questo modo, altrimenti non funziona
         return DB::queryStmt("
             SELECT personaggio.nome,personaggio.url_img_chat,personaggio.sesso,chat.*  
             FROM chat LEFT JOIN personaggio ON (personaggio.nome = chat.mittente)
@@ -244,7 +245,7 @@ class Chat extends BaseClass
                 'pg' => $pg,
                 'luogo' => $luogo,
             ]
-        )->getData();
+        );
 
         return Filters::int($count['total']);
     }
@@ -328,17 +329,18 @@ class Chat extends BaseClass
     /**
      * @fn chatAccess
      * @note Si occupa di controllare che la chat sia accessibile (non pvt o pvt accessibile dal pg)
+     * @param int $id
      * @return bool
      * @throws Throwable
      * TODO Implementare controlli per eventuali chat di gruppo o altri tipi di chat
      */
-    public function chatAccess(): bool
+    public function chatAccess(int $id = 0): bool
     {
+        # Se non è stata passata una chat, prendo quella attuale
+        $id = (!$id) ? Filters::int($this->luogo) : Filters::int($id);
+
         # Inizializzo le variabili necessarie
         $resp = false;
-
-        # Filtro i dati passati
-        $id = Filters::int($this->luogo);
 
         # Estraggo i dati della chat
         $data = $this->getChatData($id, 'privata,proprietario,invitati,scadenza');
@@ -567,11 +569,7 @@ class Chat extends BaseClass
      */
     public function printChat(): string
     {
-        if ( $this->chatAccess() ) {
-            return $this->Filter($this->getActions());
-        } else {
-            return '';
-        }
+        return ($this->chatAccess()) ? $this->Filter($this->getActions()) : '';
     }
 
     /**
@@ -585,19 +583,7 @@ class Chat extends BaseClass
      */
     public function printChatByTime(int $chat, string $start, string $end): string
     {
-        # Inizializzo le variabili necessarie
-        $html = '';
-
-        # Estraggo le azioni della chat
-        $azioni = $this->getActionsByTime($chat, $start, $end);
-
-        # Per ogni azione creo il suo html in base al tipo
-        foreach ( $azioni as $azione ) {
-            $html .= $this->Filter($azione);
-        }
-
-        # Ritorno html creato
-        return $html;
+        return ($this->chatAccess()) ? $this->Filter($this->getActionsByTime($chat, $start, $end)) : '';
     }
 
     /**
@@ -610,7 +596,7 @@ class Chat extends BaseClass
     public function Filter(DBQueryInterface $azioni): string
     {
         $html = '';
-        $id = $this->last_action;
+        $id = Session::read('last_action_id');
 
         foreach ( $azioni as $azione ) {
             # Filtro i dati passati
@@ -657,7 +643,7 @@ class Chat extends BaseClass
             $html .= "</div>";
         }
 
-        $this->setLast($id);
+        $this->setLastAction($id);
 
         # Ritorno html creato
         return $html;
@@ -1095,6 +1081,9 @@ class Chat extends BaseClass
         $tag = Filters::in($post['tag']);
         $tipo = Filters::in($post['tipo']);
         $testo = Filters::in($post['testo']);
+
+        #Salvo il tag in sessione
+        Session::store('tag', $tag);
 
         # Salvo l'azione in DB
         DB::queryStmt(

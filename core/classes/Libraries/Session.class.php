@@ -25,7 +25,7 @@ class Session extends BaseClass
 
     /**
      * @fn destroy
-     * @note distrugge la sessione corrente
+     * @note Distrugge la sessione corrente
      * @return void
      */
     public static function destroy(): void
@@ -98,7 +98,7 @@ class Session extends BaseClass
      */
     public static function store(string $key, mixed $value): void
     {
-        session_start();
+        Session::start();
         $_SESSION[$key] = $value;
         Session::commit();
     }
