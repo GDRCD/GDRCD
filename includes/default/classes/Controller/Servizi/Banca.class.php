@@ -62,7 +62,7 @@ class Banca extends BaseClass
                     'new_money' => $new_money,
                     'new_bank' => $new_bank
                 ];
-            } catch (Throwable $e) {
+            } catch (Throwable ) {
                 return [
                     'response' => false,
                     'swal_title' => 'Errore!',
@@ -112,7 +112,7 @@ class Banca extends BaseClass
                     'new_money' => $new_money,
                     'new_bank' => $new_bank
                 ];
-            } catch (Throwable $e) {
+            } catch (Throwable ) {
                 return [
                     'response' => false,
                     'swal_title' => 'Errore!',
@@ -179,7 +179,7 @@ class Banca extends BaseClass
                         'swal_type' => 'success',
                         'new_bank' => $new_bank
                     ];
-                } catch ( Throwable $e ) {
+                } catch ( Throwable ) {
                     return [
                         'response' => false,
                         'swal_title' => 'Errore!',

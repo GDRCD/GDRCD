@@ -30,7 +30,7 @@ class Contatti extends BaseClass
         # Se pubblica vedi TUTTO a prescindere (ignori il campo "pubblica" nella tabella contatti_nota), altrimenti ti rifai alla scelta del pg - default true
         $this->con_public = Functions::get_constant('CONTACT_PUBLIC');
 
-        # Se true, a prescindere dalla scelta del pg sulla nota, sono SEMPRE visibili solo a chi ha il permesso VIEW_CONTACTS ed al pg stesso, se false si rifa' a CONTACT_PUBLIC - default false
+        # Se true, a prescindere dalla scelta del pg sulla nota, sono SEMPRE visibili solo a chi ha il permesso VIEW_CONTACTS e al pg stesso, se false si rifa' a CONTACT_PUBLIC - default false
         $this->con_secret = Functions::get_constant('CONTACT_SECRETS');
         # attivi/disattivi le categorie contatto - default true
         $this->con_categories = Functions::get_constant('CONTACT_CATEGORIES');
@@ -291,6 +291,7 @@ class Contatti extends BaseClass
      * @fn listContactCategories
      * @note Crea le option con le categorie
      * @return string
+     * @throws Throwable
      */
     public function listContactCategories(): string
     {

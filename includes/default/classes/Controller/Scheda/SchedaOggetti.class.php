@@ -138,6 +138,7 @@ class SchedaOggetti extends Scheda
      * @note Funzione di rimozione di un oggetto del personaggio
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function removeObj(array $post): array
     {
@@ -176,6 +177,7 @@ class SchedaOggetti extends Scheda
      * @note Renderizza gli oggetti equipaggiati da un pg
      * @param int $pg
      * @return string
+     * @throws Throwable
      */
     public function renderPgEquipment(int $pg): string
     {
@@ -223,6 +225,7 @@ class SchedaOggetti extends Scheda
      * @note Renderizza l'inventario del personaggio
      * @param int $pg
      * @return string
+     * @throws Throwable
      */
     public function renderPgInventory(int $pg): string
     {
@@ -236,6 +239,7 @@ class SchedaOggetti extends Scheda
      * @note Renderizza un singolo oggetto del personaggio
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function renderObjectInfo(array $post): array
     {

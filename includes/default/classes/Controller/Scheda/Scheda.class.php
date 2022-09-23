@@ -17,9 +17,10 @@ class Scheda extends BaseClass
 
     /**
      * @fn available
-     * @note Controlla se una scheda e' accessibile.
+     * @note Controlla se una scheda è accessibile.
      * @param $id_pg
      * @return bool
+     * @throws Throwable
      */
     public function available($id_pg): bool
     {
@@ -194,6 +195,7 @@ class Scheda extends BaseClass
      * @note Funzione che si occupa dell'estrazione delle icone della scheda
      * @param string $pg_id
      * @return string
+     * @throws Throwable
      */
     private function getGroupIcons(string $pg_id): string
     {
@@ -219,6 +221,7 @@ class Scheda extends BaseClass
      * @note Funzione che si occupa dell'estrazione dell'icone della razza
      * @param string $pg_id
      * @return string
+     * @throws Throwable
      */
     private function getRaceIcon(string $pg_id): string
     {
@@ -239,6 +242,7 @@ class Scheda extends BaseClass
      * @note Renderizza la scheda pg
      * @param int $id_pg
      * @return array
+     * @throws Throwable
      */
     public function renderMainPage(int $id_pg): array
     {
@@ -260,6 +264,7 @@ class Scheda extends BaseClass
      * @note Renderizza la scheda pg
      * @param int $id_pg
      * @return string
+     * @throws Throwable
      */
     public function characterMainPage(int $id_pg): string
     {

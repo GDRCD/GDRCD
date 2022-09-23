@@ -119,7 +119,7 @@ class Meteo extends BaseClass
         $chat_data = Chat::getInstance()->getChatData($id, 'meteo_fisso');
         $fisso = Filters::bool($chat_data['meteo_fisso']);
 
-        // Se e' fisso non lo aggiorno a prescindere
+        // Se è fisso non lo aggiorno a prescindere
         if ( $fisso ) {
             return false;
         }
@@ -167,10 +167,10 @@ class Meteo extends BaseClass
      * @note Estrae il meteo per una chat singola
      * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
      * @throws Throwable
      */
-    public function getMeteoChat(int $id, string $val = 'meteo_chat.*,mappa.meteo_citta')
+    public function getMeteoChat(int $id, string $val = 'meteo_chat.*,mappa.meteo_city'): DBQueryInterface
     {
         return DB::queryStmt(
             "SELECT {$val} FROM meteo_chat LEFT JOIN mappa ON mappa.id = meteo_chat.id_chat WHERE id_chat=:id LIMIT 1",
@@ -205,6 +205,7 @@ class Meteo extends BaseClass
      * @fn createMeteoData
      * @note Creazione dati per meteo
      * @return array
+     * @throws Throwable
      */
     public function createMeteoData(): array
     {
@@ -231,7 +232,7 @@ class Meteo extends BaseClass
         $pg_chat = Personaggio::getPgLocation();
         $meteo_chat = $this->getMeteoChat($pg_chat);
 
-        // SE per la chat specifica e' settato un meteo o se e' settato per la mappa
+        // SE per la chat specifica è settato un meteo o se è settato per la mappa
         $meteo_data = !empty($meteo_chat) ? $meteo_chat : MeteoStagioni::getInstance()->getMeteoGlobal();
 
         // Se non esiste neanche quello globale, lo genero
@@ -288,6 +289,7 @@ class Meteo extends BaseClass
      * @fn generateGlobalWeather
      * @note Funzione contenitore generazione meteo globale
      * @return array
+     * @throws Throwable
      */
     public function generateGlobalWeather(): array
     {
@@ -307,6 +309,7 @@ class Meteo extends BaseClass
      * @fn generateGlobalWeather
      * @note Genera il meteo globale dalle stagioni
      * @return array
+     * @throws Throwable
      */
     public function generateGlobalWeatherFromSeason(): array
     {
@@ -314,7 +317,7 @@ class Meteo extends BaseClass
         $vento = 0;
 
         if ( empty($stagione) ) {
-            die("Verifica di aver assegnato correttamente le stagioni alla mappa o di aver assicurato il range data inizio e fine nelle stagioni poichè non vi sono stagioni selezionabili per questo periodo dell'anno");
+            die("Verifica di aver assegnato correttamente le stagioni alla mappa o di aver assicurato il range data inizio e fine nelle stagioni poiché non vi sono stagioni selezionabili per questo periodo dell'anno");
         }
 
         $meteo = $this->generateCondition($stagione);
@@ -354,6 +357,7 @@ class Meteo extends BaseClass
      * @note Funzione contenitore generazione meteo
      * @param int $id
      * @return void
+     * @throws Throwable
      */
     public function generateWeatherChat(int $id): void
     {
@@ -369,6 +373,7 @@ class Meteo extends BaseClass
      * @note Calcola il meteo dalla stagione
      * @param int $id
      * @return array
+     * @throws Throwable
      */
     public function generateWeatherChatFromSeason(int $id): array
     {
@@ -376,7 +381,7 @@ class Meteo extends BaseClass
         $vento = 0;
 
         if ( empty($stagione) ) {
-            die("Verifica di aver assegnato correttamente le stagioni alla mappa o di aver assicurato il range data inizio e fine nelle stagioni poichè non vi sono stagioni selezionabili per questo periodo dell'anno");
+            die("Verifica di aver assegnato correttamente le stagioni alla mappa o di aver assicurato il range data inizio e fine nelle stagioni poiché non vi sono stagioni selezionabili per questo periodo dell'anno");
         }
 
         $meteo = $this->generateCondition($stagione);
@@ -445,7 +450,7 @@ class Meteo extends BaseClass
      * @return string
      * @throws Throwable
      */
-    public function generateWind(int $id)
+    public function generateWind(int $id): string
     {
         $condizione = MeteoCondizioni::getInstance()->getCondition($id);
         $venti = explode(",", $condizione['vento']);
@@ -480,8 +485,8 @@ class Meteo extends BaseClass
     function generateWeatherChatFromApi(int $id): array
     {
         $meteo_chat = $this->getMeteoChat($id);
-        $citta = Filters::out($meteo_chat['meteo_citta']);
-        return $this->meteoWebApi($citta);
+        $city = Filters::out($meteo_chat['meteo_city']);
+        return $this->meteoWebApi($city);
     }
 
     /**
@@ -521,18 +526,18 @@ class Meteo extends BaseClass
     /**
      * @fn meteoWebApi
      * @note Restituisce il meteo dalle webapi di una città per una singola chat
-     * @param string $citta
+     * @param string $city
      * @return array
      */
     public
-    function meteoWebApi(string $citta = ''): array
+    function meteoWebApi(string $city = ''): array
     {
 
         if ( empty($city) ) {
-            $citta = Functions::get_constant('WEATHER_WEBAPI_CITY');
+            $city = Functions::get_constant('WEATHER_WEBAPI_CITY');
         }
 
-        $api = $this->getWebApiWeather($citta);
+        $api = $this->getWebApiWeather($city);
 
         $weather = $api['weather'][0];
         $icon = $weather['icon'];
@@ -651,7 +656,8 @@ class Meteo extends BaseClass
         $year = date('Y');
         $month = date('n');
         $days = date('j');
-        # Se e' prima di aprile sottraggo un anno
+
+        # Se è prima di aprile sottraggo un anno
         if ( $month < 4 ) {
             $year = $year - 1;
             $month = $month + 12;

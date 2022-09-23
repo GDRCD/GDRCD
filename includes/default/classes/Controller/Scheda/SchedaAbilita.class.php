@@ -7,7 +7,7 @@ class SchedaAbilita extends Scheda
 
     /**
      * @fn isPublic
-     * @note Controlla se la scheda abilita' e' pubblica
+     * @note Controlla se la scheda abilita' è pubblica
      * @return bool
      */
     public function isPublic(): bool
@@ -59,11 +59,13 @@ class SchedaAbilita extends Scheda
     }
 
     /**** RENDERING ****/
+
     /**
      * @fn renderAbiPage
      * @note Elabora i dati per la pagina abilita'
      * @param int $id_pg
      * @return array
+     * @throws Throwable
      */
     public function renderAbiPage(int $id_pg): array
     {
@@ -115,6 +117,7 @@ class SchedaAbilita extends Scheda
      * @note Renderizza la scheda abilita'
      * @param int $id_pg
      * @return string
+     * @throws Throwable
      */
     public function abilityPage(int $id_pg): string
     {
@@ -178,7 +181,7 @@ class SchedaAbilita extends Scheda
                     $data['next_lvl_extra_text'] = Filters::html($next_descr['descrizione']);
                 }
 
-                # Se il costo esiste ed e' maggiore di 0, lo setti, altrimenti usi il calcolo di default
+                # Se il costo esiste ed è maggiore di zero, lo setti, altrimenti usi il calcolo di default
                 if ( !empty($costo) && ($costo > 0) ) {
                     $data['price'] = $costo;
                 } else {

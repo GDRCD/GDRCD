@@ -52,6 +52,7 @@ class SchedaTransazioni extends Scheda
      * @note Lista degli ultimi log di tipo esperienza
      * @param $pg
      * @return array
+     * @throws Throwable
      */
     public function renderPgExpLog($pg): array
     {
@@ -93,6 +94,7 @@ class SchedaTransazioni extends Scheda
      * @note Tabella dell'esperienza del pg
      * @param $pg
      * @return string
+     * @throws Throwable
      */
     public function expTable($pg): string
     {

@@ -217,13 +217,13 @@ class MeteoStagioni extends Meteo
     /**** FUNCTIONS ****/
 
     /**
-     * @fn diffselectSeason
+     * @fn diffSelectSeason
      * @note Select degli stati climatici non presenti nella stagione
      * @param array $array
      * @return string
      * @throws Throwable
      */
-    public function diffselectSeason(array $array): string
+    public function diffSelectSeason(array $array): string
     {
         $option = "";
         $stagioni = MeteoStagioni::getInstance()->getAllSeason();
@@ -375,7 +375,7 @@ class MeteoStagioni extends Meteo
 
     /**
      * @fn AssignCondition
-     * @note Assegna una condizione ad una stagione
+     * @note Assegna una condizione a una stagione
      * @param array $post
      * @return array
      * @throws Throwable

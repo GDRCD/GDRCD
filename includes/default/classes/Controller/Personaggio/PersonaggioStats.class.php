@@ -87,7 +87,7 @@ class PersonaggioStats extends Personaggio
 
     /**
      * @fn isPgStatUpgradable
-     * @note Controlla se la statistica e' aumentabile
+     * @note Controlla se la statistica è aumentabile
      * @param int $id
      * @param int $pg
      * @return bool
@@ -118,7 +118,7 @@ class PersonaggioStats extends Personaggio
 
     /**
      * @fn isPgStatDowngradable
-     * @note Controlla se la statistica e' aumentabile
+     * @note Controlla se la statistica è aumentabile
      * @param int $id
      * @param int $pg
      * @return bool

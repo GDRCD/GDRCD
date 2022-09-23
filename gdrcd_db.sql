@@ -603,7 +603,7 @@ CREATE TABLE IF NOT EXISTS `mappa` (
   `stato` varchar(255) NOT NULL DEFAULT '',
   `pagina` varchar(255) DEFAULT 'nulla.php',
   `chat` tinyint(1) NOT NULL DEFAULT '1',
-  `meteo_citta` varchar(255) DEFAULT NULL,
+  `meteo_city` varchar(255) DEFAULT NULL,
   `meteo_fisso` varchar(255) DEFAULT NULL,
   `immagine` varchar(255) DEFAULT 'standard_luogo.png',
   `stanza_apparente` varchar(255) DEFAULT NULL,

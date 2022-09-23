@@ -7,7 +7,7 @@ $(function () {
         controllachat();
     }, 20000);
 
-    Chosen.init('.whisp-chosen')
+    Chosen.init('.wisp-chosen')
 });
 
 
@@ -69,7 +69,7 @@ function controllachat() {
             if (data != '') {
                 let datas = JSON.parse(data);
                 if (datas.response == false) {
-                    window.location.href = '/main.php?dir=' + datas.newdir;
+                    window.location.href = '/main.php?dir=' + datas.new_dir;
                 }
             }
         })

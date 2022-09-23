@@ -40,7 +40,7 @@ class PersonaggioOggetti extends Personaggio
      * @return DBQueryInterface
      * @throws Throwable
      */
-    public static function getAllPgObjectsByEquipped(int $id_pg, int $equipped, string $val = '*')
+    public static function getAllPgObjectsByEquipped(int $id_pg, int $equipped, string $val = '*'): DBQueryInterface
     {
         return DB::queryStmt(
             "SELECT {$val} FROM personaggio_oggetto 
@@ -77,9 +77,10 @@ class PersonaggioOggetti extends Personaggio
      * @note Estrae i dati di un oggetto di un personaggio
      * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public static function getPgObject(int $id, string $val = 'oggetto.*,personaggio_oggetto.*')
+    public static function getPgObject(int $id, string $val = 'oggetto.*,personaggio_oggetto.*'): DBQueryInterface
     {
         return DB::queryStmt(
             "SELECT {$val} FROM personaggio_oggetto 
@@ -100,6 +101,7 @@ class PersonaggioOggetti extends Personaggio
      * @param bool $equipped
      * @param string $label
      * @return string
+     * @throws Throwable
      */
     public function listPgEquipments(int $id_pg, bool $equipped, string $label = ''): string
     {
@@ -110,10 +112,11 @@ class PersonaggioOggetti extends Personaggio
 
     /**
      * @fn isPgObject
-     * @note Controlla se l'oggetto (personaggio_oggetto.id) e' di proprieta' del personaggio
+     * @note Controlla se l'oggetto (personaggio_oggetto.id) è di proprietà del personaggio
      * @param int $obj
      * @param int $pg
      * @return bool
+     * @throws Throwable
      */
     public static function isPgObject(int $obj, int $pg): bool
     {

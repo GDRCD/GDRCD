@@ -163,10 +163,10 @@ class SchedaChatOpzioni extends Scheda
     /**
      * @fn errorConstant
      * @note Crea l'errore e la lista delle opzioni in errore
-     * @param array $consts
+     * @param array $constants
      * @return array
      */
-    private function errorOptions(array $consts): array
+    private function errorOptions(array $constants): array
     {
         $resp = '';
 
@@ -176,7 +176,7 @@ class SchedaChatOpzioni extends Scheda
                 break;
         }
 
-        foreach ( $consts as $e ) {
+        foreach ( $constants as $e ) {
 
             $resp .= " {$e},";
         }

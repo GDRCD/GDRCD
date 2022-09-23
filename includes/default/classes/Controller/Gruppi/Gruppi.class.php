@@ -90,6 +90,8 @@ class Gruppi extends BaseClass
             return true;
         }
 
+        $extra_query = '';
+
         if ( $id ) {
             $extra_query = "AND gruppi_ruoli.gruppo = '{$id}'";
         }
@@ -349,6 +351,7 @@ class Gruppi extends BaseClass
      * @note Render html lista gruppi
      * @param array $list
      * @return array
+     * @throws Throwable
      */
     public function renderGroupsList(array $list): array
     {

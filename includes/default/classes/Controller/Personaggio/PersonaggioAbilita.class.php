@@ -2,13 +2,10 @@
 
 class PersonaggioAbilita extends Personaggio
 {
-    private Abilita $abi_class;
 
     protected function __construct()
     {
         parent::__construct();
-
-        $this->abi_class = Abilita::getInstance();
     }
 
     /**** TABLES HELPERS ***/
@@ -80,7 +77,7 @@ class PersonaggioAbilita extends Personaggio
      */
     public function getPgRaceAbility(int $pg, string $val = 'abilita.*,personaggio_abilita.*'): DBQueryInterface
     {
-        # Estaggo la razza del pg
+        # Estraggo la razza del pg
         $pg_data = Personaggio::getPgData($this->me_id, 'razza');
         $race = Filters::int($pg_data['razza']);
 
@@ -171,7 +168,7 @@ class PersonaggioAbilita extends Personaggio
                 $count++;
             }
 
-            # Restarto il counter per la prossima abilita
+            # Riavvio il counter per la prossima abilita
             $count = 1;
         }
 

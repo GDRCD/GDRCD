@@ -245,7 +245,7 @@ class GDRCD6 extends DbMigration
         );
 
         DB::query("
-            INSERT INTO `mappa` (`id`, `nome`, `descrizione`, `stato`, `pagina`, `chat`,`meteo_citta`,`meteo_fisso`, `immagine`, `stanza_apparente`, `id_mappa`, `link_immagine`, `link_immagine_hover`, `id_mappa_collegata`, `x_cord`, `y_cord`, `invitati`, `privata`, `proprietario`, `ora_prenotazione`, `scadenza`, `costo`) VALUES
+            INSERT INTO `mappa` (`id`, `nome`, `descrizione`, `stato`, `pagina`, `chat`,`meteo_city`,`meteo_fisso`, `immagine`, `stanza_apparente`, `id_mappa`, `link_immagine`, `link_immagine_hover`, `id_mappa_collegata`, `x_cord`, `y_cord`, `invitati`, `privata`, `proprietario`, `ora_prenotazione`, `scadenza`, `costo`) VALUES
                 (1, 'Strada', 'Via che congiunge la periferia al centro.', 'Nella norma', '', 1,'New York',0, 'standard_luogo.png', '', 1, '', '', 0, 180, 150, '', 0, 'Nessuno', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 0),
                 (2, 'Piazza', 'Piccola piazza con panchine ed una fontana al centro.', 'Nella norma', '', 1,'Miami',0, 'standard_luogo.png', '', 1, '', '', 0, 80, 150, '', 0, 'Nessuno', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 0);"
         );

@@ -43,7 +43,7 @@ $chat_abi_class = ChatAbilita::getInstance();
             </div>
             <div class="input_container small">
 
-                <select name="whispTo" class="whisp-chosen" data-placeholder="Sussurra a:">
+                <select name="wispTo" class="wisp-chosen" data-placeholder="Sussurra a:">
                     <?= Personaggio::getInstance()->listPgs(); ?>
                 </select>
             </div>

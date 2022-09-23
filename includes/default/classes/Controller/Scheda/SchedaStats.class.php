@@ -7,7 +7,7 @@ class SchedaStats extends Scheda
 
     /**
      * @fn isPublic
-     * @note Controlla se la scheda statistiche e' pubblica
+     * @note Controlla se la scheda statistiche è pubblica
      * @return bool
      */
     public function isPublic(): bool
@@ -65,6 +65,7 @@ class SchedaStats extends Scheda
      * @note Elabora i dati della scheda statistiche
      * @param int $id_pg
      * @return array
+     * @throws Throwable
      */
     public function renderStatsPage(int $id_pg): array
     {
@@ -106,6 +107,7 @@ class SchedaStats extends Scheda
      * @note Renderizza la scheda abilita'
      * @param int $id_pg
      * @return string
+     * @throws Throwable
      */
     public function statsPage(int $id_pg): string
     {
