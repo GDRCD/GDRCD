@@ -375,6 +375,7 @@ class GDRCD6 extends DbMigration
                 ('MANAGE_RACES','Permesso per la gestione delle razze'),
                 ('MANAGE_GENDERS','Permesso per la gestione dei sessi'),
                 ('MANAGE_NAMES','Permesso per la gestione dei nomi dei personaggi'),
+                ('MANAGE_BANK','Permesso per la gestione della banca altrui'),
                 ('MANAGEMENT_MENU','Permesso per la pagina gestione')
                ;"
         );
