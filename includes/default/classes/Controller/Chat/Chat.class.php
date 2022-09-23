@@ -311,7 +311,7 @@ class Chat extends BaseClass
         $luogo_id = Filters::int($luogo['ultimo_luogo']);
 
         // Ritorno il risultato ed eventuale nuova direzione per redirect
-        return ['response' => ($dir == $luogo_id), 'newdir' => $luogo_id];
+        return ['response' => ($dir == $luogo_id), 'new_dir' => $luogo_id];
     }
 
     /**
@@ -435,7 +435,7 @@ class Chat extends BaseClass
         $lunghezza_testo = strlen($testo);
 
         # Controllo se la chat è privata
-        $luogo_pvt = $this->getChatData($this->luogo, 'privata');
+        $luogo_pvt = $this->getChatData($this->luogo, 'privata')['privata'];
 
         # Se è privata e l'assegnazione privata è attivo, oppure non è privata
         if ( ($luogo_pvt && $this->chat_pvt_exp) || (!$luogo_pvt) ) {
@@ -604,10 +604,10 @@ class Chat extends BaseClass
             $tipo = Filters::out($azione['tipo']);
             $id = Filters::out($azione['id']);
 
-            # Inizio l'html con una classe comune e una di tipologia, uguale per tutte
+            # Inizio html con una classe comune e una di tipologia, uguale per tutte
             $html .= "<div class='singola_azione chat_row_{$tipo}'>";
 
-            # Creo l'html in base al tipo indicato
+            # Creo html in base al tipo indicato
             switch ( $tipo ) {
                 case 'A':
                 case 'P':
@@ -652,7 +652,7 @@ class Chat extends BaseClass
 
     /**
      * @fn htmlAzione
-     * @note Stampa html per il tipo 'A'.Azione ed il tipo 'P'.Parlato (per retrocompatibilita')
+     * @note Stampa html per il tipo 'A'.Azione e il tipo 'P'.Parlato (per retro compatibilità)
      * @param array $azione
      * @return string
      * @throws Throwable
@@ -693,6 +693,7 @@ class Chat extends BaseClass
      * @note Stampa html per il tipo 'S'.Sussurro
      * @param array $azione
      * @return string
+     * @throws Throwable
      */
     private function htmlSussurro(array $azione): string
     {
@@ -732,7 +733,7 @@ class Chat extends BaseClass
             $intestazione = "{$mittente_nome} ha sussurrato a {$destinatario_nome}";
         }
 
-        # Se l'intestazione non e' vuota, significa che posso leggere il messaggio e lo stampo
+        # Se l'intestazione non è vuota, significa che posso leggere il messaggio e lo stampo
         $array = [
             "intestazione" => $intestazione,
             "ora" => $ora,
@@ -741,7 +742,7 @@ class Chat extends BaseClass
             "testo" => $testo,
         ];
 
-        # Ritorno l'html stampato
+        # Ritorno html stampato
         return Template::getInstance()->startTemplate()->render('chat/S', $array);
     }
 
@@ -750,6 +751,7 @@ class Chat extends BaseClass
      * @note Stampa html per il tipo 'F'.Sussurro Globale
      * @param array $azione
      * @return string
+     * @throws Throwable
      */
     private function htmlSussurroGlobale(array $azione): string
     {
@@ -761,7 +763,7 @@ class Chat extends BaseClass
         $mittente_data = Personaggio::getPgData($mittente, 'nome');
         $mittente_nome = Filters::out($mittente_data['nome']);
 
-        # Customizzazioni
+        # Customization
         $colore_testo_parlato = PersonaggioChatOpzioni::getInstance()->getOptionValue('sussurro_globale_color', $this->me_id);
         $colore_parlato = Filters::out($colore_testo_parlato['valore']);
 
@@ -771,7 +773,7 @@ class Chat extends BaseClass
         # Formo i testi necessari
         $testo = $this->formattedText($testo);
 
-        # Se l'intestazione non e' vuota, significa che posso leggere il messaggio e lo stampo
+        # Se l'intestazione non è vuota, significa che posso leggere il messaggio e lo stampo
         $array = [
             "ora" => $ora,
             "colore_parlato" => $colore_parlato,
@@ -780,7 +782,7 @@ class Chat extends BaseClass
             "mittente_nome" => $mittente_nome,
         ];
 
-        # Ritorno l'html dell'azione
+        # Ritorno html dell'azione
         return Template::getInstance()->startTemplate()->render('chat/F', $array);
     }
 
@@ -789,6 +791,7 @@ class Chat extends BaseClass
      * @note Stampa html per il tipo 'N'.PNG
      * @param array $azione
      * @return string
+     * @throws Throwable
      */
     private function htmlPNG(array $azione): string
     {
@@ -796,7 +799,7 @@ class Chat extends BaseClass
         $destinatario = Filters::out($azione['destinatario']);
         $testo = Filters::string($azione['testo']);
 
-        # Customizzazioni
+        # Customization
         $colore_testo_parlato = PersonaggioChatOpzioni::getInstance()->getOptionValue('png_color_talk', $this->me_id);
         $colore_parlato = Filters::out($colore_testo_parlato['valore']);
 
@@ -818,7 +821,7 @@ class Chat extends BaseClass
             "testo" => $testo,
         ];
 
-        # Ritorno l'html dell'azione
+        # Ritorno html dell'azione
         return Template::getInstance()->startTemplate()->render('chat/N', $array);
     }
 
@@ -827,12 +830,13 @@ class Chat extends BaseClass
      * @note Stampa html per il tipo 'M'.Master
      * @param array $azione
      * @return string
+     * @throws Throwable
      */
     private function htmlMaster(array $azione): string
     {
         $testo = Filters::string($azione['testo']);
 
-        # Customizzazioni
+        # Customization
         $colore_testo_parlato = PersonaggioChatOpzioni::getInstance()->getOptionValue('master_color_talk', $this->me_id);
         $colore_parlato = Filters::out($colore_testo_parlato['valore']);
 
@@ -853,7 +857,7 @@ class Chat extends BaseClass
             "testo" => $testo,
         ];
 
-        # Ritorno l'html dell'azione
+        # Ritorno html dell'azione
         return Template::getInstance()->startTemplate()->render('chat/M', $array);
     }
 
@@ -862,12 +866,13 @@ class Chat extends BaseClass
      * @note Stampa html per il tipo 'MOD'.Moderazione
      * @param array $azione
      * @return string
+     * @throws Throwable
      */
     private function htmlMod(array $azione): string
     {
         $testo = Filters::string($azione['testo']);
 
-        # Customizzazioni
+        # Customization
         $colore_testo_parlato = PersonaggioChatOpzioni::getInstance()->getOptionValue('mod_color', $this->me_id);
         $colore_parlato = Filters::out($colore_testo_parlato['valore']);
 
@@ -885,7 +890,7 @@ class Chat extends BaseClass
             "testo" => $testo,
         ];
 
-        # Ritorno l'html dell'azione
+        # Ritorno html dell'azione
         return Template::getInstance()->startTemplate()->render('chat/MOD', $array);
     }
 
@@ -894,12 +899,13 @@ class Chat extends BaseClass
      * @note Stampa html per le tipologie che necessitano solo di ora e messaggio (Dado,Oggetto,Caccia/Invita)
      * @param array $azione
      * @return string
+     * @throws Throwable
      */
     private function htmlOnlyText(array $azione): string
     {
         $testo = Filters::string($azione['testo']);
 
-        # Customizzazioni
+        # Customization
         $colore_testo_parlato = PersonaggioChatOpzioni::getInstance()->getOptionValue('other_color', $this->me_id);
         $colore_parlato = Filters::out($colore_testo_parlato['valore']);
 
@@ -917,7 +923,7 @@ class Chat extends BaseClass
             "testo" => $testo,
         ];
 
-        # Ritorno l'html dell'azione
+        # Ritorno html dell'azione
         return Template::getInstance()->startTemplate()->render('chat/text', $array);
     }
 
@@ -938,7 +944,7 @@ class Chat extends BaseClass
             "url" => $url,
         ];
 
-        # Ritorno l'html dell'azione
+        # Ritorno html dell'azione
         return Template::getInstance()->startTemplate()->render('chat/I', $array);
     }
 
@@ -1042,7 +1048,7 @@ class Chat extends BaseClass
     private function sendSussurro(array $post): array
     {
         # Filtro le variabili necessarie
-        $sussurraA = Filters::int($post['whispTo']);
+        $sussurraA = Filters::int($post['wispTo']);
 
         # Controllo che il personaggio a cui sussurro sia nella mia stessa chat
         $count = $this->isPgInChat($sussurraA, $this->luogo);
@@ -1145,7 +1151,7 @@ class Chat extends BaseClass
                 }
             }
 
-            # Se ho selezionato una caratteristica (abbinata o meno ad un'abilita')
+            # Se ho selezionato una caratteristica (abbinata o meno a un'abilita')
             if ( $car != 0 ) {
 
                 # Estraggo i dati riguardo la statistica
@@ -1177,7 +1183,7 @@ class Chat extends BaseClass
             # Lancio il dado
             $dice = ($this->chat_dice) ? $this->rollDice() : 0;
 
-            # Formo l'array necessario per il rendering del testo # TODO DA MIGLIORARE
+            # Formo array necessario per il rendering del testo # TODO DA MIGLIORARE
             $data = [
                 'dice' => $dice,
                 'abi_dice' => $abi_dice,
@@ -1205,6 +1211,7 @@ class Chat extends BaseClass
      * @note Funzione che si occupa del calcolo dell'abilita'
      * @param int $id
      * @return array
+     * @throws Throwable
      */
     public function rollAbility(int $id): array
     {
@@ -1288,7 +1295,7 @@ class Chat extends BaseClass
         $obj_name = Filters::out($obj_data['nome']);
         $obj_bonus = Filters::int($obj_data["bonus_car{$car}"]);
 
-        # Ritorno l'array necessario
+        # Ritorno array necessario
         return ['nome' => $obj_name, 'val' => $obj_bonus];
     }
 
@@ -1357,7 +1364,7 @@ class Chat extends BaseClass
         $html .= "{$car_name} {$car_dice},";
         $total += $car_dice;
 
-        # Se ho selezionato la possibilita' di aggiungere i bonus equipaggiamento al totale della stat
+        # Se ho selezionato la possibilità di aggiungere i bonus equipaggiamento al totale della stat
         if ( $car_bonus ) {
             $html .= "Bonus Equip Stat {$car_bonus},";
             $total += $car_bonus;
