@@ -20,41 +20,48 @@ class MeteoCondizioni extends Meteo
      * @fn getAllCondition
      * @note Estrae tutte le condizioni meteo
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllCondition(string $val = '*')
+    public function getAllCondition(string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM meteo_condizioni", 'result');
+        return DB::queryStmt("SELECT {$val} FROM meteo_condizioni", []);
     }
 
     /**
      * @fn getOne
      * @note Estrae una condizione meteo
-     * @return bool|int|mixed|string
+     * @param int $id
+     * @param string $val
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getCondition(int $id, string $val = '*')
+    public function getCondition(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM meteo_condizioni WHERE id='{$id}' LIMIT 1");
+        return DB::queryStmt("SELECT {$val} FROM meteo_condizioni WHERE id=:id LIMIT 1", ['id' => $id]);
     }
 
     /** LISTS  */
 
     /**
-     * @fn selectConditions
+     * @fn listConditions
      * @note Genera gli option per le conditions
+     * @param int $selected
      * @return string
+     * @throws Throwable
      */
-    public function listConditions(): string
+    public function listConditions(int $selected = 0): string
     {
         $conditions = $this->getAllCondition('id,nome');
-        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $conditions);
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', $selected, $conditions);
     }
 
     /**
-     * @fn selectConditions
+     * @fn listConditionsByText
      * @note Genera gli option per le conditions
      * @param string $selected
      * @return string
+     * @throws Throwable
      */
     public function listConditionsByText(string $selected): string
     {
@@ -68,6 +75,7 @@ class MeteoCondizioni extends Meteo
      * @fn ajaxCondList
      * @note Estrae la lista di condizioni
      * @return array
+     * @throws Throwable
      */
     public function ajaxCondList(): array
     {
@@ -79,6 +87,7 @@ class MeteoCondizioni extends Meteo
      * @note Estrae la lista di condizioni
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function ajaxCondData(array $post): array
     {
@@ -111,6 +120,7 @@ class MeteoCondizioni extends Meteo
      * @note Inserisce una nuova condizione
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function NewCondition(array $post): array
     {
@@ -120,7 +130,14 @@ class MeteoCondizioni extends Meteo
             $vento = Filters::in(implode(",", $post['vento']));
             $img = Filters::in($post['immagine']);
 
-            DB::query("INSERT INTO meteo_condizioni (nome,vento,img )  VALUES ('{$nome}', '{$vento}' , '{$img}') ");
+            DB::queryStmt(
+                "INSERT INTO meteo_condizioni (nome,vento,img )  VALUES (:nome, :vento, :img) ",
+                [
+                    'nome' => $nome,
+                    'vento' => $vento,
+                    'img' => $img,
+                ]
+            );
 
             return [
                 'response' => true,
@@ -144,6 +161,7 @@ class MeteoCondizioni extends Meteo
      * @note Aggiorna una condizione meteo
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function ModCondition(array $post): array
     {
@@ -153,8 +171,16 @@ class MeteoCondizioni extends Meteo
             $id = Filters::in($post['id']);
             $img = Filters::in($post['immagine']);
 
-            DB::query("UPDATE  meteo_condizioni 
-                SET nome = '{$nome}',vento='{$vento}', img='{$img}' WHERE id='{$id}'");
+            DB::queryStmt(
+                "UPDATE  meteo_condizioni 
+                SET nome = :nome,vento=vento, img=:img WHERE id=:id",
+                [
+                    'nome' => $nome,
+                    'vento' => $vento,
+                    'img' => $img,
+                    'id' => $id,
+                ]
+            );
 
             return [
                 'response' => true,
@@ -178,6 +204,7 @@ class MeteoCondizioni extends Meteo
      * @note Cancella una condizione meteo
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function DelCondition(array $post): array
     {
@@ -185,7 +212,7 @@ class MeteoCondizioni extends Meteo
 
             $id = Filters::in($post['id']);
 
-            DB::query("DELETE FROM meteo_condizioni WHERE id='{$id}'");
+            DB::queryStmt("DELETE FROM meteo_condizioni WHERE id=:id", ['id' => $id]);
 
             return [
                 'response' => true,

@@ -22,29 +22,34 @@ class MeteoVenti extends Meteo
      * @fn getAllWinds
      * @note Estrae tutti i venti
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllWinds(string $val = '*')
+    public function getAllWinds(string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM meteo_venti ORDER BY nome", 'result');
+        return DB::queryStmt("SELECT {$val} FROM meteo_venti ORDER BY nome", []);
     }
 
     /**
      * @fn getWind
      * @note Estrae un vento
-     * @return bool|int|mixed|string
+     * @param int $id
+     * @param string $val
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getWind(int $id, string $val = '*')
+    public function getWind(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM meteo_venti WHERE id='{$id}' LIMIT 1");
+        return DB::queryStmt("SELECT {$val} FROM meteo_venti WHERE id=:id LIMIT 1", ['id' => $id]);
     }
 
-    /** LIST */
+    /**** LIST ****/
 
     /**
      * @fn selectVento
      * @note Genera gli option per il vento
      * @return string
+     * @throws Throwable
      */
     public function listWinds(): string
     {
@@ -57,6 +62,7 @@ class MeteoVenti extends Meteo
      * @note Genera gli option per il vento
      * @param $selected
      * @return string
+     * @throws Throwable
      */
     public function listWindsByText($selected): string
     {
@@ -64,12 +70,13 @@ class MeteoVenti extends Meteo
         return Template::getInstance()->startTemplate()->renderSelect('nome', 'nome', $selected, $winds);
     }
 
-    /** AJAX */
+    /**** AJAX ****/
 
     /**
      * @fn ajaxWindList
      * @note Estrae la lista di venti
      * @return array
+     * @throws Throwable
      */
     public function ajaxWindList(): array
     {
@@ -81,6 +88,7 @@ class MeteoVenti extends Meteo
      * @note Estrae i dati di un vento
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function ajaxWindData(array $post): array
     {
@@ -102,13 +110,14 @@ class MeteoVenti extends Meteo
         return ['response' => false];
     }
 
-    /** GESTIONE */
+    /**** GESTIONE ****/
 
     /**
      * @fn NewWind
      * @note Inserisce una nuova condizione
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function NewWind(array $post): array
     {
@@ -116,7 +125,12 @@ class MeteoVenti extends Meteo
 
             $nome = Filters::in($post['nome']);
 
-            DB::query("INSERT INTO meteo_venti (nome)  VALUES ('{$nome}') ");
+            DB::queryStmt(
+                "INSERT INTO meteo_venti (nome)  VALUES (:nome) ",
+                [
+                    'nome' => $nome,
+                ]
+            );
 
             return [
                 'response' => true,
@@ -140,6 +154,7 @@ class MeteoVenti extends Meteo
      * @note Aggiorna una condizione meteo
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function ModWind(array $post): array
     {
@@ -147,8 +162,13 @@ class MeteoVenti extends Meteo
             $id = Filters::in($post['id']);
             $nome = Filters::in($post['nome']);
 
-            DB::query("UPDATE  meteo_venti 
-                SET nome = '{$nome}' WHERE id='{$id}'");
+            DB::queryStmt(
+                "UPDATE  meteo_venti SET nome = :nome WHERE id=:id",
+                [
+                    'id' => $id,
+                    'nome' => $nome,
+                ]
+            );
 
             return [
                 'response' => true,
@@ -173,6 +193,7 @@ class MeteoVenti extends Meteo
      * @note Cancella una condizione meteo
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function DelWind(array $post): array
     {
@@ -180,7 +201,7 @@ class MeteoVenti extends Meteo
 
             $id = Filters::in($post['id']);
 
-            DB::query("DELETE FROM meteo_venti WHERE id='{$id}'");
+            DB::queryStmt("DELETE FROM meteo_venti WHERE id=:id", ['id' => $id]);
 
             return [
                 'response' => true,

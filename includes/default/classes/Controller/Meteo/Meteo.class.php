@@ -7,21 +7,28 @@
  */
 class Meteo extends BaseClass
 {
-    private
-        $moon_abilitated,
+    private bool
+        $moon_enabled,
         $weather_wind,
-        $weather_webapi,
-        $weather_webapi_city,
         $weather_webapi_icon,
-        $weather_webapi_icon_format,
+        $weather_webapi;
+
+    private string
+        $weather_webapi_city,
+        $weather_webapi_icon_format;
+
+    private int
         $weather_last_wind,
         $weather_last_condition,
         $weather_last_temp,
         $weather_last_img;
 
-    protected $weather_season,
-        $weather_last_date,
+    protected int
+        $weather_season,
         $weather_update_range;
+
+    protected string
+        $weather_last_date;
 
     /**
      * @fn __construct
@@ -31,7 +38,7 @@ class Meteo extends BaseClass
     {
         parent::__construct();
 
-        $this->moon_abilitated = Functions::get_constant('WEATHER_MOON');
+        $this->moon_enabled = Functions::get_constant('WEATHER_MOON');
         $this->weather_season = Functions::get_constant('WEATHER_SEASON');
         $this->weather_webapi = Functions::get_constant('WEATHER_WEBAPI');
         $this->weather_webapi_city = Functions::get_constant('WEATHER_WEBAPI_CITY');
@@ -50,12 +57,12 @@ class Meteo extends BaseClass
 
     /**
      * @fn activeMoon
-     * @note Controlla se la luna e' attiva
+     * @note Controlla se la luna è attiva
      * @return bool
      */
     public function activeMoon(): bool
     {
-        return $this->moon_abilitated;
+        return $this->moon_enabled;
     }
 
     /**
@@ -70,7 +77,7 @@ class Meteo extends BaseClass
 
     /**
      * @fn activeWind
-     * @note Controlla se il vento e' attivo
+     * @note Controlla se il vento è attivo
      * @return bool
      */
     public function activeWind(): bool
@@ -96,7 +103,7 @@ class Meteo extends BaseClass
     protected function weatherNeedRefresh(): bool
     {
         return empty($this->weather_last_date) ||
-            (Functions::dateDifference($this->weather_last_date, date("Y-m-d H:i"), '%h') > $this->weather_update_range);
+            (CarbonWrapper::DatesDifferenceHours($this->weather_last_date, CarbonWrapper::getNow("Y-m-d H:i")) > $this->weather_update_range);
     }
 
     /**
@@ -126,7 +133,7 @@ class Meteo extends BaseClass
         $last_update = Filters::out($chat_meteo['updated_at']);
 
         return empty($last_update) ||
-            (Functions::dateDifference($last_update, date("Y-m-d H:i"), '%h') > $this->weather_update_range);
+            (CarbonWrapper::DatesDifferenceHours($last_update, CarbonWrapper::getNow("Y-m-d H:i")) > $this->weather_update_range);
     }
 
     /**** PERMISSION ****/
@@ -142,11 +149,12 @@ class Meteo extends BaseClass
     }
 
     /**
-     * @fn permissionEditchat
+     * @fn permissionEditChat
      * @note Permessi per modifica meteo in chat
      * @return bool
+     * @throws Throwable
      */
-    public function permissionEditchat(): bool
+    public function permissionEditChat(): bool
     {
         return $this->permissionManageWeather() && $this->activeSeason() && (Personaggio::getPgLocation() > 0);
     }
@@ -159,10 +167,14 @@ class Meteo extends BaseClass
      * @param int $id
      * @param string $val
      * @return bool|int|mixed|string
+     * @throws Throwable
      */
     public function getMeteoChat(int $id, string $val = 'meteo_chat.*,mappa.meteo_citta')
     {
-        return DB::query("SELECT {$val} FROM meteo_chat LEFT JOIN mappa ON mappa.id = meteo_chat.id_chat WHERE id_chat='{$id}' LIMIT 1");
+        return DB::queryStmt(
+            "SELECT {$val} FROM meteo_chat LEFT JOIN mappa ON mappa.id = meteo_chat.id_chat WHERE id_chat=:id LIMIT 1",
+            ['id' => $id]
+        );
     }
 
     /**
@@ -211,6 +223,7 @@ class Meteo extends BaseClass
      * @fn calcSeasonMeteo
      * @note Calcola il meteo per la posizione attuale
      * @return array
+     * @throws Throwable
      */
     public function getActualMeteo(): array
     {
@@ -236,8 +249,9 @@ class Meteo extends BaseClass
      * @fn refreshWeather
      * @note Funzione che aggiorna il meteo della chat, della mappa e del
      * @return void
+     * @throws Throwable
      */
-    public function refreshWeather()
+    public function refreshWeather(): void
     {
 
         $chat = Personaggio::getPgLocation();
@@ -259,14 +273,12 @@ class Meteo extends BaseClass
      */
     public function windValToText(int $speed): string
     {
-        $velocita =
-            // "switch" comparison for $count
-            $speed <= 5 ? 'Debole' :
-                ($speed <= 10 ? 'Moderato' :
-                    ($speed <= 15 ? 'Forte' :
-                        // default above 60
-                        'Molto forte'));
-        return $velocita;
+        return match (true) {
+            ($speed <= 5) => 'Debole',
+            ($speed <= 10) => 'Moderato',
+            ($speed <= 15) => 'Forte',
+            default => 'Molto forte'
+        };
     }
 
     /**** GEN GLOBAL ***/
@@ -342,7 +354,7 @@ class Meteo extends BaseClass
      * @param int $id
      * @return void
      */
-    public function generateWeatherChat(int $id)
+    public function generateWeatherChat(int $id): void
     {
         if ( !$this->activeWebApi() ) {
             $this->generateWeatherChatFromSeason($id);
@@ -459,6 +471,7 @@ class Meteo extends BaseClass
      * @note Calcola il meteo dalle web api
      * @param int $id
      * @return array
+     * @throws Throwable
      */
     public
     function generateWeatherChatFromApi(int $id): array
@@ -498,7 +511,7 @@ class Meteo extends BaseClass
             curl_close($curl);
             return ($result);
         } else {
-            die('Citta non selezionata per il meteo o apikey mancante');
+            die('Città non selezionata per il meteo o apikey mancante');
         }
     }
 
@@ -565,22 +578,31 @@ class Meteo extends BaseClass
      * @param string $img
      * @param int $id
      * @return void
+     * @throws Throwable
      */
     public
     function saveWeatherChat(string $meteo, string $wind, int $temp, string $img, int $id): void
     {
-        $data = date("Y-m-d H:i");
-        DB::query("UPDATE config SET val = '{$data}' WHERE const_name='WEATHER_LAST_DATE'");
-        DB::query("DELETE FROM meteo_chat WHERE id_chat='{$id}'");
-        DB::query("INSERT INTO meteo_chat(vento,meteo,temp,img,id_chat,updated_at) VALUES('{$wind}','{$meteo}','{$temp}','{$img}','{$id}',NOW())");
+        DB::queryStmt("UPDATE config SET val = :data WHERE const_name='WEATHER_LAST_DATE'", ['data' => CarbonWrapper::getNow("Y-m-d H:i")]);
+        DB::queryStmt("DELETE FROM meteo_chat WHERE id_chat=:id", ['id' => $id]);
+        DB::queryStmt(
+            "INSERT INTO meteo_chat(vento,meteo,temp,img,id_chat,updated_at) VALUES(:wind,:meteo,:temp,:img,:id,NOW())",
+            [
+                "wind" => $wind,
+                "meteo" => $meteo,
+                "temp" => $temp,
+                "img" => $img,
+                "id" => $id,
+            ]
+        );
     }
 
     /**
      * @fn saveChat
      * @note Save chat meteo
      * @param array $post
-     * @param int $id
      * @return array
+     * @throws Throwable
      */
     public
     function saveChat(array $post): array
@@ -648,7 +670,7 @@ class Meteo extends BaseClass
         $phase_title = ['Nuova', 'Crescente', 'Primo Quarto', 'Gibbosa crescente', 'Piena', 'Gibbosa calante', 'Ultimo quarto', 'Calante'];
         # Estraggo e ritorno la fase calcolata
 
-        $img = "themes/{$theme}/imgs/luna/{$phase_array[$phase]}.png";
+        $img = Router::getImgsDir()."luna/{$phase_array[$phase]}.png";
 
         return [
             'Img' => $img,

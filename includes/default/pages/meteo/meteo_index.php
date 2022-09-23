@@ -4,7 +4,7 @@ Router::loadRequired();
 
 $class = Meteo::getInstance();
 
-if ( $class->permissionEditchat() ) { ?>
+if ( $class->permissionEditChat() ) { ?>
     <div class="servizi_pagina esiti_pagina">
         <?php if ( $class->activeSeason() ) { ?>
 
