@@ -7,7 +7,7 @@
 class Gruppi extends BaseClass
 {
 
-    protected
+    protected bool
         $groups_active,
         $group_icon_chat,
         $group_icon_present,
@@ -22,7 +22,7 @@ class Gruppi extends BaseClass
         $this->group_icon_present = Functions::get_constant('GROUPS_ICON_PRESENT');
     }
 
-    /** CONFIG */
+    /**** CONFIG ****/
 
     /**
      * @fn activeGroups
@@ -64,11 +64,11 @@ class Gruppi extends BaseClass
         return $this->group_icon_present;
     }
 
-    /** PERMESSI */
+    /**** PERMESSI ****/
 
     /**
      * @fn permissionManageGroups
-     * @note Controlla se si hanno i permesis per gestire i gruppi
+     * @note Controlla se si hanno i permessi per gestire i gruppi
      * @return bool
      */
     public function permissionManageGroups(): bool
@@ -81,6 +81,7 @@ class Gruppi extends BaseClass
      * @note Controlla se il personaggio ha almeno un ruolo con poteri o se ha i poteri per un singolo gruppo
      * @param int $id
      * @return int
+     * @throws Throwable
      */
     public function haveGroupPower(int $id = 0): int
     {
@@ -89,10 +90,12 @@ class Gruppi extends BaseClass
             $extra_query = "AND gruppi_ruoli.gruppo = '{$id}'";
         }
 
-        $sql = DB::query("
-                SELECT COUNT(personaggio_ruolo.id) AS 'TOT' FROM gruppi_ruoli 
-                    LEFT JOIN personaggio_ruolo ON personaggio_ruolo.ruolo = gruppi_ruoli.id AND personaggio_ruolo.personaggio ='{$this->me_id}'
-                    WHERE gruppi_ruoli.poteri = 1 AND personaggio_ruolo.id IS NOT NULL {$extra_query}");
+        $sql = DB::queryStmt(
+            "SELECT COUNT(personaggio_ruolo.id) AS 'TOT' FROM gruppi_ruoli 
+                    LEFT JOIN personaggio_ruolo ON personaggio_ruolo.ruolo = gruppi_ruoli.id AND personaggio_ruolo.personaggio =:pg
+                    WHERE gruppi_ruoli.poteri = 1 AND personaggio_ruolo.id IS NOT NULL {$extra_query}",
+            ['pg' => $this->me_id]
+        );
 
         return Filters::int($sql['TOT']);
     }
@@ -102,50 +105,57 @@ class Gruppi extends BaseClass
      * @note Controlla se il personaggio ha almeno un ruolo di un singolo gruppo
      * @param int $id
      * @return int
+     * @throws Throwable
      */
     public function haveGroupRole(int $id): int
     {
-        $sql = DB::query("
-                SELECT COUNT(personaggio_ruolo.id) AS 'TOT' FROM gruppi_ruoli 
-                    LEFT JOIN personaggio_ruolo ON personaggio_ruolo.ruolo = gruppi_ruoli.id AND personaggio_ruolo.personaggio ='{$this->me_id}'
-                    WHERE personaggio_ruolo.id IS NOT NULL AND gruppi_ruoli.gruppo = '{$id}'");
+        $sql = DB::queryStmt(
+            "SELECT COUNT(personaggio_ruolo.id) AS 'TOT' FROM gruppi_ruoli 
+                    LEFT JOIN personaggio_ruolo ON personaggio_ruolo.ruolo = gruppi_ruoli.id AND personaggio_ruolo.personaggio =:pg
+                    WHERE personaggio_ruolo.id IS NOT NULL AND gruppi_ruoli.gruppo = '{$id}'",
+            ['pg' => $this->me_id]
+        );
 
         return Filters::int($sql['TOT']);
     }
 
-    /**@fn permissionServiceGroups
+    /**
+     * @fn permissionServiceGroups
      * @note Controllo se ho il permesso per accedere alla pagina dei servizi dei gruppi
      * @param int $id
      * @return bool
+     * @throws Throwable
      */
     public function permissionServiceGroups(int $id = 0): bool
     {
         return $this->activeGroups() && ($this->haveGroupPower($id) || $this->permissionManageGroups());
     }
 
-    /** TABLE HELPERS */
+    /**** TABLE HELPERS ****/
 
     /**
      * @fn getGroup
      * @note Estrae un gruppo
      * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getGroup(int $id, string $val = '*')
+    public function getGroup(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM gruppi WHERE id='{$id}' LIMIT 1");
+        return DB::queryStmt("SELECT {$val} FROM gruppi WHERE id=:id LIMIT 1", ['id' => $id]);
     }
 
     /**
      * @fn getAllGroups
      * @note Estrae tutti i gruppi
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllGroups(string $val = '*')
+    public function getAllGroups(string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM gruppi WHERE 1 ", 'result');
+        return DB::queryStmt("SELECT {$val} FROM gruppi WHERE 1 ", []);
     }
 
     /**
@@ -153,11 +163,12 @@ class Gruppi extends BaseClass
      * @note Estrae tutti i gruppi di un tipo
      * @param string $type
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllGroupsByType(string $type, string $val = 'gruppi.*,gruppi_tipo.nome AS tipo_name')
+    public function getAllGroupsByType(string $type, string $val = 'gruppi.*,gruppi_tipo.nome AS tipo_name'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM gruppi LEFT JOIN gruppi_tipo ON gruppi_tipo.id = gruppi.tipo WHERE tipo='{$type}' ", 'result');
+        return DB::queryStmt("SELECT {$val} FROM gruppi LEFT JOIN gruppi_tipo ON gruppi_tipo.id = gruppi.tipo WHERE tipo=:tipo ", ['tipo' => $type]);
     }
 
     /**
@@ -165,16 +176,17 @@ class Gruppi extends BaseClass
      * @note Estrae il numero di membri di un gruppo
      * @param int $id
      * @return int
+     * @throws Throwable
      */
     public function getGroupPeopleNumber(int $id): int
     {
-        $sql = DB::query("
-                SELECT COUNT(personaggio.id) AS 'TOT' FROM personaggio 
-                    LEFT JOIN personaggio_ruolo 
-                        ON personaggio.id = personaggio_ruolo.personaggio
-                    LEFT JOIN gruppi_ruoli 
-                    ON gruppi_ruoli.id = personaggio_ruolo.ruolo
-                    WHERE gruppi_ruoli.gruppo = '{$id}' AND personaggio_ruolo.id IS NOT NULL ");
+        $sql = DB::queryStmt(
+            "SELECT COUNT(personaggio.id) AS 'TOT' FROM personaggio 
+                   LEFT JOIN personaggio_ruolo ON personaggio.id = personaggio_ruolo.personaggio
+                    LEFT JOIN gruppi_ruoli ON gruppi_ruoli.id = personaggio_ruolo.ruolo
+                    WHERE gruppi_ruoli.gruppo = :id AND personaggio_ruolo.id IS NOT NULL",
+            ['id' => $id]
+        );
 
         return Filters::int($sql['TOT']);
     }
@@ -183,13 +195,14 @@ class Gruppi extends BaseClass
      * @fn getAvailableGroups
      * @note Estrae i gruppi che un personaggio puo' gestire
      * @return array
+     * @throws Throwable
      */
     public function getAvailableGroups(): array
     {
-        $groups = DB::query("
+        $groups = DB::queryStmt("
                     SELECT gruppi_ruoli.gruppo FROM gruppi_ruoli 
-                    LEFT JOIN personaggio_ruolo ON personaggio_ruolo.ruolo = gruppi_ruoli.id AND personaggio_ruolo.personaggio ='{$this->me_id}'
-                    WHERE gruppi_ruoli.poteri = 1 AND personaggio_ruolo.id IS NOT NULL", 'result');
+                    LEFT JOIN personaggio_ruolo ON personaggio_ruolo.ruolo = gruppi_ruoli.id AND personaggio_ruolo.personaggio =:pg
+                    WHERE gruppi_ruoli.poteri = 1 AND personaggio_ruolo.id IS NOT NULL", ['pg' => $this->me_id]);
 
         $groups_list = [];
 
@@ -205,19 +218,23 @@ class Gruppi extends BaseClass
      * @note Estrae tutti i gruppi da piu' id
      * @param array $ids
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllGroupsByIds(array $ids, string $val = '*')
+    public function getAllGroupsByIds(array $ids, string $val = '*'): DBQueryInterface
     {
         $toSearch = implode(',', $ids);
-        return DB::query("SELECT {$val} FROM gruppi WHERE id IN ({$toSearch})", 'result');
+        return DB::queryStmt("SELECT {$val} FROM gruppi WHERE id IN ({$toSearch})", []);
     }
-    /** LISTE */
+
+
+    /**** LISTE ****/
 
     /**
      * @fn listGroups
      * @note Genera gli option per i gruppi
      * @return string
+     * @throws Throwable
      */
     public function listGroups(): string
     {
@@ -229,6 +246,7 @@ class Gruppi extends BaseClass
      * @fn listAvailableGroups
      * @note Genera gli option per i gruppi disponibili
      * @return string
+     * @throws Throwable
      */
     public function listAvailableGroups(): string
     {
@@ -248,15 +266,16 @@ class Gruppi extends BaseClass
      * @fn ajaxGroupData
      * @note Estrazione dinamica dei dati di un gruppo
      * @param array $post
-     * @return array|bool|int|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function ajaxGroupData(array $post): array
+    public function ajaxGroupData(array $post): DBQueryInterface
     {
         $id = Filters::int($post['id']);
         return $this->getGroup($id);
     }
 
-    /** LOADER */
+    /**** LOADER ****/
 
     /**
      * @fn loadServicePage
@@ -268,20 +287,11 @@ class Gruppi extends BaseClass
     {
         $op = Filters::out($op);
 
-        switch ( $op ) {
-            case 'storage':
-                $page = 'storage.php';
-                break;
-            case 'read':
-                $page = 'read.php';
-                break;
-            default:
-                $page = 'view.php';
-                break;
-        }
-
-        return $page;
-
+        return match ($op) {
+            'storage' => 'storage.php',
+            'read' => 'read.php',
+            default => 'view.php',
+        };
     }
 
     /**
@@ -294,29 +304,23 @@ class Gruppi extends BaseClass
     {
         $op = Filters::out($op);
 
-        switch ( $op ) {
-            case 'view_extra_earn':
-                $page = 'view_extra_earn.php';
-                break;
-            default:
-                $page = 'view.php';
-                break;
-        }
-
-        return $page;
+        return match ($op) {
+            'view_extra_earn' => 'view_extra_earn.php',
+            default => 'view.php',
+        };
 
     }
 
-    /** RENDER */
+    /**** RENDER ****/
 
     /**
      * @fn groupsList
      * @note Render html della lista dei gruppi
      * @return string
+     * @throws Throwable
      */
     public function groupsList(): string
     {
-        $template = Template::getInstance()->startTemplate();
         $types = GruppiTipi::getInstance()->getAllTypes();
         $list = [];
 
@@ -326,11 +330,11 @@ class Gruppi extends BaseClass
             foreach ( $groups as $group ) {
                 $groupId = Filters::int($group['id']);
                 $group['member_number'] = $this->getGroupPeopleNumber($groupId);
-                array_push($list, $group);
+                $list[] = $group;
             }
         }
 
-        return $template->renderTable(
+        return Template::getInstance()->startTemplate()->renderTable(
             'servizi/gruppi_list',
             $this->renderGroupsList($list)
         );
@@ -382,6 +386,7 @@ class Gruppi extends BaseClass
      * @note Inserisce un gruppo
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function NewGroup(array $post): array
     {
@@ -395,7 +400,19 @@ class Gruppi extends BaseClass
             $denaro = Filters::int($post['denaro']);
             $visibile = Filters::checkbox($post['visibile']);
 
-            DB::query("INSERT INTO gruppi (nome,tipo,immagine,url,statuto,denaro,visibile )  VALUES ('{$nome}','{$tipo}','{$img}','{$url}','{$statuto}','{$denaro}','{$visibile}') ");
+            DB::queryStmt(
+                "INSERT INTO gruppi (nome,tipo,immagine,url,statuto,denaro,visibile )  
+                        VALUES (:nome,:tipo,:img,:url,:statuto,:denaro,:visibile)",
+                [
+                    'nome' => $nome,
+                    'tipo' => $tipo,
+                    'img' => $img,
+                    'url' => $url,
+                    'statuto' => $statuto,
+                    'denaro' => $denaro,
+                    'visibile' => $visibile,
+                ]
+            );
 
             return [
                 'response' => true,
@@ -419,6 +436,7 @@ class Gruppi extends BaseClass
      * @note Aggiorna un gruppo
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function ModGroup(array $post): array
     {
@@ -432,8 +450,20 @@ class Gruppi extends BaseClass
             $denaro = Filters::int($post['denaro']);
             $visibile = Filters::checkbox($post['visibile']);
 
-            DB::query("UPDATE  gruppi 
-                SET nome = '{$nome}',tipo='{$tipo}', immagine='{$img}',url='{$url}',statuto='{$statuto}',denaro='{$denaro}',visibile='{$visibile}' WHERE id='{$id}'");
+            DB::queryStmt(
+                "UPDATE  gruppi 
+                SET nome = :nome,tipo=:tipo, immagine=:img,url=:url,statuto=:statuto,denaro=:denaro,visibile=:visibile WHERE id=:id",
+                [
+                    'id' => $id,
+                    'nome' => $nome,
+                    'tipo' => $tipo,
+                    'img' => $img,
+                    'url' => $url,
+                    'statuto' => $statuto,
+                    'denaro' => $denaro,
+                    'visibile' => $visibile,
+                ]
+            );
 
             return [
                 'response' => true,
@@ -457,6 +487,7 @@ class Gruppi extends BaseClass
      * @note Cancella un gruppo
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function DelGroup(array $post): array
     {
@@ -464,8 +495,8 @@ class Gruppi extends BaseClass
 
             $id = Filters::in($post['id']);
 
-            DB::query("DELETE FROM gruppi WHERE id='{$id}'");
-            DB::query("DELETE FROM gruppi_ruoli WHERE gruppo='{$id}'");
+            DB::queryStmt("DELETE FROM gruppi WHERE id=:id", ['id' => $id]);
+            DB::queryStmt("DELETE FROM gruppi_ruoli WHERE gruppo=:id", ['id' => $id]);
 
             return [
                 'response' => true,
@@ -492,7 +523,7 @@ class Gruppi extends BaseClass
      * @return void
      * @throws Throwable
      */
-    public function cronSalaries()
+    public function cronSalaries(): void
     {
 
         $pgs = Personaggio::getInstance()->getAllPg();
@@ -500,8 +531,8 @@ class Gruppi extends BaseClass
         foreach ( $pgs as $pg ) {
             $id = Filters::int($pg['id']);
 
-            //**! Tenere divisi i totali di ogni singola categoria, per poter inviare messaggi
-            // e log specifici per tipologia
+            //! Tenere divisi i totali di ogni singola categoria, per poter inviare messaggi
+            //! e log specifici per tipologia
             $totale_ruoli = 0;
             $totale_lavori = 0;
             $totale_extra = 0;
@@ -520,13 +551,24 @@ class Gruppi extends BaseClass
 
                     if ( $corp_money && ($corp_money >= $stipendio) ) {
                         $totale_ruoli += Filters::int($stipendio);
-                        DB::query("UPDATE gruppi SET denaro=denaro-'{$stipendio}' WHERE id='{$group_id}' LIMIT 1");
+                        DB::queryStmt(
+                            "UPDATE gruppi SET denaro=denaro-:stipendio WHERE id=:id LIMIT 1",
+                            [
+                                'id' => $group_id,
+                                'stipendio' => $stipendio,
+                            ]
+                        );
                     } else {
-
-                        // TODO Sostituire pg name con pg id all'invio messaggio
                         $titolo = Filters::in('Stipendio non depositato');
                         $testo = Filters::in("Il gruppo '{$group_name}' non ha abbastanza soldi per pagare il tuo stipendio di {$stipendio} dollari.");
-                        DB::query("INSERT INTO messaggi(mittente,destinatario,tipo,oggetto,testo) VALUES('System','{$id}',0,'{$titolo}','{$testo}') ");
+                        DB::queryStmt(
+                            "INSERT INTO messaggi(mittente,destinatario,tipo,oggetto,testo) VALUES('System',:id,0,:titolo,:testo) ",
+                            [
+                                'id' => $id,
+                                'titolo' => $titolo,
+                                'testo' => $testo,
+                            ]
+                        );
                     }
 
                 }
@@ -558,22 +600,37 @@ class Gruppi extends BaseClass
                         } else {
                             if ( $corp_money && ($corp_money >= $extra_val) ) {
                                 $totale_extra += Filters::int($extra_val);
-                                DB::query("UPDATE gruppi SET denaro=denaro-'{$extra_val}' WHERE id='{$group_id}' LIMIT 1");
+                                DB::queryStmt(
+                                    "UPDATE gruppi SET denaro=denaro-:extra WHERE id=:id LIMIT 1",
+                                    [
+                                        'id' => $group_id,
+                                        'extra' => $extra_val,
+                                    ]
+                                );
                             } else {
-                                // TODO Sostituire pg name con pg id all'invio messaggio
                                 $titolo = Filters::in('Stipendio non depositato');
                                 $testo = Filters::in("Il gruppo '{$group_name}' non ha abbastanza soldi per pagare il tuo stipendio extra di {$extra_val} dollari.");
-                                DB::query("INSERT INTO messaggi(mittente,destinatario,tipo,oggetto,testo) VALUES('System','{$id}',0,'{$titolo}','{$testo}') ");
+                                DB::queryStmt(
+                                    "INSERT INTO messaggi(mittente,destinatario,tipo,oggetto,testo) VALUES('System',:id,0,:titolo,:testo) ",
+                                    [
+                                        'id' => $id,
+                                        'titolo' => $titolo,
+                                        'testo' => $testo,
+                                    ]
+                                );
                             }
                         }
 
-                        DB::query("UPDATE gruppi_stipendi_extra SET last_exec=NOW() WHERE id='{$extra_id}' LIMIT 1");
+                        DB::queryStmt(
+                            "UPDATE gruppi_stipendi_extra SET last_exec=NOW() WHERE id=:id LIMIT 1",
+                            ['id' => $extra_id]
+                        );
                     }
                 }
             }
 
             // TOTALE COMPLESSIVO
-            $totale = ($totale_lavori + $totale_ruoli + $totale_extra);
+            $totale = Filters::int($totale_lavori + $totale_ruoli + $totale_extra);
 
             // ASSEGNAZIONE DEL DENARO AL PG
             Personaggio::updatePgData($id, "banca=banca+:bank", ['bank' => $totale]);

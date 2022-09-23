@@ -2,9 +2,13 @@
 
 class GruppiStipendiExtra extends Gruppi
 {
-    private
+    private bool
         $active_extra_earn;
 
+    /**
+     * @fn __construct
+     * @note Costruttore della classe
+     */
     protected function __construct()
     {
         parent::__construct();
@@ -13,7 +17,12 @@ class GruppiStipendiExtra extends Gruppi
 
     /*** CONFIG ***/
 
-    public function activeExtraEarn()
+    /**
+     * @fn activeExtraEarns
+     * @note Ritorna se il sistema di gestione stipendi extra è attivo
+     * @return bool
+     */
+    public function activeExtraEarn(): bool
     {
         return $this->active_extra_earn;
     }
@@ -24,13 +33,15 @@ class GruppiStipendiExtra extends Gruppi
      * @fn getAllExtraEarn
      * @note Estrae tutti gli stipendi extra
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllExtraEarn(string $val = '*')
+    public function getAllExtraEarn(string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val}
-                                FROM gruppi_stipendi_extra 
-                                WHERE 1", 'result');
+        return DB::queryStmt(
+            "SELECT {$val} FROM gruppi_stipendi_extra  WHERE 1",
+            []
+        );
     }
 
     /**
@@ -38,13 +49,15 @@ class GruppiStipendiExtra extends Gruppi
      * @note Estrae il singolo stipendio extra
      * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getExtraEarn(int $id, string $val = '*')
+    public function getExtraEarn(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val}
-                                FROM gruppi_stipendi_extra 
-                                WHERE id = '{$id}' LIMIT 1");
+        return DB::queryStmt(
+            "SELECT {$val} FROM gruppi_stipendi_extra WHERE id = :id LIMIT 1",
+            [ 'id' => $id ]
+        );
     }
 
     /**
@@ -52,14 +65,17 @@ class GruppiStipendiExtra extends Gruppi
      * @note Estrae gli stipendi extra di un personaggio
      * @param int $pg
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getPgExtraEarns(int $pg, string $val = '*')
+    public function getPgExtraEarns(int $pg, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val}
-                                FROM gruppi_stipendi_extra 
-                                LEFT JOIN gruppi ON (gruppi.id = gruppi_stipendi_extra.gruppo)
-                                WHERE gruppi_stipendi_extra.personaggio = '{$pg}' ", 'result');
+        return DB::queryStmt(
+            "SELECT {$val} FROM gruppi_stipendi_extra 
+                   LEFT JOIN gruppi ON (gruppi.id = gruppi_stipendi_extra.gruppo)
+                   WHERE gruppi_stipendi_extra.personaggio = :pg ",
+            [ 'pg' => $pg ]
+        );
     }
 
     /**
@@ -67,14 +83,17 @@ class GruppiStipendiExtra extends Gruppi
      * @note Estrae gli stipendi extra dati da un gruppo
      * @param array $groups
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getGroupExtraEarnsByIds(array $groups, string $val = '*')
+    public function getGroupExtraEarnsByIds(array $groups, string $val = '*'): DBQueryInterface
     {
         $toSearch = implode(',', $groups);
-        return DB::query("SELECT {$val}
-                                FROM gruppi_stipendi_extra 
-                                WHERE gruppi_stipendi_extra.gruppo IN ({$toSearch}) ", 'result');
+        return DB::queryStmt(
+            "SELECT {$val} FROM gruppi_stipendi_extra 
+                  WHERE gruppi_stipendi_extra.gruppo IN ({$toSearch}) ",
+            []
+        );
     }
 
 
@@ -84,9 +103,10 @@ class GruppiStipendiExtra extends Gruppi
      * @fn ajaxExtraEarnData
      * @note Estrae i dati di uno stipendio extra in modo dinamico
      * @param array $post
-     * @return array|bool|int|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function ajaxExtraEarnData(array $post): array
+    public function ajaxExtraEarnData(array $post): DBQueryInterface
     {
         $id = Filters::int($post['id']);
         return $this->getExtraEarn($id);
@@ -109,6 +129,7 @@ class GruppiStipendiExtra extends Gruppi
      * @note Controlla che si abbiano i permessi per gestire gli stipendi extra
      * @param int $id
      * @return bool
+     * @throws Throwable
      */
     public function permissionMangeSpecificEarn(int $id): bool
     {
@@ -123,6 +144,7 @@ class GruppiStipendiExtra extends Gruppi
      * @fn listTypes
      * @note Genera gli option per gli stipendi extra
      * @return string
+     * @throws Throwable
      */
     public function listExtraEarns(): string
     {
@@ -134,6 +156,7 @@ class GruppiStipendiExtra extends Gruppi
      * @fn listAvailableExtraEarns
      * @note Genera gli option per gli stipendi extra disponibili
      * @return string
+     * @throws Throwable
      */
     public function listAvailableExtraEarns(): string
     {
@@ -143,13 +166,14 @@ class GruppiStipendiExtra extends Gruppi
     }
 
 
-    /** GESTIONE */
+    /**** GESTIONE ****/
 
     /**
      * @fn NewExtraEarn
      * @note Inserisce un nuovo stipendio extra
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function NewExtraEarn(array $post): array
     {
@@ -163,8 +187,19 @@ class GruppiStipendiExtra extends Gruppi
             $interval_type = Filters::in($post['interval_type']);
             $last_exec = Filters::in($post['last_exec']);
 
-            DB::query("INSERT INTO gruppi_stipendi_extra (`nome`, `personaggio`, `gruppo`, `valore`, `interval`, `interval_type`, `last_exec`)
-                            VALUES ('{$nome}', '{$pg}', '{$group}', '{$valore}', '{$interval}', '{$interval_type}', '{$last_exec}')");
+            DB::queryStmt(
+                "INSERT INTO gruppi_stipendi_extra (nome, personaggio, gruppo, denaro, intervallo, intervallo_tipo, last_exec) 
+                    VALUES (:nome, :pg, :group, :valore, :interval, :interval_type, :last_exec)",
+                [
+                    'nome' => $nome,
+                    'pg' => $pg,
+                    'group' => $group,
+                    'valore' => $valore,
+                    'interval' => $interval,
+                    'interval_type' => $interval_type,
+                    'last_exec' => $last_exec
+                ]
+            );
 
             return [
                 'response' => true,
@@ -188,6 +223,7 @@ class GruppiStipendiExtra extends Gruppi
      * @note Aggiorna uno stipendio extra
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function ModExtraEarn(array $post): array
     {
@@ -201,10 +237,19 @@ class GruppiStipendiExtra extends Gruppi
             $interval = Filters::int($post['interval']);
             $interval_type = Filters::in($post['interval_type']);
 
-            DB::query("UPDATE gruppi_stipendi_extra 
-                            SET `nome` = '{$nome}', `personaggio` = '{$pg}', `gruppo` = '{$group}', 
-                                `valore` = '{$valore}', `interval` = '{$interval}', `interval_type` = '{$interval_type}'
-                            WHERE id = '{$id}'");
+            DB::queryStmt(
+                "UPDATE gruppi_stipendi_extra SET nome = :nome, personaggio = :pg, gruppo = :group, denaro = :valore, 
+                    intervallo = :interval, intervallo_tipo = :interval_type WHERE id = :id",
+                [
+                    'id' => $id,
+                    'nome' => $nome,
+                    'pg' => $pg,
+                    'group' => $group,
+                    'valore' => $valore,
+                    'interval' => $interval,
+                    'interval_type' => $interval_type
+                ]
+            );
 
             return [
                 'response' => true,
@@ -228,6 +273,7 @@ class GruppiStipendiExtra extends Gruppi
      * @note Cancella uno stipendio extra
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function DelExtraEarn(array $post): array
     {
@@ -235,7 +281,12 @@ class GruppiStipendiExtra extends Gruppi
 
             $id = Filters::in($post['id']);
 
-            DB::query("DELETE FROM gruppi_stipendi_extra WHERE id = '{$id}'");
+            DB::queryStmt(
+                "DELETE FROM gruppi_stipendi_extra WHERE id = :id",
+                [
+                    'id' => $id
+                ]
+            );
 
             return [
                 'response' => true,
@@ -261,6 +312,7 @@ class GruppiStipendiExtra extends Gruppi
      * @note Inserisce un nuovo stipendio extra se sei il capo
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function NewExtraEarnByBoss(array $post): array
     {
@@ -268,7 +320,6 @@ class GruppiStipendiExtra extends Gruppi
 
         if ( $this->haveGroupPower($group) ) {
 
-            $id = Filters::in($post['id']);
             $nome = Filters::text($post['nome']);
             $pg = Filters::int($post['personaggio']);
             $group = Filters::int($post['gruppo']);
@@ -277,8 +328,19 @@ class GruppiStipendiExtra extends Gruppi
             $interval_type = Filters::in($post['interval_type']);
             $last_exec = Filters::in($post['last_exec']);
 
-            DB::query("INSERT INTO gruppi_stipendi_extra (`nome`, `personaggio`, `gruppo`, `valore`, `interval`, `interval_type`, `last_exec`)
-                            VALUES ('{$nome}', '{$pg}', '{$group}', '{$valore}', '{$interval}', '{$interval_type}', '{$last_exec}')");
+            DB::queryStmt(
+                "INSERT INTO gruppi_stipendi_extra (nome, personaggio, gruppo, denaro, intervallo, intervallo_tipo, last_exec) 
+                    VALUES (:nome, :pg, :group, :valore, :interval, :interval_type, :last_exec)",
+                [
+                    'nome' => $nome,
+                    'pg' => $pg,
+                    'group' => $group,
+                    'valore' => $valore,
+                    'interval' => $interval,
+                    'interval_type' => $interval_type,
+                    'last_exec' => $last_exec
+                ]
+            );
 
             return [
                 'response' => true,
@@ -302,6 +364,7 @@ class GruppiStipendiExtra extends Gruppi
      * @note Modifica un stipendio extra se sei il capo
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function ModExtraEarnByBoss(array $post): array
     {
@@ -316,10 +379,18 @@ class GruppiStipendiExtra extends Gruppi
             $interval = Filters::int($post['interval']);
             $interval_type = Filters::in($post['interval_type']);
 
-            DB::query("UPDATE gruppi_stipendi_extra 
-                            SET `nome` = '{$nome}', `personaggio` = '{$pg}', `valore` = '{$valore}', 
-                                `interval` = '{$interval}', `interval_type` = '{$interval_type}'
-                            WHERE id = '{$id}'");
+            DB::queryStmt(
+                "UPDATE gruppi_stipendi_extra SET nome = :nome, personaggio = :pg, denaro = :valore, 
+                    intervallo = :interval, intervallo_tipo = :interval_type WHERE id = :id",
+                [
+                    'id' => $id,
+                    'nome' => $nome,
+                    'pg' => $pg,
+                    'valore' => $valore,
+                    'interval' => $interval,
+                    'interval_type' => $interval_type
+                ]
+            );
 
             return [
                 'response' => true,
@@ -343,6 +414,7 @@ class GruppiStipendiExtra extends Gruppi
      * @note Elimina uno stipendio extra se sei il capo
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function RemoveExtraEarnByBoss(array $post): array
     {
@@ -350,7 +422,12 @@ class GruppiStipendiExtra extends Gruppi
 
         if ( $this->permissionMangeSpecificEarn($id) ) {
 
-            DB::query("DELETE FROM gruppi_stipendi_extra WHERE id = '{$id}'");
+            DB::queryStmt(
+                "DELETE FROM gruppi_stipendi_extra WHERE id = :id",
+                [
+                    'id' => $id
+                ]
+            );
 
             return [
                 'response' => true,

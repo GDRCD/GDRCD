@@ -3,9 +3,13 @@
 class GruppiFondi extends Gruppi
 {
 
-    private
+    private bool
         $active_founds;
 
+    /**
+     * @fn __construct
+     * @note Costruttore della classe
+     */
     protected function __construct()
     {
         parent::__construct();
@@ -14,12 +18,17 @@ class GruppiFondi extends Gruppi
 
     /*** CONFIG ***/
 
-    public function activeFounds()
+    /**
+     * @fn activeFounds
+     * @note Ritorna se i fondi sono attivi
+     * @return bool
+     */
+    public function activeFounds(): bool
     {
         return $this->active_founds;
     }
 
-    /** PERMESSI */
+    /**** PERMESSI ****/
 
     /**
      * @fn permissionManageFounds
@@ -32,29 +41,31 @@ class GruppiFondi extends Gruppi
     }
 
 
-    /** TABLE HELPERS */
+    /**** TABLE HELPERS ****/
 
     /**
      * @fn getFound
      * @note Estrae un fondo preciso
      * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getFound(int $id, string $val = '*')
+    public function getFound(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM gruppi_fondi WHERE id='{$id}' LIMIT 1");
+        return DB::queryStmt("SELECT {$val} FROM gruppi_fondi WHERE id=:id LIMIT 1", ['id' => $id]);
     }
 
     /**
      * @fn getAllFounds
      * @note Estrae tutti gli introiti
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllFounds(string $val = '*')
+    public function getAllFounds(string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM gruppi_fondi WHERE 1", 'result');
+        return DB::queryStmt("SELECT {$val} FROM gruppi_fondi WHERE 1", []);
     }
 
     /**
@@ -62,19 +73,21 @@ class GruppiFondi extends Gruppi
      * @note Estrae tutti gli introiti di un gruppo specifico
      * @param int $group
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllFoundsByGroup(int $group, string $val = '*')
+    public function getAllFoundsByGroup(int $group, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM gruppi_fondi WHERE gruppo='{$group}'", 'result');
+        return DB::queryStmt("SELECT {$val} FROM gruppi_fondi WHERE gruppo=:id", ['id' => $group]);
     }
 
-    /** LISTS */
+    /**** LISTS ****/
 
     /**
      * @fn listFounds
      * @note Genera gli option per i fondi
      * @return string
+     * @throws Throwable
      */
     public function listFounds(): string
     {
@@ -87,6 +100,7 @@ class GruppiFondi extends Gruppi
      * @note Genera gli option per i fondi
      * @param int $group
      * @return string
+     * @throws Throwable
      */
     public function listFoundsByGroup(int $group): string
     {
@@ -96,7 +110,7 @@ class GruppiFondi extends Gruppi
 
     /**
      * @fn listIntervalsTypes
-     * @note Genera gli option per i tipi di intervallo
+     * @note Genera gli option per i tipi d'intervallo
      * @return string
      */
     public function listIntervalsTypes(): string
@@ -108,27 +122,30 @@ class GruppiFondi extends Gruppi
 
         return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $intervals);
     }
-    /** AJAX */
+
+    /**** AJAX ****/
 
     /**
      * @fn ajaxFoundData
      * @note Estrae i dati di un fondo dinamicamente
      * @param array $post
-     * @return array|bool|int|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function ajaxFoundData(array $post): array
+    public function ajaxFoundData(array $post): DBQueryInterface
     {
         $id = Filters::int($post['id']);
         return $this->getFound($id);
     }
 
-    /** GESTIONE */
+    /**** GESTIONE ****/
 
     /**
      * @fn NewFound
      * @note Inserisce un fondo
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function NewFound(array $post): array
     {
@@ -141,8 +158,14 @@ class GruppiFondi extends Gruppi
             $interval_type = Filters::in($post['interval_type']);
             $last_exec = Filters::in($post['last_exec']);
 
-            DB::query("INSERT INTO gruppi_fondi (`nome`,`gruppo`,`denaro`,`interval`,`interval_type`,`last_exec`)  
-                        VALUES ('{$nome}','{$group}','{$denaro}','{$interval}','{$interval_type}','{$last_exec}') ");
+            DB::queryStmt("INSERT INTO gruppi_fondi (nome, gruppo, denaro, intervallo, intervallo_tipo, last_exec) VALUES (:nome, :gruppo, :denaro, :intervallo, :intervallo_tipo, :last_exec)", [
+                'nome' => $nome,
+                'gruppo' => $group,
+                'denaro' => $denaro,
+                'intervallo' => $interval,
+                'intervallo_tipo' => $interval_type,
+                'last_exec' => $last_exec,
+            ]);
 
             return [
                 'response' => true,
@@ -166,6 +189,7 @@ class GruppiFondi extends Gruppi
      * @note Aggiorna un fondo
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function ModFound(array $post): array
     {
@@ -177,13 +201,14 @@ class GruppiFondi extends Gruppi
             $interval = Filters::int($post['interval']);
             $interval_type = Filters::in($post['interval_type']);
 
-            DB::query("UPDATE  gruppi_fondi 
-                SET `nome` = '{$nome}', 
-                    `gruppo`='{$group}',
-                    `denaro` ='{$denaro}',
-                    `interval`='{$interval}',
-                    `interval_type`='{$interval_type}'
-                    WHERE id='{$id}'");
+            DB::queryStmt("UPDATE gruppi_fondi SET nome=:nome, gruppo=:gruppo, denaro=:denaro, intervallo=:intervallo, intervallo_tipo=:intervallo_tipo WHERE id=:id", [
+                'id' => $id,
+                'nome' => $nome,
+                'gruppo' => $group,
+                'denaro' => $denaro,
+                'intervallo' => $interval,
+                'intervallo_tipo' => $interval_type,
+            ]);
 
             return [
                 'response' => true,
@@ -207,6 +232,7 @@ class GruppiFondi extends Gruppi
      * @note Cancella un fondo
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function DelFound(array $post): array
     {
@@ -214,7 +240,7 @@ class GruppiFondi extends Gruppi
 
             $id = Filters::in($post['id']);
 
-            DB::query("DELETE FROM gruppi_fondi WHERE id='{$id}'");
+            DB::queryStmt("DELETE FROM gruppi_fondi WHERE id=:id", ['id' => $id]);
 
             return [
                 'response' => true,
@@ -236,12 +262,13 @@ class GruppiFondi extends Gruppi
 
     /*** CRONJOBS ***/
 
-    /***
+    /**
      * @fn assignFounds
      * @note Assegnazione fondi da cronjob
      * @return void
+     * @throws Throwable
      */
-    public function assignFounds()
+    public function assignFounds(): void
     {
 
         if ( $this->activeFounds() ) {
@@ -268,8 +295,14 @@ class GruppiFondi extends Gruppi
                     if ( CarbonWrapper::needExec($interval, $interval_type, $last_exec) ) {
                         $denaro = Filters::int($found['denaro']);
                         $total_given += $denaro;
-                        DB::query("UPDATE gruppi SET denaro=denaro+'{$denaro}' WHERE id='{$group_id}' LIMIT 1");
-                        DB::query("UPDATE gruppi_fondi SET last_exec=NOW() WHERE id='{$found_id}' LIMIT 1");
+
+                        DB::queryStmt("UPDATE gruppi SET denaro=denaro+:denaro WHERE id=:id", [
+                            'id' => $group_id,
+                            'denaro' => $denaro,
+                        ]);
+                        DB::queryStmt("UPDATE gruppi_fondi SET last_exec=NOW() WHERE id=:id", [
+                            'id' => $found_id,
+                        ]);
                     }
                 }
 
@@ -278,12 +311,18 @@ class GruppiFondi extends Gruppi
                     $capi = GruppiRuoli::getInstance()->getAllGroupBoss($group_id);
 
                     foreach ( $capi as $capo ) {
-                        // TODO Sostituire pg name con pg id all'invio messaggio
-                        $pg = Filters::in($capo['nome']);
+                        $pg = Filters::in($capo['id']);
 
                         $titolo = Filters::in('Resoconto fondi assegnati oggi.');
                         $testo = Filters::in("Il gruppo '{$group_name}' ha ricevuto un totale di '{$total_given}' dollari.");
-                        DB::query("INSERT INTO messaggi(mittente,destinatario,tipo,oggetto,testo) VALUES('System','{$pg}',0,'{$titolo}','{$testo}') ");
+
+                        DB::queryStmt("INSERT INTO messaggi (mittente, destinatario, oggetto, testo, tipo) VALUES (:mittente, :destinatario, :oggetto, :testo, :tipo)", [
+                            'mittente' => 'System',
+                            'destinatario' => $pg,
+                            'oggetto' => $titolo,
+                            'testo' => $testo,
+                            'tipo' => 0
+                        ]);
                     }
 
                 }

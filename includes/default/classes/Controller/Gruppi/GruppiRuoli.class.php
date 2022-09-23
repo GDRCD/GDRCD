@@ -7,8 +7,12 @@
 class GruppiRuoli extends Gruppi
 {
 
-    protected $groups_max_roles;
+    protected int $groups_max_roles;
 
+    /**
+     * @fn __construct
+     * @note Costruttore della classe
+     */
     protected function __construct()
     {
         parent::__construct();
@@ -34,22 +38,24 @@ class GruppiRuoli extends Gruppi
      * @note Estrae un ruolo
      * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getRole(int $id, string $val = '*')
+    public function getRole(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM gruppi_ruoli WHERE id='{$id}' LIMIT 1");
+        return DB::queryStmt("SELECT $val FROM gruppi_ruoli WHERE id = :id LIMIT 1", ['id' => $id]);
     }
 
     /**
      * @fn getAllRoles
      * @note Estrae tutti i ruoli
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllRoles(string $val = '*')
+    public function getAllRoles(string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM gruppi_ruoli WHERE 1", 'result');
+        return DB::queryStmt("SELECT {$val} FROM gruppi_ruoli WHERE 1", []);
     }
 
     /**
@@ -57,12 +63,13 @@ class GruppiRuoli extends Gruppi
      * @note Estrae tutti i ruoli di piu' gruppi
      * @param array $ids
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllRolesByIds(array $ids, string $val = '*')
+    public function getAllRolesByIds(array $ids, string $val = '*'): DBQueryInterface
     {
         $toSearch = implode(',', $ids);
-        return DB::query("SELECT {$val} FROM gruppi_ruoli WHERE gruppo IN ({$toSearch})", 'result');
+        return DB::queryStmt("SELECT {$val} FROM gruppi_ruoli WHERE gruppo IN ({$toSearch})", []);
     }
 
     /**
@@ -70,11 +77,12 @@ class GruppiRuoli extends Gruppi
      * @note Estrae i ruoli di un gruppo preciso
      * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllGroupRoles(int $id, string $val = '*')
+    public function getAllGroupRoles(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM gruppi_ruoli WHERE gruppo='{$id}'", 'result');
+        return DB::queryStmt("SELECT {$val} FROM gruppi_ruoli WHERE gruppo = :id", ['id' => $id]);
     }
 
     /**
@@ -82,15 +90,16 @@ class GruppiRuoli extends Gruppi
      * @note Estrae tutti i membri di un gruppo preciso
      * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllGroupMembers(int $id, string $val = 'personaggio.nome,gruppi_ruoli.nome as role,gruppi_ruoli.immagine')
+    public function getAllGroupMembers(int $id, string $val = 'personaggio.nome,gruppi_ruoli.nome as role,gruppi_ruoli.immagine'): DBQueryInterface
     {
-        return DB::query("
+        return DB::queryStmt("
                 SELECT {$val} FROM gruppi_ruoli 
                     LEFT JOIN personaggio_ruolo ON personaggio_ruolo.ruolo = gruppi_ruoli.id 
                     LEFT JOIN personaggio ON personaggio_ruolo.personaggio = personaggio.id 
-                WHERE gruppi_ruoli.gruppo='{$id}' AND personaggio_ruolo.id IS NOT NULL", 'result');
+                WHERE gruppi_ruoli.gruppo=:id AND personaggio_ruolo.id IS NOT NULL", ['id' => $id]);
     }
 
     /**
@@ -98,34 +107,40 @@ class GruppiRuoli extends Gruppi
      * @note Estrae tutti i membri di un gruppo preciso
      * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllGroupBoss(int $id, string $val = 'personaggio.id,personaggio.nome,gruppi_ruoli.nome as role,gruppi_ruoli.immagine')
+    public function getAllGroupBoss(int $id, string $val = 'personaggio.id,personaggio.nome,gruppi_ruoli.nome as role,gruppi_ruoli.immagine'): DBQueryInterface
     {
 
-        return DB::query("
+        return DB::queryStmt("
                 SELECT {$val} FROM gruppi_ruoli 
                     LEFT JOIN personaggio_ruolo ON personaggio_ruolo.ruolo = gruppi_ruoli.id 
                     LEFT JOIN personaggio ON personaggio_ruolo.personaggio = personaggio.id 
-                WHERE gruppi_ruoli.gruppo='{$id}' AND personaggio_ruolo.id IS NOT NULL AND gruppi_ruoli.poteri = 1", 'result');
+                WHERE gruppi_ruoli.gruppo=:id AND personaggio_ruolo.id IS NOT NULL AND gruppi_ruoli.poteri = 1",
+            ['id' => $id]
+        );
     }
 
     /**
      * @fn getAvailableRoles
      * @note Estrae i ruoli che un personaggio puo' gestire
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAvailableRoles()
+    public function getAvailableRoles(): DBQueryInterface
     {
-        $groups = DB::query("
+        $groups = DB::queryStmt("
                 SELECT gruppi_ruoli.gruppo FROM gruppi_ruoli 
-                    LEFT JOIN personaggio_ruolo ON personaggio_ruolo.ruolo = gruppi_ruoli.id AND personaggio_ruolo.personaggio ='{$this->me_id}'
-                    WHERE gruppi_ruoli.poteri = 1 AND personaggio_ruolo.id IS NOT NULL", 'result');
+                    LEFT JOIN personaggio_ruolo ON personaggio_ruolo.ruolo = gruppi_ruoli.id AND personaggio_ruolo.personaggio =:pg
+                    WHERE gruppi_ruoli.poteri = 1 AND personaggio_ruolo.id IS NOT NULL",
+            ['pg' => $this->me_id]
+        );
 
         $groups_list = [];
 
         foreach ( $groups as $group ) {
-            array_push($groups_list, $group['gruppo']);
+            $groups_list[] = $group['gruppo'];
         }
 
         return $this->getAllRolesByIds($groups_list);
@@ -135,15 +150,18 @@ class GruppiRuoli extends Gruppi
      * @fn getCharacterSalaries
      * @note Ottiene tutti gli stipendi dei ruoli di un personaggio
      * @param int $pg
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getCharacterRolesSalaries(int $pg)
+    public function getCharacterRolesSalaries(int $pg): DBQueryInterface
     {
-        return DB::query(
+        return DB::queryStmt(
             "SELECT gruppi.id,gruppi.nome,gruppi_ruoli.stipendio,gruppi.denaro FROM personaggio_ruolo 
                     LEFT JOIN gruppi_ruoli ON (personaggio_ruolo.ruolo = gruppi_ruoli.id)
                     LEFT JOIN gruppi ON (gruppi_ruoli.gruppo = gruppi.id)
-                    WHERE personaggio_ruolo.personaggio ='{$pg}'", 'result');
+                    WHERE personaggio_ruolo.personaggio =:pg",
+            ['pg' => $pg]
+        );
     }
 
     /**** LIST ****/
@@ -152,6 +170,7 @@ class GruppiRuoli extends Gruppi
      * @fn listAvailableRoles
      * @note Genera gli option per i ruoli disponibili
      * @return string
+     * @throws Throwable
      */
     public function listAvailableRoles(): string
     {
@@ -167,6 +186,7 @@ class GruppiRuoli extends Gruppi
      * @fn listGroups
      * @note Genera gli option per i gruppi
      * @return string
+     * @throws Throwable
      */
     public function listRoles(): string
     {
@@ -178,6 +198,7 @@ class GruppiRuoli extends Gruppi
      * @fn listGroups
      * @note Genera gli option per i gruppi
      * @return string
+     * @throws Throwable
      */
     public function listServiceAvailableRoles(): string
     {
@@ -189,9 +210,10 @@ class GruppiRuoli extends Gruppi
 
     /**
      * @param array $post
-     * @return array
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function ajaxRoleData(array $post): array
+    public function ajaxRoleData(array $post): DBQueryInterface
     {
         $id = Filters::int($post['id']);
         return $this->getRole($id);
@@ -204,12 +226,12 @@ class GruppiRuoli extends Gruppi
      * @note Render html della lista dei ruoli
      * @param int $corp
      * @return string
+     * @throws Throwable
      */
     public function rolesList(int $corp): string
     {
-        $template = Template::getInstance()->startTemplate();
         $roles = $this->getAllGroupRoles($corp);
-        return $template->renderTable(
+        return Template::getInstance()->startTemplate()->renderTable(
             'servizi/roles_list',
             $this->renderRolesList($roles)
         );
@@ -255,12 +277,12 @@ class GruppiRuoli extends Gruppi
      * @note Render html della lista dei membri
      * @param int $corp
      * @return string
+     * @throws Throwable
      */
     public function membersList(int $corp): string
     {
-        $template = Template::getInstance()->startTemplate();
         $members = $this->getAllGroupMembers($corp);
-        return $template->renderTable(
+        return Template::getInstance()->startTemplate()->renderTable(
             'servizi/members_list',
             $this->renderMembersList($members)
         );
@@ -299,13 +321,14 @@ class GruppiRuoli extends Gruppi
         ];
     }
 
-    /** GESTIONE */
+    /**** GESTIONE ****/
 
     /**
      * @fn NewRole
      * @note Inserisce un ruolo gruppo
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function NewRole(array $post): array
     {
@@ -317,8 +340,16 @@ class GruppiRuoli extends Gruppi
             $stipendio = Filters::int($post['stipendio']);
             $poteri = Filters::checkbox($post['poteri']);
 
-            DB::query("INSERT INTO gruppi_ruoli (gruppo,nome,immagine,stipendio,poteri )  
-                        VALUES ('{$group}','{$nome}','{$img}','{$stipendio}','{$poteri}') ");
+            DB::queryStmt(
+                "INSERT INTO gruppi_ruoli (gruppo,nome,immagine,stipendio,poteri) VALUES (:gruppo,:nome,:immagine,:stipendio,:poteri)",
+                [
+                    'gruppo' => $group,
+                    'nome' => $nome,
+                    'immagine' => $img,
+                    'stipendio' => $stipendio,
+                    'poteri' => $poteri,
+                ]
+            );
 
             return [
                 'response' => true,
@@ -342,6 +373,7 @@ class GruppiRuoli extends Gruppi
      * @note Aggiorna un ruolo gruppo
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function ModRole(array $post): array
     {
@@ -353,10 +385,17 @@ class GruppiRuoli extends Gruppi
             $stipendio = Filters::int($post['stipendio']);
             $poteri = Filters::checkbox($post['poteri']);
 
-            DB::query("UPDATE  gruppi_ruoli 
-                SET gruppo='{$group}',nome = '{$nome}', 
-                    immagine='{$img}',stipendio='{$stipendio}',
-                    poteri='{$poteri}' WHERE id='{$id}'");
+            DB::queryStmt(
+                "UPDATE gruppi_ruoli SET gruppo=:gruppo,nome=:nome,immagine=:immagine,stipendio=:stipendio,poteri=:poteri WHERE id=:id",
+                [
+                    'id' => $id,
+                    'gruppo' => $group,
+                    'nome' => $nome,
+                    'immagine' => $img,
+                    'stipendio' => $stipendio,
+                    'poteri' => $poteri,
+                ]
+            );
 
             return [
                 'response' => true,
@@ -380,6 +419,7 @@ class GruppiRuoli extends Gruppi
      * @note Cancella un ruolo gruppo
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function DelRole(array $post): array
     {
@@ -387,7 +427,7 @@ class GruppiRuoli extends Gruppi
 
             $id = Filters::in($post['id']);
 
-            DB::query("DELETE FROM gruppi_ruoli WHERE id='{$id}'");
+            DB::queryStmt("DELETE FROM gruppi_ruoli WHERE id=:id", ['id' => $id]);
 
             return [
                 'response' => true,
@@ -414,6 +454,7 @@ class GruppiRuoli extends Gruppi
      * @note Assegna un ruolo a un personaggio
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function AssignRole(array $post): array
     {
@@ -429,7 +470,10 @@ class GruppiRuoli extends Gruppi
 
             if ( $roles_number < $this->groups_max_roles ) {
 
-                DB::query("INSERT INTO personaggio_ruolo(ruolo,personaggio) VALUES('{$ruolo}','{$personaggio}')");
+                DB::queryStmt(
+                    "INSERT INTO personaggio_ruolo(ruolo,personaggio) VALUES(:ruolo,:pg)",
+                    ['ruolo' => $ruolo, 'pg' => $personaggio]
+                );
 
                 return [
                     'response' => true,
@@ -462,6 +506,7 @@ class GruppiRuoli extends Gruppi
      * @note Rimuovi un ruolo a un personaggio
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function RemoveRole(array $post): array
     {
@@ -473,7 +518,10 @@ class GruppiRuoli extends Gruppi
 
         if ( $this->permissionServiceGroups($group) ) {
 
-            DB::query("DELETE FROM personaggio_ruolo WHERE ruolo='{$ruolo}' AND personaggio='{$personaggio}'");
+            DB::queryStmt(
+                "DELETE FROM personaggio_ruolo WHERE ruolo=:ruolo AND personaggio=:pg",
+                ['ruolo' => $ruolo, 'pg' => $personaggio]
+            );
 
             return [
                 'response' => true,
