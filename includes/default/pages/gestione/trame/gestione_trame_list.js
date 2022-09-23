@@ -8,7 +8,7 @@ $(function () {
             action = $(this).data('action'),
             page = $(this).data('page');
 
-        let button = await Swal.button('Sei sicuro?', 'Vuoi eliminare questa trama?', 'question');
+        let button = await Swal.button('Sei sicuro?', 'Vuoi eliminare questa trama?', 'info');
 
         if (button) {
             Ajax('gestione/trame/gestione_trame_ajax.php', {

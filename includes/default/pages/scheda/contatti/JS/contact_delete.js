@@ -8,7 +8,7 @@ $(function () {
             action = $(this).data('action'),
             page = $(this).data('page');
 
-        let button = await Swal.button('Sei sicuro?', 'Vuoi eliminare questo Contatto?', 'question');
+        let button = await Swal.button('Sei sicuro?', 'Vuoi eliminare questo Contatto?', 'info');
 
         if (button) {
             Ajax('scheda/contatti/contact_ajax.php', {

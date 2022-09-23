@@ -81,7 +81,7 @@ class GruppiTipi extends Gruppi
     public function ajaxTypeData(array $post): DBQueryInterface
     {
         $id = Filters::int($post['id']);
-        return $this->getType($id);
+        return $this->getType($id)->getData()[0];
     }
 
     /**** GESTIONE ****/

@@ -113,7 +113,7 @@ class GruppiStipendiExtra extends Gruppi
     public function ajaxExtraEarnData(array $post): DBQueryInterface
     {
         $id = Filters::int($post['id']);
-        return $this->getExtraEarn($id);
+        return $this->getExtraEarn($id)->getData()[0];
     }
 
     /*** PERMESSI ***/

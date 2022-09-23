@@ -216,7 +216,7 @@ class GruppiRuoli extends Gruppi
     public function ajaxRoleData(array $post): DBQueryInterface
     {
         $id = Filters::int($post['id']);
-        return $this->getRole($id);
+        return $this->getRole($id)->getData()[0];
     }
 
     /**** RENDER ****/

@@ -214,7 +214,7 @@ class GruppiLavori extends Gruppi
     public function ajaxWorkData(array $post): DBQueryInterface
     {
         $id = Filters::int($post['id']);
-        return $this->getWork($id);
+        return $this->getWork($id)->getData()[0];
     }
 
     /**** GESTIONE ****/

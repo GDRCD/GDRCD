@@ -3,11 +3,11 @@
 /**
  * @class Contatti
  * @note Classe per la gestione centralizzata dei contatti del personaggio
- * @required PHP 7.1+
+ * @required PHP 8+
  */
 class Contatti extends BaseClass
 {
-    protected
+    protected bool
         $con_enabled,
         $con_public,
         $con_secret,
@@ -55,36 +55,15 @@ class Contatti extends BaseClass
     {
         $op = Filters::out($op);
 
-        switch ( $op ) {
-            default:
-                $page = 'list.php';
-                break;
-
-            case 'contact_new':
-                $page = 'contact_new.php';
-                break;
-
-            case 'contact_edit':
-                $page = 'contact_edit.php';
-                break;
-
-            case 'note_view':
-                $page = 'note_view.php';
-                break;
-            case 'note_new':
-                $page = 'note_new.php';
-                break;
-
-            case 'note_details':
-                $page = 'note_details.php';
-                break;
-
-            case 'note_edit':
-                $page = 'note_edit.php';
-                break;
-        }
-
-        return $page;
+        return match($op){
+            default => 'list.php',
+            'contact_new'=> 'contact_new.php',
+            'contact_edit'=> 'contact_edit.php',
+            'note_view'=> 'note_view.php',
+            'note_new'=> 'note_new.php',
+            'note_details'=> 'note_details.php',
+            'note_edit'=> 'note_edit.php',
+        };
     }
 
     /**** CONTROLS ****/
@@ -211,11 +190,12 @@ class Contatti extends BaseClass
      * @note Query di tutti i contatti di un personaggio
      * @param string $val
      * @param int $pg
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllCharacterContact(int $pg, string $val = '*')
+    public function getAllCharacterContact(int $pg, string $val = '*'):DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM contatti WHERE personaggio = '{$pg}'  ", 'result');
+        return DB::queryStmt("SELECT {$val} FROM contatti WHERE personaggio = :pg  ", ['pg' => $pg]);
     }
 
     /**
@@ -223,11 +203,12 @@ class Contatti extends BaseClass
      * @note Ottiene il singolo contatto
      * @param string $val
      * @param int $id
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getContact(int $id, string $val = '*')
+    public function getContact(int $id, string $val = '*'):DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM contatti WHERE id = '{$id}' ");
+        return DB::queryStmt("SELECT {$val} FROM contatti WHERE id = :id", ['id' => $id]);
     }
 
     /*** CONTACT INDEX ***/
@@ -237,6 +218,7 @@ class Contatti extends BaseClass
      * @note Render html lista contatti pg
      * @param int $id_pg
      * @return array
+     * @throws Throwable
      */
     public function renderContactList(int $id_pg): array
     {
@@ -294,6 +276,7 @@ class Contatti extends BaseClass
      * @note Render html della lista dei contatti
      * @param int $pg
      * @return string
+     * @throws Throwable
      */
     public function ContactList(int $pg): string
     {
@@ -320,6 +303,7 @@ class Contatti extends BaseClass
      * @note Estrai gli ID di tutti i contatti che il pg ha già inserito
      * @param $pg
      * @return string
+     * @throws Throwable
      */
     public function contattiPresenti($pg): string
     {
@@ -337,6 +321,7 @@ class Contatti extends BaseClass
      * @note Filtra la lista di personaggi disponibili in creazione nota
      * @param int $id_pg
      * @return string
+     * @throws Throwable
      */
     public function filteredCharactersList(int $id_pg): string
     {
@@ -353,6 +338,7 @@ class Contatti extends BaseClass
      * @note Inserisce un nuovo contatto
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function newContatto(array $post): array
     {
@@ -362,7 +348,13 @@ class Contatti extends BaseClass
         $categoria = Filters::int($post['categoria']);
 
         if ( Personaggio::isMyPg($personaggio) ) {
-            DB::query("INSERT INTO contatti(personaggio, contatto, categoria, creato_da, creato_il) VALUES('{$personaggio}', '{$contatto}', {$categoria},'{$creato_da}', NOW())");
+
+            DB::queryStmt("INSERT INTO contatti (personaggio, contatto, categoria, creato_da, creato_il) VALUES (:personaggio, :contatto, :categoria, :creato_da, NOW())", [
+                'contatto' => $contatto,
+                'categoria' => $categoria,
+                'creato_da' => $creato_da,
+                'personaggio' => $personaggio
+            ]);
 
             return [
                 'response' => true,
@@ -386,6 +378,7 @@ class Contatti extends BaseClass
      * @note Modifica la categoria del contatto
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function editContatto(array $post): array
     {
@@ -397,7 +390,11 @@ class Contatti extends BaseClass
 
         if ( $this->contactUpdate($owner) ) {
 
-            DB::query("UPDATE contatti SET categoria = '{$categoria}'  WHERE id= {$id}");
+            DB::queryStmt("UPDATE contatti SET categoria = :categoria WHERE id = :id", [
+                'categoria' => $categoria,
+                'id' => $id
+            ]);
+
             return [
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
@@ -419,6 +416,7 @@ class Contatti extends BaseClass
      * @note Rimuove un contatto
      * @param int $id
      * @return array
+     * @throws Throwable
      */
     public function deleteContatto(int $id): array
     {
@@ -428,7 +426,10 @@ class Contatti extends BaseClass
         $owner = Filters::int($contact_data['personaggio']);
         if ( $this->contactUpdate($owner) ) {
 
-            DB::query("DELETE FROM contatti WHERE id = '{$id}' LIMIT 1"); //Cancello il contatto
+            DB::queryStmt("DELETE FROM contatti WHERE id = :id", [
+                'id' => $id
+            ]);
+
             return [
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',

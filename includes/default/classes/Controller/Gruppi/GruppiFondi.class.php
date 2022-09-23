@@ -135,7 +135,7 @@ class GruppiFondi extends Gruppi
     public function ajaxFoundData(array $post): DBQueryInterface
     {
         $id = Filters::int($post['id']);
-        return $this->getFound($id);
+        return $this->getFound($id)->getData()[0];
     }
 
     /**** GESTIONE ****/

@@ -276,7 +276,7 @@ class Gruppi extends BaseClass
     public function ajaxGroupData(array $post): DBQueryInterface
     {
         $id = Filters::int($post['id']);
-        return $this->getGroup($id);
+        return $this->getGroup($id)->getData()[0];
     }
 
     /**** LOADER ****/

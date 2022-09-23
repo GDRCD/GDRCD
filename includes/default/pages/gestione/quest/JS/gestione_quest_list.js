@@ -8,7 +8,7 @@ $(function () {
             action = $(this).data('action'),
             page = $(this).data('page');
 
-        let button = await Swal.button('Sei sicuro?', 'Vuoi eliminare questa quest?', 'question');
+        let button = await Swal.button('Sei sicuro?', 'Vuoi eliminare questa quest?', 'info');
 
         if (button) {
             Ajax('gestione/quest/gestione_quest_ajax.php', {
