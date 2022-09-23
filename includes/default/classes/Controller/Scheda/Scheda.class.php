@@ -207,7 +207,7 @@ class Scheda extends BaseClass
 
             foreach ( $roles as $role ) {
                 $link = Router::getImgsDir() . $role['immagine'];
-                $icons .= "<img src='{$link}' title='{$role['gruppo_nome']} - {$role['nome']}'>";
+                $icons .= "<img src='{$link}' title='{$role['gruppo_nome']} - {$role['nome']}' alt='{$role['nome']}'>";
             }
         }
 
@@ -231,7 +231,7 @@ class Scheda extends BaseClass
         $name = Filters::out($race_data['nome']);
 
         $link = Router::getImgsDir() . $icon;
-        return "<img src='{$link}' title='{$name}'>";
+        return "<img src='{$link}' title='{$name}' alt='{$name}'>";
     }
 
     /**
@@ -245,7 +245,7 @@ class Scheda extends BaseClass
 
         $character_data = Personaggio::getPgData($id_pg);
 
-        $data = [
+        return [
             'id' => Filters::out($character_data['id']),
             'character_data' => $character_data,
             'groups_icons' => $this->getGroupIcons($id_pg),
@@ -253,17 +253,15 @@ class Scheda extends BaseClass
             'registration_day' => Filters::date($character_data['data_iscrizione'], 'd/m/Y'),
             'last_login' => Filters::date($character_data['ora_entrata'], 'd/m/Y'),
         ];
-
-        return $data;
     }
 
     /**
      * @fn characterPage
      * @note Renderizza la scheda pg
      * @param int $id_pg
-     * @return mixed
+     * @return string
      */
-    public function characterMainPage(int $id_pg)
+    public function characterMainPage(int $id_pg): string
     {
         return Template::getInstance()->startTemplate()->render(
             'scheda/main',
@@ -279,6 +277,7 @@ class Scheda extends BaseClass
      * @note Aggiorna i dati del personaggio
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function updateCharacterData(array $post): array
     {
@@ -295,7 +294,23 @@ class Scheda extends BaseClass
             $url_media = Filters::in($post['url_media']);
             $blocca_media = Filters::checkbox($post['blocca_media']);
 
-            DB::query("UPDATE personaggio SET cognome = '{$cognome}', url_img = '{$url_img}', url_img_chat = '{$url_img_chat}', online_status = '{$online_status}', descrizione = '{$descrizione}', storia = '{$storia}', url_media = '{$url_media}', blocca_media = '{$blocca_media}' WHERE id = '{$id_pg}'");
+            DB::queryStmt("UPDATE personaggio 
+                    SET cognome = :cognome, url_img = :url_img, url_img_chat = :url_img_chat, 
+                        online_status = :online_status, descrizione = :descrizione, storia = :storia, 
+                        url_media = :url_media, blocca_media = :blocca_media
+                    WHERE id = :id",
+                [
+                    'cognome' => $cognome,
+                    'url_img' => $url_img,
+                    'url_img_chat' => $url_img_chat,
+                    'online_status' => $online_status,
+                    'descrizione' => $descrizione,
+                    'storia' => $storia,
+                    'url_media' => $url_media,
+                    'blocca_media' => $blocca_media,
+                    'id' => $id_pg,
+                ]
+            );
 
             return [
                 'response' => true,
@@ -319,6 +334,7 @@ class Scheda extends BaseClass
      * @note Aggiorna lo stato del personaggio
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function updateCharacterStatus(array $post): array
     {
@@ -329,7 +345,14 @@ class Scheda extends BaseClass
             $stato = Filters::in($post['stato']);
             $salute = Filters::int($post['salute']);
 
-            DB::query("UPDATE personaggio SET stato = '{$stato}', salute = '{$salute}' WHERE id = '{$id_pg}'");
+            DB::queryStmt(
+                "UPDATE personaggio SET stato = :stato, salute = :salute WHERE id = :id",
+                [
+                    'stato' => $stato,
+                    'salute' => $salute,
+                    'id' => $id_pg,
+                ]
+            );
 
             return [
                 'response' => true,
@@ -353,6 +376,7 @@ class Scheda extends BaseClass
      * @note Aggiorna i dati dell'amministratore del personaggio
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function updateAdministrationCharacter(array $post): array
     {
@@ -365,7 +389,16 @@ class Scheda extends BaseClass
             $banca = Filters::int($post['banca']);
             $soldi = Filters::int($post['soldi']);
 
-            DB::query("UPDATE personaggio SET sesso = '{$sesso}', razza = '{$razza}', banca = '{$banca}', soldi = '{$soldi}' WHERE id = '{$id_pg}'");
+            DB::queryStmt(
+                "UPDATE personaggio SET sesso = :sesso, razza = :razza, banca = :banca, soldi = :soldi WHERE id = :id",
+                [
+                    'sesso' => $sesso,
+                    'razza' => $razza,
+                    'banca' => $banca,
+                    'soldi' => $soldi,
+                    'id' => $id_pg,
+                ]
+            );
 
             return [
                 'response' => true,
@@ -389,6 +422,7 @@ class Scheda extends BaseClass
      * @note Ban di un personaggio
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function banCharacter(array $post): array
     {
@@ -399,7 +433,15 @@ class Scheda extends BaseClass
             $esilio = Filters::in($post['esilio']);
             $motivo_esilio = Filters::in($post['motivo_esilio']);
 
-            DB::query("UPDATE personaggio SET esilio = '{$esilio}', motivo_esilio = '{$motivo_esilio}', autore_esilio ='{$this->me_id}', data_esilio=NOW() WHERE id = '{$id_pg}'");
+            DB::queryStmt(
+                "UPDATE personaggio SET esilio = :esilio, motivo_esilio = :motivo_esilio, autore_esilio = :autore_esilio, data_esilio=NOW() WHERE id = :id",
+                [
+                    'esilio' => $esilio,
+                    'motivo_esilio' => $motivo_esilio,
+                    'autore_esilio' => $this->me_id,
+                    'id' => $id_pg,
+                ]
+            );
 
             return [
                 'response' => true,

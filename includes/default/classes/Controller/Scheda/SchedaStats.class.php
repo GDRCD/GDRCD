@@ -37,17 +37,11 @@ class SchedaStats extends Scheda
     public function indexSchedaStats(string $op): string
     {
 
-        switch ( $op ) {
-            case 'upgrade':
-                $page = 'upgrade';
-                break;
-            case 'downgrade':
-                $page = 'downgrade';
-                break;
-            default:
-                $page = 'list';
-                break;
-        }
+        $page = match ($op) {
+            'upgrade' => 'upgrade',
+            'downgrade' => 'downgrade',
+            default => 'list',
+        };
 
         return Filters::out($page);
     }
@@ -63,10 +57,6 @@ class SchedaStats extends Scheda
     {
         return Permissions::permission('VIEW_SCHEDA_STATS');
     }
-
-
-
-    /*** FUNCTIONS **/
 
     /**** RENDERING ****/
 

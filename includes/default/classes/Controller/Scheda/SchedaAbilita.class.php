@@ -37,17 +37,11 @@ class SchedaAbilita extends Scheda
     public function indexSchedaAbilita(string $op): string
     {
 
-        switch ( $op ) {
-            case 'upgrade':
-                $page = 'upgrade';
-                break;
-            case 'downgrade':
-                $page = 'downgrade';
-                break;
-            default:
-                $page = 'list';
-                break;
-        }
+        $page = match ($op) {
+            'upgrade' => 'upgrade',
+            'downgrade' => 'downgrade',
+            default => 'list',
+        };
 
         return Filters::out($page);
     }
@@ -63,8 +57,6 @@ class SchedaAbilita extends Scheda
     {
         return Permissions::permission('VIEW_SCHEDA_ABI');
     }
-
-    /*** FUNCTIONS **/
 
     /**** RENDERING ****/
     /**
@@ -209,7 +201,7 @@ class SchedaAbilita extends Scheda
                 $rif = Filters::int($requisito['id_riferimento']);
                 $rif_lvl = Filters::int($requisito['liv_riferimento']);
 
-                # Compongo l'html in base al tipo
+                # Compongo html in base al tipo
                 switch ( true ) {
                     case $req_class->isTypeAbilita($tipo):
                         $req_data = $abi_class->getAbilita($rif, 'nome');

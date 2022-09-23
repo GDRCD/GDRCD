@@ -115,7 +115,13 @@ class SchedaTransazioni extends Scheda
 
             if ( !empty($causale) && ($px != 0) && !empty($pg) ) {
 
-                Personaggio::updatePgData($pg, "esperienza = esperienza + '{$px}'");
+                DB::queryStmt(
+                    'UPDATE personaggio SET esperienza = esperienza + :exp WHERE id = :id',
+                    [
+                        'exp' => $px,
+                        'id' => $pg,
+                    ]
+                );
 
                 Log::newLog([
                     "autore" => $this->me_id,

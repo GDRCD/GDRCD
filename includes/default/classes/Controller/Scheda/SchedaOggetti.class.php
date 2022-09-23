@@ -12,21 +12,21 @@ class SchedaOggetti extends Scheda
 
     /**
      * @fn isPublic
-     * @note Controlla se la scheda oggetti e' pubblica
-     * @return mixed
+     * @note Controlla se la scheda oggetti è pubblica
+     * @return bool
      */
-    public function isPublic()
+    public function isPublic(): bool
     {
         return Functions::get_constant('SCHEDA_OBJECTS_PUBLIC');
     }
 
     /**
-     * @fn isAccesible
-     * @note La scheda oggetti e' accessibile
+     * @fn isAccessible
+     * @note La scheda oggetti è accessibile
      * @param int $id_pg
      * @return bool
      */
-    public function isAccessible(int $id_pg)
+    public function isAccessible(int $id_pg): bool
     {
         return ($this->isPublic() || $this->permissionViewObjects($id_pg));
     }
@@ -73,6 +73,7 @@ class SchedaOggetti extends Scheda
      * @note Funzione di equipaggiamento di un oggetto del personaggio
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function equipObj(array $post): array
     {
@@ -104,7 +105,13 @@ class SchedaOggetti extends Scheda
                 }
             }
 
-            DB::query("UPDATE personaggio_oggetto SET indossato = !indossato WHERE id='{$id_obj}' AND personaggio='{$owner}' LIMIT 1");
+            DB::queryStmt(
+                "UPDATE personaggio_oggetto SET indossato = !indossato WHERE id=:id AND personaggio=:pg LIMIT 1",
+                [
+                    ':id' => $id_obj,
+                    ':pg' => $owner,
+                ]
+            );
 
             return [
                 'response' => true,
@@ -175,7 +182,6 @@ class SchedaOggetti extends Scheda
 
         $html = '';
         $pg = Filters::int($pg);
-        $pg_name = Personaggio::nameFromId($pg);
         $obj_class = Oggetti::getInstance();
 
         $list = $obj_class->getAllObjectPositions();
