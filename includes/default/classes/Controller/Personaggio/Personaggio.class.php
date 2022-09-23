@@ -41,11 +41,12 @@ class Personaggio extends BaseClass
      * @note Ottiene i dati di un pg
      * @param int $pg
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public static function getPgData(int $pg, string $val = '*')
+    public static function getPgData(int $pg, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM personaggio WHERE id='{$pg}' LIMIT 1");
+        return DB::queryStmt("SELECT {$val} FROM personaggio WHERE id=:id LIMIT 1", ['id' => $pg]);
     }
 
     /**
