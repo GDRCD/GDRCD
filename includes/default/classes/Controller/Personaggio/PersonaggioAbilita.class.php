@@ -2,17 +2,13 @@
 
 class PersonaggioAbilita extends Personaggio
 {
-    private $abi_class,
-        $req_class,
-        $extra_class;
+    private Abilita $abi_class;
 
     protected function __construct()
     {
         parent::__construct();
 
         $this->abi_class = Abilita::getInstance();
-        $this->req_class = AbilitaRequisiti::getInstance();
-        $this->extra_class = AbilitaExtra::getInstance();
     }
 
     /**** TABLES HELPERS ***/
@@ -22,13 +18,19 @@ class PersonaggioAbilita extends Personaggio
      * @note Ottiene tutte le abilita' di un personaggio
      * @param int $pg
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllPgAbility(int $pg, string $val = 'abilita.*,personaggio_abilita.*')
+    public function getAllPgAbility(int $pg, string $val = 'abilita.*,personaggio_abilita.*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM personaggio_abilita
+        return DB::queryStmt(
+            "SELECT {$val} FROM personaggio_abilita
                                 LEFT JOIN abilita ON (personaggio_abilita.abilita = abilita.id)
-                                WHERE personaggio_abilita.personaggio='{$pg}'", 'result');
+                                WHERE personaggio_abilita.personaggio=:pg",
+            [
+                'pg' => $pg,
+            ]
+        );
     }
 
     /**
@@ -37,13 +39,20 @@ class PersonaggioAbilita extends Personaggio
      * @param int $id
      * @param int $pg
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getPgAbility(int $id, int $pg, string $val = 'abilita.*,personaggio_abilita.*')
+    public function getPgAbility(int $id, int $pg, string $val = 'abilita.*,personaggio_abilita.*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM personaggio_abilita 
+        return DB::queryStmt(
+            "SELECT {$val} FROM personaggio_abilita 
                                 LEFT JOIN abilita ON (personaggio_abilita.abilita = abilita.id)
-                                WHERE personaggio='{$pg}' AND abilita ='{$id}' LIMIT 1");
+                                WHERE personaggio=:pg AND abilita =:id LIMIT 1",
+            [
+                'pg' => $pg,
+                'id' => $id,
+            ]
+        );
     }
 
     /**
@@ -51,13 +60,14 @@ class PersonaggioAbilita extends Personaggio
      * @note Ottiene le generiche abilita' del personaggio
      * @param int $pg
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getPgGenericAbility(int $pg, string $val = 'abilita.*,personaggio_abilita.*')
+    public function getPgGenericAbility(int $pg, string $val = 'abilita.*,personaggio_abilita.*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM personaggio_abilita 
+        return DB::queryStmt("SELECT {$val} FROM personaggio_abilita 
                                 LEFT JOIN abilita ON (personaggio_abilita.abilita = abilita.id)
-                                WHERE personaggio_abilita.personaggio='{$pg}' AND abilita.razza = '-1'", 'result');
+                                WHERE personaggio_abilita.personaggio=:pg AND abilita.razza = '-1'", ['pg' => $pg]);
     }
 
     /**
@@ -65,24 +75,31 @@ class PersonaggioAbilita extends Personaggio
      * @note Ottiene le abilita' razziali del personaggio
      * @param int $pg
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getPgRaceAbility(int $pg, string $val = 'abilita.*,personaggio_abilita.*')
+    public function getPgRaceAbility(int $pg, string $val = 'abilita.*,personaggio_abilita.*'): DBQueryInterface
     {
         # Estaggo la razza del pg
         $pg_data = Personaggio::getPgData($this->me_id, 'razza');
         $race = Filters::int($pg_data['razza']);
 
-        return DB::query("SELECT {$val} FROM personaggio_abilita 
+        return DB::queryStmt(
+            "SELECT {$val} FROM personaggio_abilita 
                                 LEFT JOIN abilita ON (personaggio_abilita.abilita = abilita.id)
-                                WHERE personaggio_abilita.personaggio='{$pg}' AND abilita.razza = '{$race}'", 'result');
+                                WHERE personaggio_abilita.personaggio=:pg AND abilita.razza = :race",
+            [
+                'pg' => $pg,
+                'race' => $race,
+            ]
+        );
     }
 
     /*** PERMISSION */
 
     /**
      * @fn upgradeSkillPermission
-     * @note Controlla i permessi per l'upgrade delle skill
+     * @note Controlla i permessi per upgrade delle skill
      * @param string $pg
      * @param int $grado
      * @return bool
@@ -93,7 +110,7 @@ class PersonaggioAbilita extends Personaggio
         $grado = Filters::int($grado);
         $new_grado = Filters::int(($grado + 1));
 
-        return (((Personaggio::isMyPg($pg)) || Permissions::permission('UPGRADE_SCHEDA_ABI')) && ($new_grado <= $this->abi_class->abiLevelCap()));
+        return (((Personaggio::isMyPg($pg)) || Permissions::permission('UPGRADE_SCHEDA_ABI')) && ($new_grado <= Abilita::getInstance()->abiLevelCap()));
     }
 
     /**
@@ -115,6 +132,7 @@ class PersonaggioAbilita extends Personaggio
      * @note Esperienza Rimasta al pg
      * @param int $pg
      * @return float
+     * @throws Throwable
      */
     public function RemainedExp(int $pg): float
     {
@@ -139,13 +157,13 @@ class PersonaggioAbilita extends Personaggio
             while ( $count <= $grado ) {
 
                 # Estraggo il costo
-                $extra = $this->extra_class->getAbilitaExtra($abi_id, $count, 'costo');
+                $extra = AbilitaExtra::getInstance()->getAbilitaExtra($abi_id, $count, 'costo');
 
                 # Se non c'e' un costo, calcolo quello di default per quel livello
-                if ( $this->abi_class->extraActive() && !empty($extra['costo']) && ($extra['costo'] > 0) ) {
+                if ( Abilita::getInstance()->extraActive() && !empty($extra['costo']) && ($extra['costo'] > 0) ) {
                     $px_abi = Filters::int($extra['costo']);
                 } else {
-                    $px_abi = $this->abi_class->defaultCalcUp($count);
+                    $px_abi = Abilita::getInstance()->defaultCalcUp($count);
                 }
 
                 # Aggiungo il costo calcolato
@@ -166,6 +184,7 @@ class PersonaggioAbilita extends Personaggio
      * @note Aumenta una skill del personaggio
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function upgradeAbilita(array $post): array
     {
@@ -178,29 +197,43 @@ class PersonaggioAbilita extends Personaggio
 
             $new_grado = Filters::int(($grado + 1));
 
-            if ( $this->req_class->requirementControl($pg, $abi, $new_grado) ) {
+            if ( AbilitaRequisiti::getInstance()->requirementControl($pg, $abi, $new_grado) ) {
                 $exp_remained = $this->RemainedExp($pg);
 
-                if ( $this->abi_class->extraActive() ) {
+                if ( Abilita::getInstance()->extraActive() ) {
 
-                    $extra = $this->extra_class->getAbilitaExtra($abi, $new_grado, 'costo');
+                    $extra = AbilitaExtra::getInstance()->getAbilitaExtra($abi, $new_grado, 'costo');
 
                     if ( !empty($extra['costo']) && ($extra['costo'] > 0) ) {
                         $costo = Filters::int($extra['costo']);
                     } else {
-                        $costo = $this->abi_class->defaultCalcUp($new_grado);
+                        $costo = Abilita::getInstance()->defaultCalcUp($new_grado);
                     }
 
                 } else {
-                    $costo = $this->abi_class->defaultCalcUp($new_grado);
+                    $costo = Abilita::getInstance()->defaultCalcUp($new_grado);
                 }
 
                 if ( $exp_remained >= $costo ) {
 
                     if ( $grado == 0 ) {
-                        DB::query("INSERT INTO personaggio_abilita(personaggio,abilita,grado) VALUES('{$pg}','{$abi}','{$new_grado}')");
+                        DB::queryStmt(
+                            "INSERT INTO personaggio_abilita(personaggio,abilita,grado) VALUES(:pg,:abi,:grado)",
+                            [
+                                'pg' => $pg,
+                                'abi' => $abi,
+                                'grado' => $new_grado,
+                            ]
+                        );
                     } else {
-                        DB::query("UPDATE personaggio_abilita SET grado='{$new_grado}' WHERE personaggio='{$pg}' AND abilita='{$abi}' LIMIT 1");
+                        DB::queryStmt(
+                            "UPDATE personaggio_abilita SET grado=:grado WHERE personaggio=:id AND abilita=:abi LIMIT 1",
+                            [
+                                'grado' => $new_grado,
+                                'id' => $pg,
+                                'abi' => $abi,
+                            ]
+                        );
                     }
 
                     return [
@@ -244,6 +277,7 @@ class PersonaggioAbilita extends Personaggio
      * @note Diminuisce un'abilita' di un livello
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function downgradeAbilita(array $post): array
     {
@@ -258,9 +292,22 @@ class PersonaggioAbilita extends Personaggio
             $new_grado = ($grado - 1);
 
             if ( $new_grado == 0 ) {
-                DB::query("DELETE FROM personaggio_abilita WHERE personaggio='{$pg}' AND abilita='{$abi}' LIMIT 1");
+                DB::queryStmt(
+                    "DELETE FROM personaggio_abilita WHERE personaggio=:pg AND abilita=:abi LIMIT 1",
+                    [
+                        'pg' => $pg,
+                        'abi' => $abi,
+                    ]
+                );
             } else {
-                DB::query("UPDATE personaggio_abilita SET grado='{$new_grado}' WHERE personaggio='{$pg}' AND abilita='{$abi}' LIMIT 1");
+                DB::queryStmt(
+                    "UPDATE personaggio_abilita SET grado=:grado WHERE personaggio=:pg AND abilita=:abi LIMIT 1",
+                    [
+                        'grado' => $new_grado,
+                        'pg' => $pg,
+                        'abi' => $abi,
+                    ]
+                );
             }
 
             return [
@@ -281,41 +328,6 @@ class PersonaggioAbilita extends Personaggio
             ];
         }
 
-    }
-
-    /**
-     * @fn operationDone
-     * @note Ritorna un messaggio di successo/fallimento per l'operazione eseguita
-     * @param string $mex
-     * @return string
-     */
-    public function operationDone(string $mex): string
-    {
-
-        $mex = Filters::out($mex);
-
-        switch ( $mex ) {
-            case 'UpOk':
-                $text = 'Abilità aumentata con successo.';
-                break;
-            case 'downOk':
-                $text = 'Abilità diminuita correttamente.';
-                break;
-            case 'ExpKo':
-                $text = 'Non hai abbastanza esperienza per l\'acquisto.';
-                break;
-            case 'ReqKo':
-                $text = 'Non hai i requisiti necessari per questa abilita.';
-                break;
-            case 'PermKo':
-                $text = 'Non hai i permessi per effettuare questa operazione.';
-                break;
-            default:
-                $text = 'Errore sconosciuto, contattare lo staff.';
-                break;
-        }
-
-        return $text;
     }
 
 }

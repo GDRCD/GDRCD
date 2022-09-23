@@ -108,8 +108,8 @@ class SchedaOggetti extends Scheda
             DB::queryStmt(
                 "UPDATE personaggio_oggetto SET indossato = !indossato WHERE id=:id AND personaggio=:pg LIMIT 1",
                 [
-                    ':id' => $id_obj,
-                    ':pg' => $owner,
+                    'id' => $id_obj,
+                    'pg' => $owner,
                 ]
             );
 

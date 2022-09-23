@@ -226,6 +226,7 @@ class Mercato extends BaseClass
      * @note Azione di acquisto di un oggetto
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function buyObject(array $post): array
     {
@@ -256,7 +257,7 @@ class Mercato extends BaseClass
                     return ['response' => false, 'mex' => 'Non hai abbastanza denaro.'];
                 }
 
-                Personaggio::updatePgData($this->me_id, "{$cell}={$cell}-{$costo}");
+                Personaggio::updatePgData($this->me_id, "{$cell}={$cell}-:costo", ['costo' => $costo]);
                 Oggetti::addObjectToPg($object, $this->me_id);
 
                 if ( $quantita > 1 ) {

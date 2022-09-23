@@ -917,6 +917,7 @@ VALUES('{$titolo}','','{$descr}','{$trama}',NOW(),'{$this->me_id}')");
      * @param string $titolo
      * @param int $quest_id
      * @return array
+     * @throws Throwable
      */
     private function assignExp(array $partecipanti, string $titolo, int $quest_id): array
     {
@@ -936,7 +937,7 @@ VALUES('{$titolo}','','{$descr}','{$trama}',NOW(),'{$this->me_id}')");
                 DB::query("INSERT INTO personaggio_quest(id_quest, personaggio, data, commento, px_assegnati, autore)
 VALUES('{$quest_id}','{$id_pg}',NOW(),'{$pg_comm}','{$pg_px}','{$this->me_id}')");
 
-                Personaggio::updatePgData($id_pg, "esperienza = esperienza + '{$pg_px}'");
+                Personaggio::updatePgData($id_pg, "esperienza = esperienza + :exp", ['exp' => $pg_px]);
 
                 Log::newLog([
                     "autore" => $this->me_id,

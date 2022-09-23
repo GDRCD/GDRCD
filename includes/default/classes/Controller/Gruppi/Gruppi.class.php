@@ -490,6 +490,7 @@ class Gruppi extends BaseClass
      * @fn cronSalaries
      * @note Cronjob di assegnazione dei salari giornalieri
      * @return void
+     * @throws Throwable
      */
     public function cronSalaries()
     {
@@ -575,7 +576,7 @@ class Gruppi extends BaseClass
             $totale = ($totale_lavori + $totale_ruoli + $totale_extra);
 
             // ASSEGNAZIONE DEL DENARO AL PG
-            Personaggio::updatePgData($id, "banca=banca+'{$totale}'");
+            Personaggio::updatePgData($id, "banca=banca+:bank", ['bank' => $totale]);
         }
     }
 }

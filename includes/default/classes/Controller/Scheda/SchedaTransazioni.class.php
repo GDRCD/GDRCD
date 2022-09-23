@@ -104,6 +104,13 @@ class SchedaTransazioni extends Scheda
 
     /*** FUNCTIONS ***/
 
+    /**
+     * @fn addManualExp
+     * @note Aggiunge esperienza manuale
+     * @param array $post
+     * @return array
+     * @throws Throwable
+     */
     public function addManualExp(array $post): array
     {
         if ( $this->manageExpPermission() ) {
@@ -115,11 +122,11 @@ class SchedaTransazioni extends Scheda
 
             if ( !empty($causale) && ($px != 0) && !empty($pg) ) {
 
-                DB::queryStmt(
-                    'UPDATE personaggio SET esperienza = esperienza + :exp WHERE id = :id',
+                Personaggio::updatePgData(
+                    $pg,
+                    'esperienza = esperienza + :exp',
                     [
                         'exp' => $px,
-                        'id' => $pg,
                     ]
                 );
 

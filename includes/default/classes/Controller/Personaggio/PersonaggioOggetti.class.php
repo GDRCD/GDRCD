@@ -12,18 +12,22 @@ class PersonaggioOggetti extends Personaggio
      * @param int $position
      * @param int $limit
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public static function getPgObjectsByPosition(int $id_pg, int $position, int $limit = 1, string $val = '*')
+    public static function getPgObjectsByPosition(int $id_pg, int $position, int $limit = 1, string $val = '*'): DBQueryInterface
     {
 
-        return DB::query("SELECT {$val}
-                                FROM personaggio_oggetto 
-                                LEFT JOIN oggetto ON (oggetto.id = personaggio_oggetto.oggetto)
-                                WHERE personaggio_oggetto.indossato = 1 
-                                  AND oggetto.posizione = '{$position}'
-                                  AND personaggio_oggetto.personaggio = '{$id_pg}'
-                                LIMIT {$limit}", 'result');
+        return DB::queryStmt(
+            "SELECT {$val} FROM personaggio_oggetto 
+                  LEFT JOIN oggetto ON (oggetto.id = personaggio_oggetto.oggetto)
+                  WHERE personaggio_oggetto.indossato = 1 AND oggetto.posizione = :position AND personaggio_oggetto.personaggio = :pg
+                  LIMIT {$limit}",
+            [
+                'pg' => $id_pg,
+                'position' => $position,
+            ]
+        );
 
     }
 
@@ -33,15 +37,20 @@ class PersonaggioOggetti extends Personaggio
      * @param int $id_pg
      * @param int $equipped
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
     public static function getAllPgObjectsByEquipped(int $id_pg, int $equipped, string $val = '*')
     {
-        return DB::query("SELECT {$val}
-                                FROM personaggio_oggetto 
-                                LEFT JOIN oggetto ON (oggetto.id = personaggio_oggetto.oggetto)
-                                WHERE personaggio_oggetto.indossato = '{$equipped}'
-                                  AND personaggio_oggetto.personaggio = '{$id_pg}'", 'result');
+        return DB::queryStmt(
+            "SELECT {$val} FROM personaggio_oggetto 
+                  LEFT JOIN oggetto ON (oggetto.id = personaggio_oggetto.oggetto)
+                  WHERE personaggio_oggetto.indossato = :equipped AND personaggio_oggetto.personaggio = :pg",
+            [
+                'pg' => $id_pg,
+                'equipped' => $equipped,
+            ]
+        );
     }
 
     /**
@@ -49,14 +58,18 @@ class PersonaggioOggetti extends Personaggio
      * @note Estrae tutti gli oggetti di un personaggio
      * @param int $id_pg
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public static function getAllPgObjects(int $id_pg, string $val = '*')
+    public static function getAllPgObjects(int $id_pg, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val}
-                                FROM personaggio_oggetto 
-                                LEFT JOIN oggetto ON (oggetto.id = personaggio_oggetto.oggetto)
-                                  AND personaggio_oggetto.personaggio = '{$id_pg}'", 'result');
+        return DB::queryStmt(
+            "SELECT {$val} FROM personaggio_oggetto 
+                  LEFT JOIN oggetto ON (oggetto.id = personaggio_oggetto.oggetto) AND personaggio_oggetto.personaggio = :pg",
+            [
+                'pg' => $id_pg,
+            ]
+        );
     }
 
     /**

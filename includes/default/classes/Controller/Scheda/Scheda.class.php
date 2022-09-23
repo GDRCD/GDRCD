@@ -294,11 +294,11 @@ class Scheda extends BaseClass
             $url_media = Filters::in($post['url_media']);
             $blocca_media = Filters::checkbox($post['blocca_media']);
 
-            DB::queryStmt("UPDATE personaggio 
-                    SET cognome = :cognome, url_img = :url_img, url_img_chat = :url_img_chat, 
+            Personaggio::updatePgData(
+                $id_pg,
+                'cognome = :cognome, url_img = :url_img, url_img_chat = :url_img_chat, 
                         online_status = :online_status, descrizione = :descrizione, storia = :storia, 
-                        url_media = :url_media, blocca_media = :blocca_media
-                    WHERE id = :id",
+                        url_media = :url_media, blocca_media = :blocca_media',
                 [
                     'cognome' => $cognome,
                     'url_img' => $url_img,
@@ -345,12 +345,12 @@ class Scheda extends BaseClass
             $stato = Filters::in($post['stato']);
             $salute = Filters::int($post['salute']);
 
-            DB::queryStmt(
-                "UPDATE personaggio SET stato = :stato, salute = :salute WHERE id = :id",
+            Personaggio::updatePgData(
+                $id_pg,
+                'stato = :stato, salute = :salute',
                 [
                     'stato' => $stato,
                     'salute' => $salute,
-                    'id' => $id_pg,
                 ]
             );
 
@@ -389,14 +389,14 @@ class Scheda extends BaseClass
             $banca = Filters::int($post['banca']);
             $soldi = Filters::int($post['soldi']);
 
-            DB::queryStmt(
-                "UPDATE personaggio SET sesso = :sesso, razza = :razza, banca = :banca, soldi = :soldi WHERE id = :id",
+            Personaggio::updatePgData(
+                $id_pg,
+                'sesso = :sesso, razza = :razza, banca = :banca, soldi = :soldi',
                 [
                     'sesso' => $sesso,
                     'razza' => $razza,
                     'banca' => $banca,
                     'soldi' => $soldi,
-                    'id' => $id_pg,
                 ]
             );
 
@@ -433,13 +433,13 @@ class Scheda extends BaseClass
             $esilio = Filters::in($post['esilio']);
             $motivo_esilio = Filters::in($post['motivo_esilio']);
 
-            DB::queryStmt(
-                "UPDATE personaggio SET esilio = :esilio, motivo_esilio = :motivo_esilio, autore_esilio = :autore_esilio, data_esilio=NOW() WHERE id = :id",
+            Personaggio::updatePgData(
+                $id_pg,
+                'esilio = :esilio, motivo_esilio = :motivo_esilio, autore_esilio = :autore_esilio, data_esilio=NOW()',
                 [
                     'esilio' => $esilio,
                     'motivo_esilio' => $motivo_esilio,
                     'autore_esilio' => $this->me_id,
-                    'id' => $id_pg,
                 ]
             );
 

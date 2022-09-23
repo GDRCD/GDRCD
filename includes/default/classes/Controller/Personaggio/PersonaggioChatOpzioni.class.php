@@ -21,11 +21,18 @@ class PersonaggioChatOpzioni extends Personaggio
      * @param string $option
      * @param int $pg
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getOptionValue(string $option, int $pg, string $val = '*')
+    public function getOptionValue(string $option, int $pg, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM personaggio_chat_opzioni WHERE opzione='{$option}' AND personaggio='{$pg}' LIMIT 1");
+        return DB::queryStmt(
+            "SELECT {$val} FROM personaggio_chat_opzioni WHERE opzione=:option AND personaggio=:pg LIMIT 1",
+            [
+                'option' => $option,
+                'pg' => $pg,
+            ]
+        );
     }
 
     /**
@@ -33,20 +40,31 @@ class PersonaggioChatOpzioni extends Personaggio
      * @note Ottiene tutte le opzioni chat di un personaggio
      * @param int $pg
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllOptionsValues(int $pg, string $val = '*')
+    public function getAllOptionsValues(int $pg, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM personaggio_chat_opzioni WHERE personaggio='{$pg}'", 'result');
+        return DB::queryStmt("SELECT {$val} FROM personaggio_chat_opzioni WHERE personaggio=:pg", [
+            'pg' => $pg,
+        ]);
     }
 
-    public function getAllOptionsWithValues(int $pg, string $val = 'chat_opzioni.*,personaggio_chat_opzioni.*')
+    /**
+     * @fn getAllOptionsWithValues
+     * @note Ottiene tutte le opzioni chat di un personaggio
+     * @param int $pg
+     * @param string $val
+     * @return DBQueryInterface
+     * @throws Throwable
+     */
+    public function getAllOptionsWithValues(int $pg, string $val = 'chat_opzioni.*,personaggio_chat_opzioni.*'): DBQueryInterface
     {
 
-        return DB::query("SELECT {$val} FROM chat_opzioni 
-                LEFT JOIN personaggio_chat_opzioni ON chat_opzioni.nome = personaggio_chat_opzioni.opzione AND personaggio_chat_opzioni.personaggio='{$pg}'
+        return DB::queryStmt("SELECT {$val} FROM chat_opzioni 
+                LEFT JOIN personaggio_chat_opzioni ON chat_opzioni.nome = personaggio_chat_opzioni.opzione AND personaggio_chat_opzioni.personaggio=:pg
                 WHERE 1
-                ", 'result');
+                ", ['pg' => $pg]);
     }
 
 }

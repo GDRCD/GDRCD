@@ -452,7 +452,7 @@ class Chat extends BaseClass
 
                 # Assegno l'esperienza se è maggiore di zero
                 if ( $exp > 0 ) {
-                    Personaggio::updatePgData($this->me_id, "esperienza = esperienza + '{$exp}'");
+                    Personaggio::updatePgData($this->me_id, "esperienza = esperienza + :exp", ['exp' => $exp]);
                 }
             }
         }
