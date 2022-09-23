@@ -73,12 +73,12 @@ class MeteoStagioni extends Meteo
      * @fn getCurrentSeason
      * @note Estrae la stagione corrente
      * @param string $val
-     * @return DBQueryInterface
+     * @return array
      * @throws Throwable
      */
-    public function getCurrentSeason(string $val = '*'): DBQueryInterface
+    public function getCurrentSeason(string $val = '*'): array
     {
-        return DB::queryStmt("SELECT {$val} FROM meteo_stagioni WHERE data_fine > NOW() AND data_inizio < NOW() LIMIT 1", []);
+        return DB::queryStmt("SELECT {$val} FROM meteo_stagioni WHERE data_fine > NOW() AND data_inizio < NOW() LIMIT 1", [])->getData()[0];
     }
 
     /**** RENDER ***/

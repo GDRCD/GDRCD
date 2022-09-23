@@ -17,7 +17,7 @@ class Meteo extends BaseClass
         $weather_webapi_city,
         $weather_webapi_icon_format;
 
-    private int
+    private mixed
         $weather_last_wind,
         $weather_last_condition,
         $weather_last_temp,
@@ -102,8 +102,9 @@ class Meteo extends BaseClass
      */
     protected function weatherNeedRefresh(): bool
     {
+        $date = date('Y-m-d H:i:s',strtotime($this->weather_last_date));
         return empty($this->weather_last_date) ||
-            (CarbonWrapper::DatesDifferenceHours($this->weather_last_date, CarbonWrapper::getNow("Y-m-d H:i")) > $this->weather_update_range);
+            (CarbonWrapper::DatesDifferenceHours($date, CarbonWrapper::getNow()) > $this->weather_update_range);
     }
 
     /**
@@ -405,6 +406,7 @@ class Meteo extends BaseClass
      * @note Calcola le condizioni meteo di una stagione
      * @param array $stagione
      * @return array
+     * @throws Throwable
      */
     public function generateCondition(array $stagione): array
     {
@@ -440,14 +442,15 @@ class Meteo extends BaseClass
      * @fn generateWind
      * @note Calcola il vento di una chat
      * @param int $id
-     * @return mixed|string
+     * @return string
+     * @throws Throwable
      */
     public function generateWind(int $id)
     {
         $condizione = MeteoCondizioni::getInstance()->getCondition($id);
         $venti = explode(",", $condizione['vento']);
         shuffle($venti);
-        $vento = $venti[0];
+        $vento = Filters::int($venti[0]);
         $vento_data = MeteoVenti::getInstance()->getWind($vento);
         return Filters::out($vento_data['nome']);
     }
@@ -644,7 +647,6 @@ class Meteo extends BaseClass
     public
     function lunarPhase(): array
     {
-        $theme = gdrcd_filter('out', $PARAMETERS['themes']['current_theme']);
         # Inizializzo dati necessari
         $year = date('Y');
         $month = date('n');
@@ -670,7 +672,7 @@ class Meteo extends BaseClass
         $phase_title = ['Nuova', 'Crescente', 'Primo Quarto', 'Gibbosa crescente', 'Piena', 'Gibbosa calante', 'Ultimo quarto', 'Calante'];
         # Estraggo e ritorno la fase calcolata
 
-        $img = Router::getImgsDir()."luna/{$phase_array[$phase]}.png";
+        $img = Router::getImgsDir() . "luna/{$phase_array[$phase]}.png";
 
         return [
             'Img' => $img,
