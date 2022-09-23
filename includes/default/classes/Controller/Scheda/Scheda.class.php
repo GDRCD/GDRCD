@@ -307,8 +307,7 @@ class Scheda extends BaseClass
                     'descrizione' => $descrizione,
                     'storia' => $storia,
                     'url_media' => $url_media,
-                    'blocca_media' => $blocca_media,
-                    'id' => $id_pg,
+                    'blocca_media' => $blocca_media
                 ]
             );
 
