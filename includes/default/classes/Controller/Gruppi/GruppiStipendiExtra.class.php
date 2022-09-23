@@ -83,17 +83,21 @@ class GruppiStipendiExtra extends Gruppi
      * @note Estrae gli stipendi extra dati da un gruppo
      * @param array $groups
      * @param string $val
-     * @return DBQueryInterface
+     * @return DBQueryInterface|array
      * @throws Throwable
      */
-    public function getGroupExtraEarnsByIds(array $groups, string $val = '*'): DBQueryInterface
+    public function getGroupExtraEarnsByIds(array $groups, string $val = '*'): DBQueryInterface|array
     {
-        $toSearch = implode(',', $groups);
-        return DB::queryStmt(
-            "SELECT {$val} FROM gruppi_stipendi_extra 
+        if(!empty($groups)) {
+            $toSearch = implode(',', $groups);
+            return DB::queryStmt(
+                "SELECT {$val} FROM gruppi_stipendi_extra 
                   WHERE gruppi_stipendi_extra.gruppo IN ({$toSearch}) ",
-            []
-        );
+                []
+            );
+        } else{
+            return [];
+        }
     }
 
 
@@ -188,7 +192,7 @@ class GruppiStipendiExtra extends Gruppi
             $last_exec = Filters::in($post['last_exec']);
 
             DB::queryStmt(
-                "INSERT INTO gruppi_stipendi_extra (nome, personaggio, gruppo, denaro, intervallo, intervallo_tipo, last_exec) 
+                "INSERT INTO gruppi_stipendi_extra (nome, personaggio, gruppo, valore, `interval`, interval_type, last_exec) 
                     VALUES (:nome, :pg, :group, :valore, :interval, :interval_type, :last_exec)",
                 [
                     'nome' => $nome,
@@ -238,8 +242,8 @@ class GruppiStipendiExtra extends Gruppi
             $interval_type = Filters::in($post['interval_type']);
 
             DB::queryStmt(
-                "UPDATE gruppi_stipendi_extra SET nome = :nome, personaggio = :pg, gruppo = :group, denaro = :valore, 
-                    intervallo = :interval, intervallo_tipo = :interval_type WHERE id = :id",
+                "UPDATE gruppi_stipendi_extra SET nome = :nome, personaggio = :pg, gruppo = :group, valore = :valore, 
+                    `interval` = :interval, interval_type = :interval_type WHERE id = :id",
                 [
                     'id' => $id,
                     'nome' => $nome,
@@ -329,7 +333,7 @@ class GruppiStipendiExtra extends Gruppi
             $last_exec = Filters::in($post['last_exec']);
 
             DB::queryStmt(
-                "INSERT INTO gruppi_stipendi_extra (nome, personaggio, gruppo, denaro, intervallo, intervallo_tipo, last_exec) 
+                "INSERT INTO gruppi_stipendi_extra (nome, personaggio, gruppo, valore, `interval`, interval_type, last_exec) 
                     VALUES (:nome, :pg, :group, :valore, :interval, :interval_type, :last_exec)",
                 [
                     'nome' => $nome,
@@ -380,8 +384,8 @@ class GruppiStipendiExtra extends Gruppi
             $interval_type = Filters::in($post['interval_type']);
 
             DB::queryStmt(
-                "UPDATE gruppi_stipendi_extra SET nome = :nome, personaggio = :pg, denaro = :valore, 
-                    intervallo = :interval, intervallo_tipo = :interval_type WHERE id = :id",
+                "UPDATE gruppi_stipendi_extra SET nome = :nome, personaggio = :pg, valore = :valore, 
+                    `interval` = :interval, interval_type = :interval_type WHERE id = :id",
                 [
                     'id' => $id,
                     'nome' => $nome,

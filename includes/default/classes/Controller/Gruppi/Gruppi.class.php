@@ -86,6 +86,10 @@ class Gruppi extends BaseClass
     public function haveGroupPower(int $id = 0): int
     {
 
+        if($this->permissionManageGroups()){
+            return true;
+        }
+
         if ( $id ) {
             $extra_query = "AND gruppi_ruoli.gruppo = '{$id}'";
         }
@@ -201,7 +205,7 @@ class Gruppi extends BaseClass
     {
         $groups = DB::queryStmt("
                     SELECT gruppi_ruoli.gruppo FROM gruppi_ruoli 
-                    LEFT JOIN personaggio_ruolo ON personaggio_ruolo.ruolo = gruppi_ruoli.id AND personaggio_ruolo.personaggio =:pg
+                    LEFT JOIN personaggio_ruolo ON personaggio_ruolo.ruolo = gruppi_ruoli.id AND personaggio_ruolo.personaggio = :pg
                     WHERE gruppi_ruoli.poteri = 1 AND personaggio_ruolo.id IS NOT NULL", ['pg' => $this->me_id]);
 
         $groups_list = [];
