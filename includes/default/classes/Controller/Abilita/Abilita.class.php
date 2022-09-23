@@ -8,14 +8,16 @@
 class Abilita extends BaseClass
 {
 
-    protected
+    protected bool
         $abi_public,
-        $abi_level_cap,
-        $default_px_lvl,
         $abi_requirement,
+        $abi_extra;
+
+    protected int
         $requisito_abi,
         $requisito_stat,
-        $abi_extra;
+        $abi_level_cap,
+        $default_px_lvl;
 
     public function __construct()
     {
@@ -47,22 +49,24 @@ class Abilita extends BaseClass
      * @note Ottiene i dati di un'abilita'
      * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAbilita(int $id, string $val = '*')
+    public function getAbilita(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM abilita WHERE id = '{$id}' LIMIT 1");
+        return DB::queryStmt("SELECT {$val} FROM abilita WHERE id = :id LIMIT 1", ['id' => $id]);
     }
 
     /**
      * @fn getAllAbilita
      * @note Estrae la lista abilita, se specificato un pg ci associa anche il grado
      * @param string $val
-     * @return bool|int|array
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllAbilita(string $val = 'abilita.*')
+    public function getAllAbilita(string $val = 'abilita.*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM abilita WHERE 1 ORDER BY nome", 'result');
+        return DB::queryStmt("SELECT {$val} FROM abilita WHERE 1 ORDER BY nome", []);
     }
 
     /**
@@ -70,18 +74,19 @@ class Abilita extends BaseClass
      * @note Estrae la lista abilita da razza
      * @param int $race
      * @param string $val
-     * @return bool|int
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllAbilitaByRace(int $race, string $val = 'abilita.*')
+    public function getAllAbilitaByRace(int $race, string $val = 'abilita.*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM abilita WHERE razza='{$race}' ORDER BY nome", 'result');
+        return DB::queryStmt("SELECT {$val} FROM abilita WHERE razza=:race ORDER BY nome", ['race' => $race]);
     }
 
     /**** CONTROLS ****/
 
     /**
      * @fn extraActive
-     * @note Controlla se la tabella `abilita_extra` e' attiva
+     * @note Controlla se la tabella `abilita_extra` è attiva
      * @return bool
      */
     public function extraActive(): bool
@@ -91,7 +96,7 @@ class Abilita extends BaseClass
 
     /**
      * @fn requirementActive
-     * @note Controlla se la tabella `abilita_requisiti` e' attiva
+     * @note Controlla se la tabella `abilita_requisiti` è attiva
      * @return bool
      */
     public function requirementActive(): bool
@@ -99,6 +104,11 @@ class Abilita extends BaseClass
         return $this->abi_requirement;
     }
 
+    /**
+     * @fn abiLevelCap
+     * @note Restituisce il livello massimo di un'abilita'
+     * @return int
+     */
     public function abiLevelCap(): int
     {
         return $this->abi_level_cap;
@@ -109,21 +119,14 @@ class Abilita extends BaseClass
     /**
      * @fn ListaAbilita
      * @note Ritorna una serie di option per una select contenente la lista abilita'
+     * @param int $selected
      * @return string
+     * @throws Throwable
      */
-    public function listAbilita($selected = 0): string
+    public function listAbilita(int $selected = 0): string
     {
-        $html = '<option value=""></option>';
-        $abis = $this->getAllAbilita();
-
-        foreach ( $abis as $abi ) {
-            $nome = Filters::out($abi['nome']);
-            $id = Filters::int($abi['id']);
-            $sel = ($id == $selected) ? 'selected' : '';
-            $html .= "<option value='{$id}' {$sel}>{$nome}</option>";
-        }
-
-        return $html;
+        $abilities = $this->getAllAbilita();
+        return Template::getInstance()->renderSelect('id', 'nome', $selected, $abilities);
     }
 
     /*** FUNCTIONS ***/

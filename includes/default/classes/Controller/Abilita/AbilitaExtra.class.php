@@ -16,11 +16,15 @@ class AbilitaExtra extends Abilita
      * @param int $id
      * @param int $grado
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAbilitaExtra(int $id, int $grado, string $val = '*')
+    public function getAbilitaExtra(int $id, int $grado, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM abilita_extra WHERE abilita = '{$id}' AND grado ='{$grado}' LIMIT 1");
+        return DB::queryStmt(
+            "SELECT {$val} FROM abilita_extra WHERE abilita = :id AND grado =:grado LIMIT 1",
+            [ 'id' => $id, 'grado' => $grado]
+        );
     }
 
     /*** PERMISSIONS ***/
@@ -42,6 +46,7 @@ class AbilitaExtra extends Abilita
      * @note Estrazione dinamica dati di una riga nella tabella abilita_extra
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function ajaxExtraData(array $post): array
     {
@@ -50,7 +55,10 @@ class AbilitaExtra extends Abilita
             $abi = Filters::int($post['abilita']);
             $grado = Filters::int($post['grado']);
 
-            $data = DB::query("SELECT * FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
+            $data = DB::queryStmt("SELECT * FROM abilita_extra WHERE abilita=:abi AND grado=:grado LIMIT 1", [
+                'abi' => $abi,
+                'grado' => $grado,
+            ]);
 
             if ( !empty($data['abilita']) ) {
                 $descr = Filters::in($data['descrizione']);
@@ -73,6 +81,7 @@ class AbilitaExtra extends Abilita
      * @note Aggiunta di una riga nella tabella abilita_extra
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function NewAbiExtra(array $post): array
     {
@@ -83,10 +92,19 @@ class AbilitaExtra extends Abilita
             $descr = Filters::in($post['descr']);
             $costo = Filters::int($post['costo']);
 
-            $contr = DB::query("SELECT count(id) as TOT FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
+
+            $contr = DB::queryStmt("SELECT count(id) as TOT FROM abilita_extra WHERE abilita=:abi AND grado=:grado LIMIT 1", [
+                'abi' => $abi,
+                'grado' => $grado,
+            ]);
 
             if ( $contr['TOT'] == 0 ) {
-                DB::query("INSERT INTO abilita_extra(abilita,grado,descrizione,costo) VALUES('{$abi}','{$grado}','{$descr}','{$costo}')");
+                DB::queryStmt("INSERT INTO abilita_extra (abilita, grado, descrizione, costo) VALUES (:abi, :grado, :descr, :costo)", [
+                    'abi' => $abi,
+                    'grado' => $grado,
+                    'descr' => $descr,
+                    'costo' => $costo,
+                ]);
             }
 
             return [
@@ -110,6 +128,7 @@ class AbilitaExtra extends Abilita
      * @note Modifica di una riga nella tabella abilita_extra
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function ModAbiExtra(array $post): array
     {
@@ -120,7 +139,12 @@ class AbilitaExtra extends Abilita
             $descr = Filters::in($post['descr']);
             $costo = Filters::int($post['costo']);
 
-            DB::query("UPDATE abilita_extra SET abilita='{$abi}',grado='{$grado}',descrizione='{$descr}',costo='{$costo}' WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
+            DB::queryStmt("UPDATE abilita_extra SET abilita='{$abi}',grado='{$grado}',descrizione='{$descr}',costo='{$costo}' WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1", [
+                'abi' => $abi,
+                'grado' => $grado,
+                'descr' => $descr,
+                'costo' => $costo,
+            ]);
 
             return [
                 'response' => true,
@@ -143,6 +167,7 @@ class AbilitaExtra extends Abilita
      * @note Eliminazione di una riga nella tabella abilita_extra
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function DelAbiExtra(array $post): array
     {
@@ -151,7 +176,10 @@ class AbilitaExtra extends Abilita
             $abi = Filters::int($post['abilita']);
             $grado = Filters::int($post['grado']);
 
-            DB::query("DELETE FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1");
+            DB::queryStmt("DELETE FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1", [
+                'abi' => $abi,
+                'grado' => $grado,
+            ]);
 
             return [
                 'response' => true,

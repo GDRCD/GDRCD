@@ -14,13 +14,13 @@ class AbilitaRequisiti extends Abilita
      * @fn getAbilitaRequisiti
      * @note Ottiene i requisiti di un'abilita'
      * @param int $id
-     * @param int $grado
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getRequisitiByRow(int $id, string $val = '*')
+    public function getRequisitiByRow(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM abilita_requisiti WHERE id='{$id}' LIMIT 1");
+        return DB::queryStmt("SELECT {$val} FROM abilita_requisiti WHERE id=:id LIMIT 1", ['id' => $id]);
     }
 
     /**
@@ -29,24 +29,33 @@ class AbilitaRequisiti extends Abilita
      * @param int $id
      * @param int $grado
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getRequisitiByGrado(int $id, int $grado, string $val = '*')
+    public function getRequisitiByGrado(int $id, int $grado, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM abilita_requisiti WHERE abilita = '{$id}' AND grado ='{$grado}'", 'result');
+        return DB::queryStmt(
+            "SELECT {$val} FROM abilita_requisiti WHERE abilita = :id AND grado = :grado ",
+            ['id' => $id, 'grado' => $grado]
+        );
     }
 
     /**
      * @fn ListaRequisiti
      * @note Lista dei requisiti abilita', ritorna valori per una select
-     * @return bool|int|mixed|string
+     * @param int $type
+     * @param string $val
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getRequisitiByType($type, $val = 'abilita_requisiti.*,abilita.nome')
+    public function getRequisitiByType(int $type, string $val = 'abilita_requisiti.*,abilita.nome'): DBQueryInterface
     {
-        return DB::query("
+        return DB::queryStmt("
             SELECT {$val} FROM abilita_requisiti 
                 LEFT JOIN abilita ON (abilita.id = abilita_requisiti.abilita) 
-            WHERE tipo= '{$type}' ORDER BY abilita.nome", 'result');
+            WHERE tipo=  :tipo ORDER BY abilita.nome",
+            ['tipo' => $type]
+        );
     }
 
     /*** PERMISSIONS ***/
@@ -65,7 +74,7 @@ class AbilitaRequisiti extends Abilita
 
     /**
      * @fn isTypeAbilita
-     * @note Controlla se il tipo di requisito e' un abilita'
+     * @note Controlla se il tipo di requisito è un abilita'
      * @param string $type
      * @return bool
      */
@@ -76,7 +85,7 @@ class AbilitaRequisiti extends Abilita
 
     /**
      * @fn isTypeStat
-     * @note Controlla se il tipo di requisito e' una statistica
+     * @note Controlla se il tipo di requisito è una statistica
      * @param string $type
      * @return bool
      */
@@ -91,6 +100,7 @@ class AbilitaRequisiti extends Abilita
      * @param int $abi
      * @param int $grado
      * @return bool
+     * @throws Throwable
      */
     public function requirementControl(string $pg, int $abi, int $grado): bool
     {
@@ -139,15 +149,16 @@ class AbilitaRequisiti extends Abilita
      * @param int $pg
      * @param int $grado
      * @return bool
+     * @throws Throwable
      */
     public function pgRequisitoAbilitaControl(int $abi, int $pg, int $grado): bool
     {
-        $count = DB::query("SELECT COUNT(id) as TOT 
-                                        FROM personaggio_abilita 
-                                        WHERE 
-                                              personaggio_abilita.abilita = '{$abi}' 
-                                          AND personaggio_abilita.personaggio='{$pg}' 
-                                          AND personaggio_abilita.grado >= '{$grado}' LIMIT 1");
+        $count = DB::queryStmt(
+            "SELECT COUNT(id) as TOT FROM personaggio_abilita 
+                  WHERE personaggio_abilita.abilita = :abi AND personaggio_abilita.personaggio= :pg
+                  AND personaggio_abilita.grado >= :grado LIMIT 1",
+            ['abi' => $abi, 'pg' => $pg, 'grado' => $grado]
+        );
 
         return ($count['TOT'] > 0);
     }
@@ -159,13 +170,12 @@ class AbilitaRequisiti extends Abilita
      * @param int $pg
      * @param int $grado
      * @return bool
+     * @throws Throwable
      */
     public function pgRequisitoStatControl(int $stat, int $pg, int $grado): bool
     {
         $stat_pg = PersonaggioStats::getPgStat($stat, $pg, 'valore');
-        $stat = Filters::int($stat_pg['valore']);
-
-        return ($stat >= $grado);
+        return (Filters::int($stat_pg['valore']) >= $grado);
     }
 
     /*** LIST ***/
@@ -174,7 +184,7 @@ class AbilitaRequisiti extends Abilita
      * @fn ListaRequisiti
      * @note Lista dei requisiti abilita', ritorna valori per una select
      * @return string
-     * @example return : <option value='id'>nome</option>
+     * @throws Throwable
      */
     public function listRequisiti(): string
     {
@@ -229,9 +239,12 @@ class AbilitaRequisiti extends Abilita
      */
     public function listRequisitiType(): string
     {
-        $html = "<option value='{$this->requisito_abi}'>Abilita</option>";
-        $html .= "<option value='{$this->requisito_stat}'>Statistica</option>";
-        return $html;
+        $options = [
+            ["id" => $this->requisito_abi, "nome" => 'Abilita'],
+            ["id" => $this->requisito_stat, "nome" => 'Statistica'],
+        ];
+
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $options);
 
     }
 
@@ -241,9 +254,10 @@ class AbilitaRequisiti extends Abilita
      * @fn DatiAbiRequisito
      * @note Estrae i dati di un requisito abilita
      * @param array $post
-     * @return array|false[]|void
+     * @return array
+     * @throws Throwable
      */
-    public function ajaxReqData(array $post)
+    public function ajaxReqData(array $post): array
     {
 
         if ( $this->permissionManageAbiRequirement() ) {
@@ -268,12 +282,16 @@ class AbilitaRequisiti extends Abilita
 
         }
 
+        return [
+            "response" => false,
+        ];
     }
 
     /**
      * @fn ajaxReqList
      * @note Estrae i dati di un requisito abilita
      * @return array
+     * @throws Throwable
      */
     public function ajaxReqList(): array
     {
@@ -287,6 +305,7 @@ class AbilitaRequisiti extends Abilita
      * @note Crea un requisito per abilita'
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function NewAbiRequisito(array $post): array
     {
@@ -297,7 +316,15 @@ class AbilitaRequisiti extends Abilita
             $id_rif = Filters::int($post['id_rif']);
             $lvl_rif = Filters::int($post['lvl_rif']);
 
-            DB::query("INSERT INTO abilita_requisiti(abilita,grado,tipo,id_riferimento,liv_riferimento) VALUES('{$abi}','{$grado}','{$tipo}','{$id_rif}','{$lvl_rif}')");
+            DB::queryStmt(
+                "INSERT INTO abilita_requisiti(abilita,grado,tipo,id_riferimento,liv_riferimento) VALUES(:abi,:grado,:tipo,:rif,:lvl)",
+                [
+                    'abi' => $abi,
+                    'grado' => $grado,
+                    'tipo' => $tipo,
+                    'rif' => $id_rif,
+                    'lvl' => $lvl_rif,
+                ]);
 
             return [
                 'response' => true,
@@ -320,6 +347,7 @@ class AbilitaRequisiti extends Abilita
      * @note Modifica un requisito per abilita'
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function ModAbiRequisito(array $post): array
     {
@@ -332,7 +360,17 @@ class AbilitaRequisiti extends Abilita
             $id_rif = Filters::int($post['id_rif']);
             $lvl_rif = Filters::int($post['lvl_rif']);
 
-            DB::query("UPDATE abilita_requisiti SET abilita='{$abi}',grado='{$grado}',tipo='{$tipo}',id_riferimento='{$id_rif}',liv_riferimento='{$lvl_rif}' WHERE id='{$id}' LIMIT 1");
+            DB::queryStmt(
+                "UPDATE abilita_requisiti SET abilita=:abi,grado=:grado,tipo=:tipo,id_riferimento=:rif,liv_riferimento=:lvl WHERE id=:id",
+                [
+                    'id' => $id,
+                    'abi' => $abi,
+                    'grado' => $grado,
+                    'tipo' => $tipo,
+                    'rif' => $id_rif,
+                    'lvl' => $lvl_rif,
+                ]
+            );
 
             return [
                 'response' => true,
@@ -355,13 +393,20 @@ class AbilitaRequisiti extends Abilita
      * @note Elimina un requisito per abilita'
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function DelAbiRequisito(array $post): array
     {
         if ( $this->permissionManageAbiRequirement() ) {
 
             $id = Filters::int($post['requisito']);
-            DB::query("DELETE FROM abilita_requisiti WHERE id='{$id}' LIMIT 1");
+
+            DB::queryStmt(
+                "DELETE FROM abilita_requisiti WHERE id=:id",
+                [
+                    'id' => $id,
+                ]
+            );
 
             return [
                 'response' => true,
