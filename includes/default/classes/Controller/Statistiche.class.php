@@ -2,16 +2,6 @@
 
 class Statistiche extends BaseClass
 {
-
-    /**
-     * @fn __construct
-     * @note Class constructor
-     */
-    protected function __construct()
-    {
-        parent::__construct();
-    }
-
     /*** OGGETTO TABLE HELPERS ***/
 
     /**
@@ -19,23 +9,26 @@ class Statistiche extends BaseClass
      * @note Estrae i dati di una singola statistica
      * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getStat(int $id, string $val = '*')
+    public function getStat(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM statistiche WHERE id='{$id}' LIMIT 1");
+        return DB::queryStmt("SELECT {$val} FROM statistiche WHERE id=:id LIMIT 1",[
+            'id' => $id,
+        ]);
     }
 
     /**
-     * @fn getStats
+     * @fn getAllStats
      * @note Estrae le statistiche
-     * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getStats(string $val = '*')
+    public function getAllStats(string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM statistiche WHERE 1 ORDER BY nome", 'result');
+        return DB::queryStmt("SELECT {$val} FROM statistiche WHERE 1 ORDER BY nome", []);
     }
 
     /*** AJAX ***/
@@ -45,14 +38,12 @@ class Statistiche extends BaseClass
      * @note Estrae i dati di una statistica alla modifica
      * @param array $post
      * @return array|void
+     * @throws Throwable
      */
     public function ajaxStatData(array $post)
     {
-
         if ( $this->permissionManageStatistics() ) {
-
             $id = Filters::int($post['id']);
-
             $data = $this->getStat($id);
 
             return [
@@ -72,11 +63,12 @@ class Statistiche extends BaseClass
      * @note Controlla se una statistica esiste
      * @param int $id
      * @return bool
+     * @throws Throwable
      */
     public static function existStat(int $id): bool
     {
-        $data = DB::query("SELECT * FROM statistiche WHERE id='{$id}' LIMIT 1");
-        return (DB::rowsNumber($data) > 0);
+        $data = self::getInstance()->getStat($id, 'id');
+        return ($data->getNumRows() > 0);
     }
 
     /*** PERMISSION ***/
@@ -98,21 +90,12 @@ class Statistiche extends BaseClass
      * @note Crea le select delle statistiche
      * @param int $selected
      * @return string
+     * @throws Throwable
      */
     public function listStats(int $selected = 0): string
     {
-        $html = '<option value=""></option>';
-        $list = $this->getStats('id,nome');
-
-        foreach ( $list as $row ) {
-            $id = Filters::int($row['id']);
-            $nome = Filters::in($row['nome']);
-            $sel = ($selected == $id) ? 'selected' : '';
-
-            $html .= "<option value='{$id}' {$sel}>{$nome}</option>";
-        }
-
-        return $html;
+        $list = $this->getAllStats('id,nome');
+        return Template::getInstance()->startTemplate()->renderSelect('id','nome',$selected,$list);
     }
 
     /*** MANAGEMENT FUNCTIONS - STATISTIC **/
@@ -122,12 +105,11 @@ class Statistiche extends BaseClass
      * @note Inserimento statistica
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function insertStat(array $post): array
     {
-
         if ( $this->permissionManageStatistics() ) {
-
             $nome = Filters::in($post['nome']);
             $descrizione = Filters::in($post['descr']);
             $max = Filters::int($post['max_val']);
@@ -135,8 +117,14 @@ class Statistiche extends BaseClass
             $iscr = Filters::checkbox($post['iscrizione']);
             $creato_da = Filters::int($this->me_id);
 
-            DB::query("INSERT INTO statistiche(nome, max_val, min_val, descrizione,iscrizione,creato_da) 
-                            VALUES('{$nome}','{$max}','{$min}','{$descrizione}','{$iscr}','{$creato_da}')");
+            DB::queryStmt("INSERT INTO statistiche (nome,descrizione,max_val,min_val,iscrizione,creato_da) VALUES (:nome,:descrizione,:max_val,:min_val,:iscrizione,:creato_da)",[
+                'nome' => $nome,
+                'descrizione' => $descrizione,
+                'max_val' => $max,
+                'min_val' => $min,
+                'iscrizione' => $iscr,
+                'creato_da' => $creato_da,
+            ]);
 
             return [
                 'response' => true,
@@ -145,6 +133,7 @@ class Statistiche extends BaseClass
                 'swal_type' => 'success',
                 'stat_list' => $this->listStats(),
             ];
+
         } else {
             return [
                 'response' => false,
@@ -160,12 +149,11 @@ class Statistiche extends BaseClass
      * @note Modifica oggetto
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function editStat(array $post): array
     {
-
         if ( $this->permissionManageStatistics() ) {
-
             $id = Filters::int($post['stat']);
             $nome = Filters::in($post['nome']);
             $descrizione = Filters::in($post['descr']);
@@ -174,10 +162,15 @@ class Statistiche extends BaseClass
             $iscr = Filters::checkbox($post['iscrizione']);
             $creato_da = Filters::int($this->me_id);
 
-            DB::query("UPDATE statistiche 
-                            SET nome='{$nome}',descrizione='{$descrizione}',max_val='{$max}',
-                                min_val='{$min}',creato_da='{$creato_da}',iscrizione='{$iscr}'
-                            WHERE id='{$id}' LIMIT 1");
+            DB::queryStmt("UPDATE statistiche SET nome=:nome,descrizione=:descrizione,max_val=:max_val,min_val=:min_val,iscrizione=:iscrizione,creato_da=:creato_da WHERE id=:id",[
+                'id' => $id,
+                'nome' => $nome,
+                'descrizione' => $descrizione,
+                'max_val' => $max,
+                'min_val' => $min,
+                'iscrizione' => $iscr,
+                'creato_da' => $creato_da,
+            ]);
 
             return [
                 'response' => true,
@@ -186,6 +179,7 @@ class Statistiche extends BaseClass
                 'swal_type' => 'success',
                 'stat_list' => $this->listStats(),
             ];
+
         } else {
             return [
                 'response' => false,
@@ -201,15 +195,16 @@ class Statistiche extends BaseClass
      * @note Eliminazione statistica
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function deleteStat(array $post): array
     {
-
         if ( $this->permissionManageStatistics() ) {
-
             $id = Filters::int($post['stat']);
 
-            DB::query("DELETE FROM statistiche WHERE id='{$id}'");
+            DB::queryStmt("DELETE FROM statistiche WHERE id=:id",[
+                'id' => $id,
+            ]);
 
             return [
                 'response' => true,
@@ -218,6 +213,7 @@ class Statistiche extends BaseClass
                 'swal_type' => 'success',
                 'stat_list' => $this->listStats(),
             ];
+
         } else {
             return [
                 'response' => false,
