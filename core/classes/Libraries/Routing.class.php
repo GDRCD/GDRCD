@@ -7,12 +7,8 @@
  */
 class Router
 {
-    /**
-     * Init vars PUBLIC STATIC
-     * @var Router $_instance ;
-     */
     public static
-        $_instance;
+     $_instance;
 
     /**
      * @fn getInstance
@@ -43,17 +39,20 @@ class Router
      * @note Start loader for dynamic integrations of the classes
      * @return void
      */
-    public static final function startClasses()
+    public static final function startClasses(): void
     {
         spl_autoload_register([Router::getInstance(), 'loadClasses']);
     }
 
     /**
+     * @fn loadClasses
+     * @note Load classes
+     * @param string $className
+     * @return void
      * @throws Exception
      */
-    public final function loadClasses(string $className)
+    public final function loadClasses(string $className): void
     {
-
         $exist = $this->loadLibraries($className);
 
         if ( !$exist ) {
@@ -70,7 +69,6 @@ class Router
      */
     private function loadLibraries(string $className): bool
     {
-
         $path = ROOT . '/core/classes';
         $roots = $this->dirList($path);
 
@@ -96,7 +94,7 @@ class Router
      * @return void
      * @throws Exception
      */
-    private function loadController(string $className)
+    private function loadController(string $className): void
     {
         $path = ROOT . '/includes/default/classes';
         $roots = $this->dirList($path);
@@ -133,7 +131,7 @@ class Router
 
         $files = scandir($dir);
 
-        foreach ( $files as $key => $value ) {
+        foreach ( $files as $value ) {
             $path = realpath($dir . DIRECTORY_SEPARATOR . $value);
             if ( is_dir($path) && ($value != ".") && ($value != "..") ) {
                 $this->dirList($path, $results);
@@ -148,13 +146,13 @@ class Router
 
     /**
      * @fn loadPages
-     * @note Carica una pagina in base all'engine scelto
+     * @note Carica una pagina in base a engine scelto
      * @param string $page
-     * @return false
+     * @return void
+     * @throws Throwable
      */
     public static function loadPages(string $page): void
     {
-
         global $MESSAGE;
         global $PARAMETERS;
 
@@ -177,6 +175,13 @@ class Router
 
     }
 
+    /**
+     * @fn loadFramePart
+     * @note Carica una parte del frame
+     * @param string $page
+     * @return void
+     * @throws Throwable
+     */
     public static function loadFramePart(string $page): void
     {
         global $MESSAGE;
@@ -201,9 +206,7 @@ class Router
      */
     public static function loadRequired(): void
     {
-
         $root = dirname(__FILE__) . '/../../';
-
         require_once($root . '/required.php');
     }
 
@@ -213,22 +216,28 @@ class Router
      * @fn getPageRedirect
      * @note Controlla se esiste un redirect per quella pagina in db
      * @param string $page
-     * @return mixed
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public static function getPageRedirect(string $page)
+    public static function getPageRedirect(string $page): DBQueryInterface
     {
-        return DB::query("SELECT redirect FROM pages WHERE page='{$page}' LIMIT 1");
+        return DB::queryStmt("SELECT redirect FROM pages WHERE page=:page LIMIT 1",[
+            'page' => $page
+        ]);
     }
 
     /**
      * @fn getPageAlias
      * @note Controlla se esiste un redirect per quell'alias
      * @param string $page
-     * @return mixed
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public static function getPageAlias(string $page)
+    public static function getPageAlias(string $page): DBQueryInterface
     {
-        return DB::query("SELECT redirect FROM pages_alias WHERE alias='{$page}' LIMIT 1");
+        return DB::queryStmt("SELECT redirect FROM pages_alias WHERE alias=:page LIMIT 1",[
+            'page' => $page
+        ]);
     }
 
     /**
@@ -236,8 +245,9 @@ class Router
      * @note Controlla se esiste un redirect per quell'alias in db
      * @param string $page
      * @return string
+     * @throws Throwable
      */
-    public static function getPageByAlias(string $page)
+    public static function getPageByAlias(string $page): bool|string
     {
 
         if ( strpos($page, '.php') ) {
@@ -263,11 +273,12 @@ class Router
 
     /**
      * @fn getPagesLink
-     * @note Ottieni il link di una pagina specifica da caricare in base all'engine
+     * @note Ottieni il link di una pagina specifica da caricare in base a engine
      * @param string $page
      * @return string
+     * @throws Throwable
      */
-    public static function getPagesLink(string $page)
+    public static function getPagesLink(string $page): string
     {
         $db_search = Router::getPageRedirect($page);
 
@@ -286,15 +297,16 @@ class Router
             return "includes/default/pages/{$page}";
         }
 
-        return false;
+        return '';
 
     }
 
     /**
      * @fn getCssLink
-     * @note Ottieni il link per il css in base all'engine
+     * @note Ottieni il link per il css in base a engine
      * @param string $page
      * @return string
+     * @throws Throwable
      */
     public static function getCssLink(string $page): string
     {
@@ -325,9 +337,10 @@ class Router
     /**
      * @fn getThemeDir
      * @note Ottiene il link relativo della cartella themes
-     * @return string|void
+     * @return string|null
+     * @throws Throwable
      */
-    public static function getThemeDir()
+    public static function getThemeDir(): ?string
     {
 
         $engine = Functions::get_constant('STANDARD_ENGINE');
@@ -346,9 +359,10 @@ class Router
     /**
      * @fn getThemeDir
      * @note Ottiene il link relativo della cartella themes
-     * @return string|void
+     * @return string|null
+     * @throws Throwable
      */
-    public static function getImgsDir()
+    public static function getImgsDir(): ?string
     {
 
         $engine = Functions::get_constant('STANDARD_ENGINE');
@@ -367,9 +381,10 @@ class Router
     /**
      * @fn getPagesDir
      * @note Ottieni il link relativo della cartella pages
-     * @return string|void
+     * @return string|null
+     * @throws Throwable
      */
-    public static function getPagesDir()
+    public static function getPagesDir(): ?string
     {
 
         $engine = Functions::get_constant('STANDARD_ENGINE');
