@@ -3,9 +3,13 @@
 class RegistrazioneGiocate extends BaseClass
 {
 
-    private
+    private bool
         $registrazione_active;
 
+    /**
+     * @fn __construct()
+     * @note Costruttore della classe
+     */
     protected function __construct()
     {
         parent::__construct();
@@ -178,7 +182,6 @@ class RegistrazioneGiocate extends BaseClass
      */
     public function renderCharacterRecordsList(int $id_pg): array
     {
-
         $cells = [
             'Titolo',
             'Chat',
@@ -192,7 +195,6 @@ class RegistrazioneGiocate extends BaseClass
         $records = [];
 
         foreach ( $regs as $reg ) {
-
             $chat_data = Chat::getInstance()->getChatData(Filters::int($reg['chat']), 'nome');
             $reg_id = Filters::int($reg['id']);
 
@@ -220,7 +222,6 @@ class RegistrazioneGiocate extends BaseClass
             'links' => $links,
             'table_title' => 'Giocate Registrate',
         ];
-
     }
 
     /**
@@ -232,7 +233,6 @@ class RegistrazioneGiocate extends BaseClass
      */
     public function characterRecords(int $id): string
     {
-
         return Template::getInstance()->startTemplate()->renderTable(
             'scheda/registrazioni/index',
             $this->renderCharacterRecordsList($id)
@@ -279,7 +279,6 @@ class RegistrazioneGiocate extends BaseClass
      */
     public function renderAllRecordsList(string $type): array
     {
-
         $cells = [
             'Autore',
             'Titolo',
@@ -309,7 +308,6 @@ class RegistrazioneGiocate extends BaseClass
         $records = [];
 
         foreach ( $regs as $reg ) {
-
             $chat_data = Chat::getInstance()->getChatData(Filters::int($reg['chat']), 'nome');
             $autore = Filters::int($reg['autore']);
 
@@ -334,7 +332,6 @@ class RegistrazioneGiocate extends BaseClass
             'cells' => $cells,
             'table_title' => $table_title,
         ];
-
     }
 
     /**
@@ -346,7 +343,6 @@ class RegistrazioneGiocate extends BaseClass
      */
     public function allRecords(string $type): string
     {
-
         return Template::getInstance()->startTemplate()->renderTable(
             'gestione/registrazioni/index',
             $this->renderAllRecordsList($type)
@@ -365,17 +361,24 @@ class RegistrazioneGiocate extends BaseClass
      */
     public function newRegistrazione(array $post): array
     {
-
         if ( $this->activeRegistrazioni() ) {
-
             $titolo = Filters::in($post['titolo']);
             $nota = Filters::text($post['nota']);
             $chat = Filters::int($post['chat']);
             $inizio = Filters::date($post['inizio'], 'Y-m-d H:i:s');
             $fine = Filters::date($post['fine'], 'Y-m-d H:i:s');
 
-            DB::query("INSERT INTO giocate_registrate (titolo, nota, chat, inizio, fine, autore) 
-                            VALUES ('{$titolo}', '{$nota}', '{$chat}', '{$inizio}', '{$fine}', '{$this->me_id}')");
+            DB::queryStmt("INSERT INTO giocate_registrate (titolo, nota, chat, inizio, fine, autore) 
+                            VALUES (:titolo, :nota, :chat, :inizio, :fine, :id)",
+                [
+                    'titolo' => $titolo,
+                    'nota' => $nota,
+                    'chat' => $chat,
+                    'inizio' => $inizio,
+                    'fine' => $fine,
+                    'id' => $this->me_id,
+                ]
+            );
 
             return [
                 'response' => true,
@@ -383,6 +386,7 @@ class RegistrazioneGiocate extends BaseClass
                 'swal_message' => 'Registrazione inserita correttamente.',
                 'swal_type' => 'success',
             ];
+
         } else {
             return [
                 'response' => false,
@@ -403,20 +407,28 @@ class RegistrazioneGiocate extends BaseClass
      */
     public function editRegistrazione(array $post): array
     {
-
         $id = Filters::int($post['id']);
         $record_data = $this->getRecord($id);
         $owner = Filters::int($record_data['autore']);
 
         if ( $this->activeRegistrazioni() && $this->permissionUpdateRecords($owner) ) {
-
             $titolo = Filters::in($post['titolo']);
             $nota = Filters::text($post['nota']);
             $chat = Filters::int($post['chat']);
             $inizio = Filters::date($post['inizio'], 'Y-m-d H:i:s');
             $fine = Filters::date($post['fine'], 'Y-m-d H:i:s');
 
-            DB::query("UPDATE giocate_registrate SET titolo='{$titolo}', nota='{$nota}', chat='{$chat}', inizio='{$inizio}', fine='{$fine}' WHERE id='{$id}'");
+            DB::queryStmt("UPDATE giocate_registrate SET titolo = :titolo, nota = :nota, chat = :chat, inizio = :inizio, fine = :fine 
+                            WHERE id = :id",
+                [
+                    'titolo' => $titolo,
+                    'nota' => $nota,
+                    'chat' => $chat,
+                    'inizio' => $inizio,
+                    'fine' => $fine,
+                    'id' => $id,
+                ]
+            );
 
             return [
                 'response' => true,
@@ -424,6 +436,7 @@ class RegistrazioneGiocate extends BaseClass
                 'swal_message' => 'Registrazione modificata correttamente.',
                 'swal_type' => 'success',
             ];
+
         } else {
             return [
                 'response' => false,
@@ -444,14 +457,12 @@ class RegistrazioneGiocate extends BaseClass
      */
     public function deleteRegistrazione(array $post): array
     {
-
         $id = Filters::int($post['id']);
         $record_data = $this->getRecord($id);
         $owner = Filters::int($record_data['autore']);
 
         if ( $this->activeRegistrazioni() && $this->permissionUpdateRecords($owner) ) {
-
-            DB::query("DELETE FROM giocate_registrate WHERE id='{$id}'");
+            DB::queryStmt("DELETE FROM giocate_registrate WHERE id = :id", ['id' => $id]);
 
             return [
                 'response' => true,
@@ -462,6 +473,7 @@ class RegistrazioneGiocate extends BaseClass
                 'blocked_template' => $this->allRecords('blocked'),
                 'completed_template' => $this->allRecords('controlled'),
             ];
+
         } else {
             return [
                 'response' => false,
@@ -485,7 +497,7 @@ class RegistrazioneGiocate extends BaseClass
         $id = Filters::int($post['id']);
         if ( $this->activeRegistrazioni() && $this->permissionUpdateRecords() ) {
 
-            DB::query("UPDATE giocate_registrate SET controllata= IF (`controllata`, 0, 1) WHERE id='{$id}'");
+            DB::queryStmt("UPDATE giocate_registrate SET controllata = IF(`controllata`, 0, 1) WHERE id = :id", ['id' => $id]);
 
             return [
                 'response' => true,
@@ -496,6 +508,7 @@ class RegistrazioneGiocate extends BaseClass
                 'blocked_template' => $this->allRecords('blocked'),
                 'completed_template' => $this->allRecords('controlled'),
             ];
+
         } else {
             return [
                 'response' => false,
@@ -518,7 +531,7 @@ class RegistrazioneGiocate extends BaseClass
         $id = Filters::int($post['id']);
         if ( $this->activeRegistrazioni() && $this->permissionUpdateRecords() ) {
 
-            DB::query("UPDATE giocate_registrate SET bloccata= IF (`bloccata`, 0, 1) WHERE id='{$id}'");
+            DB::queryStmt("UPDATE giocate_registrate SET bloccata = IF(`bloccata`, 0, 1) WHERE id = :id", ['id' => $id]);
 
             return [
                 'response' => true,
