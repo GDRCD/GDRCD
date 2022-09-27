@@ -2,16 +2,6 @@
 
 class Mercato extends BaseClass
 {
-
-    /**
-     * @fn __construct
-     * @note Class constructor
-     */
-    protected function __construct()
-    {
-        parent::__construct();
-    }
-
     /*** ROUTER ***/
     /**
      * @fn loadShopsPage
@@ -33,7 +23,7 @@ class Mercato extends BaseClass
 
     /**
      * @fn manageMercatoPermission
-     * @note Controllo se se ho i permessi per gestire il mercato
+     * @note Controllo se ho i permessi per gestire il mercato
      * @return bool
      */
     public function manageShopObjectsPermission(): bool
@@ -43,7 +33,7 @@ class Mercato extends BaseClass
 
     /**
      * @fn manageShopPermission
-     * @note Controllo se se ho i permessi per gestire un negozio
+     * @note Controllo se ho i permessi per gestire un negozio
      * @return bool
      */
     public function manageShopPermission(): bool
@@ -57,12 +47,17 @@ class Mercato extends BaseClass
      * @fn getObject
      * @note Estrae i dati di un singolo oggetto
      * @param int $id
+     * @param int $shop
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    private function getObject(int $id, int $shop, string $val = '*')
+    private function getObject(int $id, int $shop, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM mercato WHERE oggetto='{$id}' LIMIT 1");
+        return DB::queryStmt("SELECT {$val} FROM mercato WHERE oggetto=:id AND negozio=:shop LIMIT 1", [
+            'id' => $id,
+            'shop' => $shop,
+        ]);
     }
 
     /**
@@ -70,28 +65,34 @@ class Mercato extends BaseClass
      * @note Estrae la lista di tutti gli oggetti esistenti
      * @param int $shop
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllShopObjects(int $shop, string $val = 'oggetto.*,mercato.*')
+    public function getAllShopObjects(int $shop, string $val = 'oggetto.*,mercato.*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} 
-                FROM mercato 
+        return DB::queryStmt(
+            "SELECT {$val}  FROM mercato 
                 LEFT JOIN oggetto ON (oggetto.id = mercato.oggetto)
-                WHERE mercato.negozio='{$shop}' AND oggetto.id IS NOT NULL AND mercato.quantity > 0
-                ORDER BY nome", 'result');
+                WHERE mercato.negozio=:shop AND oggetto.id IS NOT NULL AND mercato.quantity > 0
+                ORDER BY nome",
+            [
+                'shop' => $shop,
+            ]
+        );
     }
 
     /**
      * @fn getAllShops
      * @note Estrae la lista di tutti i negozi
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    private function getAllShops(string $val = '*')
+    private function getAllShops(string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} 
+        return DB::queryStmt("SELECT {$val} 
                 FROM mercato_negozi 
-                WHERE 1 ORDER BY nome", 'result');
+                WHERE 1 ORDER BY nome", []);
     }
 
     /**
@@ -99,39 +100,45 @@ class Mercato extends BaseClass
      * @note Estrae tutti i negozi presenti
      * @param int $obj
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    private function getShopFromObject(int $obj, string $val = '*')
+    private function getShopFromObject(int $obj, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM mercato WHERE oggetto='{$obj}' LIMIT 1");
+        return DB::queryStmt("SELECT {$val} FROM mercato WHERE oggetto=:obj LIMIT 1",[
+            'obj' => $obj,
+        ]);
     }
 
     /**
      * @fn getShop
      * @note Estrae tutti i negozi presenti
-     * @param int $obj
+     * @param int $shop
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getShop(int $shop, string $val = '*')
+    public function getShop(int $shop, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM mercato_negozi WHERE id='{$shop}' LIMIT 1");
+        return DB::queryStmt("SELECT {$val} FROM mercato_negozi WHERE id=:shop LIMIT 1",[
+            'shop' => $shop,
+        ]);
     }
 
     /*** AJAX ***/
 
     /**
      * @fn ajaxGetShop
-     * @note Ajax data for shop
+     * @note Ajax's data for shop
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function ajaxGetShop(array $post): array
     {
         if ( $this->manageShopPermission() ) {
             $shop = Filters::int($post['shop']);
-
-            return $this->getShop($shop);
+            return $this->getShop($shop)->getData()[0];
         } else {
             return [];
         }
@@ -145,11 +152,12 @@ class Mercato extends BaseClass
      * @param int $id
      * @param int $shop
      * @return bool
+     * @throws Throwable
      */
     public function existObject(int $id, int $shop): bool
     {
-        $data = DB::query("SELECT * FROM mercato WHERE oggetto='{$id}' AND negozio='{$shop}' LIMIT 1");
-        return (DB::rowsNumber($data) > 0);
+        $data = DB::queryStmt("SELECT * FROM mercato WHERE oggetto=:id AND negozio=:negozio LIMIT 1", ['id' => $id, 'negozio' => $shop]);
+        return ($data->getNumRows() > 0);
     }
 
     /**
@@ -157,11 +165,14 @@ class Mercato extends BaseClass
      * @note Controlla se un negozio esiste
      * @param int $id
      * @return bool
+     * @throws Throwable
      */
     public function existShop(int $id): bool
     {
-        $data = DB::query("SELECT * FROM mercato_negozi  WHERE id='{$id}' LIMIT 1");
-        return (DB::rowsNumber($data) > 0);
+        $data = DB::queryStmt("SELECT * FROM mercato_negozi  WHERE id=:id LIMIT 1",[
+            'id' => $id,
+        ]);
+        return ($data->getNumRows() > 0);
     }
 
     /*** LISTS ***/
@@ -171,21 +182,12 @@ class Mercato extends BaseClass
      * @note Crea le select delle tipologie oggetto
      * @param int $selected
      * @return string
+     * @throws Throwable
      */
     public function listShops(int $selected = 0): string
     {
-        $html = '<option value=""></option>';
         $list = $this->getAllShops('id,nome');
-
-        foreach ( $list as $row ) {
-            $id = Filters::int($row['id']);
-            $nome = Filters::in($row['nome']);
-            $sel = ($selected == $id) ? 'selected' : '';
-
-            $html .= "<option value='{$id}' {$sel}>{$nome}</option>";
-        }
-
-        return $html;
+        return Template::getInstance()->startTemplate()->renderSelect('id','nome',$selected,$list);
     }
 
 
@@ -195,12 +197,13 @@ class Mercato extends BaseClass
      * @fn getShopVisual
      * @note Estrae la visualizzazione della lista dei negozi
      * @return string
+     * @throws Throwable
      */
     public function getShopVisual(): string
     {
 
-        $html = '';
         $list = $this->getAllShops();
+        $data = [];
 
         foreach ( $list as $shop ) {
             $id = Filters::int($shop['id']);
@@ -208,15 +211,16 @@ class Mercato extends BaseClass
             $img = Filters::out($shop['immagine']);
             $descr = Filters::text($shop['descrizione']);
 
-            $html .= "<div class='single_shop'>";
-            $html .= "<div class='shop_img'><img src='/themes/advanced/imgs/shops/{$img}'></div>";
-            $html .= "<div class='shop_name'>
-                        <a href='/main.php?page=servizi_mercato&op=objects&shop={$id}'>{$nome}</a>
-                      </div>";
-            $html .= "</div>";
+            $data[] = [
+                'id' => $id,
+                'nome' => $nome,
+                'img' => $img,
+                'descr' => $descr,
+            ];
+
         }
 
-        return $html;
+        return Template::getInstance()->startTemplate()->render('mercato/shop',['data' => $data]);
     }
 
     /*** OBJECTS VISUAL ***/
@@ -261,9 +265,13 @@ class Mercato extends BaseClass
                 Oggetti::addObjectToPg($object, $this->me_id);
 
                 if ( $quantita > 1 ) {
-                    DB::query("UPDATE mercato SET quantity = quantity - 1 WHERE oggetto='{$object}' LIMIT 1");
+                    DB::queryStmt("UPDATE mercato SET quantity = quantity - 1 WHERE oggetto=:object LIMIT 1",[
+                        'object' => $object,
+                    ]);
                 } else {
-                    DB::query("DELETE FROM mercato WHERE oggetto='{$object}'");
+                    DB::queryStmt("DELETE FROM mercato WHERE oggetto=:object",[
+                        'object' => $object,
+                    ]);
                 }
 
                 return ['response' => true, 'mex' => "Oggetto acquistato. Soldi sottratti da '{$text}'."];
@@ -284,6 +292,7 @@ class Mercato extends BaseClass
      * @note Inserisce un nuovo oggetto in un negozio
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function insertShopObj(array $post): array
     {
@@ -297,8 +306,12 @@ class Mercato extends BaseClass
 
             if ( !$this->existObject($obj, $shop) ) {
 
-                DB::query("INSERT INTO mercato(oggetto, negozio, quantity,costo) 
-                            VALUES ('{$obj}','{$shop}','{$quantity}','{$costo}')");
+                DB::queryStmt("INSERT INTO mercato (negozio, oggetto, quantity, costo) VALUES (:negozio, :oggetto, :quantity, :costo)",[
+                    'negozio' => $shop,
+                    'oggetto' => $obj,
+                    'quantity' => $quantity,
+                    'costo' => $costo,
+                ]);
 
                 return [
                     'response' => true,
@@ -331,6 +344,7 @@ class Mercato extends BaseClass
      * @note Modifica un oggetto in un negozio
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function editShopObj(array $post): array
     {
@@ -344,7 +358,12 @@ class Mercato extends BaseClass
 
             if ( $this->existObject($obj, $shop) ) {
 
-                DB::query("UPDATE mercato SET quantity='{$quantity}',costo='{$costo}' WHERE oggetto='{$obj}' AND negozio='{$shop}' LIMIT 1");
+                DB::queryStmt("UPDATE mercato SET quantity=:quantity, costo=:costo WHERE negozio=:negozio AND oggetto=:oggetto LIMIT 1",[
+                    'negozio' => $shop,
+                    'oggetto' => $obj,
+                    'quantity' => $quantity,
+                    'costo' => $costo,
+                ]);
 
                 return [
                     'response' => true,
@@ -377,6 +396,7 @@ class Mercato extends BaseClass
      * @note Elimina un oggetto in un negozio
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function deleteShopObj(array $post): array
     {
@@ -388,7 +408,10 @@ class Mercato extends BaseClass
 
             if ( $this->existObject($obj, $shop) ) {
 
-                DB::query("DELETE FROM mercato WHERE oggetto='{$obj}' AND negozio='{$shop}'");
+                DB::queryStmt("DELETE FROM mercato WHERE oggetto=:obj AND negozio=:shop",[
+                    'obj' => $obj,
+                    'shop' => $shop,
+                ]);
 
                 return [
                     'response' => true,
@@ -420,6 +443,7 @@ class Mercato extends BaseClass
      * @note Inserisce un nuovo negozio
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function insertShop(array $post): array
     {
@@ -430,8 +454,11 @@ class Mercato extends BaseClass
             $descr = Filters::in($post['descrizione']);
             $img = Filters::in($post['immagine']);
 
-            DB::query("INSERT INTO mercato_negozi(nome, descrizione, immagine) 
-                            VALUES ('{$nome}','{$descr}','{$img}')");
+            DB::queryStmt("INSERT INTO negozi (nome, descrizione, immagine) VALUES (:nome, :descrizione, :immagine)",[
+                'nome' => $nome,
+                'descrizione' => $descr,
+                'immagine' => $img,
+            ]);
 
             return [
                 'response' => true,
@@ -456,6 +483,7 @@ class Mercato extends BaseClass
      * @note Modifica un negozio
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function editShop(array $post): array
     {
@@ -469,7 +497,12 @@ class Mercato extends BaseClass
 
             if ( $this->existShop($shop) ) {
 
-                DB::query("UPDATE mercato_negozi SET nome='{$nome}',descrizione='{$descr}',immagine='{$img}' WHERE id='{$shop}' LIMIT 1");
+                DB::queryStmt("UPDATE negozi SET nome=:nome, descrizione=:descrizione, immagine=:immagine WHERE id=:id LIMIT 1",[
+                    'id' => $shop,
+                    'nome' => $nome,
+                    'descrizione' => $descr,
+                    'immagine' => $img,
+                ]);
 
                 return [
                     'response' => true,
@@ -504,6 +537,7 @@ class Mercato extends BaseClass
      * @note Elimina un negozio
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function deleteShop(array $post): array
     {
@@ -514,7 +548,9 @@ class Mercato extends BaseClass
 
             if ( $this->existShop($shop) ) {
 
-                DB::query("DELETE FROM mercato_negozi WHERE id='{$shop}'");
+                DB::queryStmt("DELETE FROM negozi WHERE id=:id LIMIT 1",[
+                    'id' => $shop,
+                ]);
 
                 return [
                     'response' => true,
