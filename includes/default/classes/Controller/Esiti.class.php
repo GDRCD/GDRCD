@@ -126,6 +126,7 @@ class Esiti extends BaseClass
      * @note Controlla se si hanno i permessi per visualizzare quell'esito
      * @param int $id
      * @return bool
+     * @throws Throwable
      */
     public function esitoViewPermission(int $id): bool
     {
@@ -148,6 +149,7 @@ class Esiti extends BaseClass
      * @note Controlla se si hanno i permessi per rispondere a un esito
      * @param int $id
      * @return bool
+     * @throws Throwable
      */
     public function esitoAnswerPermission(int $id): bool
     {
@@ -170,6 +172,7 @@ class Esiti extends BaseClass
      * @note Controlla se si hanno i permessi per chiudere un esito
      * @param int $id
      * @return bool
+     * @throws Throwable
      */
     public function esitoClosePermission(int $id): bool
     {
@@ -190,6 +193,7 @@ class Esiti extends BaseClass
      * @note Controlla se si hanno i permessi per chiudere un esito
      * @param int $id
      * @return bool
+     * @throws Throwable
      */
     public function esitoResultPermission(int $id): bool
     {
@@ -210,6 +214,7 @@ class Esiti extends BaseClass
      * @note Controlla se si hanno i permessi per chiudere un esito
      * @param int $id
      * @return bool
+     * @throws Throwable
      */
     public function esitoMembersPermission(int $id): bool
     {
@@ -318,7 +323,7 @@ class Esiti extends BaseClass
 
     /**
      * @fn getEsitoAllAnswers
-     * @note Ottiene i dati di una risposta ad un esito
+     * @note Ottiene i dati di una risposta a un esito
      * @param int $id
      * @param string $val
      * @param string $dir
@@ -398,7 +403,7 @@ class Esiti extends BaseClass
 
     /**
      * @fn getPlayerEsito
-     * @note Ottiene i dati di un pg rispetto ad un esito
+     * @note Ottiene i dati di un pg rispetto a un esito
      * @param int $id
      * @param string $val
      * @return DBQueryInterface
@@ -480,7 +485,7 @@ class Esiti extends BaseClass
      * @return bool
      * @throws Throwable
      */
-    public function esitoReaded(int $id, int $pg)
+    public function esitoReaded(int $id, int $pg): bool
     {
         $data = DB::queryStmt(
             "SELECT count(id) AS tot FROM esiti_risposte_letture WHERE esito = :id AND personaggio=:pg",
@@ -517,7 +522,7 @@ class Esiti extends BaseClass
     /**
      * @fn esitiChatList
      * @note Render list esiti in chat per il pg connesso
-     * @return array
+     * @return string
      * @throws Throwable
      */
     public function esitiChatList(): string
@@ -649,6 +654,7 @@ class Esiti extends BaseClass
      * @param int $id
      * @param int $result
      * @return string
+     * @throws Throwable
      */
     public function esitoResultText(int $id, int $result): string
     {
@@ -918,20 +924,19 @@ class Esiti extends BaseClass
 
     /**
      * @fn renderEsitoAnswers
-     * @note Render html della lista delle risposte ad un esito
+     * @note Render html della lista delle risposte a un esito
      * @param int $id
      * @return string
      * @throws Throwable
      */
     public function renderEsitoAnswers(int $id): string
     {
-        $html = '';
         $id = Filters::int($id);
+        $data = [];
 
         if ( $this->esitoViewPermission($id) ) {
 
             $list = $this->getEsitoAllAnswers($id);
-            $data = [];
 
             foreach ( $list as $answer ) {
                 $to_push = [];
@@ -992,7 +997,7 @@ class Esiti extends BaseClass
 
     /**
      * @fn readAnswersMaster
-     * @note Segna le risposte di un estio come lette dal master
+     * @note Segna le risposte di un esito come lette dal master
      * @param int $id
      * @return void
      * @throws Throwable
@@ -1144,7 +1149,7 @@ class Esiti extends BaseClass
 
     /**
      * @fn addMember
-     * @note Aggiunge un membro ad un esito
+     * @note Aggiunge un membro a un esito
      * @param array $post
      * @return array
      * @throws Throwable
@@ -1252,7 +1257,10 @@ class Esiti extends BaseClass
         return Template::getInstance()->startTemplate()->renderSelect('id','nome','',$list,'Seleziona un master');
     }
 
-    public function setMaster($post)
+    /**
+     * @throws Throwable
+     */
+    public function setMaster($post): array
     {
 
         $id = Filters::int($post['id']);
