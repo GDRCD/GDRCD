@@ -6,10 +6,10 @@ $cls = OnlineStatus::getInstance();
 
 switch ( $_POST['action'] ) {
     case 'get_status_data':
-        echo json_encode($cls->getAjaxStatusData($_POST));
+        echo json_encode($cls->ajaxStatusData($_POST));
         break;
     case 'get_status_type_data':
-        echo json_encode($cls->getAjaxStatusTypeData($_POST));
+        echo json_encode($cls->ajaxStatusTypeData($_POST));
         break;
 
     case 'op_insert_status':

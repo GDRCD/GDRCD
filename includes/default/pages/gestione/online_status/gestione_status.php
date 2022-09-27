@@ -32,7 +32,7 @@ if ( $cls->manageStatusPermission() ) { # Metodo di controllo per accesso alla p
             <div class="single_input">
                 <div class="label">Tipo</div>
                 <select name="type" required>
-                    <?= $cls->renderStatusTypeList(); ?>
+                    <?= $cls->listStatusType(); ?>
                 </select>
             </div>
 
@@ -58,14 +58,14 @@ if ( $cls->manageStatusPermission() ) { # Metodo di controllo per accesso alla p
             <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
                 <div class="label">Stato da modificare</div>
                 <select name="id" required>
-                    <?= $cls->renderStatusList(); ?>
+                    <?= $cls->listStatus(); ?>
                 </select>
             </div>
 
             <div class="single_input">
                 <div class="label">Tipo</div>
                 <select name="type" required>
-                    <?= $cls->renderStatusTypeList(); ?>
+                    <?= $cls->listStatusType(); ?>
                 </select>
             </div>
 
@@ -91,7 +91,7 @@ if ( $cls->manageStatusPermission() ) { # Metodo di controllo per accesso alla p
             <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
                 <div class="label">Stato da eliminare</div>
                 <select name="id" required>
-                    <?= $cls->renderStatusList(); ?>
+                    <?= $cls->listStatus(); ?>
                 </select>
             </div>
 
