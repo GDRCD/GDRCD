@@ -8,7 +8,7 @@
     <div class="general_title"> Presenti nel luogo:</div>
 
     <div class="box_presenti">
-        <?= Presenti::getInstance()->listMiniPresences(); ?>
+        <?= Presenti::getInstance()->renderListMiniPresences(); ?>
     </div>
 
     <script src="<?= Router::getPagesLink('presenti/mini.js'); ?>"></script>

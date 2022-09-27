@@ -3,63 +3,57 @@
 class Presenti extends BaseClass
 {
 
-    /**
-     * @fn __construct
-     */
-    protected function __construct()
-    {
-        parent::__construct();
-    }
-
-
     /**** TABLE HELPERS ****/
 
     /**
      * @fn getPresenti
      * @note Ottieni i presenti
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getPresenti()
+    public function getPresenti(): DBQueryInterface
     {
-        return DB::query('
-             SELECT * FROM `personaggio` 
+        return DB::queryStmt(
+            'SELECT * FROM `personaggio` 
              WHERE `ora_entrata` > `ora_uscita` AND `ultimo_refresh` > DATE_SUB(NOW(), INTERVAL 45 MINUTE) ORDER BY `nome`',
-            'result'
+            []
         );
     }
 
     /**
      * @fn getFullPresences
      * @note Ottieni i presenti estesi
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getFullPresences()
+    public function getFullPresences(): DBQueryInterface
     {
-        return DB::query('
+        return DB::queryStmt('
              SELECT * FROM `personaggio` 
              WHERE `ora_entrata` > `ora_uscita` AND `ultimo_refresh` > DATE_SUB(NOW(), INTERVAL 45 MINUTE)
-                 ORDER BY `ultimo_luogo` ASC,
-                          `is_invisible` ASC',
-            'result'
+             ORDER BY `ultimo_luogo` ASC, `is_invisible` ASC',
+            []
         );
     }
 
     /**
      * @fn getPresentiFromCurrentPosition
      * @note Ottieni i presenti per un luogo specifico
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getPresentiFromCurrentPosition()
+    public function getPresentiFromCurrentPosition(): DBQueryInterface
     {
         $location = Personaggio::getPgLocation();
 
-        return DB::query("
+        return DB::queryStmt("
              SELECT * FROM `personaggio` 
-             WHERE `ora_entrata` > `ora_uscita` 
-                AND `ultimo_refresh` > DATE_SUB(NOW(), INTERVAL 45 MINUTE)
-                AND `ultimo_luogo` = '{$location}' 
-                AND ( (`is_invisible` = 0 AND `id` != '{$this->me_id}') OR `id`='{$this->me_id}')",
-            'result'
+             WHERE `ora_entrata` > `ora_uscita` AND `ultimo_refresh` > DATE_SUB(NOW(), INTERVAL 45 MINUTE)
+             AND `ultimo_luogo` = '{$location}' AND ( (`is_invisible` = 0 AND `id` != :me_1) OR `id`=:me_2)",
+            [
+                "me_1" => $this->me_id,
+                "me_2" => $this->me_id,
+            ]
         );
     }
 
@@ -69,10 +63,11 @@ class Presenti extends BaseClass
      * @fn ajaxPresences
      * @note Richiamo dei presenti mini via ajax
      * @return array
+     * @throws Throwable
      */
     public function ajaxPresences(): array
     {
-        return ['template' => $this->listMiniPresences(), 'counter' => $this->numberOfPresences()];
+        return ['template' => $this->renderListMiniPresences(), 'counter' => $this->numberOfPresences()];
     }
 
     /**** RENDERING ****/
@@ -81,17 +76,19 @@ class Presenti extends BaseClass
      * @fn numberOfPresences
      * @note Ottieni il numero di presenti
      * @return int
+     * @throws Throwable
      */
     public function numberOfPresences(): int
     {
         $presences = $this->getPresenti();
-        return DB::rowsNumber($presences);
+        return $presences->getNumRows();
     }
 
     /**
      * @fn renderMiniPresences
      * @note Renderizza i presenti in mini
      * @return array
+     * @throws Throwable
      */
     public function renderMiniPresences(): array
     {
@@ -119,12 +116,13 @@ class Presenti extends BaseClass
         return $compiled_characters;
     }
 
-    /***
-     * @fn listMiniPresences
+    /**
+     * @fn renderListMiniPresences
      * @note Renderizza i presenti in mini
-     * @return mixed
+     * @return string
+     * @throws Throwable
      */
-    public function listMiniPresences()
+    public function renderListMiniPresences(): string
     {
         return Template::getInstance()->startTemplate()->render(
             'presenti/mini',
@@ -136,6 +134,7 @@ class Presenti extends BaseClass
      * @fn renderMiniPresences
      * @note Renderizza i presenti in mini
      * @return array
+     * @throws Throwable
      */
     public function renderFullPresences(): array
     {
@@ -166,9 +165,11 @@ class Presenti extends BaseClass
 
             if ( $position != $last_position ) {
                 $last_position = $position;
-                // TODO sostiture query con funzione get di classe Mappa, quando sarà disponibile
+                // TODO Sostituire query con funzione get di classe Mappa, quando sarà disponibile
                 if ( $position > 0 ) {
-                    $location_data = DB::query("SELECT * FROM `mappa` WHERE `id` = '{$position}' LIMIT 1",);
+                    $location_data = DB::queryStmt("SELECT * FROM `mappa` WHERE `id` = :position LIMIT 1",[
+                        "position" => $position
+                    ]);
                     $data['position'] = Filters::out($location_data['nome']);
                 } else {
                     $data['position'] = 'Mappa';
@@ -185,7 +186,13 @@ class Presenti extends BaseClass
         return ['characters' => $compiled_characters, 'invisible' => $invisible_character];
     }
 
-    public function listFullPresences()
+    /**
+     * @fn renderListMiniPresences
+     * @note Renderizza i presenti in mini
+     * @return string
+     * @throws Throwable
+     */
+    public function renderListFullPresences(): string
     {
         return Template::getInstance()->startTemplate()->render(
             'presenti/full',
