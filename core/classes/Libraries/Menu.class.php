@@ -47,7 +47,7 @@ class Menu extends BaseClass
                 }
             }
 
-            // Aggiungo l'array formato a quello generale
+            // Aggiungo array formato a quello generale
             $categories[] = $data;
         }
 
@@ -58,11 +58,12 @@ class Menu extends BaseClass
     /**
      * @fn createMenuPlain
      * @note Crea un menu da database senza divisione per categorie
-     * @param $menu
-     * @return mixed
+     * @param string $menu
+     * @return string
      * @throws Throwable
      */
-    public function createMenuPlain($menu){
+    public function createMenuPlain(string $menu): string
+    {
         $links = DB::queryStmt("SELECT * FROM menu WHERE menu_name=:menu ORDER BY name",
             [
                 'menu' => Filters::in($menu)
