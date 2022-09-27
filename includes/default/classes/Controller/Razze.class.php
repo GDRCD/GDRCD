@@ -15,8 +15,8 @@ class Razze extends BaseClass
      */
     public function getRace(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM razze WHERE id=:id LIMIT 1",[
-            'id' => $id
+        return DB::queryStmt("SELECT {$val} FROM razze WHERE id=:id LIMIT 1", [
+            'id' => $id,
         ]);
     }
 
@@ -51,10 +51,10 @@ class Razze extends BaseClass
      * @fn listRaces
      * @note Lista delle razze disponibili
      * @param int $selected
-     * @return mixed
+     * @return string
      * @throws Throwable
      */
-    public function listRaces(int $selected = 0)
+    public function listRaces(int $selected = 0): string
     {
         $genders = $this->getAllRaces();
         return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', $selected, $genders);
@@ -70,7 +70,7 @@ class Razze extends BaseClass
      * @return array
      * @throws Throwable
      */
-    public function ajaxRaceData(array $post):array
+    public function ajaxRaceData(array $post): array
     {
         if ( $this->permissionManageRaces() ) {
             $id = Filters::int($post['id']);
@@ -113,7 +113,7 @@ class Razze extends BaseClass
                 'icon' => $icon,
                 'url_site' => $url_site,
                 'iscrizione' => $iscrizione,
-                'visibile' => $visibile
+                'visibile' => $visibile,
             ]);
 
             return [
@@ -167,7 +167,7 @@ class Razze extends BaseClass
                 'icon' => $icon,
                 'url_site' => $url_site,
                 'iscrizione' => $iscrizione,
-                'visibile' => $visibile
+                'visibile' => $visibile,
             ]);
 
             return [
@@ -204,7 +204,7 @@ class Razze extends BaseClass
             $id = Filters::int($post['id']);
 
             DB::queryStmt("DELETE FROM razze WHERE id=:id", [
-                'id' => $id
+                'id' => $id,
             ]);
 
             return [
