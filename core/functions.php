@@ -83,25 +83,6 @@ function gdrcd_controllo_esilio($pg)
 }
 
 /**
- * Controlla se l'utente è loggato da pochi minuti. Utile per l'icona entra/esce
- * @param string $time : data in un formato leggibile da strtotime()
- * @return int
- */
-function gdrcd_check_time($time)
-{
-    $time_hours = date('H', strtotime($time));
-    $time_minutes = date('i', strtotime($time));
-
-    if ( $time_hours == date('H') ) {
-        return date('i') - $time_minutes;
-    } else if ( $time_hours == (date('H') - 1) || $time_hours == (strftime('H') + 11) ) {
-        return date('i') - $time_minutes + 60;
-    }
-
-    return 61;
-}
-
-/**
  * Utilità
  * Set di funzioni di utilità generica per l'engine
  */
@@ -369,25 +350,6 @@ function gdrcd_redirect($url, $tempo = false)
         }
         echo "<meta http-equiv=\"refresh\" content=\"" . $tempo . ";" . $url . "\">";
     }
-}
-
-/**
- * Sostituisce eventuali parentesi angolari in coppia in una stringa con parentesi quadre
- * @param string $str : la stringa da controllare
- * @return $str con la coppie di parentesi angolari sostituite con parentesi quadre
- */
-function gdrcd_angs($str)
-{
-    $search = [
-        '#\&lt;(.+?)\&gt;#is',
-        '#\<(.+?)>#is',
-    ];
-    $replace = [
-        '[$1]',
-        '[$1]',
-    ];
-
-    return preg_replace($search, $replace, $str);
 }
 
 /**
