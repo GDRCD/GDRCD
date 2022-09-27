@@ -227,7 +227,7 @@ class GDRCD6 extends DbMigration
               ('Uffici', 'Lavoro', 'Lavoro', 'servizi/lavori/index', NULL),
               ('Uffici', 'Gruppi', 'Gruppi', 'servizi/gruppi/index', NULL),
               ('Uffici', 'Mercato', 'Mercato', 'servizi/mercato/mercato_index', NULL),
-              ('Uffici', 'Esiti', 'Pannello esiti', 'servizi_esiti', NULL),
+              ('Uffici', 'Esiti', 'Pannello esiti', 'servizi/esiti/esiti_index', NULL),
               ('Uffici', 'Stanze', 'Prenotazione stanze', 'servizi_prenotazioni', NULL),
               ('Uffici', 'Banca', 'Servizi bancari', 'servizi/banca/index', NULL),
               ('Utenti', 'Abilità', 'Abilità', 'user_abilita', NULL),

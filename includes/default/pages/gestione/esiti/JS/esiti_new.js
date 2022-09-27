@@ -23,7 +23,7 @@ function refreshEsitiList(data) {
         let datas = JSON.parse(data);
 
         if (datas.response) {
-            window.location.href = '/main.php?page=gestione_esiti';
+            window.location.href = '/main.php?page=gestione/esiti/esiti_index';
         }
     }
 }

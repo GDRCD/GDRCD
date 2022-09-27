@@ -24,9 +24,9 @@ if ( $esiti->esitiFromPlayerEnabled() ) {
 
         <?php if ( isset($resp) ) { ?>
             <div class="warning"><?= $resp['mex']; ?></div>
-            <div class="link_back"><a href="/main.php?page=servizi_esiti">Indietro</a></div>
+            <div class="link_back"><a href="/main.php?page=servizi/esiti/esiti_index">Indietro</a></div>
             <?php
-            Functions::redirect('/main.php?page=servizi_esiti', 2);
+            Functions::redirect('/main.php?page=servizi/esiti/esiti_index', 2);
         } ?>
 
         <form method="POST" class="form">
@@ -62,4 +62,4 @@ if ( $esiti->esitiFromPlayerEnabled() ) {
     <div class="warning">Permesso negato.</div>
 <?php } ?>
 
-<div class="link_back"><a href="/main.php?page=servizi_esiti">Indietro</a></div>
+<div class="link_back"><a href="/main.php?page=servizi/esiti/esiti_index">Indietro</a></div>

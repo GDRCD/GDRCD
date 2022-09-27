@@ -16,7 +16,7 @@ $esiti = Esiti::getInstance();
 
         <!-- Corpo della pagina -->
         <div class="page_body">
-            <?php Router::loadPages('esiti/' . $esiti->loadServicePageEsiti(Filters::out($_GET['op']))); ?>
+            <?php Router::loadPages('servizi/esiti/' . $esiti->loadServicePageEsiti(Filters::out($_GET['op']))); ?>
         </div>
 
     <?php } else { ?>

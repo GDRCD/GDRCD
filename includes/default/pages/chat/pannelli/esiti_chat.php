@@ -15,13 +15,6 @@ if ( $esiti->esitiEnabled() && $esiti->esitiTiriEnabled() ) {
         </div>
 
         <div class="fake-table esiti_in_chat">
-            <div class="tr header">
-                <div class="td">Titolo</div>
-                <div class="td">Data</div>
-                <div class="td">Tiro</div>
-                <div class="td">Abilità</div>
-                <div class="td">Controlli</div>
-            </div>
             <?= $esiti->esitiChatList(); ?>
         </div>
 

@@ -3,7 +3,7 @@
 class Esiti extends BaseClass
 {
 
-    private
+    private bool
         $esiti_enabled,
         $esiti_chat,
         $esiti_from_player,
@@ -30,7 +30,7 @@ class Esiti extends BaseClass
 
     /**
      * @fn loadManagementEsitiPage
-     * @note Routing delle paginedi gestione
+     * @note Routing delle pagine di gestione
      * @param string $op
      * @return string
      */
@@ -38,37 +38,15 @@ class Esiti extends BaseClass
     {
         $op = Filters::out($op);
 
-        switch ( $op ) {
-            default:
-                $page = 'esiti_list.php';
-                break;
-
-            case 'new':
-                $page = 'esiti_new.php';
-                break;
-
-            case 'read':
-                $page = 'esiti_read.php';
-                break;
-
-            case 'close':
-                $page = 'esiti_close.php';
-                break;
-
-            case 'open':
-                $page = 'esiti_open.php';
-                break;
-
-            case 'members':
-                $page = 'esiti_members.php';
-                break;
-
-            case 'master':
-                $page = 'esiti_master.php';
-                break;
-        }
-
-        return $page;
+        return match ($op) {
+            default => 'esiti_list.php',
+            "new" => "esiti_new.php",
+            "read" => "esiti_read.php",
+            "close" => "esiti_close.php",
+            "open" => "esiti_open.php",
+            "members" => "esiti_members.php",
+            "master" => "esiti_master.php"
+        };
     }
 
     /**
@@ -81,25 +59,12 @@ class Esiti extends BaseClass
     {
         $op = Filters::out($op);
 
-        switch ( $op ) {
-            default:
-                $page = 'esiti_list.php';
-                break;
-
-            case 'new':
-                $page = 'esiti_new.php';
-                break;
-
-            case 'read':
-                $page = 'esiti_read.php';
-                break;
-
-            case 'close':
-                $page = 'esiti_close.php';
-                break;
-        }
-
-        return $page;
+        return match ($op) {
+            default => 'esiti_list.php',
+            "new" => "esiti_new.php",
+            "read" => "esiti_read.php",
+            "close" => "esiti_close.php"
+        };
     }
 
     /*** GETTER */
@@ -180,7 +145,7 @@ class Esiti extends BaseClass
 
     /**
      * @fn esitoAnswerPermission
-     * @note Controlla se si hanno i permessi per rispondere ad un esito
+     * @note Controlla se si hanno i permessi per rispondere a un esito
      * @param int $id
      * @return bool
      */
@@ -267,13 +232,14 @@ class Esiti extends BaseClass
      * @note Ottiene la lista degli esiti
      * @param string $val
      * @param string $order
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllEsito(string $val = '*', string $order = '')
+    public function getAllEsito(string $val = '*', string $order = ''): DBQueryInterface
     {
         $where = ($this->esitiManageAll()) ? '1' : "(master = '0' OR master = '{$this->me_id}')";
 
-        return DB::query("SELECT {$val} FROM esiti WHERE {$where} {$order}", 'result');
+        return DB::queryStmt("SELECT {$val} FROM esiti WHERE {$where} {$order}", []);
     }
 
     /**
@@ -282,11 +248,19 @@ class Esiti extends BaseClass
      * @param int $pg
      * @param string $val
      * @param string $order
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllEsitoPlayer(int $pg, string $val = 'esiti.*', string $order = '')
+    public function getAllEsitoPlayer(int $pg, string $val = 'esiti.*', string $order = ''): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM esiti LEFT JOIN esiti_personaggio ON (esiti.id = esiti_personaggio.esito) WHERE esiti_personaggio.personaggio = '{$pg}' AND esiti.closed = 0 {$order}", 'result');
+        return DB::queryStmt(
+            "SELECT {$val} FROM esiti
+                    LEFT JOIN esiti_personaggio ON (esiti.id = esiti_personaggio.esito) 
+                    WHERE esiti_personaggio.personaggio = :pg AND esiti.closed = 0 {$order}",
+            [
+                'pg' => $pg,
+            ]
+        );
     }
 
     /**
@@ -294,11 +268,17 @@ class Esiti extends BaseClass
      * @note Ottiene i dati di un esito
      * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getEsito(int $id, string $val = '*')
+    public function getEsito(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM esiti WHERE id='{$id}' LIMIT 1");
+        return DB::queryStmt(
+            "SELECT {$val} FROM esiti WHERE id=:id LIMIT 1",
+            [
+                'id' => $id,
+            ]
+        );
     }
 
     /**
@@ -306,11 +286,17 @@ class Esiti extends BaseClass
      * @note Ottiene i dati di una risposta singola degli esiti
      * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAnswer(int $id, string $val = '*')
+    public function getAnswer(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM esiti_risposte WHERE id='{$id}' LIMIT 1");
+        return DB::queryStmt(
+            "SELECT {$val} FROM esiti_risposte WHERE id=:id LIMIT 1",
+            [
+                'id' => $id,
+            ]
+        );
     }
 
     /**
@@ -318,11 +304,16 @@ class Esiti extends BaseClass
      * @note Ottiene la lista dei risultati di una risposta con dadi
      * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAnswerResults(int $id, string $val = '*')
+    public function getAnswerResults(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM esiti_risposte_risultati WHERE esito='{$id}'", 'result');
+        return DB::queryStmt("SELECT {$val} FROM esiti_risposte_risultati WHERE esito=:id",
+            [
+                'id' => $id,
+            ]
+        );
     }
 
     /**
@@ -331,23 +322,32 @@ class Esiti extends BaseClass
      * @param int $id
      * @param string $val
      * @param string $dir
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getEsitoAllAnswers(int $id, string $val = '*', string $dir = 'ASC')
+    public function getEsitoAllAnswers(int $id, string $val = '*', string $dir = 'ASC'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM esiti_risposte WHERE esito = {$id} ORDER BY data {$dir}", 'result');
+        return DB::queryStmt("SELECT {$val} FROM esiti_risposte WHERE esito = :id ORDER BY data {$dir}",
+            [
+                'id' => $id,
+            ]
+        );
     }
 
     /**
      * @fn getEsitoAnswers
-     * @note Ottiene il numero di risposte ad un esito
+     * @note Ottiene il numero di risposte a un esito
      * @param int $id
      * @return int
+     * @throws Throwable
      */
-    public function getEsitoAnswesNum(int $id): int
+    public function getEsitoAnswersNum(int $id): int
     {
-        $data = DB::query("SELECT count(id) as tot FROM esiti_risposte 
-                WHERE esito = {$id}");
+        $data = DB::queryStmt(
+            "SELECT count(id) as tot FROM esiti_risposte 
+                WHERE esito = :id",
+            ['id' => $id,]
+        );
 
         return Filters::int($data['tot']);
     }
@@ -356,11 +356,11 @@ class Esiti extends BaseClass
      * @fn getLastEsitoId
      * @note Ottiene l'ultimo id inserito nella tabella esiti
      * @return int
+     * @throws Throwable
      */
     public function getLastEsitoId(): int
     {
-        $data = DB::query("SELECT max(id) as id FROM esiti WHERE 1 ORDER BY id DESC LIMIT 1");
-
+        $data = DB::queryStmt("SELECT max(id) as id FROM esiti WHERE 1 ORDER BY id DESC LIMIT 1", []);
         return Filters::int($data['id']);
     }
 
@@ -368,25 +368,32 @@ class Esiti extends BaseClass
      * @fn getLastAnswerId
      * @note Ottiene l'ultimo id inserito nella tabella esiti
      * @return int
+     * @throws Throwable
      */
     public function getLastAnswerId(): int
     {
-        $data = DB::query("SELECT max(id) as id FROM esiti_risposte WHERE 1 ORDER BY id DESC LIMIT 1");
-
+        $data = DB::queryStmt("SELECT max(id) as id FROM esiti_risposte WHERE 1 ORDER BY id DESC LIMIT 1");
         return Filters::int($data['id']);
     }
 
     /**
      * @fn getPlayerEsito
-     * @note Ottiene i dati di un pg rispetto ad un esito
+     * @note Ottiene i dati di un pg rispetto a un esito
      * @param int $id
      * @param int $pg
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getPlayerEsito(int $id, int $pg, string $val = '*')
+    public function getPlayerEsito(int $id, int $pg, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM esiti_personaggio WHERE esito='{$id}' AND personaggio='{$pg}' LIMIT 1");
+        return DB::queryStmt(
+            "SELECT {$val} FROM esiti_personaggio WHERE esito=:id AND personaggio=:pg LIMIT 1",
+            [
+                'id' => $id,
+                'pg' => $pg,
+            ]
+        );
     }
 
     /**
@@ -394,13 +401,17 @@ class Esiti extends BaseClass
      * @note Ottiene i dati di un pg rispetto ad un esito
      * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllPlayerEsito(int $id, string $val = 'esiti_personaggio.*')
+    public function getAllPlayerEsito(int $id, string $val = 'esiti_personaggio.*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM esiti_personaggio 
+        return DB::queryStmt(
+            "SELECT {$val} FROM esiti_personaggio 
                                 LEFT JOIN personaggio ON (personaggio.id = esiti_personaggio.personaggio) 
-                                WHERE esito='{$id}' ORDER BY personaggio.nome", 'result');
+                                WHERE esito=:id ORDER BY personaggio.nome",
+            ['id' => $id]
+        );
     }
 
     /**
@@ -408,11 +419,18 @@ class Esiti extends BaseClass
      * @note Estrazione delle cd superate per un esito
      * @param int $id
      * @param int $result
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getPassedEsitoCD(int $id, int $result)
+    public function getPassedEsitoCD(int $id, int $result): DBQueryInterface
     {
-        return DB::query("SELECT * FROM esiti_risposte_cd WHERE esito='{$id}' AND cd <= '{$result}'", 'result');
+        return DB::queryStmt(
+            "SELECT * FROM esiti_risposte_cd WHERE esito= :id AND cd <= :result",
+            [
+                'id' => $id,
+                'result' => $result,
+            ]
+        );
     }
 
 
@@ -423,11 +441,14 @@ class Esiti extends BaseClass
      * @note Controlla l'esistenza di un esito
      * @param int $id
      * @return bool
+     * @throws Throwable
      */
     public function esitoExist(int $id): bool
     {
-        $data = DB::query("SELECT count(id) AS tot FROM esiti WHERE id='{$id}' LIMIT 1");
-
+        $data = DB::queryStmt(
+            "SELECT count(id) AS tot FROM esiti WHERE id=:id LIMIT 1",
+            ['id' => $id,]
+        );
         return ($data['tot'] > 0);
     }
 
@@ -437,10 +458,17 @@ class Esiti extends BaseClass
      * @param int $id
      * @param int $pg
      * @return bool
+     * @throws Throwable
      */
     public function esitoPlayerExist(int $id, int $pg): bool
     {
-        $data = DB::query("SELECT count(id) AS tot FROM esiti_personaggio WHERE esito='{$id}' AND personaggio='{$pg}' LIMIT 1");
+        $data = DB::queryStmt(
+            "SELECT count(id) AS tot FROM esiti_personaggio WHERE esito=:id AND personaggio=:pg LIMIT 1",
+            [
+                'id' => $id,
+                'pg' => $pg,
+            ]
+        );
         return ($data['tot'] > 0);
     }
 
@@ -450,10 +478,17 @@ class Esiti extends BaseClass
      * @param int $id
      * @param int $pg
      * @return bool
+     * @throws Throwable
      */
     public function esitoReaded(int $id, int $pg)
     {
-        $data = DB::query("SELECT count(id) AS tot FROM esiti_risposte_letture WHERE esito = {$id} AND personaggio='{$pg}'");
+        $data = DB::queryStmt(
+            "SELECT count(id) AS tot FROM esiti_risposte_letture WHERE esito = :id AND personaggio=:pg",
+            [
+                'id' => $id,
+                'pg' => $pg,
+            ]
+        );
 
         return ($data['tot'] > 0);
     }
@@ -463,10 +498,16 @@ class Esiti extends BaseClass
      * @note Ottiene i dati di una lettura di un esito
      * @param int $id
      * @return bool
+     * @throws Throwable
      */
     public function esitoClosed(int $id): bool
     {
-        $data = DB::query("SELECT closed FROM esiti WHERE id = {$id} LIMIT 1");
+        $data = DB::queryStmt(
+            "SELECT closed FROM esiti WHERE id = :id LIMIT 1",
+            [
+                'id' => $id,
+            ]
+        );
 
         return Filters::bool($data['closed']);
     }
@@ -475,50 +516,69 @@ class Esiti extends BaseClass
 
     /**
      * @fn esitiChatList
-     * @note Render list esiti in chat per il pg loggato
-     * @return string
+     * @note Render list esiti in chat per il pg connesso
+     * @return array
+     * @throws Throwable
      */
     public function esitiChatList(): string
     {
-        $html = '';
-        $abilita = Abilita::getInstance();
 
         if ( $this->esitiEnabled() && $this->esitiTiriEnabled() ) {
             $luogo = Personaggio::getPgLocation();
 
-            $list = DB::query("SELECT esiti_risposte.* , esiti.titolo
+            $esiti = DB::queryStmt(
+                "SELECT esiti_risposte.* , esiti.titolo
                     FROM esiti 
                     LEFT JOIN esiti_risposte ON (esiti.id = esiti_risposte.esito)
-                    LEFT JOIN esiti_personaggio ON (esiti.id = esiti_personaggio.esito AND esiti_personaggio.personaggio = '{$this->me_id}')
-                    LEFT JOIN esiti_risposte_risultati ON (esiti_risposte_risultati.esito = esiti_risposte.id AND esiti_risposte_risultati.personaggio = '{$this->me_id}')
-                    WHERE esiti_risposte.chat = '{$luogo}' 
+                    LEFT JOIN esiti_personaggio ON (esiti.id = esiti_personaggio.esito AND esiti_personaggio.personaggio =:me_1)
+                    LEFT JOIN esiti_risposte_risultati ON (esiti_risposte_risultati.esito = esiti_risposte.id AND esiti_risposte_risultati.personaggio = :me_2)
+                    WHERE esiti_risposte.chat = :luogo
                     AND esiti_personaggio.id IS NOT NULL
                     AND esiti_risposte_risultati.id IS NULL
                     AND esiti.closed = 0
-                    ORDER BY esiti_risposte.data DESC", 'result');
+                    ORDER BY esiti_risposte.data DESC", [
+                "me_1" => $this->me_id,
+                "me_2" => $this->me_id,
+                "luogo" => $luogo,
+            ]);
 
-            foreach ( $list as $row ) {
+            $cells = [
+                'Titolo',
+                'Data',
+                'Dadi',
+                'Abilità',
+                'Comandi',
+            ];
 
-                $id = Filters::int($row['id']);
-                $abi_data = $abilita->getAbilita(Filters::int($row['abilita']), 'nome');
+            $esiti_data = [];
 
-                $html .= "<div class='tr'>";
-                $html .= "<div class='td'>" . Filters::out($row['titolo']) . "</div>";
-                $html .= "<div class='td'>" . Filters::date($row['data'], 'd/M/Y') . "</div>";
-                $html .= "<div class='td'>" . Filters::int($row['dice_num']) . " dadi da " . Filters::int($row['dice_face']) . "</div>";
-                $html .= "<div class='td'>" . Filters::text($abi_data['nome']) . "</div>";
-                $html .= "<div class='td'>
-                            <form class='form chat_form_ajax ajax_form' action='chat/chat_ajax.php' data-callback='invioSuccess'>
-                                <input type='hidden' name='action' value='send_esito'>
-                                <input type='hidden' name='id' value='{$id}'>
-                                <button type='submit'><i class='fas fa-dice'></i></button>
-                            </form>
-                         </div>";
-                $html .= "</div>";
+            foreach ( $esiti as $esito ) {
+
+                $id = Filters::int($esito['id']);
+                $abi_data = Abilita::getInstance()->getAbilita(Filters::int($esito['abilita']), 'nome');
+                $dice_num = Filters::int($esito['dice_num']);
+                $dice_face = Filters::int($esito['dice_face']);
+
+                $esiti_data[] = [
+                    'id' => $id,
+                    "titolo" => Filters::out($esito['titolo']),
+                    "data" => CarbonWrapper::format($esito['data'], 'd/m/Y H:i'),
+                    "dice" => "{$dice_num} dadi da {$dice_face}",
+                    "abi_name" => Filters::out($abi_data['nome']),
+                ];
             }
-        }
 
-        return $html;
+            return Template::getInstance()->startTemplate()->renderTable(
+                'esiti/list',
+                [
+                    'body_rows' => $esiti_data,
+                    'cells' => $cells,
+                    'table_title' => 'Lista Esiti',
+                ]
+            );
+        } else {
+            return '';
+        }
     }
 
     /**
@@ -526,6 +586,7 @@ class Esiti extends BaseClass
      * @note Utilizzo di un esito in chat
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function rollEsito(array $post): array
     {
@@ -550,13 +611,34 @@ class Esiti extends BaseClass
         $testo = 'Tiro: ' . $abi_nome . ', risultato totale: ' . $result . ' ';
         $testo_sussurro = Filters::in($this->esitoResultText($id_answer, $result));
 
-        DB::query("INSERT INTO chat(stanza, mittente,destinatario,tipo,testo)
-								  VALUE('{$luogo}', 'Esiti','{$this->me}','C','{$testo}')");
+        DB::queryStmt(
+            "INSERT INTO chat(stanza, mittente,destinatario,tipo,testo)
+				  VALUE(:luogo, 'Esiti',:me,'C',:testo)",
+            [
+                'luogo' => $luogo,
+                'me' => $this->me_id,
+                'testo' => $testo,
+            ]);
 
-        DB::query("INSERT INTO chat(stanza, mittente,destinatario,tipo,testo)
-								  VALUE('{$luogo}', 'Esiti','{$this->me}','S','{$testo_sussurro}')");
+        DB::queryStmt(
+            "INSERT INTO chat(stanza, mittente,destinatario,tipo,testo)
+				  VALUE(:luogo, 'Esiti',:me,'S',:testo)",
+            [
+                'luogo' => $luogo,
+                'me' => $this->me_id,
+                'testo' => $testo_sussurro,
+            ]
+        );
 
-        DB::query("INSERT INTO esiti_risposte_risultati(esito,personaggio,risultato,testo) VALUES('{$id_answer}','{$this->me_id}','{$result}','{$testo_sussurro}')");
+        DB::queryStmt(
+            "INSERT INTO esiti_risposte_risultati(esito,personaggio,risultato,testo) 
+                VALUES(:id_answer,:me,:result,:testo)",
+            [
+                'id_answer' => $id_answer,
+                'me' => $this->me_id,
+                'result' => $result,
+                'testo' => $testo_sussurro,
+            ]);
 
         return ['response' => true, 'error' => ''];
     }
@@ -593,12 +675,18 @@ class Esiti extends BaseClass
      * @note Controlla se un esito ha nuove risposte
      * @param int $id
      * @return int
+     * @throws Throwable
      */
     public function haveNewResponse(int $id): int
     {
-        $new = DB::query("SELECT count(esiti_risposte.id) as tot FROM esiti_risposte 
-                    LEFT JOIN esiti_risposte_letture ON (esiti_risposte_letture.esito = esiti_risposte.id AND esiti_risposte_letture.personaggio = '{$this->me_id}')
-                    WHERE esiti_risposte.esito = {$id} AND esiti_risposte_letture.id IS NULL");
+        $new = DB::queryStmt("SELECT count(esiti_risposte.id) as tot FROM esiti_risposte 
+                    LEFT JOIN esiti_risposte_letture ON (esiti_risposte_letture.esito = esiti_risposte.id AND esiti_risposte_letture.personaggio = :me)
+                    WHERE esiti_risposte.esito = :id AND esiti_risposte_letture.id IS NULL",
+            [
+                'id' => $id,
+                'me' => $this->me_id,
+            ]
+        );
 
         return Filters::int($new['tot']);
     }
@@ -607,13 +695,13 @@ class Esiti extends BaseClass
      * @fn esitiList
      * @note Render html della lista degli esiti
      * @return string
+     * @throws Throwable
      */
     public function esitiListPLayer(): string
     {
         $list = $this->getAllEsitoPlayer($this->me_id, 'esiti.*', 'ORDER BY closed ASC,data ASC');
         return Template::getInstance()->startTemplate()->renderTable(
             'gestione/esiti/list',
-
             $this->renderEsitiList($list, 'servizi')
         );
     }
@@ -622,6 +710,7 @@ class Esiti extends BaseClass
      * @fn esitiListManagement
      * @note Render html della lista degli esiti
      * @return string
+     * @throws Throwable
      */
     public function esitiListManagement(): string
     {
@@ -639,11 +728,12 @@ class Esiti extends BaseClass
      * @param object $list
      * @param string $page
      * @return array
+     * @throws Throwable
      */
     public function renderEsitiList(object $list, string $page): array
     {
         $row_data = [];
-        $path = ($page == 'servizi') ? 'servizi_esiti' : 'gestione_esiti';
+        $path = ($page == 'servizi') ? 'servizi/esiti/esiti_index' : 'gestione/esiti/esiti_index';
         $backlink = ($page == 'servizi') ? 'uffici' : 'gestione';
 
         foreach ( $list as $row ) {
@@ -661,7 +751,7 @@ class Esiti extends BaseClass
             $array = [
                 'id' => $id,
                 'author' => Personaggio::nameFromId(Filters::in($row['autore'])),
-                'totale_esiti' => $this->getEsitoAnswesNum($id),
+                'totale_esiti' => $this->getEsitoAnswersNum($id),
                 'new_response' => $this->haveNewResponse($id),
                 'closed' => Filters::int($row['closed']),
                 'closed_cls' => Filters::bool($row['closed']) ? 'closed' : '',
@@ -698,35 +788,17 @@ class Esiti extends BaseClass
             'links' => $links,
             'path' => $path,
             'page' => $page,
-            'footer_text' => $footer_text,
         ];
     }
 
     /**
      * @fn htmlCDAdd
-     * @note Aggiunge un input alla pagina per aggiungere una cd
+     * @note Aggiunge un form alla pagina per aggiungere una cd
      * @return array
      */
     public function htmlCDAdd(): array
     {
-        $html = '';
-
-        $html .= "<div class='single_cd' > ";
-
-        $html .= "<div class='single_input' > ";
-        $html .= "<div class='label' > CD</div > ";
-        $html .= "<input type = 'number' name = 'add_cd[cd][]' > ";
-        $html .= "</div > ";
-
-        $html .= "<div class='single_input' > ";
-        $html .= "<div class='label' > Testo</div > ";
-        $html .= "<textarea name = 'add_cd[text][]' ></textarea > ";
-        $html .= "</div > ";
-
-        $html .= "</div > ";
-
-        return ['InputHtml' => $html];
-
+        return ['InputHtml' => Template::getInstance()->startTemplate()->render('esiti/form', [])];
     }
 
     /*** NEW ESITO ***/
@@ -736,6 +808,7 @@ class Esiti extends BaseClass
      * @note Inserisce un nuovo esito da parte del master
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function newEsitoManagement(array $post): array
     {
@@ -749,12 +822,28 @@ class Esiti extends BaseClass
             $abilita = Filters::int($post['abilita']);
             $chat = Filters::int($post['chat']);
 
-            DB::query("INSERT INTO esiti(titolo, autore) VALUES('{$titolo}', '{$this->me_id}')");
+            DB::queryStmt(
+                "INSERT INTO esiti(titolo, autore) VALUES(:titolo, :me)",
+                [
+                    'titolo' => $titolo,
+                    'me' => $this->me_id,
+                ]
+            );
 
             $last_id = $this->getLastEsitoId();
 
-            DB::query("INSERT INTO esiti_risposte(esito, autore, contenuto, dice_face, dice_num, abilita, chat)
-                        VALUES('{$last_id}', '{$this->me_id}', '{$ms}', '{$dice_face}', '{$dice_num}', '{$abilita}', '{$chat}')  ");
+            DB::queryStmt(
+                "INSERT INTO esiti_risposte(esito, autore, contenuto, dice_num, dice_face, abilita, chat) VALUES(:esito, :me, :contenuto, :dice_num, :dice_face, :abilita, :chat)",
+                [
+                    'esito' => $last_id,
+                    'me' => $this->me_id,
+                    'contenuto' => $ms,
+                    'dice_num' => $dice_num,
+                    'dice_face' => $dice_face,
+                    'abilita' => $abilita,
+                    'chat' => $chat,
+                ]
+            );
 
             if ( !empty($post['add_cd']) ) {
                 $last_answer = $this->getLastAnswerId();
@@ -782,6 +871,7 @@ class Esiti extends BaseClass
      * @note Inserisce un nuovo esito da parte del master
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function newEsitoPlayer(array $post): array
     {
@@ -790,14 +880,33 @@ class Esiti extends BaseClass
             $titolo = Filters::in($post['titolo']);
             $ms = Filters::in($post['contenuto']);
 
-            DB::query("INSERT INTO esiti(titolo, autore) VALUES('{$titolo}', '{$this->me_id}')");
+            DB::queryStmt(
+                "INSERT INTO esiti(titolo, autore) VALUES(:titolo, :me)",
+                [
+                    'titolo' => $titolo,
+                    'me' => $this->me_id,
+                ]
+            );
 
             $last_id = $this->getLastEsitoId();
 
-            DB::query("INSERT INTO esiti_risposte(esito, autore, contenuto)
-                        VALUES('{$last_id}', '{$this->me_id}', '{$ms}')  ");
-            DB::query("INSERT INTO esiti_personaggio(personaggio, esito, assegnato_da)
-                        VALUES('{$this->me_id}', '{$last_id}', '{$this->me_id}')  ");
+            DB::queryStmt(
+                "INSERT INTO esiti_risposte(esito, autore, contenuto) VALUES(:esito, :me, :contenuto)",
+                [
+                    'esito' => $last_id,
+                    'me' => $this->me_id,
+                    'contenuto' => $ms,
+                ]
+            );
+
+            DB::queryStmt(
+                "INSERT INTO esiti_personaggio(personaggio, esito, assegnato_da) VALUES(:pg,:esito, :me)",
+                [
+                    'esito' => $last_id,
+                    'me' => $this->me_id,
+                    'pg' => $this->me_id,
+                ]
+            );
 
             return ['response' => true, 'mex' => 'Esito creato con successo.'];
         } else {
@@ -812,6 +921,7 @@ class Esiti extends BaseClass
      * @note Render html della lista delle risposte ad un esito
      * @param int $id
      * @return string
+     * @throws Throwable
      */
     public function renderEsitoAnswers(int $id): string
     {
@@ -821,42 +931,27 @@ class Esiti extends BaseClass
         if ( $this->esitoViewPermission($id) ) {
 
             $list = $this->getEsitoAllAnswers($id);
+            $data = [];
 
             foreach ( $list as $answer ) {
+                $to_push = [];
 
                 $id_answer = Filters::int($answer['id']);
                 $this->readAnswer($id_answer);
 
                 $autore = Filters::int($answer['autore']);
-                $mine = ($autore == $this->me_id) ? 'mine' : 'other';
-                $dice_face = Filters::int($answer['dice_face']);
                 $dice_num = Filters::int($answer['dice_num']);
                 $id_abi = Filters::int($answer['abilita']);
 
-                $html .= "<div class='single_answer {$mine}' > ";
-
-                $html .= "<div class='text' > " . Filters::text($answer['contenuto']) . "</div > ";
-
                 if ( ($dice_num > 0) && $this->esitiTiriEnabled() ) {
 
-                    $abi = Abilita::getInstance();
-                    $abi_data = $abi->getAbilita($id_abi, 'nome');
-                    $abi_name = Filters::out($abi_data['nome']);
+                    $abi_data = Abilita::getInstance()->getAbilita($id_abi, 'nome');
 
                     $chat = new Chat();
                     $chat_id = Filters::int($answer['chat']);
-                    $chat_name = $chat->getChatData($chat_id, 'nome')['nome'];
-
-                    $html .= "<div class='dice' > ";
-                    $html .= "<span > Sono richiesti {
-                $dice_num} dadi da {
-                $dice_face} su {
-                $abi_name} in chat: <a href = '/main.php?dir={$chat_id}' >{
-                $chat_name}</a > . </span > ";
-                    $html .= "</div > ";
-
                     $results = $this->getAnswerResults($id_answer);
 
+                    $lanciati = [];
                     foreach ( $results as $result ) {
 
                         $pg = Filters::int($result['personaggio']);
@@ -865,26 +960,34 @@ class Esiti extends BaseClass
                         $res_num = Filters::int($result['risultato']);
 
                         if ( $this->esitoResultPermission($id) || ($pg == $this->me_id) ) {
-                            $html .= "<div class='dice_result' > {
-                $pg_name} : <span >{
-                $res_num}</span > <div class='internal_text' > {
-                $res_text}</div > </div > ";
+                            $lanciati[] = [
+                                'pg' => $pg_name,
+                                'res_text' => $res_text,
+                                'res_num' => $res_num,
+                            ];
                         }
                     }
 
+                    $to_push['abi_name'] = Filters::out($abi_data['nome']);
+                    $to_push['chat_id'] = $chat_id;
+                    $to_push['chat_name'] = $chat->getChatData($chat_id, 'nome')['nome'];
+                    $to_push['dice_enabled'] = true;
+                    $to_push['lanciati'] = $lanciati;
                 }
 
-                $html .= "<div class='sub_text' > ";
-                $html .= "<span class='author' > " . Personaggio::nameFromId($autore) . "</span > -";
-                $html .= "<span class='date' > " . Filters::date($answer['data'], 'H:i d/m/Y') . "</span > ";
-                $html .= "</div > ";
+                $to_push['mine'] = ($autore == $this->me_id) ? 'mine' : 'other';
+                $to_push['contenuto'] = Filters::text($answer['contenuto']);
+                $to_push['dice_num'] = Filters::int($answer['dice_num']);
+                $to_push['dice_face'] = Filters::int($answer['dice_face']);
+                $to_push['autore'] = Personaggio::nameFromId($autore);
+                $to_push['date'] = CarbonWrapper::format($answer['data'], 'd/m/Y H:i');
 
-                $html .= "</div > ";
+                $data[] = $to_push;
 
             }
         }
 
-        return $html;
+        return Template::getInstance()->startTemplate()->render('esiti/single_esito', ['data' => $data]);
     }
 
     /**
@@ -892,11 +995,19 @@ class Esiti extends BaseClass
      * @note Segna le risposte di un estio come lette dal master
      * @param int $id
      * @return void
+     * @throws Throwable
      */
     public function readAnswer(int $id): void
     {
         if ( !$this->esitoReaded($id, $this->me_id) ) {
-            DB::query("INSERT INTO esiti_risposte_letture(esito, personaggio) VALUES('{$id}', '{$this->me_id}')");
+
+            DB::queryStmt(
+                "INSERT INTO esiti_letti(esito, personaggio) VALUES(:esito, :me)",
+                [
+                    'esito' => $id,
+                    'me' => $this->me_id,
+                ]
+            );
         }
     }
 
@@ -905,6 +1016,7 @@ class Esiti extends BaseClass
      * @note Inserisce una nuova risposta in un esito
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function newAnswer(array $post): array
     {
@@ -921,8 +1033,18 @@ class Esiti extends BaseClass
             $abilita = ($perm_dadi) ? Filters::int($post['abilita']) : 0;
             $chat = ($perm_dadi) ? Filters::int($post['chat']) : 0;
 
-            DB::query("INSERT INTO esiti_risposte(esito, autore, contenuto, dice_face, dice_num, abilita, chat)
-                        VALUES('{$id}', '{$this->me_id}', '{$contenuto}', '{$dice_face}', '{$dice_num}', '{$abilita}', '{$chat}')  ");
+            DB::queryStmt(
+                "INSERT INTO esiti_risposte(esito, autore, contenuto, dice_num, dice_face, abilita, chat) VALUES(:esito, :me, :contenuto, :dice_num, :dice_face, :abilita, :chat)",
+                [
+                    'esito' => $id,
+                    'me' => $this->me_id,
+                    'contenuto' => $contenuto,
+                    'dice_num' => $dice_num,
+                    'dice_face' => $dice_face,
+                    'abilita' => $abilita,
+                    'chat' => $chat,
+                ]
+            );
 
             if ( !empty($post['add_cd']) ) {
                 $last_id = $this->getLastAnswerId();
@@ -953,6 +1075,7 @@ class Esiti extends BaseClass
      * @param int $id
      * @param array $cds
      * @return void
+     * @throws Throwable
      */
     public function addCD(int $id, array $cds = []): void
     {
@@ -965,7 +1088,15 @@ class Esiti extends BaseClass
             $testo = Filters::in($cds['text'][$index]);
 
             if ( $cd > 0 ) {
-                DB::query("INSERT INTO esiti_risposte_cd(esito, cd, testo) VALUES('{$id}', '{$cd}', '{$testo}')");
+
+                DB::queryStmt(
+                    "INSERT INTO esiti_risposte_cd(esito, cd, testo) VALUES(:esito, :cd, :testo)",
+                    [
+                        'esito' => $id,
+                        'cd' => $cd,
+                        'testo' => $testo,
+                    ]
+                );
             }
         }
 
@@ -978,36 +1109,37 @@ class Esiti extends BaseClass
      * @note Render html dei membri di un esito
      * @param int $id
      * @return string
+     * @throws Throwable
      */
     public function membersList(int $id): string
     {
 
-        $html = '<div class="tr header">
-            <div class="td">Membro</div>
-            <div class="td">Controlli</div>
-        </div>';
+        $cells = [
+            'Membro',
+            'Comandi',
+        ];
+
         $list = $this->getAllPlayerEsito($id);
+        $data = [];
 
         foreach ( $list as $row ) {
             $id_row = Filters::int($row['id']);
 
-            $html .= "<div class='tr' > ";
-            $html .= "<div class='td' > " . Personaggio::nameFromId(Filters::int($row['personaggio'])) . "</div > ";
-            $html .= "<div class='td' > ";
-
-            $html .= "<form action='gestione/esiti/esiti_ajax.php' class='delete_member_form ajax_form' data-callback='refreshMembers'>
-                        <input type = 'hidden' name = 'action' value = 'delete_member' >
-                        <input type = 'hidden' name = 'id' value = '{$id_row}' >
-                        <input type = 'hidden' name = 'id_esito' value = '{$id}' >
-                        <button type = 'submit' title = 'Elimina membro' ><i class='fas fa-user-minus' ></i ></button >
-                        </form > ";
-
-            $html .= "</div > ";
-            $html .= "</div > ";
+            $data[] = [
+                'id' => $id,
+                'id_row' => $id_row,
+                'name' => Personaggio::nameFromId($row['personaggio']),
+            ];
 
         }
 
-        return $html;
+        return Template::getInstance()->startTemplate()->renderTable('esiti/members',
+            [
+                'body_rows' => $data,
+                'cells' => $cells,
+                'table_title' => 'Lista Esiti',
+            ]
+        );
     }
 
     /**
@@ -1015,6 +1147,7 @@ class Esiti extends BaseClass
      * @note Aggiunge un membro ad un esito
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function addMember(array $post): array
     {
@@ -1027,7 +1160,14 @@ class Esiti extends BaseClass
 
             if ( !$this->esitoPlayerExist($id, $pg) ) {
 
-                DB::query("INSERT INTO esiti_personaggio(esito, personaggio, assegnato_da) VALUE('{$id}', '{$pg}', '{$this->me_id}')");
+                DB::queryStmt(
+                    "INSERT INTO esiti_personaggio(esito, personaggio, assegnato_da) VALUES(:esito, :pg,:me)",
+                    [
+                        'esito' => $id,
+                        'pg' => $pg,
+                        'me' => $this->me_id,
+                    ]
+                );
 
                 return [
                     'response' => true,
@@ -1061,6 +1201,7 @@ class Esiti extends BaseClass
      * @note Rimuove un membro da un esito
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function deleteMember(array $post): array
     {
@@ -1070,7 +1211,12 @@ class Esiti extends BaseClass
 
         if ( $this->esitoMembersPermission($id_esito) ) {
 
-            DB::query("DELETE FROM esiti_personaggio WHERE id = '{$id}' LIMIT 1");
+            DB::queryStmt(
+                "DELETE FROM esiti_personaggio WHERE id = :id LIMIT 1",
+                [
+                    'id' => $id,
+                ]
+            );
 
             return [
                 'response' => true,
@@ -1097,20 +1243,13 @@ class Esiti extends BaseClass
      * @fn esitiManagersList
      * @note Estrae la lista di personaggi che hanno i permessi per gestire gli esiti
      * @return string
+     * @throws Throwable
      */
     public function esitiManagersList(): string
     {
 
-        $html = '';
         $list = Permissions::getPgListPermissions(['MANAGE_ESITI']);
-
-        foreach ( $list as $pg ) {
-            $name = Personaggio::nameFromId($pg);
-            $html .= " < option value = '{$pg}' >{
-                $name}</option > ";
-        }
-
-        return $html;
+        return Template::getInstance()->startTemplate()->renderSelect('id','nome','',$list,'Seleziona un master');
     }
 
     public function setMaster($post)
@@ -1122,7 +1261,13 @@ class Esiti extends BaseClass
 
             $pg = Filters::int($post['personaggio']);
 
-            DB::query("UPDATE esiti SET master = '{$pg}' WHERE id = '{$id}' LIMIT 1");
+            DB::queryStmt(
+                "UPDATE esiti SET master = :pg WHERE id = :id LIMIT 1",
+                [
+                    'pg' => $pg,
+                    'id' => $id,
+                ]
+            );
 
             return [
                 'response' => true,
@@ -1150,6 +1295,7 @@ class Esiti extends BaseClass
      * @note Riapertura di un esito
      * @param int $id
      * @return array
+     * @throws Throwable
      */
     public function esitoOpen(int $id): array
     {
@@ -1157,7 +1303,12 @@ class Esiti extends BaseClass
 
         if ( $this->esitiManageAll() ) {
 
-            DB::query("UPDATE esiti SET closed = 0 WHERE id = '{$id}' LIMIT 1");
+            DB::queryStmt(
+                "UPDATE esiti SET closed = 0 WHERE id = :id LIMIT 1",
+                [
+                    'id' => $id,
+                ]
+            );
 
             return [
                 'response' => true,
@@ -1183,6 +1334,7 @@ class Esiti extends BaseClass
      * @note Chiusura di un esito
      * @param int $id
      * @return array
+     * @throws Throwable
      */
     public function esitoClose(int $id): array
     {
@@ -1190,7 +1342,12 @@ class Esiti extends BaseClass
 
         if ( $this->esitoClosePermission($id) ) {
 
-            DB::query("UPDATE esiti SET closed = 1 WHERE id = '{$id}' LIMIT 1");
+            DB::queryStmt(
+                "UPDATE esiti SET closed = 1 WHERE id = :id LIMIT 1",
+                [
+                    'id' => $id,
+                ]
+            );
 
             return [
                 'response' => true,

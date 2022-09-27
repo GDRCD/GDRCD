@@ -166,6 +166,7 @@ class Permissions extends BaseClass
 
         foreach ( $pg_list as $pg ) {
             $pg_id = Filters::int($pg['id']);
+            $pg_name = Filters::out($pg['nome']);
 
             if ( !in_array($pg_id, $pg_array) ) {
                 foreach ( $permissions as $permission ) {
@@ -173,7 +174,7 @@ class Permissions extends BaseClass
                     $permission = Filters::in($permission);
 
                     if ( self::permission($permission, $pg_id) ) {
-                        array_push($pg_array, $pg_id);
+                        $pg_array[] = ['id' => $pg_id, 'nome' => $pg_name];
                     }
                 }
             }
