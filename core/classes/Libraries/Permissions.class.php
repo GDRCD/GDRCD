@@ -9,12 +9,15 @@ class Permissions extends BaseClass
      * @fn extractPermissionGroups
      * @note Estrae i gruppi di permesso del personaggio specificato
      * @param int $pg
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function extractPermissionGroups(int $pg)
+    public function extractPermissionGroups(int $pg): DBQueryInterface
     {
         $pg = Filters::int($pg);
-        return DB::query("SELECT group_id FROM permessi_group_personaggio WHERE personaggio='{$pg}' ", 'result');
+        return DB::queryStmt("SELECT group_id FROM permessi_group_personaggio WHERE personaggio=:pg ", [
+            'pg' => $pg,
+        ]);
     }
 
     /**
@@ -22,11 +25,14 @@ class Permissions extends BaseClass
      * @note Controlla se il permesso specificato esiste
      * @param string $val
      * @return bool
+     * @throws Throwable
      */
     public static function permissionExist(string $val): bool
     {
-        $contr = DB::query("SELECT count(id) as tot FROM permessi_custom WHERE permission_name='{$val}' LIMIT 1");
-        return ($contr['tot'] > 0);
+        $contr = DB::queryStmt("SELECT * FROM permessi_custom WHERE permission_name=:val LIMIT 1", [
+            'val' => $val,
+        ]);
+        return ($contr->getNumRows() > 0);
     }
 
     /**
@@ -35,11 +41,16 @@ class Permissions extends BaseClass
      * @param int $permission
      * @param int $group
      * @return bool
+     * @throws Throwable
      */
     public function permissionExistInGroup(int $permission, int $group): bool
     {
-        $contr = DB::query("SELECT count(id) as tot FROM permessi_group_assignment WHERE permission='{$permission}' AND group_id='{$group}' LIMIT 1");
-        return ($contr['tot'] > 0);
+        $contr = DB::queryStmt("SELECT * FROM permessi_group_assignment WHERE permission=:permission AND group_id=:group LIMIT 1",
+            [
+                'permission' => $permission,
+                'group' => $group,
+            ]);
+        return ($contr->getNumRows() > 0);
     }
 
     /**
@@ -48,11 +59,15 @@ class Permissions extends BaseClass
      * @param int $pg
      * @param int $permission
      * @return bool
+     * @throws Throwable
      */
     public function permissionExistInCharacter(int $pg, int $permission): bool
     {
-        $contr = DB::query("SELECT count(id) as tot FROM permessi_personaggio WHERE permission='{$permission}' AND personaggio='{$pg}' LIMIT 1");
-        return ($contr['tot'] > 0);
+        $contr = DB::queryStmt("SELECT * FROM permessi_personaggio WHERE permission=:permission AND personaggio=:pg LIMIT 1", [
+            'permission' => $permission,
+            'pg' => $pg,
+        ]);
+        return ($contr->getNumRows() > 0);
     }
 
     /**
@@ -60,24 +75,28 @@ class Permissions extends BaseClass
      * @note Estrae l'id del permesso testuale
      * @param string $val
      * @return int
+     * @throws Throwable
      */
     public function permissionId(string $val): int
     {
-        $contr = DB::query("SELECT id FROM permessi_custom WHERE permission_name='{$val}' LIMIT 1");
-        return $contr['id'];
+        $contr = DB::queryStmt("SELECT id FROM permessi_custom WHERE permission_name=:val LIMIT 1", [
+            'val' => $val,
+        ]);
+        return Filters::int($contr['id']);
     }
 
     /*** FUNZIONI ***/
 
     /**
      * @fn permission
-     * @note Controlla se il personaggio loggato ha il permesso specificato, il controllo viene effettuato:
+     * @note Controlla se il personaggio attuale ha il permesso specificato, il controllo viene effettuato:
      * - Nei permessi di gruppo
      * - Nei permessi specifici del pg
-     * - Se e' un superuser , ogni controllo e' true
+     * - Se è un superuser, ogni controllo è true
      * @param string $permission
      * @param int $pg
      * @return bool
+     * @throws Throwable
      */
     public static function permission(string $permission, int $pg = 0): bool
     {
@@ -106,11 +125,12 @@ class Permissions extends BaseClass
     /**
      * @fn permissionInGroups
      * @note Controlla che un permesso sia disponibile nei gruppi specificati
-     * @param $groups
+     * @param array|DBQueryInterface $groups
      * @param string $permission
      * @return bool
+     * @throws Throwable
      */
-    public function permissionInGroups($groups, string $permission): bool
+    public function permissionInGroups(array|DBQueryInterface $groups, string $permission): bool
     {
 
         $resp = false;
@@ -131,17 +151,20 @@ class Permissions extends BaseClass
     /**
      * @fn isSuperUser
      * @note Controlla se uno dei gruppi del pg bypassa qualsiasi blocco o permesso
-     * @param $groups
+     * @param array|DBQueryInterface $groups
      * @return bool
+     * @throws Throwable
      */
-    private function isSuperUser($groups)
+    private function isSuperUser(array|DBQueryInterface $groups): bool
     {
 
         $resp = false;
         foreach ( $groups as $group ) {
             $group_id = Filters::int($group['group_id']);
 
-            $data = DB::query("SELECT superuser FROM permessi_group WHERE id='{$group_id}' LIMIT 1");
+            $data = DB::queryStmt("SELECT superuser FROM permessi_group WHERE id=:group LIMIT 1",[
+                'group' => $group_id,
+            ]);
 
             if ( Filters::int($data['superuser']) ) {
                 $resp = true;
@@ -157,6 +180,7 @@ class Permissions extends BaseClass
      * @note Estrae tutti i personaggi che sono compresi nei permessi indicati, che siano di gruppo, persona o superuser
      * @param array $permissions
      * @return array
+     * @throws Throwable
      */
     public static function getPgListPermissions(array $permissions): array
     {
@@ -181,6 +205,5 @@ class Permissions extends BaseClass
         }
 
         return $pg_array;
-
     }
 }
