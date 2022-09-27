@@ -83,7 +83,7 @@
                 </div>
             </a>
 
-            <a href="/logout.php?>">
+            <a href="/logout.php">
                 <div class="single_menu">
                     Logout
                 </div>

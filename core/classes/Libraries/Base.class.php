@@ -2,12 +2,14 @@
 
 abstract class BaseClass
 {
-    public static mixed
+    public static
         $_instance;
 
     protected string
         $me,
-        $permission,
+        $permission;
+
+    protected array
         $parameters;
 
     protected int
