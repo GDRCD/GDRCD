@@ -12,16 +12,19 @@ class Functions extends BaseClass
      * @note Funzione di estrazione delle costanti dal db
      * @param string $name
      * @param bool $die_on_fail
-     * @return mixed
+     * @return string|bool
      * #TODO Rivedere die on fail
+     * @throws Throwable
      */
-    public static function get_constant(string $name, bool $die_on_fail = true)
+    public static function get_constant(string $name, bool $die_on_fail = true): string|bool
     {
 
         $name = Filters::in($name);
 
-        $search = DB::query("SELECT const_name,val FROM config WHERE const_name='{$name}'", 'result', $die_on_fail);
-        $num = DB::rowsNumber($search);
+        $search = DB::queryStmt("SELECT const_name,val FROM config WHERE const_name=:name", [
+            'name' => $name,
+        ]);
+        $num = $search->getNumRows();
 
         if ( $num == 0 ) {
             $message = "Costante {$name} inesistente nella tabella config.";
@@ -40,8 +43,7 @@ class Functions extends BaseClass
                 return false;
             }
         } else {
-            $row = DB::query($search, 'fetch', $die_on_fail);
-            return Filters::out($row['val']);
+            return Filters::out($search['val']);
         }
     }
 
@@ -50,22 +52,28 @@ class Functions extends BaseClass
      * @note Funzione di estrazione delle costanti dal db
      * @param string $name
      * @param mixed $val
-     * @return bool|void
+     * @return bool|null
+     * @throws Throwable
      */
-    public static function set_constant(string $name, $val)
+    public static function set_constant(string $name, mixed $val): ?bool
     {
 
         $name = gdrcd_filter('in', $name);
 
-        $search = gdrcd_query("SELECT const_name,val FROM config WHERE const_name='{$name}'", 'result');
-        $num = gdrcd_query($search, 'num_rows');
+        $search = DB::queryStmt("SELECT const_name,val FROM config WHERE const_name=:name", [
+            'name' => $name,
+        ]);
+        $num = $search->getNumRows();
 
         if ( $num == 0 ) {
             die("Costante {$name} inesistente nella tabella config.");
         } else if ( $num > 1 ) {
             die("Esistono più costanti con il nome '{$name}'. Correggere e riprovare.");
         } else {
-            DB::query("UPDATE config SET val = '{$val}' WHERE const_name='{$name}'");
+            DB::queryStmt("UPDATE config SET val = :val WHERE const_name=:name",[
+                'val' => $val,
+                'name' => $name,
+            ]);
             return true;
         }
     }
@@ -75,22 +83,16 @@ class Functions extends BaseClass
      * @note Estrae l'id del pg dal suo nome
      * @param string $pg
      * @return int
+     * @throws Throwable
      */
     public static function getPgId(string $pg): int
     {
         $pg = Filters::in($pg);
-        $data = DB::query("SELECT id FROM personaggio WHERE nome='{$pg}' LIMIT 1");
+        $data = DB::queryStmt("SELECT id FROM personaggio WHERE nome=:nome LIMIT 1",
+        [
+            'nome' => $pg,
+        ]);
         return Filters::int($data['id']);
-    }
-
-    /**
-     * @fn getPermission
-     * @note Estrae i permessi del personaggio specificato
-     * @return int
-     */
-    public function getPermission(): int
-    {
-        return $this->permission;
     }
 
     /**
@@ -118,13 +120,14 @@ class Functions extends BaseClass
      * @note Crea la select dei personaggi in land
      * @param int $selected
      * @return string
+     * @throws Throwable
      */
     public static function getPgList(int $selected = 0): string
     {
 
         $html = '';
         $selected = Filters::int($selected);
-        $data = DB::query("SELECT id,nome FROM personaggio WHERE 1 ORDER BY nome", 'result');
+        $data = DB::queryStmt("SELECT id,nome FROM personaggio WHERE 1 ORDER BY nome", []);
 
         foreach ( $data as $row ) {
             $id = Filters::int($row['id']);
@@ -140,49 +143,34 @@ class Functions extends BaseClass
     /**
      * @fn getAllPgs
      * @note Estrae la lista di tutti i pg
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public static function getAllPgs()
+    public static function getAllPgs(): DBQueryInterface
     {
-        return DB::query("SELECT id,nome FROM personaggio WHERE 1 ORDER BY nome", 'result');
+        return DB::queryStmt("SELECT id,nome FROM personaggio WHERE 1 ORDER BY nome", []);
     }
 
     /**
      * @fn redirect
      * @note Funzione di redirect della pagina
      * @param string $url
-     * @param int|bool $tempo
+     * @param bool|int $tempo
      * @return void
      */
-    public static function redirect(string $url, $tempo = false): void
+    public static function redirect(string $url, bool|int $tempo = false): void
     {
-        if ( !headers_sent() && $tempo == false ) {
+        if ( !headers_sent() && !$tempo ) {
             header('Location:' . $url);
-        } else if ( !headers_sent() && $tempo != false ) {
+        } else if ( !headers_sent() && $tempo ) {
             header('Refresh:' . $tempo . ';' . $url);
         } else {
-            if ( $tempo == false ) {
+            if ( !$tempo ) {
                 $tempo = 0;
             }
             echo "<meta http-equiv=\"refresh\" content=\"" . $tempo . ";" . $url . "\">";
         }
 
         exit();
-    }
-
-    /**
-     * @fn dateDifference
-     * @note Calcolo differenza di ore fra la data/ora attuale e quella scelta
-     * @param string $date_1 @format 'YYYY-MM-DD H:i:s'
-     * @param string $date_2 @format 'YYYY-MM-DD H:i:s'
-     * @param string $format
-     * @return string
-     */
-    public static function dateDifference(string $date_1, string $date_2, string $format = '%a')
-    {
-        $datetime1 = date_create($date_1);
-        $datetime2 = date_create($date_2);
-        $interval = date_diff($datetime1, $datetime2);
-        return $interval->format($format);
     }
 }
