@@ -3,15 +3,6 @@
 class Oggetti extends BaseClass
 {
 
-    /**
-     * @fn __construct
-     * @note Class constructor
-     */
-    protected function __construct()
-    {
-        parent::__construct();
-    }
-
     /*** OGGETTO TABLE HELPERS ***/
 
     /**
@@ -19,22 +10,26 @@ class Oggetti extends BaseClass
      * @note Estrae i dati di un singolo oggetto
      * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getObject(int $id, string $val = '*')
+    public function getObject(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM oggetto WHERE id='{$id}' LIMIT 1");
+        return DB::queryStmt("SELECT {$val} FROM oggetto WHERE id=:id LIMIT 1",[
+            'id' => $id
+        ]);
     }
 
     /**
      * @fn getAllObjects
      * @note Estrae la lista di tutti gli oggetti esistenti
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    private function getAllObjects(string $val = '*')
+    private function getAllObjects(string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM oggetto WHERE 1 ORDER BY nome", 'result');
+        return DB::queryStmt("SELECT {$val} FROM oggetto WHERE 1 ORDER BY nome", []);
     }
 
     /**
@@ -42,11 +37,14 @@ class Oggetti extends BaseClass
      * @note Estrae tutti gli oggetti di un tipo specifico
      * @param int $type
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    private function getObjectsByType(int $type, string $val = '*')
+    private function getObjectsByType(int $type, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM oggetto WHERE tipo='{$type}' ORDER BY nome", 'result');
+        return DB::queryStmt("SELECT {$val} FROM oggetto WHERE tipo=:type ORDER BY nome", [
+            'type' => $type
+        ]);
     }
 
     /*** OGGETTO_TIPO TABLE HELPERS ***/
@@ -56,22 +54,26 @@ class Oggetti extends BaseClass
      * @note Estrae i dati di una tipologia di oggetto
      * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getObjectType(int $id, string $val = '*')
+    public function getObjectType(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM oggetto_tipo WHERE id='{$id}' LIMIT 1");
+        return DB::queryStmt("SELECT {$val} FROM oggetto_tipo WHERE id=:id LIMIT 1",[
+            'id' => $id
+        ]);
     }
 
     /**
      * @fn getAllObjectTypes
      * @note Estrae tutte le tipologia di oggetto esistenti
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllObjectTypes(string $val = '*')
+    public function getAllObjectTypes(string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM oggetto_tipo WHERE 1 ORDER BY nome", 'result');
+        return DB::queryStmt("SELECT {$val} FROM oggetto_tipo WHERE 1 ORDER BY nome", []);
     }
 
     /*** OGGETTO_POSIZIONE TABLE HELPERS ***/
@@ -81,22 +83,26 @@ class Oggetti extends BaseClass
      * @note Estrae i dati di una posizione oggetto
      * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getObjectPosition(int $id, string $val = '*')
+    public function getObjectPosition(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM oggetto_posizioni WHERE id='{$id}' LIMIT 1");
+        return DB::queryStmt("SELECT {$val} FROM oggetto_posizioni WHERE id=:id LIMIT 1",[
+            'id' => $id
+        ]);
     }
 
     /**
      * @fn getAllObjectPositions
      * @note Estrae tutte le posizioni di oggetto
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllObjectPositions(string $val = '*')
+    public function getAllObjectPositions(string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM oggetto_posizioni WHERE 1 ORDER BY nome", 'result');
+        return DB::queryStmt("SELECT {$val} FROM oggetto_posizioni WHERE 1 ORDER BY nome", []);
     }
 
     /*** TABLES CONTROLS ***/
@@ -106,11 +112,14 @@ class Oggetti extends BaseClass
      * @note Controlla se un oggetto esiste
      * @param int $id
      * @return bool
+     * @throws Throwable
      */
     public function existObject(int $id): bool
     {
-        $data = DB::query("SELECT * FROM oggetto WHERE id='{$id}' LIMIT 1");
-        return (DB::rowsNumber($data) > 0);
+        $data = DB::queryStmt("SELECT * FROM oggetto WHERE id=:id LIMIT 1",[
+            'id' => $id
+        ]);
+        return ($data->getNumRows() > 0);
     }
 
     /**
@@ -118,10 +127,13 @@ class Oggetti extends BaseClass
      * @note Controlla se esiste una tipologia di oggetto
      * @param int $id
      * @return bool
+     * @throws Throwable
      */
     public function existObjectType(int $id): bool
     {
-        $data = DB::query("SELECT * FROM oggetto_tipo WHERE id='{$id}' LIMIT 1");
+        $data = DB::queryStmt("SELECT * FROM oggetto_tipo WHERE id=:id LIMIT 1",[
+            'id' => $id
+        ]);
         return (DB::rowsNumber($data) > 0);
     }
 
@@ -164,6 +176,7 @@ class Oggetti extends BaseClass
      * @note Estrae i dati di un oggetto alla modifica
      * @param array $post
      * @return array|void
+     * @throws Throwable
      */
     public function ajaxObjectData(array $post)
     {
@@ -190,6 +203,7 @@ class Oggetti extends BaseClass
      * @note Estrae i dati di una tipologia oggetto alla modifica
      * @param array $post
      * @return array|void
+     * @throws Throwable
      */
     public function ajaxObjectTypeData(array $post)
     {
@@ -212,6 +226,7 @@ class Oggetti extends BaseClass
      * @note Estrae i dati di una posizione oggetto alla modifica
      * @param array $post
      * @return array|void
+     * @throws Throwable
      */
     public function ajaxObjectPositionData(array $post)
     {
@@ -237,11 +252,12 @@ class Oggetti extends BaseClass
      * @note Crea le select delle tipologie oggetto
      * @param int $selected
      * @return string
+     * @throws Throwable
      */
-    public function listObjectTypes(): string
+    public function listObjectTypes(int $selected = 0): string
     {
         $list = $this->getAllObjectTypes('id,nome');
-        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $list);
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', $selected, $list);
     }
 
     /**
@@ -249,11 +265,12 @@ class Oggetti extends BaseClass
      * @note Crea le select delle posizioni oggetto
      * @param int $selected
      * @return string
+     * @throws Throwable
      */
-    public function listObjectPositions(): string
+    public function listObjectPositions(int $selected = 0): string
     {
         $list = $this->getAllObjectPositions('id,nome');
-        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $list);
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', $selected, $list);
     }
 
     /**
@@ -261,6 +278,7 @@ class Oggetti extends BaseClass
      * @note Crea le select degli oggetti
      * @param int $selected
      * @return string
+     * @throws Throwable
      */
     public function listObjects(int $selected = 0): string
     {
@@ -276,13 +294,18 @@ class Oggetti extends BaseClass
      * @param int $obj
      * @param int $pg
      * @return void
+     * @throws Throwable
      */
     public static function addObjectToPg(int $obj, int $pg): void
     {
         $obj_data = Oggetti::getInstance()->getObject($obj, 'cariche');
         $cariche = Filters::int($obj_data['cariche']);
 
-        DB::query("INSERT INTO personaggio_oggetto(personaggio, oggetto, cariche) VALUES('{$pg}','{$obj}','{$cariche}') ");
+        DB::queryStmt("INSERT INTO personaggio_oggetto(oggetto,personaggio,cariche) VALUES (:obj,:pg,:cariche)",[
+            'obj' => $obj,
+            'personaggio' => $pg,
+            'cariche' => $cariche
+        ]);
     }
 
     /**
@@ -291,10 +314,14 @@ class Oggetti extends BaseClass
      * @param int $obj
      * @param int $pg
      * @return void
+     * @throws Throwable
      */
     public static function removeObjectFromPg(int $obj, int $pg): void
     {
-        DB::query("DELETE FROM personaggio_oggetto WHERE id='{$obj}' AND personaggio='{$pg}' ");
+        DB::queryStmt("DELETE FROM personaggio_oggetto WHERE id = :obj AND personaggio = :pg",[
+            'obj' => $obj,
+            'pg' => $pg
+        ]);
     }
 
     /*** MANAGEMENT FUNCTIONS - OBJECTS **/
@@ -304,6 +331,7 @@ class Oggetti extends BaseClass
      * @note Inserimento oggetto
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function insertObject(array $post): array
     {
@@ -318,8 +346,15 @@ class Oggetti extends BaseClass
             $cariche = Filters::int($post['cariche']);
             $creato_da = Filters::int($this->me_id);
 
-            DB::query("INSERT INTO oggetto(tipo, nome, descrizione, immagine, indossabile, cariche,creatore_da) 
-                            VALUES('{$tipo}','{$nome}','{$descrizione}','{$immagine}','{$indossabile}','{$cariche}','{$creato_da}')");
+            DB::queryStmt("INSERT INTO oggetto(tipo,nome,descrizione,immagine,indossabile,cariche,creato_da) VALUES (:tipo,:nome,:descrizione,:immagine,:indossabile,:cariche,:creato_da)",[
+                'tipo' => $tipo,
+                'nome' => $nome,
+                'descrizione' => $descrizione,
+                'immagine' => $immagine,
+                'indossabile' => $indossabile,
+                'cariche' => $cariche,
+                'creato_da' => $creato_da
+            ]);
 
             return [
                 'response' => true,
@@ -343,6 +378,7 @@ class Oggetti extends BaseClass
      * @note Modifica oggetto
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function editObject(array $post): array
     {
@@ -357,10 +393,15 @@ class Oggetti extends BaseClass
             $indossabile = Filters::checkbox($post['indossabile']);
             $cariche = Filters::int($post['cariche']);
 
-            DB::query("UPDATE oggetto 
-                            SET tipo='{$tipo}',nome='{$nome}',descrizione='{$descrizione}',immagine='{$immagine}',
-                                indossabile='{$indossabile}',cariche='{$cariche}'
-                            WHERE id='{$id}' LIMIT 1");
+            DB::queryStmt("UPDATE oggetto SET tipo = :tipo, nome = :nome, descrizione = :descrizione, immagine = :immagine, indossabile = :indossabile, cariche = :cariche WHERE id = :id",[
+                'id' => $id,
+                'tipo' => $tipo,
+                'nome' => $nome,
+                'descrizione' => $descrizione,
+                'immagine' => $immagine,
+                'indossabile' => $indossabile,
+                'cariche' => $cariche
+            ]);
 
             return [
                 'response' => true,
@@ -384,6 +425,7 @@ class Oggetti extends BaseClass
      * @note Eliminazione oggetto
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function deleteObject(array $post): array
     {
@@ -392,7 +434,9 @@ class Oggetti extends BaseClass
 
             $id = Filters::int($post['oggetto']);
 
-            DB::query("DELETE FROM oggetto WHERE id='{$id}'");
+            DB::queryStmt("DELETE FROM oggetto WHERE id = :id",[
+                'id' => $id
+            ]);
 
             return [
                 'response' => true,
@@ -418,6 +462,7 @@ class Oggetti extends BaseClass
      * @note Inserimento tipologia oggetto
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function insertObjectType(array $post): array
     {
@@ -427,8 +472,10 @@ class Oggetti extends BaseClass
             $nome = Filters::in($post['nome']);
             $descrizione = Filters::in($post['descrizione']);
 
-            DB::query("INSERT INTO oggetto_tipo( nome, descrizione) 
-                            VALUES('{$nome}','{$descrizione}')");
+            DB::queryStmt("INSERT INTO oggetto_tipo(nome,descrizione) VALUES (:nome,:descrizione)",[
+                'nome' => $nome,
+                'descrizione' => $descrizione
+            ]);
 
             return [
                 'response' => true,
@@ -452,6 +499,7 @@ class Oggetti extends BaseClass
      * @note Modifica tipologia oggetto
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function editObjectType(array $post): array
     {
@@ -462,9 +510,11 @@ class Oggetti extends BaseClass
             $nome = Filters::in($post['nome']);
             $descrizione = Filters::in($post['descrizione']);
 
-            DB::query("UPDATE oggetto_tipo 
-                            SET nome='{$nome}',descrizione='{$descrizione}'
-                            WHERE id='{$id}' LIMIT 1");
+            DB::queryStmt("UPDATE oggetto_tipo SET nome = :nome, descrizione = :descrizione WHERE id = :id",[
+                'id' => $id,
+                'nome' => $nome,
+                'descrizione' => $descrizione
+            ]);
 
             return [
                 'response' => true,
@@ -488,6 +538,7 @@ class Oggetti extends BaseClass
      * @note Eliminazione tipologia oggetto
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function deleteObjectType(array $post): array
     {
@@ -496,7 +547,9 @@ class Oggetti extends BaseClass
 
             $id = Filters::int($post['tipo']);
 
-            DB::query("DELETE FROM oggetto_tipo WHERE id='{$id}'");
+            DB::queryStmt("DELETE FROM oggetto_tipo WHERE id = :id",[
+                'id' => $id
+            ]);
 
             return [
                 'response' => true,
@@ -522,6 +575,7 @@ class Oggetti extends BaseClass
      * @note Inserimento posizione oggetto
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function insertObjectPosition(array $post): array
     {
@@ -532,8 +586,11 @@ class Oggetti extends BaseClass
             $img = Filters::in($post['immagine']);
             $numero = Filters::int($post['numero']);
 
-            DB::query("INSERT INTO oggetto_posizioni( nome, immagine,numero) 
-                            VALUES('{$nome}','{$img}','{$numero}')");
+            DB::queryStmt("INSERT INTO oggetto_posizione(nome,immagine,numero) VALUES (:nome,:immagine,:numero)",[
+                'nome' => $nome,
+                'immagine' => $img,
+                'numero' => $numero
+            ]);
 
             return [
                 'response' => true,
@@ -557,6 +614,7 @@ class Oggetti extends BaseClass
      * @note Modifica posizione oggetto
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function editObjectPosition(array $post): array
     {
@@ -568,9 +626,12 @@ class Oggetti extends BaseClass
             $img = Filters::in($post['immagine']);
             $numero = Filters::int($post['numero']);
 
-            DB::query("UPDATE oggetto_posizioni 
-                            SET nome='{$nome}',immagine='{$img}',numero='{$numero}'
-                            WHERE id='{$id}' LIMIT 1");
+            DB::queryStmt("UPDATE oggetto_posizione SET nome = :nome, immagine = :immagine, numero = :numero WHERE id = :id",[
+                'id' => $id,
+                'nome' => $nome,
+                'immagine' => $img,
+                'numero' => $numero
+            ]);
 
             return [
                 'response' => true,
@@ -594,6 +655,7 @@ class Oggetti extends BaseClass
      * @note Eliminazione posizione oggetto
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function deleteObjectPosition(array $post): array
     {
@@ -602,7 +664,9 @@ class Oggetti extends BaseClass
 
             $id = Filters::int($post['id']);
 
-            DB::query("DELETE FROM oggetto_posizioni WHERE id='{$id}'");
+            DB::queryStmt("DELETE FROM oggetto_posizione WHERE id = :id",[
+                'id' => $id
+            ]);
 
             return [
                 'response' => true,
