@@ -144,7 +144,7 @@ class DbMigrationEngine extends BaseClass
      */
     public static function dbNeedsInstallation(): bool
     {
-        return (self::getTablesCountInDb() <= 1 && !self::dbConfigExist());//Controlliamo sempre 1 e non 0, per escludere la tabella delle  migration
+        return (self::getTablesCountInDb() <= 1 && !self::dbConfigExist());//Controlliamo sempre uno e non zero, per escludere la tabella delle migration
     }
 
     /**
@@ -245,7 +245,7 @@ class DbMigrationEngine extends BaseClass
      * @note Decide se eseguire il setup del sistema o se è già stato eseguito e quindi va solo aggiunta la tabella
      * Delle versioni saltando il setup
      * @param DbMigration[] $migrations
-     * @throws Exception
+     * @throws Throwable
      */
     private static function performDbSetup(array $migrations, &$lastApplied)
     {
@@ -285,10 +285,10 @@ class DbMigrationEngine extends BaseClass
             $lastAppliedIdx = 0;
             $targetIdx = -1;
             foreach ( $migrations as $k => $m ) {
-                if ( (int)$m->getMigrationId() == (int)$lastApplied['migration_id'] ) {
+                if ( (int)$m->getMigrationId() == $lastApplied['migration_id'] ) {
                     $lastAppliedIdx = $k;
                 }
-                if ( (int)$m->getMigrationId() == (int)$targetMigrationId ) {
+                if ( (int)$m->getMigrationId() == $targetMigrationId ) {
                     $targetIdx = $k;
                 }
                 if ( $targetIdx != -1 && $lastAppliedIdx != 0 ) {
