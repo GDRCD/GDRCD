@@ -2,11 +2,6 @@
 
 class Razze extends BaseClass
 {
-    protected function __construct()
-    {
-        parent::__construct();
-    }
-
 
     /**** TABLE HELPERS ****/
 
@@ -15,21 +10,26 @@ class Razze extends BaseClass
      * @note Ottieni una razza
      * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getRace(int $id, string $val = '*')
+    public function getRace(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM razze WHERE id='{$id}' LIMIT 1");
+        return DB::queryStmt("SELECT {$val} FROM razze WHERE id=:id LIMIT 1",[
+            'id' => $id
+        ]);
     }
 
     /**
      * @fn getAllRaces
      * @note Ottieni tutte le razze
-     * @return bool|int|mixed|string
+     * @param string $val
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllRaces(string $val = '*')
+    public function getAllRaces(string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM razze WHERE 1", 'result');
+        return DB::queryStmt("SELECT {$val} FROM razze WHERE 1", []);
     }
 
 
@@ -52,6 +52,7 @@ class Razze extends BaseClass
      * @note Lista delle razze disponibili
      * @param int $selected
      * @return mixed
+     * @throws Throwable
      */
     public function listRaces(int $selected = 0)
     {
@@ -66,14 +67,17 @@ class Razze extends BaseClass
      * @fn ajaxRaceData
      * @note Estrae i dati di una razza
      * @param array $post
-     * @return array|false[]|void
+     * @return array
+     * @throws Throwable
      */
-    public function ajaxRaceData(array $post)
+    public function ajaxRaceData(array $post):array
     {
         if ( $this->permissionManageRaces() ) {
             $id = Filters::int($post['id']);
-            return $this->getRace($id);
+            return $this->getRace($id)->getData()[0];
         }
+
+        return [];
     }
 
     /**** GESTIONE ****/
@@ -83,6 +87,7 @@ class Razze extends BaseClass
      * @note Inserisce una nuova razza
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function newRace(array $post): array
     {
@@ -99,7 +104,17 @@ class Razze extends BaseClass
             $iscrizione = Filters::checkbox($post['iscrizione']);
             $visibile = Filters::checkbox($post['visibile']);
 
-            DB::query("INSERT INTO razze(nome, sing_m, sing_f, descrizione, immagine, icon, url_site, iscrizione, visibile) VALUES('{$nome}', '{$sing_m}', '{$sing_f}', '{$descrizione}', '{$immagine}', '{$icon}', '{$url_site}', '{$iscrizione}', '{$visibile}')");
+            DB::queryStmt("INSERT INTO razze (nome, sing_m, sing_f, descrizione, immagine, icon, url_site, iscrizione, visibile) VALUES (:nome, :sing_m, :sing_f, :descrizione, :immagine, :icon, :url_site, :iscrizione, :visibile)", [
+                'nome' => $nome,
+                'sing_m' => $sing_m,
+                'sing_f' => $sing_f,
+                'descrizione' => $descrizione,
+                'immagine' => $immagine,
+                'icon' => $icon,
+                'url_site' => $url_site,
+                'iscrizione' => $iscrizione,
+                'visibile' => $visibile
+            ]);
 
             return [
                 'response' => true,
@@ -124,6 +139,7 @@ class Razze extends BaseClass
      * @note Modifica una razza
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function modRace(array $post): array
     {
@@ -141,7 +157,18 @@ class Razze extends BaseClass
             $iscrizione = Filters::checkbox($post['iscrizione']);
             $visibile = Filters::checkbox($post['visibile']);
 
-            DB::query("UPDATE razze SET nome='{$nome}', sing_m='{$sing_m}', sing_f='{$sing_f}', descrizione='{$descrizione}', immagine='{$immagine}', icon='{$icon}', url_site='{$url_site}', iscrizione='{$iscrizione}', visibile='{$visibile}' WHERE id='{$id}'");
+            DB::queryStmt("UPDATE razze SET nome=:nome, sing_m=:sing_m, sing_f=:sing_f, descrizione=:descrizione, immagine=:immagine, icon=:icon, url_site=:url_site, iscrizione=:iscrizione, visibile=:visibile WHERE id=:id", [
+                'id' => $id,
+                'nome' => $nome,
+                'sing_m' => $sing_m,
+                'sing_f' => $sing_f,
+                'descrizione' => $descrizione,
+                'immagine' => $immagine,
+                'icon' => $icon,
+                'url_site' => $url_site,
+                'iscrizione' => $iscrizione,
+                'visibile' => $visibile
+            ]);
 
             return [
                 'response' => true,
@@ -167,6 +194,7 @@ class Razze extends BaseClass
      * @note Elimina una razza
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function delRace(array $post): array
     {
@@ -175,7 +203,9 @@ class Razze extends BaseClass
 
             $id = Filters::int($post['id']);
 
-            DB::query("DELETE FROM razze WHERE id='{$id}'");
+            DB::queryStmt("DELETE FROM razze WHERE id=:id", [
+                'id' => $id
+            ]);
 
             return [
                 'response' => true,
