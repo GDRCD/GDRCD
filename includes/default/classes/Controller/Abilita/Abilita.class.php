@@ -126,7 +126,7 @@ class Abilita extends BaseClass
     public function listAbilita(int $selected = 0): string
     {
         $abilities = $this->getAllAbilita();
-        return Template::getInstance()->renderSelect('id', 'nome', $selected, $abilities);
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', $selected, $abilities);
     }
 
     /*** FUNCTIONS ***/

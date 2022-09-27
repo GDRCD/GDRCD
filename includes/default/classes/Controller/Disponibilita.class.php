@@ -2,11 +2,6 @@
 
 class Disponibilita extends BaseClass
 {
-    protected function __construct()
-    {
-        parent::__construct();
-    }
-
 
     /**** TABLE HELPERS ****/
 
@@ -15,21 +10,24 @@ class Disponibilita extends BaseClass
      * @note Ottieni una disponibilità
      * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAvailability(int $id, string $val = '*')
+    public function getAvailability(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM disponibilita WHERE id='{$id}' LIMIT 1");
+        return DB::queryStmt("SELECT {$val} FROM disponibilita WHERE id=:id LIMIT 1", ['id' => $id]);
     }
 
     /**
      * @fn getAllAvailabilities
      * @note Ottieni tutte le disponibilità
-     * @return bool|int|mixed|string
+     * @param string $val
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllAvailabilities(string $val = '*')
+    public function getAllAvailabilities(string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM disponibilita WHERE 1", 'result');
+        return DB::queryStmt("SELECT {$val} FROM disponibilita WHERE 1", []);
     }
 
 
@@ -47,7 +45,13 @@ class Disponibilita extends BaseClass
 
     /**** LISTS ***/
 
-    public function listAvailabilities()
+    /**
+     * @fn listAvailabilities
+     * @note Ottieni una lista di disponibilità
+     * @return string
+     * @throws Throwable
+     */
+    public function listAvailabilities(): string
     {
         $availabilities = $this->getAllAvailabilities();
         return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $availabilities);
@@ -60,7 +64,8 @@ class Disponibilita extends BaseClass
      * @fn ajaxAvailabilityData
      * @note Estrae i dati di una disponibilità
      * @param array $post
-     * @return array|false[]|void
+     * @return DBQueryInterface|void
+     * @throws Throwable
      */
     public function ajaxAvailabilityData(array $post)
     {
@@ -77,6 +82,7 @@ class Disponibilita extends BaseClass
      * @note Inserisce una nuova disponibilità
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function newAvailability(array $post): array
     {
@@ -86,13 +92,15 @@ class Disponibilita extends BaseClass
             $nome = Filters::in($post['nome']);
             $img = Filters::in($post['immagine']);
 
-            DB::query("INSERT INTO disponibilita(nome, immagine) 
-                            VALUES ('{$nome}','{$img}')");
+            DB::queryStmt("INSERT INTO disponibilita (nome, immagine) VALUES (:nome, :img)", [
+                'nome' => $nome,
+                'img' => $img,
+            ]);
 
             return [
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
-                'swal_message' => 'Disponibilita creata correttamente.',
+                'swal_message' => 'Disponibilità creata correttamente.',
                 'swal_type' => 'success',
                 'availabilities_list' => $this->listAvailabilities(),
             ];
@@ -112,6 +120,7 @@ class Disponibilita extends BaseClass
      * @note Modifica una disponibilità
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function modAvailability(array $post): array
     {
@@ -122,12 +131,16 @@ class Disponibilita extends BaseClass
             $nome = Filters::in($post['nome']);
             $img = Filters::in($post['immagine']);
 
-            DB::query("UPDATE disponibilita SET nome='{$nome}',immagine='{$img}' WHERE id='{$id}' LIMIT 1");
+            DB::queryStmt("UPDATE disponibilita SET nome=:nome, immagine=:img WHERE id=:id", [
+                'id' => $id,
+                'nome' => $nome,
+                'img' => $img,
+            ]);
 
             return [
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
-                'swal_message' => 'Disponibilita modificata correttamente.',
+                'swal_message' => 'Disponibilità modificata correttamente.',
                 'swal_type' => 'success',
                 'availabilities_list' => $this->listAvailabilities(),
             ];
@@ -148,6 +161,7 @@ class Disponibilita extends BaseClass
      * @note Elimina una disponibilità
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function delAvailability(array $post): array
     {
@@ -156,12 +170,14 @@ class Disponibilita extends BaseClass
 
             $shop = Filters::int($post['id']);
 
-            DB::query("DELETE FROM disponibilita WHERE id='{$shop}'");
+            DB::queryStmt("DELETE FROM disponibilita WHERE id=:id", [
+                'id' => $shop,
+            ]);
 
             return [
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
-                'swal_message' => 'Disponibilita eliminata correttamente.',
+                'swal_message' => 'Disponibilità eliminata correttamente.',
                 'swal_type' => 'success',
                 'availabilities_list' => $this->listAvailabilities(),
             ];

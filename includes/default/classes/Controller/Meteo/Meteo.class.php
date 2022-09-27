@@ -134,7 +134,7 @@ class Meteo extends BaseClass
         $last_update = Filters::out($chat_meteo['updated_at']);
 
         return empty($last_update) ||
-            (CarbonWrapper::DatesDifferenceHours($last_update, CarbonWrapper::getNow("Y-m-d H:i")) > $this->weather_update_range);
+            (CarbonWrapper::DatesDifferenceHours($last_update, CarbonWrapper::getNow()) > $this->weather_update_range);
     }
 
     /**** PERMISSION ****/
@@ -230,7 +230,7 @@ class Meteo extends BaseClass
     public function getActualMeteo(): array
     {
         $pg_chat = Personaggio::getPgLocation();
-        $meteo_chat = $this->getMeteoChat($pg_chat);
+        $meteo_chat = $this->getMeteoChat($pg_chat)->getData()[0];
 
         // SE per la chat specifica è settato un meteo o se è settato per la mappa
         $meteo_data = !empty($meteo_chat) ? $meteo_chat : MeteoStagioni::getInstance()->getMeteoGlobal();
