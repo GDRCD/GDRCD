@@ -2,17 +2,12 @@
 
 require ROOT . 'plugins/Carbon/autoload.php';
 
+# ! Non eliminare!
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
 
 class CarbonWrapper
 {
-
-    public function __construct()
-    {
-
-    }
-
     /**
      * @fn format
      * @note Formatta una data in base al formato passato
