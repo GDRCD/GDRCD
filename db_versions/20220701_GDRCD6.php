@@ -41,7 +41,7 @@ class GDRCD6 extends DbMigration
                 ('TEMPLATE_ENGINE','TemplateSmarty','Template','Template utilizzato. Non modificare se non necessario.','','select',1,'Template'),
                 ('SECURITY_PASSWORD_CRYPTER','$defaultPasswordCrypter','Sicurezza','Algoritmo di Hashing delle Password. Non modificare se non necessario.','','select',1,'PasswordHash'),
                 ('INLINE_CRONJOB',1,'Engine','Cronjob inline','Cronjob inline nell header?','bool',1,NULL),
-                ('LOGIN_BACK_LOCATION',0,'Login','Login in lcoazione','Login in vecchia location?','bool',1,NULL),
+                ('LOGIN_BACK_LOCATION',0,'Login','Login in locazione','Login in vecchia location?','bool',1,NULL),
                 ('ABI_LEVEL_CAP',5,'Abilita','Level cap Abilità','Livello massimo abilità','int',1,NULL),
                 ('DEFAULT_PX_PER_LVL',10,'Abilita','Costo default Abilità','Moltiplicatore costo abilità, se non specificato','int',1,NULL),
                 ('ABI_REQUIREMENT',1,'Abilita','Requisiti Abilità','Abilitare requisiti abilità?','bool',1,NULL),

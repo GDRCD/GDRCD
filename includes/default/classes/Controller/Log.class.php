@@ -15,11 +15,14 @@ class Log extends BaseClass
      * @note Ottieni un log dalla tabella logs
      * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getLog(int $id, string $val = '*')
+    public function getLog(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM log WHERE id='{$id}' LIMIT 1");
+        return DB::queryStmt("SELECT {$val} FROM logs WHERE id = :id", [
+            'id' => $id
+        ]);
     }
 
     /**
@@ -27,11 +30,14 @@ class Log extends BaseClass
      * @note Ottieni tutti i logs dalla tabella logs
      * @param int $limit
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllLogs(int $limit = 500, string $val = '*')
+    public function getAllLogs(int $limit = 500, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM log WHERE 1 LIMIT {$limit}", 'result');
+        return DB::queryStmt("SELECT {$val} FROM log WHERE 1 LIMIT :limit", [
+            'limit' => $limit
+        ]);
     }
 
     /**
@@ -40,11 +46,15 @@ class Log extends BaseClass
      * @param string $type
      * @param int $limit
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllLogsByType(string $type, int $limit = 500, string $val = '*')
+    public function getAllLogsByType(string $type, int $limit = 500, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM log WHERE tipo='{$type}' LIMIT {$limit}", 'result');
+        return DB::queryStmt("SELECT {$val} FROM log WHERE tipo=:type LIMIT :limit",[
+            'type' => $type,
+            'limit' => $limit
+        ]);
     }
 
     /**
@@ -53,11 +63,15 @@ class Log extends BaseClass
      * @param int $destinatario
      * @param int $limit
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllLogsByDestinatario(int $destinatario, int $limit = 500, string $val = '*')
+    public function getAllLogsByDestinatario(int $destinatario, int $limit = 500, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM log WHERE destinatario='{$destinatario}' LIMIT {$limit}", 'result');
+        return DB::queryStmt("SELECT {$val} FROM log WHERE destinatario=:destinatario LIMIT :limit", [
+            'destinatario' => $destinatario,
+            'limit' => $limit
+        ]);
     }
 
     /**
@@ -67,11 +81,16 @@ class Log extends BaseClass
      * @param string $type
      * @param int $limit
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllLogsByDestinatarioAndType(int $destinatario, string $type, int $limit = 500, string $val = '*')
+    public function getAllLogsByDestinatarioAndType(int $destinatario, string $type, int $limit = 500, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM log WHERE destinatario='{$destinatario}' AND tipo='{$type}' LIMIT {$limit}", 'result');
+        return DB::queryStmt("SELECT {$val} FROM log WHERE destinatario=:destinatario AND tipo=:type LIMIT :limit", [
+            'destinatario' => $destinatario,
+            'type' => $type,
+            'limit' => $limit
+        ]);
     }
 
     /**** PERMISSIONS ****/
@@ -91,6 +110,7 @@ class Log extends BaseClass
      * @note Inserisce un nuovo log
      * @param array $data
      * @return void
+     * @throws Throwable
      */
     public static function newLog(array $data): void
     {
@@ -99,7 +119,12 @@ class Log extends BaseClass
         $testo = Filters::in($data['testo']);
         $destinatario = Filters::int($data['destinatario']);
 
-        DB::query("INSERT INTO log (autore, tipo, testo, destinatario) VALUES ('{$autore}', '{$tipo}', '{$testo}', '{$destinatario}')");
+        DB::queryStmt("INSERT INTO logs (autore, tipo, testo, destinatario) VALUES (:autore, :tipo, :testo, :destinatario)", [
+            'autore' => $autore,
+            'tipo' => $tipo,
+            'testo' => $testo,
+            'destinatario' => $destinatario
+        ]);
     }
 
     /*** RENDER ***/
@@ -112,6 +137,7 @@ class Log extends BaseClass
      * @param int $type
      * @param int $limit
      * @return array
+     * @throws Throwable
      */
     public function renderLogTable(int $id_pg, int $type, int $limit, string $title): array
     {
@@ -158,10 +184,10 @@ class Log extends BaseClass
      * @param int $limit
      * @param string $title
      * @return string
+     * @throws Throwable
      */
     public function logTable(int $id_pg, int $type, int $limit = 500, string $title = "Log"): string
     {
-
         return Template::getInstance()->startTemplate()->renderTable(
             'log/table',
             $this->renderLogTable($id_pg, $type, $limit, $title)

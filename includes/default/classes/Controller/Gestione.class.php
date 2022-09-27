@@ -15,7 +15,7 @@ class Gestione extends BaseClass
      * @return string
      * @throws Throwable
      */
-    public function inputByType(string $name, $val, string $type, string $options = ''): string
+    public function inputByType(string $name, mixed $val, string $type, string $options = ''): string
     {
 
         $type = Filters::out($type);
@@ -51,10 +51,15 @@ class Gestione extends BaseClass
         return $html;
     }
 
-    /*** QUERY HELPER ****
+    /*** QUERY HELPER ****/
+
+    /**
+     * @fn getOptions
+     * @note Ottieni le opzioni di un campo
+     * @param $section
+     * @return DBQueryInterface
      * @throws Throwable
      */
-
     public function getOptions($section): DBQueryInterface
     {
         return DB::queryStmt("SELECT * FROM config_options WHERE `section`=:section", [':section' => $section]);
@@ -73,26 +78,23 @@ class Gestione extends BaseClass
     }
 
     /**
-     * @fn costantList
+     * @fn constantList
      * @note Creazione della sezione della gestione delle costanti
      * @return string
+     * @throws Throwable
      */
     public function constantList(): string
     {
-
-        $html = '';
-
         $const_category = DB::query('SELECT section FROM config WHERE editable = 1 GROUP BY section ', 'result');
+        $data = [];
 
         foreach ( $const_category as $category ) {
             $section = Filters::out($category['section']);
+            $const_list = DB::queryStmt(
+                "SELECT const_name,label,val,type,options,description FROM config 
+                      WHERE section=:section AND editable=1 ORDER BY label", ['section' => $section]);
 
-            $html .= "<div class='single_section'>";
-            $html .= "<div class='form_title'>{$section}</div>";
-            $html .= "<div class='box_input'>";
-
-            $const_list = DB::query("SELECT const_name,label,val,type,options,description FROM config WHERE section='{$section}' AND editable=1 ORDER BY label", 'result');
-
+            $constants = [];
             foreach ( $const_list as $const ) {
                 $name = Filters::out($const['const_name']);
                 $label = Filters::out($const['label']);
@@ -100,30 +102,35 @@ class Gestione extends BaseClass
                 $type = Filters::out($const['type']);
                 $options = Filters::out($const['options']);
 
-                $html .= "<div class='single_input w-33'>";
-                $html .= "<div class='label'>{$label}</div>";
-                $html .= $this->inputByType($name, $val, $type, $options);
-                $html .= "</div>";
+                $constants[] = [
+                    'name' => $name,
+                    'label' => $label,
+                    'input' => $this->inputByType($name, $val, $type, $options),
+                    'description' => Filters::out($const['description'])
+                ];
             }
-
-            $html .= "</div>";
-            $html .= "</div>";
+            
+            $data[] = [
+                "name" => $section,
+                "constants" => $constants
+            ];
         }
 
-        return $html;
+        return Template::getInstance()->startTemplate()->render('gestione/constants_input', ['data' => $data]);
     }
 
     /**
      * @fn updateConstants
-     * @note Funzione pubblica/contenitore per l'update delle costanti via POST
+     * @note Funzione pubblica/contenitore per update delle costanti via POST
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public final function updateConstants(array $post): array
     {
         if ( $this->constantsPermission() ) {
 
-            $const_list = DB::query("SELECT * FROM config WHERE editable=1 ORDER BY label", 'result');
+            $const_list = DB::queryStmt("SELECT * FROM config WHERE editable=1 ORDER BY label", []);
             $empty_const = [];
 
             foreach ( $const_list as $const ) {
@@ -178,9 +185,10 @@ class Gestione extends BaseClass
      * @param string $name
      * @param string $type
      * @param mixed $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface|bool
+     * @throws Throwable
      */
-    private function saveConstant(string $name, string $type, $val)
+    private function saveConstant(string $name, string $type, mixed $val): DBQueryInterface|bool
     {
 
         $name = Filters::in($name);
@@ -205,18 +213,19 @@ class Gestione extends BaseClass
                 break;
         }
 
-        return DB::query("UPDATE config SET val='{$val}' WHERE const_name='{$name}' LIMIT 1");
+        return DB::queryStmt("UPDATE config SET val=:val WHERE const_name=:name", [':val' => $val, ':name' => $name]);
     }
 
     /**
      * @fn errorConstant
      * @note Crea l'errore e la lista delle costanti in errore
-     * @param array $consts
+     * @param array $constants
      * @param string $type
      * @return array
      */
-    private function errorConstant(array $consts, string $type): array
+    private function errorConstant(array $constants, string $type): array
     {
+        $resp = '';
 
         switch ( $type ) {
             case 'empty':
@@ -227,7 +236,7 @@ class Gestione extends BaseClass
                 break;
         }
 
-        foreach ( $consts as $e ) {
+        foreach ( $constants as $e ) {
 
             $resp .= " {$e},";
         }
