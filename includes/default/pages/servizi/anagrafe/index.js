@@ -1,7 +1,3 @@
-$(function(){
-
-})
-
 function searchSuccess(data){
 
     if(data){
