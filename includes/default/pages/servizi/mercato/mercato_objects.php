@@ -24,9 +24,9 @@ if ( !empty($shop) ) {
         ?>
         <div class='warning'><?= $resp['mex']; ?></div>
         <div class='link_back'>
-            <a href="/main.php?page=servizi_mercato&op=objects&shop=<?= $shop; ?>">Indietro</a>
+            <a href="/main.php?page=servizi/mercato/mercato_index&op=objects&shop=<?= $shop; ?>">Indietro</a>
         </div>
-        <?php Functions::redirect("/main.php?page=servizi_mercato&op=objects&shop={$shop}", 3);
+        <?php Functions::redirect("/main.php?page=servizi/mercato/mercato_index&op=objects&shop={$shop}", 3);
     }
 
     ?>
