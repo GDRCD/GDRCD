@@ -1315,3 +1315,23 @@ div.innertube {
     margin: 0 auto;
     overflow: auto;
 }
+
+/**** ANAGRAFE ****/
+
+.anagrafe_table .tr .td {
+    width: 24% !important;
+}
+
+.anagrafe_table .tr:not(.header) .td {
+    vertical-align: middle;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 35px;
+    font-size: 17px;
+}
+
+.anagrafe_table .tr .td img{
+    width: 30px;
+    height: 30px;
+}

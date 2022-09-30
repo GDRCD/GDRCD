@@ -53,10 +53,10 @@ class Sessi extends BaseClass
      * @return mixed
      * @throws Throwable
      */
-    public function listGenders(int $selected = 0)
+    public function listGenders(int $selected = 0, string $label = ''): mixed
     {
         $genders = $this->getAllGenders();
-        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', $selected, $genders);
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', $selected, $genders, $label);
     }
 
 

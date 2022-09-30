@@ -113,6 +113,7 @@ class GDRCD6 extends DbMigration
                 ('CONTACT_CATEGORIES', 1, 'Contatti','Abilita/Disabilita le categorie',  'Abilita/Disabilita le categorie', 'bool', 1,NULL),
                 ('CONTACT_CATEGORIES_PUBLIC', 1, 'Contatti','Se abilitato, tutti vedono le categorie',  'Se abilitato, tutti vedono le categorie', 'bool', 1,NULL),
                 ('CONTACT_CATEGORIES_STAFF_ONLY', 0, 'Contatti', 'Se abilitato, solo lo staff può assegnare le categorie di contatto', 'Se abilitato, solo lo staff può assegnare le categorie di contatto', 'bool', 1,NULL),
+                ('RACES_ACTIVE', 1, 'Razze', 'Se abilitato, le razze sono abilitate nel sito', 'Se abilitato, le razze sono abilitate nel sito', 'bool', 1,NULL),
                 ('REGISTRAZIONI_ENABLED',1,'Registrazioni','Registrazioni attive','Registrazioni attive?','bool',1,NULL);"
 
         );
@@ -222,7 +223,7 @@ class GDRCD6 extends DbMigration
               ('Gestione', 'Extra', 'Gestione Sessi', 'gestione/sessi/gestione_sessi', 'MANAGE_GENDERS'),
               ('Gestione', 'Extra', 'Gestione Razze', 'gestione/razze/gestione_razze', 'MANAGE_RACES'),
               ('Gestione', 'Contatti', 'Gestione Categorie', 'gestione/contatti/gestione_categorie', 'MANAGE_CONTACTS_CATEGORIES'),
-              ('Uffici', 'Anagrafe', 'Anagrafe', 'servizi_anagrafe', NULL),
+              ('Uffici', 'Anagrafe', 'Anagrafe', 'servizi/anagrafe/index', NULL),
               ('Uffici', 'Lavoro', 'Amministrazione Gruppi', 'servizi/amministrazioneGilde/index', NULL),
               ('Uffici', 'Lavoro', 'Lavoro', 'servizi/lavori/index', NULL),
               ('Uffici', 'Gruppi', 'Gruppi', 'servizi/gruppi/index', NULL),
