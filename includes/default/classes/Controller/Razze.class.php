@@ -2,6 +2,31 @@
 
 class Razze extends BaseClass
 {
+    private bool $races_active;
+
+    /**
+     * @fn __construct
+     * @note Costruttore della classe
+     * @throws Throwable
+     */
+    protected function __construct()
+    {
+        parent::__construct();
+        $this->races_active = Functions::get_constant('RACES_ACTIVE');
+
+    }
+
+    /**** GETTER ****/
+
+    /**
+     * @fn activeRaces
+     * @note Controlla se le razze sono attive
+     * @return bool
+     */
+    public function activeRaces():bool
+    {
+        return $this->races_active;
+    }
 
     /**** TABLE HELPERS ****/
 
@@ -51,13 +76,14 @@ class Razze extends BaseClass
      * @fn listRaces
      * @note Lista delle razze disponibili
      * @param int $selected
+     * @param string $label
      * @return string
      * @throws Throwable
      */
-    public function listRaces(int $selected = 0): string
+    public function listRaces(int $selected = 0,string $label = ''): string
     {
         $genders = $this->getAllRaces();
-        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', $selected, $genders);
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', $selected, $genders, $label);
     }
 
 
