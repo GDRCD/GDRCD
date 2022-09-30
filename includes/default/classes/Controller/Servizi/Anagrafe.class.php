@@ -57,7 +57,13 @@ class Anagrafe extends BaseClass
 
     }
 
-    public function renderResults($pgs_list)
+    /**
+     * @fn renderResults
+     * @note Ritorna il markup HTML della lista dei personaggi
+     * @param $pgs_list
+     * @return string
+     */
+    public function renderResults($pgs_list): string
     {
 
         $pgs = [];
