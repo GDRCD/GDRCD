@@ -48,7 +48,7 @@
                                 <?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['email']); ?>
                             </div>
                             <div class="form_field">
-                                <input name="email" value="<?php echo gdrcd_filter('email', $_POST['email']); ?>"/>
+                                <input name="email" value="<?php echo gdrcd_filter('email', $_POST['email']); ?>" required/>
                             </div>
                             <div class="form_info">
                                 <?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['email_info']); ?>
@@ -58,7 +58,7 @@
                                 <?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['name']); ?>
                             </div>
                             <div class="form_field">
-                                <input name="nome" value="<?php echo gdrcd_filter('out', $_POST['nome']); ?>"/>
+                                <input name="nome" value="<?php echo gdrcd_filter('out', $_POST['nome']); ?>" required/>
                             </div>
                             <div class="form_info">
                                 <?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['name_info']); ?>
@@ -241,21 +241,20 @@
                         }
                     }
 
-                    if ((gdrcd_filter_email($_POST['email']) == '') || (strpos(gdrcd_filter_email($_POST['email']), '@') == false) || (strpos(gdrcd_filter_email($_POST['email']), '.') == false)) {
+                    if ((gdrcd_filter_email($_POST['email']) == '') || !strpos(gdrcd_filter_email($_POST['email']), '@') || !strpos(gdrcd_filter_email($_POST['email']), '.')) {
                         $ok = false;
                         echo '<div class="error">' . gdrcd_filter('out', $MESSAGE['register']['error']['email_needed']) . '</div>';
                     }
 
                     $result = gdrcd_query("SELECT nome FROM personaggio WHERE nome='" . gdrcd_safe_name($_POST['nome']) . "' LIMIT 1", 'result');
-
                     if (gdrcd_query($result, 'num_rows') > 0) {
                         gdrcd_query($result, 'free');
                         $ok = false;
                         echo '<div class="error">' . gdrcd_filter('out', $MESSAGE['register']['error']['name_taken']) . '</div>';
                     }
-                    $regex = '#[^\p{L}\s]#u';
 
-                    if (preg_match($regex, $_POST['nome'])) {
+                    $regex = '#[^\p{L}\s]#u';
+                    if (empty(gdrcd_safe_name($_POST['nome'])) || preg_match($regex, $_POST['nome'])) {
                         $ok = false;
                         echo '<div class="error">' . gdrcd_filter('out', $MESSAGE['register']['error']['invalid_name']) . '</div>';
                     }
