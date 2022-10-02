@@ -242,30 +242,59 @@ if((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) 
                 }
             }//Not empty message
         } else { //Altrimenti e' un comando di stanza privata.
-            $info = gdrcd_query("SELECT invitati, nome, proprietario FROM mappa WHERE id=".$_SESSION['luogo']."");
+            $info = gdrcd_query("SELECT invitati, nome, proprietario FROM mappa WHERE id=".$_SESSION['luogo']);
 
+            // Ottengo l'elenco degli invitati già presenti nella stanza
+            $invitati = !empty($info['invitati']) ? explode(",", $info['invitati']) : [];
+
+            // Determino se ho i permessi per eseguire il comando richiesto
             $ok_command = false;
-            if($info['proprietario'] == $_SESSION['login'] || strpos($_SESSION['gilda'], $info['proprietario']) != false) {
+            if($info['proprietario'] == $_SESSION['login'] || strpos($_SESSION['gilda'], $info['proprietario'])) {
                 $ok_command = true;
             }
-            if(($type == "5") && ($ok_command === true)) { //invita
-                gdrcd_query("UPDATE mappa SET invitati = '".$info['invitati'].','.gdrcd_capital_letter(strtolower(gdrcd_filter('in', $tag_n_beyond)))."' WHERE id=".$_SESSION['luogo']." LIMIT 1");
 
-                gdrcd_query("INSERT INTO chat ( stanza, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", 'System message', '".$_SESSION['login']."', NOW(), 'S', '".gdrcd_capital_letter(gdrcd_filter('in', $tag_n_beyond)).' '.$MESSAGE['chat']['warning']['invited']."')");
+            if(($type == "5") && ($ok_command === true) && (!empty($tag_n_beyond))) { /*Invita*/
+                // Determino il nome del nuovo invitato
+                $newInvitato = gdrcd_capital_letter(strtolower(gdrcd_filter('in', $tag_n_beyond)));
 
-                if(empty($_POST['tag']) === false) {
-                    gdrcd_query("INSERT INTO messaggi ( mittente, destinatario, spedito, letto, testo ) VALUES ('System message', '".gdrcd_capital_letter(gdrcd_filter('in', $_POST['tag']))."', NOW(), 0,  '".$_SESSION['login'].' '.$MESSAGE['chat']['warning']['invited_message'].' '.$info['nome']."')");
+                // Controllo che l'utente non sia già presente nella stanza
+                if(!in_array($newInvitato, $invitati)) {
+                    // Aggiungo il nuovo invitato alla lista degli invitati
+                    $invitati[] = $newInvitato;
+                    gdrcd_query("UPDATE mappa SET invitati = '".implode(",", $invitati)."' WHERE id=".$_SESSION['luogo']." LIMIT 1");
+                    // Invio un messaggio all invitato
+                    gdrcd_query("INSERT INTO messaggi ( mittente, destinatario, spedito, letto, testo ) VALUES ('System message', '".$newInvitato."', NOW(), 0,  '".$_SESSION['login'].' '.$MESSAGE['chat']['warning']['invited_message'].' '.$info['nome']."')");
+                    //
+                    $chat_message = $newInvitato." ".$MESSAGE['chat']['warning']['invited'];
+                } else {
+                    $chat_message = $newInvitato." ".$MESSAGE['chat']['warning']['already_invited'];
                 }
-            } else {
-                if(($type == "6") && ($ok_command === true)) { //caccia
-                    $scaccia = str_replace(','.gdrcd_capital_letter(gdrcd_filter('in', $tag_n_beyond)), '', $info['invitati']);
-                    gdrcd_query("UPDATE mappa SET invitati = '".$scaccia."' WHERE id=".$_SESSION['luogo']." LIMIT 1");
 
-                    gdrcd_query("INSERT INTO chat ( stanza, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", 'System message', '".$_SESSION['login']."', NOW(), 'S', '".gdrcd_capital_letter(gdrcd_filter('in', $tag_n_beyond)).' '.$MESSAGE['chat']['warning']['expelled']."')");
-                } elseif($ok_command === true) { //elenco
-                    $ospiti = str_replace(',', '', $info['invitati']);
-                    gdrcd_query("INSERT INTO chat ( stanza, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", 'System message', '".$_SESSION['login']."', NOW(), 'S', '".$MESSAGE['chat']['warning']['list'].': '.$ospiti."')");
+                // Invio il messaggio di conferma
+                gdrcd_query("INSERT INTO chat ( stanza, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", 'System message', '".$_SESSION['login']."', NOW(), 'S', '".$chat_message."')");
+            }
+            elseif(($type == "6") && ($ok_command === true) && (!empty($tag_n_beyond))) { /*Caccia*/
+                // Determino il nome dell'utente da cacciare
+                $delInvitato = gdrcd_capital_letter(strtolower(gdrcd_filter('in', $tag_n_beyond)));
+
+                // Controllo che l'utente sia presente nella stanza
+                if(in_array($delInvitato, $invitati)) {
+                    // Rimuovo l'utente dalla lista degli invitati
+                    $invitati = array_diff($invitati, [$delInvitato]);
+                    gdrcd_query("UPDATE mappa SET invitati = '".implode(",", $invitati)."' WHERE id=".$_SESSION['luogo']." LIMIT 1");
+                    //
+                    $chat_message = $delInvitato." ".$MESSAGE['chat']['warning']['expelled'];
+                } else {
+                    $chat_message = $delInvitato." ".$MESSAGE['chat']['warning']['not_invited'];
                 }
+
+                // Invio il messaggio di conferma
+                gdrcd_query("INSERT INTO chat ( stanza, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", 'System message', '".$_SESSION['login']."', NOW(), 'S', '".$chat_message."')");
+            }
+            elseif($ok_command === true) { /*Elenco*/
+                // Invio l'elenco degli invitati
+                $chat_message = $MESSAGE['chat']['warning']['invited_list'].": ".implode(", ", $invitati);
+                gdrcd_query("INSERT INTO chat ( stanza, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", 'System message', '".$_SESSION['login']."', NOW(), 'S', '".$chat_message."')");
             }
         }//else
     }//Fine (gdrcd_filter('get', $_POST['op']) == 'new_chat_message')
