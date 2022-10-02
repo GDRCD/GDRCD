@@ -541,7 +541,7 @@ function gdrcd_check_time($time)
 
     if ($time_hours == date('H')) {
         return date('i') - $time_minutes;
-    } elseif ($time_hours == (date('H') - 1) || $time_hours == (strftime('H') + 11)) {
+    } elseif ($time_hours == (date('H') - 1) || $time_hours == (date('H') + 11)) {
         return date('i') - $time_minutes + 60;
     }
 
