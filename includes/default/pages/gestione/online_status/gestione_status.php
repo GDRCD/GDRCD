@@ -32,7 +32,7 @@ if ( $cls->manageStatusPermission() ) { # Metodo di controllo per accesso alla p
             <div class="single_input">
                 <div class="label">Tipo</div>
                 <select name="type" required>
-                    <?= $cls->listStatusType(); ?>
+                    <?= OnlineStatusType::getInstance()->listStatusType(); ?>
                 </select>
             </div>
 
@@ -65,7 +65,7 @@ if ( $cls->manageStatusPermission() ) { # Metodo di controllo per accesso alla p
             <div class="single_input">
                 <div class="label">Tipo</div>
                 <select name="type" required>
-                    <?= $cls->listStatusType(); ?>
+                    <?= OnlineStatusType::getInstance()->listStatusType(); ?>
                 </select>
             </div>
 

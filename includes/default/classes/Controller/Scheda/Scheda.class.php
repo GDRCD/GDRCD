@@ -248,6 +248,7 @@ class Scheda extends BaseClass
     {
 
         $character_data = Personaggio::getPgData($id_pg);
+        $status_online_enabled = OnlineStatus::getInstance()->isEnabled();
 
         return [
             'id' => Filters::out($character_data['id']),
@@ -256,6 +257,8 @@ class Scheda extends BaseClass
             'race_icon' => $this->getRaceIcon($id_pg),
             'registration_day' => Filters::date($character_data['data_iscrizione'], 'd/m/Y'),
             'last_login' => Filters::date($character_data['ora_entrata'], 'd/m/Y'),
+            "status_online"=> $status_online_enabled ? OnlineStatus::getInstance()->renderStatusOnline($character_data['id']) : [],
+            "status_online_enabled" => $status_online_enabled
         ];
     }
 
