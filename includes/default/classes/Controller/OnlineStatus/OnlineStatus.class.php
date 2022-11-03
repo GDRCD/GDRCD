@@ -18,6 +18,7 @@ class OnlineStatus extends BaseClass
         $this->login_refresh = Functions::get_constant('ONLINE_STATUS_LOGIN_REFRESH');
     }
 
+
     /*** GETTERS */
 
     /**
@@ -91,48 +92,6 @@ class OnlineStatus extends BaseClass
     }
 
     /**
-     * @fn getStatusByType
-     * @note Estrae i dati di uno stato in base al tipo
-     * @param int $type
-     * @param string $val
-     * @return DBQueryInterface
-     * @throws Throwable
-     */
-    public function getStatusByType(int $type, string $val = '*'): DBQueryInterface
-    {
-        return DB::queryStmt("SELECT {$val} FROM online_status WHERE type=:type ORDER by text", [
-            'type' => $type,
-        ]);
-    }
-
-    /**
-     * @fn getStatusTypes
-     * @note Estrae tutti i tipi di stato esistenti
-     * @param string $val
-     * @return DBQueryInterface
-     * @throws Throwable
-     */
-    public function getStatusTypes(string $val = '*'): DBQueryInterface
-    {
-        return DB::queryStmt("SELECT * FROM online_status_type WHERE 1 ORDER BY label", []);
-    }
-
-    /**
-     * @fn getStatusType
-     * @note Estrae tutti i dati di uno stato specifico
-     * @param int $id
-     * @param string $val
-     * @return DBQueryInterface
-     * @throws Throwable
-     */
-    public function getStatusType(int $id, string $val = '*'): DBQueryInterface
-    {
-        return DB::queryStmt("SELECT {$val} FROM online_status_type WHERE id=:id LIMIT 1", [
-            'id' => $id,
-        ]);
-    }
-
-    /**
      * @fn getPgStatus
      * @note Estrae lo stato online di un pg
      * @param int $pg
@@ -151,6 +110,7 @@ class OnlineStatus extends BaseClass
         ]);
     }
 
+
     /*** AJAX ***/
 
     /**
@@ -160,7 +120,7 @@ class OnlineStatus extends BaseClass
      * @return array
      * @throws Throwable
      */
-    public function ajaxStatusData(array $post):array
+    public function ajaxStatusData(array $post): array
     {
         if ( $this->manageStatusPermission() ) {
             $id = Filters::int($post['id']);
@@ -174,27 +134,6 @@ class OnlineStatus extends BaseClass
         return [];
     }
 
-    /**
-     * @fn ajaxStatusTypeData
-     * @note Estrae i dati di un tipo di stato
-     * @param array $post
-     * @return array
-     * @throws Throwable
-     */
-    public function ajaxStatusTypeData(array $post):array
-    {
-
-        if ( $this->manageStatusPermission() ) {
-            $id = Filters::int($post['id']);
-            $data = $this->getStatusType($id);
-            return [
-                'label' => Filters::out($data['label']),
-                'request' => Filters::out($data['request']),
-            ];
-        }
-
-        return [];
-    }
 
     /**** LIST ****/
 
@@ -207,14 +146,14 @@ class OnlineStatus extends BaseClass
     public function renderOnlineStatusOptions(): string
     {
 
-        $types = $this->getStatusTypes();
+        $types = OnlineStatusType::getInstance()->getStatusTypes();
 
         $data = [];
         foreach ( $types as $type ) {
             $type_id = Filters::int($type['id']);
             $type_request = Filters::out($type['request']);
 
-            $list = $this->getStatusByType($type_id);
+            $list = OnlineStatusType::getInstance()->getStatusByType($type_id);
 
             if ( $list->getNumRows() > 0 ) {
 
@@ -242,19 +181,6 @@ class OnlineStatus extends BaseClass
     }
 
     /**
-     * @fn listStatusType
-     * @note Crea la lista select dei tipi
-     * @param int $selected
-     * @return string
-     * @throws Throwable
-     */
-    public function listStatusType(int $selected = 0): string
-    {
-        $types = $this->getStatusTypes();
-        return Template::getInstance()->startTemplate()->renderSelect('id','label',$selected,$types);
-    }
-
-    /**
      * @fn listStatus
      * @note Render della lista degli stati disponibili, divisi per tipo
      * @return string
@@ -265,13 +191,13 @@ class OnlineStatus extends BaseClass
     {
 
         $html = '<option value=""></option>';
-        $types = $this->getStatusTypes();
+        $types = OnlineStatusType::getInstance()->getStatusTypes();
 
         foreach ( $types as $type ) {
             $type_id = Filters::int($type['id']);
             $type_label = Filters::out($type['label']);
 
-            $list = $this->getStatusByType($type_id);
+            $list = OnlineStatusType::getInstance()->getStatusByType($type_id);
 
             $html .= "<optgroup label='{$type_label}'>";
 
@@ -294,17 +220,17 @@ class OnlineStatus extends BaseClass
      * @fn renderStatusOnline
      * @note Visualizza le risposte nello status online
      * @param int $pg
-     * @return string
+     * @return array
      * @throws Throwable
-     * TODO Collegare nel punto dove far comparire lo status online
      */
-    public function renderStatusOnline(int $pg): string
+    public function renderStatusOnline(int $pg): array
     {
-        $html = '';
+        $result = [];
+
         $pg = Filters::int($pg);
         $pg_data = Personaggio::getPgData($pg, 'ora_entrata');
         $last_login = ($this->refreshOnLogin()) ? Filters::out($pg_data['ora_entrata']) : '';
-        $types = $this->getStatusTypes();
+        $types = OnlineStatusType::getInstance()->getStatusTypes();
 
         foreach ( $types as $type ) {
             $type_id = Filters::int($type['id']);
@@ -313,16 +239,16 @@ class OnlineStatus extends BaseClass
             $list = $this->getPgStatus($pg, $type_id, $last_login, 'value');
             if ( !empty($list['value']) ) {
                 $status_data = $this->getStatus(Filters::int($list['value']), 'text');
-                $status_text = Filters::out($status_data['text']);
+                $result[$type_label] = Filters::out($status_data['text']);
             } else {
-                $status_text = 'Non definito';
+                $result[$type_label] = '-';
             }
 
-            $html .= " <span>{$type_label} : {$status_text}</span> | ";
         }
 
-        return $html;
+        return $result;
     }
+
 
     /*** FUNCTIONS ***/
 
@@ -348,13 +274,13 @@ class OnlineStatus extends BaseClass
                 $contr = $this->getPgStatus($this->me_id, $type);
 
                 if ( isset($contr['id']) ) {
-                    DB::queryStmt("UPDATE personaggio_online_status SET value=:value,last_refresh=NOW() WHERE personaggio=:pg AND type=:type LIMIT 1",[
+                    DB::queryStmt("UPDATE personaggio_online_status SET value=:value,last_refresh=NOW() WHERE personaggio=:pg AND type=:type LIMIT 1", [
                         'value' => $value,
                         'pg' => $this->me_id,
                         'type' => $type,
                     ]);
                 } else {
-                    DB::queryStmt("INSERT INTO personaggio_online_status (personaggio,type,value) VALUES (:pg,:type,:value)",[
+                    DB::queryStmt("INSERT INTO personaggio_online_status (personaggio,type,value) VALUES (:pg,:type,:value)", [
                         'pg' => $this->me_id,
                         'type' => $type,
                         'value' => $value,
@@ -363,7 +289,7 @@ class OnlineStatus extends BaseClass
 
             }
 
-            DB::queryStmt("UPDATE personaggio SET online_last_refresh=NOW() WHERE id=:pg LIMIT 1",[
+            DB::queryStmt("UPDATE personaggio SET online_last_refresh=NOW() WHERE id=:pg LIMIT 1", [
                 'pg' => $this->me_id,
             ]);
 
@@ -402,7 +328,7 @@ class OnlineStatus extends BaseClass
             $type = Filters::int($post['type']);
             $text = Filters::in($post['text']);
 
-            DB::queryStmt("INSERT INTO online_status (type,text) VALUES (:type,:text)",[
+            DB::queryStmt("INSERT INTO online_status (type,text) VALUES (:type,:text)", [
                 'type' => $type,
                 'text' => $text,
             ]);
@@ -442,7 +368,7 @@ class OnlineStatus extends BaseClass
             $type = Filters::int($post['type']);
             $text = Filters::in($post['text']);
 
-            DB::queryStmt("UPDATE online_status SET type=:type,text=:text WHERE id=:id LIMIT 1",[
+            DB::queryStmt("UPDATE online_status SET type=:type,text=:text WHERE id=:id LIMIT 1", [
                 'id' => $id,
                 'type' => $type,
                 'text' => $text,
@@ -480,7 +406,7 @@ class OnlineStatus extends BaseClass
 
             $id = Filters::int($post['id']);
 
-            DB::queryStmt("DELETE FROM online_status WHERE id=:id LIMIT 1",[
+            DB::queryStmt("DELETE FROM online_status WHERE id=:id LIMIT 1", [
                 'id' => $id,
             ]);
 
@@ -490,121 +416,6 @@ class OnlineStatus extends BaseClass
                 'swal_message' => 'Stato eliminato correttamente.',
                 'swal_type' => 'success',
                 'status_list' => $this->listStatus(),
-            ];
-
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
-        }
-    }
-
-    /**
-     * @fn insertStatusType
-     * @note Funzione d'inserimento di un nuovo tipo di stato
-     * @param array $post
-     * @return array
-     * @throws Throwable
-     */
-    public function insertStatusType(array $post): array
-    {
-
-        if ( $this->manageStatusPermission() ) {
-
-            $label = Filters::in($post['label']);
-            $request = Filters::in($post['request']);
-
-            DB::queryStmt("INSERT INTO online_status_type (label,request) VALUES (:label,:request)",[
-                'label' => $label,
-                'request' => $request,
-            ]);
-
-            return [
-                'response' => true,
-                'swal_title' => 'Operazione riuscita!',
-                'swal_message' => 'Tipo di stato inserito correttamente.',
-                'swal_type' => 'success',
-                'status_list' => $this->listStatusType(),
-            ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
-        }
-    }
-
-    /**
-     * @fn editStatusType
-     * @note Funzione di modifica di un tipo di stato
-     * @param array $post
-     * @return array
-     * @throws Throwable
-     */
-    public function editStatusType(array $post): array
-    {
-
-        if ( $this->manageStatusPermission() ) {
-
-            $id = Filters::int($post['id']);
-            $label = Filters::in($post['label']);
-            $request = Filters::in($post['request']);
-
-            DB::queryStmt("UPDATE online_status_type SET label=:label,request=:request WHERE id=:id LIMIT 1",[
-                'id' => $id,
-                'label' => $label,
-                'request' => $request,
-            ]);
-
-            return [
-                'response' => true,
-                'swal_title' => 'Operazione riuscita!',
-                'swal_message' => 'Tipo di stato modificato correttamente.',
-                'swal_type' => 'success',
-                'status_list' => $this->listStatusType(),
-            ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
-        }
-    }
-
-    /**
-     * @fn deleteStatusType
-     * @note Funzione di eliminazione di un tipo di stato
-     * @param array $post
-     * @return array
-     * @throws Throwable
-     */
-    public function deleteStatusType(array $post): array
-    {
-
-        if ( $this->manageStatusPermission() ) {
-
-            $id = Filters::int($post['id']);
-
-            DB::queryStmt("DELETE FROM online_status_type WHERE id=:id LIMIT 1",[
-                'id' => $id,
-            ]);
-            DB::queryStmt("DELETE FROM online_status WHERE type=:id",[
-                'id' => $id,
-            ]);
-
-            return [
-                'response' => true,
-                'swal_title' => 'Operazione riuscita!',
-                'swal_message' => 'Tipo di stato eliminato correttamente.',
-                'swal_type' => 'success',
-                'status_list' => $this->listStatusType(),
             ];
 
         } else {

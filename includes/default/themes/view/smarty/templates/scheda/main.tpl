@@ -36,11 +36,20 @@
             <div class="value">{{$last_login}}</div>
         </div>
 
+        {if $status_online_enabled}
+            <div class="general_title">Status Online</div>
+            {foreach $status_online as $index => $value }
+                <div class="single_info">
+                    <div class="label">{{$index}}</div>
+                    <div class="value">{{$value}}</div>
+                </div>
+            {/foreach}
+        {/if}
+
         <div class="message_link">
             <a href="main.php?page=messages_center&op=create&reply_dest={{$character_data.id}}">
                 Invia un messaggio a {{$character_data.nome}}
             </a>
         </div>
-
     </div>
 </div>
