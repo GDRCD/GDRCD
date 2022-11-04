@@ -1342,22 +1342,3 @@ div.innertube {
 }
 
 
-.forum_list_table .td {
-    width: 45%;
-}
-
-.forum_posts_table .td {
-    width: 24%;
-}
-
-.forum_posts_table .td.title span{
-    margin-right: 5px;
-}
-
-.forum_posts_table .td.title span.important{
-    color: #fffa86;
-}
-
-.forum_posts_table .td.title span.closed{
-    color: firebrick;
-}

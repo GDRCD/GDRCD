@@ -2,10 +2,6 @@
 
 class ForumTipo extends Forum
 {
-
-    /**** PERMISSIONS ***/
-
-
     /*** TABLES HELPER ***/
 
     /**
@@ -33,9 +29,12 @@ class ForumTipo extends Forum
         return DB::queryStmt("SELECT {$val} FROM forum_tipo WHERE 1  ORDER BY id", []);
     }
 
-    /*** Functions ***/
+
+    /*** FUNCTIONS ***/
 
     /**
+     * @fn isTypePublic
+     * @note Ritorna true se il tipo di forum è pubblico, false altrimenti
      * @param int $type_id
      * @return bool
      * @throws Throwable

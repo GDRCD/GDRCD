@@ -2,8 +2,41 @@
 
 class ForumPosts extends Forum
 {
-
     /*** TABLES HELPERS ***/
+
+    /**
+     * @fn getPost
+     * @note Estrapola uno specifico post dal database
+     * @param int $id
+     * @param string $val
+     * @return DBQueryInterface
+     * @throws Throwable
+     */
+    public function getPost(int $id, string $val = '*'): DBQueryInterface
+    {
+        return DB::queryStmt("SELECT {$val} FROM forum_posts WHERE id=:id LIMIT 1", ['id' => $id]);
+    }
+
+    /**
+     * @fn getPost
+     * @note Estrapola uno specifico post dal database
+     * @param int $id
+     * @param int $pagination
+     * @param string $val
+     * @return DBQueryInterface
+     * @throws Throwable
+     */
+    public function getPostHistoryPaginated(int $id, int $pagination, string $val = '*'): DBQueryInterface
+    {
+        $comments_number = Functions::get_constant('FORUM_COMMENTS_FOR_PAGE');
+        $initial_index = ($pagination - 1) * $comments_number;
+
+        return DB::queryStmt("SELECT {$val} FROM forum_posts 
+             WHERE (id=:id OR id_padre =:id_padre )
+             ORDER BY id_padre ASC, data ASC
+             LIMIT {$initial_index}, {$comments_number}
+             ", ['id' => $id, 'id_padre' => $id]);
+    }
 
     /**
      * @fn getForumsPermissionsByType
@@ -21,22 +54,6 @@ class ForumPosts extends Forum
             ['forum' => $forum_id, 'me' => $this->me_id]
         );
         return $response->getNumRows();
-    }
-
-    /**
-     * @fn getForumPermissionForPg
-     * @note Ottiene i dati del permesso di un forum specifico
-     * @param int $forum
-     * @param int $pg
-     * @param string $val
-     * @return DBQueryInterface
-     * @throws Throwable
-     */
-    public function getForumPermissionForPg(int $forum, int $pg, string $val = '*'): DBQueryInterface
-    {
-        return DB::queryStmt("SELECT {$val} FROM forum_permessi WHERE forum=:forum  AND eliminato=0 AND pg=:pg LIMIT 1",
-            ['forum' => $forum, 'pg' => $pg]
-        );
     }
 
     /**
@@ -72,6 +89,21 @@ class ForumPosts extends Forum
         )->getNumRows();
     }
 
+    /**
+     * @fn getOriginalPostId
+     * @note Ottiene l'id del post originale di un commento
+     * @param int $post_id
+     * @return int
+     * @throws Throwable
+     */
+    public function getOriginalPostId(int $post_id): int
+    {
+        $post_data = $this->getPost($post_id, 'id_padre');
+        $id_padre = Filters::int($post_data['id_padre']);
+
+        return ($id_padre > 0) ? $id_padre : $post_id;
+    }
+
 
     /*** AJAX ***/
 
@@ -82,11 +114,12 @@ class ForumPosts extends Forum
      * @return array
      * @throws Throwable
      */
-    public function newPost(array $post):array{
+    public function newPost(array $post): array
+    {
 
         $forum_id = Filters::int($post['forum_id']);
 
-        if(ForumPermessi::getInstance()->haveForumPermission($forum_id)){
+        if ( ForumPermessi::getInstance()->haveForumPermission($forum_id) ) {
 
             DB::queryStmt("INSERT INTO forum_posts(id_forum, id_padre, titolo, testo, autore) VALUES (:forum, :padre, :titolo, :testo, :autore)",
                 [
@@ -94,7 +127,7 @@ class ForumPosts extends Forum
                     'padre' => 0,
                     'titolo' => Filters::text($post['titolo']),
                     'testo' => Filters::text($post['testo']),
-                    'autore' => $this->me_id
+                    'autore' => $this->me_id,
                 ]
             );
 
@@ -102,9 +135,9 @@ class ForumPosts extends Forum
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Post inserito correttamente.',
-                'swal_type' => 'success'
+                'swal_type' => 'success',
             ];
-        } else{
+        } else {
             return [
                 'response' => false,
                 'swal_title' => 'Errore!',
@@ -113,14 +146,264 @@ class ForumPosts extends Forum
             ];
         }
 
+    }
+
+    /**
+     * @fn editPost
+     * @note Modifica un post
+     * @param array $post
+     * @return array
+     * @throws Throwable
+     */
+    public function editPost(array $post): array
+    {
+
+        $post_id = Filters::int($post['post_id']);
+
+        if ( ForumPermessi::getInstance()->haveForumPermissionByPostId($post_id) && ForumPermessi::getInstance()->permissionPostEdit($post_id) ) {
+
+            DB::queryStmt("UPDATE forum_posts SET titolo=:titolo, testo=:testo WHERE id=:id",
+                [
+                    'id' => $post_id,
+                    'titolo' => Filters::text($post['titolo']),
+                    'testo' => Filters::text($post['testo']),
+                ]
+            );
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Post modificato correttamente.',
+                'swal_type' => 'success',
+            ];
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Errore!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error',
+            ];
+        }
 
     }
+
+    /**
+     * @fn deletePost
+     * @note Elimina un post
+     * @param array $post
+     * @return array
+     * @throws Throwable
+     */
+    public function deletePost(array $post): array
+    {
+
+        $post_id = Filters::int($post['post_id']);
+        $pagination = Filters::int($post['pagination']);
+
+        if ( ForumPermessi::getInstance()->haveForumPermissionByPostId($post_id) && ForumPermessi::getInstance()->permissionPostEdit($post_id) ) {
+
+            DB::queryStmt("UPDATE forum_posts SET eliminato=1 WHERE id=:id",
+                [
+                    'id' => $post_id,
+                ]
+            );
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Post eliminato correttamente.',
+                'swal_type' => 'success',
+                'new_view' => $this->singlePost($this->getOriginalPostId($post_id), $pagination)
+            ];
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Errore!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error',
+            ];
+        }
+
+    }
+
+    /**
+     * @fn commentPost
+     * @note Crea un nuovo commento
+     * @param array $post
+     * @return array
+     * @throws Throwable
+     */
+    public function commentPost(array $post): array
+    {
+
+        $post_id = Filters::int($post['post_id']);
+
+        if ( ForumPermessi::getInstance()->permissionPostComment($post_id) ) {
+
+            DB::queryStmt("INSERT INTO forum_posts(id_forum, id_padre, titolo, testo, autore) VALUES (:forum, :padre, :titolo, :testo, :autore)",
+                [
+                    'forum' => 0,
+                    'padre' => $post_id,
+                    'titolo' => Filters::text($post['titolo']),
+                    'testo' => Filters::text($post['testo']),
+                    'autore' => $this->me_id,
+                ]
+            );
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Post commentato correttamente.',
+                'swal_type' => 'success',
+            ];
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Errore!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error',
+            ];
+        }
+
+    }
+
+    /**
+     * @fn restorePost
+     * @note Ripristina un post
+     * @param array $post
+     * @return array
+     * @throws Throwable
+     */
+    public function restorePost(array $post): array
+    {
+
+        $post_id = Filters::int($post['post_id']);
+        $pagination = Filters::int($post['pagination']);
+
+        if ( ForumPermessi::getInstance()->permissionForumAdmin() ) {
+
+            DB::queryStmt("UPDATE forum_posts SET eliminato=0 WHERE id=:id",
+                [
+                    'id' => $post_id,
+                ]
+            );
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Post ripristinato correttamente.',
+                'swal_type' => 'success',
+                'new_view' => $this->singlePost($this->getOriginalPostId($post_id), $pagination)
+            ];
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Errore!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error',
+            ];
+        }
+
+    }
+
+    /**
+     * @fn lockPost
+     * @note Sblocca/Blocca un post
+     * @param array $post
+     * @return array
+     * @throws Throwable
+     */
+    public function lockPost(array $post): array
+    {
+
+        $post_id = Filters::int($post['post_id']);
+        $pagination = Filters::int($post['pagination']);
+
+        if ( ForumPermessi::getInstance()->permissionForumAdmin() ) {
+
+            DB::queryStmt("UPDATE forum_posts SET chiuso = NOT chiuso WHERE id=:id",
+                [
+                    'id' => $post_id,
+                ]
+            );
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Post modificato correttamente.',
+                'swal_type' => 'success',
+                'new_view' => $this->singlePost($this->getOriginalPostId($post_id), $pagination)
+            ];
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Errore!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error',
+            ];
+        }
+
+    }
+
+    /**
+     * @fn importantPost
+     * @note Sblocca/Blocca un post
+     * @param array $post
+     * @return array
+     * @throws Throwable
+     */
+    public function importantPost(array $post): array
+    {
+
+        $post_id = Filters::int($post['post_id']);
+        $pagination = Filters::int($post['pagination']);
+
+        if ( ForumPermessi::getInstance()->permissionForumAdmin() ) {
+
+            DB::queryStmt("UPDATE forum_posts SET importante = NOT importante WHERE id=:id",
+                [
+                    'id' => $post_id,
+                ]
+            );
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Post modificato correttamente.',
+                'swal_type' => 'success',
+                'new_view' => $this->singlePost($this->getOriginalPostId($post_id), $pagination)
+            ];
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Errore!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error',
+            ];
+        }
+
+    }
+
 
     /*** RENDER ***/
 
     /**
+     * @fn renderPostName
+     * @note Renderizza il nome di un post
+     * @param int $post_id
+     * @return string
+     * @throws Throwable
+     */
+    public function renderPostName(int $post_id): string
+    {
+        return Filters::string($this->getPost($post_id, 'titolo')['titolo']);
+    }
+
+    /**
      * @fn forumsList
      * @note Ritorna la lista renderizzata dei forum
+     * @param int $forum_id
+     * @param int $pagination
      * @return string
      * @throws Throwable
      */
@@ -162,7 +445,7 @@ class ForumPosts extends Forum
         }
 
         $cells = [
-            'Nome',
+            'Titolo',
             'Autore',
             'Data',
             'Ultimo messaggio',
@@ -177,19 +460,19 @@ class ForumPosts extends Forum
             'body_rows' => $row_data,
             'cells' => $cells,
             'links' => $links,
-            'footer_pagination' => $this->renderPagination($forum_id, $pagination)
+            'footer_pagination' => $this->renderPostsPagination($forum_id, $pagination),
         ];
     }
 
     /**
      * @fn renderPagination
      * @note Renderizza la paginazione per la lista posts
-     * @param $forum_id
+     * @param int $forum_id
      * @param $pagination
      * @return array
      * @throws Throwable
      */
-    public function renderPagination($forum_id, $pagination): array
+    public function renderPostsPagination(int $forum_id, $pagination): array
     {
 
         $posts_number = $this->getCountPostsByForum($forum_id);
@@ -197,16 +480,65 @@ class ForumPosts extends Forum
 
         $pages = [];
 
-        for($i = 1; $i <= ceil($posts_number / $posts_number_for_page); $i++){
+        for ( $i = 1; $i <= ceil($posts_number / $posts_number_for_page); $i++ ) {
             $pages[] = [
                 'url' => "/main.php?page=forum/index&op=posts&forum_id={$forum_id}&pagination={$i}",
-                'page' => $i
+                'page' => $i,
             ];
         }
 
         return [
             "current" => $pagination,
-            "pages" => $pages
+            "pages" => $pages,
         ];
+    }
+
+    /**
+     * @fn singlePost
+     * @note Ritorna il post renderizzato
+     * @param int $post_id
+     * @param int $pagination
+     * @return string
+     * @throws Throwable
+     */
+    public function singlePost(int $post_id, int $pagination): string
+    {
+        $array = [];
+        $original_post = $this->getPost($post_id);
+        $admin_permission = ForumPermessi::getInstance()->permissionForumAdmin();
+
+        if ( !Filters::bool($original_post['eliminato']) || $admin_permission ) {
+            $posts = $this->getPostHistoryPaginated($post_id, $pagination);
+
+            foreach ( $posts as $post ) {
+                $author_data = Personaggio::getPgData(Filters::int($post['autore']), 'url_img, nome, cognome');
+                $deleted = Filters::bool($post['eliminato']);
+
+                if ( !$deleted || $admin_permission ) {
+                    $array[] = [
+                        'id' => Filters::int($post['id']),
+                        'author_id' => Filters::int($post['autore']),
+                        'author_name' => Personaggio::nameFromId(Filters::int($post['autore'])),
+                        'author_avatar' => Filters::out($author_data['url_img']),
+                        'text' => Filters::out($post['testo']),
+                        'date' => Filters::date($post['data'], 'd/m/Y H:i:s'),
+                        'admin_permission' => $admin_permission,
+                        'edit_permission' => ForumPermessi::getInstance()->permissionPostEdit($post['id']),
+                        'delete_permission' => ForumPermessi::getInstance()->permissionPostEdit($post['id']),
+                        'closed' => Filters::bool($post['chiuso']),
+                        'important' => Filters::bool($post['importante']),
+                        'deleted' => $deleted,
+                        'padre' => Filters::int($post['id_padre']) === 0,
+                    ];
+                }
+            }
+
+        }
+
+        return Template::getInstance()->startTemplate()->render(
+            'forum/post',
+            ['posts' => $array, 'pagination' => $pagination]
+        );
+
     }
 }

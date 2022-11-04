@@ -17,6 +17,7 @@ class Forum extends BaseClass
         $this->forum_active = Functions::get_constant('FORUM_ACTIVE');
     }
 
+
     /*** GETTER ***/
 
     /**
@@ -28,6 +29,7 @@ class Forum extends BaseClass
     {
         return $this->forum_active;
     }
+
 
     /*** TABLES HELPER ***/
 
@@ -42,18 +44,6 @@ class Forum extends BaseClass
     public function getForum(int $id, string $val = '*'): DBQueryInterface
     {
         return DB::queryStmt("SELECT {$val} FROM forum WHERE id=:id LIMIT 1", ['id' => $id]);
-    }
-
-    /**
-     * @fn getAllForums
-     * @note Ottieni tutti i forum
-     * @param string $val
-     * @return DBQueryInterface
-     * @throws Throwable
-     */
-    public function getAllForums(string $val = '*'): DBQueryInterface
-    {
-        return DB::queryStmt("SELECT {$val} FROM forum WHERE 1  ORDER BY tipo DESC", []);
     }
 
     /**
@@ -115,11 +105,12 @@ class Forum extends BaseClass
         return $page;
     }
 
+
     /*** RENDER ***/
 
     /**
      * @fn renderForumName
-     * @note
+     * @note Renderizza il nome del forum
      * @param int $forum_id
      * @return string
      * @throws Throwable

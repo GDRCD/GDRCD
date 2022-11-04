@@ -125,7 +125,8 @@ class GDRCD6 extends DbMigration
                 ('RACES_ACTIVE', 1, 'Razze', 'Se abilitato, le razze sono abilitate nel sito', 'Se abilitato, le razze sono abilitate nel sito', 'bool', 1,NULL),
                 ('REGISTRAZIONI_ENABLED',1,'Registrazioni','Registrazioni attive','Registrazioni attive?','bool',1,NULL),
                 ('FORUM_ACTIVE',1,'Forum','Forum attivo','Forum attivo?','bool',1,NULL),
-                ('FORUM_POSTS_FOR_PAGE',10,'Forum','Posts per pagina','Numero posts per pagina','bool',1,NULL)
+                ('FORUM_POSTS_FOR_PAGE',10,'Forum','Posts per pagina','Numero posts per pagina','bool',1,NULL),
+                ('FORUM_COMMENTS_FOR_PAGE',10,'Forum','Commenti per pagina','Numero commenti post per pagina','bool',1,NULL)
         ;");
 
         DB::query("
@@ -388,7 +389,9 @@ class GDRCD6 extends DbMigration
                 ('MANAGE_NAMES','Permesso per la gestione dei nomi dei personaggi'),
                 ('MANAGE_BANK','Permesso per la gestione della banca altrui'),
                 ('MANAGEMENT_MENU','Permesso per la pagina gestione'),
-                ('FORUM_VIEW_ALL','Permesso per la visione di tutti i forum esistenti')
+                ('FORUM_VIEW_ALL','Permesso per la visione di tutti i forum esistenti'),
+                ('FORUM_EDIT_ALL','Permesso per la modifica di tutti i forum visibili'),
+                ('FORUM_ADMIN','Permesso per la modifica di tutti i forum visibili')
                ;"
         );
 
