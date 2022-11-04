@@ -613,7 +613,8 @@ div.innertube {
     font-size: 15px;
 }
 
-.fake-table .header .header-title {
+.fake-table .header .header-title ,
+.fake-table .footer .pagination{
     background: #23272a !important;
     color: #ccc !important;
     font-size: 15px;
@@ -621,6 +622,10 @@ div.innertube {
     padding-top: 0;
     border-bottom: 1px solid #4d5259;
     margin-bottom: 5px;
+}
+
+.fake-table .footer .pagination .current{
+    color: #7289da;
 }
 
 .fake-table .footer a,
@@ -1334,4 +1339,25 @@ div.innertube {
 .anagrafe_table .tr .td img{
     width: 30px;
     height: 30px;
+}
+
+
+.forum_list_table .td {
+    width: 45%;
+}
+
+.forum_posts_table .td {
+    width: 24%;
+}
+
+.forum_posts_table .td.title span{
+    margin-right: 5px;
+}
+
+.forum_posts_table .td.title span.important{
+    color: #fffa86;
+}
+
+.forum_posts_table .td.title span.closed{
+    color: firebrick;
 }

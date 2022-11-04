@@ -12,6 +12,7 @@ class GDRCD6 extends DbMigration
 
     /**
      * @inheritDoc
+     * @throws Throwable
      */
     public function up()
     {
@@ -22,11 +23,19 @@ class GDRCD6 extends DbMigration
         ");
 
         DB::query("
-            INSERT INTO `araldo` (`id_araldo`, `tipo`, `nome`, `proprietari`) VALUES
-                (1, 4, 'Resoconti quest', 0),
-                (2, 0, 'Notizie in gioco', 0),
-                (3, 2, 'Umani', 1000),
-                (4, 3, 'Ordini alla Guardia', 1);"
+            INSERT INTO `forum` (`tipo`, `nome`, `proprietari`) VALUES
+                (1, 'Notizie in gioco', NULL),
+                (2, 'Ordini alla Guardia', 1),
+                (3, 'Umani', 1000),
+                (4, 'Resoconti quest', NULL);"
+        );
+
+        DB::query("
+            INSERT INTO `forum_tipo` (`id`, `nome`,`pubblico`) VALUES
+                (1, 'Pubblico',1),
+                (2, 'Gruppi',0),
+                (3, 'Razze',0),
+                (4, 'Privato',0);"
         );
 
         // Argon2 potrebbe non essere sempre disponibile. Nel qual caso usiamo Blowfish come default
@@ -114,9 +123,10 @@ class GDRCD6 extends DbMigration
                 ('CONTACT_CATEGORIES_PUBLIC', 1, 'Contatti','Se abilitato, tutti vedono le categorie',  'Se abilitato, tutti vedono le categorie', 'bool', 1,NULL),
                 ('CONTACT_CATEGORIES_STAFF_ONLY', 0, 'Contatti', 'Se abilitato, solo lo staff può assegnare le categorie di contatto', 'Se abilitato, solo lo staff può assegnare le categorie di contatto', 'bool', 1,NULL),
                 ('RACES_ACTIVE', 1, 'Razze', 'Se abilitato, le razze sono abilitate nel sito', 'Se abilitato, le razze sono abilitate nel sito', 'bool', 1,NULL),
-                ('REGISTRAZIONI_ENABLED',1,'Registrazioni','Registrazioni attive','Registrazioni attive?','bool',1,NULL);"
-
-        );
+                ('REGISTRAZIONI_ENABLED',1,'Registrazioni','Registrazioni attive','Registrazioni attive?','bool',1,NULL),
+                ('FORUM_ACTIVE',1,'Forum','Forum attivo','Forum attivo?','bool',1,NULL),
+                ('FORUM_POSTS_FOR_PAGE',10,'Forum','Posts per pagina','Numero posts per pagina','bool',1,NULL)
+        ;");
 
         DB::query("
             INSERT INTO config_options(section,label,value) VALUES 
@@ -377,7 +387,8 @@ class GDRCD6 extends DbMigration
                 ('MANAGE_GENDERS','Permesso per la gestione dei sessi'),
                 ('MANAGE_NAMES','Permesso per la gestione dei nomi dei personaggi'),
                 ('MANAGE_BANK','Permesso per la gestione della banca altrui'),
-                ('MANAGEMENT_MENU','Permesso per la pagina gestione')
+                ('MANAGEMENT_MENU','Permesso per la pagina gestione'),
+                ('FORUM_VIEW_ALL','Permesso per la visione di tutti i forum esistenti')
                ;"
         );
 
