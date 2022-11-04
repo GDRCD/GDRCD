@@ -94,16 +94,6 @@ class Form {
             processData: false,
             success: async function (data) {
 
-                //*** CALLBACK
-                if (success != false) {
-
-                    let callback = eval(success)
-
-                    if (typeof callback === "function") {
-                        callback.call(this, data);
-                    }
-                }
-
                 //**** RESET
                 if (cls.form_reset) {
                     await cls.FormReset(form);
@@ -120,10 +110,29 @@ class Form {
                             json.swal_title,
                             (json.swal_message) ? json.swal_message : '',
                             (json.swal_type) ? json.swal_type : ''
-                        )
+                        ).then(() => {
+                            if (success != false) {
 
+                                let callback = eval(success)
+
+                                if (typeof callback === "function") {
+                                    callback.call(this, data);
+                                }
+                            }
+                        })
+                    }
+                } else{
+                    //*** CALLBACK
+                    if (success != false) {
+
+                        let callback = eval(success)
+
+                        if (typeof callback === "function") {
+                            callback.call(this, data);
+                        }
                     }
                 }
+
             }
         });
     }

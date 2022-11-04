@@ -1,7 +1,7 @@
 class Swal {
 
     static fire(title, message, type) {
-        new swal(title, message, type);
+        return new swal(title, message, type);
     }
 
     static button(title, message, type, buttons = false) {
