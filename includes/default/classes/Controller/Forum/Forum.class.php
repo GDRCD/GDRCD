@@ -1,5 +1,16 @@
 <?php
 
+# TODO Mancano pagine di gestione di:
+# - Forum
+# - Forum tipo
+# - Forum permessi
+
+# TODO Manca logica letture post
+
+# TODO Manca logica segnalazioni post
+
+# TODO Frame laterale avviso nuovi messaggi bacheche
+
 class Forum extends BaseClass
 {
 
