@@ -23,11 +23,11 @@ class GDRCD6 extends DbMigration
         ");
 
         DB::query("
-            INSERT INTO `forum` (`tipo`, `nome`, `proprietari`) VALUES
-                (1, 'Notizie in gioco', NULL),
-                (2, 'Ordini alla Guardia', 1),
-                (3, 'Umani', 1000),
-                (4, 'Resoconti quest', NULL);"
+            INSERT INTO `forum` (`tipo`, `nome`) VALUES
+                (1, 'Notizie in gioco'),
+                (2, 'Ordini alla Guardia'),
+                (3, 'Umani'),
+                (4, 'Resoconti quest');"
         );
 
         DB::query("
@@ -234,6 +234,9 @@ class GDRCD6 extends DbMigration
               ('Gestione', 'Extra', 'Gestione Sessi', 'gestione/sessi/gestione_sessi', 'MANAGE_GENDERS'),
               ('Gestione', 'Extra', 'Gestione Razze', 'gestione/razze/gestione_razze', 'MANAGE_RACES'),
               ('Gestione', 'Contatti', 'Gestione Categorie', 'gestione/contatti/gestione_categorie', 'MANAGE_CONTACTS_CATEGORIES'),
+              ('Gestione', 'Forum', 'Gestione Forum', 'gestione/forum/forum/gestione_forum', 'FORUM_ADMIN'),
+              ('Gestione', 'Forum', 'Gestione Tipi', 'gestione/forum/tipi/gestione_forum_tipi', 'FORUM_ADMIN'),
+              ('Gestione', 'Forum', 'Gestione Permessi', 'gestione/forum/permessi/gestione_forum_permessi', 'FORUM_ADMIN'),
               ('Uffici', 'Anagrafe', 'Anagrafe', 'servizi/anagrafe/index', NULL),
               ('Uffici', 'Lavoro', 'Amministrazione Gruppi', 'servizi/amministrazioneGilde/index', NULL),
               ('Uffici', 'Lavoro', 'Lavoro', 'servizi/lavori/index', NULL),

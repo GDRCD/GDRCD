@@ -1,11 +1,6 @@
 <?php
 
-# TODO Mancano pagine di gestione di:
-# - Forum
-# - Forum tipo
-# - Forum permessi
-
-# TODO Manca logica segnalazioni post
+# TODO Logica segnalazioni post via messaggio - Attesa sezione messaggi
 
 class Forum extends BaseClass
 {
@@ -78,6 +73,7 @@ class Forum extends BaseClass
         return DB::queryStmt("SELECT {$val} FROM forum WHERE tipo = :tipo  ORDER BY tipo DESC", ["tipo" => $type]);
     }
 
+
     /*** ROUTING ****/
 
     /**
@@ -137,6 +133,35 @@ class Forum extends BaseClass
     {
         return ['text' => $this->renderFrameText()];
     }
+
+    /**
+     * @fn get_forum_data
+     * @note Ritorna il testo del frame laterale
+     * @param array $post
+     * @return array
+     * @throws Throwable
+     */
+    public function ajaxForumData(array $post): array
+    {
+        return $this->getForum($post['id'])->getData()[0];
+    }
+
+
+    /*** LISTS ***/
+
+    /**
+     * @fn listForums
+     * @note Ritorna la lista dei forum
+     * @param int $selected
+     * @return string
+     * @throws Throwable
+     */
+    public function listForums(int $selected = 0): string
+    {
+        $forums = $this->getAllForums();
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', $selected, $forums);
+    }
+
 
     /*** RENDER ***/
 
@@ -212,10 +237,10 @@ class Forum extends BaseClass
     /**
      * @fn renderFrameText
      * @note Renderizza il testo del frame laterale
-     * @return mixed
+     * @return string
      * @throws Throwable
      */
-    public function renderFrameText()
+    public function renderFrameText(): string
     {
         $new_post = ForumPosts::getInstance()->getCountPostsAllForum();
 
@@ -225,5 +250,127 @@ class Forum extends BaseClass
                 'new_post' => $new_post,
             ]
         );
+    }
+
+
+    /**** GESTIONE ****/
+
+    /**
+     * @fn newForum
+     * @note Inserisce un nuovo forum
+     * @param array $post
+     * @return array
+     * @throws Throwable
+     */
+    public function newForum(array $post): array
+    {
+
+        if ( ForumPermessi::getInstance()->permissionForumAdmin() ) {
+
+            $name = Filters::in($post['nome']);
+            $description = Filters::in($post['descrizione']);
+            $type = Filters::in($post['tipo']);
+
+            DB::queryStmt("INSERT INTO forum (nome, descrizione,tipo) VALUES (:nome, :descrizione,:tipo)", [
+                'nome' => $name,
+                'descrizione' => $description,
+                'tipo' => $type,
+            ]);
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Forum creato correttamente.',
+                'swal_type' => 'success',
+                'forums_list' => $this->listForums(),
+            ];
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error',
+            ];
+        }
+    }
+
+    /**
+     * @fn modForum
+     * @note Modifica un forum
+     * @param array $post
+     * @return array
+     * @throws Throwable
+     */
+    public function modForum(array $post): array
+    {
+
+        if ( ForumPermessi::getInstance()->permissionForumAdmin() ) {
+
+            $id = Filters::int($post['id']);
+            $name = Filters::in($post['nome']);
+            $description = Filters::in($post['descrizione']);
+            $type = Filters::in($post['tipo']);
+
+            DB::queryStmt("UPDATE forum SET nome=:nome, descrizione=:description, tipo=:tipo WHERE id=:id", [
+                'id' => $id,
+                'nome' => $name,
+                'description' => $description,
+                'tipo' => $type,
+            ]);
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Forum modificato correttamente.',
+                'swal_type' => 'success',
+                'forums_list' => $this->listForums(),
+            ];
+
+        } else {
+
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error',
+            ];
+        }
+    }
+
+    /**
+     * @fn delForum
+     * @note Elimina un forum
+     * @param array $post
+     * @return array
+     * @throws Throwable
+     */
+    public function delForum(array $post): array
+    {
+
+        if ( ForumPermessi::getInstance()->permissionForumAdmin() ) {
+
+            $id = Filters::int($post['id']);
+
+            DB::queryStmt("DELETE FROM forum WHERE id=:id", [
+                'id' => $id,
+            ]);
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Forum eliminato correttamente.',
+                'swal_type' => 'success',
+                'forums_list' => $this->listForums(),
+            ];
+
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error',
+            ];
+        }
+
     }
 }

@@ -164,3 +164,9 @@
 .forum_post_container .comment_button a:hover {
     color: white;
 }
+
+/***** GESTIONE ******/
+
+.visual_result .td{
+    width: 32%;
+}

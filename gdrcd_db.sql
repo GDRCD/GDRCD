@@ -406,7 +406,6 @@ CREATE TABLE IF NOT EXISTS `forum` (
     `tipo` int NOT NULL DEFAULT '0',
     `nome` varchar(255) DEFAULT NULL,
     `descrizione` TEXT DEFAULT NULL,
-    `proprietari` int DEFAULT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
