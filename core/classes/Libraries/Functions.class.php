@@ -124,20 +124,8 @@ class Functions extends BaseClass
      */
     public static function getPgList(int $selected = 0): string
     {
-
-        $html = '';
-        $selected = Filters::int($selected);
         $data = DB::queryStmt("SELECT id,nome FROM personaggio WHERE 1 ORDER BY nome", []);
-
-        foreach ( $data as $row ) {
-            $id = Filters::int($row['id']);
-            $nome = Filters::out($row['nome']);
-            $sel = ($selected == $id) ? 'selected' : '';
-
-            $html .= "<option value='{$id}' {$sel}>{$nome}</option>";
-        }
-
-        return $html;
+        return Template::getInstance()->startTemplate()->renderSelect('id','nome',Filters::int($selected),$data);
     }
 
     /**
