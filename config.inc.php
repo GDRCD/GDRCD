@@ -174,7 +174,7 @@ $PARAMETERS['left_column']['box']['info_location']['page'] = 'info_location'; //
 $PARAMETERS['left_column']['box']['frame_messages']['class'] = 'messages';
 $PARAMETERS['left_column']['box']['frame_messages']['page'] = 'frame_messages'; //Link ai messaggi
 $PARAMETERS['left_column']['box']['frame_forum']['class'] = 'forums';
-$PARAMETERS['left_column']['box']['frame_forum']['page'] = 'frame_forums'; //Link al forum
+$PARAMETERS['left_column']['box']['frame_forum']['page'] = 'forum/frame'; //Link al forum
 $PARAMETERS['left_column']['box']['link_menu']['class'] = 'menu';
 $PARAMETERS['left_column']['box']['link_menu']['page'] = 'link_menu'; //Menu' del gioco.
 

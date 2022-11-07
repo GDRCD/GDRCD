@@ -75,35 +75,6 @@ CREATE TABLE IF NOT EXISTS `ambientazione` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `araldo`
---
-
-CREATE TABLE IF NOT EXISTS `araldo` (
-  `id_araldo` int NOT NULL AUTO_INCREMENT,
-  `tipo` int NOT NULL DEFAULT '0',
-  `nome` varchar(255) DEFAULT NULL,
-  `proprietari` int NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_araldo`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `araldo_letto`
---
-
-CREATE TABLE IF NOT EXISTS `araldo_letto` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `nome` varchar(255) DEFAULT NULL,
-  `araldo_id` int NOT NULL,
-  `thread_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `nome` (`nome`,`thread_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Struttura della tabella `backmessaggi`
 --
 
@@ -427,6 +398,84 @@ CREATE TABLE IF NOT EXISTS `esiti_risposte_risultati` (
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `forum`
+--
+
+CREATE TABLE IF NOT EXISTS `forum` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `tipo` int NOT NULL DEFAULT '0',
+    `nome` varchar(255) DEFAULT NULL,
+    `descrizione` TEXT DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `forum`
+--
+
+CREATE TABLE IF NOT EXISTS `forum_permessi` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `forum` int NOT NULL,
+    `pg` int NOT NULL,
+    `assegnato_da` int DEFAULT NULL,
+    `assegnato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `forum_post`
+--
+
+CREATE TABLE IF NOT EXISTS `forum_posts` (
+    `id` bigint NOT NULL AUTO_INCREMENT,
+    `id_padre` bigint NOT NULL DEFAULT '0',
+    `id_forum` int DEFAULT NULL,
+    `titolo` varchar(255) DEFAULT NULL,
+    `testo` text,
+    `autore` INT,
+    `data` datetime DEFAULT CURRENT_TIMESTAMP,
+    `data_ultimo` datetime DEFAULT CURRENT_TIMESTAMP,
+    `importante` tinyint(1) NOT NULL DEFAULT 0,
+    `chiuso` tinyint(1) NOT NULL DEFAULT 0,
+    `eliminato` tinyint(1) NOT NULL DEFAULT 0,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `forum_letto`
+--
+
+CREATE TABLE IF NOT EXISTS `forum_posts_letti` (
+    `id` bigint NOT NULL AUTO_INCREMENT,
+    `pg` varchar(255) DEFAULT NULL,
+    `post` int NOT NULL,
+    PRIMARY KEY (`id`),
+    KEY `pg_post` (`pg`,`post`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `forum_tipo`
+--
+
+CREATE TABLE IF NOT EXISTS `forum_tipo` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `nome` varchar(255),
+    `descrizione` varchar(255) DEFAULT NULL,
+    `pubblico` tinyint(1) DEFAULT 0,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `lavori`
 --
 
@@ -662,30 +711,6 @@ CREATE TABLE IF NOT EXISTS `messaggi` (
   KEY `destinatario` (`destinatario`),
   KEY `letto` (`letto`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `messaggioaraldo`
---
-
-CREATE TABLE IF NOT EXISTS `messaggioaraldo` (
-  `id_messaggio` bigint NOT NULL AUTO_INCREMENT,
-  `id_messaggio_padre` bigint NOT NULL DEFAULT '0',
-  `id_araldo` int DEFAULT NULL,
-  `titolo` varchar(255) DEFAULT NULL,
-  `messaggio` text,
-  `autore` varchar(255) DEFAULT NULL,
-  `data_messaggio` datetime DEFAULT NULL,
-  `data_ultimo_messaggio` datetime DEFAULT NULL,
-  `importante` binary(1) NOT NULL DEFAULT '0',
-  `chiuso` binary(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_messaggio`),
-  KEY `id_araldo` (`id_araldo`),
-  KEY `id_messaggio_padre` (`id_messaggio_padre`),
-  KEY `data_messaggio` (`data_messaggio`),
-  KEY `importante` (`importante`,`chiuso`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0;
 
 -- --------------------------------------------------------
 

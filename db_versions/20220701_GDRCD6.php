@@ -12,6 +12,7 @@ class GDRCD6 extends DbMigration
 
     /**
      * @inheritDoc
+     * @throws Throwable
      */
     public function up()
     {
@@ -22,11 +23,19 @@ class GDRCD6 extends DbMigration
         ");
 
         DB::query("
-            INSERT INTO `araldo` (`id_araldo`, `tipo`, `nome`, `proprietari`) VALUES
-                (1, 4, 'Resoconti quest', 0),
-                (2, 0, 'Notizie in gioco', 0),
-                (3, 2, 'Umani', 1000),
-                (4, 3, 'Ordini alla Guardia', 1);"
+            INSERT INTO `forum` (`tipo`, `nome`) VALUES
+                (1, 'Notizie in gioco'),
+                (2, 'Ordini alla Guardia'),
+                (3, 'Umani'),
+                (4, 'Resoconti quest');"
+        );
+
+        DB::query("
+            INSERT INTO `forum_tipo` (`id`, `nome`,`pubblico`) VALUES
+                (1, 'Pubblico',1),
+                (2, 'Gruppi',0),
+                (3, 'Razze',0),
+                (4, 'Privato',0);"
         );
 
         // Argon2 potrebbe non essere sempre disponibile. Nel qual caso usiamo Blowfish come default
@@ -114,9 +123,11 @@ class GDRCD6 extends DbMigration
                 ('CONTACT_CATEGORIES_PUBLIC', 1, 'Contatti','Se abilitato, tutti vedono le categorie',  'Se abilitato, tutti vedono le categorie', 'bool', 1,NULL),
                 ('CONTACT_CATEGORIES_STAFF_ONLY', 0, 'Contatti', 'Se abilitato, solo lo staff può assegnare le categorie di contatto', 'Se abilitato, solo lo staff può assegnare le categorie di contatto', 'bool', 1,NULL),
                 ('RACES_ACTIVE', 1, 'Razze', 'Se abilitato, le razze sono abilitate nel sito', 'Se abilitato, le razze sono abilitate nel sito', 'bool', 1,NULL),
-                ('REGISTRAZIONI_ENABLED',1,'Registrazioni','Registrazioni attive','Registrazioni attive?','bool',1,NULL);"
-
-        );
+                ('REGISTRAZIONI_ENABLED',1,'Registrazioni','Registrazioni attive','Registrazioni attive?','bool',1,NULL),
+                ('FORUM_ACTIVE',1,'Forum','Forum attivo','Forum attivo?','bool',1,NULL),
+                ('FORUM_POSTS_FOR_PAGE',10,'Forum','Posts per pagina','Numero posts per pagina','bool',1,NULL),
+                ('FORUM_COMMENTS_FOR_PAGE',10,'Forum','Commenti per pagina','Numero commenti post per pagina','bool',1,NULL)
+        ;");
 
         DB::query("
             INSERT INTO config_options(section,label,value) VALUES 
@@ -223,6 +234,9 @@ class GDRCD6 extends DbMigration
               ('Gestione', 'Extra', 'Gestione Sessi', 'gestione/sessi/gestione_sessi', 'MANAGE_GENDERS'),
               ('Gestione', 'Extra', 'Gestione Razze', 'gestione/razze/gestione_razze', 'MANAGE_RACES'),
               ('Gestione', 'Contatti', 'Gestione Categorie', 'gestione/contatti/gestione_categorie', 'MANAGE_CONTACTS_CATEGORIES'),
+              ('Gestione', 'Forum', 'Gestione Forum', 'gestione/forum/forum/gestione_forum', 'FORUM_ADMIN'),
+              ('Gestione', 'Forum', 'Gestione Tipi', 'gestione/forum/tipi/gestione_forum_tipi', 'FORUM_ADMIN'),
+              ('Gestione', 'Forum', 'Gestione Permessi', 'gestione/forum/permessi/gestione_forum_permessi', 'FORUM_ADMIN'),
               ('Uffici', 'Anagrafe', 'Anagrafe', 'servizi/anagrafe/index', NULL),
               ('Uffici', 'Lavoro', 'Amministrazione Gruppi', 'servizi/amministrazioneGilde/index', NULL),
               ('Uffici', 'Lavoro', 'Lavoro', 'servizi/lavori/index', NULL),
@@ -377,7 +391,10 @@ class GDRCD6 extends DbMigration
                 ('MANAGE_GENDERS','Permesso per la gestione dei sessi'),
                 ('MANAGE_NAMES','Permesso per la gestione dei nomi dei personaggi'),
                 ('MANAGE_BANK','Permesso per la gestione della banca altrui'),
-                ('MANAGEMENT_MENU','Permesso per la pagina gestione')
+                ('MANAGEMENT_MENU','Permesso per la pagina gestione'),
+                ('FORUM_VIEW_ALL','Permesso per la visione di tutti i forum esistenti'),
+                ('FORUM_EDIT_ALL','Permesso per la modifica di tutti i forum visibili'),
+                ('FORUM_ADMIN','Permesso per la modifica di tutti i forum visibili')
                ;"
         );
 

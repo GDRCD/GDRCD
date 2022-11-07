@@ -1,1 +1,0 @@
-<?php Router::loadPages('frame/forums/index.inc.php'); ?>
