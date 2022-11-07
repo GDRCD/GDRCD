@@ -2,9 +2,9 @@
 
 Router::loadRequired();
 $forum_id = Filters::int($_GET['forum_id']);
-$pagination = Filters::int($_GET['pagination']);
+$pagination = ($_GET['pagination']) ? Filters::int($_GET['pagination']) : 1;
 
-if ( ForumPermessi::getInstance()->haveForumPermission($forum_id) ) {
+if ( ForumPermessi::getInstance()->permissionForum($forum_id) ) {
     ?>
     <div class="general_title"><?= Forum::getInstance()->renderForumName($forum_id); ?> </div>
 

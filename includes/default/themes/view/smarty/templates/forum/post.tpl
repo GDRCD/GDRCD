@@ -10,7 +10,7 @@
             {/if}
 
             {if $post.delete_permission && !$post.deleted}
-                <form method="POST" class="form ajax_form" action="forum/post/ajax.php"
+                <form method="POST" class="form ajax_form" action="forum/ajax.php"
                       data-callback="updatePosts">
                     <div class="single_input single_command">
                         <input type="hidden" name="post_id" value="{{$post.id}}">
@@ -22,7 +22,7 @@
             {/if}
 
             {if $post.admin_permission && $post.deleted}
-                <form method="POST" class="form ajax_form" action="forum/post/ajax.php"
+                <form method="POST" class="form ajax_form" action="forum/ajax.php"
                       data-callback="updatePosts">
                     <div class="single_input single_command">
                         <input type="hidden" name="post_id" value="{{$post.id}}">
@@ -38,7 +38,7 @@
             {if $post.admin_permission && $post.padre}
 
                 <!-- CHIUDI -->
-                <form method="POST" class="form ajax_form" action="forum/post/ajax.php"
+                <form method="POST" class="form ajax_form" action="forum/ajax.php"
                       data-callback="updatePosts">
                     <div class="single_input single_command">
                         <input type="hidden" name="post_id" value="{{$post.id}}">
@@ -61,7 +61,7 @@
                 </form>
 
                 <!-- IMPORTANTE -->
-                <form method="POST" class="form ajax_form" action="forum/post/ajax.php"
+                <form method="POST" class="form ajax_form" action="forum/ajax.php"
                       data-callback="updatePosts">
                     <div class="single_input single_command">
                         <input type="hidden" name="post_id" value="{{$post.id}}">

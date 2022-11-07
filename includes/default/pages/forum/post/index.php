@@ -4,9 +4,11 @@ Router::loadRequired();
 $post_id = Filters::int($_GET['post_id']);
 $pagination = Filters::int($_GET['pagination']);
 
-if ( ForumPermessi::getInstance()->haveForumPermissionByPostId($post_id) && ForumPermessi::getInstance()->permissionPostView($post_id) ) {
+if ( (ForumPosts::getInstance()->getOriginalPostId($post_id) == $post_id) && ForumPermessi::getInstance()->permissionForumByPostId($post_id)) {
 
-    $post_data = ForumPosts::getInstance()->getPost($post_id, 'chiuso,importante');
+    $post_data = ForumPosts::getInstance()->getPost($post_id, 'id_forum,chiuso,importante');
+    $forum_id = Filters::int($post_data['id_forum']);
+    ForumPosts::getInstance()->readPost($post_id);
 
     ?>
     <div class="forum_post_container">
@@ -25,6 +27,11 @@ if ( ForumPermessi::getInstance()->haveForumPermissionByPostId($post_id) && Foru
             </div>
         <?php } ?>
 
+        <div class="general_subtitle comment_button">
+            <a href="/main.php?page=forum/index&op=posts&forum_id=<?= $forum_id; ?>">
+                Indietro
+            </a>
+        </div>
     </div>
 
     <script src="<?= Router::getPagesLink('forum/post/index.js'); ?>"></script>

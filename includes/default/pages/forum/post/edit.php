@@ -5,7 +5,7 @@ Router::loadRequired();
 $cls = Forum::getInstance();
 $post_id = Filters::int($_GET['post_id']);
 
-if ( ForumPermessi::getInstance()->haveForumPermissionByPostId($post_id) && ForumPermessi::getInstance()->permissionPostEdit($post_id) ) {
+if ( ForumPermessi::getInstance()->permissionPostEdit($post_id) ) {
 
     $post_data = ForumPosts::getInstance()->getPost($post_id, 'id_forum, titolo, testo');
 
@@ -15,7 +15,7 @@ if ( ForumPermessi::getInstance()->haveForumPermissionByPostId($post_id) && Foru
 
         <!-- INSERT -->
         <form class="form ajax_form"
-              action="forum/post/ajax.php"
+              action="forum/ajax.php"
               data-callback="() => editPostRedirectBack(<?=$post_id;?>)">
 
             <div class="form_title">Modifica post "<?= Filters::string($post_data['titolo']); ?>"</div>

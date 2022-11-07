@@ -66,7 +66,6 @@ class ForumPosts extends Forum
      */
     public function getAllPostsByForumPaginated(int $forum_id, int $pagination = 1): DBQueryInterface
     {
-
         $posts_number = Functions::get_constant('FORUM_POSTS_FOR_PAGE');
         $initial_index = ($pagination - 1) * $posts_number;
 
@@ -90,6 +89,26 @@ class ForumPosts extends Forum
     }
 
     /**
+     * @fn getCountPostsAllForum
+     * @note Ottiene il conto di tutti i post non letti nel forum
+     * @return int
+     * @throws Throwable
+     */
+    public function getCountPostsAllForum(): int
+    {
+        $forums = Forum::getInstance()->getAllForums();
+        $total = 0;
+
+        foreach ( $forums as $forum ) {
+            if(ForumPermessi::getInstance()->permissionForum($forum['id'])) {
+                $total += $this->getPostsToReadByForum($forum['id']);
+            }
+        }
+
+        return $total;
+    }
+
+    /**
      * @fn getOriginalPostId
      * @note Ottiene l'id del post originale di un commento
      * @param int $post_id
@@ -102,6 +121,21 @@ class ForumPosts extends Forum
         $id_padre = Filters::int($post_data['id_padre']);
 
         return ($id_padre > 0) ? $id_padre : $post_id;
+    }
+
+    /*** CONTROLS ***/
+
+    /**
+     * @fn existRead
+     * @note Controlla se un post è stato letto
+     * @param int $post_id
+     * @param int $pg_id
+     * @return bool
+     * @throws Throwable
+     */
+    public function existRead(int $post_id, int $pg_id): bool
+    {
+        return DB::queryStmt("SELECT * FROM forum_posts_letti WHERE post = :post AND pg = :pg", ['post' => $post_id, 'pg' => $pg_id])->getNumRows() > 0;
     }
 
 
@@ -119,7 +153,7 @@ class ForumPosts extends Forum
 
         $forum_id = Filters::int($post['forum_id']);
 
-        if ( ForumPermessi::getInstance()->haveForumPermission($forum_id) ) {
+        if ( ForumPermessi::getInstance()->permissionForum($forum_id) ) {
 
             DB::queryStmt("INSERT INTO forum_posts(id_forum, id_padre, titolo, testo, autore) VALUES (:forum, :padre, :titolo, :testo, :autore)",
                 [
@@ -160,7 +194,7 @@ class ForumPosts extends Forum
 
         $post_id = Filters::int($post['post_id']);
 
-        if ( ForumPermessi::getInstance()->haveForumPermissionByPostId($post_id) && ForumPermessi::getInstance()->permissionPostEdit($post_id) ) {
+        if ( ForumPermessi::getInstance()->permissionPostEdit($post_id) ) {
 
             DB::queryStmt("UPDATE forum_posts SET titolo=:titolo, testo=:testo WHERE id=:id",
                 [
@@ -200,7 +234,7 @@ class ForumPosts extends Forum
         $post_id = Filters::int($post['post_id']);
         $pagination = Filters::int($post['pagination']);
 
-        if ( ForumPermessi::getInstance()->haveForumPermissionByPostId($post_id) && ForumPermessi::getInstance()->permissionPostEdit($post_id) ) {
+        if (ForumPermessi::getInstance()->permissionPostEdit($post_id) ) {
 
             DB::queryStmt("UPDATE forum_posts SET eliminato=1 WHERE id=:id",
                 [
@@ -213,7 +247,7 @@ class ForumPosts extends Forum
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Post eliminato correttamente.',
                 'swal_type' => 'success',
-                'new_view' => $this->singlePost($this->getOriginalPostId($post_id), $pagination)
+                'new_view' => $this->singlePost($this->getOriginalPostId($post_id), $pagination),
             ];
         } else {
             return [
@@ -240,6 +274,10 @@ class ForumPosts extends Forum
 
         if ( ForumPermessi::getInstance()->permissionPostComment($post_id) ) {
 
+            # Elimino tutte le letture per quel post, così da farlo comparire come non letto
+            DB::queryStmt("DELETE FROM forum_posts_letti WHERE post = :id_post", ['id_post' => $post_id]);
+
+            # Inserisco il commento
             DB::queryStmt("INSERT INTO forum_posts(id_forum, id_padre, titolo, testo, autore) VALUES (:forum, :padre, :titolo, :testo, :autore)",
                 [
                     'forum' => 0,
@@ -293,7 +331,7 @@ class ForumPosts extends Forum
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Post ripristinato correttamente.',
                 'swal_type' => 'success',
-                'new_view' => $this->singlePost($this->getOriginalPostId($post_id), $pagination)
+                'new_view' => $this->singlePost($this->getOriginalPostId($post_id), $pagination),
             ];
         } else {
             return [
@@ -332,7 +370,7 @@ class ForumPosts extends Forum
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Post modificato correttamente.',
                 'swal_type' => 'success',
-                'new_view' => $this->singlePost($this->getOriginalPostId($post_id), $pagination)
+                'new_view' => $this->singlePost($this->getOriginalPostId($post_id), $pagination),
             ];
         } else {
             return [
@@ -371,7 +409,7 @@ class ForumPosts extends Forum
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Post modificato correttamente.',
                 'swal_type' => 'success',
-                'new_view' => $this->singlePost($this->getOriginalPostId($post_id), $pagination)
+                'new_view' => $this->singlePost($this->getOriginalPostId($post_id), $pagination),
             ];
         } else {
             return [
@@ -436,9 +474,10 @@ class ForumPosts extends Forum
                 'author' => Personaggio::nameFromId(Filters::int($post['autore'])),
                 'title' => Filters::out($post['titolo']),
                 'date' => Filters::date($post['data'], 'd/m/Y H:i:s'),
-                'date_last' => Filters::date($post['data_ultimo'], 'd/m/Y H:i:s'),
+                'date_last' => Filters::date($post['data_ultimo'], 'd/m/Y H:i'),
                 'closed' => Filters::bool($post['chiuso']),
                 'important' => Filters::bool($post['importante']),
+                'to_read' => !$this->existRead($post['id'],$this->me_id)
             ];
 
             $row_data[] = $array;
@@ -468,11 +507,11 @@ class ForumPosts extends Forum
      * @fn renderPagination
      * @note Renderizza la paginazione per la lista posts
      * @param int $forum_id
-     * @param $pagination
+     * @param int $pagination
      * @return array
      * @throws Throwable
      */
-    public function renderPostsPagination(int $forum_id, $pagination): array
+    public function renderPostsPagination(int $forum_id, int $pagination = 1): array
     {
 
         $posts_number = $this->getCountPostsByForum($forum_id);
@@ -501,7 +540,7 @@ class ForumPosts extends Forum
      * @return string
      * @throws Throwable
      */
-    public function singlePost(int $post_id, int $pagination): string
+    public function singlePost(int $post_id, int $pagination = 1): string
     {
         $array = [];
         $original_post = $this->getPost($post_id);
@@ -540,5 +579,18 @@ class ForumPosts extends Forum
             ['posts' => $array, 'pagination' => $pagination]
         );
 
+    }
+
+    /*** FUNCTIONS ***/
+
+    public function readPost(int $post_id): void
+    {
+
+        if (!$this->existRead($post_id, $this->me_id) ) {
+            DB::queryStmt("INSERT INTO forum_posts_letti (post, pg) VALUES (:post, :pg)", [
+                'post' => $post_id,
+                'pg' => $this->me_id,
+            ]);
+        }
     }
 }

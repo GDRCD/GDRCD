@@ -12,7 +12,7 @@ if ( ForumPermessi::getInstance()->permissionPostComment($post_id) ) {
 
         <!-- INSERT -->
         <form class="form ajax_form"
-              action="forum/post/ajax.php"
+              action="forum/ajax.php"
               data-callback="() => commentPostRedirectBack(<?=$post_id;?>)">
 
             <div class="form_title">Nuovo commento in "<?= ForumPosts::getInstance()->renderPostName($post_id); ?>"</div>

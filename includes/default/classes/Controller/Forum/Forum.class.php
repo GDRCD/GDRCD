@@ -5,11 +5,7 @@
 # - Forum tipo
 # - Forum permessi
 
-# TODO Manca logica letture post
-
 # TODO Manca logica segnalazioni post
-
-# TODO Frame laterale avviso nuovi messaggi bacheche
 
 class Forum extends BaseClass
 {
@@ -55,6 +51,18 @@ class Forum extends BaseClass
     public function getForum(int $id, string $val = '*'): DBQueryInterface
     {
         return DB::queryStmt("SELECT {$val} FROM forum WHERE id=:id LIMIT 1", ['id' => $id]);
+    }
+
+    /**
+     * @fn getAllForums
+     * @note Ottiene tutti i forum
+     * @param string $val
+     * @return DBQueryInterface
+     * @throws Throwable
+     */
+    public function getAllForums(string $val = '*'): DBQueryInterface
+    {
+        return DB::queryStmt("SELECT {$val} FROM forum WHERE 1");
     }
 
     /**
@@ -117,6 +125,19 @@ class Forum extends BaseClass
     }
 
 
+    /*** AJAX ***/
+
+    /**
+     * @fn ajaxFrameText
+     * @note Ritorna il testo del frame laterale
+     * @return array
+     * @throws Throwable
+     */
+    public function ajaxFrameText(): array
+    {
+        return ['text' => $this->renderFrameText()];
+    }
+
     /*** RENDER ***/
 
     /**
@@ -159,8 +180,7 @@ class Forum extends BaseClass
         foreach ( $forum_types as $forum_type ) {
             $type_id = Filters::int($forum_type['id']);
 
-
-            if(ForumPermessi::getInstance()->permissionForumType($type_id)) {
+            if ( ForumPermessi::getInstance()->permissionForumType($type_id) ) {
 
                 $forums[$type_id] = [
                     'type_data' => $forum_type,
@@ -172,7 +192,7 @@ class Forum extends BaseClass
                 foreach ( $forums_list as $forum ) {
                     $forum_id = Filters::int($forum['id']);
 
-                    if ( ForumPermessi::getInstance()->permissionForum($forum_id, $type_id) ) {
+                    if ( ForumPermessi::getInstance()->permissionForum($forum_id) ) {
                         $forums[$type_id]['forums'][] = [
                             'id' => $forum_id,
                             'tipo' => Filters::out($forum['tipo']),
@@ -187,5 +207,23 @@ class Forum extends BaseClass
         }
 
         return ["forums" => $forums];
+    }
+
+    /**
+     * @fn renderFrameText
+     * @note Renderizza il testo del frame laterale
+     * @return mixed
+     * @throws Throwable
+     */
+    public function renderFrameText()
+    {
+        $new_post = ForumPosts::getInstance()->getCountPostsAllForum();
+
+        return Template::getInstance()->startTemplate()->render(
+            'forum/forums_frame',
+            [
+                'new_post' => $new_post,
+            ]
+        );
     }
 }

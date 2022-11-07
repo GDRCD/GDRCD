@@ -5,14 +5,14 @@ Router::loadRequired();
 $cls = Forum::getInstance();
 $forum_id = Filters::int($_GET['forum_id']);
 
-if ( ForumPermessi::getInstance()->haveForumPermission($forum_id) ) {
+if ( ForumPermessi::getInstance()->permissionForum($forum_id) ) {
     ?>
 
     <div class="form_container forum_new_post">
 
         <!-- INSERT -->
         <form class="form ajax_form"
-              action="forum/post/ajax.php"
+              action="forum/ajax.php"
               data-callback="() => newPostRedirectBack(<?=$forum_id;?>)">
 
             <div class="form_title">Nuovo post in "<?= Forum::getInstance()->renderForumName($forum_id); ?>"</div>

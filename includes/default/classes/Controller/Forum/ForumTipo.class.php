@@ -44,4 +44,19 @@ class ForumTipo extends Forum
         $type_data = $this->getForumType($type_id, 'pubblico');
         return Filters::bool($type_data['pubblico']);
     }
+
+
+    /**
+     * @fn isForumPublic
+     * @note Ritorna true se il forum è pubblico
+     * @param int $forum_id
+     * @return bool
+     * @throws Throwable
+     */
+    public function isForumPublic(int $forum_id): bool
+    {
+        $forum_type = $this->getForum($forum_id,'tipo');
+        $type_data = $this->getForumType($forum_type['tipo'], 'pubblico');
+        return Filters::bool($type_data['pubblico']);
+    }
 }

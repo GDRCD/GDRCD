@@ -17,6 +17,11 @@
             </a>
         </div>
         <div class='td'>{$row.date}</div>
-        <div class='td'>{{$row.date_last}}</div>
+        <div class='td'>
+            {{$row.date_last}}
+            {if $row.to_read}
+                <span class="to_read" title="Nuove risposte!"><i class="far fa-exclamation-circle"></i></span>
+            {/if}
+        </div>
     </div>
 {/foreach}

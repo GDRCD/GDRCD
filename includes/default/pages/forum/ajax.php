@@ -32,5 +32,9 @@ switch ( $_POST['action'] ) {
     case 'important_post':
         echo json_encode($cls->importantPost($_POST));
         break;
+
+    case 'frame_text':
+        echo json_encode($cls->ajaxFrameText());
+        break;
 }
 

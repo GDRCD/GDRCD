@@ -3,10 +3,12 @@
 //Includio i parametri, la configurazione, la lingua e le funzioni
 Router::loadRequired();
 
-# TODO Aggiunta controllo nuovi post non letti e relativo refresh
 ?>
 
-<div class="box_forums"><a href="/main.php?page=forum/index">Bacheche</a> </div>
+<div class="box_forums forum_frame">
+    <?=Forum::getInstance()->renderFrameText();?>
+</div>
 
+<script src="<?= Router::getPagesLink('forum/frame.js'); ?>"></script>
 
 

@@ -24,66 +24,80 @@ class ForumPermessi extends Forum
      */
     public function permissionForumType(int $type): bool|DBQueryInterface
     {
-        if ( $this->permissionForumAdmin() || Permissions::permission('FORUM_VIEW_ALL') || ForumTipo::getInstance()->isTypePublic($type) ) {
-            return true;
-        } else {
-            $permissions = ForumPermessi::getInstance()->getForumsPermissionsByType($type);
-            return ($permissions->getNumRows() > 0);
-        }
+        return (
+            $this->permissionForumAdmin() ||
+            Permissions::permission('FORUM_VIEW_ALL') ||
+            ForumTipo::getInstance()->isTypePublic($type) ||
+            $this->getForumsPermissionsByType($type)->getNumRows() > 0
+        );
     }
 
     /**
      * @fn permissionForum
      * @note Controlla se l'utente ha i permessi per accedere al forum
      * @param int $forum_id
-     * @param int $type_id
      * @return bool
      * @throws Throwable
      */
-    public function permissionForum(int $forum_id, int $type_id): bool
+    public function permissionForum(int $forum_id): bool
     {
-
-        if ( $this->permissionForumAdmin() || Permissions::permission('FORUM_VIEW_ALL') || ForumTipo::getInstance()->isTypePublic($type_id) ) {
-            return true;
-        } else {
-            return ForumPermessi::getInstance()->haveForumPermission($forum_id);
-        }
+        return (
+            $this->permissionForumAdmin() ||
+            Permissions::permission('FORUM_VIEW_ALL') ||
+            ForumTipo::getInstance()->isForumPublic($forum_id) ||
+            $this->getForumPermissionForPg($forum_id, $this->me_id)->getNumRows() > 0
+        );
     }
 
     /**
-     * @fn haveForumPermission
+     * @fn permissionEditForum
      * @note Controlla se l'utente ha i permessi per accedere al forum
-     * @param int $forum_id
-     * @param int|bool $pg_id
+     * @param int $post_id
      * @return bool
      * @throws Throwable
      */
-    public function haveForumPermission(int $forum_id, int|bool $pg_id = false): bool
+    public function permissionForumEdit(int $post_id): bool
     {
-        if ( !$pg_id ) {
-            $pg_id = $this->me_id;
-        }
 
-        return ($this->permissionForumAdmin() || Permissions::permission('FORUM_VIEW_ALL') || $this->getForumPermissionForPg($forum_id, $pg_id)->getNumRows() > 0);
+        $post_data = ForumPosts::getInstance()->getPost($post_id, 'autore,eliminato');
+
+        return (
+            $this->permissionForumAdmin() ||
+            Permissions::permission('FORUM_EDIT_ALL') ||
+            (!Filters::bool($post_data['eliminato']) && (Filters::int($post_data['autore']) == $this->me_id))
+        );
     }
 
     /**
      * @fn haveForumPermissionByPostId
      * @note Controlla se l'utente ha i permessi per accedere al forum
      * @param int $post_id
-     * @param int|bool $pg_id
      * @return bool
      * @throws Throwable
      */
-    public function haveForumPermissionByPostId(int $post_id, int|bool $pg_id = false): bool
+    public function permissionForumByPostId(int $post_id): bool
     {
-        if ( !$pg_id ) {
-            $pg_id = $this->me_id;
-        }
-
         $post_data = ForumPosts::getInstance()->getPost($post_id, 'id_forum,eliminato');
+        return ($this->permissionForum($post_data['id_forum']) && $this->permissionPost($post_id));
+    }
 
-        return ($this->permissionForumAdmin() || Permissions::permission('FORUM_VIEW_ALL') || (!Filters::bool($post_data['eliminato']) && ($this->getForumPermissionForPg(Filters::int($post_data['id_forum']), $pg_id)->getNumRows() > 0)));
+    /**
+     * @fn permissionPost
+     * @note Controlla se l'utente ha i permessi per accedere al post
+     * @param int $post_id
+     * @return bool
+     * @throws Throwable
+     */
+    public function permissionPost(int $post_id): bool
+    {
+        $post_data = ForumPosts::getInstance()->getPost($post_id, 'autore,eliminato');
+
+
+        return (
+            $this->permissionForumAdmin() ||
+            Permissions::permission('FORUM_VIEW_ALL') ||
+            !Filters::bool($post_data['eliminato'])
+        );
     }
 
     /**
@@ -93,10 +107,13 @@ class ForumPermessi extends Forum
      * @return bool
      * @throws Throwable
      */
-    public function permissionPostView(int $post_id): bool
+    public function permissionPostEdit(int $post_id): bool
     {
-        $post_data = ForumPosts::getInstance()->getPost($post_id, 'eliminato');
-        return ($this->permissionForumAdmin() || Permissions::permission('FORUM_VIEW_ALL') || !Filters::bool($post_data['eliminato']));
+
+        $original_id = ForumPosts::getInstance()->getOriginalPostId($post_id);
+        $post_data = ForumPosts::getInstance()->getPost($original_id, 'id_forum,autore,eliminato');
+
+        return $this->permissionForum($post_data['id_forum']) &&$this->permissionForumEdit($post_id);
     }
 
     /**
@@ -108,27 +125,8 @@ class ForumPermessi extends Forum
      */
     public function permissionPostComment(int $post_id): bool
     {
-        $post_data = ForumPosts::getInstance()->getPost($post_id, 'chiuso,eliminato');
-        return ($this->permissionForumAdmin() || (!Filters::bool($post_data['eliminato']) && !Filters::bool($post_data['chiuso'])));
-    }
-
-    /**
-     * @fn permissionPostEdit
-     * @note Controlla se l'utente ha i permessi per modificare il post
-     * @param int $post_id
-     * @param bool|int $pg_id
-     * @return bool
-     * @throws Throwable
-     */
-    public function permissionPostEdit(int $post_id, bool|int $pg_id = false): bool
-    {
-        if ( !$pg_id ) {
-            $pg_id = $this->me_id;
-        }
-
-        $post_data = ForumPosts::getInstance()->getPost($post_id, 'autore,eliminato');
-
-        return ($this->permissionForumAdmin() || Permissions::permission('FORUM_EDIT_ALL') || (!Filters::bool($post_data['eliminato']) && (Filters::int($post_data['autore']) == $pg_id)));
+        $post_data = ForumPosts::getInstance()->getPost($post_id, 'id_forum,chiuso,eliminato');
+        return ($this->permissionForum($post_data['id_forum']) && !Filters::bool($post_data['eliminato']) && !Filters::bool($post_data['chiuso']));
     }
 
 
