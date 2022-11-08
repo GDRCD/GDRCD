@@ -442,6 +442,8 @@ CREATE TABLE IF NOT EXISTS `forum_posts` (
     `importante` tinyint(1) NOT NULL DEFAULT 0,
     `chiuso` tinyint(1) NOT NULL DEFAULT 0,
     `eliminato` tinyint(1) NOT NULL DEFAULT 0,
+    `modificato_il` datetime DEFAULT NULL,
+    `modificato_da` int DEFAULT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -457,6 +459,22 @@ CREATE TABLE IF NOT EXISTS `forum_posts_letti` (
     `post` int NOT NULL,
     PRIMARY KEY (`id`),
     KEY `pg_post` (`pg`,`post`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `forum_letto`
+--
+
+CREATE TABLE IF NOT EXISTS `forum_posts_updates` (
+    `id` bigint NOT NULL AUTO_INCREMENT,
+    `post` int NOT NULL,
+    `titolo` varchar(255),
+    `testo` text,
+    `modificato_il` datetime DEFAULT CURRENT_TIMESTAMP,
+    `modificato_da`int DEFAULT NULL,
+    PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------

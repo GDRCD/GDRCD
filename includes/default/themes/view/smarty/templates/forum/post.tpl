@@ -59,7 +59,6 @@
                         {/if}
                     </div>
                 </form>
-
                 <!-- IMPORTANTE -->
                 <form method="POST" class="form ajax_form" action="forum/ajax.php"
                       data-callback="updatePosts">
@@ -83,6 +82,14 @@
                     </div>
                 </form>
             {/if}
+
+            {if $post.admin_permission && $history_permission}
+                <div class="single_command view_update" title="Storico Modifiche Post">
+                    <a href="/main.php?page=forum/index&op=post_history&post_id={{$post.id}}">
+                        <i class="fas fa-eye"></i>
+                    </a>
+                </div>
+            {/if}
         </div>
         <div class="bottom_box">
             <div class="box post_left">
@@ -100,6 +107,15 @@
             </div>
             <div class="box post_right">
                 {$post.text}
+
+                {if $post.updated_at_date}
+                    <div class="updated_at">
+                        Modificato il {$post.updated_at_date} alle {$post.updated_at_time} da
+                        <a href="/main.php?page=scheda/index&id_pg={$post.updated_by_id}">
+                            {$post.updated_by}
+                        </a>
+                    </div>
+                {/if}
             </div>
         </div>
     </div>

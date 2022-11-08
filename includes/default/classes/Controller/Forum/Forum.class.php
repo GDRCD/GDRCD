@@ -115,6 +115,11 @@ class Forum extends BaseClass
             case 'post_comment':
                 $page = 'post/comment.php';
                 break;
+
+            // Singolo Post Storia Updates
+            case 'post_history':
+                $page = 'post/history.php';
+                break;
         }
 
         return $page;

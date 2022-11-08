@@ -143,6 +143,17 @@ class ForumPermessi extends Forum
         return ($this->permissionForum($post_data['id_forum']) && !Filters::bool($post_data['eliminato']) && !Filters::bool($post_data['chiuso']));
     }
 
+    /**
+     * @fn permissionHistory
+     * @note Controlla se l'utente ha i permessi per visualizzare la cronologia del post
+     * @return bool
+     * @throws Throwable
+     */
+    public function permissionHistory(): bool
+    {
+        return $this->permissionForumAdmin() && ForumPosts::getInstance()->isHistoryActive();
+    }
+
 
     /*** TABLES HELPERS ***/
 
