@@ -2,6 +2,32 @@
 
 class ForumPosts extends Forum
 {
+
+    private string|bool $historyActive;
+
+    /**
+     * @fn __construct
+     * @note Costruttore
+     * @throws Throwable
+     */
+    protected function __construct()
+    {
+        parent::__construct();
+        $this->historyActive = Functions::get_constant('FORUM_POST_HISTORY');
+    }
+
+    /*** GETTERS ***/
+
+    /**
+     * @fn isHistoryActive
+     * @note Ritorna se la funzione di storico è attiva
+     * @return bool|string
+     */
+    public function isHistoryActive(): bool|string
+    {
+        return $this->historyActive;
+    }
+
     /*** TABLES HELPERS ***/
 
     /**
@@ -26,7 +52,7 @@ class ForumPosts extends Forum
      * @return DBQueryInterface
      * @throws Throwable
      */
-    public function getPostHistoryPaginated(int $id, int $pagination, string $val = '*'): DBQueryInterface
+    public function getPostCommentsPaginated(int $id, int $pagination, string $val = '*'): DBQueryInterface
     {
         $comments_number = Functions::get_constant('FORUM_COMMENTS_FOR_PAGE');
         $initial_index = ($pagination - 1) * $comments_number;
@@ -100,7 +126,7 @@ class ForumPosts extends Forum
         $total = 0;
 
         foreach ( $forums as $forum ) {
-            if(ForumPermessi::getInstance()->permissionForum($forum['id'])) {
+            if ( ForumPermessi::getInstance()->permissionForum($forum['id']) ) {
                 $total += $this->getPostsToReadByForum($forum['id']);
             }
         }
@@ -121,6 +147,18 @@ class ForumPosts extends Forum
         $id_padre = Filters::int($post_data['id_padre']);
 
         return ($id_padre > 0) ? $id_padre : $post_id;
+    }
+
+    /**
+     * @fn getPostHistory
+     * @param int $post_id
+     * @param string $val
+     * @return DBQueryInterface
+     * @throws Throwable
+     */
+    public function getPostHistory(int $post_id, string $val = '*'): DBQueryInterface
+    {
+        return DB::queryStmt("SELECT {$val} FROM forum_posts_updates WHERE post = :post ORDER BY modificato_il DESC", ['post' => $post_id]);
     }
 
     /*** CONTROLS ***/
@@ -196,11 +234,24 @@ class ForumPosts extends Forum
 
         if ( ForumPermessi::getInstance()->permissionPostEdit($post_id) ) {
 
-            DB::queryStmt("UPDATE forum_posts SET titolo=:titolo, testo=:testo WHERE id=:id",
+            # Lo storico del post viene salvato comunque, in modo che se viene attivato
+            # si possa vedere anche lo storico per post ormai vecchi
+            $post_data = $this->getPost($post_id, 'titolo,testo');
+
+            DB::queryStmt("INSERT INTO forum_posts_updates(post,titolo,testo,modificato_da) VALUES(:post,:title,:text,:updated_by)", [
+                'post' => $post_id,
+                'title' => Filters::text($post_data['titolo']),
+                'text' => Filters::text($post_data['testo']),
+                'updated_by' => $this->me_id,
+            ]);
+
+            DB::queryStmt("UPDATE forum_posts SET titolo=:title, testo=:text, modificato_il=:updated_at, modificato_da=:updated_by WHERE id=:id",
                 [
                     'id' => $post_id,
-                    'titolo' => Filters::text($post['titolo']),
-                    'testo' => Filters::text($post['testo']),
+                    'title' => Filters::text($post['titolo']),
+                    'text' => Filters::text($post['testo']),
+                    'updated_at' => Filters::date(date('Y-m-d H:i:s'), 'Y-m-d H:i:s'),
+                    'updated_by' => $this->me_id,
                 ]
             );
 
@@ -234,7 +285,7 @@ class ForumPosts extends Forum
         $post_id = Filters::int($post['post_id']);
         $pagination = Filters::int($post['pagination']);
 
-        if (ForumPermessi::getInstance()->permissionPostEdit($post_id) ) {
+        if ( ForumPermessi::getInstance()->permissionPostEdit($post_id) ) {
 
             DB::queryStmt("UPDATE forum_posts SET eliminato=1 WHERE id=:id",
                 [
@@ -477,7 +528,7 @@ class ForumPosts extends Forum
                 'date_last' => Filters::date($post['data_ultimo'], 'd/m/Y H:i'),
                 'closed' => Filters::bool($post['chiuso']),
                 'important' => Filters::bool($post['importante']),
-                'to_read' => !$this->existRead($post['id'],$this->me_id)
+                'to_read' => !$this->existRead($post['id'], $this->me_id),
             ];
 
             $row_data[] = $array;
@@ -547,7 +598,7 @@ class ForumPosts extends Forum
         $admin_permission = ForumPermessi::getInstance()->permissionForumAdmin();
 
         if ( !Filters::bool($original_post['eliminato']) || $admin_permission ) {
-            $posts = $this->getPostHistoryPaginated($post_id, $pagination);
+            $posts = $this->getPostCommentsPaginated($post_id, $pagination);
 
             foreach ( $posts as $post ) {
                 $author_data = Personaggio::getPgData(Filters::int($post['autore']), 'url_img, nome, cognome');
@@ -568,6 +619,10 @@ class ForumPosts extends Forum
                         'important' => Filters::bool($post['importante']),
                         'deleted' => $deleted,
                         'padre' => Filters::int($post['id_padre']) === 0,
+                        'updated_at_date' => Filters::date($post['modificato_il'],'d/m/Y'),
+                        'updated_at_time' => Filters::date($post['modificato_il'],'H:i'),
+                        'updated_by_id' => Filters::int($post['modificato_da']),
+                        'updated_by' => Personaggio::nameFromId(Filters::int($post['modificato_da'])),
                     ];
                 }
             }
@@ -576,9 +631,70 @@ class ForumPosts extends Forum
 
         return Template::getInstance()->startTemplate()->render(
             'forum/post',
-            ['posts' => $array, 'pagination' => $pagination]
+            [
+                'posts' => $array,
+                'pagination' => $pagination,
+                'history_permission' => ForumPermessi::getInstance()->permissionHistory(),
+            ]
         );
 
+    }
+
+    /**
+     * @fn viewUpdateHistory
+     * @note Ritorna la lista delle modifiche del post
+     * @param int $post_id
+     * @return string
+     */
+    public function viewUpdateHistory(int $post_id): string
+    {
+        return Template::getInstance()->startTemplate()->render(
+            'forum/post_history',
+            $this->renderUpdateHistory($post_id)
+        );
+    }
+
+    /**
+     * @fn renderUpdateHistory
+     * @note Renderizza la lista delle modifiche del post
+     * @param int $post_id
+     * @return array
+     * @throws Throwable
+     */
+    public function renderUpdateHistory(int $post_id): array
+    {
+
+        $post = $this->getPost($post_id);
+        $post_data = [
+            'id' => Filters::int($post['id']),
+            'author_id' => Filters::int($post['autore']),
+            'author_name' => Personaggio::nameFromId(Filters::int($post['autore'])),
+            'title' => Filters::out($post['titolo']),
+            'text' => Filters::out($post['testo']),
+            'date' => Filters::date($post['data'], 'd/m/Y H:i:s'),
+            'closed' => Filters::bool($post['chiuso']),
+            'important' => Filters::bool($post['importante']),
+            'deleted' => Filters::bool($post['eliminato']),
+        ];
+
+        $post_history = $this->getPostHistory($post_id);
+        $post_history_data = [];
+
+        foreach ( $post_history as $history ) {
+            $post_history_data[] = [
+                'id' => Filters::int($history['id']),
+                'title' => Filters::out($history['titolo']),
+                'text' => Filters::out($history['testo']),
+                'date' => Filters::date($history['modificato_il'], 'd/m/Y H:i:s'),
+                'author_id' => Filters::int($history['modificato_da']),
+                'author_name' => Personaggio::nameFromId(Filters::int($history['modificato_da'])),
+            ];
+        }
+
+        return [
+            'post' => $post_data,
+            'history' => $post_history_data,
+        ];
     }
 
     /*** FUNCTIONS ***/
@@ -586,7 +702,7 @@ class ForumPosts extends Forum
     public function readPost(int $post_id): void
     {
 
-        if (!$this->existRead($post_id, $this->me_id) ) {
+        if ( !$this->existRead($post_id, $this->me_id) ) {
             DB::queryStmt("INSERT INTO forum_posts_letti (post, pg) VALUES (:post, :pg)", [
                 'post' => $post_id,
                 'pg' => $this->me_id,

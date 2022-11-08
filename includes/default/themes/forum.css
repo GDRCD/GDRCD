@@ -152,6 +152,15 @@
     box-sizing: border-box;
 }
 
+.forum_post_container .forum_post .single_forum_post .bottom_box .post_right .updated_at {
+    margin-top: 20px;
+    font-style: italic;
+}
+
+.forum_post_container .forum_post .single_forum_post .bottom_box .post_right .updated_at a{
+    color: #ccc;
+}
+
 .forum_post_container .comment_button {
     width: 100%;
     background: #23272a;
@@ -167,6 +176,6 @@
 
 /***** GESTIONE ******/
 
-.visual_result .td{
+.visual_result .td {
     width: 32%;
 }
