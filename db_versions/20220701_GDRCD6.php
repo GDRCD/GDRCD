@@ -125,8 +125,9 @@ class GDRCD6 extends DbMigration
                 ('RACES_ACTIVE', 1, 'Razze', 'Se abilitato, le razze sono abilitate nel sito', 'Se abilitato, le razze sono abilitate nel sito', 'bool', 1,NULL),
                 ('REGISTRAZIONI_ENABLED',1,'Registrazioni','Registrazioni attive','Registrazioni attive?','bool',1,NULL),
                 ('FORUM_ACTIVE',1,'Forum','Forum attivo','Forum attivo?','bool',1,NULL),
-                ('FORUM_POSTS_FOR_PAGE',10,'Forum','Posts per pagina','Numero posts per pagina','bool',1,NULL),
-                ('FORUM_COMMENTS_FOR_PAGE',10,'Forum','Commenti per pagina','Numero commenti post per pagina','bool',1,NULL)
+                ('FORUM_POSTS_FOR_PAGE',10,'Forum','Posts per pagina','Numero posts per pagina','int',1,NULL),
+                ('FORUM_COMMENTS_FOR_PAGE',10,'Forum','Commenti per pagina','Numero commenti post per pagina','int',1,NULL),
+                ('FORUM_POST_HISTORY',1,'Forum','Storico delle modifica ad un post o commento','Storico delle modifica ad un posto commento','bool',1,NULL)
         ;");
 
         DB::query("

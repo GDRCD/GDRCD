@@ -75,7 +75,7 @@ class ForumPosts extends Forum
     {
         $response = DB::queryStmt(
             "SELECT forum_posts_letti.id FROM forum_posts 
-                    LEFT JOIN forum_posts_letti ON forum_posts_letti.post = forum_posts.id AND forum_posts_letti.pg = :me
+                    LEFT JOIN forum_posts_letti ON forum_posts_letti.post = forum_posts.id AND forum_posts_letti.personaggio = :me
                     WHERE forum_posts.id_forum = :forum AND forum_posts_letti.id IS NULL AND forum_posts.id_padre = 0  AND eliminato=0",
             ['forum' => $forum_id, 'me' => $this->me_id]
         );
@@ -173,7 +173,7 @@ class ForumPosts extends Forum
      */
     public function existRead(int $post_id, int $pg_id): bool
     {
-        return DB::queryStmt("SELECT * FROM forum_posts_letti WHERE post = :post AND pg = :pg", ['post' => $post_id, 'pg' => $pg_id])->getNumRows() > 0;
+        return DB::queryStmt("SELECT * FROM forum_posts_letti WHERE post = :post AND personaggio = :pg", ['post' => $post_id, 'pg' => $pg_id])->getNumRows() > 0;
     }
 
 
@@ -703,7 +703,7 @@ class ForumPosts extends Forum
     {
 
         if ( !$this->existRead($post_id, $this->me_id) ) {
-            DB::queryStmt("INSERT INTO forum_posts_letti (post, pg) VALUES (:post, :pg)", [
+            DB::queryStmt("INSERT INTO forum_posts_letti (post, personaggio) VALUES (:post, :pg)", [
                 'post' => $post_id,
                 'pg' => $this->me_id,
             ]);

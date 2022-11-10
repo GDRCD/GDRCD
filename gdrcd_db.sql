@@ -418,7 +418,7 @@ CREATE TABLE IF NOT EXISTS `forum` (
 CREATE TABLE IF NOT EXISTS `forum_permessi` (
     `id` int NOT NULL AUTO_INCREMENT,
     `forum` int NOT NULL,
-    `pg` int NOT NULL,
+    `personaggio` int NOT NULL,
     `assegnato_da` int DEFAULT NULL,
     `assegnato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
@@ -455,10 +455,10 @@ CREATE TABLE IF NOT EXISTS `forum_posts` (
 
 CREATE TABLE IF NOT EXISTS `forum_posts_letti` (
     `id` bigint NOT NULL AUTO_INCREMENT,
-    `pg` varchar(255) DEFAULT NULL,
+    `personaggio` varchar(255) DEFAULT NULL,
     `post` int NOT NULL,
     PRIMARY KEY (`id`),
-    KEY `pg_post` (`pg`,`post`)
+    KEY `personaggio_post` (`personaggio`,`post`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------

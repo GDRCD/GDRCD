@@ -168,7 +168,7 @@ class ForumPermessi extends Forum
     {
         return DB::queryStmt(
             "SELECT forum_permessi.id FROM forum LEFT JOIN forum_permessi ON forum_permessi.forum = forum.id    
-                  WHERE forum.tipo = :tipo AND forum_permessi.pg = :me",
+                  WHERE forum.tipo = :tipo AND forum_permessi.personaggio = :me",
             ['tipo' => $type_id, 'me' => $this->me_id]
         );
     }
@@ -184,7 +184,7 @@ class ForumPermessi extends Forum
      */
     public function getForumPermissionForPg(int $forum, int $pg, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM forum_permessi WHERE forum=:forum AND pg=:pg LIMIT 1",
+        return DB::queryStmt("SELECT {$val} FROM forum_permessi WHERE forum=:forum AND personaggio=:pg LIMIT 1",
             ['forum' => $forum, 'pg' => $pg]
         );
     }
@@ -204,7 +204,7 @@ class ForumPermessi extends Forum
         $extra_query = '';
 
         if ( $pg > 0 ) {
-            $extra_query .= " AND pg = {$pg}";
+            $extra_query .= " AND personaggio = {$pg}";
         }
 
         if ( $forum > 0 ) {
@@ -266,8 +266,8 @@ class ForumPermessi extends Forum
             $forum_data = Forum::getInstance()->getForum($row['forum']);
 
             $row_data[] = [
-                'user_id' => Filters::int($row['pg']),
-                'user_name' => Personaggio::nameFromId($row['pg']),
+                'user_id' => Filters::int($row['personaggio']),
+                'user_name' => Personaggio::nameFromId($row['personaggio']),
                 'forum_id' => Filters::int($row['forum']),
                 'forum_name' => Filters::out($forum_data['nome']),
             ];
@@ -305,7 +305,7 @@ class ForumPermessi extends Forum
             $forum = Filters::in($post['forum']);
 
             if ( !$this->existPermission($forum, $pg) ) {
-                DB::queryStmt("INSERT INTO forum_permessi (pg, forum,assegnato_da) VALUES (:pg, :forum,:assigned_by)", [
+                DB::queryStmt("INSERT INTO forum_permessi (personaggio, forum,assegnato_da) VALUES (:pg, :forum,:assigned_by)", [
                     'pg' => $pg,
                     'forum' => $forum,
                     'assigned_by' => $this->me_id,
@@ -351,7 +351,7 @@ class ForumPermessi extends Forum
             $forum = Filters::in($post['forum']);
 
             if ( $this->existPermission($forum, $pg) ) {
-                DB::queryStmt("DELETE FROM forum_permessi WHERE pg=:pg AND forum=:forum", [
+                DB::queryStmt("DELETE FROM forum_permessi WHERE personaggio=:pg AND forum=:forum", [
                     'pg' => $pg,
                     'forum' => $forum,
                 ]);
