@@ -38,11 +38,11 @@ class GDRCD6 extends DbMigration
         );
 
         DB::query("
-            INSERT INTO `forum_tipo` (`id`, `nome`,`pubblico`) VALUES
-                (1, 'Pubblico',1),
-                (2, 'Gruppi',0),
-                (3, 'Razze',0),
-                (4, 'Privato',0);"
+            INSERT INTO `forum_tipo` (`nome`,`pubblico`) VALUES
+                ('Pubblico',1),
+                ('Gruppi',0),
+                ('Razze',0),
+                ('Privato',0);"
         );
 
         // Argon2 potrebbe non essere sempre disponibile. Nel qual caso usiamo Blowfish come default
@@ -139,7 +139,7 @@ class GDRCD6 extends DbMigration
         ;");
 
         DB::query("
-            INSERT INTO config_options(section,label,value) VALUES 
+            INSERT INTO config_options(`section`,`label`,`value`) VALUES 
                 ('Template','Smarty','TemplateSmarty'),
                 ('PasswordHash','Argon2','CrypterPasswordArgon2,argon2id'),
                 ('PasswordHash','Blowfish','CrypterPasswordBlowfish,2y'),
@@ -271,9 +271,9 @@ class GDRCD6 extends DbMigration
         );
 
         DB::query("
-            INSERT INTO `mappa` (`id`, `nome`, `descrizione`, `stato`, `pagina`, `chat`,`meteo_city`,`meteo_fisso`, `immagine`, `stanza_apparente`, `id_mappa`, `link_immagine`, `link_immagine_hover`, `id_mappa_collegata`, `x_cord`, `y_cord`, `invitati`, `privata`, `proprietario`, `ora_prenotazione`, `scadenza`, `costo`) VALUES
-                (1, 'Strada', 'Via che congiunge la periferia al centro.', 'Nella norma', '', 1,'New York',0, 'standard_luogo.png', '', 1, '', '', 0, 180, 150, '', 0, 'Nessuno', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 0),
-                (2, 'Piazza', 'Piccola piazza con panchine ed una fontana al centro.', 'Nella norma', '', 1,'Miami',0, 'standard_luogo.png', '', 1, '', '', 0, 80, 150, '', 0, 'Nessuno', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 0);"
+            INSERT INTO `mappa` (`nome`, `descrizione`, `stato`, `pagina`, `chat`,`meteo_city`,`meteo_fisso`, `immagine`, `stanza_apparente`, `id_mappa`, `link_immagine`, `link_immagine_hover`, `id_mappa_collegata`, `x_cord`, `y_cord`, `invitati`, `privata`, `proprietario`, `ora_prenotazione`, `scadenza`, `costo`) VALUES
+                ('Strada', 'Via che congiunge la periferia al centro.', 'Nella norma', '', 1,'New York',0, 'standard_luogo.png', '', 1, '', '', 0, 180, 150, '', 0, 'Nessuno', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 0),
+                ('Piazza', 'Piccola piazza con panchine ed una fontana al centro.', 'Nella norma', '', 1,'Miami',0, 'standard_luogo.png', '', 1, '', '', 0, 80, 150, '', 0, 'Nessuno', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 0);"
         );
 
         DB::query("
@@ -420,22 +420,22 @@ class GDRCD6 extends DbMigration
         );
 
         DB::query("
-            INSERT INTO `permessi_group` (`id`, `group_name`, `description`, `superuser`) VALUES
-                (1, 'MASTER', 'Gruppo permessi master', 0),
-                (2, 'MODERATOR', 'Gruppo permessi moderatore', 0),
-                (3, 'SUPERUSER', 'Gruppo Permessi superuser', 1),
-                (4, 'USER', 'Permessi gruppo user', 0);"
+            INSERT INTO `permessi_group` (`group_name`, `description`, `superuser`) VALUES
+                ('SUPERUSER', 'Gruppo Permessi superuser', 1),
+                ('MASTER', 'Gruppo permessi master', 0),
+                ('MODERATOR', 'Gruppo permessi moderatore', 0),
+                ('USER', 'Permessi gruppo user', 0);"
         );
 
         DB::query("
-            INSERT INTO `permessi_group_personaggio` (`id`, `group_id`, `personaggio`) VALUES
-                (1, 3, 1);"
+            INSERT INTO `permessi_group_personaggio` (`group_id`, `personaggio`) VALUES
+                (1, 1);"
         );
 
         DB::queryStmt("
-            INSERT INTO `personaggio` (`id`,`nome`, `cognome`, `pass`, `ultimo_cambiopass`, `data_iscrizione`, `email`, `permessi`, `ultima_mappa`, `ultimo_luogo`, `esilio`, `data_esilio`, `motivo_esilio`, `autore_esilio`, `sesso`, `razza`, `descrizione`, `affetti`, `stato`, `online_status`, `disponibile`, `url_img`, `url_img_chat`, `url_media`, `blocca_media`, `esperienza`, `salute`, `salute_max`, `soldi`, `banca`, `last_ip`, `is_invisible`, `ultimo_refresh`, `ora_entrata`, `ora_uscita`, `posizione`) VALUES
-                (1,'Super', 'User', :superpassword, NULL, '2011-06-04 00:47:48', '\$P\$BNZYtz9JOQE.O4Tv7qZyl3SzIoZzzR.', 5, 1, -1, '2009-01-01', '2009-01-01', '', '', 1, 1, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 100, 100, 300, 50000,  '127.0.0.1', 0, '2021-10-08 00:28:13', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1),
-                (2,'Test', 'Di Funzionalità', :testpassword, NULL, '2011-06-04 00:47:48', '\$P\$Bd1amPCKkOF9GdgYsibZ96U92D5CtR0', 0, 1, -1, '2009-01-01', '2009-01-01', '', '', 1, 1, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000',  100, 100, 50, 50, '127.0.0.1', 0, '2009-01-01 00:00:00', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1);",
+            INSERT INTO `personaggio` (`nome`, `cognome`, `pass`, `ultimo_cambiopass`, `data_iscrizione`, `email`, `permessi`, `ultima_mappa`, `ultimo_luogo`, `esilio`, `data_esilio`, `motivo_esilio`, `autore_esilio`, `sesso`, `razza`, `descrizione`, `affetti`, `stato`, `online_status`, `disponibile`, `url_img`, `url_img_chat`, `url_media`, `blocca_media`, `esperienza`, `salute`, `salute_max`, `soldi`, `banca`, `last_ip`, `is_invisible`, `ultimo_refresh`, `ora_entrata`, `ora_uscita`, `posizione`) VALUES
+                ('Super', 'User', :superpassword, NULL, '2011-06-04 00:47:48', '\$P\$BNZYtz9JOQE.O4Tv7qZyl3SzIoZzzR.', 5, 1, -1, '2009-01-01', '2009-01-01', '', '', 1, 1, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 100, 100, 300, 50000,  '127.0.0.1', 0, '2021-10-08 00:28:13', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1),
+                ('Test', 'Di Funzionalità', :testpassword, NULL, '2011-06-04 00:47:48', '\$P\$Bd1amPCKkOF9GdgYsibZ96U92D5CtR0', 0, 1, -1, '2009-01-01', '2009-01-01', '', '', 1, 1, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000',  100, 100, 50, 50, '127.0.0.1', 0, '2009-01-01 00:00:00', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1);",
             [
                 'superpassword' => Password::hash('super'),
                 'testpassword' => Password::hash('test'),
@@ -443,8 +443,8 @@ class GDRCD6 extends DbMigration
         );
 
         DB::query("
-            INSERT INTO `razze` (`id`, `nome`, `sing_m`, `sing_f`, `descrizione`, `immagine`, `icon`, `url_site`, `iscrizione`, `visibile`) VALUES
-                (1, 'Umani', 'Umano', 'Umana', '', 'races/standard_razza.png', 'races/standard_razza.png', '', 1, 1);"
+            INSERT INTO `razze` (`nome`, `sing_m`, `sing_f`, `descrizione`, `immagine`, `icon`, `url_site`, `iscrizione`, `visibile`) VALUES
+                ('Umani', 'Umano', 'Umana', '', 'races/standard_razza.png', 'races/standard_razza.png', '', 1, 1);"
         );
 
         DB::query("
