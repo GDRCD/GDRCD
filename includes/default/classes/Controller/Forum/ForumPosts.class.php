@@ -699,6 +699,13 @@ class ForumPosts extends Forum
 
     /*** FUNCTIONS ***/
 
+    /**
+     * @fn readPost
+     * @note Legge il post
+     * @param int $post_id
+     * @return void
+     * @throws Throwable
+     */
     public function readPost(int $post_id): void
     {
 
