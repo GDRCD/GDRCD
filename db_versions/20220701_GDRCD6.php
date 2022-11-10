@@ -127,7 +127,8 @@ class GDRCD6 extends DbMigration
                 ('FORUM_ACTIVE',1,'Forum','Forum attivo','Forum attivo?','bool',1,NULL),
                 ('FORUM_POSTS_FOR_PAGE',10,'Forum','Posts per pagina','Numero posts per pagina','int',1,NULL),
                 ('FORUM_COMMENTS_FOR_PAGE',10,'Forum','Commenti per pagina','Numero commenti post per pagina','int',1,NULL),
-                ('FORUM_POST_HISTORY',1,'Forum','Storico delle modifica ad un post o commento','Storico delle modifica ad un posto commento','bool',1,NULL)
+                ('FORUM_POST_HISTORY',1,'Forum','Storico delle modifica ad un post o commento','Storico delle modifica ad un posto commento','bool',1,NULL),
+                ('NEWS_ACTIVE',1,'News','News attive','News attive?','bool',1,NULL)
         ;");
 
         DB::query("
@@ -238,6 +239,8 @@ class GDRCD6 extends DbMigration
               ('Gestione', 'Forum', 'Gestione Forum', 'gestione/forum/forum/gestione_forum', 'FORUM_ADMIN'),
               ('Gestione', 'Forum', 'Gestione Tipi', 'gestione/forum/tipi/gestione_forum_tipi', 'FORUM_ADMIN'),
               ('Gestione', 'Forum', 'Gestione Permessi', 'gestione/forum/permessi/gestione_forum_permessi', 'FORUM_ADMIN'),
+              ('Gestione', 'News', 'Gestione News', 'gestione/news/news/gestione_news', 'MANAGE_NEWS'),
+              ('Gestione', 'News', 'Gestione Tipologia News', 'gestione/news/tipo/gestione_news_tipo', 'MANAGE_NEWS_TYPE'),
               ('Uffici', 'Anagrafe', 'Anagrafe', 'servizi/anagrafe/index', NULL),
               ('Uffici', 'Lavoro', 'Amministrazione Gruppi', 'servizi/amministrazioneGilde/index', NULL),
               ('Uffici', 'Lavoro', 'Lavoro', 'servizi/lavori/index', NULL),
@@ -299,6 +302,12 @@ class GDRCD6 extends DbMigration
                 ('Brezza Leggera'),
                 ('Vento forte'),
                 ('Burrasca');"
+        );
+
+        DB::query("
+            INSERT INTO `news_tipo` (`nome`,`descrizione`) VALUES
+                ('On','Notizie On'),
+                ('Off','Notizie Off');"
         );
 
         DB::query("
@@ -395,7 +404,9 @@ class GDRCD6 extends DbMigration
                 ('MANAGEMENT_MENU','Permesso per la pagina gestione'),
                 ('FORUM_VIEW_ALL','Permesso per la visione di tutti i forum esistenti'),
                 ('FORUM_EDIT_ALL','Permesso per la modifica di tutti i forum visibili'),
-                ('FORUM_ADMIN','Permesso per la modifica di tutti i forum visibili')
+                ('FORUM_ADMIN','Permesso per la modifica di tutti i forum visibili'),
+                ('MANAGE_NEWS','Permesso per la gestione delle news'),
+                ('MANAGE_NEWS_TYPE','Permesso per la gestione delle news')
                ;"
         );
 

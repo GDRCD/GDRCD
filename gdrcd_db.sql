@@ -853,6 +853,54 @@ CREATE TABLE `meteo_venti` (
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `meteo_venti`
+--
+
+CREATE TABLE `news` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `autore` VARCHAR(255) NULL DEFAULT NULL,
+    `titolo` varchar(255) NULL,
+    `testo` text NULL,
+    `tipo` int NOT NULL,
+    `attiva` tinyint(1) NOT NULL DEFAULT 1,
+    `creata_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `creata_da` int DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `meteo_venti`
+--
+
+CREATE TABLE `news_lette` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `personaggio` INT NOT NULL ,
+    `news` INT NULL,
+    `letto_il` datetime DEFAULT CURRENT_TIMESTAMP ,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `meteo_venti`
+--
+
+CREATE TABLE `news_tipo` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `nome` varchar(255) NULL,
+    `descrizione` text NULL,
+    `attiva` tinyint(1) NOT NULL DEFAULT 1,
+    `creata_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `creata_da` int DEFAULT NULL,
+     PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `oggetto`
 --
 
