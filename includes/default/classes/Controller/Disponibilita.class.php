@@ -37,6 +37,7 @@ class Disponibilita extends BaseClass
      * @fn permissionManageAvailabilities
      * @note Controlla se il personaggio può gestire le disponibilità
      * @return bool
+     * @throws Throwable
      */
     public function permissionManageAvailabilities(): bool
     {
@@ -168,10 +169,10 @@ class Disponibilita extends BaseClass
 
         if ( $this->permissionManageAvailabilities() ) {
 
-            $shop = Filters::int($post['id']);
+            $id = Filters::int($post['id']);
 
             DB::queryStmt("DELETE FROM disponibilita WHERE id=:id", [
-                'id' => $shop,
+                'id' => $id,
             ]);
 
             return [

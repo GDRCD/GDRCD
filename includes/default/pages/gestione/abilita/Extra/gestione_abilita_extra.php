@@ -45,8 +45,7 @@ $abi_class = AbilitaExtra::getInstance();
             <div class="single_input">
                 <div class="label">Abilita</div>
                 <select name="abilita" required>
-                    <option value=""></option>
-                    <?= $abi_class->listAbilita(); ?>
+                    <?= $abi_class->listAbility(); ?>
                 </select>
             </div>
 
@@ -97,8 +96,7 @@ $abi_class = AbilitaExtra::getInstance();
             <div class="single_input">
                 <div class="label">Abilita</div>
                 <select name="abilita" required>
-                    <option value=""></option>
-                    <?= $abi_class->listAbilita(); ?>
+                    <?= $abi_class->listAbility(); ?>
                 </select>
             </div>
 
@@ -154,8 +152,7 @@ $abi_class = AbilitaExtra::getInstance();
             <div class="single_input">
                 <div class="label">Abilita</div>
                 <select name="abilita" required>
-                    <option value=""></option>
-                    <?= $abi_class->listAbilita(); ?>
+                    <?= $abi_class->listAbility(); ?>
                 </select>
             </div>
 

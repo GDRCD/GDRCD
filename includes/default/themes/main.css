@@ -1445,3 +1445,51 @@ div.innertube {
     color: white;
 }
 
+/**** UTENTI ABILITA ****/
+
+.user_service_ability_table div.abilita_scheda_nome span {
+    width: 98%;
+    font-size: 12px;
+    background: #222222;
+    border: 1px solid black;
+    color: white;
+    cursor: pointer;
+    border-radius: 10px;
+    padding: 2px 5px;
+}
+
+
+.user_service_ability_table div.abilita_scheda_nome span:hover {
+    background: #555555;
+}
+
+.user_service_ability_table div.abilita_scheda_text {
+    width: 100%;
+    background: grey;
+    border: 1px solid black;
+    border-radius: 5px;
+    margin: 10px 0;
+    padding: 0 5px;
+    box-sizing: border-box;
+    display: none;
+}
+
+.user_service_ability_table div.abilita_scheda_text .table-subtitle {
+    border-bottom: 1px solid black;
+    width: 90%;
+    margin: 15px auto;
+}
+
+.user_service_ability_table .tr .td {
+    width: 23% !important;
+}
+
+.user_service_ability_table .abilita_scheda_sub form {
+    display: inline-block;
+    width: 25%;
+}
+
+.user_service_ability_table .extra_level{
+    border-top: 1px solid black;
+    margin: 15px auto;
+}

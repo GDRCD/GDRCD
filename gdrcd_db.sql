@@ -23,8 +23,8 @@ SET time_zone = "+00:00";
 CREATE TABLE IF NOT EXISTS `abilita` (
   `id` int NOT NULL AUTO_INCREMENT,
   `nome` varchar(255) NOT NULL,
-  `statistica` tinyint(1) NOT NULL DEFAULT '0',
   `descrizione` text NOT NULL,
+  `statistica` tinyint(1) NOT NULL DEFAULT '0',
   `razza` int DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
@@ -70,24 +70,6 @@ CREATE TABLE IF NOT EXISTS `ambientazione` (
   `capitolo` int NOT NULL,
   `testo` text NOT NULL,
   `titolo` varchar(255) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `backmessaggi`
---
-
-CREATE TABLE IF NOT EXISTS `backmessaggi` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `mittente` varchar(255) NOT NULL DEFAULT '',
-  `destinatario` varchar(255) NOT NULL DEFAULT '',
-  `spedito` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `letto` tinyint(1) DEFAULT '0',
-  `tipo` int NOT NULL DEFAULT '0',
-  `oggetto` text,
-  `testo` text,
-  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -188,18 +170,6 @@ CREATE TABLE IF NOT EXISTS `chat_opzioni` (
     `creato_da` int DEFAULT NULL,
     `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `clgpersonaggiomostrine`
---
-
-CREATE TABLE IF NOT EXISTS `clgpersonaggiomostrine` (
-  `id_mostrina` varchar(255) NOT NULL DEFAULT '',
-  `nome` varchar(255) NOT NULL DEFAULT '',
-  PRIMARY KEY (`id_mostrina`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -1312,21 +1282,6 @@ CREATE TABLE IF NOT EXISTS `sessi` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `nome` varchar(255) NOT NULL,
   `immagine` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `send_GM`
---
-
-CREATE TABLE IF NOT EXISTS `send_GM` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `data` datetime NOT NULL,
-  `autore` varchar(255) NOT NULL,
-  `role_reg` int NOT NULL,
-  `note` text DEFAULT NULL ,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 

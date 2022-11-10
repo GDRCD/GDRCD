@@ -201,7 +201,7 @@ class AbilitaRequisiti extends Abilita
             $grado = Filters::int($new['grado']);
             $nome_abi = Filters::out($new['nome']);
 
-            $dati_rif = $this->getAbilita($id_riferimento, 'nome');
+            $dati_rif = $this->getAbility($id_riferimento, 'nome');
             $nome_riferimento = Filters::out($dati_rif['nome']);
 
             $html .= "<option value='{$id}'>{$nome_abi} {$grado} - {$nome_riferimento} {$lvl_rif}</option>";

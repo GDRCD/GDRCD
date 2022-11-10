@@ -377,7 +377,7 @@ class Gruppi extends BaseClass
             'Comandi',
         ];
         $links = [
-            ['href' => "/main.php?page=uffici", 'text' => 'Indietro'],
+            ['href' => "/main.php?page=servizi", 'text' => 'Indietro'],
         ];
         return [
             'body_rows' => $row_data,

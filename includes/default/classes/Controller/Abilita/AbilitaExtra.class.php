@@ -51,7 +51,7 @@ class AbilitaExtra extends Abilita
     public function ajaxExtraData(array $post): array
     {
 
-        if ( $_SESSION['permessi'] >= GAMEMASTER ) {
+        if ( $this->permissionManageAbiExtra() ) {
             $abi = Filters::int($post['abilita']);
             $grado = Filters::int($post['grado']);
 

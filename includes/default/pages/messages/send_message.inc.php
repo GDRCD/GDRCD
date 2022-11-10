@@ -51,7 +51,6 @@ switch ( $opRequest ) {
             // Se ho costruito delle query di inserimento, prevedo la query
             if ( isset($queryInsert) ) {
                 $query = gdrcd_query("INSERT INTO messaggi (mittente, destinatario, spedito, tipo, oggetto, testo) VALUES " . implode(",", $queryInsert));
-                $query = gdrcd_query("INSERT INTO backmessaggi (mittente, destinatario, spedito, tipo, oggetto, testo) VALUES " . implode(",", $queryInsert));
             }
 
             echo '<div class="warning">' . $PARAMETERS['names']['private_message']['sing'] . $MESSAGE['interface']['messages']['sent'] . '</div>';

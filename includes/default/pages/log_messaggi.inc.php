@@ -48,14 +48,10 @@
                 $pagebegin = (int) $_REQUEST['offset'] * $PARAMETERS['settings']['records_per_page'];
                 $pageend = $PARAMETERS['settings']['records_per_page'];
                 //Conteggio record totali
-                $record_globale = gdrcd_query("SELECT COUNT(*) FROM backmessaggi WHERE mittente = '".gdrcd_filter('in', $_REQUEST['pg'])."'");
-                $totaleresults = $record_globale['COUNT(*)'];
                 //Lettura record
-                $result = gdrcd_query("SELECT destinatario, spedito, testo FROM backmessaggi WHERE mittente = '".gdrcd_filter('in', $_REQUEST['pg'])."' ORDER BY spedito DESC LIMIT ".$pagebegin.", ".$pageend."", 'result');
-                $numresults = gdrcd_query($result, 'num_rows');
 
                 /* Se esistono record */
-                if($numresults > 0) { ?>
+                if(0 > 0) { ?>
                     <!-- Elenco dei record paginato -->
                     <div class="elenco_record_gestione">
                         <table>
@@ -104,9 +100,9 @@
                 <?php }//if  ?>
                 <!-- Paginatore elenco -->
                 <div class="pager">
-                    <?php if($totaleresults > $PARAMETERS['settings']['records_per_page']) {
+                    <?php if(1 > $PARAMETERS['settings']['records_per_page']) {
                         echo gdrcd_filter('out', $MESSAGE['interface']['pager']['pages_name']);
-                        for($i = 0; $i <= floor($totaleresults / $PARAMETERS['settings']['records_per_page']); $i++) {
+                        for($i = 0; $i <= floor(1 / $PARAMETERS['settings']['records_per_page']); $i++) {
                             if($i != $_REQUEST['offset']) {
                                 ?>
                                 <a href="main.php?page=log_messaggi&op=view&pg=<?php echo $_REQUEST['pg']; ?>&offset=<?php echo $i; ?>"><?php echo $i + 1; ?></a>

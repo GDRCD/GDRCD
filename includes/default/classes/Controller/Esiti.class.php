@@ -560,7 +560,7 @@ class Esiti extends BaseClass
             foreach ( $esiti as $esito ) {
 
                 $id = Filters::int($esito['id']);
-                $abi_data = Abilita::getInstance()->getAbilita(Filters::int($esito['abilita']), 'nome');
+                $abi_data = Abilita::getInstance()->getAbility(Filters::int($esito['abilita']), 'nome');
                 $dice_num = Filters::int($esito['dice_num']);
                 $dice_face = Filters::int($esito['dice_face']);
 
@@ -740,7 +740,7 @@ class Esiti extends BaseClass
     {
         $row_data = [];
         $path = ($page == 'servizi') ? 'servizi/esiti/esiti_index' : 'gestione/esiti/esiti_index';
-        $backlink = ($page == 'servizi') ? 'uffici' : 'gestione';
+        $backlink = ($page == 'servizi') ? 'servizi' : 'gestione';
 
         foreach ( $list as $row ) {
 
@@ -950,7 +950,7 @@ class Esiti extends BaseClass
 
                 if ( ($dice_num > 0) && $this->esitiTiriEnabled() ) {
 
-                    $abi_data = Abilita::getInstance()->getAbilita($id_abi, 'nome');
+                    $abi_data = Abilita::getInstance()->getAbility($id_abi, 'nome');
 
                     $chat = new Chat();
                     $chat_id = Filters::int($answer['chat']);

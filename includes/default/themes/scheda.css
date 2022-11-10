@@ -585,22 +585,23 @@ div.pagina_scheda_equip {
 /**** ABILITA ***/
 
 
-div.abilita_scheda_nome {
-    width: 250px;
+.scheda_abilita_box div.abilita_scheda_nome span {
+    width: 98%;
     font-size: 12px;
     background: #222222;
     border: 1px solid black;
     color: white;
     cursor: pointer;
     border-radius: 10px;
+    padding: 2px 5px;
 }
 
 
-div.abilita_scheda_nome:hover {
+.scheda_abilita_box div.abilita_scheda_nome span:hover {
     background: #555555;
 }
 
-div.abilita_scheda_text {
+.scheda_abilita_box div.abilita_scheda_text {
     width: 100%;
     background: grey;
     border: 1px solid black;
@@ -611,17 +612,17 @@ div.abilita_scheda_text {
     display: none;
 }
 
-div.abilita_scheda_text .table-subtitle {
+.scheda_abilita_box div.abilita_scheda_text .table-subtitle {
     border-bottom: 1px solid black;
     width: 90%;
     margin: 3px auto;
 }
 
-.ability_table .tr .td {
+.scheda_abilita_box .user_ability_table .tr .td {
     width: 23% !important;
 }
 
-.ability_table .abilita_scheda_sub form {
+.scheda_abilita_box .user_ability_table .abilita_scheda_sub form {
     display: inline-block;
     width: 25%;
 }

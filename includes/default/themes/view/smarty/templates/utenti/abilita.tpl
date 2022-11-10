@@ -2,38 +2,30 @@
     <div class="tr">
         <div class="sub-tr">
             <div class="abilita_scheda_nome td" title="Clicca per aprire/chiudere la descrizione.">
-                <span>{{$ability.nome}}</span>
+                <span>{{$ability.name}}</span>
             </div>
             <div class="abilita_scheda_car td">
                 {{$ability.stat}}
-            </div>
-            <div class="abilita_scheda_tank td">
-                {{$ability.grado}}
-            </div>
-            <div class="abilita_scheda_sub td">
-                {if $ability.upgrade_permission}
-                    <form class="form ajax_form" action="scheda/abilita/ajax.php" data-callback="updateAbilities">
-                        <button type="submit">[+]</button>
-                        <input type="hidden" name="action" value="upgrade_ability"/>
-                        <input type="hidden" name="abilita" value="{{$ability.id}}"/>
-                        <input type="hidden" name="pg" value="{{$ability.id_pg}}"/>
-                    </form>
-                {/if}
-                {if $ability.downgrade_permission}
-                    <form class="form ajax_form" action="scheda/abilita/ajax.php" data-callback="updateAbilities">
-                        <button type="submit">[-]</button>
-                        <input type="hidden" name="action" value="downgrade_ability"/>
-                        <input type="hidden" name="abilita" value="{{$ability.id}}"/>
-                        <input type="hidden" name="pg" value="{{$ability.id_pg}}"/>
-                    </form>
-                {/if}
             </div>
         </div>
         <div class="sub-tr">
             <div class="abilita_scheda_text">
                 <div class="default_tex">
                     <div class="table-subtitle">Descrizione</div>
-                    <div class="table-text">{{$ability.extra_data.text}}</div>
+                    <div class="table-text">{{$ability.description}}</div>
+
+                    {if $ability.extra}
+
+                        <div class="table-subtitle">Extra</div>
+                        {foreach $ability.extra as $extra_data}
+                            <div class="extra_level">
+                                <div class="general_subtitle">Grado {{$extra_data.level}}</div>
+                                <div class="table-text">{{$extra_data.description}}</div>
+                            </div>
+                        {/foreach}
+                    {/if}
+
+
                 </div>
                 {if $extra_active}
                     <div class="actual_extra_text">

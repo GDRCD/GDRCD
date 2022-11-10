@@ -48,7 +48,7 @@ $stat_cls = Statistiche::getInstance();
                 <div class="label">Abilita</div>
                 <select name="abilita" required>
                     <option value=""></option>
-                    <?= $abiReq->listAbilita(); ?>
+                    <?= $abiReq->listAbility(); ?>
                 </select>
             </div>
 
@@ -78,7 +78,7 @@ $stat_cls = Statistiche::getInstance();
                 <select name="id_rif" required>
                     <option value=""></option>
                     <optgroup label="Abilita">
-                        <?= $abiReq->listAbilita(); ?>
+                        <?= $abiReq->listAbility(); ?>
                     </optgroup>
                     <optgroup label="Caratteristiche">
                         <?= $stat_cls->listStats(); ?>
@@ -123,7 +123,7 @@ $stat_cls = Statistiche::getInstance();
                 <div class="label">Abilita</div>
                 <select name="abilita" required>
                     <option value=""></option>
-                    <?= $abiReq->listAbilita(); ?>
+                    <?= $abiReq->listAbility(); ?>
                 </select>
             </div>
 
@@ -153,7 +153,7 @@ $stat_cls = Statistiche::getInstance();
                 <select name="id_rif" required>
                     <option value=""></option>
                     <optgroup label="Abilita">
-                        <?= $abiReq->listAbilita(); ?>
+                        <?= $abiReq->listAbility(); ?>
                     </optgroup>
                     <optgroup label="Caratteristiche">
                         <?= $stat_cls->listStats(); ?>

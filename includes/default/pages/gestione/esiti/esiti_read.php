@@ -46,7 +46,7 @@ if ( $esiti->esitoViewPermission($id_record) && $esiti->esitoExist($id_record) )
                     <div class="single_input w-33">
                         <div class="label">Abilità</div>
                         <select name="abilita">
-                            <?= $abi->listAbilita(); ?>
+                            <?= $abi->listAbility(); ?>
                         </select>
                     </div>
                     <div class="single_input w-33">

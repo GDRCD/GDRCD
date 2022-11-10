@@ -98,6 +98,27 @@ class Chat extends BaseClass
         $this->chat_esiti = Functions::get_constant('ESITI_CHAT');
     }
 
+    /*** PERMISSIONS ***/
+
+    /**
+     * @fn permissionChatMaster
+     * @note Controlla se l'utente ha i permessi per essere master
+     * @return bool
+     * @throws Throwable
+     */
+    public function permissionChatMaster(){
+        return Permissions::permission('CHAT_MASTER');
+    }
+
+    /**
+     * @fn permissionChatModerator
+     * @note Controlla se l'utente ha i permessi per essere master
+     * @return bool
+     * @throws Throwable
+     */
+    public function permissionChatModerator(){
+        return Permissions::permission('CHAT_MODERATOR');
+    }
 
     /**** GETTER ****/
 
@@ -729,18 +750,23 @@ class Chat extends BaseClass
         else if ( $this->me_id == $destinatario ) {
             $intestazione = "{$mittente_nome} ti ha sussurrato: ";
         } # Se non sono nessuno di entrambi ma sono uno staffer
-        else if ( $this->permission > MODERATOR ) {
+        else if ( $this->permissionChatModerator() ) {
             $intestazione = "{$mittente_nome} ha sussurrato a {$destinatario_nome}";
         }
 
         # Se l'intestazione non è vuota, significa che posso leggere il messaggio e lo stampo
-        $array = [
-            "intestazione" => $intestazione,
-            "ora" => $ora,
-            "colore_parlato" => $colore_parlato,
-            "size" => $size,
-            "testo" => $testo,
-        ];
+
+        if($intestazione) {
+            $array = [
+                "intestazione" => $intestazione,
+                "ora" => $ora,
+                "colore_parlato" => $colore_parlato,
+                "size" => $size,
+                "testo" => $testo,
+            ];
+        } else {
+            $array = [];
+        }
 
         # Ritorno html stampato
         return Template::getInstance()->startTemplate()->render('chat/S', $array);
@@ -967,20 +993,21 @@ class Chat extends BaseClass
             # Filtro i dati necessari
             $tipo = Filters::in($post['tipo']);
 
+            # TODO PERMESSI AZIONE
             # In base al tipo mando l'azione con diversi permessi
             switch ( $tipo ) {
                 case 'A':
                 case 'P':
                 case 'F':
-                    $resp = $this->sendAction($post, USER);
+                    $resp = $this->sendAction($post, true);
                     break;
                 case 'N':
                 case 'M':
                 case 'I':
-                    $resp = $this->sendAction($post, GAMEMASTER);
+                    $resp = $this->sendAction($post, $this->permissionChatMaster());
                     break;
                 case 'MOD':
-                    $resp = $this->sendAction($post, MODERATOR);
+                    $resp = $this->sendAction($post, $this->permissionChatModerator());
                     break;
                 case 'S':
                     $resp = $this->sendSussurro($post);
@@ -1006,17 +1033,17 @@ class Chat extends BaseClass
      * @fn sendAction
      * @note Manda le azioni generiche che non hanno il permesso come unico controllo
      * @param array $post
-     * @param int $permission
+     * @param bool $permission
      * @return array
      * @throws Throwable
      */
-    private function sendAction(array $post, int $permission): array
+    private function sendAction(array $post, bool $permission = false): array
     {
         # Filtro le variabili necessarie
-        $permission = Filters::int($permission);
+        $permission = Filters::bool($permission);
 
         # Se i permessi sono superiori a quelli necessari
-        if ( $this->permission >= $permission ) {
+        if ( $permission ) {
 
             # Salvo l'azione in db
             $this->saveAction($post);
@@ -1230,7 +1257,7 @@ class Chat extends BaseClass
         $stat_name = Filters::in($stat_data['nome']);
 
         # Dati Abi
-        $abi_data = $abi_class->getAbilita($id, 'nome');
+        $abi_data = $abi_class->getAbility($id, 'nome');
         $abi_dice = !empty($abi_data_pg['grado']) ? Filters::int($abi_data_pg['grado']) : 0;
         $nome = Filters::in($abi_data['nome']);
 

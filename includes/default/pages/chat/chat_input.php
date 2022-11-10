@@ -29,13 +29,13 @@ $chat_abi_class = ChatAbilita::getInstance();
                     <option value="S">Sussurro</option>
                     <option value="F">Sussurro globale</option>
 
-                    <?php if ( $_SESSION['permessi'] >= GAMEMASTER ) { ?>
+                    <?php if ( Chat::getInstance()->permissionChatMaster() ) { ?>
                         <option value="N">PNG</option>
                         <option value="M">Master</option>
                         <option value="I">Immagine</option>
                     <?php } ?>
 
-                    <?php if ( $_SESSION['permessi'] >= MODERATOR ) { ?>
+                    <?php if ( Chat::getInstance()->permissionChatModerator() ) { ?>
                         <option value="MOD">Moderazione</option>
                     <?php } ?>
 
@@ -97,10 +97,6 @@ $chat_abi_class = ChatAbilita::getInstance();
         </div>
     </form>
     <div class="chat_dice chat_internal_box">
-        <button name="reg_role"
-                onclick="modalWindow('reg_role', 'Registra giocata', 'popup.php?page=chat_pannelli_index&pannello=segnalazione_role')">
-            Registra role
-        </button>
         <?php
         if ( $esiti_chat && $esiti ) { ?>
             <button name="esiti"

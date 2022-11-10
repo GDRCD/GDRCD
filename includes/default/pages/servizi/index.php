@@ -3,7 +3,7 @@
         <h2>Servizi</h2>
     </div>
     <div class="page_body">
-        <?=Menu::getInstance()->createMenu('Uffici'); ?>
+        <?=Menu::getInstance()->createMenu('Servizi'); ?>
     </div>
 </div>
 

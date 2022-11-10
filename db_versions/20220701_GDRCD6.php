@@ -18,9 +18,16 @@ class GDRCD6 extends DbMigration
     {
         DB::query("
             INSERT INTO `abilita` (`nome`, `statistica`, `descrizione`, `razza`) VALUES
-                ('Resistenza', 4, 'Il personaggio Ã¨ in grado di sopportare il dolore ed il disagio e sopporta minime dosi di agenti tossici nel proprio organismo. ', -1),
-                ('Sopravvivenza', 4, 'Il personaggio Ã¨ in grado di procurarsi cibo e riparo all''aperto, con mezzi minimi.', -1);
+                ('Resistenza', 1, 'Il personaggio Ã¨ in grado di sopportare il dolore ed il disagio e sopporta minime dosi di agenti tossici nel proprio organismo. ', -1),
+                ('Sopravvivenza', 1, 'Il personaggio Ã¨ in grado di procurarsi cibo e riparo all''aperto, con mezzi minimi.', -1);
         ");
+
+        DB::query("
+            INSERT INTO disponibilita(`nome`,`immagine`) VALUES
+            ('Disponibile','availability/disponibile.png'),
+            ('Non Disponibile','availability/non_disponibile.png'),
+            ('Occupato','availability/in_lavorazione.png');"
+        );
 
         DB::query("
             INSERT INTO `forum` (`tipo`, `nome`) VALUES
@@ -196,9 +203,9 @@ class GDRCD6 extends DbMigration
               ('Gestione', 'Log', 'Log Chat', 'log_chat', 'LOG_CHAT'),
               ('Gestione', 'Log', 'Log Eventi', 'log_eventi', 'LOG_EVENTI'),
               ('Gestione', 'Log', 'Log Messaggi', 'log_messaggi', 'LOG_MESSAGGI'),
-              ('Gestione', 'Abilità', 'Gestione Abilità', 'gestione_abilita', 'MANAGE_ABILITY'),
-              ('Gestione', 'Abilità', 'Dati Extra Abilità', 'gestione/abilita/extra/gestione_abilita_extra', 'MANAGE_ABILITY_EXTRA'),
-              ('Gestione', 'Abilità', 'Requisiti abilità', 'gestione/abilita/requisiti/gestione_requisiti', 'MANAGE_ABILITY_REQUIREMENT'),
+              ('Gestione', 'Abilità', 'Gestione Abilità', 'gestione/abilita/abilita/gestione_abilita', 'MANAGE_ABILITY'),
+              ('Gestione', 'Abilità', 'Gestione Abilità Extra', 'gestione/abilita/extra/gestione_abilita_extra', 'MANAGE_ABILITY_EXTRA'),
+              ('Gestione', 'Abilità', 'Gestione Abilità Requisiti', 'gestione/abilita/requisiti/gestione_requisiti', 'MANAGE_ABILITY_REQUIREMENT'),
               ('Gestione', 'Locations', 'Gestione Luoghi', 'gestione_luoghi', 'MANAGE_LOCATIONS'),
               ('Gestione', 'Locations', 'Gestione Mappe', 'gestione_mappe', 'MANAGE_MAPS'),
               ('Gestione', 'Documentazioni', 'Gestione Ambientazione', 'gestione_ambientazione', 'MANAGE_AMBIENT'),
@@ -241,15 +248,15 @@ class GDRCD6 extends DbMigration
               ('Gestione', 'Forum', 'Gestione Permessi', 'gestione/forum/permessi/gestione_forum_permessi', 'FORUM_ADMIN'),
               ('Gestione', 'News', 'Gestione News', 'gestione/news/news/gestione_news', 'MANAGE_NEWS'),
               ('Gestione', 'News', 'Gestione Tipologia News', 'gestione/news/tipo/gestione_news_tipo', 'MANAGE_NEWS_TYPE'),
-              ('Uffici', 'Anagrafe', 'Anagrafe', 'servizi/anagrafe/index', NULL),
-              ('Uffici', 'Lavoro', 'Amministrazione Gruppi', 'servizi/amministrazioneGilde/index', NULL),
-              ('Uffici', 'Lavoro', 'Lavoro', 'servizi/lavori/index', NULL),
-              ('Uffici', 'Gruppi', 'Gruppi', 'servizi/gruppi/index', NULL),
-              ('Uffici', 'Mercato', 'Mercato', 'servizi/mercato/mercato_index', NULL),
-              ('Uffici', 'Esiti', 'Pannello esiti', 'servizi/esiti/esiti_index', NULL),
-              ('Uffici', 'Stanze', 'Prenotazione stanze', 'servizi_prenotazioni', NULL),
-              ('Uffici', 'Banca', 'Servizi bancari', 'servizi/banca/index', NULL),
-              ('Utenti', 'Abilità', 'Abilità', 'user_abilita', NULL),
+              ('Servizi', 'Anagrafe', 'Anagrafe', 'servizi/anagrafe/index', NULL),
+              ('Servizi', 'Lavoro', 'Amministrazione Gruppi', 'servizi/amministrazioneGilde/index', NULL),
+              ('Servizi', 'Lavoro', 'Lavoro', 'servizi/lavori/index', NULL),
+              ('Servizi', 'Gruppi', 'Gruppi', 'servizi/gruppi/index', NULL),
+              ('Servizi', 'Mercato', 'Mercato', 'servizi/mercato/mercato_index', NULL),
+              ('Servizi', 'Esiti', 'Pannello esiti', 'servizi/esiti/esiti_index', NULL),
+              ('Servizi', 'Stanze', 'Prenotazione stanze', 'servizi_prenotazioni', NULL),
+              ('Servizi', 'Banca', 'Servizi bancari', 'servizi/banca/index', NULL),
+              ('Utenti', 'Abilità', 'Abilità', 'utenti/abilita/index', NULL),
               ('Utenti', 'Ambientazione', 'Ambientazione', 'user_ambientazione', NULL),
               ('Utenti', 'Ambientazione', 'Razze', 'user_razze', NULL),
               ('Utenti', 'Regolamento', 'Regolamento', 'user_regolamento', NULL),
@@ -259,8 +266,8 @@ class GDRCD6 extends DbMigration
               ('Utenti', 'Statistiche', 'Statistiche Sito', 'user_stats', NULL),
               ('Rapido', 'Scheda', 'Scheda', 'scheda/index', NULL),
               ('Rapido', 'Gestione', 'Gestione', 'gestione', 'MANAGEMENT_MENU'),
-              ('Rapido', 'Servizi', 'Uffici', 'uffici', NULL),
-              ('Rapido', 'Menu utente', 'Utenti', 'utenti', NULL);"
+              ('Rapido', 'Servizi', 'Servizi', 'servizi/index', NULL),
+              ('Rapido', 'Menu utente', 'Pannello Utenti', 'utenti/index', NULL);"
         );
 
         DB::query("
@@ -406,7 +413,9 @@ class GDRCD6 extends DbMigration
                 ('FORUM_EDIT_ALL','Permesso per la modifica di tutti i forum visibili'),
                 ('FORUM_ADMIN','Permesso per la modifica di tutti i forum visibili'),
                 ('MANAGE_NEWS','Permesso per la gestione delle news'),
-                ('MANAGE_NEWS_TYPE','Permesso per la gestione delle news')
+                ('MANAGE_NEWS_TYPE','Permesso per la gestione delle news'),
+                ('CHAT_MASTER','Azioni master in chat'),
+                ('CHAT_MODERATOR','Azioni moderatore in chat')
                ;"
         );
 
@@ -425,8 +434,8 @@ class GDRCD6 extends DbMigration
 
         DB::queryStmt("
             INSERT INTO `personaggio` (`id`,`nome`, `cognome`, `pass`, `ultimo_cambiopass`, `data_iscrizione`, `email`, `permessi`, `ultima_mappa`, `ultimo_luogo`, `esilio`, `data_esilio`, `motivo_esilio`, `autore_esilio`, `sesso`, `razza`, `descrizione`, `affetti`, `stato`, `online_status`, `disponibile`, `url_img`, `url_img_chat`, `url_media`, `blocca_media`, `esperienza`, `salute`, `salute_max`, `soldi`, `banca`, `last_ip`, `is_invisible`, `ultimo_refresh`, `ora_entrata`, `ora_uscita`, `posizione`) VALUES
-                (1,'Super', 'User', :superpassword, NULL, '2011-06-04 00:47:48', '\$P\$BNZYtz9JOQE.O4Tv7qZyl3SzIoZzzR.', 5, 1, -1, '2009-01-01', '2009-01-01', '', '', 1, 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 100, 100, 300, 50000,  '127.0.0.1', 0, '2021-10-08 00:28:13', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1),
-                (2,'Test', 'Di Funzionalità', :testpassword, NULL, '2011-06-04 00:47:48', '\$P\$Bd1amPCKkOF9GdgYsibZ96U92D5CtR0', 0, 1, -1, '2009-01-01', '2009-01-01', '', '', 1, 1000, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000',  100, 100, 50, 50, '127.0.0.1', 0, '2009-01-01 00:00:00', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1);",
+                (1,'Super', 'User', :superpassword, NULL, '2011-06-04 00:47:48', '\$P\$BNZYtz9JOQE.O4Tv7qZyl3SzIoZzzR.', 5, 1, -1, '2009-01-01', '2009-01-01', '', '', 1, 1, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 100, 100, 300, 50000,  '127.0.0.1', 0, '2021-10-08 00:28:13', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1),
+                (2,'Test', 'Di Funzionalità', :testpassword, NULL, '2011-06-04 00:47:48', '\$P\$Bd1amPCKkOF9GdgYsibZ96U92D5CtR0', 0, 1, -1, '2009-01-01', '2009-01-01', '', '', 1, 1, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000',  100, 100, 50, 50, '127.0.0.1', 0, '2009-01-01 00:00:00', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1);",
             [
                 'superpassword' => Password::hash('super'),
                 'testpassword' => Password::hash('test'),
@@ -435,14 +444,7 @@ class GDRCD6 extends DbMigration
 
         DB::query("
             INSERT INTO `razze` (`id`, `nome`, `sing_m`, `sing_f`, `descrizione`, `immagine`, `icon`, `url_site`, `iscrizione`, `visibile`) VALUES
-                (1000, 'Umani', 'Umano', 'Umana', '', 'races/standard_razza.png', 'races/standard_razza.png', '', 1, 1);"
-        );
-
-        DB::query("
-            INSERT INTO disponibilita(`nome`,`immagine`) VALUES
-            ('Disponibile','availability/disponibile.png'),
-            ('Non Disponibile','availability/non_disponibile.png'),
-            ('Occupato','availability/in_lavorazione.png');"
+                (1, 'Umani', 'Umano', 'Umana', '', 'races/standard_razza.png', 'races/standard_razza.png', '', 1, 1);"
         );
 
         DB::query("
@@ -451,6 +453,16 @@ class GDRCD6 extends DbMigration
             ('Femmina','gender/f.png');"
         );
 
+
+        DB::query("
+            INSERT INTO statistiche(`nome`,`max_val`,`min_val`,`descrizione`,`creato_da`) VALUES
+            ('Forza',5,1,'Forza fisica','1'),
+            ('Destrezza',5,1,'Destrezza manuale','1'),
+            ('Intelligenza',5,1,'Intelligenza','1'),
+            ('Carisma',5,1,'Carisma','1'),
+            ('Costituzione',5,1,'Costituzione','1'),
+            ('Saggezza',5,1,'Saggezza','1');"
+        );
     }
 
     /**

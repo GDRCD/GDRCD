@@ -23,6 +23,6 @@ $stagioni = MeteoStagioni::getInstance();
 
         <div class="warning"> Funzione disabilitata.</div>
 
-        <div class="link_back"><a href="/main.php?page=uffici">Indietro</a></div>
+        <div class="link_back"><a href="/main.php?page=servizi">Indietro</a></div>
     <?php } ?>
 </div>

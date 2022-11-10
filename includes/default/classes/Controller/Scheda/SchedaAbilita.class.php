@@ -26,25 +26,6 @@ class SchedaAbilita extends Scheda
         return ($this->isPublic() || $this->permissionViewAbilita() || Personaggio::isMyPg($id_pg));
     }
 
-    /*** INDEX ***/
-
-    /**
-     * @fn indexSchedaAbilita
-     * @note Indexing della scheda Abilita
-     * @param string $op
-     * @return string
-     */
-    public function indexSchedaAbilita(string $op): string
-    {
-
-        $page = match ($op) {
-            'upgrade' => 'upgrade',
-            'downgrade' => 'downgrade',
-            default => 'list',
-        };
-
-        return Filters::out($page);
-    }
 
     /**** PERMISSION ***/
 
@@ -58,7 +39,23 @@ class SchedaAbilita extends Scheda
         return Permissions::permission('VIEW_SCHEDA_ABI');
     }
 
+
     /**** RENDERING ****/
+
+    /**
+     * @fn abilityPage
+     * @note Renderizza la scheda abilita'
+     * @param int $id_pg
+     * @return string
+     * @throws Throwable
+     */
+    public function abilityPage(int $id_pg): string
+    {
+        return Template::getInstance()->startTemplate()->renderTable(
+            'scheda/abilita',
+            $this->renderAbiPage($id_pg)
+        );
+    }
 
     /**
      * @fn renderAbiPage
@@ -113,22 +110,6 @@ class SchedaAbilita extends Scheda
     }
 
     /**
-     * @fn abilityPage
-     * @note Renderizza la scheda abilita'
-     * @param int $id_pg
-     * @return string
-     * @throws Throwable
-     */
-    public function abilityPage(int $id_pg): string
-    {
-
-        return Template::getInstance()->startTemplate()->renderTable(
-            'scheda/abilita',
-            $this->renderAbiPage($id_pg)
-        );
-    }
-
-    /**
      * @fn LvlData
      * @note Estrae i dati per la compilazione della descrizione del livello
      * @param int $abi
@@ -149,7 +130,7 @@ class SchedaAbilita extends Scheda
         $new_grado = ($grado < $abi_class->abiLevelCap()) ? ($grado + 1) : 0;
 
         # Create return array
-        $default_descr = $abi_class->getAbilita($abi, 'descrizione');
+        $default_descr = $abi_class->getAbility($abi, 'descrizione');
         $data = [
             'text' => Filters::html($default_descr['descrizione']),
             'requirement' => '',
@@ -207,7 +188,7 @@ class SchedaAbilita extends Scheda
                 # Compongo html in base al tipo
                 switch ( true ) {
                     case $req_class->isTypeAbilita($tipo):
-                        $req_data = $abi_class->getAbilita($rif, 'nome');
+                        $req_data = $abi_class->getAbility($rif, 'nome');
                         $nome = Filters::out($req_data['nome']);
 
                         $data['requirement'] .= " {$nome} {$rif_lvl}, ";
