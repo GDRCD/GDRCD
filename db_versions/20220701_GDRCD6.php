@@ -358,7 +358,7 @@ class GDRCD6 extends DbMigration
                 ('MANAGE_PERMISSIONS', 'Permesso per la gestione dei permessi'),
                 ('MANAGE_MANUTENTIONS', 'Permesso per la gestione della manutenzione del db'),
                 ('MANAGE_REPORTS', 'Permesso per la gestione delle giocate segnalate'),
-                ('MANAGE_WEATHER ', 'Permesso per la gestione meteo'),
+                ('MANAGE_WEATHER', 'Permesso per la gestione meteo'),
                 ('MANAGE_WEATHER_SEASONS', 'Permesso per la gestione delle stagioni meteo'),
                 ('MANAGE_WEATHER_CONDITIONS ', 'Permesso per la gestione delle condizioni meteo'),
                 ('MANAGE_ESITI', 'Permesso per la gestione base degli esiti'),
