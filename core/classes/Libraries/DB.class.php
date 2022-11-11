@@ -93,16 +93,7 @@ class DB extends BaseClass
     {
         if (is_null(self::$PDO))
         {
-            /**
-             * TODO: le tabelle del db devono essere in utf8mb4 (e preferibilmente innoDB). Anche la connessione dovrà usare lo stesso charset
-             * @note la codifica utf8 di PHP utilizza gruppi di 4 byte, mentre "utf8" di mysql ne utilizza 3.
-             * Per essere al riparo in maniera certa da qualsiasi potenziale errore di codifica, quella
-             * corretta in mysql dovrebbe essere "utf8mb4", ma al momento le tabelle del db vengono dichiarate
-             * in "utf8". Dal momento che avere un set di caratteri differente tra connessione e tabelle è
-             * tendenzialmente più problematico, la connessione per il momento verrà istanziata in codifica
-             * "utf8" a 3 byte.
-             */
-            $db_charset = 'utf8';
+            $db_charset = 'utf8mb4';
             $db_port = 3306;
             $db_user = $GLOBALS['PARAMETERS']['database']['username'];
             $db_pass = $GLOBALS['PARAMETERS']['database']['password'];
