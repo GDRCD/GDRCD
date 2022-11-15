@@ -64,6 +64,7 @@ class Razze extends BaseClass
      * @fn permissionManageGenders
      * @note Controlla se il personaggio può gestire i generi
      * @return bool
+     * @throws Throwable
      */
     public function permissionManageRaces(): bool
     {

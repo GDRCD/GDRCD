@@ -8,6 +8,7 @@ class MeteoCondizioni extends Meteo
      * @fn permissionManageWeatherConditions
      * @note Controlla se si hanno i permessi per gestire le condizioni meteo
      * @return bool
+     * @throws Throwable
      */
     public function permissionManageWeatherConditions(): bool
     {

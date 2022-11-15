@@ -13,6 +13,9 @@ class Gruppi extends BaseClass
         $group_icon_present,
         $pay_from_money;
 
+    /**
+     * @throws Throwable
+     */
     protected function __construct()
     {
         parent::__construct();
@@ -55,6 +58,7 @@ class Gruppi extends BaseClass
     }
 
     /**
+     * TODO INTEGRARE
      * @fn activeGroupIconPresent
      * @note Controlla se sono attive le icone gruppo nei presenti
      * @return bool
@@ -70,6 +74,7 @@ class Gruppi extends BaseClass
      * @fn permissionManageGroups
      * @note Controlla se si hanno i permessi per gestire i gruppi
      * @return bool
+     * @throws Throwable
      */
     public function permissionManageGroups(): bool
     {

@@ -9,6 +9,7 @@ class SchedaStats extends Scheda
      * @fn isPublic
      * @note Controlla se la scheda statistiche è pubblica
      * @return bool
+     * @throws Throwable
      */
     public function isPublic(): bool
     {
@@ -20,6 +21,7 @@ class SchedaStats extends Scheda
      * @note Controlla se le statistiche sono accessibili
      * @param int $id_pg
      * @return bool
+     * @throws Throwable
      */
     public function isAccessible(int $id_pg): bool
     {
@@ -52,6 +54,7 @@ class SchedaStats extends Scheda
      * @fn permissionViewStats
      * @note Controlla che si abbiano i permessi per visualizzare le statistiche altrui
      * @return bool
+     * @throws Throwable
      */
     public function permissionViewStats(): bool
     {

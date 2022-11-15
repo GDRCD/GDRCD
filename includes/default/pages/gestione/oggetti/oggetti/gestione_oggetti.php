@@ -28,7 +28,7 @@ if ( $cls->permissionManageObjects() ) { # Metodo di controllo per accesso alla 
 
         <!-- INSERT -->
         <form class="form ajax_form"
-              action="gestione/oggetti/gestione_oggetti_ajax.php"
+              action="gestione/oggetti/oggetti/gestione_oggetti_ajax.php"
               data-callback="refreshObjectList">
 
             <div class="form_title">Creazione oggetto</div>
@@ -37,7 +37,7 @@ if ( $cls->permissionManageObjects() ) { # Metodo di controllo per accesso alla 
             <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
                 <div class="label">Tipo</div>
                 <select name="tipo">
-                    <?= $cls->listObjectTypes(); ?>
+                    <?= OggettiTipo::getInstance()->listObjectTypes(); ?>
                 </select>
             </div>
 
@@ -65,6 +65,13 @@ if ( $cls->permissionManageObjects() ) { # Metodo di controllo per accesso alla 
                 <input type="checkbox" name="indossabile">
             </div>
 
+            <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
+                <div class="label">Posizione</div>
+                <select name="posizione">
+                    <?= OggettiPosizioni::getInstance()->listObjectPositions(); ?>
+                </select>
+            </div>
+
             <!-- Cariche -->
             <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
                 <div class="label">Cariche</div>
@@ -72,14 +79,14 @@ if ( $cls->permissionManageObjects() ) { # Metodo di controllo per accesso alla 
             </div>
 
             <div class="single_input">
-                <input type="hidden" name="action" value="op_insert_object"> <!-- OP NEEDED -->
+                <input type="hidden" name="action" value="op_insert"> <!-- OP NEEDED -->
                 <input type="submit" value="Crea">
             </div>
 
         </form>
 
         <!-- EDIT -->
-        <form class="form ajax_form edit-form" action="gestione/oggetti/gestione_oggetti_ajax.php"
+        <form class="form ajax_form edit-form" action="gestione/oggetti/oggetti/gestione_oggetti_ajax.php"
               data-callback="refreshObjectList">
 
             <div class="form_title">Modifica oggetto</div>
@@ -97,7 +104,7 @@ if ( $cls->permissionManageObjects() ) { # Metodo di controllo per accesso alla 
             <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
                 <div class="label">Tipo</div>
                 <select name="tipo">
-                    <?= $cls->listObjectTypes(); ?>
+                    <?= OggettiTipo::getInstance()->listObjectTypes(); ?>
                 </select>
             </div>
 
@@ -125,6 +132,13 @@ if ( $cls->permissionManageObjects() ) { # Metodo di controllo per accesso alla 
                 <input type="checkbox" name="indossabile">
             </div>
 
+            <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
+                <div class="label">Posizione</div>
+                <select name="posizione">
+                    <?= OggettiPosizioni::getInstance()->listObjectPositions(); ?>
+                </select>
+            </div>
+
             <!-- Cariche -->
             <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
                 <div class="label">Cariche</div>
@@ -132,14 +146,14 @@ if ( $cls->permissionManageObjects() ) { # Metodo di controllo per accesso alla 
             </div>
 
             <div class="single_input">
-                <input type="hidden" name="action" value="op_edit_object"> <!-- OP NEEDED -->
+                <input type="hidden" name="action" value="op_edit"> <!-- OP NEEDED -->
                 <input type="submit" value="Modifica">
             </div>
 
         </form>
 
         <!-- DELETE -->
-        <form class="form ajax_form" action="gestione/oggetti/gestione_oggetti_ajax.php"
+        <form class="form ajax_form" action="gestione/oggetti/oggetti/gestione_oggetti_ajax.php"
               data-callback="refreshObjectList">
 
             <div class="form_title">Elimina Oggetto</div>
@@ -153,7 +167,7 @@ if ( $cls->permissionManageObjects() ) { # Metodo di controllo per accesso alla 
             </div>
 
             <div class="single_input">
-                <input type="hidden" name="action" value="op_delete_object"> <!-- OP NEEDED -->
+                <input type="hidden" name="action" value="op_delete"> <!-- OP NEEDED -->
                 <input type="submit" value="Invia">
             </div>
 
@@ -161,7 +175,7 @@ if ( $cls->permissionManageObjects() ) { # Metodo di controllo per accesso alla 
 
     </div>
 
-    <script src="<?= Router::getPagesLink('gestione/oggetti/gestione_oggetti.js'); ?>"></script>
+    <script src="<?= Router::getPagesLink('gestione/oggetti/oggetti/gestione_oggetti.js'); ?>"></script>
 
     <div class="link_back"><a href="/main.php?page=gestione">Indietro</a></div>
 

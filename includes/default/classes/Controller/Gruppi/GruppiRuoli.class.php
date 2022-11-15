@@ -12,6 +12,7 @@ class GruppiRuoli extends Gruppi
     /**
      * @fn __construct
      * @note Costruttore della classe
+     * @throws Throwable
      */
     protected function __construct()
     {
@@ -25,6 +26,7 @@ class GruppiRuoli extends Gruppi
      * @fn permissionManageRoles
      * @note Controlla se si hanno i permessi per gestire i ruoli
      * @return bool
+     * @throws Throwable
      */
     public function permissionManageRoles(): bool
     {
@@ -242,6 +244,7 @@ class GruppiRuoli extends Gruppi
      * @note Render html lista ruoli
      * @param object $list
      * @return array
+     * @throws Throwable
      */
     public function renderRolesList(object $list): array
     {
@@ -293,6 +296,7 @@ class GruppiRuoli extends Gruppi
      * @note Render html lista membri
      * @param object $list
      * @return array
+     * @throws Throwable
      */
     public function renderMembersList(object $list): array
     {

@@ -10,6 +10,7 @@ class Banca extends BaseClass
      * @note Controlla se l'utente ha i permessi per gestire la banca
      * @param int $pg
      * @return bool
+     * @throws Throwable
      */
     public function permissionManageBank(int $pg): bool
     {

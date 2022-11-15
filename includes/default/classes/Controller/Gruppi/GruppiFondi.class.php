@@ -9,6 +9,7 @@ class GruppiFondi extends Gruppi
     /**
      * @fn __construct
      * @note Costruttore della classe
+     * @throws Throwable
      */
     protected function __construct()
     {
@@ -34,6 +35,7 @@ class GruppiFondi extends Gruppi
      * @fn permissionManageFounds
      * @note Controlla permessi sulla gestione dei fondi
      * @return bool
+     * @throws Throwable
      */
     public function permissionManageFounds(): bool
     {
@@ -96,8 +98,8 @@ class GruppiFondi extends Gruppi
     }
 
     /**
-     * @fn listFounds
-     * @note Genera gli option per i fondi
+     * @fn listFoundsByGroup
+     * @note Genera gli option per i fondi di un gruppo specifico
      * @param int $group
      * @return string
      * @throws Throwable

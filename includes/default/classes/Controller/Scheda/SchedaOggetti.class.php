@@ -14,6 +14,7 @@ class SchedaOggetti extends Scheda
      * @fn isPublic
      * @note Controlla se la scheda oggetti è pubblica
      * @return bool
+     * @throws Throwable
      */
     public function isPublic(): bool
     {
@@ -25,6 +26,7 @@ class SchedaOggetti extends Scheda
      * @note La scheda oggetti è accessibile
      * @param int $id_pg
      * @return bool
+     * @throws Throwable
      */
     public function isAccessible(int $id_pg): bool
     {
@@ -38,6 +40,7 @@ class SchedaOggetti extends Scheda
      * @note Controlla che si abbiano i permessi per rimuovere gli oggetti altrui
      * @param $pg
      * @return bool
+     * @throws Throwable
      */
     public function permissionRemoveObjects($pg): bool
     {
@@ -49,6 +52,7 @@ class SchedaOggetti extends Scheda
      * @note Controlla che si abbiano i permessi per equipaggiare gli oggetti altrui
      * @param $pg
      * @return bool
+     * @throws Throwable
      */
     public function permissionEquipObjects($pg): bool
     {
@@ -60,6 +64,7 @@ class SchedaOggetti extends Scheda
      * @note Controlla che si abbiano i permessi per visualizzare gli oggetti altrui
      * @param int $id_pg
      * @return bool
+     * @throws Throwable
      */
     public function permissionViewObjects(int $id_pg): bool
     {
@@ -79,7 +84,6 @@ class SchedaOggetti extends Scheda
     {
 
         $id_obj = Filters::int($post['object']);
-        $obj_class = Oggetti::getInstance();
         $obj_data = PersonaggioOggetti::getPgObject($id_obj);
         $owner = Filters::int($obj_data['personaggio']);
 
@@ -87,7 +91,7 @@ class SchedaOggetti extends Scheda
 
             $indossato = Filters::int($obj_data['indossato']);
             $obj_position = Filters::int($obj_data['posizione']);
-            $position_data = $obj_class->getObjectPosition($obj_position);
+            $position_data = OggettiPosizioni::getInstance()->getObjectPosition($obj_position);
             $indossato_text = ($indossato) ? 'rimosso' : 'indossato';
 
             if ( !$indossato ) {
@@ -184,9 +188,8 @@ class SchedaOggetti extends Scheda
 
         $html = '';
         $pg = Filters::int($pg);
-        $obj_class = Oggetti::getInstance();
 
-        $list = $obj_class->getAllObjectPositions();
+        $list = OggettiPosizioni::getInstance()->getAllObjectPositions();
 
         foreach ( $list as $position ) {
 
@@ -250,7 +253,7 @@ class SchedaOggetti extends Scheda
         $obj_data = PersonaggioOggetti::getPgObject($obj, 'oggetto.*,personaggio_oggetto.*,personaggio_oggetto.cariche AS cariche_obj');
         $object = Filters::int($obj_data['oggetto']);
         $pg = Filters::int($obj_data['personaggio']);
-        $type_data = $obj_class->getObjectType(Filters::int($obj_data['tipo']));
+        $type_data = OggettiTipo::getInstance()->getObjectType(Filters::int($obj_data['tipo']));
 
         if ( $obj_class->existObject($object) && $this->permissionViewObjects($pg) ) {
 
@@ -286,6 +289,7 @@ class SchedaOggetti extends Scheda
      * @note Renderizzazione oggetti da una lista di oggetti
      * @param object $objs
      * @return string
+     * @throws Throwable
      */
     public static function renderObjects(object $objs): string
     {

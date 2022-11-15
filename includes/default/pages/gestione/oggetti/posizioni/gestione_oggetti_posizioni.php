@@ -4,7 +4,7 @@ Router::loadRequired(); # Inserisco il required se non presente, per futuro spos
 
 $cls = Oggetti::getInstance(); # Inizializzo classe
 
-if ( $cls->permissionManageObjectsType() ) { # Metodo di controllo per accesso alla pagina di gestione
+if ( OggettiTipo::getInstance()->permissionManageObjectsType() ) { # Metodo di controllo per accesso alla pagina di gestione
     ?>
 
     <div class="general_incipit">
@@ -37,7 +37,7 @@ if ( $cls->permissionManageObjectsType() ) { # Metodo di controllo per accesso a
 
         <!-- INSERT -->
         <form class="form ajax_form"
-              action="gestione/oggetti/gestione_oggetti_ajax.php"
+              action="gestione/oggetti/posizioni/gestione_oggetti_posizioni_ajax.php"
               data-callback="refreshObjPosList">
 
             <div class="form_title">Creazione posizione oggetto</div>
@@ -62,7 +62,7 @@ if ( $cls->permissionManageObjectsType() ) { # Metodo di controllo per accesso a
 
 
             <div class="single_input">
-                <input type="hidden" name="action" value="op_insert_object_position"> <!-- OP NEEDED -->
+                <input type="hidden" name="action" value="op_insert"> <!-- OP NEEDED -->
                 <input type="submit" value="Crea">
             </div>
 
@@ -70,7 +70,7 @@ if ( $cls->permissionManageObjectsType() ) { # Metodo di controllo per accesso a
 
         <!-- EDIT -->
         <form class="form edit-form ajax_form"
-              action="gestione/oggetti/gestione_oggetti_ajax.php"
+              action="gestione/oggetti/posizioni/gestione_oggetti_posizioni_ajax.php"
               data-callback="refreshObjPosList">
 
             <div class="form_title">Modifica tipologia oggetto</div>
@@ -79,7 +79,7 @@ if ( $cls->permissionManageObjectsType() ) { # Metodo di controllo per accesso a
             <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
                 <div class="label">Posizione</div>
                 <select name="id">
-                    <?= $cls->listObjectPositions(); ?>
+                    <?= OggettiPosizioni::getInstance()->listObjectPositions(); ?>
                 </select>
             </div>
 
@@ -102,7 +102,7 @@ if ( $cls->permissionManageObjectsType() ) { # Metodo di controllo per accesso a
             </div>
 
             <div class="single_input">
-                <input type="hidden" name="action" value="op_edit_object_position"> <!-- OP NEEDED -->
+                <input type="hidden" name="action" value="op_edit"> <!-- OP NEEDED -->
                 <input type="submit" value="Modifica">
             </div>
 
@@ -110,7 +110,7 @@ if ( $cls->permissionManageObjectsType() ) { # Metodo di controllo per accesso a
 
         <!-- DELETE -->
         <form class="form ajax_form"
-              action="gestione/oggetti/gestione_oggetti_ajax.php"
+              action="gestione/oggetti/posizioni/gestione_oggetti_posizioni_ajax.php"
               data-callback="refreshObjPosList">
 
             <div class="form_title">Elimina tipologia Oggetto</div>
@@ -120,12 +120,12 @@ if ( $cls->permissionManageObjectsType() ) { # Metodo di controllo per accesso a
             <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
                 <div class="label">Posizione</div>
                 <select name="id">
-                    <?= $cls->listObjectPositions(); ?>
+                    <?= OggettiPosizioni::getInstance()->listObjectPositions(); ?>
                 </select>
             </div>
 
             <div class="single_input">
-                <input type="hidden" name="action" value="op_delete_object_position"> <!-- OP NEEDED -->
+                <input type="hidden" name="action" value="op_delete"> <!-- OP NEEDED -->
                 <input type="submit" value="Invia">
             </div>
 
@@ -133,7 +133,7 @@ if ( $cls->permissionManageObjectsType() ) { # Metodo di controllo per accesso a
 
     </div>
 
-    <script src="<?= Router::getPagesLink('gestione/oggetti/gestione_oggetti_posizioni.js'); ?>"></script>
+    <script src="<?= Router::getPagesLink('gestione/oggetti/posizioni/gestione_oggetti_posizioni.js'); ?>"></script>
     <div class="link_back"><a href="/main.php?page=gestione">Indietro</a></div>
 
 

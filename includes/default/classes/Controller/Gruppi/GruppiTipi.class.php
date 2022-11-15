@@ -6,22 +6,13 @@
  */
 class GruppiTipi extends Gruppi
 {
-
-    /**
-     * @fn __construct
-     * @note Costruttore della classe
-     */
-    protected function __construct()
-    {
-        parent::__construct();
-    }
-
     /**** PERMESSI ****/
 
     /**
      * @fn permissionManageTypes
      * @note Controlla permessi sulla gestione dei tipi
      * @return bool
+     * @throws Throwable
      */
     public function permissionManageTypes(): bool
     {

@@ -4,7 +4,7 @@ $(function () {
 
     form.find('select[name="tipo"]').on('change', function () {
         let id = $(this).val()
-        Ajax('gestione/oggetti/gestione_oggetti_ajax.php', {'id': id, 'action': 'get_object_type_data'}, setEditInput)
+        Ajax('gestione/oggetti/tipo/gestione_oggetti_tipo_ajax.php', {'id': id, 'action': 'get_object_type_data'}, setEditInput)
     });
 
     function setEditInput(data) {

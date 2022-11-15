@@ -99,6 +99,7 @@ class Log extends BaseClass
      * @fn permissionViewLogs
      * @note Controlla se il personaggio può vedere i logs
      * @return bool
+     * @throws Throwable
      */
     public function permissionViewLogs(): bool
     {

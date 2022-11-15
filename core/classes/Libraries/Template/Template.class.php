@@ -3,12 +3,13 @@
 class Template extends BaseClass
 {
 
-    protected $engine;
-    protected $used_class;
+    protected mixed $engine;
+    protected mixed $used_class;
 
     /**
      * @fn __construct
      * @return Template
+     * @throws Throwable
      */
     public function startTemplate(): Template
     {
@@ -41,7 +42,7 @@ class Template extends BaseClass
         return $this->used_class->addValues($container, $values);
     }
 
-    protected function renderRaw($file_name, $data)
+    protected function renderRaw($file_name)
     {
         $base_dir = __DIR__ . '/../../../themes/advanced/view/raw/templates/';
 

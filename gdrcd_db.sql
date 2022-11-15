@@ -174,20 +174,6 @@ CREATE TABLE IF NOT EXISTS `chat_opzioni` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `codmostrina`
---
-
-CREATE TABLE IF NOT EXISTS `codmostrina` (
-  `id_mostrina` int NOT NULL AUTO_INCREMENT,
-  `nome` varchar(255) NOT NULL,
-  `img_url` varchar(255) NOT NULL DEFAULT 'grigia.gif',
-  `descrizione` varchar(255) NOT NULL DEFAULT 'nessuna',
-  PRIMARY KEY (`id_mostrina`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
 -- Struttura della tabella `config`
 --
 
@@ -201,7 +187,8 @@ CREATE TABLE IF NOT EXISTS `config` (
   `type` varchar(255) DEFAULT 'String',
   `options` varchar(255) DEFAULT NULL,
   `editable` tinyint(1) DEFAULT 1,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `const_name` (`const_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -345,7 +332,8 @@ CREATE TABLE IF NOT EXISTS `esiti_risposte_letture` (
     `esito` int NOT NULL,
     `personaggio` int NOT NULL,
     `letto_il` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `esito_personaggio` (`esito`,`personaggio`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -361,7 +349,8 @@ CREATE TABLE IF NOT EXISTS `esiti_risposte_risultati` (
     `risultato` int NOT NULL,
     `testo` text DEFAULT NULL,
     `lanciato_il` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `personaggio` (`personaggio`,`esito`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -427,13 +416,13 @@ CREATE TABLE IF NOT EXISTS `forum_posts_letti` (
     `personaggio` varchar(255) DEFAULT NULL,
     `post` int NOT NULL,
     PRIMARY KEY (`id`),
-    KEY `personaggio_post` (`personaggio`,`post`)
+    UNIQUE INDEX `personaggio_post` (`personaggio`,`post`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `forum_letto`
+-- Struttura della tabella `forum_posts_updates`
 --
 
 CREATE TABLE IF NOT EXISTS `forum_posts_updates` (
@@ -623,7 +612,8 @@ CREATE TABLE `menu` (
     `name` varchar(255) NOT NULL,
     `page` varchar(255) NOT NULL,
     `permission` varchar(255) DEFAULT NULL,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `page` (`page`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -848,7 +838,8 @@ CREATE TABLE `news_lette` (
     `personaggio` INT NOT NULL ,
     `news` INT NULL,
     `letto_il` datetime DEFAULT CURRENT_TIMESTAMP ,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `pg_letto` (`personaggio`, `news`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -882,7 +873,7 @@ CREATE TABLE IF NOT EXISTS `oggetto` (
     `indossabile` int NOT NULL DEFAULT '0',
     `posizione` int NOT NULL DEFAULT '0',
     `cariche` varchar(255) NOT NULL DEFAULT '0',
-    `creatore_da` varchar(255) NOT NULL DEFAULT 'System',
+    `creato_da` varchar(255) NOT NULL DEFAULT 'System',
     `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
@@ -890,7 +881,7 @@ CREATE TABLE IF NOT EXISTS `oggetto` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `oggetto`
+-- Struttura della tabella `oggetto_posizioni`
 --
 
 CREATE TABLE IF NOT EXISTS `oggetto_posizioni` (
@@ -951,7 +942,8 @@ CREATE TABLE `pages` (
     `id` int NOT NULL AUTO_INCREMENT,
     `page` varchar(255) NOT NULL,
     `redirect` text NOT NULL,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `page` (`page`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -964,7 +956,8 @@ CREATE TABLE `pages_alias` (
     `id` int NOT NULL AUTO_INCREMENT,
     `alias` varchar(255) NOT NULL,
     `redirect` text NOT NULL,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `alias` (`alias`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -1005,7 +998,8 @@ CREATE TABLE `permessi_group_assignment` (
     `group_id` int NOT NULL,
     `permission` int NOT NULL,
     `assigned_by` varchar(255) NOT NULL,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `group_permission` (`group_id`, `permission`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -1018,7 +1012,8 @@ CREATE TABLE `permessi_group_personaggio` (
     `id` int NOT NULL AUTO_INCREMENT,
     `group_id` int NOT NULL,
     `personaggio` varchar(255) NOT NULL,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `group_personaggio` (`group_id`, `personaggio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -1032,7 +1027,8 @@ CREATE TABLE `permessi_personaggio` (
     `personaggio` varchar(255) NOT NULL,
     `permission` int NOT NULL,
     `assigned_by` varchar(255) NOT NULL,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `personaggio_permission` (`personaggio`, `permission`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -1094,7 +1090,8 @@ CREATE TABLE IF NOT EXISTS `personaggio_abilita` (
     `personaggio` int NOT NULL,
     `abilita` int NOT NULL,
     `grado` int NOT NULL,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `pg_ability` (`personaggio`, `abilita`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -1108,7 +1105,8 @@ CREATE TABLE IF NOT EXISTS `personaggio_chat_opzioni` (
     `personaggio` int NOT NULL,
     `opzione` varchar(255) NOT NULL,
     `valore` varchar(255) NOT NULL,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `pg_chat_option` (`personaggio`, `opzione`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -1122,7 +1120,8 @@ CREATE TABLE IF NOT EXISTS `personaggio_lavoro` (
     `personaggio` varchar(255) NOT NULL,
     `lavoro` int NOT NULL,
     `scadenza` date NOT NULL DEFAULT '2010-01-01',
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `pg_work` (`personaggio`, `lavoro`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -1153,7 +1152,8 @@ CREATE TABLE `personaggio_online_status` (
     `type` int NOT NULL,
     `value` varchar(255) NOT NULL,
     `last_refresh` DATETIME DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `pg_status_online` (`personaggio`, `type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -1184,7 +1184,8 @@ CREATE TABLE IF NOT EXISTS `personaggio_ruolo` (
     `personaggio` varchar(255) NOT NULL,
     `ruolo` int NOT NULL,
     `scadenza` date NOT NULL DEFAULT '2010-01-01',
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `pg_role` (`personaggio`, `ruolo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ---------------------------------------------
@@ -1198,7 +1199,8 @@ CREATE TABLE `personaggio_statistiche` (
     `personaggio` int NOT NULL,
     `statistica` int NOT NULL,
     `valore` int DEFAULT 0,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `pg_stat` (`personaggio`, `statistica`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------

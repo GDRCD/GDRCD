@@ -2,7 +2,7 @@
 
 class TemplateSmarty extends Template
 {
-    private $smarty;
+    private mixed $smarty;
 
     public function startTemplate(): Template
     {
@@ -26,7 +26,7 @@ class TemplateSmarty extends Template
         if ( file_exists($this->smarty->getTemplateDir()[0] . $file_name . '.tpl') ) {
             $render = $this->smarty->fetch($file_name . '.tpl');
         } else {
-            $render = $this->renderRaw($file_name . '.php', $data);
+            $render = $this->renderRaw($file_name . '.php');
         }
 
         return $render;

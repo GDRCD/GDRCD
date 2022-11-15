@@ -4,7 +4,7 @@ $(function () {
 
     form.find('select[name="oggetto"]').on('change', function () {
         let id = $(this).val()
-        Ajax('gestione/oggetti/gestione_oggetti_ajax.php', {'id': id, 'action': 'get_object_data'}, setEditInput)
+        Ajax('gestione/oggetti/oggetti/gestione_oggetti_ajax.php', {'id': id, 'action': 'get_object_data'}, setEditInput)
     });
 
     function setEditInput(data) {
@@ -12,6 +12,7 @@ $(function () {
             let datas = JSON.parse(data);
 
             form.find('select[name="tipo"]').val(datas.tipo);
+            form.find('select[name="posizione"]').val(datas.posizione);
             form.find('input[name="nome"]').val(datas.nome);
             form.find('textarea[name="descrizione"]').val(datas.descrizione);
             form.find('input[name="immagine"]').val(datas.immagine);

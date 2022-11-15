@@ -9,7 +9,6 @@ class Abilita extends BaseClass
 {
 
     protected bool
-        $abi_public,
         $abi_requirement,
         $abi_extra;
 
@@ -56,7 +55,7 @@ class Abilita extends BaseClass
      * @return bool
      * @throws Throwable
      */
-    public function permissionManageAbility()
+    public function permissionManageAbility(): bool
     {
         return Permissions::permission('MANAGE_ABILITY');
     }

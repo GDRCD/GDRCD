@@ -32,7 +32,7 @@ class CrypterPasswordBlowfish extends CrypterAlgo implements CrypterInterface
 
     /**
      * @fn normalizeInput
-     * @note Normalizza la stringa di input prima di codificarla.
+     * @note Normalizza la stringa d'input prima di codificarla.
      * @param string $string
      * @return string
      */

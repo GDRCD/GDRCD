@@ -9,6 +9,7 @@ class SchedaAbilita extends Scheda
      * @fn isPublic
      * @note Controlla se la scheda abilita' è pubblica
      * @return bool
+     * @throws Throwable
      */
     public function isPublic(): bool
     {
@@ -20,6 +21,7 @@ class SchedaAbilita extends Scheda
      * @note Controlla se le abilita sono accessibili
      * @param int $id_pg
      * @return bool
+     * @throws Throwable
      */
     public function isAccessible(int $id_pg): bool
     {
@@ -33,6 +35,7 @@ class SchedaAbilita extends Scheda
      * @fn permissionViewStats
      * @note Controlla che si abbiano i permessi per visualizzare le abilita altrui
      * @return bool
+     * @throws Throwable
      */
     public function permissionViewAbilita(): bool
     {
@@ -115,6 +118,7 @@ class SchedaAbilita extends Scheda
      * @param int $abi
      * @param int $grado
      * @return array
+     * @throws Throwable
      */
     public function LvlData(int $abi, int $grado): array
     {

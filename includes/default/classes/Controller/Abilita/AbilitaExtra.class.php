@@ -33,6 +33,7 @@ class AbilitaExtra extends Abilita
      * @fn permissionManageAbiExtra
      * @note Controlla se si hanno i permessi per gestire gli extra delle abilita
      * @return bool
+     * @throws Throwable
      */
     public function permissionManageAbiExtra(): bool
     {

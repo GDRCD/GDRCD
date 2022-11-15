@@ -9,6 +9,7 @@ class MeteoStagioni extends Meteo
      * @fn permissionManageSeasons
      * @note Controlla se si hanno i permessi per gestire le stagioni meteo
      * @return bool
+     * @throws Throwable
      */
     public function permissionManageSeasons(): bool
     {
@@ -120,6 +121,7 @@ class MeteoStagioni extends Meteo
      * @note Sotto-funzione per regole di renderizzazione della lista stagioni in gestione
      * @param object $list
      * @return array
+     * @throws Throwable
      */
     public function renderSeasonList(object $list): array
     {
@@ -212,32 +214,6 @@ class MeteoStagioni extends Meteo
             'cells' => $cells,
             'links' => $links,
         ];
-    }
-
-    /**** FUNCTIONS ****/
-
-    /**
-     * @fn diffSelectSeason
-     * @note Select degli stati climatici non presenti nella stagione
-     * @param array $array
-     * @return string
-     * @throws Throwable
-     */
-    public function diffSelectSeason(array $array): string
-    {
-        $option = "";
-        $stagioni = MeteoStagioni::getInstance()->getAllSeason();
-        foreach ( $stagioni as $item ) {
-            $option .= "<div class='form_field'>";
-            if ( in_array($item['id'], $array) ) {
-                $option .= "<input type='checkbox' name='stagioni[]' checked value='{$item['id']}'></div>";
-            } else {
-                $option .= "<input type='checkbox' name='stagioni[]' value='{$item['id']}'></div>";
-            }
-
-            $option .= "<div class='form_label'>{$item['nome']}</div>";
-        }
-        return $option;
     }
 
     /**** GESTIONE ****/

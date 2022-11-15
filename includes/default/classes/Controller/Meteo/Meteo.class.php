@@ -33,6 +33,7 @@ class Meteo extends BaseClass
     /**
      * @fn __construct
      * @note Constructor
+     * @throws Throwable
      */
     public function __construct()
     {
@@ -143,6 +144,7 @@ class Meteo extends BaseClass
      * @fn permissionManageWeather
      * @note Controlla se si hanno i permessi per gestire il meteo
      * @return bool
+     * @throws Throwable
      */
     public function permissionManageWeather(): bool
     {
@@ -344,6 +346,7 @@ class Meteo extends BaseClass
      * @fn generateGlobalWeatherFromApi
      * @note Genera il meteo della chat dalle api
      * @return array
+     * @throws Throwable
      */
     public function generateGlobalWeatherFromApi(): array
     {
@@ -494,6 +497,7 @@ class Meteo extends BaseClass
      * @note Chiamata webapi per recuperare il meteo di una città passando l'api key e la città di default
      * @param string $city
      * @return array
+     * @throws Throwable
      */
     public
     function getWebApiWeather(string $city): array
@@ -528,6 +532,7 @@ class Meteo extends BaseClass
      * @note Restituisce il meteo dalle webapi di una città per una singola chat
      * @param string $city
      * @return array
+     * @throws Throwable
      */
     public
     function meteoWebApi(string $city = ''): array
@@ -566,6 +571,7 @@ class Meteo extends BaseClass
      * @param string $temp
      * @param string $img
      * @return void
+     * @throws Throwable
      */
     public
     function saveWeather(string $meteo, string $wind, string $temp, string $img): void
@@ -648,6 +654,7 @@ class Meteo extends BaseClass
      * @fn
      * @note Fasi lunari
      * @return array
+     * @throws Throwable
      */
     public
     function lunarPhase(): array

@@ -17,6 +17,7 @@ class GruppiLavori extends Gruppi
     /**
      * @fn __construct
      * @note Costruttore della classe
+     * @throws Throwable
      */
     protected function __construct()
     {
@@ -44,6 +45,7 @@ class GruppiLavori extends Gruppi
      * @fn permissionManageWorks
      * @note Controlla permessi sulla gestione dei lavori
      * @return bool
+     * @throws Throwable
      */
     public function permissionManageWorks(): bool
     {

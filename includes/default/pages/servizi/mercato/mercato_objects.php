@@ -49,7 +49,7 @@ if ( !empty($shop) ) {
                 $cariche = Filters::int($object['cariche']);
                 $quantity = Filters::int($object['quantity']);
                 $tipo = Filters::int($object['tipo']);
-                $tipo_data = $obj_class->getObjectType($tipo);
+                $tipo_data = OggettiTipo::getInstance()->getObjectType($tipo);
                 $tipo_name = Filters::out($tipo_data['nome']);
 
                 ?>

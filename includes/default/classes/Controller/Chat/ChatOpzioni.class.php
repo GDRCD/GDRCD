@@ -46,6 +46,7 @@ class ChatOpzioni extends BaseClass
      * @fn permissionManageOptions
      * @note Controlla se si hanno i permessi per gestire le opzioni chat
      * @return bool
+     * @throws Throwable
      */
     public function permissionManageOptions(): bool
     {

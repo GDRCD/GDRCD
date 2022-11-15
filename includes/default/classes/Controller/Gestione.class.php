@@ -71,6 +71,7 @@ class Gestione extends BaseClass
      * @fn constantsPermission
      * @note Permessi per la gestione delle costanti
      * @return bool
+     * @throws Throwable
      */
     public function constantsPermission(): bool
     {

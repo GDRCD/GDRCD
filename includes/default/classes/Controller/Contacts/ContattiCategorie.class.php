@@ -14,6 +14,7 @@ class ContattiCategorie extends Contatti
      * @fn permissionManageCategories
      * @note Controlla se si hanno i permessi per vedere i contatti o se sono i propri
      * @return bool
+     * @throws Throwable
      */
     public function permissionManageCategories(): bool
     {

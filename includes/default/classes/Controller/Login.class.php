@@ -23,8 +23,8 @@ class Login extends BaseClass
     /**
      * @fn isAccountBanned
      * @note Permette di sapere se il personaggio è stato bannato
-     * @param string $username lo username del personaggio da verificare
-     * @return false|array false se il personaggio non è stato esiliato, altrimenti un array con i dettagli del ban
+     * @param string $username Lo username del personaggio da verificare
+     * @return false|array False se il personaggio non è stato esiliato, altrimenti un array con i dettagli del ban
      * @throws Throwable
      */
     public static function isAccountBanned(string $username): false|array {
