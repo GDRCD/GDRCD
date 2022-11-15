@@ -10,6 +10,7 @@ class SchedaContatti extends Scheda
      * @note Controlla se i contatti sono accessibili
      * @param int $pg
      * @return bool
+     * @throws Throwable
      */
     public function isAccessible(int $pg): bool
     {

@@ -8,6 +8,7 @@ class GruppiStipendiExtra extends Gruppi
     /**
      * @fn __construct
      * @note Costruttore della classe
+     * @throws Throwable
      */
     protected function __construct()
     {
@@ -122,6 +123,7 @@ class GruppiStipendiExtra extends Gruppi
      * @fn permissionMangeExtraEarn
      * @note Controlla che si abbiano i permessi per gestire gli stipendi extra
      * @return bool
+     * @throws Throwable
      */
     public function permissionMangeExtraEarn(): bool
     {

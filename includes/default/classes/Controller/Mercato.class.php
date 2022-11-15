@@ -25,6 +25,7 @@ class Mercato extends BaseClass
      * @fn manageMercatoPermission
      * @note Controllo se ho i permessi per gestire il mercato
      * @return bool
+     * @throws Throwable
      */
     public function manageShopObjectsPermission(): bool
     {
@@ -35,6 +36,7 @@ class Mercato extends BaseClass
      * @fn manageShopPermission
      * @note Controllo se ho i permessi per gestire un negozio
      * @return bool
+     * @throws Throwable
      */
     public function manageShopPermission(): bool
     {
@@ -178,8 +180,8 @@ class Mercato extends BaseClass
     /*** LISTS ***/
 
     /**
-     * @fn listObjectTypes
-     * @note Crea le select delle tipologie oggetto
+     * @fn listShops
+     * @note Crea le select dei negozi
      * @param int $selected
      * @return string
      * @throws Throwable
@@ -244,9 +246,9 @@ class Mercato extends BaseClass
             $mercato_data = $this->getObject($object, $shop);
 
             $costo = Filters::int($mercato_data['costo']);
-            $quantita = Filters::Int($mercato_data['quantity']);
+            $quantity = Filters::Int($mercato_data['quantity']);
 
-            if ( $quantita > 0 ) {
+            if ( $quantity > 0 ) {
                 $personaggio = Personaggio::getPgData($this->me_id, 'soldi,banca');
                 $soldi = Filters::int($personaggio['soldi']);
                 $banca = Filters::int($personaggio['banca']);
@@ -262,9 +264,9 @@ class Mercato extends BaseClass
                 }
 
                 Personaggio::updatePgData($this->me_id, "{$cell}={$cell}-:costo", ['costo' => $costo]);
-                Oggetti::addObjectToPg($object, $this->me_id);
+                Oggetti::getInstance()->addObjectToPg($object, $this->me_id);
 
-                if ( $quantita > 1 ) {
+                if ( $quantity > 1 ) {
                     DB::queryStmt("UPDATE mercato SET quantity = quantity - 1 WHERE oggetto=:object LIMIT 1",[
                         'object' => $object,
                     ]);

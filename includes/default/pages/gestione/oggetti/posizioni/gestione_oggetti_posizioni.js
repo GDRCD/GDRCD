@@ -4,7 +4,7 @@ $(function () {
 
     form.find('select[name="id"]').on('change', function () {
         let id = $(this).val()
-        Ajax('gestione/oggetti/gestione_oggetti_ajax.php', {
+        Ajax('gestione/oggetti/posizioni/gestione_oggetti_posizioni_ajax.php', {
             'id': id,
             'action': 'get_object_position_data'
         }, setEditInput)

@@ -8,6 +8,7 @@ class SchedaDiario extends Scheda
     /**
      * @fn __construct
      * @note Class constructor
+     * @throws Throwable
      */
     protected function __construct()
     {
@@ -66,6 +67,7 @@ class SchedaDiario extends Scheda
      * @note Permessi per visualizzare la scheda diario privata
      * @param int $id_pg
      * @return bool
+     * @throws Throwable
      */
     public function permessiViewPrivateDiary(int $id_pg): bool
     {
@@ -77,6 +79,7 @@ class SchedaDiario extends Scheda
      * @note Permessi per visualizzare la scheda diario privata
      * @param int $id_pg
      * @return bool
+     * @throws Throwable
      */
     public function permessiUpdateDiary(int $id_pg): bool
     {

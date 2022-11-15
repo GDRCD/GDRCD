@@ -9,6 +9,7 @@ class RegistrazioneGiocate extends BaseClass
     /**
      * @fn __construct()
      * @note Costruttore della classe
+     * @throws Throwable
      */
     protected function __construct()
     {
@@ -115,6 +116,7 @@ class RegistrazioneGiocate extends BaseClass
      * @note Controlla se l'utente può vedere le registrazioni
      * @param int $id_pg
      * @return bool
+     * @throws Throwable
      */
     public function permissionViewRecords(int $id_pg = 0): bool
     {
@@ -126,6 +128,7 @@ class RegistrazioneGiocate extends BaseClass
      * @note Controlla se l'utente può modificare la registrazione
      * @param int $id_pg
      * @return bool
+     * @throws Throwable
      */
     public function permissionUpdateRecords(int $id_pg = 0): bool
     {

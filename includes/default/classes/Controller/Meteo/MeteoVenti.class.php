@@ -9,6 +9,7 @@ class MeteoVenti extends Meteo
      * @fn permissionManageWeatherWinds
      * @note Controlla se si hanno i permessi per gestire i venti
      * @return bool
+     * @throws Throwable
      */
     public function permissionManageWeatherWinds(): bool
     {

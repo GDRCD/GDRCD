@@ -18,6 +18,7 @@ class SchedaTransazioni extends Scheda
      * @note Permessi per visualizzazione delle transazioni
      * @param int $id_pg
      * @return bool
+     * @throws Throwable
      */
     public function permissionViewTransactions(int $id_pg): bool
     {
@@ -29,6 +30,7 @@ class SchedaTransazioni extends Scheda
      * @fn viewExpPermission
      * @note Controllo permessi per visualizzazione esperienza scheda
      * @return bool
+     * @throws Throwable
      */
     public function viewExpPermission(): bool
     {
@@ -39,6 +41,7 @@ class SchedaTransazioni extends Scheda
      * @fn manageExpPermission
      * @note Controllo permessi per singola assegnazione esperienza scheda
      * @return bool
+     * @throws Throwable
      */
     public function manageExpPermission(): bool
     {

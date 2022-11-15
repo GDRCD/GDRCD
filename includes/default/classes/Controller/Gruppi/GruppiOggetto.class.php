@@ -30,6 +30,7 @@ class GruppiOggetto extends Gruppi
      * @fn permissionManageStorages
      * @note Controlla permessi sulla gestione dei depositi
      * @return bool
+     * @throws Throwable
      */
     public function permissionManageStorages(): bool
     {

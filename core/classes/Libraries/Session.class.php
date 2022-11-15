@@ -312,7 +312,7 @@ class Session extends BaseClass
         // Cookie scade quando si chiude il browser
         ini_set('session.cookie_lifetime', '0');
 
-        // previene l'uso di id di sessione non inizializzati, mitigando alcune tipologie di attacco
+        // previene l'uso d'id di sessione non inizializzati, mitigando alcune tipologie di attacco
         ini_set('session.use_strict_mode', 'On');
 
         // impedisce l'accesso alla sessione da parte di script javascript (utile contro xss)
@@ -327,7 +327,7 @@ class Session extends BaseClass
         // disattiva la gestione degli id di sessione trasparenti, impedendo di esibirli/riceverli tramite url
         ini_set('session.use_trans_sid', 'Off');
 
-        // id di sessione più lunghi sono anche più robusti. Molti provider ancora li configurano a 26 caratteri
+        // Id di sessione più lunghi sono anche più robusti. Molti provider ancora li configurano a 26 caratteri
         ini_set('session.sid_length', '48');
 
         // quanti più bit sono indicati, tanto più robusto sarà l'id di sessione generato a parità di lunghezza

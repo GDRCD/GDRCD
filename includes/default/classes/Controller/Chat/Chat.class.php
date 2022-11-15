@@ -35,6 +35,7 @@ class Chat extends BaseClass
     /**
      * @fn __construct
      * @note Chat constructor.
+     * @throws Throwable
      */
     public function __construct()
     {
@@ -46,6 +47,7 @@ class Chat extends BaseClass
      * @fn resetClass
      * @note Funzione per il reset delle variabili necessarie
      * @return void
+     * @throws Throwable
      */
     public function resetClass(): void
     {
@@ -106,7 +108,8 @@ class Chat extends BaseClass
      * @return bool
      * @throws Throwable
      */
-    public function permissionChatMaster(){
+    public function permissionChatMaster(): bool
+    {
         return Permissions::permission('CHAT_MASTER');
     }
 
@@ -116,7 +119,8 @@ class Chat extends BaseClass
      * @return bool
      * @throws Throwable
      */
-    public function permissionChatModerator(){
+    public function permissionChatModerator(): bool
+    {
         return Permissions::permission('CHAT_MODERATOR');
     }
 
@@ -993,7 +997,6 @@ class Chat extends BaseClass
             # Filtro i dati necessari
             $tipo = Filters::in($post['tipo']);
 
-            # TODO PERMESSI AZIONE
             # In base al tipo mando l'azione con diversi permessi
             switch ( $tipo ) {
                 case 'A':

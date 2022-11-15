@@ -29,7 +29,7 @@ class OnlineStatusType extends OnlineStatus
      */
     public function getStatusTypes(string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT * FROM online_status_type WHERE 1 ORDER BY label", []);
+        return DB::queryStmt("SELECT {$val} FROM online_status_type WHERE 1 ORDER BY label", []);
     }
 
     /**

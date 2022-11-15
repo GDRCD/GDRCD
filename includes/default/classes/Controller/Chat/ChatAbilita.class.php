@@ -2,17 +2,6 @@
 
 class ChatAbilita extends Chat
 {
-
-    /**
-     * @fn __construct
-     * @note Costruttore della classe
-     */
-    public function __construct()
-    {
-        parent::__construct();
-
-    }
-
     /*** FUNCTIONS ***/
 
     /**

@@ -35,6 +35,7 @@ class Scheda extends BaseClass
      * @note Controlla se un personaggio puo' essere modificato.
      * @param int $id_pg
      * @return bool
+     * @throws Throwable
      */
     public function permissionUpdateCharacter(int $id_pg): bool
     {
@@ -45,6 +46,7 @@ class Scheda extends BaseClass
      * @fn permissionStatusCharacter
      * @note Controlla se lo status di un personaggio puo' essere modificato.
      * @return bool
+     * @throws Throwable
      */
     public function permissionStatusCharacter(): bool
     {
@@ -55,6 +57,7 @@ class Scheda extends BaseClass
      * @fn permissionBanCharacter
      * @note Controlla se un personaggio puo' essere bannato.
      * @return bool
+     * @throws Throwable
      */
     public function permissionBanCharacter(): bool
     {
@@ -65,6 +68,7 @@ class Scheda extends BaseClass
      * @fn permissionAdministrationCharacter
      * @note Controlla se le info fondamentali di un personaggio possono essere modificate.
      * @return bool
+     * @throws Throwable
      */
     public function permissionAdministrationCharacter(): bool
     {

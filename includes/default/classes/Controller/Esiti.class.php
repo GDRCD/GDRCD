@@ -9,6 +9,9 @@ class Esiti extends BaseClass
         $esiti_from_player,
         $esiti_tiri;
 
+    /**
+     * @throws Throwable
+     */
     public function __construct()
     {
         parent::__construct();
@@ -105,6 +108,7 @@ class Esiti extends BaseClass
      * @fn esitiManage
      * @note Controlla se si hanno i permessi per gestire gli esiti
      * @return bool
+     * @throws Throwable
      */
     public function esitiManage(): bool
     {
@@ -115,6 +119,7 @@ class Esiti extends BaseClass
      * @fn esitiManage
      * @note Controlla se si hanno i permessi per gestire gli esiti altrui
      * @return bool
+     * @throws Throwable
      */
     public function esitiManageAll(): bool
     {

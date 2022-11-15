@@ -32,11 +32,11 @@ class Filters extends BaseClass
                 break;
 
             case 'email':
-                $val = (preg_match("#^[a-z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,4}$#is", $val)) ? $val : false;
+                $val = (preg_match("#^[a-z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,4}$#i", $val)) ? $val : false;
                 break;
 
             case 'includes':
-                $val = (preg_match("#[^:]#is")) ? htmlentities($val, ENT_QUOTES) : false;
+                $val = (preg_match("#[^:]#i")) ? htmlentities($val, ENT_QUOTES) : false;
                 break;
 
             case 'url':

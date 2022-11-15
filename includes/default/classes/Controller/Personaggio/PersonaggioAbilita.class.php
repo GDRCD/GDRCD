@@ -100,6 +100,7 @@ class PersonaggioAbilita extends Personaggio
      * @param string $pg
      * @param int $grado
      * @return bool
+     * @throws Throwable
      */
     public function permissionUpgradeAbilita(string $pg, int $grado): bool
     {
@@ -115,6 +116,7 @@ class PersonaggioAbilita extends Personaggio
      * @note Controlla se si hanno i permessi per diminuire una skill
      * @param int $grado
      * @return bool
+     * @throws Throwable
      */
     public function permissionDowngradeAbilita(int $grado): bool
     {

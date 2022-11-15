@@ -244,7 +244,7 @@ class Router
      * @fn getPageByAlias
      * @note Controlla se esiste un redirect per quell'alias in db
      * @param string $page
-     * @return string
+     * @return bool|string
      * @throws Throwable
      */
     public static function getPageByAlias(string $page): bool|string

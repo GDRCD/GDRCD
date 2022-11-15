@@ -67,6 +67,7 @@ class PersonaggioStats extends Personaggio
      * @fn permissionUpgradeStats
      * @note Controlla che si abbiano i permessi per aumentare le statistiche
      * @return bool
+     * @throws Throwable
      */
     public static function permissionUpgradeStats(): bool
     {
@@ -77,6 +78,7 @@ class PersonaggioStats extends Personaggio
      * @fn permissionDowngradeStats
      * @note Controlla che si abbiano i permessi per diminuire le statistiche
      * @return bool
+     * @throws Throwable
      */
     public static function permissionDowngradeStats(): bool
     {

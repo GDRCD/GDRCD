@@ -2,8 +2,7 @@
 
 abstract class BaseClass
 {
-    public static
-        $_instance;
+    public static $_instance;
 
     protected string
         $me,

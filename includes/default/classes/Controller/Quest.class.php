@@ -1,5 +1,7 @@
 <?php
 
+# TODO REFACTORING
+
 class Quest extends BaseClass
 {
 
@@ -443,7 +445,7 @@ class Quest extends BaseClass
                 <a href="main.php?page=gestione/quest/gestione_quest_index&op=insert_quest">
                     Registra nuova quest
                 </a> |
-                <a href="main.php?page=gestione">
+                <a href="/main.php?page=gestione">
                     Indietro
                 </a>
             </div>';
@@ -535,12 +537,12 @@ class Quest extends BaseClass
         $html .= '<div class="tr footer">';
 
         if ( $this->manageTramePermission() ) {
-            $html .= '<a href="main.php?page=gestione_trame&op=insert_trama">
+            $html .= '<a href="/main.php?page=gestione_trame&op=insert_trama">
                 Registra nuova trama
             </a> |';
         }
 
-        $html .= '<a href="main.php?page=gestione">
+        $html .= '<a href="/main.php?page=gestione">
                     Indietro
                 </a>
             </div>';

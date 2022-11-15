@@ -645,6 +645,7 @@ class ForumPosts extends Forum
      * @note Ritorna la lista delle modifiche del post
      * @param int $post_id
      * @return string
+     * @throws Throwable
      */
     public function viewUpdateHistory(int $post_id): string
     {

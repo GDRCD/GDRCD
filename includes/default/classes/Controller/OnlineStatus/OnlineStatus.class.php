@@ -10,6 +10,7 @@ class OnlineStatus extends BaseClass
     /**
      * @fn __construct
      * @note Costruttore della classe
+     * @throws Throwable
      */
     public function __construct()
     {
@@ -67,6 +68,7 @@ class OnlineStatus extends BaseClass
      * @fn manageStatusPermission
      * @note Controlla se si hanno i permessi per la gestione degli status online
      * @return bool
+     * @throws Throwable
      */
     public function manageStatusPermission(): bool
     {

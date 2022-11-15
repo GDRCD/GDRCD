@@ -64,6 +64,7 @@ class AbilitaRequisiti extends Abilita
      * @fn permissionManageAbiRequirement
      * @note Controlla se si hanno i permessi per gestire i requisiti
      * @return bool
+     * @throws Throwable
      */
     public function permissionManageAbiRequirement(): bool
     {

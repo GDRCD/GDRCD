@@ -46,7 +46,7 @@ class CarbonWrapper
 
     /**
      * @fn AddDays
-     * @note Aggiunge un numero preciso di giorni ad una data
+     * @note Aggiunge un numero preciso di giorni a una data
      * @param string $date
      * @param int $days
      * @return string
@@ -157,25 +157,15 @@ class CarbonWrapper
             return true;
         } else {
             // Altrimenti estraggo la differenza in base al tipo
-            switch ( $interval_type ) {
-                case 'months':
-                    $diff = CarbonWrapper::DatesDifferenceMonths(date('Y-m-d'), Filters::date($last_exec, 'Y-m-d'));
-                    break;
-                case 'days':
-                    $diff = CarbonWrapper::DatesDifferenceDays(date('Y-m-d'), Filters::date($last_exec, 'Y-m-d'));
-                    break;
-                case 'hours':
-                    $diff = CarbonWrapper::DatesDifferenceHours(date('Y-m-d H:i:s'), Filters::date($last_exec, 'Y-m-d H:i:s'));
-                    break;
-                case 'minutes':
-                    $diff = CarbonWrapper::DatesDifferenceMinutes(date('Y-m-d H:i:s'), Filters::date($last_exec, 'Y-m-d H:i:s'));
-                    break;
-                default:
-                    $diff = 0;
-                    break;
-            }
+            $diff = match ($interval_type) {
+                'months' => CarbonWrapper::DatesDifferenceMonths(date('Y-m-d'), Filters::date($last_exec, 'Y-m-d')),
+                'days' => CarbonWrapper::DatesDifferenceDays(date('Y-m-d'), Filters::date($last_exec, 'Y-m-d')),
+                'hours' => CarbonWrapper::DatesDifferenceHours(date('Y-m-d H:i:s'), Filters::date($last_exec, 'Y-m-d H:i:s')),
+                'minutes' => CarbonWrapper::DatesDifferenceMinutes(date('Y-m-d H:i:s'), Filters::date($last_exec, 'Y-m-d H:i:s')),
+                default => 0,
+            };
 
-            // Controllo se e' superato il timer richiesto
+            // Controllo se è superato il timer richiesto
             return ($diff >= $interval);
         }
     }

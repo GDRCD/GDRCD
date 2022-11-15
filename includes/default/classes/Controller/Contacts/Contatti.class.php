@@ -19,6 +19,7 @@ class Contatti extends BaseClass
      * @fn __construct
      * @note construct function
      * @return void
+     * @throws Throwable
      */
     public function __construct()
     {
@@ -135,6 +136,7 @@ class Contatti extends BaseClass
      * @note Controlla se si hanno i permessi per vedere i contatti o se sono i propri
      * @param int $pg
      * @return bool
+     * @throws Throwable
      */
     public function contactView(int $pg): bool
     {
@@ -146,6 +148,7 @@ class Contatti extends BaseClass
      * @note Controlla se si hanno i permessi per aggiornare le note dei contatti propri o altrui
      * @param int $pg
      * @return bool
+     * @throws Throwable
      */
     public function contactUpdate(int $pg): bool
     {
@@ -157,6 +160,7 @@ class Contatti extends BaseClass
      * @note Controlla se si hanno i permessi per eliminare i contatti
      * @param int $pg
      * @return bool
+     * @throws Throwable
      */
     public function contactDelete(int $pg): bool
     {
@@ -167,6 +171,7 @@ class Contatti extends BaseClass
      * @fn contactPublic
      * @note Controlla se le categorie sono Pubbliche, altrimenti solo chi ha il permesso può vederle
      * @return bool
+     * @throws Throwable
      */
     public function categoriePublic(): bool
     {
@@ -177,6 +182,7 @@ class Contatti extends BaseClass
      * @fn contactStaff
      * @note Controlla se le categorie sono visibili allo staff e se si hanno i permessi per vederle
      * @return bool
+     * @throws Throwable
      */
     public function categoriesStaff(): bool
     {

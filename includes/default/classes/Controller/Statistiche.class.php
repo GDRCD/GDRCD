@@ -77,6 +77,7 @@ class Statistiche extends BaseClass
      * @fn permissionManageObjects
      * @note Controlla se si hanno i permessi per la gestione degli oggetti
      * @return bool
+     * @throws Throwable
      */
     public function permissionManageStatistics(): bool
     {
@@ -114,7 +115,7 @@ class Statistiche extends BaseClass
             $descrizione = Filters::in($post['descr']);
             $max = Filters::int($post['max_val']);
             $min = Filters::int($post['min_val']);
-            $iscr = Filters::checkbox($post['iscrizione']);
+            $registration = Filters::checkbox($post['iscrizione']);
             $creato_da = Filters::int($this->me_id);
 
             DB::queryStmt("INSERT INTO statistiche (nome,descrizione,max_val,min_val,iscrizione,creato_da) VALUES (:nome,:descrizione,:max_val,:min_val,:iscrizione,:creato_da)",[
@@ -122,7 +123,7 @@ class Statistiche extends BaseClass
                 'descrizione' => $descrizione,
                 'max_val' => $max,
                 'min_val' => $min,
-                'iscrizione' => $iscr,
+                'iscrizione' => $registration,
                 'creato_da' => $creato_da,
             ]);
 
@@ -159,7 +160,7 @@ class Statistiche extends BaseClass
             $descrizione = Filters::in($post['descr']);
             $max = Filters::int($post['max_val']);
             $min = Filters::int($post['min_val']);
-            $iscr = Filters::checkbox($post['iscrizione']);
+            $registration = Filters::checkbox($post['iscrizione']);
             $creato_da = Filters::int($this->me_id);
 
             DB::queryStmt("UPDATE statistiche SET nome=:nome,descrizione=:descrizione,max_val=:max_val,min_val=:min_val,iscrizione=:iscrizione,creato_da=:creato_da WHERE id=:id",[
@@ -168,7 +169,7 @@ class Statistiche extends BaseClass
                 'descrizione' => $descrizione,
                 'max_val' => $max,
                 'min_val' => $min,
-                'iscrizione' => $iscr,
+                'iscrizione' => $registration,
                 'creato_da' => $creato_da,
             ]);
 

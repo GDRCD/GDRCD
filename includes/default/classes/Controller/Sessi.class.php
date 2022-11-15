@@ -38,6 +38,7 @@ class Sessi extends BaseClass
      * @fn permissionManageGenders
      * @note Controlla se il personaggio può gestire i generi
      * @return bool
+     * @throws Throwable
      */
     public function permissionManageGenders(): bool
     {
@@ -50,6 +51,7 @@ class Sessi extends BaseClass
      * @fn listGenders
      * @note Lista dei sessi disponibili
      * @param int $selected
+     * @param string $label
      * @return mixed
      * @throws Throwable
      */
