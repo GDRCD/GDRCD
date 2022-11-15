@@ -86,43 +86,15 @@ class Forum extends BaseClass
     {
         $op = Filters::out($op);
 
-        switch ( $op ) {
-            default:
-                $page = 'forums/index.php';
-                break;
-
-            // Lista Posts
-            case 'posts':
-                $page = 'posts/index.php';
-                break;
-
-            // Singolo Post
-            case 'post':
-                $page = 'post/index.php';
-                break;
-
-            // Singolo Post Nuovo
-            case 'post_new':
-                $page = 'post/new.php';
-                break;
-
-            // Singolo Post Modifica
-            case 'post_edit':
-                $page = 'post/edit.php';
-                break;
-
-            // Singolo Post Commenta
-            case 'post_comment':
-                $page = 'post/comment.php';
-                break;
-
-            // Singolo Post Storia Updates
-            case 'post_history':
-                $page = 'post/history.php';
-                break;
-        }
-
-        return $page;
+        return match ($op) {
+            'posts' => 'posts/index.php',
+            'post' => 'post/index.php',
+            'post_new' => 'post/new.php',
+            'post_edit' => 'post/edit.php',
+            'post_comment' => 'post/comment.php',
+            'post_history' => 'post/history.php',
+            default => 'forums/index.php',
+        };
     }
 
 
