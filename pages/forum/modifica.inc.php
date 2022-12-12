@@ -1,6 +1,6 @@
 <?php
 // Ottengo i dati del messaggio e i campi di controllo del permesso
-$row = gdrcd_query("SELECT messaggioaraldo.titolo, messaggioaraldo.messaggio, messaggioaraldo.id_messaggio_padre, araldo.tipo,  araldo.proprietari FROM messaggioaraldo LEFT JOIN araldo ON messaggioaraldo.id_araldo = araldo.id_araldo WHERE messaggioaraldo.id_messaggio=".gdrcd_filter('num', $_REQUEST['what']));
+$row = gdrcd_query("SELECT messaggioaraldo.id_messaggio, messaggioaraldo.titolo, messaggioaraldo.messaggio, messaggioaraldo.id_messaggio_padre, araldo.tipo, araldo.proprietari FROM messaggioaraldo LEFT JOIN araldo ON messaggioaraldo.id_araldo = araldo.id_araldo WHERE messaggioaraldo.id_messaggio=".gdrcd_filter('num', $_REQUEST['what']));
 
 // Controllo esistenza del messaggio
 if(!empty($row)) {
@@ -11,7 +11,7 @@ if(!empty($row)) {
     } else { ?>
         <div class="panels_box">
             <div class="form_gioco">
-                <form action="main.php?page=forum" method="post">
+                <form action="main.php?page=forum&op=modifica&what=<?php echo $row['id_messaggio']; ?>" method="post">
                     <?php
                     if($row['id_messaggio_padre'] == -1) {
                         /*Se è il primo di un topic serve un titolo*/
