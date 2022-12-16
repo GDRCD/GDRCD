@@ -14,7 +14,7 @@ class Statistiche extends BaseClass
      */
     public function getStat(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM statistiche WHERE id=:id LIMIT 1",[
+        return DB::queryStmt("SELECT {$val} FROM statistiche WHERE id=:id LIMIT 1", [
             'id' => $id,
         ]);
     }
@@ -90,13 +90,14 @@ class Statistiche extends BaseClass
      * @fn listStats
      * @note Crea le select delle statistiche
      * @param int $selected
+     * @param string $label
      * @return string
      * @throws Throwable
      */
-    public function listStats(int $selected = 0): string
+    public function listStats(int $selected = 0, string $label = 'Statistiche'): string
     {
         $list = $this->getAllStats('id,nome');
-        return Template::getInstance()->startTemplate()->renderSelect('id','nome',$selected,$list);
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', $selected, $list, $label);
     }
 
     /*** MANAGEMENT FUNCTIONS - STATISTIC **/
@@ -118,7 +119,7 @@ class Statistiche extends BaseClass
             $registration = Filters::checkbox($post['iscrizione']);
             $creato_da = Filters::int($this->me_id);
 
-            DB::queryStmt("INSERT INTO statistiche (nome,descrizione,max_val,min_val,iscrizione,creato_da) VALUES (:nome,:descrizione,:max_val,:min_val,:iscrizione,:creato_da)",[
+            DB::queryStmt("INSERT INTO statistiche (nome,descrizione,max_val,min_val,iscrizione,creato_da) VALUES (:nome,:descrizione,:max_val,:min_val,:iscrizione,:creato_da)", [
                 'nome' => $nome,
                 'descrizione' => $descrizione,
                 'max_val' => $max,
@@ -163,7 +164,7 @@ class Statistiche extends BaseClass
             $registration = Filters::checkbox($post['iscrizione']);
             $creato_da = Filters::int($this->me_id);
 
-            DB::queryStmt("UPDATE statistiche SET nome=:nome,descrizione=:descrizione,max_val=:max_val,min_val=:min_val,iscrizione=:iscrizione,creato_da=:creato_da WHERE id=:id",[
+            DB::queryStmt("UPDATE statistiche SET nome=:nome,descrizione=:descrizione,max_val=:max_val,min_val=:min_val,iscrizione=:iscrizione,creato_da=:creato_da WHERE id=:id", [
                 'id' => $id,
                 'nome' => $nome,
                 'descrizione' => $descrizione,
@@ -203,7 +204,7 @@ class Statistiche extends BaseClass
         if ( $this->permissionManageStatistics() ) {
             $id = Filters::int($post['stat']);
 
-            DB::queryStmt("DELETE FROM statistiche WHERE id=:id",[
+            DB::queryStmt("DELETE FROM statistiche WHERE id=:id", [
                 'id' => $id,
             ]);
 

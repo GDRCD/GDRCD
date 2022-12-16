@@ -113,7 +113,7 @@ class Oggetti extends BaseClass
 
         DB::queryStmt("INSERT INTO personaggio_oggetto(oggetto,personaggio,cariche) VALUES (:obj,:pg,:cariche)", [
             'obj' => $obj,
-            'personaggio' => $pg,
+            'pg' => $pg,
             'cariche' => $cariche,
         ]);
     }
@@ -283,7 +283,7 @@ class Oggetti extends BaseClass
             $pg = Filters::int($post['personaggio']);
             $object = Filters::int($post['oggetto']);
 
-            $this->addObjectToPg($pg, $object);
+            $this->addObjectToPg($object, $pg);
 
             return [
                 'response' => true,

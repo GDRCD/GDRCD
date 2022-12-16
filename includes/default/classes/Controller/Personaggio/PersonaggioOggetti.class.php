@@ -95,17 +95,19 @@ class PersonaggioOggetti extends Personaggio
     /**** LISTS ****/
 
     /**
-     * @fn listPgEquipments
-     * @note Lista gli oggetti indossati dal personaggio
+     * @fn listChatPgEquipments
+     * @note Lista gli oggetti indossati dal personaggio in chat
      * @param int $id_pg
      * @param bool $equipped
+     * @param int $selected
      * @param string $label
      * @return string
      * @throws Throwable
      */
-    public function listPgEquipments(int $id_pg, bool $equipped, string $label = ''): string
+    public function listChatPgEquipments(int $id_pg, bool $equipped,int $selected = 0, string $label = 'Oggetti'): string
     {
-        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', self::getAllPgObjectsByEquipped($id_pg, $equipped), $label);
+        $list = $this->getAllPgObjectsByEquipped($id_pg, $equipped,'personaggio_oggetto.id,oggetto.nome');
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', $selected, $list, $label);
     }
 
     /*** CONTROLS ***/

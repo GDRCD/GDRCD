@@ -32,7 +32,7 @@ class PersonaggioStats extends Personaggio
      * @return DBQueryInterface
      * @throws Throwable
      */
-    public static function getPgStat(int $id, int $pg, string $val = 'statistiche.*,personaggio_statistiche.*'): DBQueryInterface
+    public function getPgStat(int $id, int $pg, string $val = 'statistiche.*,personaggio_statistiche.*'): DBQueryInterface
     {
         return DB::queryStmt(
             "SELECT {$val} FROM personaggio_statistiche 
