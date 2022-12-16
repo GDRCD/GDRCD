@@ -175,7 +175,7 @@ class AbilitaRequisiti extends Abilita
      */
     public function pgRequisitoStatControl(int $stat, int $pg, int $grado): bool
     {
-        $stat_pg = PersonaggioStats::getPgStat($stat, $pg, 'valore');
+        $stat_pg = PersonaggioStats::getInstance()->getPgStat($stat, $pg, 'valore');
         return (Filters::int($stat_pg['valore']) >= $grado);
     }
 

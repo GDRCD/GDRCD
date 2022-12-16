@@ -65,9 +65,11 @@ class ChatAbilita extends Chat
      * @fn listChatAbilita
      * @note Trasforma le coppie id/abilita' nelle option necessarie
      * @param array $ids
+     * @param string $label
      * @return string
+     * @throws Throwable
      */
-    private function listChatAbilita(array $ids): string
+    private function listChatAbilita(array $ids, string $label = 'Abilità'): string
     {
 
         # Riordino gli id in base al nome
@@ -86,7 +88,7 @@ class ChatAbilita extends Chat
         }
 
         # Ritorno le opzioni
-        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', 0, $options);
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', 0, $options, $label);
     }
 
     /*** RENDER ***/

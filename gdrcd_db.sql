@@ -895,6 +895,23 @@ CREATE TABLE IF NOT EXISTS `oggetto_posizioni` (
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `oggetto_statistiche`
+--
+
+CREATE TABLE IF NOT EXISTS `oggetto_statistiche` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `oggetto` int NOT NULL,
+    `statistica` int NOT NULL,
+    `valore` int NOT NULL,
+    `creato_da` int DEFAULT NULL,
+    `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `oggetto_statistica` (`oggetto`, `statistica`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `oggetto_tipo`
 --
 

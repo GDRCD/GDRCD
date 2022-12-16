@@ -608,12 +608,12 @@ class Esiti extends BaseClass
         $dice_num = Filters::int($data['dice_num']);
         $luogo = Personaggio::getPgLocation();
 
-        $abi_roll = $chat->rollAbility(Filters::int($data['abilita']));
+        $abi_roll = $chat->calcRollAbility($data['abilita']);
 
         # Filtro i dati ricevuti
-        $abi_dice = Filters::int($abi_roll['abi_dice']);
-        $abi_nome = Filters::in($abi_roll['abi_nome']);
-        $car = Filters::int($abi_roll['car']);
+        $abi_dice = Filters::int($abi_roll['bonus']);
+        $abi_nome = Filters::in($abi_roll['name']);
+        $car = Filters::int($abi_roll['stat']);
 
         $dice = $chat->rollCustomDice($dice_num, $dice_face);
         $result = ($dice + $abi_dice + $car);
@@ -1012,7 +1012,7 @@ class Esiti extends BaseClass
         if ( !$this->esitoReaded($id, $this->me_id) ) {
 
             DB::queryStmt(
-                "INSERT INTO esiti_letti(esito, personaggio) VALUES(:esito, :me)",
+                "INSERT INTO esiti_risposte_letture(esito, personaggio) VALUES(:esito, :me)",
                 [
                     'esito' => $id,
                     'me' => $this->me_id,

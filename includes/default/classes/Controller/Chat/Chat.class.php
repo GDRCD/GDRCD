@@ -687,7 +687,7 @@ class Chat extends BaseClass
         # Filtro le variabili necessarie
         $mittente = Filters::int($azione['mittente']);
         $mittente_data = Personaggio::getPgData($mittente, 'nome,url_img_chat');
-        $testo = Filters::string($azione['testo']);
+        $testo = Filters::text($azione['testo']);
 
         # Customization
         $colore_testo_parlato = PersonaggioChatOpzioni::getInstance()->getOptionValue('action_color_talk', $this->me_id);
@@ -728,7 +728,7 @@ class Chat extends BaseClass
         # Filtro le variabili necessarie
         $mittente = Filters::int($azione['mittente']);
         $destinatario = Filters::int($azione['destinatario']);
-        $testo = Filters::string($azione['testo']);
+        $testo = Filters::text($azione['testo']);
 
         $mittente_data = Personaggio::getPgData($mittente, 'nome');
         $mittente_nome = Filters::out($mittente_data['nome']);
@@ -760,7 +760,7 @@ class Chat extends BaseClass
 
         # Se l'intestazione non è vuota, significa che posso leggere il messaggio e lo stampo
 
-        if($intestazione) {
+        if ( $intestazione ) {
             $array = [
                 "intestazione" => $intestazione,
                 "ora" => $ora,
@@ -788,7 +788,7 @@ class Chat extends BaseClass
         # Filtro i dati necessari
         $mittente = Filters::int($azione['mittente']);
         $ora = CarbonWrapper::format($azione['ora'], 'H:i');
-        $testo = Filters::string($azione['testo']);
+        $testo = Filters::text($azione['testo']);
 
         $mittente_data = Personaggio::getPgData($mittente, 'nome');
         $mittente_nome = Filters::out($mittente_data['nome']);
@@ -827,7 +827,7 @@ class Chat extends BaseClass
     {
         # Filtro i dati necessari
         $destinatario = Filters::out($azione['destinatario']);
-        $testo = Filters::string($azione['testo']);
+        $testo = Filters::text($azione['testo']);
 
         # Customization
         $colore_testo_parlato = PersonaggioChatOpzioni::getInstance()->getOptionValue('png_color_talk', $this->me_id);
@@ -864,7 +864,7 @@ class Chat extends BaseClass
      */
     private function htmlMaster(array $azione): string
     {
-        $testo = Filters::string($azione['testo']);
+        $testo = Filters::text($azione['testo']);
 
         # Customization
         $colore_testo_parlato = PersonaggioChatOpzioni::getInstance()->getOptionValue('master_color_talk', $this->me_id);
@@ -900,7 +900,7 @@ class Chat extends BaseClass
      */
     private function htmlMod(array $azione): string
     {
-        $testo = Filters::string($azione['testo']);
+        $testo = Filters::text($azione['testo']);
 
         # Customization
         $colore_testo_parlato = PersonaggioChatOpzioni::getInstance()->getOptionValue('mod_color', $this->me_id);
@@ -933,7 +933,7 @@ class Chat extends BaseClass
      */
     private function htmlOnlyText(array $azione): string
     {
-        $testo = Filters::string($azione['testo']);
+        $testo = Filters::text($azione['testo']);
 
         # Customization
         $colore_testo_parlato = PersonaggioChatOpzioni::getInstance()->getOptionValue('other_color', $this->me_id);
@@ -1117,7 +1117,7 @@ class Chat extends BaseClass
         # Filtro le variabili necessarie
         $tag = Filters::in($post['tag']);
         $tipo = Filters::in($post['tipo']);
-        $testo = Filters::in($post['testo']);
+        $testo = Filters::string($post['testo']);
 
         #Salvo il tag in sessione
         Session::store('tag', $tag);
@@ -1140,204 +1140,181 @@ class Chat extends BaseClass
     /**** LANCIO DADI ****/
 
     /**
-     * @fn roll
-     * @note Funzione contenitore del lancio dadi/abi/stat
-     * @param array $post
+     * @fn rollAbility
+     * @note Funzione che si occupa di lanciare un dado di abilità
+     * @param array $post [abilita]
      * @return array
      * @throws Throwable
      */
-    public function roll(array $post): array
+    public function rollAbility(array $post): array
     {
         if ( $this->chatAccess() ) {
-            # Inizializzo le variabili necessarie
-            $abi_nome = '';
-            $abi_dice = '';
-            $car_dice = '';
-            $car_bonus = '';
-            $car_name = '';
-            $obj_nome = '';
-            $obj_dice = '';
 
-            # Filtro le variabili necessarie
-            $abi = Filters::int($post['abilita']);
-            $car = Filters::int($post['caratteristica']);
-            $obj = Filters::int($post['oggetto']);
+            $dice = $this->calcBaseRollDice();
 
-            # Se ho selezionato l'abilita'
-            if ( $abi != 0 ) {
+            $ability = Filters::int($post['abilita']);
+            $ability_roll = $this->calcRollAbility($ability);
 
-                # Estraggo i dati dell'abilita' scelta
-                $abi_roll = $this->rollAbility($abi);
+            $stat = Filters::int($ability_roll['stat']);
+            $stat_roll = $this->calcRollStat($stat);
 
-                # Filtro i dati ricevuti
-                $abi_dice = Filters::int($abi_roll['abi_dice']);
-                $abi_nome = Filters::in($abi_roll['abi_nome']);
+            $objects = $this->calcRollObjects($stat);
 
-                # Se non ho selezionato nessuna caratteristica utilizzo quella base dell'abilita'
-                if ( $car == 0 ) {
-                    # Imposto la stat dell'abilita' come caratteristica richiesta in caso di utilizzo oggetti
-                    $car_name = Filters::out($abi_roll['car_name']);
-                    $car = Filters::int($abi_roll['car']);
-                }
-            }
-
-            # Se ho selezionato una caratteristica (abbinata o meno a un'abilita')
-            if ( $car != 0 ) {
-
-                # Estraggo i dati riguardo la statistica
-                $car_roll = $this->rollCar($car, $obj);
-
-                # Setto il valore della caratteristica
-                $car_dice = Filters::int($car_roll['car_dice']);
-                $car_name = Filters::out($car_roll['car_name']);
-
-                # Se devo aggiungere anche il valore dell'equipaggiamento alla stat
-                if ( $this->chat_equip_bonus ) {
-
-                    # Valorizzo il campo bonus equip stat per la stampa del testo
-                    $car_bonus = Filters::int($car_roll['car_bonus']);
-                }
-            }
-
-            # Se ho selezionato l'utilizzo di un oggetto e di una tra abilita' o stat
-            if ( ($obj != 0) && ($car != 0) ) {
-
-                # Estraggo i dati dell'oggetto
-                $obj_roll = $this->rollObj($obj, $car);
-
-                # Filtro e setto i dati necessari all'aggiunta del valore al lancio
-                $obj_nome = Filters::out($obj_roll['nome']);
-                $obj_dice = Filters::int($obj_roll['val']);
-            }
-
-            # Lancio il dado
-            $dice = ($this->chat_dice) ? $this->rollDice() : 0;
-
-            # Formo array necessario per il rendering del testo # TODO DA MIGLIORARE
             $data = [
                 'dice' => $dice,
-                'abi_dice' => $abi_dice,
-                'abi_nome' => $abi_nome,
-                'car_dice' => $car_dice,
-                'car_name' => $car_name,
-                'obj_nome' => $obj_nome,
-                'obj_dice' => $obj_dice,
-                'car_bonus' => $car_bonus,
+                'abi_bonus' => $ability_roll['bonus'],
+                'abi_name' => $ability_roll['name'],
+                'stat_bonus' => $stat_roll['bonus'],
+                'stat_name' => $stat_roll['name'],
+                'obj_bonus' => $objects['bonus'],
             ];
 
             # Formo il testo e lo salvo in database
             $this->saveDice($data);
 
-            # Ritorno il responso positivo
-            return ['response' => true, 'error' => ''];
+            return ['response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Lancio dadi avvenuto con successo.',
+                'swal_type' => 'success',
+            ];
         } else {
-            return ['response' => false, 'error' => 'Permesso negato.'];
-
+            return ['response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Lancio dadi non abilitato in questa chat.',
+                'swal_type' => 'error',
+            ];
         }
     }
 
     /**
-     * @fn rollAbility
-     * @note Funzione che si occupa del calcolo dell'abilita'
+     * @fn rollStat
+     * @note Funzione che si occupa di lanciare un dado di statistica
+     * @param array $post
+     * @return array
+     * @throws Throwable
+     */
+    public function rollStat(array $post): array
+    {
+        if ( $this->chatAccess() ) {
+
+            $dice = $this->calcBaseRollDice();
+
+            $stat = Filters::int($post['stat']);
+            $stat_roll = $this->calcRollStat($stat);
+
+            $objects = $this->calcRollObjects($stat);
+
+            $data = [
+                'dice' => $dice,
+                'stat_bonus' => $stat_roll['bonus'],
+                'stat_name' => $stat_roll['name'],
+                'obj_bonus' => $objects['bonus'],
+            ];
+
+            # Formo il testo e lo salvo in database
+            $this->saveDice($data);
+
+            return ['response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Lancio dadi avvenuto con successo.',
+                'swal_type' => 'success',
+            ];
+
+        } else {
+            return ['response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Lancio dadi non abilitato in questa chat.',
+                'swal_type' => 'error',
+            ];
+        }
+    }
+
+    /**
+     * @fn calcRollAbility
+     * @note Funzione che si occupa di calcolare il bonus di un dado di abilità
      * @param int $id
      * @return array
      * @throws Throwable
      */
-    public function rollAbility(int $id): array
+    public function calcRollAbility(int $id): array
     {
-        # Filtro le variabili necessarie
-        $id = Filters::int($id);
-        $pg_class = PersonaggioAbilita::getInstance();
-        $abi_class = Abilita::getInstance();
 
-        # Estraggo i dati relativi l'abilita'
-        $abi_data_pg = $pg_class->getPgAbility($id, $this->me_id, 'personaggio_abilita.grado,abilita.nome,abilita.statistica');
-        $stat = Filters::int($abi_data_pg['statistica']);
+        $abi_data = Abilita::getInstance()->getAbility($id);
+        $abi_name = Filters::in($abi_data['nome']);
+        $abi_stat = Filters::int($abi_data['statistica']);
 
-        # $Dati Stat
-        $stat_class = Statistiche::getInstance();
-        $stat_data = $stat_class->getStat($stat, 'nome');
-        $stat_name = Filters::in($stat_data['nome']);
+        $abi_pg_data = PersonaggioAbilita::getInstance()->getPgAbility($id, $this->me_id, 'personaggio_abilita.grado,abilita.nome,abilita.statistica');
+        $abi_pg_bonus = Filters::int($abi_pg_data['grado']) ?? 0;
 
-        # Dati Abi
-        $abi_data = $abi_class->getAbility($id, 'nome');
-        $abi_dice = !empty($abi_data_pg['grado']) ? Filters::int($abi_data_pg['grado']) : 0;
-        $nome = Filters::in($abi_data['nome']);
-
-        # Ritorno i dati necessari
-        return ['abi_nome' => $nome, 'abi_dice' => $abi_dice, 'car_name' => $stat_name, 'car' => $stat];
-    }
-
-    /**
-     * @fn rollCar
-     * @note Funzione che si occupa del calcolo della statistica
-     * @param int $car
-     * @param int $obj
-     * @return array
-     * @throws Throwable
-     */
-    private function rollCar(int $car, int $obj): array
-    {
-        # Filtro i dati passati
-        $car = Filters::int($car);
-        $obj = Filters::int($obj);
-        $stat_class = Statistiche::getInstance();
-
-        # Inizializzo il totale
-        $total_bonus = ($this->chat_equip_bonus) ? $this->calcAllObjsBonus($this->me_id, $car, [$obj]) : 0;
-
-        # Seleziono la caratteristica interessata e ritorno il suo valore
-        $stat_data_pg = PersonaggioStats::getPgStat($car, $this->me_id, 'personaggio_statistiche.valore');
-        $stat_val = !empty($stat_data_pg['valore']) ? Filters::int($stat_data_pg['valore']) : 0;
-
-        $stat_data = $stat_class->getStat($car);
-        $stat_name = Filters::in($stat_data['nome']);
-
-        # Ritorno un array contenente i vari valori
         return [
-            'car_dice' => $stat_val,
-            'car_bonus' => $total_bonus,
-            'car_name' => $stat_name,
+            "name" => $abi_name,
+            "stat" => $abi_stat,
+            "bonus" => $abi_pg_bonus,
         ];
     }
 
     /**
-     * @fn rollObj
-     * @note Funzione che si occupa del calcolo dell'oggetto
-     * @param int $obj
-     * @param int $car
+     * @fn calcRollStat
+     * @note Funzione che si occupa di calcolare il bonus di un dado di statistica
+     * @param int $id
      * @return array
      * @throws Throwable
-     * TODO Adattare statistiche oggetto
      */
-    private function rollObj(int $obj, int $car): array
+    public function calcRollStat(int $id): array
     {
-        # Filtro le variabili necessarie
-        $obj = Filters::int($obj);
-        $car = Filters::int($car);
 
-        # Estraggo i dati dell'oggetto
-        $obj_data = DB::query("SELECT oggetto.nome,oggetto.bonus_car{$car} FROM personaggio_oggetto 
-                                        LEFT JOIN oggetto ON (oggetto.id = personaggio_oggetto.oggetto) 
-                                        WHERE personaggio_oggetto.id='{$obj}' LIMIT 1");
+        $stat_data = Statistiche::getInstance()->getStat($id);
+        $stat_name = Filters::in($stat_data['nome']);
 
-        # Filtro i dati estratti
-        $obj_name = Filters::out($obj_data['nome']);
-        $obj_bonus = Filters::int($obj_data["bonus_car{$car}"]);
+        $stat_pg_data = PersonaggioStats::getInstance()->getPgStat($id, $this->me_id, 'personaggio_statistiche.valore');
+        $stat_pg_bonus = Filters::int($stat_pg_data['valore']) ?? 0;
 
-        # Ritorno array necessario
-        return ['nome' => $obj_name, 'val' => $obj_bonus];
+        return [
+            "name" => $stat_name,
+            "bonus" => $stat_pg_bonus,
+        ];
     }
 
     /**
-     * @fn rollDice
-     * @note Funzione che si occupa del lancio del dado
+     * @fn calcRollObjects
+     * @note Funzione che si occupa di calcolare il bonus di un dado di oggetti
+     * @param int $stat
+     * @return int[]
+     * @throws Throwable
+     */
+    public function calcRollObjects(int $stat): array
+    {
+        $equipped_objects = PersonaggioOggetti::getInstance()->getAllPgObjectsByEquipped($this->me_id, true, 'oggetto.id');
+
+        $total = 0;
+        $number = 0;
+
+        foreach ( $equipped_objects as $object ) {
+            $object_id = Filters::int($object['id']);
+            $object_stat_val = OggettiStatistiche::getInstance()->getObjectStat($object_id, $stat, 'oggetto_statistiche.valore');
+            $object_val = Filters::int($object_stat_val['valore']) ?? 0;
+
+            if ( $object_val > 0 ) {
+                $total += $object_val;
+                $number++;
+            }
+        }
+
+        return [
+            "bonus" => $total,
+        ];
+
+    }
+
+    /**
+     * @fn calcBaseRollDice
+     * @note Funzione che si occupa del lancio del dado base
      * @return int
      */
-    private function rollDice(): int
+    private function calcBaseRollDice(): int
     {
         # Lancio il dado
-        return rand(1, $this->chat_dice_base);
+        return ($this->chat_dice) ? rand(1, $this->chat_dice_base) : 0;
     }
 
     /**
@@ -1362,6 +1339,98 @@ class Chat extends BaseClass
     }
 
     /**
+     * @fn roll_obj
+     * @note Funzione che si occupa di lanciare un dado di oggetto
+     * @param array $post
+     * @return array
+     */
+    /**
+     * @fn rollCustomDice
+     * @note Funzione che si occupa del lancio di dadi diversi da quelli base
+     * @param array $post
+     * @return array
+     * @throws Throwable
+     */
+    public function rollObject(array $post): array
+    {
+        if($this->chatAccess()) {
+            $obj_pg_id = Filters::int($post['oggetto_pg']);
+            $used_charges = Filters::int($post['cariche']);
+
+            // Estraggo da personaggio_oggetto l'oggetto selezionato
+            $obj_data = PersonaggioOggetti::getInstance()->getPgObject($obj_pg_id, 'oggetto.id,personaggio_oggetto.cariche');
+            $obj_charges = Filters::int($obj_data['cariche']);
+
+            if ( $obj_charges >= $used_charges ) {
+                // Estraggo da oggetto l'oggetto selezionato
+                $obj_data = Oggetti::getInstance()->getObject($obj_data['id']);
+                $obj_name = Filters::in($obj_data['nome']);
+
+                $pg_name = Personaggio::nameFromId($this->me_id);
+
+                $text = "{$pg_name} utilizza {$used_charges} cariche dell'oggetto '{$obj_name}'.";
+
+                $this->sendAction([
+                    'tipo' => 'O',
+                    'testo' => $text,
+                ], true);
+
+                if ( $obj_charges > 1 ) {
+                    DB::queryStmt(
+                        'UPDATE personaggio_oggetto SET cariche = cariche - :cariche WHERE id = :id',
+                        [
+                            'cariche' => $used_charges,
+                            'id' => $obj_pg_id,
+                        ]
+                    );
+
+                    $new_charges = ($obj_charges - $used_charges);
+                    $alert = "Cariche rimaste per {$obj_name}: $new_charges.";
+
+                    $this->sendSussurro([
+                        'tipo' => 'S',
+                        'wispTo' => $this->me_id,
+                        'testo' => $alert,
+                    ]);
+                } else {
+                    DB::queryStmt(
+                        'DELETE FROM personaggio_oggetto WHERE id = :id',
+                        [
+                            'id' => $obj_pg_id,
+                        ]
+                    );
+
+                    $alert = "L'oggetto {$obj_name} è stato distrutto.";
+
+                    $this->sendSussurro([
+                        'tipo' => 'S',
+                        'wispTo' => $this->me_id,
+                        'testo' => $alert,
+                    ]);
+                }
+
+                return ['response' => true,
+                    'swal_title' => 'Operazione riuscita!',
+                    'swal_message' => 'Lancio dadi avvenuto con successo.',
+                    'swal_type' => 'success',
+                ];
+            } else {
+                return ['response' => false,
+                    'swal_title' => 'Operazione fallita!',
+                    'swal_message' => 'Non hai abbastanza cariche su questo oggetto.',
+                    'swal_type' => 'info',
+                ];
+            }
+        } else {
+            return ['response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Lancio dadi non abilitato in questa chat.',
+                'swal_type' => 'error',
+            ];
+        }
+    }
+
+    /**
      * @fn saveDice
      * @note Funzione che si occupa di creare il testo e salvarlo in db
      * @param array $array
@@ -1372,58 +1441,49 @@ class Chat extends BaseClass
     {
         # Filtro le variabili necessarie
         $dice = Filters::int($array['dice']);
-        $abi_nome = Filters::in($array['abi_nome']);
-        $abi_dice = Filters::int($array['abi_dice']);
-        $car_dice = Filters::int($array['car_dice']);
-        $car_name = Filters::in($array['car_name']);
-        $car_bonus = Filters::int($array['car_bonus']);
-        $obj_nome = Filters::in($array['obj_nome']);
-        $obj_dice = Filters::int($array['obj_dice']);
+        $abi_name = Filters::in($array['abi_name']);
+        $abi_bonus = Filters::int($array['abi_bonus']);
+        $stat_name = Filters::in($array['stat_name']);
+        $stat_bonus = Filters::int($array['stat_bonus']);
+        $obj_bonus = Filters::int($array['obj_bonus']);
+        $pg_name = Personaggio::nameFromId($this->me_id);
         $total = 0;
 
         # Inizializzo il testo con una parte comune
-        $html = "{$this->me} ha lanciato:";
+        $html = "{$pg_name} ha lanciato: ";
 
         # Se ho lanciato un'abilita' ne aggiungo il testo
-        if ( $abi_nome != '' ) {
-            $html .= "{$abi_nome} {$abi_dice},";
-            $total += $abi_dice;
+        if ( $abi_name ) {
+            $html .= "{$abi_name} {$abi_bonus}, ";
+            $total += $abi_bonus;
         }
 
-        # Aggiungo la caratteristica
-        $html .= "{$car_name} {$car_dice},";
-        $total += $car_dice;
-
-        # Se ho selezionato la possibilità di aggiungere i bonus equipaggiamento al totale della stat
-        if ( $car_bonus ) {
-            $html .= "Bonus Equip Stat {$car_bonus},";
-            $total += $car_bonus;
+        if ( $stat_name ) {
+            # Aggiungo la caratteristica
+            $html .= "{$stat_name} {$stat_bonus}, ";
+            $total += $stat_bonus;
         }
 
         # Se ho lanciato un oggetto ne aggiungo il testo
-        if ( $obj_nome != '' ) {
-            $html .= "{$obj_nome} {$obj_dice},";
-            $total += $obj_dice;
+        if ( $obj_bonus > 0 ) {
+            $html .= "Oggetti {$obj_bonus}, ";
+            $total += $obj_bonus;
         }
 
         # Aggiungo il valore del dado al testo
         if ( $this->chat_dice ) {
-            $html .= "Dado: {$dice},";
+            $html .= "Dado: {$dice}, ";
             $total += $dice;
         }
 
         # Aggiungo il totale al dado
         $html .= " Totale : {$total}";
 
-        # Salvo il risultato in DB
-        DB::queryStmt('INSERT INTO chat(stanza,mittente,destinatario,tipo,testo)
-                            VALUE(:stanza,:mittente,:destinatario,:tipo,:testo)', [
-            'stanza' => $this->luogo,
-            'mittente' => $this->me_id,
-            'destinatario' => '',
-            'tipo' => 'C',
+        $this->sendAction([
+            'tipo' => 'O',
             'testo' => $html,
-        ]);
+        ], true);
+
     }
 
     /*******  ESITI *******/

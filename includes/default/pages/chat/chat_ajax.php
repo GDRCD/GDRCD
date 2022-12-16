@@ -11,9 +11,16 @@ switch ( $action ) {
         echo json_encode($chat->send($_POST));
         break;
 
-    # Lancio Dado
-    case 'roll_dice':
-        echo json_encode($chat->roll($_POST));
+    case 'roll_ability':
+        echo json_encode($chat->rollAbility($_POST));
+        break;
+
+    case 'roll_stat':
+        echo json_encode($chat->rollStat($_POST));
+        break;
+
+    case 'roll_obj':
+        echo json_encode($chat->rollObject($_POST));
         break;
 
     # Controlla che la chat sia quella dichiarata
