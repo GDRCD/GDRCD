@@ -12,8 +12,6 @@ $(function () {
 
 
 function invioAzioneSuccess(data) {
-    console.log(data)
-
     if (data != '') {
         let datas = JSON.parse(data);
         if (datas.response == true) {

@@ -1,10 +1,8 @@
 $(function($) {
-    console.log(123132)
     let editForm = $('.edit_form');
 
     editForm.find('select[name="id"]').on('change', function () {
         let id = $(this).val();
-        console.log(123)
         Ajax(
             'gestione/contatti/gestione_categorie_ajax.php',
             {'id': id, 'action': 'get_category_data'},

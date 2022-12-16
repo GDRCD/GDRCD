@@ -10,7 +10,6 @@ $(function () {
             function (data) {
                 if (data != '') {
                     let datas = JSON.parse(data);
-                    console.log(data)
                     editForm.find('input[name="nome"]').val(datas.nome);
                     editForm.find('input[name="descrizione"]').val(datas.descrizione);
                     editForm.find('select[name="tipo"]').val(datas.tipo);
