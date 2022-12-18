@@ -19,6 +19,18 @@ $(function () {
             }, deleteConvSuccess)
         }
     })
+
+    $('body').on('click','#search_conversations',function(){
+        let title = $('.conversations_search_box .search_body .single_input input[name="title"]').val(),
+            member = $('.conversations_search_box .search_body .single_input select[name="member"]').val();
+
+        Ajax('conversazioni/ajax.php', {
+            action: 'get_filtered_conversations',
+            member: member,
+            title: title,
+        }, filterSuccess)
+
+    })
 });
 
 function ScrollDownMessages() {
@@ -61,6 +73,17 @@ function invioMessaggioSuccess(data) {
     }
 }
 
+function filterSuccess(data) {
+    if (data) {
+        let datas = JSON.parse(data),
+            box = $('#conversations_view_container');
+
+        if (datas.response) {
+            box.find('.conversations_list').html(datas.new_conversations);
+        }
+    }
+}
+
 function newConvSuccess(data) {
 
     if (data) {
@@ -81,4 +104,10 @@ function editConvSuccess(data) {
             window.location.href = "/main.php?page=conversazioni/index&conversation=" + datas.conv_id;
         }
     }
+}
+
+function conversationsFilter(){
+
+    return true;
+
 }

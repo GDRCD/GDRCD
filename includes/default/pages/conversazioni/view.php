@@ -23,6 +23,24 @@ $op = Filters::out($_GET['op']);
                         </a>
                     </div>
                 </div>
+                <div class="conversations_search_box">
+                    <div class="title">Cerca</div>
+                    <div class="search_body">
+                        <div class="single_input">
+                            <input type="text" name="title" placeholder="Titolo"/>
+                        </div>
+                        <div class="single_input">
+                            <select name="member">
+                                <?= Personaggio::getInstance()->listPgs(0,'PG'); ?>
+                            </select>
+                        </div>
+                        <div class="single_input submit">
+                            <button id="search_conversations">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
                 <div class="conversations_list">
                     <?= Conversazioni::getInstance()->conversationsList(); ?>
                 </div>

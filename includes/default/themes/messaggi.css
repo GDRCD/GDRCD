@@ -22,8 +22,80 @@
 
 /*** LISTA MITTENTI ****/
 
+#conversations_view_container .conversations_box_list .conversations_commands {
+    height: 45px;
+    border-bottom: 1px solid white;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 10px;
+}
+
+#conversations_view_container .conversations_box_list .conversations_commands a {
+    color: white;
+    font-size: 18px;
+}
+
+#conversations_view_container .conversations_box_list .conversations_search_box {
+    height: 50px;
+    border-bottom: 1px solid white;
+    box-sizing: border-box;
+    padding: 3px 10px;
+}
+
+#conversations_view_container .conversations_box_list .conversations_search_box .title{
+    color: white;
+    font-size: 15px;
+    text-transform: uppercase;
+}
+
+#conversations_view_container .conversations_box_list .conversations_search_box .search_body{
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+
+#conversations_view_container .conversations_box_list .conversations_search_box .search_body .single_input:not(.submit){
+    width: 45%;
+    margin: 0 10px 0 0;
+    display: flex;
+    align-items: center;
+}
+
+#conversations_view_container .conversations_box_list .conversations_search_box .search_body .single_input input,
+#conversations_view_container .conversations_box_list .conversations_search_box .search_body .single_input select{
+    width: 100%;
+    height: 20px;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #333333;
+    border-top: 1px solid #333333;
+    outline: none;
+    color: white;
+}
+
+#conversations_view_container .conversations_box_list .conversations_search_box .search_body .single_input input::placeholder {
+    color: white;
+}
+
+#conversations_view_container .conversations_box_list .conversations_search_box .search_body button {
+    background: #7289da;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    padding: 3px 10px;
+    cursor: pointer;
+}
+
+#conversations_view_container .conversations_box_list .conversations_search_box .search_body button:active {
+    border: 1px solid white;
+}
+
 #conversations_view_container .conversations_box_list .conversations_list {
-    height: calc(100% - 45px);
+    height: calc(100% - 70px);
     overflow-y: auto;
 }
 
@@ -64,7 +136,6 @@
     padding: 5px 5px 0 5px;
 }
 
-
 #conversations_view_container .conversations_box_list .conversations_list .single_conversation .box .logo {
     width: 35px;
     height: 35px;
@@ -95,21 +166,6 @@
     overflow: hidden;
     color: white;
     font-size: 15px;
-}
-
-#conversations_view_container .conversations_box_list .conversations_commands {
-    height: 45px;
-    border-bottom: 1px solid white;
-    display: flex;
-    justify-content: left;
-    align-items: center;
-    box-sizing: border-box;
-    padding: 10px;
-}
-
-#conversations_view_container .conversations_box_list .conversations_commands a {
-    color: white;
-    font-size: 18px;
 }
 
 

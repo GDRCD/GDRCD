@@ -93,22 +93,46 @@ class Conversazioni extends BaseClass
     /**
      * @fn getAllConversationsByMember
      * @note Ottiene tutte le conversazioni di un utente (proprietario o membro)
+     * @param int $pg
      * @param int $member
+     * @param string $title
      * @param string $val
-     * @return DBQueryInterface
+     * @return array
      * @throws Throwable
      */
-    public function getAllConversationsByMember(int $member, string $val = 'conversazioni.*'): DBQueryInterface
+    public function getAllConversationsByMember(int $pg, int $member = 0, string $title = '', string $val = 'conversazioni.*'): array
     {
-        return DB::queryStmt("SELECT {$val} FROM conversazioni 
+
+        $extra_query = '';
+
+        if ( !empty($title) ) {
+            $extra_query .= " AND conversazioni.nome LIKE \"%{$title}%\" ";
+        }
+
+        $results = DB::queryStmt("SELECT {$val} FROM conversazioni 
                 LEFT JOIN conversazioni_membri 
                     ON conversazioni_membri.conversazione = conversazioni.id 
-                    AND conversazioni_membri.personaggio = :member
+                    AND conversazioni_membri.personaggio = :pg
                 WHERE conversazioni_membri.personaggio IS NOT NULL
                     AND conversazioni.eliminato_il IS NULL
+                {$extra_query}
                 ORDER BY ultimo_messaggio DESC",
-            ['member' => $member]
-        );
+            ['pg' => $pg]
+        )->getData();
+
+        if ( !empty($member) ) {
+
+            foreach ( $results as $index => $result ) {
+                $conversation_id = Filters::int($result['id']);
+
+                if ( !$this->getConversationMember($member, $conversation_id)->getNumRows() ) {
+                    unset($results[$index]);
+                }
+
+            }
+        }
+
+        return $results;
     }
 
     /**
@@ -196,7 +220,13 @@ class Conversazioni extends BaseClass
         );
     }
 
-    public function getConversationsToRead()
+    /**
+     * @fn getConversationsToRead
+     * @note Ottiene le conversazioni da leggere
+     * @return DBQueryInterface
+     * @throws Throwable
+     */
+    public function getConversationsToRead(): DBQueryInterface
     {
         return DB::queryStmt("SELECT conversazioni.id FROM conversazioni 
                 LEFT JOIN conversazioni_membri 
@@ -240,6 +270,23 @@ class Conversazioni extends BaseClass
         return ['text' => $this->renderFrameText()];
     }
 
+    /**
+     * @fn ajaxConversations
+     * @note Ritorna le conversazioni
+     * @param array $post
+     * @return array
+     * @throws Throwable
+     */
+    public function ajaxConversations(array $post): array
+    {
+        $member = Filters::int($post['member']);
+        $title = Filters::out($post['title']);
+
+        return [
+            'response' => true,
+            'new_conversations' => $this->conversationsList($member, $title),
+        ];
+    }
 
     /*** LISTS ***/
 
@@ -252,9 +299,8 @@ class Conversazioni extends BaseClass
      */
     public function listConversations(int $selected = 0): string
     {
-        $conversations = $this->getAllConversationsByMember($this->me_id)->getData();
+        $conversations = $this->getAllConversationsByMember($this->me_id);
         return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', $selected, $conversations, 'Conversazioni');
-
     }
 
     /*** RENDER ***/
@@ -262,27 +308,31 @@ class Conversazioni extends BaseClass
     /**
      * @fn conversationsList
      * @note Ritorna la lista delle conversazioni renderizzata
+     * @param int $member
+     * @param string $title
      * @return string
      * @throws Throwable
      */
-    public function conversationsList(): string
+    public function conversationsList(int $member = 0, string $title = ''): string
     {
         return Template::getInstance()->startTemplate()->render(
             'conversazioni/conversazioni_list',
-            $this->renderConversationsList()
+            $this->renderConversationsList($member, $title)
         );
     }
 
     /**
      * @fn renderConversationsList
      * @note Renderizza la lista delle conversazioni
+     * @param int $member
+     * @param string $title
      * @return array
      * @throws Throwable
      */
-    public function renderConversationsList(): array
+    public function renderConversationsList(int $member = 0, string $title = ''): array
     {
         $conversations = [];
-        $conversations_list = $this->getAllConversationsByMember($this->me_id);
+        $conversations_list = $this->getAllConversationsByMember($this->me_id, $member, $title);
 
         foreach ( $conversations_list as $conversation ) {
             $conversation_member = $this->getConversationMember($this->me_id, Filters::int($conversation['id']), 'conversazioni_membri.*')->getData()[0];
@@ -395,7 +445,7 @@ class Conversazioni extends BaseClass
         return Template::getInstance()->startTemplate()->render(
             'conversazioni/conversazioni_frame',
             [
-                'new_post' => $this->getConversationsToRead()->getNumRows()
+                'new_post' => $this->getConversationsToRead()->getNumRows(),
             ]
         );
     }

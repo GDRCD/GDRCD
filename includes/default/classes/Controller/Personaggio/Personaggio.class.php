@@ -83,10 +83,10 @@ class Personaggio extends BaseClass
      * @return string
      * @throws Throwable
      */
-    public function listPgs(int $selected = 0): string
+    public function listPgs(int $selected = 0, $label = 'Personaggi'): string
     {
         $pgs = $this->getAllPg();
-        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', $selected, $pgs);
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', $selected, $pgs, $label);
     }
 
     /**
