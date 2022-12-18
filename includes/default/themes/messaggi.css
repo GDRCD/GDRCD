@@ -6,16 +6,10 @@
     background: #434f77;
 }
 
-#conversations_view_container .conversations_header {
-    width: 100%;
-    height: 25px;
-    background-color: #f1f1f1;
-    border-bottom: 1px solid black;
-}
 
 #conversations_view_container .conversations_box {
     display: flex;
-    height: calc(100% - 25px);
+    height: 100%;
     width: 100%;
 }
 
@@ -91,7 +85,7 @@
 }
 
 #conversations_view_container .conversations_box_list .conversations_list .single_conversation .box.new .text .title {
-    color: red;
+    color: #a91d1d;
 }
 
 #conversations_view_container .conversations_box_list .conversations_list .single_conversation .box .text .title {
