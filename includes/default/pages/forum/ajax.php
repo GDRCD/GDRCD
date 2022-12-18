@@ -36,5 +36,9 @@ switch ( $_POST['action'] ) {
     case 'frame_text':
         echo json_encode($cls->ajaxFrameText());
         break;
+
+    case 'share_post':
+        echo json_encode($cls->sharePost($_POST));
+        break;
 }
 

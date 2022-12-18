@@ -1,6 +1,11 @@
 {foreach $posts as $post}
     <div class="single_forum_post {if $post.deleted}deleted{/if}">
         <div class="forum_post_commands">
+            <div class="single_command share_post" title="Segnala">
+                <a href="/main.php?page=forum/index&op=post_share&post_id={{$post.id}}">
+                    <i class="fal fa-share-alt"></i>
+                </a>
+            </div>
             {if $post.edit_permission}
                 <div class="single_command edit_post" title="Modifica">
                     <a href="/main.php?page=forum/index&op=post_edit&post_id={{$post.id}}">

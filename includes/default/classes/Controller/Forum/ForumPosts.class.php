@@ -619,8 +619,8 @@ class ForumPosts extends Forum
                         'important' => Filters::bool($post['importante']),
                         'deleted' => $deleted,
                         'padre' => Filters::int($post['id_padre']) === 0,
-                        'updated_at_date' => Filters::date($post['modificato_il'],'d/m/Y'),
-                        'updated_at_time' => Filters::date($post['modificato_il'],'H:i'),
+                        'updated_at_date' => Filters::date($post['modificato_il'], 'd/m/Y'),
+                        'updated_at_time' => Filters::date($post['modificato_il'], 'H:i'),
                         'updated_by_id' => Filters::int($post['modificato_da']),
                         'updated_by' => Personaggio::nameFromId(Filters::int($post['modificato_da'])),
                     ];
@@ -716,5 +716,46 @@ class ForumPosts extends Forum
                 'pg' => $this->me_id,
             ]);
         }
+    }
+
+    /**
+     * @fn sharePostFromForum
+     * @note Condivide un post del forum in una conversazione
+     * @param array $post
+     * @return array
+     * @throws Throwable
+     */
+    public function sharePost(array $post): array
+    {
+
+        $post_id = Filters::int($post['post_id']);
+
+        if ( ForumPermessi::getInstance()->permissionPost($post_id) ) {
+
+            $conv_id = Filters::int($post['conversation']);
+            $text = Filters::in($post['testo']);
+
+            Conversazioni::getInstance()->sendMessage([
+                'id' => $conv_id,
+                'testo' => $text,
+                'post_id' => $post_id,
+            ]);
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Post condiviso correttamente.',
+                'swal_type' => 'success',
+            ];
+
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Non hai i permessi per condividere questo post.',
+                'swal_type' => 'error',
+            ];
+        }
+
     }
 }

@@ -20,6 +20,15 @@
                             {{$message.author.nome}}
                         </a>
                     </div>
+                    {if $message.data.forum_post_id}
+                        <div> - </div>
+                        <div class="share">
+                            Allegato:
+                            <a href="/main.php?page=forum/index&op=post&post_id={{$message.data.forum_post_id}}&pagination=1">
+                                {{$message.data.forum_post_name}}
+                            </a>
+                        </div>
+                    {/if}
                 </div>
                 <div class="message">
                     <div class="text">

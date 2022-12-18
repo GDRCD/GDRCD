@@ -420,6 +420,9 @@ class Conversazioni extends BaseClass
             $is_me = (Filters::int($message['mittente']) === Filters::int($this->me_id));
             $author_data = Personaggio::getPgData($message['mittente']);
 
+            $post_id = Filters::int($message['forum_post_id']);
+            $message['forum_post_name'] = ($post_id > 0) ? ForumPosts::getInstance()->renderPostName($post_id) : '';
+
             $message['creato_il'] = CarbonWrapper::format($message['creato_il'], 'd/m/y H:i');
 
             $conversation_data['messages'][] = [
@@ -467,11 +470,13 @@ class Conversazioni extends BaseClass
         if ( $this->permissionConversation($id) ) {
 
             $text = Filters::in($post['testo']);
+            $post_id = Filters::int($post['post_id']);
 
-            DB::queryStmt("INSERT INTO conversazioni_messaggi(conversazione,mittente,testo,creato_da) VALUES (:conversazione, :mittente,:testo,:creato_da)", [
+            DB::queryStmt("INSERT INTO conversazioni_messaggi(conversazione,mittente,testo,forum_post_id,creato_da) VALUES (:conversazione, :mittente,:testo,:post_id,:creato_da)", [
                 'conversazione' => $id,
                 'mittente' => $this->me_id,
                 'testo' => $text,
+                'post_id' => $post_id,
                 'creato_da' => $this->me_id,
             ]);
 

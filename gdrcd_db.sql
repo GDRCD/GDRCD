@@ -711,8 +711,9 @@ CREATE TABLE IF NOT EXISTS `conversazioni_membri` (
 CREATE TABLE IF NOT EXISTS `conversazioni_messaggi` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `conversazione` int NOT NULL,
-  `mittente` varchar(255) NOT NULL,
+  `mittente` int NOT NULL,
   `testo` text NOT NULL,
+  `forum_post_id` int DEFAULT NULL,
   `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `creato_da` int NOT NULL,
   PRIMARY KEY (`id`)

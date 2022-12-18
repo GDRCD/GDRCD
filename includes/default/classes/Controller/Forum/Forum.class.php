@@ -93,6 +93,7 @@ class Forum extends BaseClass
             'post_edit' => 'post/edit.php',
             'post_comment' => 'post/comment.php',
             'post_history' => 'post/history.php',
+            'post_share'=> 'post/share.php',
             default => 'forums/index.php',
         };
     }

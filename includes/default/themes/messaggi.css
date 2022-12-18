@@ -289,6 +289,19 @@
     text-decoration: none;
 }
 
+#conversations_view_container .conversations_messages .conversation_body .single_message .body .author .share{
+    margin: 0 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: white;
+}
+
+#conversations_view_container .conversations_messages .conversation_body .single_message .body .author .share a{
+    color: #2dda2f;
+    font-weight: bold;
+}
+
 #conversations_view_container .conversations_messages .conversation_body .single_message .body .text {
     color: white;
     font-size: 15px;
