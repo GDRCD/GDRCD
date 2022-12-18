@@ -171,8 +171,8 @@ $PARAMETERS['right_column']['activate'] = 'ON';
 /*COLONNA SINISTRA */
 $PARAMETERS['left_column']['box']['info_location']['class'] = 'info';
 $PARAMETERS['left_column']['box']['info_location']['page'] = 'info_location'; //Meteo e informazioni sul luogo.
-$PARAMETERS['left_column']['box']['frame_messages']['class'] = 'messages';
-$PARAMETERS['left_column']['box']['frame_messages']['page'] = 'frame_messages'; //Link ai messaggi
+$PARAMETERS['left_column']['box']['frame_messages']['class'] = 'conversazioni';
+$PARAMETERS['left_column']['box']['frame_messages']['page'] = 'conversazioni/frame'; //Link ai messaggi
 $PARAMETERS['left_column']['box']['frame_forum']['class'] = 'forums';
 $PARAMETERS['left_column']['box']['frame_forum']['page'] = 'forum/frame'; //Link al forum
 $PARAMETERS['left_column']['box']['frame_news']['class'] = 'news';

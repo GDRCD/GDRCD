@@ -87,7 +87,19 @@ class Personaggio extends BaseClass
     {
         $pgs = $this->getAllPg();
         return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', $selected, $pgs);
+    }
 
+    /**
+     * @fn listPgs
+     * @note Genera gli option per i personaggi
+     * @param array $selected
+     * @return string
+     * @throws Throwable
+     */
+    public function listPgsMultiselect(array $selected = []): string
+    {
+        $pgs = $this->getAllPg();
+        return Template::getInstance()->startTemplate()->renderSelectMulti('id', 'nome', $selected, $pgs);
     }
 
     /**** CONTROLS ****/

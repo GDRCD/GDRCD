@@ -670,23 +670,52 @@ CREATE TABLE IF NOT EXISTS `mappa_click` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `messaggi`
+-- Struttura della tabella `conversazioni`
 --
 
-CREATE TABLE IF NOT EXISTS `messaggi` (
+CREATE TABLE IF NOT EXISTS `conversazioni` (
   `id` bigint NOT NULL AUTO_INCREMENT,
+  `nome` varchar(255) NOT NULL,
+  `immagine` varchar(255) NOT NULL,
+  `ultimo_messaggio` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `creato_da` int NOT NULL,
+  `eliminato_il` datetime DEFAULT NULL,
+  `eliminato_da` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `conversazioni_membri`
+--
+
+CREATE TABLE IF NOT EXISTS `conversazioni_membri` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `conversazione` int NOT NULL,
+  `personaggio` varchar(255) NOT NULL,
+  `proprietario` tinyint(1) NOT NULL DEFAULT 0,
+  `ultima_lettura` datetime DEFAULT NULL,
+  `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `creato_da` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `conversazioni_messaggi`
+--
+
+CREATE TABLE IF NOT EXISTS `conversazioni_messaggi` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `conversazione` int NOT NULL,
   `mittente` varchar(255) NOT NULL,
-  `destinatario` varchar(255) NOT NULL DEFAULT 'Nessuno',
-  `spedito` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `letto` tinyint(1) DEFAULT '0',
-  `mittente_del` tinyint(1) DEFAULT '0',
-  `destinatario_del` tinyint(1) DEFAULT '0',
-  `tipo` int NOT NULL DEFAULT '0',
-  `oggetto` text,
-  `testo` text,
-  PRIMARY KEY (`id`),
-  KEY `destinatario` (`destinatario`),
-  KEY `letto` (`letto`)
+  `testo` text NOT NULL,
+  `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `creato_da` int NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------

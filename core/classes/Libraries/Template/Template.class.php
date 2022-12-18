@@ -32,6 +32,11 @@ class Template extends BaseClass
         return $this->used_class->renderSelect($value_cell, $name_cell, $selected, $data, $label);
     }
 
+    public function renderSelectMulti($value_cell, $name_cell, $selected, $data, $label = '')
+    {
+        return $this->used_class->renderSelectMulti($value_cell, $name_cell, $selected, $data, $label);
+    }
+
     public function renderTable($body_file, $data)
     {
         return $this->used_class->renderTable($body_file, $data);
