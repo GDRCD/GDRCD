@@ -54,6 +54,7 @@
     display: flex;
     justify-content: left;
     align-items: center;
+    margin-top: 2px;
 }
 
 #conversations_view_container .conversations_box_list .conversations_search_box .search_body .single_input:not(.submit){
