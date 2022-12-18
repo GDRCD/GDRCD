@@ -13,9 +13,6 @@ $op = Filters::out($_GET['op']);
 <div id="conversations_view_container">
 
     <?php if ( Conversazioni::getInstance()->isActive() ) { ?>
-        <div class="conversations_header">
-
-        </div>
         <div class="conversations_box">
 
             <div class="conversations_box_list">
