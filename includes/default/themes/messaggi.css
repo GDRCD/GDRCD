@@ -96,7 +96,7 @@
 }
 
 #conversations_view_container .conversations_box_list .conversations_list {
-    height: calc(100% - 70px);
+    height: calc(100% - 95px);
     overflow-y: auto;
 }
 
