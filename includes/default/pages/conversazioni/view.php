@@ -12,7 +12,7 @@ $op = Filters::out($_GET['op']);
 </div>
 <div id="conversations_view_container">
 
-    <?php if ( Conversazioni::getInstance()->isActive() ) { ?>
+    <?php if ( Conversazioni::getInstance()->conversationsEnabled() ) { ?>
         <div class="conversations_box">
 
             <div class="conversations_box_list">

@@ -3,7 +3,7 @@
 //Includio i parametri, la configurazione, la lingua e le funzioni
 Router::loadRequired();
 
-if ( Conversazioni::getInstance()->isActive() ) {
+if ( Conversazioni::getInstance()->conversationsEnabled() ) {
 
     ?>
 

@@ -5,7 +5,7 @@ Router::loadRequired(); # Inserisco il required se non presente, per futuro spos
 $cls = NewsTipo::getInstance(); # Inizializzo classe
 
 if ( $cls->permissionManageNewsType() ) { # Metodo di controllo per accesso alla pagina di gestione
-    if ( News::getInstance()->isActive() ) {
+    if ( News::getInstance()->newsEnabled() ) {
         ?>
         <div class="general_incipit">
             <div class="title"> Gestione Tipologie News</div>

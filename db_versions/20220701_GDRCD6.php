@@ -135,8 +135,8 @@ class GDRCD6 extends DbMigration
                 ('FORUM_POSTS_FOR_PAGE',10,'Forum','Posts per pagina','Numero posts per pagina','int',1,NULL),
                 ('FORUM_COMMENTS_FOR_PAGE',10,'Forum','Commenti per pagina','Numero commenti post per pagina','int',1,NULL),
                 ('FORUM_POST_HISTORY',1,'Forum','Storico delle modifica ad un post o commento','Storico delle modifica ad un posto commento','bool',1,NULL),
-                ('NEWS_ACTIVE',1,'News','News attive','News attive?','bool',1,NULL),
-                ('MESSAGE_ACTIVE',1,'Messaggi','Messaggi attivi','Messaggi attivi?','bool',1,NULL)
+                ('NEWS_ENABLED',1,'News','News attive','News attive?','bool',1,NULL),
+                ('CONVERSATIONS_ENABLED',1,'Conversazioni','Conversazioni attive','Conversazioni attive?','bool',1,NULL)
         ;");
 
         DB::query("
@@ -270,6 +270,7 @@ class GDRCD6 extends DbMigration
               ('Rapido', 'Scheda', 'Scheda', 'scheda/index', NULL),
               ('Rapido', 'Gestione', 'Gestione', 'gestione', 'MANAGEMENT_MENU'),
               ('Rapido', 'Servizi', 'Servizi', 'servizi/index', NULL),
+              ('Rapido', 'Calendario', 'Calendario', 'calendario/index', NULL),
               ('Rapido', 'Menu utente', 'Pannello Utenti', 'utenti/index', NULL);"
         );
 

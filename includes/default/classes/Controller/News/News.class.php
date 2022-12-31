@@ -2,7 +2,7 @@
 
 class News extends BaseClass
 {
-    public bool $news_active = false;
+    public bool $news_enabled = false;
 
     /**
      * @fn __construct
@@ -12,20 +12,20 @@ class News extends BaseClass
     protected function __construct()
     {
         parent::__construct();
-        $this->news_active = Functions::get_constant('NEWS_ACTIVE');
+        $this->news_enabled = Functions::get_constant('NEWS_ENABLED');
     }
 
 
     /*** GETTER ***/
 
     /**
-     * @fn isActive
-     * @note Ritorna se la news è attiva
+     * @fn newsEnabled
+     * @note Controllo se le news sono abilitate
      * @return bool
      */
-    public function isActive(): bool
+    public function newsEnabled(): bool
     {
-        return $this->news_active;
+        return $this->news_enabled;
     }
 
 

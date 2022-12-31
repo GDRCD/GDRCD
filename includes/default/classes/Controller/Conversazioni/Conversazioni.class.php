@@ -5,8 +5,7 @@
 class Conversazioni extends BaseClass
 {
 
-    protected bool
-        $message_active;
+    protected bool $conversations_enabled;
 
     /**
      * @fn __construct
@@ -16,20 +15,20 @@ class Conversazioni extends BaseClass
     protected function __construct()
     {
         parent::__construct();
-        $this->message_active = Functions::get_constant('MESSAGE_ACTIVE');
+        $this->conversations_enabled = Functions::get_constant('CONVERSATIONS_ENABLED');
     }
 
 
     /*** GETTER ***/
 
     /**
-     * @fn isActive
-     * @note Ritorna true se il forum è attivo, false altrimenti
+     * @fn conversationsEnabled
+     * @note Controlla se le conversazioni sono abilitate
      * @return bool|string
      */
-    public function isActive(): bool|string
+    public function conversationsEnabled(): bool|string
     {
-        return $this->message_active;
+        return $this->conversations_enabled;
     }
 
     /*** PERMESSI ***/
