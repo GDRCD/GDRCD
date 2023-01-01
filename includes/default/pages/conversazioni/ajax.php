@@ -25,6 +25,10 @@ switch ( $_POST['action'] ) {
         echo json_encode($cls->deleteConversation($_POST));
         break;
 
+    case 'add_event_from_conversation':
+        echo json_encode($cls->addEventFromConversation($_POST));
+        break;
+
     case 'frame_text':
         echo json_encode($cls->ajaxFrameText($_POST));
         break;

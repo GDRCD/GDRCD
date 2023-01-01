@@ -149,6 +149,20 @@ class Conversazioni extends BaseClass
     }
 
     /**
+     * @fn getConversationAttachments
+     * @note Ottiene gli allegati di una conversazione
+     * @param int $id
+     * @param string $val
+     * @return DBQueryInterface
+     * @throws Throwable
+     */
+    public function getConversationAttachments(int $id, string $val = '*'): DBQueryInterface
+    {
+        return DB::queryStmt("SELECT {$val} FROM conversazioni_messaggi_allegati 
+                        WHERE conversazioni_messaggi_allegati.messaggio=:id", ['id' => $id]);
+    }
+
+    /**
      * @fn getConversationMessages
      * @note Ottiene i messaggi di una conversazione
      * @param int $id
@@ -293,13 +307,14 @@ class Conversazioni extends BaseClass
      * @fn listConversations
      * @note Ritorna la lista delle conversazioni
      * @param int $selected
+     * @param string $label
      * @return string
      * @throws Throwable
      */
-    public function listConversations(int $selected = 0): string
+    public function listConversations(int $selected = 0, string $label = 'Conversazioni'): string
     {
         $conversations = $this->getAllConversationsByMember($this->me_id);
-        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', $selected, $conversations, 'Conversazioni');
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', $selected, $conversations, $label);
     }
 
     /*** RENDER ***/
@@ -416,11 +431,36 @@ class Conversazioni extends BaseClass
 
         foreach ( $conversation_messages as $message ) {
 
+            $message_id = Filters::int($message['id']);
             $is_me = (Filters::int($message['mittente']) === Filters::int($this->me_id));
             $author_data = Personaggio::getPgData($message['mittente']);
 
-            $post_id = Filters::int($message['forum_post_id']);
-            $message['forum_post_name'] = ($post_id > 0) ? ForumPosts::getInstance()->renderPostName($post_id) : '';
+            $allegati = [];
+            $allegati_list = $this->getConversationAttachments($message_id);
+
+            foreach ( $allegati_list as $allegato ) {
+
+                $type = Filters::string($allegato['tipo']);
+                $allegato = Filters::string($allegato['allegato']);
+                $title = '';
+                $link = '';
+
+                switch ($type){
+                    case 'forum':
+                        $title = ForumPosts::getInstance()->renderPostName($allegato);
+                        break;
+                    case 'calendario':
+                        $title = Calendario::getInstance()->renderEventName($allegato);
+                        break;
+                }
+
+                $allegati[] = [
+                    'type' => $type,
+                    'title' => $title,
+                    'allegato' => $allegato,
+                    'link' => $link,
+                ];
+            }
 
             $message['creato_il'] = CarbonWrapper::format($message['creato_il'], 'd/m/y H:i');
 
@@ -428,6 +468,7 @@ class Conversazioni extends BaseClass
                 "is_me" => $is_me,
                 'data' => $message,
                 'author' => $author_data,
+                'allegati' => $allegati,
             ];
         }
 
@@ -469,19 +510,30 @@ class Conversazioni extends BaseClass
         if ( $this->permissionConversation($id) ) {
 
             $text = Filters::in($post['testo']);
-            $post_id = Filters::int($post['post_id']);
-
-            DB::queryStmt("INSERT INTO conversazioni_messaggi(conversazione,mittente,testo,forum_post_id,creato_da) VALUES (:conversazione, :mittente,:testo,:post_id,:creato_da)", [
-                'conversazione' => $id,
-                'mittente' => $this->me_id,
-                'testo' => $text,
-                'post_id' => $post_id,
-                'creato_da' => $this->me_id,
-            ]);
 
             DB::queryStmt("UPDATE conversazioni SET ultimo_messaggio=NOW() WHERE id=:id", [
                 'id' => $id,
             ]);
+
+            DB::queryStmt("INSERT INTO conversazioni_messaggi(conversazione,mittente,testo,creato_da) VALUES (:conversazione, :mittente,:testo,:creato_da)", [
+                'conversazione' => $id,
+                'mittente' => $this->me_id,
+                'testo' => $text,
+                'creato_da' => $this->me_id,
+            ]);
+
+            if(isset($post['allegati'])){
+                $message_id = DB::queryLastId();
+
+                foreach ($post['allegati'] as $allegato) {
+                    DB::queryStmt("INSERT INTO conversazioni_messaggi_allegati(messaggio,allegato,tipo,creato_da) VALUES (:messaggio, :allegato,:tipo,:creato_da)", [
+                        'messaggio' => $message_id,
+                        'allegato' => Filters::in($allegato['allegato']),
+                        'tipo' => Filters::in($allegato['tipo']),
+                        'creato_da' => $this->me_id,
+                    ]);
+                }
+            }
 
             return [
                 'response' => true,
@@ -661,5 +713,18 @@ class Conversazioni extends BaseClass
                 'swal_type' => 'error',
             ];
         }
+    }
+
+    /**
+     * @fn addEventFromConversation
+     * @note Aggiunge un evento da una conversazione
+     * @param array $post
+     * @return array
+     * @throws Throwable
+     */
+    public function addEventFromConversation(array $post): array
+    {
+        $event_id = Filters::int($post['id']);
+        return Calendario::getInstance()->copyEventToMe($event_id);
     }
 }

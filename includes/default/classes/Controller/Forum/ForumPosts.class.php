@@ -738,7 +738,12 @@ class ForumPosts extends Forum
             Conversazioni::getInstance()->sendMessage([
                 'id' => $conv_id,
                 'testo' => $text,
-                'post_id' => $post_id,
+                'allegati' => [
+                    [
+                        'tipo' => 'forum',
+                        'allegato' => $post_id,
+                    ],
+                ]
             ]);
 
             return [

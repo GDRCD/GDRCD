@@ -56,7 +56,7 @@ class Form {
 
         //*** SWAL CONFIRM
         if (cls.swal_alert) {
-            accepted = await Swal.button(
+            accepted = await SwalWrapper.button(
                 'Confermi l\'invio del form?',
                 '',
                 'info',
@@ -106,7 +106,7 @@ class Form {
 
                     if (json.swal_title) {
 
-                        await Swal.fire(
+                        await SwalWrapper.fire(
                             json.swal_title,
                             (json.swal_message) ? json.swal_message : '',
                             (json.swal_type) ? json.swal_type : ''

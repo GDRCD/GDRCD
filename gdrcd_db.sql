@@ -90,6 +90,44 @@ CREATE TABLE IF NOT EXISTS `blacklist` (
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `calendario`
+--
+
+CREATE TABLE `calendario` (
+   `id` int NOT NULL AUTO_INCREMENT,
+   `personaggio` int NOT NULL DEFAULT '0',
+   `titolo` varchar(255) NOT NULL,
+   `descrizione` text NOT NULL,
+   `tipo` int NOT NULL,
+   `inizio` datetime NOT NULL,
+   `fine` datetime NOT NULL,
+   `all_day` tinyint(1) NOT NULL DEFAULT 0,
+   `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   `creato_da` int DEFAULT NULL,
+   PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `calendario_tipi`
+--
+
+CREATE TABLE `calendario_tipi` (
+   `id` int NOT NULL AUTO_INCREMENT,
+   `nome` varchar(255) NOT NULL DEFAULT '0',
+   `colore_bg` varchar(255) NOT NULL,
+   `colore_testo` varchar(255) NOT NULL,
+   `pubblico` tinyint(1) NOT NULL DEFAULT 0,
+   `permessi` varchar(255) DEFAULT NULL,
+   `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   `creato_da` int DEFAULT NULL,
+   PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `contatti`
 --
 
@@ -713,7 +751,22 @@ CREATE TABLE IF NOT EXISTS `conversazioni_messaggi` (
   `conversazione` int NOT NULL,
   `mittente` int NOT NULL,
   `testo` text NOT NULL,
-  `forum_post_id` int DEFAULT NULL,
+  `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `creato_da` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `conversazioni_messaggi_allegati`
+--
+
+CREATE TABLE IF NOT EXISTS `conversazioni_messaggi_allegati` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `messaggio` int NOT NULL,
+  `allegato` varchar(255) NOT NULL,
+  `tipo` text NOT NULL,
   `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `creato_da` int NOT NULL,
   PRIMARY KEY (`id`)

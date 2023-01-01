@@ -20,7 +20,7 @@ function invioAzioneSuccess(data) {
             $('.chat_form_ajax input[name="testo"]').val('');
         }
         else{
-            Swal.fire(
+            SwalWrapper.fire(
                 'Invio azione fallito.',
                 datas.error,
                 'error'

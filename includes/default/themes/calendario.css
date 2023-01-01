@@ -1,0 +1,80 @@
+
+/** CUSTOM THEME **/
+.tippy-box[data-theme~='gdrcd'] {
+    background-color:  #7289da;
+    color: yellow;
+    border-radius: 10px;
+    pointer-events: all;
+}
+
+.tippy-box[data-theme~='gdrcd'] .tippy-content{
+    border-radius: 5px;
+    overflow: hidden;
+    max-width: 500px !important;
+    width: auto !important;
+}
+
+.tippy-box[data-theme~='gdrcd'][data-placement^='top'] > .tippy-arrow::before {
+    border-top-color: #7289da;
+}
+.tippy-box[data-theme~='gdrcd'][data-placement^='bottom'] > .tippy-arrow::before {
+    border-bottom-color: #7289da;
+}
+.tippy-box[data-theme~='gdrcd'][data-placement^='left'] > .tippy-arrow::before {
+    border-left-color: #7289da;
+}
+.tippy-box[data-theme~='gdrcd'][data-placement^='right'] > .tippy-arrow::before {
+    border-right-color: #7289da;
+}
+
+/*** CALENDARIO ***/
+
+#calendar_container{
+    background: #222222;
+    color: white;
+    padding: 10px;
+    width: 90%;
+    margin: 0 auto;
+}
+
+#calendar_container a{
+    color: white;
+}
+
+#calendar_container .fc-footer-toolbar .fc-button-group button{
+    margin-right: 10px;
+}
+
+#calendar_container .fc-footer-toolbar .fc-button-group button.selected{
+    background: #7289da;
+    border: 1px solid black;
+}
+
+.event_tooltip_container{
+    background: #7289da;
+    color: white;
+    margin: 0;
+    width: 250px;
+}
+
+.event_tooltip_container .title{
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.event_tooltip_container .description{
+    font-size: 0.8em;
+    margin-top: 10px;
+    max-height: 100px;
+    overflow: auto;
+}
+
+.event_tooltip_container .date{
+    display: flex;
+    font-size: 0.8em;
+    text-align: center;
+}
+
+.event_tooltip_container .date .cell{
+    width: 50%;
+}

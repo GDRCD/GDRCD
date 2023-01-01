@@ -20,15 +20,27 @@
                             {{$message.author.nome}}
                         </a>
                     </div>
-                    {if $message.data.forum_post_id}
-                        <div> - </div>
-                        <div class="share">
-                            Allegato:
-                            <a href="/main.php?page=forum/index&op=post&post_id={{$message.data.forum_post_id}}&pagination=1">
-                                {{$message.data.forum_post_name}}
-                            </a>
-                        </div>
-                    {/if}
+                    {foreach $message.allegati as $allegato}
+
+                        {if $allegato.type === 'forum'}
+                            <div> -</div>
+                            <div class="share share_forum">
+                                Allegato {{$allegato.type}}:
+                                <a href="/main.php?page=forum/index&op=post&post_id={$allegato.allegato}&pagination=1">
+                                    {{$allegato.title}}
+                                </a>
+                            </div>
+                        {elseif $allegato.type === 'calendario'}
+                            <div> -</div>
+                            <div class="share share_calendario">
+                                Allegato {{$allegato.type}}:
+                                <a class='ajax_link' data-id='{$allegato.allegato}' data-action='add_event_from_conversation' href='#'>
+                                    {{$allegato.title}}
+                                </a>
+                            </div>
+                        {/if}
+
+                    {/foreach}
                 </div>
                 <div class="message">
                     <div class="text">
@@ -43,12 +55,13 @@
     {/foreach}
 </div>
 <div class="conversation_footer">
-    <form method="POST" class="ajax_form" action="conversazioni/ajax.php" data-callback="invioMessaggioSuccess" data-swal="false" >
+    <form method="POST" class="ajax_form" action="conversazioni/ajax.php" data-callback="invioMessaggioSuccess"
+          data-swal="false">
         <div class="single_input testo">
             <input type="text" name="testo" placeholder="Scrivi un messaggio qui" required>
         </div>
         <div class="single_input submit">
-            <button type="submit"  title="Invia"><i class="fas fa-paper-plane"></i> </button>
+            <button type="submit" title="Invia"><i class="fas fa-paper-plane"></i></button>
             <input type="hidden" name="action" value="send_message">
             <input type="hidden" name="id" value="{{$conversation.data.id}}">
         </div>

@@ -22,28 +22,13 @@ class GDRCD6 extends DbMigration
                 ('Sopravvivenza', 1, 'Il personaggio Ã¨ in grado di procurarsi cibo e riparo all''aperto, con mezzi minimi.', -1);
         ");
 
-        DB::query("
-            INSERT INTO disponibilita(`nome`,`immagine`) VALUES
-            ('Disponibile','availability/disponibile.png'),
-            ('Non Disponibile','availability/non_disponibile.png'),
-            ('Occupato','availability/in_lavorazione.png');"
-        );
 
         DB::query("
-            INSERT INTO `forum` (`tipo`, `nome`) VALUES
-                (1, 'Notizie in gioco'),
-                (2, 'Ordini alla Guardia'),
-                (3, 'Umani'),
-                (4, 'Resoconti quest');"
-        );
-
-        DB::query("
-            INSERT INTO `forum_tipo` (`nome`,`pubblico`) VALUES
-                ('Pubblico',1),
-                ('Gruppi',0),
-                ('Razze',0),
-                ('Privato',0);"
-        );
+            INSERT INTO calendario_tipi(`nome`,`colore_bg`,`colore_testo`,`permessi`,`pubblico`)  VALUES  
+                    ('Personale', '#ff0000', '#ffffff', NULL,'0'),
+                    ('Quest', '#00ff00', '#000000', 'CALENDAR_ADD_QUEST','1'),
+                    ('Ambient', '#0000ff', '#ffffff', 'CALENDAR_ADD_AMBIENT','1');
+            ");
 
         // Argon2 potrebbe non essere sempre disponibile. Nel qual caso usiamo Blowfish come default
         $defaultPasswordCrypter = defined('PASSWORD_ARGON2ID') ?
@@ -136,7 +121,9 @@ class GDRCD6 extends DbMigration
                 ('FORUM_COMMENTS_FOR_PAGE',10,'Forum','Commenti per pagina','Numero commenti post per pagina','int',1,NULL),
                 ('FORUM_POST_HISTORY',1,'Forum','Storico delle modifica ad un post o commento','Storico delle modifica ad un posto commento','bool',1,NULL),
                 ('NEWS_ENABLED',1,'News','News attive','News attive?','bool',1,NULL),
-                ('CONVERSATIONS_ENABLED',1,'Conversazioni','Conversazioni attive','Conversazioni attive?','bool',1,NULL)
+                ('CONVERSATIONS_ENABLED',1,'Conversazioni','Conversazioni attive','Conversazioni attive?','bool',1,NULL),
+                ('CALENDAR_ENABLED',1,'Calendario','Calendario attivo','Calendario attivo?','bool',1,NULL),
+                ('CALENDAR_ONLY_FUTURE_SELECTABLE',1,'Calendario','Solo date future selezionabili per nuovi eventi','Solo date future selezionabili per nuovi eventi?','bool',1,NULL)
         ;");
 
         DB::query("
@@ -177,6 +164,29 @@ class GDRCD6 extends DbMigration
                 ('meteo_update',NULL,false,'60','minutes','Meteo','generateGlobalWeather'),
                 ('fondi_assign',NULL,false,'1','days','GruppiFondi','assignFounds'),
                 ('stipendi_assign',NULL,false,'1','days','Gruppi','cronSalaries');"
+        );
+
+        DB::query("
+            INSERT INTO disponibilita(`nome`,`immagine`) VALUES
+            ('Disponibile','availability/disponibile.png'),
+            ('Non Disponibile','availability/non_disponibile.png'),
+            ('Occupato','availability/in_lavorazione.png');"
+        );
+
+        DB::query("
+            INSERT INTO `forum` (`tipo`, `nome`) VALUES
+                (1, 'Notizie in gioco'),
+                (2, 'Ordini alla Guardia'),
+                (3, 'Umani'),
+                (4, 'Resoconti quest');"
+        );
+
+        DB::query("
+            INSERT INTO `forum_tipo` (`nome`,`pubblico`) VALUES
+                ('Pubblico',1),
+                ('Gruppi',0),
+                ('Razze',0),
+                ('Privato',0);"
         );
 
         DB::query("
@@ -420,7 +430,9 @@ class GDRCD6 extends DbMigration
                 ('MANAGE_NEWS','Permesso per la gestione delle news'),
                 ('MANAGE_NEWS_TYPE','Permesso per la gestione delle news'),
                 ('CHAT_MASTER','Azioni master in chat'),
-                ('CHAT_MODERATOR','Azioni moderatore in chat')
+                ('CHAT_MODERATOR','Azioni moderatore in chat'),
+                ('CALENDAR_ADD_QUEST','Aggiungi quest al calendario'),
+                ('CALENDAR_ADD_AMBIENT','Aggiungi quest al calendario')
                ;"
         );
 

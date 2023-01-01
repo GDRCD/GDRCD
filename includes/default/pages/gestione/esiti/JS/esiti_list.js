@@ -24,7 +24,7 @@ $(function () {
             if (datas.response) {
                 $('.esiti_list').html(datas.esiti_list)
 
-                Swal.fire(datas.swal_title, datas.swal_message, datas.swal_type)
+                SwalWrapper.fire(datas.swal_title, datas.swal_message, datas.swal_type)
 
             }
 

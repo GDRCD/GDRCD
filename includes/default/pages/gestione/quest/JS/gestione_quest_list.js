@@ -8,7 +8,7 @@ $(function () {
             action = $(this).data('action'),
             page = $(this).data('page');
 
-        let button = await Swal.button('Sei sicuro?', 'Vuoi eliminare questa quest?', 'info');
+        let button = await SwalWrapper.button('Sei sicuro?', 'Vuoi eliminare questa quest?', 'info');
 
         if (button) {
             Ajax('gestione/quest/gestione_quest_ajax.php', {
@@ -28,7 +28,7 @@ $(function () {
             if (datas.response) {
                 $('.quest_list').html(datas.quest_list)
 
-                Swal.fire(datas.swal_title, datas.swal_message, datas.swal_type)
+                SwalWrapper.fire(datas.swal_title, datas.swal_message, datas.swal_type)
 
             }
 
