@@ -11,7 +11,8 @@ class AudioController
      * @note Controllo sulla abilitazione dei suoni nelle configurazioni
      * @return bool
      */
-    public static function isSoundAllowed($label) {
+    public static function isSoundAllowed($label)
+    {
         global $PARAMETERS;
         return $PARAMETERS['mode']['allow_audio'] == 'ON' && !empty($PARAMETERS['settings']['audio_new_'.$label]);
     }
@@ -28,7 +29,7 @@ class AudioController
         if(empty($label)) return NULL;
 
         // Esco nel caso in cui siano disattivati i suoni
-        if(!self::isSoundAllowed($label) && $_SESSION['blocca_media'] == 1 ) {
+        if(!self::isSoundAllowed($label) || $_SESSION['blocca_media'] == 1 ) {
             return NULL;
         }
 
@@ -61,8 +62,8 @@ class AudioController
         // Se non è stato dichiarato un tipo, non emetto suono
         if(empty($label)) return NULL;
 
-        // Nel caso in cui siano disattivati i suoni, forzo il loro spegnimento
-        if(!self::isSoundAllowed($label) && $_SESSION['blocca_media'] == 1 ) {
+        // Esco nel caso in cui siano disattivati i suoni
+        if(!self::isSoundAllowed($label) || $_SESSION['blocca_media'] == 1 ) {
             return NULL;
         }
 
