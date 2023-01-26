@@ -447,19 +447,25 @@ class Conversazioni extends BaseClass
 
                 switch ($type){
                     case 'forum':
-                        $title = ForumPosts::getInstance()->renderPostName($allegato);
+                        if(ForumPermessi::getInstance()->permissionPost($allegato)) {
+                            $title = ForumPosts::getInstance()->renderPostName($allegato);
+                        }
                         break;
                     case 'calendario':
-                        $title = Calendario::getInstance()->renderEventName($allegato);
+                        if(Calendario::getInstance()->existEvent($allegato)) {
+                            $title = Calendario::getInstance()->renderEventName($allegato);
+                        }
                         break;
                 }
 
-                $allegati[] = [
-                    'type' => $type,
-                    'title' => $title,
-                    'allegato' => $allegato,
-                    'link' => $link,
-                ];
+                if($title){
+                    $allegati[] = [
+                        'type' => $type,
+                        'title' => $title,
+                        'allegato' => $allegato,
+                        'link' => $link,
+                    ];
+                }
             }
 
             $message['creato_il'] = CarbonWrapper::format($message['creato_il'], 'd/m/y H:i');

@@ -115,6 +115,38 @@ class Calendario extends BaseClass
         return DB::queryStmt("SELECT {$val} FROM calendario_tipi WHERE id=:id LIMIT 1", ['id' => $id]);
     }
 
+    /**
+     * @fn countCopiedEvent
+     * @note Controlla se un evento è stato copiato in precedenza
+     * @param int $id
+     * @param int $pg
+     * @return int
+     * @throws Throwable
+     */
+    public function countCopiedEvent(int $id, int $pg): int
+    {
+        return DB::queryStmt(" SELECT id
+                FROM calendario
+                WHERE personaggio=:personaggio AND copied_from=:copied_from", [
+            'personaggio' => $pg,
+            'copied_from' => Filters::int($id),
+        ])->getNumRows();
+    }
+
+    /*** CONTROLS ***/
+
+    /**
+     * @fn eventExist
+     * @note Controlla se un evento esiste
+     * @param int $id
+     * @return bool
+     * @throws Throwable
+     */
+    public function existEvent(int $id): bool
+    {
+        return $this->getCalendarEvent($id)->getNumRows() > 0;
+    }
+
     /*** AJAX ***/
 
     /**
@@ -204,7 +236,7 @@ class Calendario extends BaseClass
             "calendario/add_event",
             [
                 "conversations" => Conversazioni::getInstance()->listConversations(),
-                "conversations_active" => Conversazioni::getInstance()->conversationsEnabled()
+                "conversations_active" => Conversazioni::getInstance()->conversationsEnabled(),
             ]
         );
     }
@@ -216,7 +248,8 @@ class Calendario extends BaseClass
      * @return string
      * @throws Throwable
      */
-    public function renderEventName(int $event_id): string {
+    public function renderEventName(int $event_id): string
+    {
         $event_data = $this->getCalendarEvent($event_id)->getData()[0];
         return Filters::out($event_data['titolo']);
     }
@@ -228,7 +261,8 @@ class Calendario extends BaseClass
      * @return string
      * @throws Throwable
      */
-    public function renderEventTooltip(array $event_data): string {
+    public function renderEventTooltip(array $event_data): string
+    {
         $event_data['start_format'] = CarbonWrapper::format($event_data['inizio'], 'd/m/Y H:i');
         $event_data['end_format'] = CarbonWrapper::format($event_data['fine'], 'd/m/Y H:i');
         return Template::getInstance()->startTemplate()->render('calendario/event_tooltip', [
@@ -260,10 +294,10 @@ class Calendario extends BaseClass
                 'allDay' => $event['all_day'],
                 'color' => $event['colore_bg'],
                 'textColor' => $event['colore_testo'],
-                'extendedProps'=> [
+                'extendedProps' => [
                     'description' => $event['descrizione'],
                     'tooltip' => $this->renderEventTooltip($event),
-                ]
+                ],
             ];
         }
 
@@ -281,7 +315,7 @@ class Calendario extends BaseClass
         $data = [];
         $types = $this->getCalendarAllTypes();
         foreach ( $types as $type ) {
-            if(!isset($type['permessi']) || Permissions::permission($type['permessi'])) {
+            if ( !isset($type['permessi']) || Permissions::permission($type['permessi']) ) {
                 $data[] = $type;
             }
         }
@@ -323,8 +357,8 @@ class Calendario extends BaseClass
 
                 $calendar_id = DB::queryLastId();
 
-                if($conversation_id){
-                    if(Conversazioni::getInstance()->permissionConversation($conversation_id)) {
+                if ( $conversation_id ) {
+                    if ( Conversazioni::getInstance()->permissionConversation($conversation_id) ) {
                         Conversazioni::getInstance()->sendMessage([
                             'id' => $conversation_id,
                             'testo' => $conversation_text,
@@ -333,7 +367,7 @@ class Calendario extends BaseClass
                                     'tipo' => 'calendario',
                                     'allegato' => $calendar_id,
                                 ],
-                            ]
+                            ],
                         ]);
                     } else {
                         return [
@@ -405,6 +439,64 @@ class Calendario extends BaseClass
     }
 
     /**
+     * @fn canCopyEvent
+     * @note Controlla se l'utente può copiare l'evento
+     * @param int $event_id
+     * @param int $pg_id
+     * @return array
+     * @throws Throwable
+     */
+    public function canCopyEvent(int $event_id, int $pg_id): array
+    {
+
+        $event_data = $this->getCalendarEvent($event_id);
+        $owner = Filters::int($event_data['personaggio']);
+
+        // Controllo che non sia un mio evento
+        if ( $owner != $this->me_id ) {
+
+            $already_copied = $this->countCopiedEvent($event_id, $pg_id);
+
+            // Controllo che non sia già stato copiato
+            if (!$already_copied) {
+
+                $event_type = $this->getCalendarTypeData($event_data['tipo']);
+
+                $pubblico = Filters::bool($event_type['pubblico']);
+
+                // Controllo che l'evento non sia pubblico
+                if ( !$pubblico ) {
+                    return [
+                        'response' => true,
+                    ];
+                } else{
+                    return [
+                        'response' => false,
+                        'swal_title' => 'Operazione fallita!',
+                        'swal_message' => 'Evento pubblico, gia presente nel calendario.',
+                        'swal_type' => 'info',
+                    ];
+                }
+            } else{
+                return [
+                    'response' => false,
+                    'swal_title' => 'Operazione fallita!',
+                    'swal_message' => 'Hai già copiato questo evento.',
+                    'swal_type' => 'info',
+                ];
+            }
+        } else{
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Non puoi copiare un evento che hai creato.',
+                'swal_type' => 'info',
+            ];
+        }
+
+    }
+
+    /**
      * @fn copyEventToMe
      * @note Copia un evento nel calendario personale
      * @param int $event_id
@@ -414,24 +506,33 @@ class Calendario extends BaseClass
     public function copyEventToMe(int $event_id): array
     {
 
-        $event_data = $this->getCalendarEvent($event_id);
+        $control = $this->canCopyEvent($event_id, $this->me_id);
 
-        DB::queryStmt("INSERT INTO calendario (inizio,fine,titolo,personaggio,all_day,tipo) VALUES (:inizio,:fine,:titolo,:personaggio,:all_day,:tipo)",
-            [
-                'inizio' => $event_data['inizio'],
-                'fine' => $event_data['fine'],
-                'titolo' =>  $event_data['titolo'],
-                'personaggio' => $this->me_id,
-                'all_day' => $event_data['all_day'],
-                'tipo' => $event_data['tipo'],
-            ]
-        );
+        if ($control['response']) {
 
-        return [
-            'response' => true,
-            'swal_title' => 'Operazione riuscita!',
-            'swal_message' => 'Evento duplicato nel tuo calendario personale.',
-            'swal_type' => 'success',
-        ];
+            $event_data = $this->getCalendarEvent($event_id);
+
+            DB::queryStmt("INSERT INTO calendario (inizio,fine,titolo,descrizione,personaggio,all_day,tipo, copied_from) VALUES (:inizio,:fine,:titolo,:descrizione,:personaggio,:all_day,:tipo,:copied_from)",
+                [
+                    'inizio' => $event_data['inizio'],
+                    'fine' => $event_data['fine'],
+                    'titolo' => $event_data['titolo'],
+                    'descrizione' => $event_data['descrizione'],
+                    'personaggio' => $this->me_id,
+                    'all_day' => $event_data['all_day'],
+                    'tipo' => $event_data['tipo'],
+                    'copied_from' => $event_id,
+                ]
+            );
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Evento duplicato nel tuo calendario personale.',
+                'swal_type' => 'success',
+            ];
+        } else {
+            return $control;
+        }
     }
 }

@@ -102,6 +102,7 @@ CREATE TABLE `calendario` (
    `inizio` datetime NOT NULL,
    `fine` datetime NOT NULL,
    `all_day` tinyint(1) NOT NULL DEFAULT 0,
+   `copied_from` int NOT NULL DEFAULT 0,
    `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
    `creato_da` int DEFAULT NULL,
    PRIMARY KEY (`id`)
