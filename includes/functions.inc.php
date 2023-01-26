@@ -45,7 +45,8 @@ function gdrcd_connect()
  */
 function gdrcd_close_connection($db)
 {
-    mysqli_close($db);
+    // Chiudo la connessione al database
+    if(is_resource($db) && get_resource_type($db)==='mysql link') mysqli_close($db);
 }
 
 /**
