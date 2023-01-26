@@ -18,9 +18,7 @@
     if ($PARAMETERS['mode']['allow_audio'] == 'ON')
     {
 
-        if ( ! empty($_POST['modifica_url_media']) && ! isset($PARAMETERS['settings']['audiotype']['.' . strtolower(end(explode('.',
-                    $_POST['modifica_url_media'])))])
-        )
+        if ( ! empty($_POST['modifica_url_media']) && ! isset($PARAMETERS['settings']['audiotype']['.' . strtolower(end(explode('.', $_POST['modifica_url_media'])))]) )
         {
             echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['warning']['media_not_allowed']) . '</div>';
             $confirm_updating = false;
