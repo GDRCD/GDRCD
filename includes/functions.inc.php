@@ -45,7 +45,8 @@ function gdrcd_connect()
  */
 function gdrcd_close_connection($db)
 {
-    mysqli_close($db);
+    // Chiudo la connessione al database
+    if(is_resource($db) && get_resource_type($db)==='mysql link') mysqli_close($db);
 }
 
 /**
@@ -536,13 +537,17 @@ function gdrcd_controllo_permessi_forum($tipo, $proprietari = '')
  */
 function gdrcd_check_time($time)
 {
-    $time_hours = date('H', strtotime($time));
-    $time_minutes = date('i', strtotime($time));
+    // Converto l'orario $time in un formato leggibile
+    $time_hours = (int)date('H', strtotime($time));
+    $time_minutes = (int)date('i', strtotime($time));
+    // Converto l'orario corrente in un formato leggibile
+    $current_hours = (int)date('H');
+    $current_minutes = (int)date('i');
 
-    if ($time_hours == date('H')) {
-        return date('i') - $time_minutes;
-    } elseif ($time_hours == (date('H') - 1) || $time_hours == (date('H') + 11)) {
-        return date('i') - $time_minutes + 60;
+    if ($time_hours == $current_hours) {
+        return $current_minutes - $time_minutes;
+    } elseif ($time_hours == ($current_hours - 1) || $time_hours == ($current_hours + 11)) {
+        return $current_minutes - $time_minutes + 60;
     }
 
     return 61;
