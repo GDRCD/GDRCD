@@ -1,4 +1,5 @@
 <?php
+
 //carico le sole abilità del pg
 $abilita = gdrcd_query("SELECT id_abilita, grado FROM clgpersonaggioabilita WHERE nome='".gdrcd_filter('in', $_REQUEST['pg'])."'", 'result');
 
@@ -11,11 +12,17 @@ while($row = gdrcd_query($abilita, 'fetch')) {
     $ranks[$row['id_abilita']] = $row['grado'];
 }
 
-$personaggio=gdrcd_query("SELECT id_razza, esperienza FROM personaggio WHERE nome='".gdrcd_filter('in', $_REQUEST['pg'])."'", 'query');
+// In caso non siano state estratte in precedenza informazioni sul personaggio, le riottengo
+if(!isset($personaggio['id_razza']) || !isset($personaggio['esperienza']) ) {
+    // Eseguo la query
+    $personaggioInfo = gdrcd_query("SELECT id_razza, esperienza FROM personaggio WHERE nome='".gdrcd_filter('in', $_REQUEST['pg'])."'", 'query');
+    // Salvo i dati
+    $personaggio['id_razza'] = $personaggioInfo['id_razza'];
+    $personaggio['esperienza'] = $personaggioInfo['esperienza'];
+}
 
-
+// Calcolo il totale di esperienza del personaggio
 $px_totali_pg = gdrcd_filter('int', $personaggio['esperienza']) ;
-
 
 ?>
 <div class="elenco_abilita"><!-- Elenco abilità -->
