@@ -135,10 +135,23 @@ if((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) 
         $type = gdrcd_filter('in', $_POST['type']);
         $first_char = substr($chat_message, 0, 1);
 
+        // Se è stata settata l'esperienza per azione, allora avvio la procedura per il calcolo dell'esperienza
         if($PARAMETERS['mode']['exp_by_chat'] == 'ON') {
+            // Ottengo la lunghezza del messaggio inviato
             $msg_length = strlen($chat_message);
+            // Determino il numero di caratteri necessari per ottenere un bonus
             $char_needed = gdrcd_filter('num', $PARAMETERS['settings']['exp_by_chat']['number']);
-            $exp_bonus = ($PARAMETERS['settings']['exp_by_chat']['value'] == '0') ? $msg_length / $char_needed : gdrcd_filter_num($PARAMETERS['settings']['exp_by_chat']['value']);
+            // Determino il bonus da assegnare
+            $exp_assign = gdrcd_filter('num', $PARAMETERS['settings']['exp_by_chat']['value']);
+
+            // Se il numero di caratteri necessari è maggiore di 0, allora il bonus viene dato se il messaggio è lungo almeno quanto il numero di caratteri necessari
+            if ($char_needed > 0) {
+                $exp_bonus = ($exp_assign <= 0) ? $msg_length / $char_needed : ( $msg_length >= $char_needed ? $exp_assign : 0);
+            }
+            // Altrimenti il bonus viene assegnato sempre
+            else {
+                $exp_bonus = $exp_assign;
+            }
         }
 
         if($type < "5") {

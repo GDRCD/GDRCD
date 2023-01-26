@@ -357,6 +357,7 @@ $PARAMETERS['mode']['exp_by_chat'] = 'OFF';
 
 $PARAMETERS['settings']['exp_by_chat']['number'] = '1000';
 // Numero di caratteri necessari al fine di aggiungere punti esperienza.
+// Se l'incremento dell'esperienza è abilitato e il numero caratteri è 0 allora si aggiungono punti esperienza ogni volta che si scrive un carattere.
 $PARAMETERS['settings']['exp_by_chat']['value'] = '0';
 //Numero di punti da assegnare quando si superano i caratteri necessari.
 //Impostare 0 nel caso si vuole dare 1 punto ogni volta che si raggiungono i caratteri dichiarati prima.
