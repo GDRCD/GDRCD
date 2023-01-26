@@ -60,9 +60,9 @@
          */
         if($PARAMETERS['mode']['alert_password_change'] == 'ON') {
             $six_months = 15552000;
-            $ts_signup = strtotime($record['data_iscrizione']);
-            $ts_lastpass = (int) strtotime($record['ultimo_cambiopass']);
-            if($ts_lastpass + $six_months < time() && $record['nome'] == $_SESSION['login']) {
+            $ts_signup = strtotime($personaggio['data_iscrizione']);
+            $ts_lastpass = (int) strtotime($personaggio['ultimo_cambiopass']);
+            if($ts_lastpass + $six_months < time() && $personaggio['nome'] == $_SESSION['login']) {
                 $message = ($ts_signup + $six_months < time()) ? $MESSAGE['warning']['changepass'] : $MESSAGE['warning']['changepass_signup'];
                 echo '<div class="warning">'.$message.'</div>';
             }
@@ -90,7 +90,7 @@
                 <div class="iscritto_da">
                     <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['first_login']).' '.gdrcd_format_date($personaggio['data_iscrizione']); ?>
                 </div>
-                <?php if(gdrcd_format_date($record['ora_entrata']) != '00/00/0000') { ?>
+                <?php if(gdrcd_format_date($personaggio['ora_entrata']) != '00/00/0000') { ?>
                     <div class="ultimo_ingresso">
                         <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['last_login']).' '.gdrcd_format_date($personaggio['ora_entrata']); ?>
                     </div>
@@ -114,7 +114,7 @@
                 <div class="titolo_box">
                     <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['box_title']['profile']); ?>
                 </div>
-                <?php if($record['permessi'] > 0) { ?>
+                <?php if($personaggio['permessi'] > 0) { ?>
                     <div class="profilo_voce">
                         <div class="profilo_voce_label">
                             <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['profile']['role']); ?>:
@@ -263,13 +263,14 @@
     <?php
     /********* CHIUSURA SCHEDA **********/
     //Impedisci XSS nella musica
-    $record['url_media'] = gdrcd_filter('fullurl', $record['url_media']);
-    if($PARAMETERS['mode']['allow_audio'] == 'ON' && ! $_SESSION['blocca_media'] && ! empty($record['url_media'])) { ?>
+    $personaggio['url_media'] = gdrcd_filter('fullurl', $personaggio['url_media']);
+    if($PARAMETERS['mode']['allow_audio'] == 'ON' && !$_SESSION['blocca_media'] && !empty($personaggio['url_media'])) { ?>
         <audio autoplay>
-            <source src="<?php echo $record['url_media']; ?>" type="audio/mpeg">
+            <source src="<?php echo $personaggio['url_media']; ?>" type="<?php echo $PARAMETERS['settings']['audiotype']['.' . strtolower(end(explode('.', $personaggio['url_media'])))]; ?>">
+            Your browser does not support the audio element.
         </audio>
         <!--[if IE9]>
-        <embed src="<?php echo $record['url_media']; ?>" autostart="true" hidden="true"/>
+        <embed src="<?php echo $personaggio['url_media']; ?>" autostart="true" hidden="true"/>
         <![endif]-->
     <?php } ?>
 </div><!-- Pagina -->
