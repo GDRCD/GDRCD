@@ -2,7 +2,7 @@ async function Ajax(path, data, success, type = 'POST') {
 
     data.path = path;
 
-    $.ajax({
+    let response = $.ajax({
         url: 'core/wrapper_ajax.php',
         type: type,
         data: data,
@@ -10,8 +10,10 @@ async function Ajax(path, data, success, type = 'POST') {
         success: function (response) {
 
             if (success != false) {
-                success(response);
+               return success(response);
             }
         }
     });
+
+    return JSON.parse(response.responseText);
 }

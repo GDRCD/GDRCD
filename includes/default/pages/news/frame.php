@@ -3,7 +3,7 @@
 //Includio i parametri, la configurazione, la lingua e le funzioni
 Router::loadRequired();
 
-if ( News::getInstance()->isActive() ) {
+if ( News::getInstance()->newsEnabled() ) {
     ?>
 
     <div class="box_news news_frame">
