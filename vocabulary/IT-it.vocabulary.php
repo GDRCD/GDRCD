@@ -484,9 +484,9 @@ $MESSAGE['interface']['administration']['locations']['map_related_info'] = 'Coll
 
 /*Mappe*/
 $MESSAGE['interface']['administration']['maps']['page_name'] = 'Gestione mappe';
-$MESSAGE['interface']['administration']['maps']['link']['new'] = 'Crea una nuova mappa';
+$MESSAGE['interface']['administration']['maps']['link']['create'] = 'Crea una nuova mappa';
 $MESSAGE['interface']['administration']['maps']['link']['back'] = 'Torna all\'elenco';
-$MESSAGE['interface']['administration']['maps']['submit']['insert'] = 'Crea';
+$MESSAGE['interface']['administration']['maps']['submit']['create'] = 'Crea';
 $MESSAGE['interface']['administration']['maps']['submit']['edit'] = 'Modifica';
 $MESSAGE['interface']['administration']['maps']['submit']['undo'] = 'Annulla';
 $MESSAGE['interface']['administration']['maps']['name'] = 'Nome';
