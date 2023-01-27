@@ -100,7 +100,7 @@
                             <?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['maps']['position']); ?>
                         </div>
                         <div class='form_field'>
-                            <input name="posizione" value="<?php echo 0 + gdrcd_filter('out', isset($loaded_record['posizione']) ? $loaded_record['posizione'] : 0); ?>" />
+                            <input type="number" name="posizione" value="<?php echo 0 + gdrcd_filter('num', $loaded_record['posizione']); ?>" />
                         </div>
                         <div class='form_info'>
                             <?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['maps']['position_info']); ?>
