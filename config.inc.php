@@ -757,7 +757,7 @@ $PARAMETERS['administration']['locations']['text'] = 'Gestione luoghi';
 $PARAMETERS['administration']['locations']['url'] = 'main.php?page=gestione_luoghi';
 $PARAMETERS['administration']['locations']['access_level'] = SUPERUSER;
 $PARAMETERS['administration']['maps']['text'] = 'Gestione mappe';
-$PARAMETERS['administration']['maps']['url'] = 'main.php?page=gestione_mappe';
+$PARAMETERS['administration']['maps']['url'] = 'main.php?page=gestione/mappe';
 $PARAMETERS['administration']['maps']['access_level'] = SUPERUSER;
 $PARAMETERS['administration']['items']['text'] = 'Gestione oggetti';
 $PARAMETERS['administration']['items']['url'] = 'main.php?page=gestione_mercato';
