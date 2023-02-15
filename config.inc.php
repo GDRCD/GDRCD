@@ -361,7 +361,7 @@ $PARAMETERS['settings']['exp_by_chat']['value'] = '0';
 //Numero di punti da assegnare quando si superano i caratteri necessari.
 //Impostare 0 nel caso si vuole dare 1 punto ogni volta che si raggiungono i caratteri dichiarati prima.
 
-$PARAMETERS['mode']['exp_in_private'] == 'ON';
+$PARAMETERS['mode']['exp_in_private'] = 'ON';
 //ON: abilita l'incremento dei punti esperienza tramite i caratteri scritti in chat privata.
 //OFF: disabilita l'incremento dei punti esperienza tramite i caratteri scritti in chat privata.
 
