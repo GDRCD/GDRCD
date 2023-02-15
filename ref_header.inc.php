@@ -229,15 +229,15 @@ if((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) 
                     gdrcd_query("INSERT INTO chat ( stanza, imgs, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", '".$_SESSION['sesso'].";".$_SESSION['img_razza']."', '".$_SESSION['login']."', '".gdrcd_capital_letter(gdrcd_filter('in', $tag_n_beyond))."', NOW(), '".$m_type."', '".$chat_message."')");
                 }
 
+                // Assegnazione esperienza per i messaggi in chat
                 if($PARAMETERS['mode']['exp_by_chat'] == 'ON') {
-                    if($PARAMETERS['mode']['exp_in_private'] == 'ON') {
-                        if($mappa['privata']==0 && ($m_type == 'A' || $m_type == 'P' || $m_type == 'M')) {
-                            gdrcd_query("UPDATE personaggio SET esperienza = esperienza + ".$exp_bonus." WHERE nome = '".$_SESSION['login']."' LIMIT 1");
-                        }
-                    } else {
-                        if($m_type == 'A' || $m_type == 'P' || $m_type == 'M') {
-                            gdrcd_query("UPDATE personaggio SET esperienza = esperienza + ".$exp_bonus." WHERE nome = '".$_SESSION['login']."' LIMIT 1");
-                        }
+                    // Messaggio in chat pubblica
+                    if($mappa['privata'] == 0 && ($m_type == 'A' || $m_type == 'P' || $m_type == 'M')) {
+                        gdrcd_query("UPDATE personaggio SET esperienza = esperienza + ".$exp_bonus." WHERE nome = '".$_SESSION['login']."' LIMIT 1");
+                    }
+                    // Messaggio in chat privata (solo se impostato in config)
+                    if($mappa['privata'] == 1 && $PARAMETERS['mode']['exp_in_private'] == 'ON' && ($m_type == 'A' || $m_type == 'P' || $m_type == 'M')) {
+                        gdrcd_query("UPDATE personaggio SET esperienza = esperienza + ".$exp_bonus." WHERE nome = '".$_SESSION['login']."' LIMIT 1");
                     }
                 }
             }//Not empty message
