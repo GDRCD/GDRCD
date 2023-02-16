@@ -22,6 +22,12 @@
             </div>
 
             <div class='single_input'>
+                <div class="label"><?=gdrcd_filter('out', $MESSAGE['interface']['administration']['maps']['is_main']); ?></div>
+                <input type="checkbox" name="principale" <?php if($_POST['principale'] == 1) { ?>checked="checked"<?php } ?> value="is_main" />
+                <div class="subtitle"><?=gdrcd_filter('out', $MESSAGE['interface']['administration']['maps']['is_main_info']); ?></div>
+            </div>
+
+            <div class='single_input'>
                 <div class="label"><?=gdrcd_filter('out', $MESSAGE['interface']['administration']['maps']['position']); ?></div>
                 <input type="number" name="posizione" value="<?=(0 + gdrcd_filter('num', $_POST['posizione'])); ?>" />
                 <div class="subtitle"><?=gdrcd_filter('out', $MESSAGE['interface']['administration']['maps']['position_info']); ?></div>

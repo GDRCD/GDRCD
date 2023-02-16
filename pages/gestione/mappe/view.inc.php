@@ -11,7 +11,7 @@
     $pageend = $PARAMETERS['settings']['records_per_page'];
     // Costruisco la query delle mappe
     $sqlMappe = "
-        SELECT id_click, nome, mobile, posizione 
+        SELECT id_click, nome, mobile, posizione, principale
         FROM mappa_click 
         ORDER BY nome
     ";
@@ -41,6 +41,9 @@
                             <div class="titoli_elenco"><?=gdrcd_filter('out', $MESSAGE['interface']['administration']['maps']['is_mobile']); ?></div>
                         </td>
                         <td class="casella_titolo">
+                            <div class="titoli_elenco"><?=gdrcd_filter('out', $MESSAGE['interface']['administration']['maps']['is_main']); ?></div>
+                        </td>
+                        <td class="casella_titolo">
                             <div class="titoli_elenco"><?=gdrcd_filter('out', $MESSAGE['interface']['administration']['ops_col']); ?></div>
                         </td>
                     </tr>
@@ -56,6 +59,11 @@
                             <td class="casella_elemento">
                                 <div class="elementi_elenco">
                                     <div class="elementi_elenco"><?=gdrcd_filter('out', $MESSAGE['interface']['administration'][$row['mobile'] == 1 ? 'yes' : 'no']); ?></div>
+                                </div>
+                            </td>
+                            <td class="casella_elemento">
+                                <div class="elementi_elenco">
+                                    <div class="elementi_elenco"><?=gdrcd_filter('out', $MESSAGE['interface']['administration'][$row['principale'] == 1 ? 'yes' : 'no']); ?></div>
                                 </div>
                             </td>
                             <td class="casella_controlli"><!-- Iconcine dei controlli -->
