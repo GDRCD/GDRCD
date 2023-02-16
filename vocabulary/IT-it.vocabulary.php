@@ -709,6 +709,7 @@ $MESSAGE['error']['db_empty'] = 'Il database non contiene tabelle, è necessario
 $MESSAGE['error']['db_not_updated'] = 'E\' stata rilevata l\'installazione di Mr Fabers GDRCD5, per aggiornare il database e renderlo compatibile proseguire cliccando sul link sottostante';
 $MESSAGE['error']['can_t_load_frame'] = 'Impossibile caricare la pagina.';
 $MESSAGE['error']['can_t_find_any_map'] = 'Nessuna mappa esistente.';
+$MESSAGE['error']['can_t_find_main_map'] = 'Non è stata impostata una mappa principale. Prima di procedere, impostane una nella sezione di Gestione.';
 $MESSAGE['error']['session_expired'] = 'La tua sessione è scaduta o non hai effettuato il login.';
 $MESSAGE['error']['location_doesnt_exist'] = 'Questo luogo non esiste.';
 $MESSAGE['error']['unknown_character_sheet'] = 'Non è stato specificato il none del PG oppure il PG non esiste.';
