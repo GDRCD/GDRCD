@@ -12,21 +12,29 @@
     // Costruisco la query delle mappe
     $sqlMappe = "
         SELECT id_click, nome, mobile, posizione, principale
-        FROM mappa_click 
-        ORDER BY nome
+        FROM mappa_click
     ";
-    $result = gdrcd_query($sqlMappe." LIMIT ".$pagebegin.", ".$pageend, 'result');
+    $result = gdrcd_query($sqlMappe." ORDER BY nome LIMIT ".$pagebegin.", ".$pageend, 'result');
     $numresults = gdrcd_query($result, 'num_rows');
 
     // Conteggio i record totali per l'impaginazione
     $totaleresults = gdrcd_query(gdrcd_query($sqlMappe, 'result'), 'num_rows');
 
-    ?>
+    // Conteggio i record aventi posizione principale
+    $mainMaps = gdrcd_query(gdrcd_query($sqlMappe." WHERE principale = 1", 'result'), 'num_rows');
 
+    ?>
     <div id="GestioneMappeView" class="elenco_record_gestione">
         <?php
             // Se sono presenti record, avvio la costruzione della tabella
-            if($numresults > 0) { ?>
+            if($numresults > 0) {
+
+                // Se non è presente almeno una mappa principale, mostro un messaggio di avviso
+                if(!$mainMaps) {
+                    echo '<div class="error">'.gdrcd_filter('out', $MESSAGE['interface']['administration']['maps']['no_main']).'</div>';
+                }
+
+                ?>
                 <!-- Elenco dei record paginato -->
                 <table>
                     <!-- Intestazione tabella -->

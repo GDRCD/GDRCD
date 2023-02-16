@@ -493,21 +493,17 @@ $MESSAGE['interface']['administration']['maps']['name'] = 'Nome';
 $MESSAGE['interface']['administration']['maps']['is_mobile'] = 'Mobile';
 $MESSAGE['interface']['administration']['maps']['is_mobile_info'] = 'Le mappe mobili sono intese a creare particolari ambienti come navi o carovane, in grado di spostarsi da un vicinato all\'altro.';
 $MESSAGE['interface']['administration']['maps']['is_main'] = 'Principale';
-$MESSAGE['interface']['administration']['maps']['is_main_info'] = 'Indica la mappa principale del gioco, quella che viene visualizzata all\'apertura del sito e in caso di errore nel caricamento della mappa attuale.';
+$MESSAGE['interface']['administration']['maps']['is_main_info'] = 'Indica la mappa principale del gioco, quella che viene visualizzata all\'apertura del sito e in caso di errore nel caricamento della mappa attuale. È possibile avere una sola mappa principale. Se si spunta questa casella, la mappa attuale verrà automaticamente disattivata.';
 $MESSAGE['interface']['administration']['maps']['position'] = 'Posizione';
 $MESSAGE['interface']['administration']['maps']['position_info'] = 'Il valore di posizione genera un vicinato di mappe. Le mappe con lo stesso valore presentano, nella propria visualizzazione, un link alle altre, permettendo lo spostamento di un personaggio da una mappa all\'altra.';
 $MESSAGE['interface']['administration']['maps']['image'] = 'Immagine';
-
-/**    * Aggiunta delle nuove definizioni per le implementazioni nel pannello gestionale
- * @author Blancks <s.rotondo90@gmail.com
- */
 $MESSAGE['interface']['administration']['maps']['width'] = 'Larghezza';
 $MESSAGE['interface']['administration']['maps']['height'] = 'Altezza';
 $MESSAGE['interface']['administration']['maps']['width_info'] = 'La larghezza in pixel del file immagine della mappa.';
 $MESSAGE['interface']['administration']['maps']['height_info'] = 'Altezza in pixel del file immagine usato per la mappa.';
-
-/**    * Fine
- */
+$MESSAGE['interface']['administration']['maps']['no_main'] = 'Per visualizzare correttamente il gioco è necessario definire almeno una mappa principale.';
+$MESSAGE['interface']['administration']['maps']['no_erase_main'] = 'Non è possibile eliminare la mappa principale.';
+$MESSAGE['interface']['administration']['maps']['no_erase_last'] = 'Non è possibile eliminare l\'ultima mappa.';
 
 /*Bacheche*/
 $MESSAGE['interface']['administration']['forums']['page_name'] = 'Gestione ' . strtolower($PARAMETERS['names']['forum']['plur']);

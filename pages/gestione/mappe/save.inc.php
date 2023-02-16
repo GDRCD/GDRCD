@@ -13,6 +13,11 @@
     $is_main = ((isset($_POST['principale']) == true) && ($_POST['principale'] == 'is_main')) ? 1 : 0;
     $immagine = empty($_POST['immagine']) ? "standard_mappa.png" : gdrcd_filter('in', $_POST['immagine']);
 
+    // Se la mappa è principale, devo togliere la principale a tutte le altre
+    if($is_main == 1) {
+        gdrcd_query("UPDATE mappa_click SET principale = 0 WHERE principale = 1");
+    }
+
     // Se id_click è 0, vuol dire che si sta creando una nuova mappa
     if($id_click == 0) {
         /*Eseguo l'inserimento*/
