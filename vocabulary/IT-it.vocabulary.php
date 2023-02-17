@@ -380,9 +380,11 @@ $MESSAGE['interface']['pg_list']['select'] = 'Visualizza il personaggio';
 $MESSAGE['interface']['pg_list']['search']['title'] = 'Ricerca Personaggio';
 $MESSAGE['interface']['pg_list']['search']['img'] = 'Avatar Chat';
 $MESSAGE['interface']['pg_list']['search']['personaggio'] = 'Personaggio';
+$MESSAGE['interface']['pg_list']['search']['nome'] = 'Nome';
 $MESSAGE['interface']['pg_list']['search']['sesso'] = 'Sesso';
 $MESSAGE['interface']['pg_list']['search']['razza'] = 'Razza';
-$MESSAGE['interface']['pg_list']['search']['limit'] = 'Limite personaggio estratti. Inserire 0 per ottenerli tutti.';
+$MESSAGE['interface']['pg_list']['search']['limit'] = 'Limite personaggio estratti';
+$MESSAGE['interface']['pg_list']['search']['limit_info'] = 'Inserire 0 per ottenerli tutti.';
 $MESSAGE['interface']['pg_list']['search']['submit'] = 'Cerca';
 /*Elenco abilita*/
 $MESSAGE['interface']['skills']['page_name'] = 'Elenco abilità';
