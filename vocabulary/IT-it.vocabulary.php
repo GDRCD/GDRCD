@@ -492,20 +492,18 @@ $MESSAGE['interface']['administration']['maps']['submit']['undo'] = 'Annulla';
 $MESSAGE['interface']['administration']['maps']['name'] = 'Nome';
 $MESSAGE['interface']['administration']['maps']['is_mobile'] = 'Mobile';
 $MESSAGE['interface']['administration']['maps']['is_mobile_info'] = 'Le mappe mobili sono intese a creare particolari ambienti come navi o carovane, in grado di spostarsi da un vicinato all\'altro.';
+$MESSAGE['interface']['administration']['maps']['is_main'] = 'Principale';
+$MESSAGE['interface']['administration']['maps']['is_main_info'] = 'Indica la mappa principale del gioco, quella che viene visualizzata all\'apertura del sito e in caso di errore nel caricamento della mappa attuale. È possibile avere una sola mappa principale. Se si spunta questa casella, la mappa attuale verrà automaticamente disattivata.';
 $MESSAGE['interface']['administration']['maps']['position'] = 'Posizione';
 $MESSAGE['interface']['administration']['maps']['position_info'] = 'Il valore di posizione genera un vicinato di mappe. Le mappe con lo stesso valore presentano, nella propria visualizzazione, un link alle altre, permettendo lo spostamento di un personaggio da una mappa all\'altra.';
 $MESSAGE['interface']['administration']['maps']['image'] = 'Immagine';
-
-/**    * Aggiunta delle nuove definizioni per le implementazioni nel pannello gestionale
- * @author Blancks <s.rotondo90@gmail.com
- */
 $MESSAGE['interface']['administration']['maps']['width'] = 'Larghezza';
 $MESSAGE['interface']['administration']['maps']['height'] = 'Altezza';
 $MESSAGE['interface']['administration']['maps']['width_info'] = 'La larghezza in pixel del file immagine della mappa.';
 $MESSAGE['interface']['administration']['maps']['height_info'] = 'Altezza in pixel del file immagine usato per la mappa.';
-
-/**    * Fine
- */
+$MESSAGE['interface']['administration']['maps']['no_main'] = 'Per visualizzare correttamente il gioco è necessario definire almeno una mappa principale.';
+$MESSAGE['interface']['administration']['maps']['no_erase_main'] = 'Non è possibile eliminare la mappa principale.';
+$MESSAGE['interface']['administration']['maps']['no_erase_last'] = 'Non è possibile eliminare l\'ultima mappa.';
 
 /*Bacheche*/
 $MESSAGE['interface']['administration']['forums']['page_name'] = 'Gestione ' . strtolower($PARAMETERS['names']['forum']['plur']);
@@ -711,6 +709,7 @@ $MESSAGE['error']['db_empty'] = 'Il database non contiene tabelle, è necessario
 $MESSAGE['error']['db_not_updated'] = 'E\' stata rilevata l\'installazione di Mr Fabers GDRCD5, per aggiornare il database e renderlo compatibile proseguire cliccando sul link sottostante';
 $MESSAGE['error']['can_t_load_frame'] = 'Impossibile caricare la pagina.';
 $MESSAGE['error']['can_t_find_any_map'] = 'Nessuna mappa esistente.';
+$MESSAGE['error']['can_t_find_main_map'] = 'Non è stata impostata una mappa principale. Prima di procedere, impostane una nella sezione di Gestione.';
 $MESSAGE['error']['session_expired'] = 'La tua sessione è scaduta o non hai effettuato il login.';
 $MESSAGE['error']['location_doesnt_exist'] = 'Questo luogo non esiste.';
 $MESSAGE['error']['unknown_character_sheet'] = 'Non è stato specificato il none del PG oppure il PG non esiste.';

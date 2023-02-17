@@ -1,8 +1,5 @@
-<?php /*HELP: */
-/*Aggiorno la mappa corrente del PG*/
-$current_map = (isset($_GET['map_id']) === true) ? gdrcd_filter('num', $_GET['map_id']) : $_SESSION['mappa'];
+<?php
 
-$redirect_pc = 0;
 /*Se ho richiesto di far partire o arrivare una mappa mobile*/
 if((isset($_POST['op']) === true) && (($_POST['op'] == gdrcd_filter('out', $MESSAGE['interface']['maps']['leave'])) ||
         ($_POST['op'] == gdrcd_filter('out', $MESSAGE['interface']['maps']['arrive'])))) {
@@ -13,19 +10,34 @@ if((isset($_POST['op']) === true) && ($_POST['op'] == gdrcd_filter('out', $MESSA
     /*Aggiorno la sua posizione*/
     gdrcd_query("UPDATE mappa_click SET meteo = '".gdrcd_filter('num', $_POST['temperature'])."°C - ".gdrcd_filter('in', $_POST['climate'])."' WHERE id_click = ".gdrcd_filter('num', $_REQUEST['map_id'])." LIMIT 1");
 }
-/*Seleziono le voci della mappa*/
-$result = gdrcd_query("SELECT mappa.id, mappa.nome, mappa.chat, mappa.x_cord, mappa.y_cord, mappa.id_mappa, mappa_click.nome AS nome_mappa, mappa_click.immagine, mappa_click.posizione, mappa_click.id_click, mappa_click.mobile FROM mappa_click LEFT JOIN mappa ON mappa.id_mappa = mappa_click.id_click WHERE mappa_click.id_click = ".$current_map."", 'result');
 
-if(gdrcd_query($result, 'num_rows') == 0) {
-    $result = gdrcd_query("SELECT id_click FROM mappa_click LIMIT 1", 'result');
+// Ottengo la mappa corrente (se non è impostata, uso quella salvata in sessione del giocatore)
+$current_map = (isset($_GET['map_id']) === true) ? gdrcd_filter('num', $_GET['map_id']) : $_SESSION['mappa'];
 
+// Controllo se la mappa corrente esiste
+$result_checkCurrentMap = gdrcd_query("SELECT id_click FROM mappa_click WHERE id_click = ".$current_map." LIMIT 1", 'result');
+
+// Se non esiste, prendo la mappa principale
+if(gdrcd_query($result_checkCurrentMap, 'num_rows') == 0) {
+    $result_checkCurrentMap = gdrcd_query("SELECT id_click FROM mappa_click WHERE principale = 1 LIMIT 1", 'result');
+}
+
+// Ottengo l'id "sicuro" della mappa corrente
+$current_map = gdrcd_query($result_checkCurrentMap, 'fetch')['id_click'];
+
+// Se non ottengo risultati, mostro un errore
+if(empty($current_map)) {
     echo '<div class="error">'.gdrcd_filter('out', $MESSAGE['error']['can_t_find_any_map']).'</div>';
-} else {
-    $just_one_click = gdrcd_query($result, 'fetch');
-    gdrcd_query($result, 'free');
+    // Se l'utente è un admin, mostro il messaggio di errore per la mappa principale e un link per crearne una nuova
+    if(gdrcd_controllo_permessi($PARAMETERS['administration']['maps']['access_level'])) {
+        echo '<div class="error">'.gdrcd_filter('out', $MESSAGE['error']['can_t_find_main_map']).'</div>';
+    }
+}
+// Altrimenti, mostro la mappa
+else {
 
-    $result = gdrcd_query("SELECT mappa.id, mappa.nome, mappa.chat, mappa.link_immagine, mappa.descrizione, mappa.link_immagine_hover, mappa.id_mappa_collegata, mappa.x_cord, mappa.y_cord, mappa.id_mappa, mappa.pagina, mappa_click.nome AS nome_mappa, mappa_click.immagine, mappa_click.posizione, mappa_click.id_click, mappa_click.mobile, mappa_click.larghezza, mappa_click.altezza FROM mappa_click LEFT JOIN mappa ON mappa.id_mappa = mappa_click.id_click WHERE mappa_click.id_click = ".$just_one_click['id_click']."", 'result');
-    $redirect_pc = 1;
+    // Ottengo i dati della mappa corrente
+    $result = gdrcd_query("SELECT mappa.id, mappa.nome, mappa.chat, mappa.link_immagine, mappa.descrizione, mappa.link_immagine_hover, mappa.id_mappa_collegata, mappa.x_cord, mappa.y_cord, mappa.id_mappa, mappa.pagina, mappa_click.nome AS nome_mappa, mappa_click.immagine, mappa_click.posizione, mappa_click.id_click, mappa_click.mobile, mappa_click.larghezza, mappa_click.altezza FROM mappa_click LEFT JOIN mappa ON mappa.id_mappa = mappa_click.id_click WHERE mappa_click.id_click = ".$current_map, 'result');
 
     /*Stampo la mappa cliccabile*/
     echo '<div class="pagina_mappaclick">';
@@ -36,10 +48,9 @@ if(gdrcd_query($result, 'num_rows') == 0) {
     $self = 0;
     $mobile = 0;
     while($row = gdrcd_query($result, 'fetch')) {
-        /*Se il personaggio si trovava in una mappa inesistente o cancellata aggiorno la sua posizione*/
-        if($redirect_pc == 1) {
-            gdrcd_query("UPDATE personaggio SET ultima_mappa=".gdrcd_filter('get', $row['id_click'])." WHERE nome = '".gdrcd_filter('in', $_SESSION['login'])."'");
-        }
+        // Se il personaggio si trovava in una mappa inesistente o cancellata aggiorno la sua posizione
+        gdrcd_query("UPDATE personaggio SET ultima_mappa=".gdrcd_filter('get', $row['id_click'])." WHERE nome = '".gdrcd_filter('in', $_SESSION['login'])."'");
+
         /*Stampo il titolo, se non l'ho gia' fatto*/
         if($echoed_title === false) {
             echo '<div class="page_title">';
