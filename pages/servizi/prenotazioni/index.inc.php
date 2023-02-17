@@ -75,11 +75,9 @@ if( ( is_array($optionsRooms) && count($optionsRooms) == 0 ) || ($PARAMETERS['mo
     <div class="warning"><?=gdrcd_filter('out', $MESSAGE['interface']['hotel']['no_room']);?></div>
 <?php } else { ?>
     <!-- FORM -->
-    <div id="PrenotaStanza" class="servizi_form_container">
+    <div id="PrenotaStanza" class="form_container">
 
-        <div class="servizi_form_title"><?= gdrcd_filter('out', $MESSAGE['interface']['hotel']['form']['bookRoom']['title']); ?></div>
-
-        <form method="POST" id="PrenotaStanzaForm" class="servizi_form" action="main.php?page=servizi_prenotazioni">
+        <form method="POST" id="PrenotaStanzaForm" class="form" action="main.php?page=servizi_prenotazioni">
 
             <!-- STANZE -->
             <div class="single_input">
