@@ -448,8 +448,8 @@ div.innertube {
  * GESTIONE
  * SERVIZI
  */
-.gestione_pagina .gestione_incipit,
-.servizi_pagina .servizi_incipit {
+.gestione_pagina > .gestione_incipit,
+.servizi_pagina > .servizi_incipit {
     background: grey;
     padding: 10px;
     color:black;
@@ -459,89 +459,107 @@ div.innertube {
     font-size: 13px;
 }
 
-.gestione_pagina .gestione_incipit .title,
-.servizi_pagina .servizi_incipit .title {
+.gestione_pagina > .gestione_incipit > .title,
+.servizi_pagina > .servizi_incipit > .title {
     font-size: 18px;
     font-weight: bold;
 }
 
-.gestione_pagina .gestione_incipit .subtitle,
-.servizi_pagina .servizi_incipit .subtitle {
+.gestione_pagina > .gestione_incipit > .subtitle,
+.servizi_pagina > .servizi_incipit > .subtitle {
     font-size: 15px;
     font-weight: bold;
 }
 
-.gestione_pagina .gestione_incipit .highlight,
-.servizi_pagina .servizi_incipit .highlight {
+.gestione_pagina > .gestione_incipit > .highlight,
+.servizi_pagina > .servizi_incipit > .highlight {
     font-weight: bold;
     color: rgb(177, 71, 71);
 }
 
-.gestione_pagina .gestione_incipit ul,
-.servizi_pagina .servizi_incipit ul {
+.gestione_pagina > .gestione_incipit > ul,
+.servizi_pagina > .servizi_incipit > ul {
     width: 80%;
     margin:0 auto;
 }
 
-.gestione_pagina .gestione_incipit ul li,
-.servizi_pagina .servizi_incipit ul li {
+.gestione_pagina > .gestione_incipit > ul > li,
+.servizi_pagina > .servizi_incipit > ul > li {
     padding: 5px 0;
     text-align: left;
 }
 
-.gestione_pagina .gestione_form_container,
-.servizi_pagina .servizi_form_container,
+.gestione_pagina > .gestione_body,
+.servizi_pagina > .servizi_body {
+    width: 80%;
+    margin: 5px auto;
+}
+
+.gestione_pagina > .gestione_body > .form_container,
+.servizi_pagina > .servizi_body > .form_container,
 .form_container{
     width: 90%;
     margin: 5px auto;
 }
 
-.gestione_pagina .gestione_form_container .gestione_form,
-.servizi_pagina .servizi_form_container .servizi_form,
-.form_container .form{
+.gestione_pagina > .gestione_body > .form_container.form_container_bg,
+.servizi_pagina > .servizi_body > .form_container.form_container_bg,
+.form_container.form_container_bg{
+    border: none;
+    margin: 10px auto;
+    padding: 5px;
+    background-color: #D1D1D1;
+        -moz-border-radius: 5px; /* Bordi arrotondati */
+        -webkit-border-radius: 5px;
+        -khtml-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.gestione_pagina > .gestione_body > .form_container > .form,
+.servizi_pagina > .servizi_body > .form_container > .form,
+.form_container > .form {
     width: 100%;
 }
 
-.gestione_pagina .gestione_form_container .gestione_form_title,
-.servizi_pagina .servizi_form_container .servizi_form_title,
-.form_container .form .form_title{
+.gestione_pagina > .gestione_body > .form_container > .form > .title,
+.servizi_pagina > .servizi_body > .form_container > .form > .title,
+.form_container > .form > .title {
     font-size: 15px;
     font-weight: bold;
-    border: solid black;
-    border-width: 1px 0;
+    text-decoration-line: underline;
     margin: 10px 0;
     padding: 5px 0;
     clear: both;
 }
 
 
-.gestione_pagina .gestione_form .single_input,
-.servizi_pagina .servizi_form .single_input,
-.form_container .form .single_input{
+.gestione_pagina  > .gestione_body > .form_container > .form > .single_input,
+.servizi_pagina  > .servizi_body > .form_container > .form > .single_input,
+.form_container > .form > .single_input{
     width: 100%;
     margin: 5px;
 }
 
-.gestione_pagina .gestione_form .single_input .label,
-.servizi_pagina .servizi_form .single_input .label,
-.form_container .form .single_input .label{
+.gestione_pagina > .gestione_body > .form_container > .form > .single_input > .label,
+.servizi_pagina > .servizi_body > .form_container > .form > .single_input > .label,
+.form_container > .form > .single_input > .label{
     font-size: 13px;
     font-weight: bold;
 }
 
-.gestione_pagina .gestione_form .single_input .subtitle,
-.servizi_pagina .servizi_form .single_input .subtitle,
-.form_container .form .single_input .subtitle{
+.gestione_pagina > .gestione_body > .form_container > .form > .single_input > .subtitle,
+.servizi_pagina > .servizi_body > .form_container > .form > .single_input > .subtitle,
+.form_container > .form > .single_input > .subtitle{
     font-size: 11px;
     width: 50%;
     margin: 0 25%;
 }
 
-.gestione_pagina .gestione_form .single_input input textarea select,
-.servizi_pagina .servizi_form .single_input input textarea select,
-.form_container .form .single_input input,
-.form_container .form .single_input textarea,
-.form_container .form .single_input select{
+.gestione_pagina > .gestione_body > .form_container > .form > .single_input > input textarea select,
+.servizi_pagina > .servizi_body > .form_container > .form > .single_input > input textarea select,
+.form_container > .form > .single_input > input,
+.form_container > .form > .single_input > textarea,
+.form_container > .form > .single_input > select{
     margin: 0 !important;
     max-width: 500px;
 }
