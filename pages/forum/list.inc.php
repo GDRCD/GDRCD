@@ -45,7 +45,7 @@ $ultimotipo = -1;
                     </td>
                     <td class="casella_elemento">
                         <div class="elementi_elenco">
-                            <a href="main.php?page=forum&op=visit&what=<?php echo gdrcd_filter('out', $row['id_araldo']); ?>&name=<?php echo gdrcd_filter('out', $row['nome']); ?>">
+                            <a href="main.php?page=forum&op=visit&what=<?php echo gdrcd_filter('out', $row['id_araldo']); ?>">
                                 <?php echo gdrcd_filter('out', $row['nome']); ?>
                             </a>
                         </div>

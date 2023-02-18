@@ -95,7 +95,7 @@ if($PARAMETERS['mode']['check_messages'] === 'ON') {
 
         // Avvio notifica sul title
         if($PARAMETERS['mode']['alert_pm_via_pagetitle'] == 'ON') {
-            $cntMessagesFrame .= '<script type="text/javascript">parent.blink_title("('.$MESSAGE['interface']['forums']['topic']['new_posts']['sing'].')" '.$PARAMETERS['info']['site_name'].');</script>';
+            $cntMessagesFrame .= '<script type="text/javascript">parent.blink_title("('.$MESSAGE['interface']['forums']['topic']['new_posts']['sing'].') '.$PARAMETERS['info']['site_name'].'");</script>';
         }
 
         // Avvio notifica sonora

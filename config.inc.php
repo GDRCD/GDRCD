@@ -33,7 +33,7 @@ if( ! empty($_SESSION['login'])) {
 }
 
 /* INFORMAZIONI SU GDRCD */
-$PARAMETERS['info']['GDRCD'] = '5.6.0.5'; //versione di GDRCD
+$PARAMETERS['info']['GDRCD'] = '5.6.0.6'; //versione di GDRCD
 
 /* PARAMETRI DI CONNESSIONE */
 $PARAMETERS['database']['username'] = 'gdrcd';            //nome utente del database
@@ -45,7 +45,7 @@ $PARAMETERS['database']['url'] = 'localhost';        //indirizzo ip del database
 /* HELP: Sostituire le diciture inserite tra le virgolette con i parametri di connessione al Database del proprio dominio. Essi sono forniti al momento della registrazione. Se non si e' in possesso di tali parametri consultare le FAQ della homepage dell'host che fornisce il dominio. Se non le si trovano li contattare lo staff dell'host. */
 
 /* INFORMAZIONI SUL SITO */
-$PARAMETERS['info']['site_name'] = 'GDRCD 5.6.0.5'; //nome del gioco
+$PARAMETERS['info']['site_name'] = 'GDRCD 5.6.0.6'; //nome del gioco
 $PARAMETERS['info']['site_url'] = 'http://gdrcd.test/'; //indirizzo URL del gioco
 $PARAMETERS['info']['webmaster_name'] = 'Webmaster'; //nome e cognome del responsabile del sito
 $PARAMETERS['info']['webmaster_email'] = 'webmaster@gdrhost.it'; //email ufficiale del webmaster (è visibile in homepage)
@@ -357,11 +357,12 @@ $PARAMETERS['mode']['exp_by_chat'] = 'OFF';
 
 $PARAMETERS['settings']['exp_by_chat']['number'] = '1000';
 // Numero di caratteri necessari al fine di aggiungere punti esperienza.
+// Se l'incremento dell'esperienza è abilitato e il numero caratteri è 0 allora si aggiungono punti esperienza ogni volta che si scrive un carattere.
 $PARAMETERS['settings']['exp_by_chat']['value'] = '0';
 //Numero di punti da assegnare quando si superano i caratteri necessari.
 //Impostare 0 nel caso si vuole dare 1 punto ogni volta che si raggiungono i caratteri dichiarati prima.
 
-$PARAMETERS['mode']['exp_in_private'] == 'ON';
+$PARAMETERS['mode']['exp_in_private'] = 'ON';
 //ON: abilita l'incremento dei punti esperienza tramite i caratteri scritti in chat privata.
 //OFF: disabilita l'incremento dei punti esperienza tramite i caratteri scritti in chat privata.
 
@@ -757,7 +758,7 @@ $PARAMETERS['administration']['locations']['text'] = 'Gestione luoghi';
 $PARAMETERS['administration']['locations']['url'] = 'main.php?page=gestione_luoghi';
 $PARAMETERS['administration']['locations']['access_level'] = SUPERUSER;
 $PARAMETERS['administration']['maps']['text'] = 'Gestione mappe';
-$PARAMETERS['administration']['maps']['url'] = 'main.php?page=gestione_mappe';
+$PARAMETERS['administration']['maps']['url'] = 'main.php?page=gestione/mappe';
 $PARAMETERS['administration']['maps']['access_level'] = SUPERUSER;
 $PARAMETERS['administration']['items']['text'] = 'Gestione oggetti';
 $PARAMETERS['administration']['items']['url'] = 'main.php?page=gestione_mercato';

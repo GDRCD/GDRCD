@@ -1,8 +1,8 @@
 <?php
 //Permessi
-$row = gdrcd_query("SELECT tipo, proprietari FROM araldo WHERE id_araldo = ".gdrcd_filter('num', $_REQUEST['what'])."");
+$araldo = gdrcd_query("SELECT nome, tipo, proprietari FROM araldo WHERE id_araldo = ".gdrcd_filter('num', $_REQUEST['what']));
 
-if(!gdrcd_controllo_permessi_forum($row['tipo'],$row['proprietari'])){
+if(!gdrcd_controllo_permessi_forum($araldo['tipo'],$araldo['proprietari'])){
     /*Restrizione di visualizzazione solo master e admin*/
     echo '<div class="error">'.gdrcd_filter('out', $MESSAGE['error']['not_allowed']).'</div>';
     ?>
@@ -66,7 +66,7 @@ if(!gdrcd_controllo_permessi_forum($row['tipo'],$row['proprietari'])){
                         <td colspan="3">
                         <?php } ?>
                             <div class="capitolo_elenco">
-                                <?php echo gdrcd_filter('get', $_REQUEST['nome']); ?>
+                                <?php echo gdrcd_filter('get', $araldo['nome']); ?>
                             </div>
                         </td>
                     </tr>

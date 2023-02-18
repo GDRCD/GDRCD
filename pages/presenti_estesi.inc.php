@@ -87,9 +87,9 @@
                 //Lo segnalo come appena entrato
                 echo '<img class="presenti_ico" src="imgs/icons/enter.gif" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['enter']).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['enter']).'" />';
             } else  {
-                 //Altrimenti e' semplicemente loggato
-                    echo '<img class="presenti_ico" src="imgs/icons/blank.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['logged']).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['logged']).'" />';
-                }//else
+             //Altrimenti e' semplicemente loggato
+                echo '<img class="presenti_ico" src="imgs/icons/blank.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['logged']).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['logged']).'" />';
+            }//else
              
             switch ($record['permessi']) {
                 case USER:

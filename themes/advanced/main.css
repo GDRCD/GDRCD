@@ -465,8 +465,8 @@ div.innertube {
     font-weight: bold;
 }
 
-.gestione_pagina .gestione_incipit .subtitle_gst,
-.servizi_pagina .servizi_incipit .subtitle_gst {
+.gestione_pagina .gestione_incipit .subtitle,
+.servizi_pagina .servizi_incipit .subtitle {
     font-size: 15px;
     font-weight: bold;
 }
@@ -516,7 +516,7 @@ div.innertube {
 
 
 .gestione_pagina .gestione_form .single_input,
-.servizi_pagina .servizi_form .single_input
+.servizi_pagina .servizi_form .single_input,
 .form_container .form .single_input{
     width: 100%;
     margin: 5px;
@@ -527,6 +527,14 @@ div.innertube {
 .form_container .form .single_input .label{
     font-size: 13px;
     font-weight: bold;
+}
+
+.gestione_pagina .gestione_form .single_input .subtitle,
+.servizi_pagina .servizi_form .single_input .subtitle,
+.form_container .form .single_input .subtitle{
+    font-size: 11px;
+    width: 50%;
+    margin: 0 25%;
 }
 
 .gestione_pagina .gestione_form .single_input input textarea select,

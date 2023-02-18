@@ -71,7 +71,7 @@ if( ! empty($row)) {
 
                             if(($_SESSION['login'] == $row['autore'] && $chiuso == 0) || ($_SESSION['permessi'] >= MODERATOR)) {
                                 ?>
-                                <a href="main.php?page=forum&op=modifica&what=<?php echo $row['id_messaggio']; ?>">[<?php echo $MESSAGE['interface']['forums']['link']['edit']; ?>]</a>
+                                <a href="main.php?page=forum&op=modifica&what=<?php echo $row['id_messaggio']; ?>&where=<?php echo gdrcd_filter('num', $_REQUEST['where']); ?>">[<?php echo $MESSAGE['interface']['forums']['link']['edit']; ?>]</a>
                                 <a href="main.php?page=forum&op=delete_conf&id_record=<?php echo $row['id_messaggio']; ?>&padre=<?php echo $row['id_messaggio_padre']; ?>">[<?php echo gdrcd_filter('out', $MESSAGE['interface']['forums']['link']['delete']); ?>]</a>
                                 <?php
                             }

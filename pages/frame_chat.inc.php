@@ -15,7 +15,10 @@ $info = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprieta
         if($info['privata'] == 1) {
             $allowance = false;
 
-            if((($info['proprietario'] == gdrcd_capital_letter($_SESSION['login'])) || (strpos($_SESSION['gilda'], $info['proprietario']) != false) || (strpos($info['invitati'], gdrcd_capital_letter($_SESSION['login'])) != false) || (($PARAMETERS['mode']['spyprivaterooms'] == 'ON') && ($_SESSION['permessi'] > MODERATOR))) && ($info['scadenza'] > strftime('%Y-%m-%d %H:%M:%S'))) {
+            // Ottengo l'elenco degli invitati in formato array
+            $invitati = explode(',', $info['invitati']);
+
+            if((($info['proprietario'] == gdrcd_capital_letter($_SESSION['login'])) || strpos($_SESSION['gilda'], $info['proprietario']) || in_array(gdrcd_capital_letter($_SESSION['login']), $invitati) || (($PARAMETERS['mode']['spyprivaterooms'] == 'ON') && ($_SESSION['permessi'] > MODERATOR))) && ($info['scadenza'] > strftime('%Y-%m-%d %H:%M:%S'))) {
                 $allowance = true;
             }
         } else {

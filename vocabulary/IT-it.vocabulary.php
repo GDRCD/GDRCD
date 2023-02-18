@@ -484,28 +484,26 @@ $MESSAGE['interface']['administration']['locations']['map_related_info'] = 'Coll
 
 /*Mappe*/
 $MESSAGE['interface']['administration']['maps']['page_name'] = 'Gestione mappe';
-$MESSAGE['interface']['administration']['maps']['link']['new'] = 'Crea una nuova mappa';
+$MESSAGE['interface']['administration']['maps']['link']['create'] = 'Crea una nuova mappa';
 $MESSAGE['interface']['administration']['maps']['link']['back'] = 'Torna all\'elenco';
-$MESSAGE['interface']['administration']['maps']['submit']['insert'] = 'Crea';
+$MESSAGE['interface']['administration']['maps']['submit']['create'] = 'Crea';
 $MESSAGE['interface']['administration']['maps']['submit']['edit'] = 'Modifica';
 $MESSAGE['interface']['administration']['maps']['submit']['undo'] = 'Annulla';
 $MESSAGE['interface']['administration']['maps']['name'] = 'Nome';
 $MESSAGE['interface']['administration']['maps']['is_mobile'] = 'Mobile';
 $MESSAGE['interface']['administration']['maps']['is_mobile_info'] = 'Le mappe mobili sono intese a creare particolari ambienti come navi o carovane, in grado di spostarsi da un vicinato all\'altro.';
+$MESSAGE['interface']['administration']['maps']['is_main'] = 'Principale';
+$MESSAGE['interface']['administration']['maps']['is_main_info'] = 'Indica la mappa principale del gioco, quella che viene visualizzata all\'apertura del sito e in caso di errore nel caricamento della mappa attuale. È possibile avere una sola mappa principale. Se si spunta questa casella, la mappa attuale verrà automaticamente disattivata.';
 $MESSAGE['interface']['administration']['maps']['position'] = 'Posizione';
 $MESSAGE['interface']['administration']['maps']['position_info'] = 'Il valore di posizione genera un vicinato di mappe. Le mappe con lo stesso valore presentano, nella propria visualizzazione, un link alle altre, permettendo lo spostamento di un personaggio da una mappa all\'altra.';
 $MESSAGE['interface']['administration']['maps']['image'] = 'Immagine';
-
-/**    * Aggiunta delle nuove definizioni per le implementazioni nel pannello gestionale
- * @author Blancks <s.rotondo90@gmail.com
- */
 $MESSAGE['interface']['administration']['maps']['width'] = 'Larghezza';
 $MESSAGE['interface']['administration']['maps']['height'] = 'Altezza';
 $MESSAGE['interface']['administration']['maps']['width_info'] = 'La larghezza in pixel del file immagine della mappa.';
 $MESSAGE['interface']['administration']['maps']['height_info'] = 'Altezza in pixel del file immagine usato per la mappa.';
-
-/**    * Fine
- */
+$MESSAGE['interface']['administration']['maps']['no_main'] = 'Per visualizzare correttamente il gioco è necessario definire almeno una mappa principale.';
+$MESSAGE['interface']['administration']['maps']['no_erase_main'] = 'Non è possibile eliminare la mappa principale.';
+$MESSAGE['interface']['administration']['maps']['no_erase_last'] = 'Non è possibile eliminare l\'ultima mappa.';
 
 /*Bacheche*/
 $MESSAGE['interface']['administration']['forums']['page_name'] = 'Gestione ' . strtolower($PARAMETERS['names']['forum']['plur']);
@@ -646,6 +644,13 @@ $MESSAGE['interface']['administration']['log']['chat']['date'] = 'Data';
 $MESSAGE['interface']['administration']['log']['chat']['text'] = 'Testo';
 $MESSAGE['interface']['administration']['log']['chat']['room'] = 'Luogo';
 $MESSAGE['interface']['administration']['log']['chat']['sender'] = 'Personaggio';
+/*Email*/
+$MESSAGE['interface']['administration']['email']['page_name'] = 'Gestione email';
+$MESSAGE['interface']['administration']['email']['link']['back'] = 'Torna all\'elenco';
+$MESSAGE['interface']['administration']['email']['email'] = 'Inserire la nuova mail';
+$MESSAGE['interface']['administration']['email']['new'] = 'Selezionare personaggio';
+$MESSAGE['interface']['administration']['email']['submit']['user'] = 'Cambia email';
+$MESSAGE['interface']['administration']['email']['change_to'] = 'Cambia a...';
 /********** Pagine del menu' utente *********/
 /*Cambio pass*/
 $MESSAGE['interface']['user']['pass']['page_name'] = 'Cambio password';
@@ -654,12 +659,6 @@ $MESSAGE['interface']['user']['pass']['new'] = 'Inserire la nuova password';
 $MESSAGE['interface']['user']['pass']['force'] = 'Cambia password ad un account';
 $MESSAGE['interface']['user']['pass']['submit']['user'] = 'Salva';
 $MESSAGE['interface']['user']['pass']['change_to'] = 'Cambia a...';
-/*Cambio email*/
-$MESSAGE['interface']['user']['email']['page_name'] = 'Cambio password';
-$MESSAGE['interface']['user']['email']['email'] = 'Inserire la nuova mail';
-$MESSAGE['interface']['user']['email']['new'] = 'Selezionare personaggio';
-$MESSAGE['interface']['user']['email']['submit']['user'] = 'Cambia email';
-$MESSAGE['interface']['user']['email']['change_to'] = 'Cambia a...';
 /*Cancella account*/
 $MESSAGE['interface']['user']['delete']['page_name'] = 'Cancella account';
 $MESSAGE['interface']['user']['delete']['email'] = 'Inserire la EMail di registrazione per conferma';
@@ -710,6 +709,7 @@ $MESSAGE['error']['db_empty'] = 'Il database non contiene tabelle, è necessario
 $MESSAGE['error']['db_not_updated'] = 'E\' stata rilevata l\'installazione di Mr Fabers GDRCD5, per aggiornare il database e renderlo compatibile proseguire cliccando sul link sottostante';
 $MESSAGE['error']['can_t_load_frame'] = 'Impossibile caricare la pagina.';
 $MESSAGE['error']['can_t_find_any_map'] = 'Nessuna mappa esistente.';
+$MESSAGE['error']['can_t_find_main_map'] = 'Non è stata impostata una mappa principale. Prima di procedere, impostane una nella sezione di Gestione.';
 $MESSAGE['error']['session_expired'] = 'La tua sessione è scaduta o non hai effettuato il login.';
 $MESSAGE['error']['location_doesnt_exist'] = 'Questo luogo non esiste.';
 $MESSAGE['error']['unknown_character_sheet'] = 'Non è stato specificato il none del PG oppure il PG non esiste.';
@@ -789,8 +789,10 @@ $MESSAGE['chat']['type'][5] = 'Invita';
 $MESSAGE['chat']['type'][6] = 'Caccia';
 $MESSAGE['chat']['type'][7] = 'Elenco';
 $MESSAGE['chat']['warning']['invited'] = 'invitato';
+$MESSAGE['chat']['warning']['already_invited'] = 'già invitato';
+$MESSAGE['chat']['warning']['not_invited'] = 'non invitato';
 $MESSAGE['chat']['warning']['expelled'] = 'escluso';
-$MESSAGE['chat']['warning']['list'] = 'Ospiti';
+$MESSAGE['chat']['warning']['invited_list'] = 'Ospiti';
 $MESSAGE['chat']['warning']['invited_message'] = 'ti ha inoltrato un invito per';
 $MESSAGE['chat']['tag']['info']['tag'] = 'Tag';
 $MESSAGE['chat']['tag']['info']['png'] = '/PNG';
