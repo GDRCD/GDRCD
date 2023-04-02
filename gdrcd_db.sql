@@ -105,7 +105,8 @@ CREATE TABLE `calendario` (
    `copied_from` int NOT NULL DEFAULT 0,
    `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
    `creato_da` int DEFAULT NULL,
-   PRIMARY KEY (`id`)
+   PRIMARY KEY (`id`),
+   KEY(`personaggio`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -277,7 +278,8 @@ CREATE TABLE IF NOT EXISTS `diario` (
   `data_inserimento` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `data_modifica` datetime DEFAULT NULL,
   `visibile` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY(`personaggio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
@@ -322,7 +324,8 @@ CREATE TABLE IF NOT EXISTS `esiti_personaggio` (
   `esito` int NOT NULL,
   `assegnato_il` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `assegnato_da` int NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY(`personaggio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -418,7 +421,8 @@ CREATE TABLE IF NOT EXISTS `forum_permessi` (
     `personaggio` int NOT NULL,
     `assegnato_da` int DEFAULT NULL,
     `assegnato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    KEY(`personaggio`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -606,7 +610,8 @@ CREATE TABLE IF NOT EXISTS `gruppi_stipendi_extra` (
     `interval` int NOT NULL DEFAULT 60,
     `interval_type` varchar(255) NOT NULL DEFAULT 'minutes',
     `last_exec` datetime DEFAULT NULL,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    KEY(`personaggio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ---------------------------------------------------------
@@ -738,7 +743,8 @@ CREATE TABLE IF NOT EXISTS `conversazioni_membri` (
   `ultima_lettura` datetime DEFAULT NULL,
   `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `creato_da` int NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY(`personaggio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -1238,7 +1244,8 @@ CREATE TABLE `personaggio_oggetto` (
     `cariche` int DEFAULT 0,
     `commento` text DEFAULT NULL,
     `indossato` int DEFAULT 0,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    KEY(`personaggio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -1271,7 +1278,8 @@ CREATE TABLE personaggio_quest  (
   `personaggio` int NOT NULL,
   `px_assegnati` int NOT NULL,
   `autore` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY(`personaggio`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -1413,3 +1421,27 @@ CREATE TABLE IF NOT EXISTS _gdrcd_db_versions (
   `applied_on` DATETIME NOT NULL ,
   PRIMARY KEY (`migration_id`)
 );
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `personaggio_abilita`
+--
+ALTER TABLE `personaggio_abilita`
+    ADD CONSTRAINT `personaggio_abilita_ibfk_1` FOREIGN KEY (`personaggio`) REFERENCES `personaggio` (`id`),
+    ADD CONSTRAINT `personaggio_abilita_ibfk_2` FOREIGN KEY (`abilita`) REFERENCES `abilita` (`id`);
+
+--
+-- Constraints for table `personaggio_chat_opzioni`
+--
+ALTER TABLE `personaggio_chat_opzioni`
+    ADD CONSTRAINT `personaggio_chat_opzioni_ibfk_1` FOREIGN KEY (`personaggio`) REFERENCES `personaggio` (`id`);
+
+--
+-- Constraints for table `personaggio_oggetto`
+--
+ALTER TABLE `personaggio_oggetto`
+    ADD CONSTRAINT `personaggio_oggetto_ibfk_1` FOREIGN KEY (`personaggio`) REFERENCES `personaggio` (`id`);
+COMMIT;
