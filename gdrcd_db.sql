@@ -57,7 +57,8 @@ CREATE TABLE IF NOT EXISTS `abilita_requisiti` (
   `tipo` int NOT NULL,
   `id_riferimento` int NOT NULL,
   `liv_riferimento` int NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY(`abilita`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -537,13 +538,14 @@ CREATE TABLE IF NOT EXISTS `giocate_registrate` (
 CREATE TABLE IF NOT EXISTS `gruppi` (
   `id` int NOT NULL AUTO_INCREMENT,
   `nome` varchar(255) NOT NULL DEFAULT '',
-  `tipo` varchar(255) NOT NULL DEFAULT '0',
+  `tipo` int NOT NULL DEFAULT '0',
   `immagine` varchar(255) DEFAULT NULL,
   `url` varchar(255) DEFAULT NULL,
   `statuto` text,
   `denaro` int NOT NULL DEFAULT 0,
   `visibile` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY(`tipo`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 
@@ -561,7 +563,8 @@ CREATE TABLE IF NOT EXISTS `gruppi_fondi` (
   `interval` int DEFAULT NULL,
   `interval_type` varchar(255) NOT NULL,
   `last_exec` datetime NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY(`gruppo`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -576,7 +579,9 @@ CREATE TABLE IF NOT EXISTS `gruppi_oggetto` (
   `oggetto` int DEFAULT NULL,
   `cariche` int DEFAULT 0,
   `commento` text DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY(`gruppo`),
+  KEY(`oggetto`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -592,7 +597,8 @@ CREATE TABLE IF NOT EXISTS `gruppi_ruoli` (
     `immagine` varchar(255) NOT NULL,
     `stipendio` int NOT NULL DEFAULT '0',
     `poteri` int NOT NULL DEFAULT '0',
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    KEY(`gruppo`)
     ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -744,7 +750,8 @@ CREATE TABLE IF NOT EXISTS `conversazioni_membri` (
   `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `creato_da` int NOT NULL,
   PRIMARY KEY (`id`),
-  KEY(`personaggio`)
+  KEY(`personaggio`),
+  KEY(`conversazione`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -760,7 +767,8 @@ CREATE TABLE IF NOT EXISTS `conversazioni_messaggi` (
   `testo` text NOT NULL,
   `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `creato_da` int NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY(`conversazione`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -791,7 +799,8 @@ CREATE TABLE IF NOT EXISTS `mercato` (
     `negozio` int NOT NULL,
     `costo` int NOT NULL,
     `quantity` int NOT NULL DEFAULT '0',
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    KEY(`oggetto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -1427,6 +1436,105 @@ CREATE TABLE IF NOT EXISTS _gdrcd_db_versions (
 --
 
 --
+-- Constraints for table `abilita_requisiti`
+--
+ALTER TABLE `abilita_requisiti`
+    ADD CONSTRAINT `abilita_requisiti_ibfk_1` FOREIGN KEY (`abilita`) REFERENCES `abilita` (`id`);
+
+--
+-- Constraints for table `conversazioni_membri`
+--
+ALTER TABLE `conversazioni_membri`
+    ADD CONSTRAINT `conversazioni_membri_ibfk_1` FOREIGN KEY (`personaggio`) REFERENCES `personaggio` (`id`),
+    ADD CONSTRAINT `conversazioni_membri_ibfk_2` FOREIGN KEY (`conversazione`) REFERENCES `conversazioni` (`id`);
+
+--
+-- Constraints for table `conversazioni_messaggi`
+--
+ALTER TABLE `conversazioni_messaggi`
+    ADD CONSTRAINT `conversazioni_messaggi_ibfk_1` FOREIGN KEY (`conversazione`) REFERENCES `conversazioni` (`id`);
+
+--
+-- Constraints for table `diario`
+--
+ALTER TABLE `diario`
+    ADD CONSTRAINT `diario_ibfk_1` FOREIGN KEY (`personaggio`) REFERENCES `personaggio` (`id`);
+
+--
+-- Constraints for table `esiti_personaggio`
+--
+ALTER TABLE `esiti_personaggio`
+    ADD CONSTRAINT `esiti_personaggio_ibfk_1` FOREIGN KEY (`personaggio`) REFERENCES `personaggio` (`id`);
+
+--
+-- Constraints for table `esiti_risposte_letture`
+--
+ALTER TABLE `esiti_risposte_letture`
+    ADD CONSTRAINT `esiti_risposte_letture_ibfk_1` FOREIGN KEY (`personaggio`) REFERENCES `personaggio` (`id`);
+
+--
+-- Constraints for table `esiti_risposte_risultati`
+--
+ALTER TABLE `esiti_risposte_risultati`
+    ADD CONSTRAINT `esiti_risposte_risultati_ibfk_1` FOREIGN KEY (`personaggio`) REFERENCES `personaggio` (`id`);
+
+--
+-- Constraints for table `forum_permessi`
+--
+ALTER TABLE `forum_permessi`
+    ADD CONSTRAINT `forum_permessi_ibfk_1` FOREIGN KEY (`personaggio`) REFERENCES `personaggio` (`id`);
+
+--
+-- Constraints for table `forum_posts_letti`
+--
+ALTER TABLE `forum_posts_letti`
+    ADD CONSTRAINT `forum_posts_letti_ibfk_1` FOREIGN KEY (`personaggio`) REFERENCES `personaggio` (`id`);
+
+--
+-- Constraints for table `gruppi_fondi`
+--
+ALTER TABLE `gruppi_fondi`
+    ADD CONSTRAINT `gruppi_fondi_ibfk_1` FOREIGN KEY (`gruppo`) REFERENCES `gruppi` (`id`);
+
+--
+-- Constraints for table `gruppi_oggetto`
+--
+ALTER TABLE `gruppi_oggetto`
+    ADD CONSTRAINT `gruppi_oggetto_ibfk_1` FOREIGN KEY (`gruppo`) REFERENCES `gruppi` (`id`),
+    ADD CONSTRAINT `gruppi_oggetto_ibfk_2` FOREIGN KEY (`oggetto`) REFERENCES `oggetto` (`id`);
+
+--
+-- Constraints for table `gruppi_ruoli`
+--
+ALTER TABLE `gruppi_ruoli`
+    ADD CONSTRAINT `gruppi_ruoli_ibfk_1` FOREIGN KEY (`gruppo`) REFERENCES `gruppi` (`id`);
+
+--
+-- Constraints for table `gruppi_stipendi_extra`
+--
+ALTER TABLE `gruppi_stipendi_extra`
+    ADD CONSTRAINT `gruppi_stipendi_extra_ibfk_1` FOREIGN KEY (`personaggio`) REFERENCES `personaggio` (`id`);
+
+--
+-- Constraints for table `mercato`
+--
+ALTER TABLE `mercato`
+    ADD CONSTRAINT `mercato_ibfk_1` FOREIGN KEY (`oggetto`) REFERENCES `oggetto` (`id`);
+
+--
+-- Constraints for table `oggetto_statistiche`
+--
+ALTER TABLE `oggetto_statistiche`
+    ADD CONSTRAINT `oggetto_statistiche_ibfk_1` FOREIGN KEY (`oggetto`) REFERENCES `oggetto` (`id`),
+    ADD CONSTRAINT `oggetto_statistiche_ibfk_2` FOREIGN KEY (`statistica`) REFERENCES `statistiche` (`id`);
+
+--
+-- Constraints for table `permessi_personaggio`
+--
+ALTER TABLE `permessi_personaggio`
+    ADD CONSTRAINT `permessi_personaggio_ibfk_1` FOREIGN KEY (`personaggio`) REFERENCES `personaggio` (`id`);
+
+--
 -- Constraints for table `personaggio_abilita`
 --
 ALTER TABLE `personaggio_abilita`
@@ -1440,8 +1548,40 @@ ALTER TABLE `personaggio_chat_opzioni`
     ADD CONSTRAINT `personaggio_chat_opzioni_ibfk_1` FOREIGN KEY (`personaggio`) REFERENCES `personaggio` (`id`);
 
 --
+-- Constraints for table `personaggio_lavoro`
+--
+ALTER TABLE `personaggio_lavoro`
+    ADD CONSTRAINT `personaggio_lavoro_ibfk_1` FOREIGN KEY (`personaggio`) REFERENCES `personaggio` (`id`);
+
+--
 -- Constraints for table `personaggio_oggetto`
 --
 ALTER TABLE `personaggio_oggetto`
     ADD CONSTRAINT `personaggio_oggetto_ibfk_1` FOREIGN KEY (`personaggio`) REFERENCES `personaggio` (`id`);
+
+--
+-- Constraints for table `personaggio_online_status`
+--
+ALTER TABLE `personaggio_online_status`
+    ADD CONSTRAINT `personaggio_online_status_ibfk_1` FOREIGN KEY (`personaggio`) REFERENCES `personaggio` (`id`);
+
+--
+-- Constraints for table `personaggio_quest`
+--
+ALTER TABLE `personaggio_quest`
+    ADD CONSTRAINT `personaggio_quest_ibfk_1` FOREIGN KEY (`personaggio`) REFERENCES `personaggio` (`id`),
+    ADD CONSTRAINT `personaggio_quest_ibfk_2` FOREIGN KEY (`id_quest`) REFERENCES `quest` (`id`);
+
+--
+-- Constraints for table `personaggio_ruolo`
+--
+ALTER TABLE `personaggio_ruolo`
+    ADD CONSTRAINT `personaggio_ruolo_ibfk_1` FOREIGN KEY (`personaggio`) REFERENCES `personaggio` (`id`);
+
+--
+-- Constraints for table `personaggio_statistiche`
+--
+ALTER TABLE `personaggio_statistiche`
+    ADD CONSTRAINT `personaggio_statistiche_ibfk_1` FOREIGN KEY (`personaggio`) REFERENCES `personaggio` (`id`),
+    ADD CONSTRAINT `personaggio_statistiche_ibfk_2` FOREIGN KEY (`statistica`) REFERENCES `statistiche` (`id`);
 COMMIT;
