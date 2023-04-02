@@ -136,7 +136,7 @@ CREATE TABLE `calendario_tipi` (
 CREATE TABLE `contatti` (
    `id` INT(11) NOT NULL AUTO_INCREMENT,
    `personaggio` INT(11) NOT NULL DEFAULT '0',
-   `contatto` BIGINT(20) NOT NULL DEFAULT '0',
+   `contatto` int NOT NULL DEFAULT '0',
    `categoria` VARCHAR(255) NOT NULL,
    `creato_il` DATE NOT NULL,
    `creato_da` VARCHAR(255) NOT NULL,
@@ -182,7 +182,7 @@ CREATE TABLE `contatti_categorie` (
 --
 
 CREATE TABLE IF NOT EXISTS `chat` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
+  `id` int NOT NULL AUTO_INCREMENT,
   `stanza` int NOT NULL DEFAULT '0',
   `imgs` varchar(255) NOT NULL DEFAULT '',
   `mittente` varchar(255) NOT NULL DEFAULT '',
@@ -252,7 +252,7 @@ CREATE TABLE IF NOT EXISTS `config_options` (
 --
 
 CREATE TABLE IF NOT EXISTS `cronjob` (
-    `id` bigint NOT NULL AUTO_INCREMENT,
+    `id` int NOT NULL AUTO_INCREMENT,
     `name` varchar(255) NOT NULL DEFAULT '0',
     `last_exec` datetime DEFAULT NULL,
     `in_exec` varchar(255) NOT NULL DEFAULT '',
@@ -432,8 +432,8 @@ CREATE TABLE IF NOT EXISTS `forum_permessi` (
 --
 
 CREATE TABLE IF NOT EXISTS `forum_posts` (
-    `id` bigint NOT NULL AUTO_INCREMENT,
-    `id_padre` bigint NOT NULL DEFAULT '0',
+    `id` int NOT NULL AUTO_INCREMENT,
+    `id_padre` int NOT NULL DEFAULT '0',
     `id_forum` int DEFAULT NULL,
     `titolo` varchar(255) DEFAULT NULL,
     `testo` text,
@@ -455,7 +455,7 @@ CREATE TABLE IF NOT EXISTS `forum_posts` (
 --
 
 CREATE TABLE IF NOT EXISTS `forum_posts_letti` (
-    `id` bigint NOT NULL AUTO_INCREMENT,
+    `id` int NOT NULL AUTO_INCREMENT,
     `personaggio` int NOT NULL,
     `post` int NOT NULL,
     PRIMARY KEY (`id`),
@@ -469,7 +469,7 @@ CREATE TABLE IF NOT EXISTS `forum_posts_letti` (
 --
 
 CREATE TABLE IF NOT EXISTS `forum_posts_updates` (
-    `id` bigint NOT NULL AUTO_INCREMENT,
+    `id` int NOT NULL AUTO_INCREMENT,
     `post` int NOT NULL,
     `titolo` varchar(255),
     `testo` text,
@@ -718,7 +718,7 @@ CREATE TABLE IF NOT EXISTS `mappa_click` (
 --
 
 CREATE TABLE IF NOT EXISTS `conversazioni` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
+  `id` int NOT NULL AUTO_INCREMENT,
   `nome` varchar(255) NOT NULL,
   `immagine` varchar(255) NOT NULL,
   `ultimo_messaggio` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -736,7 +736,7 @@ CREATE TABLE IF NOT EXISTS `conversazioni` (
 --
 
 CREATE TABLE IF NOT EXISTS `conversazioni_membri` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
+  `id` int NOT NULL AUTO_INCREMENT,
   `conversazione` int NOT NULL,
   `personaggio` int NOT NULL,
   `proprietario` tinyint(1) NOT NULL DEFAULT 0,
@@ -754,7 +754,7 @@ CREATE TABLE IF NOT EXISTS `conversazioni_membri` (
 --
 
 CREATE TABLE IF NOT EXISTS `conversazioni_messaggi` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
+  `id` int NOT NULL AUTO_INCREMENT,
   `conversazione` int NOT NULL,
   `mittente` int NOT NULL,
   `testo` text NOT NULL,
@@ -770,7 +770,7 @@ CREATE TABLE IF NOT EXISTS `conversazioni_messaggi` (
 --
 
 CREATE TABLE IF NOT EXISTS `conversazioni_messaggi_allegati` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
+  `id` int NOT NULL AUTO_INCREMENT,
   `messaggio` int NOT NULL,
   `allegato` varchar(255) NOT NULL,
   `tipo` text NOT NULL,
@@ -1389,7 +1389,7 @@ CREATE TABLE IF NOT EXISTS `regolamento` (
 --
 
 CREATE TABLE IF NOT EXISTS `sessi` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
+  `id` int NOT NULL AUTO_INCREMENT,
   `nome` varchar(255) NOT NULL,
   `immagine` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
