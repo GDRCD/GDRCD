@@ -270,7 +270,7 @@ CREATE TABLE IF NOT EXISTS `cronjob` (
 
 CREATE TABLE IF NOT EXISTS `diario` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `personaggio` varchar(255) DEFAULT NULL,
+  `personaggio` int NOT NULL,
   `titolo` varchar(255) NOT NULL DEFAULT '',
   `testo` text NOT NULL,
   `data` date NOT NULL,
@@ -452,7 +452,7 @@ CREATE TABLE IF NOT EXISTS `forum_posts` (
 
 CREATE TABLE IF NOT EXISTS `forum_posts_letti` (
     `id` bigint NOT NULL AUTO_INCREMENT,
-    `personaggio` varchar(255) DEFAULT NULL,
+    `personaggio` int NOT NULL,
     `post` int NOT NULL,
     PRIMARY KEY (`id`),
     UNIQUE INDEX `personaggio_post` (`personaggio`,`post`)
@@ -600,7 +600,7 @@ CREATE TABLE IF NOT EXISTS `gruppi_ruoli` (
 CREATE TABLE IF NOT EXISTS `gruppi_stipendi_extra` (
     `id` int NOT NULL AUTO_INCREMENT,
     `nome` varchar(255) NOT NULL,
-    `personaggio` varchar(255) NOT NULL,
+    `personaggio` int NOT NULL,
     `gruppo` int NOT NULL,
     `valore` int NOT NULL,
     `interval` int NOT NULL DEFAULT 60,
@@ -609,7 +609,7 @@ CREATE TABLE IF NOT EXISTS `gruppi_stipendi_extra` (
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
------------------------------------------------------------
+-- ---------------------------------------------------------
 
 --
 -- Struttura della tabella `gruppi_tipo`
@@ -733,7 +733,7 @@ CREATE TABLE IF NOT EXISTS `conversazioni` (
 CREATE TABLE IF NOT EXISTS `conversazioni_membri` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `conversazione` int NOT NULL,
-  `personaggio` varchar(255) NOT NULL,
+  `personaggio` int NOT NULL,
   `proprietario` tinyint(1) NOT NULL DEFAULT 0,
   `ultima_lettura` datetime DEFAULT NULL,
   `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -1112,7 +1112,7 @@ CREATE TABLE `permessi_group_assignment` (
 CREATE TABLE `permessi_group_personaggio` (
     `id` int NOT NULL AUTO_INCREMENT,
     `group_id` int NOT NULL,
-    `personaggio` varchar(255) NOT NULL,
+    `personaggio` int NOT NULL,
     PRIMARY KEY (`id`),
     UNIQUE INDEX `group_personaggio` (`group_id`, `personaggio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -1125,7 +1125,7 @@ CREATE TABLE `permessi_group_personaggio` (
 
 CREATE TABLE `permessi_personaggio` (
     `id` int NOT NULL AUTO_INCREMENT,
-    `personaggio` varchar(255) NOT NULL,
+    `personaggio` int NOT NULL,
     `permission` int NOT NULL,
     `assigned_by` varchar(255) NOT NULL,
     PRIMARY KEY (`id`),
@@ -1218,7 +1218,7 @@ CREATE TABLE IF NOT EXISTS `personaggio_chat_opzioni` (
 
 CREATE TABLE IF NOT EXISTS `personaggio_lavoro` (
     `id` int NOT NULL AUTO_INCREMENT,
-    `personaggio` varchar(255) NOT NULL,
+    `personaggio` int NOT NULL,
     `lavoro` int NOT NULL,
     `scadenza` date NOT NULL DEFAULT '2010-01-01',
     PRIMARY KEY (`id`),
@@ -1249,7 +1249,7 @@ CREATE TABLE `personaggio_oggetto` (
 
 CREATE TABLE `personaggio_online_status` (
     `id` int NOT NULL AUTO_INCREMENT,
-    `personaggio` varchar(255) NOT NULL,
+    `personaggio` int NOT NULL,
     `type` int NOT NULL,
     `value` varchar(255) NOT NULL,
     `last_refresh` DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -1282,7 +1282,7 @@ CREATE TABLE personaggio_quest  (
 
 CREATE TABLE IF NOT EXISTS `personaggio_ruolo` (
     `id` int NOT NULL AUTO_INCREMENT,
-    `personaggio` varchar(255) NOT NULL,
+    `personaggio` int NOT NULL,
     `ruolo` int NOT NULL,
     `scadenza` date NOT NULL DEFAULT '2010-01-01',
     PRIMARY KEY (`id`),
