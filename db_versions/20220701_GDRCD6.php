@@ -18,8 +18,8 @@ class GDRCD6 extends DbMigration
     {
         DB::query("
             INSERT INTO `abilita` (`nome`, `statistica`, `descrizione`, `razza`) VALUES
-                ('Resistenza', 1, 'Il personaggio Ã¨ in grado di sopportare il dolore ed il disagio e sopporta minime dosi di agenti tossici nel proprio organismo. ', -1),
-                ('Sopravvivenza', 1, 'Il personaggio Ã¨ in grado di procurarsi cibo e riparo all''aperto, con mezzi minimi.', -1);
+                ('Resistenza', 1, 'Il personaggio è in grado di sopportare il dolore ed il disagio e sopporta minime dosi di agenti tossici nel proprio organismo. ', -1),
+                ('Sopravvivenza', 1, 'Il personaggio è in grado di procurarsi cibo e riparo all''aperto, con mezzi minimi.', -1);
         ");
 
 
@@ -61,7 +61,7 @@ class GDRCD6 extends DbMigration
                 ('CHAT_DICE',1,'Chat Dadi','Dadi in chat','Dadi attivi in chat?','bool',1,NULL),
                 ('CHAT_DICE_BASE',20,'Chat Dadi','Tipo dado in chat','Numero massimo dado in chat','int',1,NULL),
                 ('CHAT_SKILL_BUYED',0,'Chat Dadi','Solo abilità acquistate','Solo skill acquistate nel lancio in chat','bool',1,NULL),
-                ('CHAT_EQUIP_BONUS',0,'Chat Dadi','Bonus equipaggimento','Bonus equipaggiamento ai dadi in chat?','bool',1,NULL),
+                ('CHAT_EQUIP_BONUS',0,'Chat Dadi','Bonus equipaggiamento','Bonus equipaggiamento ai dadi in chat?','bool',1,NULL),
                 ('CHAT_EQUIP_EQUIPPED',1,'Chat Dadi','Solo equipaggiamento','Solo oggetti equipaggiati in chat?','bool',1,NULL),
                 ('CHAT_SAVE',1,'Chat Salvataggio','Salva chat','Salva chat attivo?','bool',1,NULL),
                 ('CHAT_PVT_SAVE',1,'Chat Salvataggio','Salva chat pvt','Salva chat attivo in pvt?','bool',1,NULL),
