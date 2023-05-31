@@ -33,7 +33,7 @@ class GDRCD6 extends DbMigration
         // Argon2 potrebbe non essere sempre disponibile. Nel qual caso usiamo Blowfish come default
         $defaultPasswordCrypter = defined('PASSWORD_ARGON2ID') ?
             'CrypterPasswordArgon2,argon2id'
-            : 'CrypterPaswordBlowfish,2y';
+            : 'CrypterPasswordBlowfish,2y';
 
         DB::query("
             INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,`editable`,`options`) VALUES
