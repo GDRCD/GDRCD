@@ -10,7 +10,7 @@ class Cronjob extends BaseClass
      * @return bool
      * @throws Throwable
      */
-    public function inlineCronjob():bool
+    public function inlineCronjob(): bool
     {
         return Functions::get_constant('INLINE_CRONJOB');
     }
@@ -27,8 +27,8 @@ class Cronjob extends BaseClass
      */
     public function getCron(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM cronjob WHERE id=:id LIMIT 1",[
-            'id' => $id
+        return DB::queryStmt("SELECT {$val} FROM cronjob WHERE id=:id LIMIT 1", [
+            'id' => $id,
         ]);
     }
 
@@ -73,7 +73,11 @@ class Cronjob extends BaseClass
         $last_exec = Filters::out($data['last_exec']);
         $interval_type = Filters::out($data['interval_type']);
 
-        return CarbonWrapper::needExec($interval, $interval_type, $last_exec);
+        if ( $last_exec ) {
+            return CarbonWrapper::needExec($interval, $interval_type, $last_exec);
+        } else {
+            return true;
+        }
     }
 
     /**
@@ -85,8 +89,8 @@ class Cronjob extends BaseClass
      */
     public function startExec(int $id): void
     {
-        DB::queryStmt("UPDATE cronjob SET in_exec=1 WHERE id=:id LIMIT 1",[
-            'id' => $id
+        DB::queryStmt("UPDATE cronjob SET in_exec=1 WHERE id=:id LIMIT 1", [
+            'id' => $id,
         ]);
     }
 
@@ -99,8 +103,8 @@ class Cronjob extends BaseClass
      */
     public function endExec(int $id): void
     {
-        DB::queryStmt("UPDATE cronjob SET in_exec=0,last_exec=NOW() WHERE id=:id LIMIT 1",[
-            'id' => $id
+        DB::queryStmt("UPDATE cronjob SET in_exec=0,last_exec=NOW() WHERE id=:id LIMIT 1", [
+            'id' => $id,
         ]);
     }
 
