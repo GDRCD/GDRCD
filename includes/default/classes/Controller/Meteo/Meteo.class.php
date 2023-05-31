@@ -105,8 +105,7 @@ class Meteo extends BaseClass
     {
         if($this->weather_last_date) {
             $date = date('Y-m-d H:i:s', strtotime($this->weather_last_date));
-            return empty($this->weather_last_date) ||
-                (CarbonWrapper::DatesDifferenceHours($date, CarbonWrapper::getNow()) > $this->weather_update_range);
+            return (CarbonWrapper::DatesDifferenceHours($date, CarbonWrapper::getNow()) > $this->weather_update_range);
         } else {
             return true;
         }
