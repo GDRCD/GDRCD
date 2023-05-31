@@ -64,6 +64,7 @@ class Login extends BaseClass
             throw new Exception($GLOBALS['MESSAGE']['warning']['blacklisted']);
         }
 
+        // Controllo che l'account non sia già attivo
         if (
             !$wasAlreadyLoggedIn &&
             CarbonWrapper::DatesDifferenceMinutes(Session::read('ultimo_refresh'), CarbonWrapper::getNow()) < 2 &&
