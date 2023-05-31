@@ -103,9 +103,8 @@ class Meteo extends BaseClass
      */
     protected function weatherNeedRefresh(): bool
     {
-        $date = date('Y-m-d H:i:s',strtotime($this->weather_last_date));
-        return empty($this->weather_last_date) ||
-            (CarbonWrapper::DatesDifferenceHours($date, CarbonWrapper::getNow()) > $this->weather_update_range);
+        $date = date('Y-m-d H:i:s', strtotime($this->weather_last_date));
+        return empty($this->weather_last_date) || (CarbonWrapper::DatesDifferenceHours($date, CarbonWrapper::getNow()) > $this->weather_update_range);
     }
 
     /**
