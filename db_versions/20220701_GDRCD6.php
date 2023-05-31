@@ -261,6 +261,7 @@ class GDRCD6 extends DbMigration
               ('Gestione', 'Forum', 'Gestione Permessi', 'gestione/forum/permessi/gestione_forum_permessi', 'FORUM_ADMIN'),
               ('Gestione', 'News', 'Gestione News', 'gestione/news/news/gestione_news', 'MANAGE_NEWS'),
               ('Gestione', 'News', 'Gestione Tipologia News', 'gestione/news/tipo/gestione_news_tipo', 'MANAGE_NEWS_TYPE'),
+              ('Gestione', 'Calendario', 'Gestione Tipologia Eventi Calendario', 'gestione/calendario/gestione_tipi', 'MANAGE_CALENDAR_EVENTS_TYPES'),
               ('Servizi', 'Anagrafe', 'Anagrafe', 'servizi/anagrafe/index', NULL),
               ('Servizi', 'Lavoro', 'Amministrazione Gruppi', 'servizi/amministrazioneGilde/index', NULL),
               ('Servizi', 'Lavoro', 'Lavoro', 'servizi/lavori/index', NULL),
@@ -432,7 +433,8 @@ class GDRCD6 extends DbMigration
                 ('CHAT_MASTER','Azioni master in chat'),
                 ('CHAT_MODERATOR','Azioni moderatore in chat'),
                 ('CALENDAR_ADD_QUEST','Aggiungi quest al calendario'),
-                ('CALENDAR_ADD_AMBIENT','Aggiungi quest al calendario')
+                ('CALENDAR_ADD_AMBIENT','Aggiungi quest al calendario'),
+                ('MANAGE_CALENDAR_EVENTS_TYPES','Gestione tipologie eventi calendario')
                ;"
         );
 

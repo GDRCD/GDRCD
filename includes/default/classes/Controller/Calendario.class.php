@@ -58,6 +58,17 @@ class Calendario extends BaseClass
         return Personaggio::isMyPg(Filters::int($event_data['personaggio']));
     }
 
+    /**
+     * @fn permissionManageEvents
+     * @note Controlla se l'utente ha i permessi per gestire gli eventi
+     * @return bool
+     * @throws Throwable
+     */
+    public function permissionManageEvents(): bool
+    {
+        return Permissions::permission('MANAGE_CALENDAR_EVENTS_TYPES');
+    }
+
     /*** TABLE HELPER ***/
 
     /**
@@ -132,6 +143,20 @@ class Calendario extends BaseClass
             'copied_from' => Filters::int($id),
         ])->getNumRows();
     }
+
+    /*** LIST ***/
+
+    /**
+     * @fn listCalendarEventTypes
+     * @note Ritorna la lista dei tipi di evento
+     * @throws Throwable
+     */
+    public function listCalendarEventTypes(int $selected = 0, string $label = 'Seleziona una tipologia di evento'): string
+    {
+        $list = $this->getCalendarAllTypes();
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', $selected, $list, $label);
+    }
+
 
     /*** CONTROLS ***/
 
@@ -220,6 +245,19 @@ class Calendario extends BaseClass
                 'action' => 'view',
             ];
         }
+    }
+
+    /**
+     * @fn ajaxCalendarEventType
+     * @note Ritorna i dati di una tipologia di evento
+     * @param array $post
+     * @return array
+     * @throws Throwable
+     */
+    public function ajaxCalendarEventType(array $post): array
+    {
+        $event_id = Filters::int($post['id']);
+        return $this->getCalendarTypeData($event_id)->getData()[0];
     }
 
     /*** RENDER ***/
@@ -458,7 +496,7 @@ class Calendario extends BaseClass
             $already_copied = $this->countCopiedEvent($event_id, $pg_id);
 
             // Controllo che non sia già stato copiato
-            if (!$already_copied) {
+            if ( !$already_copied ) {
 
                 $event_type = $this->getCalendarTypeData($event_data['tipo']);
 
@@ -469,7 +507,7 @@ class Calendario extends BaseClass
                     return [
                         'response' => true,
                     ];
-                } else{
+                } else {
                     return [
                         'response' => false,
                         'swal_title' => 'Operazione fallita!',
@@ -477,7 +515,7 @@ class Calendario extends BaseClass
                         'swal_type' => 'info',
                     ];
                 }
-            } else{
+            } else {
                 return [
                     'response' => false,
                     'swal_title' => 'Operazione fallita!',
@@ -485,7 +523,7 @@ class Calendario extends BaseClass
                     'swal_type' => 'info',
                 ];
             }
-        } else{
+        } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
@@ -508,7 +546,7 @@ class Calendario extends BaseClass
 
         $control = $this->canCopyEvent($event_id, $this->me_id);
 
-        if ($control['response']) {
+        if ( $control['response'] ) {
 
             $event_data = $this->getCalendarEvent($event_id);
 
@@ -535,4 +573,133 @@ class Calendario extends BaseClass
             return $control;
         }
     }
+
+
+    /*** MANAGEMENT ***/
+
+    /**
+     * @fn NewEventType
+     * @note Inserisce un nuovo oggetto in un negozio
+     * @param array $post
+     * @return array
+     * @throws Throwable
+     */
+    public function NewEventType(array $post): array
+    {
+
+        if ( $this->permissionManageEvents() ) {
+
+            $name = Filters::string($post['nome']);
+            $colore_bg = Filters::string($post['colore_bg']);
+            $colore_testo = Filters::string($post['colore_testo']);
+            $pubblico = Filters::int($post['pubblico']);
+            $permessi = Filters::string($post['permessi']);
+
+            DB::queryStmt("INSERT INTO calendario_tipi (nome, colore_bg, colore_testo, pubblico, permessi) VALUES (:nome, :colore_bg, :colore_testo, :pubblico, :permessi)", [
+                'nome' => $name,
+                'colore_bg' => $colore_bg,
+                'colore_testo' => $colore_testo,
+                'pubblico' => $pubblico,
+                'permessi' => $permessi,
+            ]);
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Tipologia evento creata con successo.',
+                'swal_type' => 'success',
+                'event_types' => $this->listCalendarEventTypes(),
+            ];
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error',
+            ];
+        }
+    }
+
+    /**
+     * @fn ModEventType
+     * @note Modifica una tipologia di evento
+     * @param array $post
+     * @return array
+     * @throws Throwable
+     */
+    public function ModEventType(array $post): array
+    {
+
+        if ( $this->permissionManageEvents() ) {
+
+            $id = Filters::int($post['id']);
+            $name = Filters::string($post['nome']);
+            $colore_bg = Filters::string($post['colore_bg']);
+            $colore_testo = Filters::string($post['colore_testo']);
+            $pubblico = Filters::int($post['pubblico']);
+            $permessi = Filters::string($post['permessi']);
+
+            DB::queryStmt("UPDATE calendario_tipi SET nome = :nome, colore_bg = :colore_bg, colore_testo = :colore_testo, pubblico = :pubblico, permessi = :permessi WHERE id = :id", [
+                'id' => $id,
+                'nome' => $name,
+                'colore_bg' => $colore_bg,
+                'colore_testo' => $colore_testo,
+                'pubblico' => $pubblico,
+                'permessi' => $permessi,
+            ]);
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Tipologia evento modificata.',
+                'swal_type' => 'success',
+                'event_types' => $this->listCalendarEventTypes(),
+            ];
+        } else {
+
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error',
+            ];
+        }
+    }
+
+    /**
+     * @fn DelEventType
+     * @note Elimina una tipologia di evento
+     * @param array $post
+     * @return array
+     * @throws Throwable
+     */
+    public function DelEventType(array $post): array
+    {
+
+        if ( $this->permissionManageEvents() ) {
+
+            $id = Filters::int($post['id']);
+
+            DB::queryStmt("DELETE FROM calendario_tipi WHERE id=:id", [
+                'id' => $id,
+            ]);
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Tipologia evento eliminata correttamente.',
+                'swal_type' => 'success',
+                'event_types' => $this->listCalendarEventTypes(),
+            ];
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error',
+            ];
+        }
+
+    }
+
 }

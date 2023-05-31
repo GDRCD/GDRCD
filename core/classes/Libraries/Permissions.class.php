@@ -3,6 +3,36 @@
 class Permissions extends BaseClass
 {
 
+    /*** GETTER ***/
+
+    /**
+     * @fn getAllPermission
+     * @note Estrae tutti i permessi disponibili
+     * @return DBQueryInterface
+     * @throws Throwable
+     */
+    public static function getAllPermission(): DBQueryInterface{
+        return DB::queryStmt("SELECT * FROM permessi_custom WHERE 1 ORDER BY permission_name");
+    }
+
+
+    /*** LISTS ***/
+
+    /**
+     * @fn listPermissions
+     * @note Estrae tutti i permessi disponibili
+     * @param int $selected
+     * @param string $label
+     * @return string
+     * @throws Throwable
+     */
+    public static function listPermissions(int $selected = 0, string $label = 'Seleziona un permesso'): string
+    {
+        $list = self::getAllPermission();
+        return Template::getInstance()->startTemplate()->renderSelect('permission_name', 'permission_name', $selected, $list, $label);
+    }
+
+
     /*** GENERICO **/
 
     /**
@@ -206,4 +236,5 @@ class Permissions extends BaseClass
 
         return $pg_array;
     }
+
 }
