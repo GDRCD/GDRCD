@@ -108,7 +108,6 @@ class CarbonWrapper
      */
     public static function DatesDifferenceMinutes(string $date1, string $date2): int
     {
-        var_dump($date1, $date2);
         $start = Carbon::createFromFormat('Y-m-d H:i:s', $date1);
         $end = Carbon::createFromFormat('Y-m-d H:i:s', $date2);
         return $start->diffInMinutes($end);
@@ -155,6 +154,7 @@ class CarbonWrapper
 
         // Se non e' mai stato eseguito, lo eseguo
         if ( empty($last_exec) ) {
+            var_dump($last_exec);
             return true;
         } else {
             // Altrimenti estraggo la differenza in base al tipo
