@@ -108,13 +108,10 @@ class CarbonWrapper
      */
     public static function DatesDifferenceMinutes(string $date1, string $date2): int
     {
-        try {
-            $start = Carbon::createFromFormat('Y-m-d H:i:s', $date1);
-            $end = Carbon::createFromFormat('Y-m-d H:i:s', $date2);
-            return $start->diffInMinutes($end);
-        } catch (Exception $e) {
-            return $e->getMessage();
-        }
+        var_dump($date1, $date2);
+        $start = Carbon::createFromFormat('Y-m-d H:i:s', $date1);
+        $end = Carbon::createFromFormat('Y-m-d H:i:s', $date2);
+        return $start->diffInMinutes($end);
     }
 
     /**
