@@ -64,18 +64,10 @@ class Login extends BaseClass
             throw new Exception($GLOBALS['MESSAGE']['warning']['blacklisted']);
         }
 
-        $ultimo_refresh = Session::read('ultimo_refresh');
-        $ultima_entrata = Session::read('ultima_entrata');
-        $ultima_uscita = Session::read('ultima_uscita');
-
-        // Controllo che l'account non sia già attivo
         if (
             !$wasAlreadyLoggedIn &&
-            $ultimo_refresh &&
-            $ultima_entrata &&
-            $ultima_uscita &&
-            CarbonWrapper::DatesDifferenceMinutes($ultimo_refresh, CarbonWrapper::getNow()) < 2 &&
-            CarbonWrapper::greaterThan($ultima_entrata, $ultima_uscita)
+            CarbonWrapper::DatesDifferenceMinutes(Session::read('ultimo_refresh'), CarbonWrapper::getNow()) < 2 &&
+            CarbonWrapper::greaterThan(Session::read('ultima_entrata'), Session::read('ultima_uscita'))
         ) {
             throw new Exception($GLOBALS['MESSAGE']['warning']['double_connection']);
         }
