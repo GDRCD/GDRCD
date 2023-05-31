@@ -66,6 +66,7 @@ class CrypterAlgo extends BaseClass
         try {
             $this->CrypterAlgo = $CrypterAlgo::getInstance();
         } catch ( Throwable $e ) {
+            var_dump((string)$e);
             error_log((string)$e);
             die('SECURITY_CRYPTER_NOT_EXISTS');
         }
