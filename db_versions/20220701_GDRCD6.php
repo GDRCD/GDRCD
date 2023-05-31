@@ -35,6 +35,8 @@ class GDRCD6 extends DbMigration
             'CrypterPasswordArgon2,argon2id'
             : 'CrypterPaswordBlowfish,2y';
 
+        var_dump($defaultPasswordCrypter);
+
         DB::query("
             INSERT INTO `config` (`const_name`,`val`,`section`,`label`,`description`,`type`,`editable`,`options`) VALUES
                 ('DEVELOPING',1,'Engine','Gdr in sviluppo?','','bool',1,NULL),
