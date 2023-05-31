@@ -154,7 +154,6 @@ class CarbonWrapper
 
         // Se non e' mai stato eseguito, lo eseguo
         if ( empty($last_exec) ) {
-            var_dump($last_exec);
             return true;
         } else {
             // Altrimenti estraggo la differenza in base al tipo
