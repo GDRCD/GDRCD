@@ -52,12 +52,14 @@ $login1 = ucwords(strtolower(trim($login1)));
 /*Carico dal database il profilo dell'account (personaggio)*/
 $record = gdrcd_query("SELECT personaggio.pass, personaggio.nome, personaggio.cognome, personaggio.permessi, personaggio.sesso, personaggio.ultima_mappa, personaggio.ultimo_luogo, personaggio.id_razza, personaggio.blocca_media, personaggio.ora_entrata, personaggio.ora_uscita, personaggio.ultimo_refresh, razza.sing_m, razza.sing_f, razza.icon AS url_img_razza FROM personaggio LEFT JOIN razza ON personaggio.id_razza = razza.id_razza WHERE nome = '".gdrcd_filter('in', $login1)."' LIMIT 1");
 
-/*Se esiste un personaggio corrispondente al nome ed alla password specificati*/
-/** * Aggiunti i controlli sugli orari di connessione e disconnessione per impedire i doppi login con gli stessi account
+/**
+ * Se esiste un personaggio corrispondente al nome ed alla password specificati
+ *
+ * Aggiunti i controlli sugli orari di connessione e disconnessione per impedire i doppi login con gli stessi account
  * Se si esce non correttamente dal gioco, sarà possibile entrare dopo 5 minuti dall'ultimo refresh registrato
  * @author Blancks
  */
-if( ! empty($record) and gdrcd_password_check($pass1, $record['pass']) && ($record['permessi'] > -1) && (strtotime($record['ora_entrata']) < strtotime($record['ora_uscita']) || (strtotime($record['ultimo_refresh']) + 300) < time())) {
+if( ! empty($record) and gdrcd_password_check($pass1, $record['pass']) && ($record['permessi'] > -1) && (strtotime($record['ora_entrata']) < strtotime($record['ora_uscita']) || (strtotime($record['ultimo_refresh']) + $PARAMETERS['settings']['reconnection_cooldown']) < time())) {
     $_SESSION['login'] = gdrcd_filter_in($record['nome']);
     $_SESSION['cognome'] = $record['cognome'];
     $_SESSION['permessi'] = $record['permessi'];
@@ -103,7 +105,7 @@ if( ! empty($record) and gdrcd_password_check($pass1, $record['pass']) && ($reco
 
     /*Registro l'evento (Avvenuto login)*/
     gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".gdrcd_filter('in', $_SESSION['login'])."','".$_SERVER['REMOTE_ADDR']."', NOW(), ".LOGGEDIN." ,'".$_SERVER['REMOTE_ADDR']."')");
-} elseif(strtotime($record['ora_entrata']) > strtotime($record['ora_uscita']) || (strtotime($record['ultimo_refresh']) + 300) > time()) {
+} elseif(strtotime($record['ora_entrata']) > strtotime($record['ora_uscita']) || (strtotime($record['ultimo_refresh']) + $PARAMETERS['settings']['reconnection_cooldown']) > time()) {
     /*Se la postazione è stata esclusa*/
     echo '<div class="error_box"><h2 class="error_major">'.$MESSAGE['warning']['double_connection'].'</h2></div>';
     /*Registro l'evento (Tentativo di connessione da postazione esclusa)*/
