@@ -446,8 +446,6 @@
                         $lastpasschange_value = ", NOW()";
                     }
 
-                    $email = strtolower(gdrcd_filter_email($_POST['email']));
-
                     $email = gdrcd_filter_email($_POST['email']);
                     $result = gdrcd_query("SELECT email FROM personaggio", 'result');
 
