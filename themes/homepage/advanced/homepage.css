@@ -46,6 +46,8 @@ a:hover {
 
 div.form_field table {
     margin: 5px auto;
+    table-layout: fixed;
+    width: 100%;
 }
 
 input, textarea, select {
