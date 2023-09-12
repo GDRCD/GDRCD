@@ -345,7 +345,8 @@ if((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) 
 
         // identifico se l'ultimo messaggio è dell'utente o meno
         $isLastMessageFromUser = ($row['mittente'] == $_SESSION['login']);
-        
+        //è un sussurro?
+        $whisper = false;
         //dobbiamo capire se un eventuale sussurro è rivolto a me.
         $whisperToMe = false; 
         switch($row['tipo']) {
@@ -393,6 +394,7 @@ if((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) 
                 }
                 break;
             case 'S':
+                $whisper = true;
                 if($_SESSION['login'] == $row['destinatario']) {
                     //il sussurro è rivolto a me, quindi vero. 
                     $whisperToMe = true;
@@ -433,9 +435,16 @@ if((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) 
     gdrcd_query($query, 'free');
 
     // Prevedo la notifica in caso di nuovi messaggi
-    //aggiungo il flag per verificare che il sussurro sia per me, così da lanciare la notifica
-    if($_SESSION['last_message'] > 0 && (isset($isLastMessageFromUser) && !$isLastMessageFromUser) && $whisperToMe && (isset($add_chat) && $add_chat != '')){
-        $playAudioController = AudioController::play('chat', TRUE);;
+    if($_SESSION['last_message'] > 0 && (isset($isLastMessageFromUser) && !$isLastMessageFromUser) && (isset($add_chat) && $add_chat != '')){
+        //se è una azione normale eseguo il suono solo se NON è un un sussurro
+        if(!$whisper){
+            $playAudioController = AudioController::play('chat', TRUE);
+        }else {
+            //E' un sussurro non fatto dal mio pg.
+            if($whisperToMe){
+                $playAudioController = AudioController::play('chat', TRUE);
+            }
+        }
     }
 
         // Aggiorno ultimo messaggio visualizzato
