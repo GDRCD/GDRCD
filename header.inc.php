@@ -70,6 +70,8 @@ if ( ($PARAMETERS['mode']['user_bbcode'] == 'ON' && $PARAMETERS['settings']['use
               type="text/css"/>
         <link rel="stylesheet" href="<?= Router::getCssLink('presenti.css'); ?>"
               type="text/css"/>
+        <link rel="stylesheet" href="<?= Router::getCssLink('calendario.css'); ?>"
+              type="text/css"/>
 
         <!-- JQUERY -->
         <link rel="stylesheet" href="plugins/Jquery/jquery.min.css"/>
@@ -81,18 +83,32 @@ if ( ($PARAMETERS['mode']['user_bbcode'] == 'ON' && $PARAMETERS['settings']['use
         <link rel="stylesheet" href="plugins/Chosen/chosen.min.css"/>
 
         <!-- SweetAlert v2.11 -->
-        <script src="plugins/Swal/swal.min.js"></script>
-        <link rel="stylesheet" href="plugins/Swal/swal.min.css"/>
+        <script src="plugins/Swal2/dist/sweetalert2.all.min.js"></script>
+        <link rel="stylesheet" href="plugins/Swal2/dist/sweetalert2.min.css"/>
 
+        <!-- FullCalendar v6.0.2 -->
+        <script src="/plugins/moment/min/moment-with-locales.js"></script>
+        <script src="plugins/FullCalendar/dist/index.global.min.js"></script>
+        <script src="plugins/FullCalendar/packages/daygrid/index.global.min.js"></script>
+
+        <!-- Popper v2 -->
+        <script src="plugins/Tippy/popper.min.js"></script>
+
+        <!-- Tippy v6.3.7 -->
+        <script src="plugins/Tippy/tippy.min.js"></script>
 
         <!-- CUSTOM PLUGINS -->
         <script src="plugins/Ajax.js"></script>
         <script src="plugins/Form.js"></script>
         <script src="plugins/Menu.js"></script>
         <script src="plugins/FakeTable.js"></script>
+        <script src="plugins/modal.js"></script>
+
+        <!-- CUSTOM WRAPPERS -->
         <script src="plugins/Swal.js"></script>
         <script src="plugins/Chosen.js"></script>
-        <script src="plugins/modal.js"></script>
+        <script src="plugins/FullCalendar.js"></script>
+        <script src="plugins/Tippy.js"></script>
 
 
         <?php

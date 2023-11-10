@@ -23,12 +23,11 @@ if (!empty($_SESSION['login'])) {
      * @author Blancks
      */
     if (isset($_REQUEST['map_id']) && is_numeric($_REQUEST['map_id'])) {
-        $_SESSION['luogo'] = -1;
-        $_SESSION['mappa'] = $_REQUEST['map_id'];
+        Session::store('mappa',$_REQUEST['map_id']);
     }
 
     if (isset($_REQUEST['dir']) && is_numeric($_REQUEST['dir'])) {
-        $_SESSION['luogo'] = $_REQUEST['dir'];
+        Session::store('luogo',$_REQUEST['dir']);
     }
 }
 
@@ -172,14 +171,18 @@ $PARAMETERS['right_column']['activate'] = 'ON';
 /*COLONNA SINISTRA */
 $PARAMETERS['left_column']['box']['info_location']['class'] = 'info';
 $PARAMETERS['left_column']['box']['info_location']['page'] = 'info_location'; //Meteo e informazioni sul luogo.
-$PARAMETERS['left_column']['box']['frame_messages']['class'] = 'messages';
-$PARAMETERS['left_column']['box']['frame_messages']['page'] = 'frame_messages'; //Link ai messaggi
+$PARAMETERS['left_column']['box']['frame_messages']['class'] = 'conversazioni';
+$PARAMETERS['left_column']['box']['frame_messages']['page'] = 'conversazioni/frame'; //Link ai messaggi
 $PARAMETERS['left_column']['box']['frame_forum']['class'] = 'forums';
-$PARAMETERS['left_column']['box']['frame_forum']['page'] = 'frame_forums'; //Link al forum
+$PARAMETERS['left_column']['box']['frame_forum']['page'] = 'forum/frame'; //Link al forum
+$PARAMETERS['left_column']['box']['frame_news']['class'] = 'news';
+$PARAMETERS['left_column']['box']['frame_news']['page'] = 'news/frame'; //Link al forum
 $PARAMETERS['left_column']['box']['link_menu']['class'] = 'menu';
 $PARAMETERS['left_column']['box']['link_menu']['page'] = 'link_menu'; //Menu' del gioco.
 
 /*COLONNA DESTRA*/
+$PARAMETERS['right_column']['box']['frame_mappa']['class'] = 'mappa_rapida';
+$PARAMETERS['right_column']['box']['frame_mappa']['page'] = 'mappa/rapida'; //Presenti mini.
 $PARAMETERS['right_column']['box']['frame_presenti']['class'] = 'presenti';
 $PARAMETERS['right_column']['box']['frame_presenti']['page'] = 'presenti/mini'; //Presenti mini.
 

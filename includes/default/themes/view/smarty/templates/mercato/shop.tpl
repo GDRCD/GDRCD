@@ -1,0 +1,8 @@
+{foreach $data as $shop}
+    <div class='single_shop'>
+        <div class='shop_img'><img src='/themes/advanced/imgs/shops/{{$shop.img}}'></div>
+        <div class='shop_name'>
+            <a href='/main.php?page=servizi/mercato/mercato_index&op=objects&shop={{$shop.id}}'>{{$shop.nome}}</a>
+        </div>
+    </div>
+{/foreach}

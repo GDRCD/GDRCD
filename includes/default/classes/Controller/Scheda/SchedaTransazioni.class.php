@@ -18,6 +18,7 @@ class SchedaTransazioni extends Scheda
      * @note Permessi per visualizzazione delle transazioni
      * @param int $id_pg
      * @return bool
+     * @throws Throwable
      */
     public function permissionViewTransactions(int $id_pg): bool
     {
@@ -29,6 +30,7 @@ class SchedaTransazioni extends Scheda
      * @fn viewExpPermission
      * @note Controllo permessi per visualizzazione esperienza scheda
      * @return bool
+     * @throws Throwable
      */
     public function viewExpPermission(): bool
     {
@@ -39,6 +41,7 @@ class SchedaTransazioni extends Scheda
      * @fn manageExpPermission
      * @note Controllo permessi per singola assegnazione esperienza scheda
      * @return bool
+     * @throws Throwable
      */
     public function manageExpPermission(): bool
     {
@@ -52,6 +55,7 @@ class SchedaTransazioni extends Scheda
      * @note Lista degli ultimi log di tipo esperienza
      * @param $pg
      * @return array
+     * @throws Throwable
      */
     public function renderPgExpLog($pg): array
     {
@@ -93,6 +97,7 @@ class SchedaTransazioni extends Scheda
      * @note Tabella dell'esperienza del pg
      * @param $pg
      * @return string
+     * @throws Throwable
      */
     public function expTable($pg): string
     {
@@ -104,6 +109,13 @@ class SchedaTransazioni extends Scheda
 
     /*** FUNCTIONS ***/
 
+    /**
+     * @fn addManualExp
+     * @note Aggiunge esperienza manuale
+     * @param array $post
+     * @return array
+     * @throws Throwable
+     */
     public function addManualExp(array $post): array
     {
         if ( $this->manageExpPermission() ) {
@@ -115,7 +127,13 @@ class SchedaTransazioni extends Scheda
 
             if ( !empty($causale) && ($px != 0) && !empty($pg) ) {
 
-                Personaggio::updatePgData($pg, "esperienza = esperienza + '{$px}'");
+                Personaggio::updatePgData(
+                    $pg,
+                    'esperienza = esperienza + :exp',
+                    [
+                        'exp' => $px,
+                    ]
+                );
 
                 Log::newLog([
                     "autore" => $this->me_id,

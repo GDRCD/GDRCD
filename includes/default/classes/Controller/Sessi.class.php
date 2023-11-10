@@ -2,12 +2,6 @@
 
 class Sessi extends BaseClass
 {
-    protected function __construct()
-    {
-        parent::__construct();
-    }
-
-
     /**** TABLE HELPERS ****/
 
     /**
@@ -15,21 +9,26 @@ class Sessi extends BaseClass
      * @note Ottieni un genere
      * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getGender(int $id, string $val = '*')
+    public function getGender(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM sessi WHERE id='{$id}' LIMIT 1");
+        return DB::queryStmt("SELECT {$val} FROM sessi WHERE id=:id LIMIT 1", [
+            'id' => $id,
+        ]);
     }
 
     /**
      * @fn getAllGenders
      * @note Ottieni tutti i generi presenti
-     * @return bool|int|mixed|string
+     * @param string $val
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllGenders(string $val = '*')
+    public function getAllGenders(string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM sessi WHERE 1", 'result');
+        return DB::queryStmt("SELECT {$val} FROM sessi WHERE 1", []);
     }
 
 
@@ -39,6 +38,7 @@ class Sessi extends BaseClass
      * @fn permissionManageGenders
      * @note Controlla se il personaggio può gestire i generi
      * @return bool
+     * @throws Throwable
      */
     public function permissionManageGenders(): bool
     {
@@ -51,12 +51,14 @@ class Sessi extends BaseClass
      * @fn listGenders
      * @note Lista dei sessi disponibili
      * @param int $selected
+     * @param string $label
      * @return mixed
+     * @throws Throwable
      */
-    public function listGenders(int $selected = 0)
+    public function listGenders(int $selected = 0, string $label = ''): mixed
     {
         $genders = $this->getAllGenders();
-        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', $selected, $genders);
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', $selected, $genders, $label);
     }
 
 
@@ -66,14 +68,17 @@ class Sessi extends BaseClass
      * @fn DatiAbiRequisito
      * @note Estrae i dati di un requisito abilita
      * @param array $post
-     * @return array|false[]|void
+     * @return array
+     * @throws Throwable
      */
-    public function ajaxGenderData(array $post)
+    public function ajaxGenderData(array $post): array
     {
         if ( $this->permissionManageGenders() ) {
             $id = Filters::int($post['id']);
-            return $this->getGender($id);
+            return $this->getGender($id)->getData()[0];
         }
+
+        return [];
     }
 
     /**** GESTIONE ****/
@@ -83,17 +88,18 @@ class Sessi extends BaseClass
      * @note Inserisce un nuovo genere
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function newGender(array $post): array
     {
-
         if ( $this->permissionManageGenders() ) {
-
             $nome = Filters::in($post['nome']);
             $img = Filters::in($post['immagine']);
 
-            DB::query("INSERT INTO sessi(nome, immagine) 
-                            VALUES ('{$nome}','{$img}')");
+            DB::queryStmt("INSERT INTO sessi (nome, immagine) VALUES (:nome, :img)", [
+                'nome' => $nome,
+                'img' => $img,
+            ]);
 
             return [
                 'response' => true,
@@ -102,6 +108,7 @@ class Sessi extends BaseClass
                 'swal_type' => 'success',
                 'genders_list' => $this->listGenders(),
             ];
+
         } else {
 
             return [
@@ -118,17 +125,20 @@ class Sessi extends BaseClass
      * @note Modifica un genere
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function modGender(array $post): array
     {
-
         if ( $this->permissionManageGenders() ) {
-
             $id = Filters::int($post['id']);
             $nome = Filters::in($post['nome']);
             $img = Filters::in($post['immagine']);
 
-            DB::query("UPDATE sessi SET nome='{$nome}',immagine='{$img}' WHERE id='{$id}' LIMIT 1");
+            DB::queryStmt("UPDATE sessi SET nome=:nome, immagine=:img WHERE id=:id", [
+                'id' => $id,
+                'nome' => $nome,
+                'img' => $img,
+            ]);
 
             return [
                 'response' => true,
@@ -154,15 +164,16 @@ class Sessi extends BaseClass
      * @note Elimina un genere
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function delGender(array $post): array
     {
-
         if ( $this->permissionManageGenders() ) {
-
             $shop = Filters::int($post['id']);
 
-            DB::query("DELETE FROM sessi WHERE id='{$shop}'");
+            DB::queryStmt("DELETE FROM sessi WHERE id=:id", [
+                'id' => $shop,
+            ]);
 
             return [
                 'response' => true,

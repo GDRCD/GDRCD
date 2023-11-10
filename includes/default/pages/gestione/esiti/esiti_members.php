@@ -26,7 +26,6 @@ if ( $esiti->esitoMembersPermission($id_record) ) {
             <div class="single_input">
                 <div class="label">Personaggio</div>
                 <select name="personaggio" required>
-                    <option value=""></option>
                     <?= Functions::getPgList(); ?>
                 </select>
             </div>

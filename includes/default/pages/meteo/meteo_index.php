@@ -4,7 +4,7 @@ Router::loadRequired();
 
 $class = Meteo::getInstance();
 
-if ( $class->permissionEditchat() ) { ?>
+if ( $class->permissionEditChat() ) { ?>
     <div class="servizi_pagina esiti_pagina">
         <?php if ( $class->activeSeason() ) { ?>
 
@@ -22,7 +22,7 @@ if ( $class->permissionEditchat() ) { ?>
 
             <div class="warning"> Funzione disabilitata.</div>
 
-            <div class="link_back"><a href="/main.php?page=uffici">Indietro</a></div>
+            <div class="link_back"><a href="/main.php?page=servizi">Indietro</a></div>
         <?php } ?>
     </div>
 <?php } ?>

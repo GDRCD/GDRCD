@@ -46,13 +46,13 @@ if ( $esiti->esitoViewPermission($id_record) && $esiti->esitoExist($id_record) )
                     <div class="single_input w-33">
                         <div class="label">Abilità</div>
                         <select name="abilita">
-                            <?= $abi->listAbilita(); ?>
+                            <?= $abi->listAbility(); ?>
                         </select>
                     </div>
                     <div class="single_input w-33">
                         <div class="label">Chat</div>
                         <select name="chat">
-                            <?= $chat->chatList(); ?>
+                            <?= $chat->listChats(); ?>
                         </select>
                     </div>
 
@@ -84,5 +84,5 @@ if ( $esiti->esitoViewPermission($id_record) && $esiti->esitoExist($id_record) )
 <?php } ?>
 
 <div class="link_back">
-    <a href="/main.php?page=gestione_esiti">Indietro</a>
+    <a href="/main.php?page=gestione/esiti/esiti_index">Indietro</a>
 </div>

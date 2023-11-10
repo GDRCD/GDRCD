@@ -43,8 +43,10 @@ $id_pg = isset($_GET['id_pg']) ? Filters::out($_GET['id_pg']) : Functions::getIn
 <?php } ?>
 
     <!-- ROLES -->
-<?php if ( ($_SESSION['permessi'] >= ROLE_PERM || $_REQUEST['pg'] == $_SESSION['login']) && REG_ROLE ) { ?>
-    <a href="main.php?page=scheda_roles&id_pg=<?= $id_pg; ?>">
+<?php
+
+if (RegistrazioneGiocate::getInstance()->activeRegistrazioni() && RegistrazioneGiocate::getInstance()->permissionViewRecords($id_pg) ) { ?>
+    <a href="main.php?page=scheda/index&op=registrazioni&id_pg=<?= $id_pg; ?>">
         Giocate registrate
     </a>
 <?php } ?>

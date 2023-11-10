@@ -9,6 +9,7 @@ class MeteoStagioni extends Meteo
      * @fn permissionManageSeasons
      * @note Controlla se si hanno i permessi per gestire le stagioni meteo
      * @return bool
+     * @throws Throwable
      */
     public function permissionManageSeasons(): bool
     {
@@ -20,22 +21,26 @@ class MeteoStagioni extends Meteo
     /**
      * @fn getAllSeason
      * @note Estrae lista delle stagioni
-     * @return bool|int|mixed|string
+     * @param string $val
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllSeason(string $val = '*')
+    public function getAllSeason(string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val}  FROM meteo_stagioni WHERE 1 ORDER BY nome", 'result');
+        return DB::queryStmt("SELECT {$val}  FROM meteo_stagioni WHERE 1 ORDER BY nome", []);
     }
 
     /**
      * @fn getSeason
      * @note Estrae una stagione
-     * @return bool|int|mixed|string
+     * @param int $id
+     * @param string $val
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getSeason(int $id, string $val = '*')
+    public function getSeason(int $id, string $val = '*'): DBQueryInterface
     {
-        $id = Filters::int($id);
-        return DB::query("SELECT {$val} FROM meteo_stagioni WHERE id='{$id}' LIMIT 1");
+        return DB::queryStmt("SELECT {$val} FROM meteo_stagioni WHERE id=:id LIMIT 1", ['id' => $id]);
     }
 
     /**
@@ -43,17 +48,23 @@ class MeteoStagioni extends Meteo
      * @note Estrae tutte le condizioni meteo di una stagione
      * @param int $id
      * @param string $val
-     * # TODO - Da rivedere
      * @return array
+     * @throws Throwable
      */
     public function getAllSeasonCondition(int $id, string $val = 'meteo_stagioni_condizioni.*, meteo_condizioni.*'): array
     {
-        $output = [];
-        $stmt = DB::query("SELECT {$val} FROM meteo_stagioni_condizioni LEFT JOIN meteo_condizioni ON meteo_stagioni_condizioni.condizione = meteo_condizioni.id WHERE meteo_stagioni_condizioni.stagione='{$id}'", 'result');
+        $stmt = DB::queryStmt(
+            "SELECT {$val} FROM meteo_stagioni_condizioni 
+                  LEFT JOIN meteo_condizioni ON meteo_stagioni_condizioni.condizione = meteo_condizioni.id 
+                  WHERE meteo_stagioni_condizioni.stagione=:id",
+            ['id' => $id]
+        );
 
-        if (DB::query($stmt, 'num_rows')) {
-            while ($output[] = DB::query($stmt, 'fetch'));
-            DB::query($stmt,'free');
+        $output = [];
+        if ( DB::rowsNumber($stmt) ) {
+            foreach ( $stmt as $row ) {
+                $output[] = $row;
+            }
         }
 
         return $output;
@@ -63,11 +74,12 @@ class MeteoStagioni extends Meteo
      * @fn getCurrentSeason
      * @note Estrae la stagione corrente
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return array
+     * @throws Throwable
      */
-    public function getCurrentSeason(string $val = '*')
+    public function getCurrentSeason(string $val = '*'): array
     {
-        return DB::query("SELECT {$val} FROM meteo_stagioni WHERE data_fine > NOW() AND data_inizio < NOW() LIMIT 1");
+        return DB::queryStmt("SELECT {$val} FROM meteo_stagioni WHERE data_fine > NOW() AND data_inizio < NOW() LIMIT 1", [])->getData()[0];
     }
 
     /**** RENDER ***/
@@ -82,39 +94,25 @@ class MeteoStagioni extends Meteo
     {
         $op = Filters::out($op);
 
-        switch ( $op ) {
-            default:
-                $page = 'gestione_stagioni_view.php';
-                break;
-
-            case 'new':
-                $page = 'gestione_stagioni_new.php';
-                break;
-
-            case 'edit':
-                $page = 'gestione_stagioni_edit.php';
-                break;
-
-            case 'conditions':
-                $page = 'gestione_stagioni_condizioni.php';
-                break;
-        }
-
-        return $page;
+        return match ($op) {
+            'new' => 'gestione_stagioni_new.php',
+            'edit' => 'gestione_stagioni_edit.php',
+            'conditions' => 'gestione_stagioni_condizioni.php',
+            default => 'gestione_stagioni_view.php'
+        };
     }
 
     /**
      * @fn esitiListManagement
      * @note Render lista gestione delle stagioni
      * @return string
+     * @throws Throwable
      */
     public function seasonListManagement(): string
     {
-        $template = Template::getInstance()->startTemplate();
-        $list = $this->getAllSeason('*', 'ORDER BY closed ASC,data ASC');
-        return $template->renderTable(
+        return Template::getInstance()->startTemplate()->renderTable(
             'gestione/meteo/stagioni/list',
-            $this->renderSeasonList($list)
+            $this->renderSeasonList($this->getAllSeason())
         );
     }
 
@@ -123,6 +121,7 @@ class MeteoStagioni extends Meteo
      * @note Sotto-funzione per regole di renderizzazione della lista stagioni in gestione
      * @param object $list
      * @return array
+     * @throws Throwable
      */
     public function renderSeasonList(object $list): array
     {
@@ -170,14 +169,13 @@ class MeteoStagioni extends Meteo
      * @note Render lista gestione delle stagioni
      * @param int $id
      * @return string
+     * @throws Throwable
      */
     public function seasonConditionsManageList(int $id): string
     {
-        $template = Template::getInstance()->startTemplate();
-        $list = $this->getAllSeasonCondition($id);
-        return $template->renderTable(
+        return Template::getInstance()->startTemplate()->renderTable(
             'gestione/meteo/stagioni/condition_list',
-            $this->renderSeasonConditionList($list)
+            $this->renderSeasonConditionList($this->getAllSeasonCondition($id))
         );
     }
 
@@ -218,38 +216,14 @@ class MeteoStagioni extends Meteo
         ];
     }
 
-    /**** FUNCTIONS ****/
-
-    /**
-     * @fn diffselectSeason
-     * @note Select degli stati climatici non presenti nella stagione
-     * @param array $array
-     * @return string
-     */
-    public function diffselectSeason(array $array): string
-    {
-        $option = "";
-        $stagioni = MeteoStagioni::getInstance()->getAllSeason();
-        foreach ( $stagioni as $item ) {
-            $option .= "<div class='form_field'>";
-            if ( in_array($item['id'], $array) ) {
-                $option .= "<input type='checkbox' name='stagioni[]' checked value='{$item['id']}'></div>";
-            } else {
-                $option .= "<input type='checkbox' name='stagioni[]' value='{$item['id']}'></div>";
-            }
-
-            $option .= "<div class='form_label'>{$item['nome']}</div>";
-        }
-        return $option;
-    }
-
     /**** GESTIONE ****/
 
     /**
      * @fn NewSeason
      * @note Inserisce una stagione
      * @param array $post
-     * @return void
+     * @return array
+     * @throws Throwable
      */
     public function NewSeason(array $post): array
     {
@@ -263,7 +237,18 @@ class MeteoStagioni extends Meteo
             $alba = Filters::in($post['alba']);
             $tramonto = Filters::in($post['tramonto']);
 
-            DB::query("INSERT INTO meteo_stagioni (nome,minima,massima, data_inizio,data_fine, alba, tramonto )  VALUES ('{$nome}', '{$minima}' , '{$massima}', '{$data_inizio}', '{$data_fine}', '{$alba}', '{$tramonto}') ");
+            DB::queryStmt("INSERT INTO meteo_stagioni (nome,minima,massima, data_inizio,data_fine, alba, tramonto ) 
+                            VALUES (:nome, :minima , :massima, :inizio, :fine, :alba, :tramonto) ",
+                [
+                    'nome' => $nome,
+                    'minima' => $minima,
+                    'massima' => $massima,
+                    'inizio' => $data_inizio,
+                    'fine' => $data_fine,
+                    'alba' => $alba,
+                    'tramonto' => $tramonto,
+                ]
+            );
 
             return [
                 'response' => true,
@@ -285,7 +270,8 @@ class MeteoStagioni extends Meteo
      * @fn editSeason
      * @note Aggiorna una stagione
      * @param array $post
-     * @return void
+     * @return array
+     * @throws Throwable
      */
     public function ModSeason(array $post): array
     {
@@ -299,8 +285,21 @@ class MeteoStagioni extends Meteo
             $data_fine = Filters::in($post['data_fine']);
             $alba = Filters::in($post['alba']);
             $tramonto = Filters::in($post['tramonto']);
-            DB::query("UPDATE  meteo_stagioni 
-                SET nome = '{$nome}',minima='{$minima}', massima='{$massima}', data_inizio='{$data_inizio}',data_fine='{$data_fine}', alba='{$alba}', tramonto='{$tramonto}' WHERE id='{$id}'");
+            DB::queryStmt(
+                "UPDATE  meteo_stagioni  
+                        SET nome = :nome,minima=:minima, massima=:massima, data_inizio=:inizio,data_fine=:fine, alba=:alba, tramonto=:tramonto 
+                        WHERE id=:id",
+                [
+                    'id' => $id,
+                    'nome' => $nome,
+                    'minima' => $minima,
+                    'massima' => $massima,
+                    'inizio' => $data_inizio,
+                    'fine' => $data_fine,
+                    'alba' => $alba,
+                    'tramonto' => $tramonto,
+                ]
+            );
 
             return [
                 'response' => true,
@@ -324,13 +323,14 @@ class MeteoStagioni extends Meteo
      * @note Cancella una stagione
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function DelSeason(array $post): array
     {
         if ( $this->permissionManageSeasons() ) {
 
             $id = Filters::in($post['id']);
-            DB::query("DELETE FROM meteo_stagioni WHERE id='{$id}'");
+            DB::queryStmt("DELETE FROM meteo_stagioni WHERE id=:id", ['id' => $id]);
 
             return [
                 'response' => true,
@@ -351,9 +351,10 @@ class MeteoStagioni extends Meteo
 
     /**
      * @fn AssignCondition
-     * @note Assegna una condizione ad una stagione
+     * @note Assegna una condizione a una stagione
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function AssignCondition(array $post): array
     {
@@ -364,8 +365,14 @@ class MeteoStagioni extends Meteo
             $condizione = Filters::int($post['condizione']);
             $percentuale = Filters::int($post['percentuale']);
 
-            DB::query("DELETE FROM meteo_stagioni_condizioni WHERE stagione='{$id}' AND condizione='{$condizione}'");
-            DB::query("INSERT INTO meteo_stagioni_condizioni(stagione,condizione,percentuale) VALUES('{$id}','{$condizione}','{$percentuale}')");
+            DB::queryStmt(
+                "DELETE FROM meteo_stagioni_condizioni WHERE stagione=:id AND condizione=:condizione",
+                ['id' => $id, 'condizione' => $condizione]
+            );
+            DB::queryStmt(
+                "INSERT INTO meteo_stagioni_condizioni(stagione,condizione,percentuale) VALUES(:id,:condizione,:percentuale)",
+                ['id' => $id, 'condizione' => $condizione, 'percentuale' => $percentuale]
+            );
 
             return [
                 'response' => true,
@@ -390,6 +397,7 @@ class MeteoStagioni extends Meteo
      * @note Rimuove una condizione da una stagione
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function RemoveCondition(array $post): array
     {
@@ -399,7 +407,13 @@ class MeteoStagioni extends Meteo
             $id = Filters::int($post['id']);
             $condizione = Filters::int($post['condizione']);
 
-            DB::query("DELETE FROM meteo_stagioni_condizioni WHERE stagione='{$id}' AND condizione='{$condizione}'");
+            DB::queryStmt(
+                "DELETE FROM meteo_stagioni_condizioni WHERE stagione=:id AND condizione=:condizione",
+                [
+                    'id' => $id,
+                    'condizione' => $condizione,
+                ]
+            );
 
             return [
                 'response' => true,

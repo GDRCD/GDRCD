@@ -101,10 +101,10 @@ final class Password extends BaseClass {
     /**
      * @fn verify
      * @note Confronta l'hash con la password in chiaro e indica se c'è un riscontro
-     * @param string $hash la stringa rappresentante la password criptata
-     * @param string $password la password in chiaro fornita al login
-     * @param int|null $idPersonaggio l'id del personaggio che sta effettuando il login
-     * @return bool true se la password coincide con l'hash, false altriemnti
+     * @param string $hash La stringa rappresentante la password criptata
+     * @param string $password La password in chiaro fornita al login
+     * @param int|null $idPersonaggio L'id del personaggio che sta effettuando il login
+     * @return bool true se la password coincide con l'hash, false altrimenti
      * @throws Throwable
      */
     public static function verify(string $hash, string $password, ?int $idPersonaggio = null): bool
@@ -114,9 +114,9 @@ final class Password extends BaseClass {
         if (self::getProperCrypter($hash)->verify($hash, $password)) {
             if (!is_null($idPersonaggio) && self::needsRehash($hash)) {
                 DB::queryStmt(
-                    'UPDATE personaggio SET pass = :newpass WHERE id = :id',
+                    'UPDATE personaggio SET pass = :newPass WHERE id = :id',
                     [
-                        'newpass' => self::hash($password),
+                        'newPass' => self::hash($password),
                         'id' => $idPersonaggio
                     ]
                 );

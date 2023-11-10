@@ -35,7 +35,7 @@ class CrypterPasswordSha512 extends CrypterAlgo implements CrypterInterface
 
     /**
      * @fn pbkdf2
-     * @note Utilizza il metodo di criptaggio a derivazione di chiave ( PBKDF2 )
+     * @note Utilizza il metodo di criptaggio a derivazione di chiave (PBKDF2)
      * per produrre l'hash di una password robusta contro attacchi bruteforce
      * @param string $algo
      * @param string $password
@@ -50,7 +50,7 @@ class CrypterPasswordSha512 extends CrypterAlgo implements CrypterInterface
         return '$' . $algo
             . '$' . $cost
             . '$' . bin2hex($salt)
-            . '$' . hash_pbkdf2($algo, $password, $salt, $cost, 128, false);
+            . '$' . hash_pbkdf2($algo, $password, $salt, $cost, 128);
     }
 
     /**
@@ -90,8 +90,8 @@ class CrypterPasswordSha512 extends CrypterAlgo implements CrypterInterface
      */
     public function verify(string $crypted, string $string, ?string $key = null): bool
     {
-        $hashparts = explode('$', $crypted);
-        $newHash = $this->pbkdf2($hashparts[1], $string, hex2bin($hashparts[3]), (int)$hashparts[2]);
+        $hashParts = explode('$', $crypted);
+        $newHash = $this->pbkdf2($hashParts[1], $string, hex2bin($hashParts[3]), (int)$hashParts[2]);
         return hash_equals($crypted, $newHash);
     }
 

@@ -23,11 +23,11 @@ SET time_zone = "+00:00";
 CREATE TABLE IF NOT EXISTS `abilita` (
   `id` int NOT NULL AUTO_INCREMENT,
   `nome` varchar(255) NOT NULL,
-  `statistica` tinyint(1) NOT NULL DEFAULT '0',
   `descrizione` text NOT NULL,
+  `statistica` tinyint(1) NOT NULL DEFAULT '0',
   `razza` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `abilita_extra` (
   `descrizione` text NOT NULL,
   `costo` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `abilita_requisiti` (
   `id_riferimento` int NOT NULL,
   `liv_riferimento` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -70,54 +70,7 @@ CREATE TABLE IF NOT EXISTS `ambientazione` (
   `capitolo` int NOT NULL,
   `testo` text NOT NULL,
   `titolo` varchar(255) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `araldo`
---
-
-CREATE TABLE IF NOT EXISTS `araldo` (
-  `id_araldo` int NOT NULL AUTO_INCREMENT,
-  `tipo` int NOT NULL DEFAULT '0',
-  `nome` varchar(255) DEFAULT NULL,
-  `proprietari` int NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_araldo`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `araldo_letto`
---
-
-CREATE TABLE IF NOT EXISTS `araldo_letto` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `nome` varchar(255) DEFAULT NULL,
-  `araldo_id` int NOT NULL,
-  `thread_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `nome` (`nome`,`thread_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `backmessaggi`
---
-
-CREATE TABLE IF NOT EXISTS `backmessaggi` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `mittente` varchar(255) NOT NULL DEFAULT '',
-  `destinatario` varchar(255) NOT NULL DEFAULT '',
-  `spedito` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `letto` tinyint(1) DEFAULT '0',
-  `tipo` int NOT NULL DEFAULT '0',
-  `oggetto` text,
-  `testo` text,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -131,9 +84,47 @@ CREATE TABLE IF NOT EXISTS `blacklist` (
   `granted` tinyint(1) NOT NULL DEFAULT '0',
   `ora` datetime DEFAULT NULL,
   `host` varchar(255) NOT NULL DEFAULT '-',
-  PRIMARY KEY (`ip`),
-  KEY `Ora` (`ora`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`ip`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `calendario`
+--
+
+CREATE TABLE `calendario` (
+   `id` int NOT NULL AUTO_INCREMENT,
+   `personaggio` int NOT NULL DEFAULT '0',
+   `titolo` varchar(255) NOT NULL,
+   `descrizione` text NOT NULL,
+   `tipo` int NOT NULL,
+   `inizio` datetime NOT NULL,
+   `fine` datetime NOT NULL,
+   `all_day` tinyint(1) NOT NULL DEFAULT 0,
+   `copied_from` int NOT NULL DEFAULT 0,
+   `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   `creato_da` int DEFAULT NULL,
+   PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `calendario_tipi`
+--
+
+CREATE TABLE `calendario_tipi` (
+   `id` int NOT NULL AUTO_INCREMENT,
+   `nome` varchar(255) NOT NULL DEFAULT '0',
+   `colore_bg` varchar(255) NOT NULL,
+   `colore_testo` varchar(255) NOT NULL,
+   `pubblico` tinyint(1) NOT NULL DEFAULT 0,
+   `permessi` varchar(255) DEFAULT NULL,
+   `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   `creato_da` int DEFAULT NULL,
+   PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -149,7 +140,7 @@ CREATE TABLE `contatti` (
    `creato_il` DATE NOT NULL,
    `creato_da` VARCHAR(255) NOT NULL,
    PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -167,7 +158,7 @@ CREATE TABLE `contatti_nota` (
    `creato_il` DATETIME NOT NULL,
    `creato_da` VARCHAR(255) NOT NULL DEFAULT '0',
    PRIMARY KEY (`id`)
-)ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+)ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -181,7 +172,7 @@ CREATE TABLE `contatti_categorie` (
    `creato_il` DATETIME NOT NULL,
    `creato_da` VARCHAR(255) NOT NULL DEFAULT '0',
    PRIMARY KEY (`id`)
-)ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+)ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -200,7 +191,7 @@ CREATE TABLE IF NOT EXISTS `chat` (
   `testo` text,
   PRIMARY KEY (`id`),
   KEY `Stanza` (`stanza`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -217,33 +208,7 @@ CREATE TABLE IF NOT EXISTS `chat_opzioni` (
     `creato_da` int DEFAULT NULL,
     `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `clgpersonaggiomostrine`
---
-
-CREATE TABLE IF NOT EXISTS `clgpersonaggiomostrine` (
-  `id_mostrina` varchar(255) NOT NULL DEFAULT '',
-  `nome` varchar(255) NOT NULL DEFAULT '',
-  PRIMARY KEY (`id_mostrina`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `codmostrina`
---
-
-CREATE TABLE IF NOT EXISTS `codmostrina` (
-  `id_mostrina` int NOT NULL AUTO_INCREMENT,
-  `nome` varchar(255) NOT NULL,
-  `img_url` varchar(255) NOT NULL DEFAULT 'grigia.gif',
-  `descrizione` varchar(255) NOT NULL DEFAULT 'nessuna',
-  PRIMARY KEY (`id_mostrina`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -261,8 +226,9 @@ CREATE TABLE IF NOT EXISTS `config` (
   `type` varchar(255) DEFAULT 'String',
   `options` varchar(255) DEFAULT NULL,
   `editable` tinyint(1) DEFAULT 1,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `const_name` (`const_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -276,7 +242,7 @@ CREATE TABLE IF NOT EXISTS `config_options` (
   `label` varchar(255) NOT NULL,
   `value` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -294,7 +260,7 @@ CREATE TABLE IF NOT EXISTS `cronjob` (
     `class` varchar(255) NOT NULL,
     `function` varchar(255) NOT NULL,
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -312,7 +278,7 @@ CREATE TABLE IF NOT EXISTS `diario` (
   `data_modifica` datetime DEFAULT NULL,
   `visibile` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 -- --------------------------------------------------------
@@ -326,7 +292,7 @@ CREATE TABLE IF NOT EXISTS `disponibilita` (
   `nome` varchar(255) NOT NULL,
   `immagine` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -336,13 +302,13 @@ CREATE TABLE IF NOT EXISTS `disponibilita` (
 
 CREATE TABLE IF NOT EXISTS `esiti` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `autore` varchar(255) COLLATE utf8_general_ci NOT NULL,
-  `titolo` text COLLATE utf8_general_ci NOT NULL,
+  `autore` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `titolo` text COLLATE utf8mb4_general_ci NOT NULL,
   `data` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `master` varchar(255) COLLATE utf8_general_ci NOT NULL DEFAULT '0',
+  `master` varchar(255) COLLATE utf8mb4_general_ci NOT NULL DEFAULT '0',
   `closed` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -357,7 +323,7 @@ CREATE TABLE IF NOT EXISTS `esiti_personaggio` (
   `assegnato_il` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `assegnato_da` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -378,7 +344,7 @@ CREATE TABLE IF NOT EXISTS `esiti_risposte` (
   `dice_num` int NOT NULL DEFAULT '0',
   `modificatore` int(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -392,7 +358,7 @@ CREATE TABLE IF NOT EXISTS `esiti_risposte_cd` (
   `cd` int NOT NULL,
   `testo` text DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -405,8 +371,9 @@ CREATE TABLE IF NOT EXISTS `esiti_risposte_letture` (
     `esito` int NOT NULL,
     `personaggio` int NOT NULL,
     `letto_il` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `esito_personaggio` (`esito`,`personaggio`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -421,8 +388,105 @@ CREATE TABLE IF NOT EXISTS `esiti_risposte_risultati` (
     `risultato` int NOT NULL,
     `testo` text DEFAULT NULL,
     `lanciato_il` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `personaggio` (`personaggio`,`esito`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `forum`
+--
+
+CREATE TABLE IF NOT EXISTS `forum` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `tipo` int NOT NULL DEFAULT '0',
+    `nome` varchar(255) DEFAULT NULL,
+    `descrizione` TEXT DEFAULT NULL,
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `forum`
+--
+
+CREATE TABLE IF NOT EXISTS `forum_permessi` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `forum` int NOT NULL,
+    `personaggio` int NOT NULL,
+    `assegnato_da` int DEFAULT NULL,
+    `assegnato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `forum_post`
+--
+
+CREATE TABLE IF NOT EXISTS `forum_posts` (
+    `id` bigint NOT NULL AUTO_INCREMENT,
+    `id_padre` bigint NOT NULL DEFAULT '0',
+    `id_forum` int DEFAULT NULL,
+    `titolo` varchar(255) DEFAULT NULL,
+    `testo` text,
+    `autore` INT,
+    `data` datetime DEFAULT CURRENT_TIMESTAMP,
+    `data_ultimo` datetime DEFAULT CURRENT_TIMESTAMP,
+    `importante` tinyint(1) NOT NULL DEFAULT 0,
+    `chiuso` tinyint(1) NOT NULL DEFAULT 0,
+    `eliminato` tinyint(1) NOT NULL DEFAULT 0,
+    `modificato_il` datetime DEFAULT NULL,
+    `modificato_da` int DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `forum_letto`
+--
+
+CREATE TABLE IF NOT EXISTS `forum_posts_letti` (
+    `id` bigint NOT NULL AUTO_INCREMENT,
+    `personaggio` varchar(255) DEFAULT NULL,
+    `post` int NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `personaggio_post` (`personaggio`,`post`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `forum_posts_updates`
+--
+
+CREATE TABLE IF NOT EXISTS `forum_posts_updates` (
+    `id` bigint NOT NULL AUTO_INCREMENT,
+    `post` int NOT NULL,
+    `titolo` varchar(255),
+    `testo` text,
+    `modificato_il` datetime DEFAULT CURRENT_TIMESTAMP,
+    `modificato_da`int DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `forum_tipo`
+--
+
+CREATE TABLE IF NOT EXISTS `forum_tipo` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `nome` varchar(255),
+    `descrizione` varchar(255) DEFAULT NULL,
+    `pubblico` tinyint(1) DEFAULT 0,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -437,7 +501,28 @@ CREATE TABLE IF NOT EXISTS `lavori` (
     `immagine` varchar(255) NOT NULL,
     `stipendio` int NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `giocate_registrate`
+--
+
+CREATE TABLE IF NOT EXISTS `giocate_registrate` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `autore` int NOT NULL,
+    `chat` int NOT NULL,
+    `titolo` varchar(255) NOT NULL,
+    `nota` text DEFAULT NULL,
+    `quest` int DEFAULT NULL ,
+    `inizio` datetime NOT NULL,
+    `fine` datetime NOT NULL,
+    `bloccata` tinyint(1) DEFAULT 0,
+    `controllata` tinyint(1) DEFAULT 0,
+    `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -455,7 +540,7 @@ CREATE TABLE IF NOT EXISTS `gruppi` (
   `denaro` int NOT NULL DEFAULT 0,
   `visibile` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 
 -- --------------------------------------------------------
@@ -473,7 +558,7 @@ CREATE TABLE IF NOT EXISTS `gruppi_fondi` (
   `interval_type` varchar(255) NOT NULL,
   `last_exec` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -488,7 +573,7 @@ CREATE TABLE IF NOT EXISTS `gruppi_oggetto` (
   `cariche` int DEFAULT 0,
   `commento` text DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -504,7 +589,7 @@ CREATE TABLE IF NOT EXISTS `gruppi_ruoli` (
     `stipendio` int NOT NULL DEFAULT '0',
     `poteri` int NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`)
-    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+    ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -522,7 +607,7 @@ CREATE TABLE IF NOT EXISTS `gruppi_stipendi_extra` (
     `interval_type` varchar(255) NOT NULL DEFAULT 'minutes',
     `last_exec` datetime DEFAULT NULL,
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -----------------------------------------------------------
 
@@ -535,7 +620,7 @@ CREATE TABLE IF NOT EXISTS `gruppi_tipo` (
     `nome` varchar(255) NOT NULL,
     `descrizione` text NOT NULL,
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -551,7 +636,7 @@ CREATE TABLE IF NOT EXISTS `log` (
   `testo` varchar(255) NOT NULL DEFAULT '',
   `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -565,9 +650,10 @@ CREATE TABLE `menu` (
     `section` varchar(255) NOT NULL,
     `name` varchar(255) NOT NULL,
     `page` varchar(255) NOT NULL,
-    `permission` varchar(255) NOT NULL,
-    PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+    `permission` varchar(255) DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `page` (`page`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -582,7 +668,7 @@ CREATE TABLE IF NOT EXISTS `mappa` (
   `stato` varchar(255) NOT NULL DEFAULT '',
   `pagina` varchar(255) DEFAULT 'nulla.php',
   `chat` tinyint(1) NOT NULL DEFAULT '1',
-  `meteo_citta` varchar(255) DEFAULT NULL,
+  `meteo_city` varchar(255) DEFAULT NULL,
   `meteo_fisso` varchar(255) DEFAULT NULL,
   `immagine` varchar(255) DEFAULT 'standard_luogo.png',
   `stanza_apparente` varchar(255) DEFAULT NULL,
@@ -600,7 +686,7 @@ CREATE TABLE IF NOT EXISTS `mappa` (
   `costo` int DEFAULT '0',
   PRIMARY KEY (`id`),
   FULLTEXT KEY `Invitati` (`invitati`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -618,53 +704,74 @@ CREATE TABLE IF NOT EXISTS `mappa_click` (
   `larghezza` smallint NOT NULL DEFAULT '500',
   `altezza` smallint NOT NULL DEFAULT '330',
   PRIMARY KEY (`id_click`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `messaggi`
+-- Struttura della tabella `conversazioni`
 --
 
-CREATE TABLE IF NOT EXISTS `messaggi` (
+CREATE TABLE IF NOT EXISTS `conversazioni` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `mittente` varchar(255) NOT NULL,
-  `destinatario` varchar(255) NOT NULL DEFAULT 'Nessuno',
-  `spedito` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `letto` tinyint(1) DEFAULT '0',
-  `mittente_del` tinyint(1) DEFAULT '0',
-  `destinatario_del` tinyint(1) DEFAULT '0',
-  `tipo` int NOT NULL DEFAULT '0',
-  `oggetto` text,
-  `testo` text,
-  PRIMARY KEY (`id`),
-  KEY `destinatario` (`destinatario`),
-  KEY `letto` (`letto`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  `nome` varchar(255) NOT NULL,
+  `immagine` varchar(255) NOT NULL,
+  `ultimo_messaggio` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `creato_da` int NOT NULL,
+  `eliminato_il` datetime DEFAULT NULL,
+  `eliminato_da` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `messaggioaraldo`
+-- Struttura della tabella `conversazioni_membri`
 --
 
-CREATE TABLE IF NOT EXISTS `messaggioaraldo` (
-  `id_messaggio` bigint NOT NULL AUTO_INCREMENT,
-  `id_messaggio_padre` bigint NOT NULL DEFAULT '0',
-  `id_araldo` int DEFAULT NULL,
-  `titolo` varchar(255) DEFAULT NULL,
-  `messaggio` text,
-  `autore` varchar(255) DEFAULT NULL,
-  `data_messaggio` datetime DEFAULT NULL,
-  `data_ultimo_messaggio` datetime DEFAULT NULL,
-  `importante` binary(1) NOT NULL DEFAULT '0',
-  `chiuso` binary(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_messaggio`),
-  KEY `id_araldo` (`id_araldo`),
-  KEY `id_messaggio_padre` (`id_messaggio_padre`),
-  KEY `data_messaggio` (`data_messaggio`),
-  KEY `importante` (`importante`,`chiuso`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=0;
+CREATE TABLE IF NOT EXISTS `conversazioni_membri` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `conversazione` int NOT NULL,
+  `personaggio` varchar(255) NOT NULL,
+  `proprietario` tinyint(1) NOT NULL DEFAULT 0,
+  `ultima_lettura` datetime DEFAULT NULL,
+  `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `creato_da` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `conversazioni_messaggi`
+--
+
+CREATE TABLE IF NOT EXISTS `conversazioni_messaggi` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `conversazione` int NOT NULL,
+  `mittente` int NOT NULL,
+  `testo` text NOT NULL,
+  `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `creato_da` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `conversazioni_messaggi_allegati`
+--
+
+CREATE TABLE IF NOT EXISTS `conversazioni_messaggi_allegati` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `messaggio` int NOT NULL,
+  `allegato` varchar(255) NOT NULL,
+  `tipo` text NOT NULL,
+  `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `creato_da` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -679,7 +786,7 @@ CREATE TABLE IF NOT EXISTS `mercato` (
     `costo` int NOT NULL,
     `quantity` int NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -693,7 +800,7 @@ CREATE TABLE IF NOT EXISTS `mercato_negozi` (
     `descrizione` TEXT,
     `immagine` varchar(255),
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -710,7 +817,7 @@ CREATE TABLE IF NOT EXISTS `meteo_chat` (
     `img` varchar(255) DEFAULT NULL,
     `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -726,7 +833,7 @@ CREATE TABLE IF NOT EXISTS `meteo_mappa` (
     `temp` int DEFAULT NULL,
     `img` varchar(255) DEFAULT NULL,
      PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -740,7 +847,7 @@ CREATE TABLE IF NOT EXISTS `meteo_condizioni` (
     `img` varchar(255) DEFAULT NULL,
     `vento` varchar(255) DEFAULT NULL,
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -758,7 +865,7 @@ CREATE TABLE `meteo_stagioni` (
     `alba` TIME NULL DEFAULT NULL,
     `tramonto` TIME NULL DEFAULT NULL,
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -772,7 +879,7 @@ CREATE TABLE `meteo_stagioni_condizioni` (
     `condizione` INT NULL,
     `percentuale` INT NULL,
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -784,7 +891,56 @@ CREATE TABLE `meteo_venti` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `nome` varchar(255) NULL,
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `meteo_venti`
+--
+
+CREATE TABLE `news` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `autore` VARCHAR(255) NULL DEFAULT NULL,
+    `titolo` varchar(255) NULL,
+    `testo` text NULL,
+    `tipo` int NOT NULL,
+    `attiva` tinyint(1) NOT NULL DEFAULT 1,
+    `creata_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `creata_da` int DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `meteo_venti`
+--
+
+CREATE TABLE `news_lette` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `personaggio` INT NOT NULL ,
+    `news` INT NULL,
+    `letto_il` datetime DEFAULT CURRENT_TIMESTAMP ,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `pg_letto` (`personaggio`, `news`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `meteo_venti`
+--
+
+CREATE TABLE `news_tipo` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `nome` varchar(255) NULL,
+    `descrizione` text NULL,
+    `attiva` tinyint(1) NOT NULL DEFAULT 1,
+    `creata_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `creata_da` int DEFAULT NULL,
+     PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -801,15 +957,15 @@ CREATE TABLE IF NOT EXISTS `oggetto` (
     `indossabile` int NOT NULL DEFAULT '0',
     `posizione` int NOT NULL DEFAULT '0',
     `cariche` varchar(255) NOT NULL DEFAULT '0',
-    `creatore_da` varchar(255) NOT NULL DEFAULT 'System',
+    `creato_da` varchar(255) NOT NULL DEFAULT 'System',
     `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `oggetto`
+-- Struttura della tabella `oggetto_posizioni`
 --
 
 CREATE TABLE IF NOT EXISTS `oggetto_posizioni` (
@@ -818,7 +974,24 @@ CREATE TABLE IF NOT EXISTS `oggetto_posizioni` (
     `immagine` text DEFAULT NULL,
     `numero` int DEFAULT '1',
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `oggetto_statistiche`
+--
+
+CREATE TABLE IF NOT EXISTS `oggetto_statistiche` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `oggetto` int NOT NULL,
+    `statistica` int NOT NULL,
+    `valore` int NOT NULL,
+    `creato_da` int DEFAULT NULL,
+    `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `oggetto_statistica` (`oggetto`, `statistica`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -831,7 +1004,7 @@ CREATE TABLE IF NOT EXISTS `oggetto_tipo` (
     `nome` varchar(255) NOT NULL,
     `descrizione` text DEFAULT NULL,
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -844,7 +1017,7 @@ CREATE TABLE `online_status` (
     `type` varchar(255) NOT NULL,
     `text` varchar(255) NOT NULL,
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -858,7 +1031,7 @@ CREATE TABLE `online_status_type` (
     `request` varchar(255) NOT NULL,
     `active` tinyint(1) DEFAULT 1,
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -870,8 +1043,9 @@ CREATE TABLE `pages` (
     `id` int NOT NULL AUTO_INCREMENT,
     `page` varchar(255) NOT NULL,
     `redirect` text NOT NULL,
-    PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `page` (`page`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -883,8 +1057,9 @@ CREATE TABLE `pages_alias` (
     `id` int NOT NULL AUTO_INCREMENT,
     `alias` varchar(255) NOT NULL,
     `redirect` text NOT NULL,
-    PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `alias` (`alias`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -897,7 +1072,7 @@ CREATE TABLE `permessi_custom` (
     `permission_name` varchar(255) NOT NULL,
     `description` text NOT NULL,
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -911,7 +1086,7 @@ CREATE TABLE `permessi_group` (
     `description` text NOT NULL,
     `superuser` tinyint(1) NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -924,8 +1099,9 @@ CREATE TABLE `permessi_group_assignment` (
     `group_id` int NOT NULL,
     `permission` int NOT NULL,
     `assigned_by` varchar(255) NOT NULL,
-    PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `group_permission` (`group_id`, `permission`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -937,8 +1113,9 @@ CREATE TABLE `permessi_group_personaggio` (
     `id` int NOT NULL AUTO_INCREMENT,
     `group_id` int NOT NULL,
     `personaggio` varchar(255) NOT NULL,
-    PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `group_personaggio` (`group_id`, `personaggio`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -951,8 +1128,9 @@ CREATE TABLE `permessi_personaggio` (
     `personaggio` varchar(255) NOT NULL,
     `permission` int NOT NULL,
     `assigned_by` varchar(255) NOT NULL,
-    PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `personaggio_permission` (`personaggio`, `permission`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -1000,7 +1178,7 @@ CREATE TABLE IF NOT EXISTS `personaggio` (
     `data_iscrizione` datetime DEFAULT NULL,
     `last_ip` varchar(255) DEFAULT NULL,
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -1013,8 +1191,9 @@ CREATE TABLE IF NOT EXISTS `personaggio_abilita` (
     `personaggio` int NOT NULL,
     `abilita` int NOT NULL,
     `grado` int NOT NULL,
-    PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `pg_ability` (`personaggio`, `abilita`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -1027,8 +1206,9 @@ CREATE TABLE IF NOT EXISTS `personaggio_chat_opzioni` (
     `personaggio` int NOT NULL,
     `opzione` varchar(255) NOT NULL,
     `valore` varchar(255) NOT NULL,
-    PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `pg_chat_option` (`personaggio`, `opzione`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -1041,8 +1221,9 @@ CREATE TABLE IF NOT EXISTS `personaggio_lavoro` (
     `personaggio` varchar(255) NOT NULL,
     `lavoro` int NOT NULL,
     `scadenza` date NOT NULL DEFAULT '2010-01-01',
-    PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `pg_work` (`personaggio`, `lavoro`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -1058,7 +1239,7 @@ CREATE TABLE `personaggio_oggetto` (
     `commento` text DEFAULT NULL,
     `indossato` int DEFAULT 0,
     PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -1072,8 +1253,9 @@ CREATE TABLE `personaggio_online_status` (
     `type` int NOT NULL,
     `value` varchar(255) NOT NULL,
     `last_refresh` DATETIME DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `pg_status_online` (`personaggio`, `type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -1090,7 +1272,7 @@ CREATE TABLE personaggio_quest  (
   `px_assegnati` int NOT NULL,
   `autore` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -1103,8 +1285,9 @@ CREATE TABLE IF NOT EXISTS `personaggio_ruolo` (
     `personaggio` varchar(255) NOT NULL,
     `ruolo` int NOT NULL,
     `scadenza` date NOT NULL DEFAULT '2010-01-01',
-    PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `pg_role` (`personaggio`, `ruolo`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ---------------------------------------------
 
@@ -1117,8 +1300,9 @@ CREATE TABLE `personaggio_statistiche` (
     `personaggio` int NOT NULL,
     `statistica` int NOT NULL,
     `valore` int DEFAULT 0,
-    PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `pg_stat` (`personaggio`, `statistica`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -1137,7 +1321,7 @@ CREATE TABLE IF NOT EXISTS  quest  (
   `autore_modifica` varchar(255) DEFAULT NULL,
   `ultima_modifica` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -1156,7 +1340,7 @@ CREATE TABLE IF NOT EXISTS  quest_trama  (
   `stato` int NOT NULL DEFAULT '0',
   `quests` text DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -1176,7 +1360,7 @@ CREATE TABLE IF NOT EXISTS `razze` (
   `iscrizione` tinyint(1) NOT NULL DEFAULT '1',
   `visibile` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -1188,26 +1372,7 @@ CREATE TABLE IF NOT EXISTS `regolamento` (
   `articolo` int NOT NULL,
   `titolo` varchar(255) NOT NULL,
   `testo` text NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `segnalazione_role`
---
-
-CREATE TABLE IF NOT EXISTS `segnalazione_role` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `stanza` int NOT NULL,
-  `conclusa` int NOT NULL DEFAULT '0',
-  `partecipanti` text CHARACTER SET utf8 COLLATE utf8_general_ci,
-  `mittente` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `data_inizio` datetime DEFAULT NULL,
-  `data_fine` datetime DEFAULT NULL,
-  `tags` text CHARACTER SET utf8 COLLATE utf8_general_ci,
-  `quest` text CHARACTER SET utf8 COLLATE utf8_general_ci,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -1220,22 +1385,7 @@ CREATE TABLE IF NOT EXISTS `sessi` (
   `nome` varchar(255) NOT NULL,
   `immagine` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `send_GM`
---
-
-CREATE TABLE IF NOT EXISTS `send_GM` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `data` datetime NOT NULL,
-  `autore` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `role_reg` int NOT NULL,
-  `note` text CHARACTER SET utf8 COLLATE utf8_general_ci,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -1252,7 +1402,7 @@ CREATE TABLE IF NOT EXISTS `statistiche` (
   `iscrizione` bool DEFAULT 0,
   `creato_da` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 --
 -- Struttura della tabella `_gdrcd_db_versions`

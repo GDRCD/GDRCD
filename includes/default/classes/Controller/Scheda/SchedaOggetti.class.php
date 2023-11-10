@@ -12,21 +12,23 @@ class SchedaOggetti extends Scheda
 
     /**
      * @fn isPublic
-     * @note Controlla se la scheda oggetti e' pubblica
-     * @return mixed
+     * @note Controlla se la scheda oggetti è pubblica
+     * @return bool
+     * @throws Throwable
      */
-    public function isPublic()
+    public function isPublic(): bool
     {
         return Functions::get_constant('SCHEDA_OBJECTS_PUBLIC');
     }
 
     /**
-     * @fn isAccesible
-     * @note La scheda oggetti e' accessibile
+     * @fn isAccessible
+     * @note La scheda oggetti è accessibile
      * @param int $id_pg
      * @return bool
+     * @throws Throwable
      */
-    public function isAccessible(int $id_pg)
+    public function isAccessible(int $id_pg): bool
     {
         return ($this->isPublic() || $this->permissionViewObjects($id_pg));
     }
@@ -38,6 +40,7 @@ class SchedaOggetti extends Scheda
      * @note Controlla che si abbiano i permessi per rimuovere gli oggetti altrui
      * @param $pg
      * @return bool
+     * @throws Throwable
      */
     public function permissionRemoveObjects($pg): bool
     {
@@ -49,6 +52,7 @@ class SchedaOggetti extends Scheda
      * @note Controlla che si abbiano i permessi per equipaggiare gli oggetti altrui
      * @param $pg
      * @return bool
+     * @throws Throwable
      */
     public function permissionEquipObjects($pg): bool
     {
@@ -60,6 +64,7 @@ class SchedaOggetti extends Scheda
      * @note Controlla che si abbiano i permessi per visualizzare gli oggetti altrui
      * @param int $id_pg
      * @return bool
+     * @throws Throwable
      */
     public function permissionViewObjects(int $id_pg): bool
     {
@@ -73,12 +78,12 @@ class SchedaOggetti extends Scheda
      * @note Funzione di equipaggiamento di un oggetto del personaggio
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function equipObj(array $post): array
     {
 
         $id_obj = Filters::int($post['object']);
-        $obj_class = Oggetti::getInstance();
         $obj_data = PersonaggioOggetti::getPgObject($id_obj);
         $owner = Filters::int($obj_data['personaggio']);
 
@@ -86,7 +91,7 @@ class SchedaOggetti extends Scheda
 
             $indossato = Filters::int($obj_data['indossato']);
             $obj_position = Filters::int($obj_data['posizione']);
-            $position_data = $obj_class->getObjectPosition($obj_position);
+            $position_data = OggettiPosizioni::getInstance()->getObjectPosition($obj_position);
             $indossato_text = ($indossato) ? 'rimosso' : 'indossato';
 
             if ( !$indossato ) {
@@ -104,7 +109,13 @@ class SchedaOggetti extends Scheda
                 }
             }
 
-            DB::query("UPDATE personaggio_oggetto SET indossato = !indossato WHERE id='{$id_obj}' AND personaggio='{$owner}' LIMIT 1");
+            DB::queryStmt(
+                "UPDATE personaggio_oggetto SET indossato = !indossato WHERE id=:id AND personaggio=:pg LIMIT 1",
+                [
+                    'id' => $id_obj,
+                    'pg' => $owner,
+                ]
+            );
 
             return [
                 'response' => true,
@@ -131,6 +142,7 @@ class SchedaOggetti extends Scheda
      * @note Funzione di rimozione di un oggetto del personaggio
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function removeObj(array $post): array
     {
@@ -169,16 +181,15 @@ class SchedaOggetti extends Scheda
      * @note Renderizza gli oggetti equipaggiati da un pg
      * @param int $pg
      * @return string
+     * @throws Throwable
      */
     public function renderPgEquipment(int $pg): string
     {
 
         $html = '';
         $pg = Filters::int($pg);
-        $pg_name = Personaggio::nameFromId($pg);
-        $obj_class = Oggetti::getInstance();
 
-        $list = $obj_class->getAllObjectPositions();
+        $list = OggettiPosizioni::getInstance()->getAllObjectPositions();
 
         foreach ( $list as $position ) {
 
@@ -217,6 +228,7 @@ class SchedaOggetti extends Scheda
      * @note Renderizza l'inventario del personaggio
      * @param int $pg
      * @return string
+     * @throws Throwable
      */
     public function renderPgInventory(int $pg): string
     {
@@ -230,6 +242,7 @@ class SchedaOggetti extends Scheda
      * @note Renderizza un singolo oggetto del personaggio
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function renderObjectInfo(array $post): array
     {
@@ -240,7 +253,7 @@ class SchedaOggetti extends Scheda
         $obj_data = PersonaggioOggetti::getPgObject($obj, 'oggetto.*,personaggio_oggetto.*,personaggio_oggetto.cariche AS cariche_obj');
         $object = Filters::int($obj_data['oggetto']);
         $pg = Filters::int($obj_data['personaggio']);
-        $type_data = $obj_class->getObjectType(Filters::int($obj_data['tipo']));
+        $type_data = OggettiTipo::getInstance()->getObjectType(Filters::int($obj_data['tipo']));
 
         if ( $obj_class->existObject($object) && $this->permissionViewObjects($pg) ) {
 
@@ -276,6 +289,7 @@ class SchedaOggetti extends Scheda
      * @note Renderizzazione oggetti da una lista di oggetti
      * @param object $objs
      * @return string
+     * @throws Throwable
      */
     public static function renderObjects(object $objs): string
     {

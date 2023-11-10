@@ -1,73 +1,438 @@
-/****************************************************************************/
-/* STILE DEI MESSAGGI PRIVATI */
-
-/* HELP: Da qui è possibile modificare:
-- I font ed i colori dei messaggi privati
-- Le dimensioni e la posizione delle finestre dei messaggi privati
-- Lo sfondo dei messaggi privati */
-
-/****************************************************************************/
-
-div.pagina_messages_center {
+#conversations_view_container {
+    width: 800px;
+    height: 600px;
+    border: 1px solid black;
+    margin: 0 auto;
+    background: #434f77;
 }
 
-/*Testo delle colonne*/
-div.pagina_messages_center div.elementi_elenco {
-    height: 40px;
+
+#conversations_view_container .conversations_box {
+    display: flex;
+    height: 100%;
+    width: 100%;
 }
 
-/*Testo delle colonne*/
-div.pagina_messages_center div.pulsanti_elenco {
-    display: inline-block;
+#conversations_view_container .conversations_box_list {
+    width: 30%;
+    border-right: 1px solid white;
+    height: 100%;
+    background: #434f77;
 }
 
-div.pagina_messages_center div.pulsanti_elenco form {
-    float: left;
+/*** LISTA MITTENTI ****/
+
+#conversations_view_container .conversations_box_list .conversations_commands {
+    height: 45px;
+    border-bottom: 1px solid white;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 10px;
 }
 
-/*************************/
-/*Visualizzazione del messaggio singolo*/
-div.read_message_box {
-    width: 80%;
-    margin-left: auto;
-    margin-right: auto;
+#conversations_view_container .conversations_box_list .conversations_commands a {
+    color: white;
+    font-size: 18px;
 }
 
-div.read_message_box div.infos {
-    clear: both;
+#conversations_view_container .conversations_box_list .conversations_search_box {
+    height: 50px;
+    border-bottom: 1px solid white;
+    box-sizing: border-box;
+    padding: 3px 10px;
+}
+
+#conversations_view_container .conversations_box_list .conversations_search_box .title{
+    color: white;
+    font-size: 15px;
+    text-transform: uppercase;
+}
+
+#conversations_view_container .conversations_box_list .conversations_search_box .search_body{
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    margin-top: 2px;
+}
+
+#conversations_view_container .conversations_box_list .conversations_search_box .search_body .single_input:not(.submit){
+    width: 45%;
+    margin: 0 10px 0 0;
+    display: flex;
+    align-items: center;
+}
+
+#conversations_view_container .conversations_box_list .conversations_search_box .search_body .single_input input,
+#conversations_view_container .conversations_box_list .conversations_search_box .search_body .single_input select{
+    width: 100%;
+    height: 20px;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #333333;
+    border-top: 1px solid #333333;
+    outline: none;
+    color: white;
+}
+
+#conversations_view_container .conversations_box_list .conversations_search_box .search_body .single_input input::placeholder {
+    color: white;
+}
+
+#conversations_view_container .conversations_box_list .conversations_search_box .search_body button {
+    background: #7289da;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    padding: 3px 10px;
+    cursor: pointer;
+}
+
+#conversations_view_container .conversations_box_list .conversations_search_box .search_body button:active {
+    border: 1px solid white;
+}
+
+#conversations_view_container .conversations_box_list .conversations_list {
+    height: calc(100% - 95px);
+    overflow-y: auto;
+}
+
+#conversations_view_container .conversations_box_list .conversations_list .single_conversation {
+    background: #7289da;
+    border: 1px solid #2b2b2b;
+    margin: 5px 4px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#conversations_view_container .conversations_box_list .conversations_list .single_conversation .commands {
+    height: 25px;
+    background: black;
+    margin: 5px 1px 1px 1px;
+    width: calc(100% - 2px);
+    border-radius: 0 0 10px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    padding: 0 5px;
+    box-sizing: border-box;
+    color: white;
+}
+
+#conversations_view_container .conversations_box_list .conversations_list .single_conversation .commands .command {
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+#conversations_view_container .conversations_box_list .conversations_list .single_conversation .commands .command a {
+    color: white;
+    text-decoration: none;
+}
+
+#conversations_view_container .conversations_box_list .conversations_list .single_conversation .box {
+    display: flex;
+    padding: 5px 5px 0 5px;
+}
+
+#conversations_view_container .conversations_box_list .conversations_list .single_conversation .box .logo {
+    width: 35px;
+    height: 35px;
+    border: 1px solid blue;
+    border-radius: 100%;
+    overflow: hidden;
+}
+
+#conversations_view_container .conversations_box_list .conversations_list .single_conversation .box .logo img {
+    width: 100%;
+    height: 100%;
+}
+
+#conversations_view_container .conversations_box_list .conversations_list .single_conversation .box .text {
+    margin-left: 10px;
+    width: calc(100% - 45px);
+    overflow: hidden;
+}
+
+#conversations_view_container .conversations_box_list .conversations_list .single_conversation .box.new .text .title {
+    color: #a91d1d;
+}
+
+#conversations_view_container .conversations_box_list .conversations_list .single_conversation .box .text .title {
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    color: white;
+    font-size: 15px;
+}
+
+
+/**** MESSAGGI ****/
+
+#conversations_view_container .conversations_messages {
+    width: 70%;
+    height: 100%;
+    overflow: hidden;
+}
+
+#conversations_view_container .conversations_messages .conversation_header {
+    height: 45px;
+    background: #434f77;
+    width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    border-bottom: 1px solid white;
+}
+
+#conversations_view_container .conversations_messages .conversation_header .img {
+    width: 35px;
+    height: 35px;
+    overflow: hidden;
+    border-radius: 100%;
+    margin-right: 10px;
+    border: 1px solid #7289da;
+}
+
+#conversations_view_container .conversations_messages .conversation_header .img img {
+    width: 100%;
+    height: 100%;
+}
+
+#conversations_view_container .conversations_messages .conversation_header .title {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: white;
+    font-size: 20px;
+    width: calc(100% - 45px);
+}
+
+#conversations_view_container .conversations_messages .conversation_body {
+    overflow: auto;
+    height: calc(100% - 85px);
+    background: #434f77;
+}
+
+#conversations_view_container .conversations_messages .conversation_body .single_message {
+    width: 100%;
+    display: flex;
+    margin: 5px 0;
+    box-sizing: border-box;
+}
+
+#conversations_view_container .conversations_messages .conversation_body .single_message.mine_message {
+    justify-content: end;
+    text-align: right;
+}
+
+#conversations_view_container .conversations_messages .conversation_body .single_message.other_message {
+    justify-content: start;
     text-align: left;
 }
 
-div.read_message_box div.infos span.title {
-    font-style: italic;
+#conversations_view_container .conversations_messages .conversation_body .single_message .body {
+    Width: 70%;
+    background: #7289da;
+    border-radius: 10px;
+    padding: 5px;
+    margin: 0 10px;
+    box-sizing: border-box;
+    word-wrap: break-word;
+    border: 1px solid white;
 }
 
-div.read_message_box div.infos span.body {
+#conversations_view_container .conversations_messages .conversation_body .single_message.mine_message .body {
+    background: #7289da;
+}
+
+#conversations_view_container .conversations_messages .conversation_body .single_message.other_message .body {
+    background: #54618c;
+}
+
+#conversations_view_container .conversations_messages .conversation_body .single_message.mine_message .body .author {
+    flex-direction: row-reverse;
+}
+
+#conversations_view_container .conversations_messages .conversation_body .single_message .body .author {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    border-bottom: 1px solid white;
+    padding-bottom: 5px;
+}
+
+#conversations_view_container .conversations_messages .conversation_body .single_message .body .author .img {
+    width: 25px;
+    height: 25px;
+    overflow: hidden;
+    border-radius: 100%;
+    border: 1px solid #7289da;
+}
+
+#conversations_view_container .conversations_messages .conversation_body .single_message .body .author .img img {
+    width: 100%;
+    height: 100%;
+}
+
+#conversations_view_container .conversations_messages .conversation_body .single_message .body .author .name {
+    margin: 0 10px;
+}
+
+#conversations_view_container .conversations_messages .conversation_body .single_message .body .author .name a {
+    color: white;
+    text-decoration: none;
+}
+
+#conversations_view_container .conversations_messages .conversation_body .single_message .body .author .share{
+    margin: 0 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: white;
+}
+
+#conversations_view_container .conversations_messages .conversation_body .single_message .body .author .share a{
+    color: #2dda2f;
     font-weight: bold;
 }
 
-div.read_message_box_text {
-    clear: both;
-    border: solid 1px #d9d9d9;
-    background-color: #999;
-    padding: 10px;
-    margin: 20px 0 5px 0;
-    -moz-border-radius: 5px; /* Bordi arrotondati */
-    -webkit-border-radius: 5px;
-    -khtml-border-radius: 5px;
+#conversations_view_container .conversations_messages .conversation_body .single_message .body .text {
+    color: white;
+    font-size: 15px;
+    padding: 5px 0;
+}
+
+#conversations_view_container .conversations_messages .conversation_body .single_message .body .date {
+    color: white;
+}
+
+#conversations_view_container .conversations_messages .conversation_body .single_message.other_message .body .date {
+    text-align: right;
+}
+
+#conversations_view_container .conversations_messages .conversation_body .single_message.mine_message .body .date {
+    text-align: left;
+}
+
+#conversations_view_container .conversations_messages .conversation_footer {
+    height: 40px;
+    background: #434f77;
+    width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    border-top: 1px solid white;
+}
+
+#conversations_view_container .conversations_messages .conversation_footer form {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+#conversations_view_container .conversations_messages .conversation_footer form input {
+    margin: 0;
+}
+
+#conversations_view_container .conversations_messages .conversation_footer form .testo {
+    width: 90%;
+    margin-right: 15px;
+}
+
+#conversations_view_container .conversations_messages .conversation_footer form .testo input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #333333;
+    outline: none;
+    color: white;
+    width: 100%;
+}
+
+#conversations_view_container .conversations_messages .conversation_footer form .testo input::placeholder {
+    color: white;
+}
+
+#conversations_view_container .conversations_messages .conversation_footer form .submit button {
+    background: #7289da;
+    border: none;
     border-radius: 5px;
+    color: white;
+    padding: 3px 10px;
+    cursor: pointer;
 }
 
-div.read_message_box_forms {
-    clear: both;
-    margin-bottom: 40px;
+#conversations_view_container .conversations_messages .conversation_footer form .submit button:active {
+    border: 1px solid white;
 }
 
-div.read_message_box_form {
-    float: right;
+/**** NUOVI MESSAGGI ****/
+
+#conversations_view_container .new_conversation {
+    color: white;
+    padding: 10px;
+    box-sizing: border-box;
 }
 
-div.read_message_box_form input {
-    height: 20px;
-    width: 20px;
+/*** LISTA MEMBRI ****/
+
+#conversations_view_container .conversation_members_list {
+    height: 100%;
+}
+
+#conversations_view_container .conversation_members_list .general_title {
+    color: white;
+    border-color: white;
+    border-width: 0 0 1px 0;
+    margin: 0;
+}
+
+#conversations_view_container .conversation_members_list .conversation_members_body {
+    height: calc(100% - 40px);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#conversations_view_container .conversation_members_list .conversation_members_body .single_member {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    box-sizing: border-box;
+    width: 70%;
+    background: #7289da;
+    border: 1px solid #333333;
+    border-radius: 10px;
+    margin: 5px auto;
+}
+
+#conversations_view_container .conversation_members_list .conversation_members_body .single_member .member_avatar {
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
+    border-radius: 100%;
+    border: 1px solid #333333;
+    margin: 5px;
+}
+
+#conversations_view_container .conversation_members_list .conversation_members_body .single_member .member_avatar img {
+    width: 100%;
+    height: 100%;
+}
+
+#conversations_view_container .conversation_members_list .conversation_members_body .single_member .member_name {
+    color: white;
+    font-size: 13px;
+}
+
+#conversations_view_container .conversation_members_list .conversation_members_body .single_member .member_name a {
+    color: white;
 }

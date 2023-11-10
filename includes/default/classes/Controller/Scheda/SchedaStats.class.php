@@ -7,8 +7,9 @@ class SchedaStats extends Scheda
 
     /**
      * @fn isPublic
-     * @note Controlla se la scheda statistiche e' pubblica
+     * @note Controlla se la scheda statistiche è pubblica
      * @return bool
+     * @throws Throwable
      */
     public function isPublic(): bool
     {
@@ -20,6 +21,7 @@ class SchedaStats extends Scheda
      * @note Controlla se le statistiche sono accessibili
      * @param int $id_pg
      * @return bool
+     * @throws Throwable
      */
     public function isAccessible(int $id_pg): bool
     {
@@ -37,17 +39,11 @@ class SchedaStats extends Scheda
     public function indexSchedaStats(string $op): string
     {
 
-        switch ( $op ) {
-            case 'upgrade':
-                $page = 'upgrade';
-                break;
-            case 'downgrade':
-                $page = 'downgrade';
-                break;
-            default:
-                $page = 'list';
-                break;
-        }
+        $page = match ($op) {
+            'upgrade' => 'upgrade',
+            'downgrade' => 'downgrade',
+            default => 'list',
+        };
 
         return Filters::out($page);
     }
@@ -58,15 +54,12 @@ class SchedaStats extends Scheda
      * @fn permissionViewStats
      * @note Controlla che si abbiano i permessi per visualizzare le statistiche altrui
      * @return bool
+     * @throws Throwable
      */
     public function permissionViewStats(): bool
     {
         return Permissions::permission('VIEW_SCHEDA_STATS');
     }
-
-
-
-    /*** FUNCTIONS **/
 
     /**** RENDERING ****/
 
@@ -75,6 +68,7 @@ class SchedaStats extends Scheda
      * @note Elabora i dati della scheda statistiche
      * @param int $id_pg
      * @return array
+     * @throws Throwable
      */
     public function renderStatsPage(int $id_pg): array
     {
@@ -116,6 +110,7 @@ class SchedaStats extends Scheda
      * @note Renderizza la scheda abilita'
      * @param int $id_pg
      * @return string
+     * @throws Throwable
      */
     public function statsPage(int $id_pg): string
     {

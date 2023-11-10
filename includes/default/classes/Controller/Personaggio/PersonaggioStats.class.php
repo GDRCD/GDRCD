@@ -10,15 +10,17 @@ class PersonaggioStats extends Personaggio
      * @note Estrae tutte le statistiche di un personaggio
      * @param int $id_pg
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public static function getPgAllStats(int $id_pg, string $val = 'statistiche.*,personaggio_statistiche.valore')
+    public static function getPgAllStats(int $id_pg, string $val = 'statistiche.*,personaggio_statistiche.valore'): DBQueryInterface
     {
-        return DB::query("SELECT {$val}
-                                FROM statistiche 
-                                LEFT JOIN personaggio_statistiche ON 
-                                    (statistiche.id = personaggio_statistiche.statistica AND personaggio_statistiche.personaggio ='{$id_pg}')
-                                WHERE 1 ORDER BY statistiche.nome", 'result');
+        return DB::queryStmt(
+            "SELECT {$val} FROM statistiche 
+                  LEFT JOIN personaggio_statistiche ON (statistiche.id = personaggio_statistiche.statistica AND personaggio_statistiche.personaggio =:pg)
+                  WHERE 1 ORDER BY statistiche.nome",
+            ['pg' => $id_pg]
+        );
     }
 
     /**
@@ -27,14 +29,17 @@ class PersonaggioStats extends Personaggio
      * @param int $id
      * @param int $pg
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public static function getPgStat(int $id, int $pg, string $val = 'statistiche.*,personaggio_statistiche.*')
+    public function getPgStat(int $id, int $pg, string $val = 'statistiche.*,personaggio_statistiche.*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val}
-                                FROM personaggio_statistiche 
-                                LEFT JOIN statistiche ON (statistiche.id = personaggio_statistiche.statistica)
-                                  WHERE personaggio_statistiche.statistica = '{$id}' AND personaggio_statistiche.personaggio ='{$pg}' LIMIT 1");
+        return DB::queryStmt(
+            "SELECT {$val} FROM personaggio_statistiche 
+                  LEFT JOIN statistiche ON (statistiche.id = personaggio_statistiche.statistica)
+                  WHERE personaggio_statistiche.statistica = :id AND personaggio_statistiche.personaggio =:pg LIMIT 1",
+            ['id' => $id, 'pg' => $pg]
+        );
     }
 
     /**
@@ -43,14 +48,17 @@ class PersonaggioStats extends Personaggio
      * @param int $id
      * @param int $pg
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public static function getPgStatByStatId(int $id, int $pg, string $val = '*')
+    public static function getPgStatByStatId(int $id, int $pg, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val}
-                                FROM personaggio_statistiche 
-                                  WHERE personaggio_statistiche.statistica = '{$id}' AND personaggio_statistiche.personaggio = '{$pg}'
-                                LIMIT 1");
+        return DB::queryStmt(
+            "SELECT {$val} FROM personaggio_statistiche 
+                  WHERE personaggio_statistiche.statistica = :id AND personaggio_statistiche.personaggio = :pg
+                  LIMIT 1",
+            ['id' => $id, 'pg' => $pg]
+        );
     }
 
     /*** PERMESSI ***/
@@ -59,6 +67,7 @@ class PersonaggioStats extends Personaggio
      * @fn permissionUpgradeStats
      * @note Controlla che si abbiano i permessi per aumentare le statistiche
      * @return bool
+     * @throws Throwable
      */
     public static function permissionUpgradeStats(): bool
     {
@@ -69,6 +78,7 @@ class PersonaggioStats extends Personaggio
      * @fn permissionDowngradeStats
      * @note Controlla che si abbiano i permessi per diminuire le statistiche
      * @return bool
+     * @throws Throwable
      */
     public static function permissionDowngradeStats(): bool
     {
@@ -79,10 +89,11 @@ class PersonaggioStats extends Personaggio
 
     /**
      * @fn isPgStatUpgradable
-     * @note Controlla se la statistica e' aumentabile
+     * @note Controlla se la statistica è aumentabile
      * @param int $id
      * @param int $pg
      * @return bool
+     * @throws Throwable
      */
     public static function isPgStatUpgradable(int $id, int $pg): bool
     {
@@ -109,16 +120,16 @@ class PersonaggioStats extends Personaggio
 
     /**
      * @fn isPgStatDowngradable
-     * @note Controlla se la statistica e' aumentabile
+     * @note Controlla se la statistica è aumentabile
      * @param int $id
      * @param int $pg
      * @return bool
+     * @throws Throwable
      */
     public static function isPgStatDowngradable(int $id, int $pg): bool
     {
 
         $stat_class = Statistiche::getInstance();
-        $res = false;
 
         if ( self::permissionUpgradeStats() ) {
 
@@ -134,8 +145,7 @@ class PersonaggioStats extends Personaggio
 
         }
 
-        return $res;
-
+        return false;
     }
 
     /**
@@ -144,13 +154,12 @@ class PersonaggioStats extends Personaggio
      * @param int $id
      * @param int $pg
      * @return bool
+     * @throws Throwable
      */
     public static function existPgStat(int $id, int $pg): bool
     {
         $data = self::getPgStat($id, $pg);
-        $count = DB::rowsNumber($data);
-
-        return ($count > 0);
+        return (DB::rowsNumber($data) > 0);
     }
 
     /*** FUNCTIONS ***/
@@ -160,6 +169,7 @@ class PersonaggioStats extends Personaggio
      * @note Aumenta una statistica di un personaggio
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public static function upgradePgStat(array $post): array
     {
@@ -168,11 +178,17 @@ class PersonaggioStats extends Personaggio
 
         if ( self::isPgStatUpgradable($id, $pg) ) {
             if ( self::existPgStat($id, $pg) ) {
-                DB::query("UPDATE personaggio_statistiche SET valore= valore+1 
-                            WHERE personaggio_statistiche.statistica='{$id}' AND personaggio_statistiche.personaggio='{$pg}'");
+                DB::queryStmt(
+                    "UPDATE personaggio_statistiche SET valore= valore+1 
+                            WHERE personaggio_statistiche.statistica=:id AND personaggio_statistiche.personaggio=:pg",
+                    ['id' => $id, 'pg' => $pg]
+                );
             } else {
                 if ( Statistiche::existStat($id) ) {
-                    DB::query("INSERT INTO personaggio_statistiche(personaggio, statistica, valore) VALUES('{$pg}','{$id}',1)");
+                    DB::queryStmt(
+                        "INSERT INTO personaggio_statistiche(personaggio, statistica, valore) VALUES(:pg,:id,1)",
+                        ['id' => $id, 'pg' => $pg]
+                    );
                 }
             }
             return [
@@ -197,6 +213,7 @@ class PersonaggioStats extends Personaggio
      * @note Diminuisce una statistica di un personaggio
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public static function downgradePgStat(array $post): array
     {
@@ -205,8 +222,14 @@ class PersonaggioStats extends Personaggio
 
         if ( self::isPgStatDowngradable($id, $pg) && Statistiche::existStat($id) ) {
 
-            DB::query("UPDATE personaggio_statistiche SET valore= valore-1 
-                            WHERE personaggio_statistiche.statistica='{$id}' AND personaggio_statistiche.personaggio='{$pg}'");
+            DB::queryStmt(
+                "UPDATE personaggio_statistiche SET valore= valore-1 
+                            WHERE personaggio_statistiche.statistica=:id AND personaggio_statistiche.personaggio=:pg",
+                [
+                    'id' => $id,
+                    'pg' => $pg,
+                ]
+            );
 
             return ['response' => true,
                 'swal_title' => 'Operazione riuscita!',

@@ -3,7 +3,7 @@
 /**
  * @class ContattiNote
  * @note Classe per la gestione centralizzata delle note dei contatti
- * @required PHP 7.1+
+ * @required PHP 8+
  */
 class ContattiNote extends Contatti
 {
@@ -15,27 +15,24 @@ class ContattiNote extends Contatti
      * @note Estrae le note di un contatto
      * @param int $id
      * @param int $id_pg
-     * @return mixed
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllNote(int $id, int $id_pg)
+    public function getAllNote(int $id, int $id_pg): DBQueryInterface
     {
-        if ( $this->contactEnables() ) {
-            if ( $this->contactView($id_pg) ) {
-                //se sei il proprietario, visualizzi le tue note
-                return DB::query("SELECT * FROM contatti_nota WHERE id_contatto={$id} AND eliminato=0", 'result');
-            } else if ( $this->contactSecret() && (Permissions::permission('VIEW_CONTACTS')) ) {
-                //se le note sono segrete e hai il permesso di visualizzarle
-                return DB::query("SELECT * FROM contatti_nota WHERE id_contatto={$id} AND eliminato=0", 'result');
-            } else if ( $this->contactPublic() ) {
-                //se la configurazione è impostata su pubblico
-                return DB::query("SELECT * FROM contatti_nota WHERE id_contatto={$id} AND eliminato=0", 'result');
-            } else {
-                //altrimenti, prende solo quelli impostati come pubblico dall'utente
-                return DB::query("SELECT * FROM contatti_nota WHERE id_contatto={$id} AND pubblica IN ('si', '') AND eliminato=0", 'result');
-            }
+        if ( $this->contactView($id_pg) ) {
+            //se sei il proprietario, visualizzi le tue note
+            return DB::queryStmt("SELECT * FROM contatti_nota WHERE id_contatto=:id AND eliminato=0", ['id' => $id]);
+        } else if ( $this->contactSecret() && (Permissions::permission('VIEW_CONTACTS')) ) {
+            //se le note sono segrete e hai il permesso di visualizzarle
+            return DB::queryStmt("SELECT * FROM contatti_nota WHERE id_contatto=:id AND eliminato=0", ['id' => $id]);
+        } else if ( $this->contactPublic() ) {
+            //se la configurazione è impostata su pubblico
+            return DB::queryStmt("SELECT * FROM contatti_nota WHERE id_contatto=:id AND eliminato=0", ['id' => $id]);
+        } else {
+            //altrimenti, prende solo quelli impostati come pubblico dall'utente
+            return DB::queryStmt("SELECT * FROM contatti_nota WHERE id_contatto=:id AND pubblica IN ('si', '') AND eliminato=0", ['id' => $id]);
         }
-
-        return [];
     }
 
     /**
@@ -43,11 +40,12 @@ class ContattiNote extends Contatti
      * @note Estrae le note di un contatto
      * @param string $val
      * @param string $id
-     * @return mixed
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getNota(string $id, string $val = '*')
+    public function getNota(string $id, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM contatti_nota WHERE id = '{$id}' ");
+        return DB::queryStmt("SELECT {$val} FROM contatti_nota WHERE id = :id", ['id' => $id]);
     }
 
     /*** CONTACT INDEX ***/
@@ -57,6 +55,7 @@ class ContattiNote extends Contatti
      * @note Render html lista contatti pg
      * @param int $id_contatto
      * @return array
+     * @throws Throwable
      */
     public function renderNoteList(int $id_contatto): array
     {
@@ -95,7 +94,7 @@ class ContattiNote extends Contatti
         ];
         $links = [
             ['href' => "/main.php?page=scheda/index&op=contatti_nota_new&id_pg={$id_pg}&id={$id_contatto}", 'text' => 'Nuova nota', 'separator' => true],
-            ['href' => "/main.php?page=scheda/index&id_pg={$id_pg}", 'text' => 'Torna indietro'],
+            ['href' => "/main.php?page=scheda/index&op=contatti&id_pg={$id_pg}", 'text' => 'Torna indietro'],
         ];
 
         $contact_name = Personaggio::nameFromId($contact);
@@ -116,8 +115,9 @@ class ContattiNote extends Contatti
     /**
      * @fn NoteList
      * @note Render html della lista delle note di un contatto
-     * @param int $pg
+     * @param int $id_contatto
      * @return string
+     * @throws Throwable
      */
     public function NoteList(int $id_contatto): string
     {
@@ -134,6 +134,7 @@ class ContattiNote extends Contatti
      * @note Inserisce una nuova nota al contatto
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function newNota(array $post): array
     {
@@ -148,7 +149,17 @@ class ContattiNote extends Contatti
 
         if ( Personaggio::isMyPg($owner) ) {
 
-            DB::query("INSERT INTO contatti_nota(id_contatto,titolo, nota, pubblica, creato_da, creato_il) VALUES('{$id_contatto}', '{$titolo}','{$nota}', '{$pubblica}','{$creato_da}', NOW())");
+            DB::queryStmt(
+                "INSERT INTO contatti_nota (id_contatto, nota, pubblica, titolo, creato_da, creato_il) VALUES (:id_contatto, :nota, :pubblica, :titolo, :creato_da, NOW())",
+                [
+                    'id_contatto' => $id_contatto,
+                    'nota' => $nota,
+                    'pubblica' => $pubblica,
+                    'titolo' => $titolo,
+                    'creato_da' => $creato_da,
+                ]
+            );
+
             return [
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
@@ -170,6 +181,7 @@ class ContattiNote extends Contatti
      * @note Modifica una nota al contatto
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function editNota(array $post): array
     {
@@ -184,7 +196,17 @@ class ContattiNote extends Contatti
         $owner = Filters::int($contact_data['personaggio']);
 
         if ( $this->contactUpdate($owner) ) {
-            DB::query("UPDATE contatti_nota SET titolo = '{$titolo}', nota='{$nota}', pubblica='{$pubblica}' WHERE id= {$id}");
+
+            DB::queryStmt(
+                "UPDATE contatti_nota SET nota = :nota, pubblica = :pubblica, titolo = :titolo WHERE id = :id",
+                [
+                    'id' => $id,
+                    'nota' => $nota,
+                    'pubblica' => $pubblica,
+                    'titolo' => $titolo,
+                ]
+            );
+
             return [
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
@@ -207,6 +229,7 @@ class ContattiNote extends Contatti
      * @note Rimuove una nota
      * @param int $id
      * @return array
+     * @throws Throwable
      */
     public function deleteNota(int $id): array
     {
@@ -218,7 +241,13 @@ class ContattiNote extends Contatti
         $owner = Filters::int($contact_data['personaggio']);
 
         if ( $this->contactUpdate($owner) ) {
-            DB::query("UPDATE contatti_nota SET eliminato = '1' WHERE id = '{$id}' LIMIT 1");
+
+            DB::queryStmt(
+                "UPDATE contatti_nota SET eliminato = '1' WHERE id = :id LIMIT 1",
+                [
+                    'id' => $id,
+                ]
+            );
 
             return [
                 'response' => true,

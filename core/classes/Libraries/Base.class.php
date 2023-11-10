@@ -2,21 +2,17 @@
 
 abstract class BaseClass
 {
+    public static $_instance;
 
-    /**
-     * Init vars PUBLIC STATIC
-     * @var Router $_instance ;
-     */
-    public static
-        $_instance;
-    /**
-     * @var string $me
-     * @var int $perm
-     */
-    protected $me,
-        $me_id,
-        $permission,
+    protected string
+        $me,
+        $permission;
+
+    protected array
         $parameters;
+
+    protected int
+        $me_id;
 
     protected function __construct()
     {

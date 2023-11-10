@@ -17,9 +17,10 @@ class Scheda extends BaseClass
 
     /**
      * @fn available
-     * @note Controlla se una scheda e' accessibile.
+     * @note Controlla se una scheda è accessibile.
      * @param $id_pg
      * @return bool
+     * @throws Throwable
      */
     public function available($id_pg): bool
     {
@@ -34,6 +35,7 @@ class Scheda extends BaseClass
      * @note Controlla se un personaggio puo' essere modificato.
      * @param int $id_pg
      * @return bool
+     * @throws Throwable
      */
     public function permissionUpdateCharacter(int $id_pg): bool
     {
@@ -44,6 +46,7 @@ class Scheda extends BaseClass
      * @fn permissionStatusCharacter
      * @note Controlla se lo status di un personaggio puo' essere modificato.
      * @return bool
+     * @throws Throwable
      */
     public function permissionStatusCharacter(): bool
     {
@@ -54,6 +57,7 @@ class Scheda extends BaseClass
      * @fn permissionBanCharacter
      * @note Controlla se un personaggio puo' essere bannato.
      * @return bool
+     * @throws Throwable
      */
     public function permissionBanCharacter(): bool
     {
@@ -64,6 +68,7 @@ class Scheda extends BaseClass
      * @fn permissionAdministrationCharacter
      * @note Controlla se le info fondamentali di un personaggio possono essere modificate.
      * @return bool
+     * @throws Throwable
      */
     public function permissionAdministrationCharacter(): bool
     {
@@ -165,6 +170,23 @@ class Scheda extends BaseClass
                 $page = 'amministra/index.php';
                 break;
 
+            //REGISTRAZIONI
+            case 'registrazioni':
+                $page = 'registrazioni/index.php';
+                break;
+
+            case 'registrazioni_new':
+                $page = 'registrazioni/new.php';
+                break;
+
+            case 'registrazioni_edit':
+                $page = 'registrazioni/edit.php';
+                break;
+
+            case 'registrazioni_view':
+                $page = 'registrazioni/view.php';
+                break;
+
         }
 
         return $page;
@@ -177,6 +199,7 @@ class Scheda extends BaseClass
      * @note Funzione che si occupa dell'estrazione delle icone della scheda
      * @param string $pg_id
      * @return string
+     * @throws Throwable
      */
     private function getGroupIcons(string $pg_id): string
     {
@@ -190,7 +213,7 @@ class Scheda extends BaseClass
 
             foreach ( $roles as $role ) {
                 $link = Router::getImgsDir() . $role['immagine'];
-                $icons .= "<img src='{$link}' title='{$role['gruppo_nome']} - {$role['nome']}'>";
+                $icons .= "<img src='{$link}' title='{$role['gruppo_nome']} - {$role['nome']}' alt='{$role['nome']}'>";
             }
         }
 
@@ -202,6 +225,7 @@ class Scheda extends BaseClass
      * @note Funzione che si occupa dell'estrazione dell'icone della razza
      * @param string $pg_id
      * @return string
+     * @throws Throwable
      */
     private function getRaceIcon(string $pg_id): string
     {
@@ -214,7 +238,7 @@ class Scheda extends BaseClass
         $name = Filters::out($race_data['nome']);
 
         $link = Router::getImgsDir() . $icon;
-        return "<img src='{$link}' title='{$name}'>";
+        return "<img src='{$link}' title='{$name}' alt='{$name}'>";
     }
 
     /**
@@ -222,31 +246,34 @@ class Scheda extends BaseClass
      * @note Renderizza la scheda pg
      * @param int $id_pg
      * @return array
+     * @throws Throwable
      */
     public function renderMainPage(int $id_pg): array
     {
 
         $character_data = Personaggio::getPgData($id_pg);
+        $status_online_enabled = OnlineStatus::getInstance()->isEnabled();
 
-        $data = [
+        return [
             'id' => Filters::out($character_data['id']),
             'character_data' => $character_data,
             'groups_icons' => $this->getGroupIcons($id_pg),
             'race_icon' => $this->getRaceIcon($id_pg),
             'registration_day' => Filters::date($character_data['data_iscrizione'], 'd/m/Y'),
             'last_login' => Filters::date($character_data['ora_entrata'], 'd/m/Y'),
+            "status_online"=> $status_online_enabled ? OnlineStatus::getInstance()->renderStatusOnline($character_data['id']) : [],
+            "status_online_enabled" => $status_online_enabled
         ];
-
-        return $data;
     }
 
     /**
      * @fn characterPage
      * @note Renderizza la scheda pg
      * @param int $id_pg
-     * @return mixed
+     * @return string
+     * @throws Throwable
      */
-    public function characterMainPage(int $id_pg)
+    public function characterMainPage(int $id_pg): string
     {
         return Template::getInstance()->startTemplate()->render(
             'scheda/main',
@@ -262,6 +289,7 @@ class Scheda extends BaseClass
      * @note Aggiorna i dati del personaggio
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function updateCharacterData(array $post): array
     {
@@ -278,7 +306,22 @@ class Scheda extends BaseClass
             $url_media = Filters::in($post['url_media']);
             $blocca_media = Filters::checkbox($post['blocca_media']);
 
-            DB::query("UPDATE personaggio SET cognome = '{$cognome}', url_img = '{$url_img}', url_img_chat = '{$url_img_chat}', online_status = '{$online_status}', descrizione = '{$descrizione}', storia = '{$storia}', url_media = '{$url_media}', blocca_media = '{$blocca_media}' WHERE id = '{$id_pg}'");
+            Personaggio::updatePgData(
+                $id_pg,
+                'cognome = :cognome, url_img = :url_img, url_img_chat = :url_img_chat, 
+                        online_status = :online_status, descrizione = :descrizione, storia = :storia, 
+                        url_media = :url_media, blocca_media = :blocca_media',
+                [
+                    'cognome' => $cognome,
+                    'url_img' => $url_img,
+                    'url_img_chat' => $url_img_chat,
+                    'online_status' => $online_status,
+                    'descrizione' => $descrizione,
+                    'storia' => $storia,
+                    'url_media' => $url_media,
+                    'blocca_media' => $blocca_media
+                ]
+            );
 
             return [
                 'response' => true,
@@ -302,6 +345,7 @@ class Scheda extends BaseClass
      * @note Aggiorna lo stato del personaggio
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function updateCharacterStatus(array $post): array
     {
@@ -312,7 +356,14 @@ class Scheda extends BaseClass
             $stato = Filters::in($post['stato']);
             $salute = Filters::int($post['salute']);
 
-            DB::query("UPDATE personaggio SET stato = '{$stato}', salute = '{$salute}' WHERE id = '{$id_pg}'");
+            Personaggio::updatePgData(
+                $id_pg,
+                'stato = :stato, salute = :salute',
+                [
+                    'stato' => $stato,
+                    'salute' => $salute,
+                ]
+            );
 
             return [
                 'response' => true,
@@ -336,6 +387,7 @@ class Scheda extends BaseClass
      * @note Aggiorna i dati dell'amministratore del personaggio
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function updateAdministrationCharacter(array $post): array
     {
@@ -348,7 +400,16 @@ class Scheda extends BaseClass
             $banca = Filters::int($post['banca']);
             $soldi = Filters::int($post['soldi']);
 
-            DB::query("UPDATE personaggio SET sesso = '{$sesso}', razza = '{$razza}', banca = '{$banca}', soldi = '{$soldi}' WHERE id = '{$id_pg}'");
+            Personaggio::updatePgData(
+                $id_pg,
+                'sesso = :sesso, razza = :razza, banca = :banca, soldi = :soldi',
+                [
+                    'sesso' => $sesso,
+                    'razza' => $razza,
+                    'banca' => $banca,
+                    'soldi' => $soldi,
+                ]
+            );
 
             return [
                 'response' => true,
@@ -372,6 +433,7 @@ class Scheda extends BaseClass
      * @note Ban di un personaggio
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function banCharacter(array $post): array
     {
@@ -382,7 +444,15 @@ class Scheda extends BaseClass
             $esilio = Filters::in($post['esilio']);
             $motivo_esilio = Filters::in($post['motivo_esilio']);
 
-            DB::query("UPDATE personaggio SET esilio = '{$esilio}', motivo_esilio = '{$motivo_esilio}', autore_esilio ='{$this->me_id}', data_esilio=NOW() WHERE id = '{$id_pg}'");
+            Personaggio::updatePgData(
+                $id_pg,
+                'esilio = :esilio, motivo_esilio = :motivo_esilio, autore_esilio = :autore_esilio, data_esilio=NOW()',
+                [
+                    'esilio' => $esilio,
+                    'motivo_esilio' => $motivo_esilio,
+                    'autore_esilio' => $this->me_id,
+                ]
+            );
 
             return [
                 'response' => true,

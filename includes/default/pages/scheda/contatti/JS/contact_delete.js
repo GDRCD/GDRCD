@@ -8,7 +8,7 @@ $(function () {
             action = $(this).data('action'),
             page = $(this).data('page');
 
-        let button = await Swal.button('Sei sicuro?', 'Vuoi eliminare questo Contatto?', 'question');
+        let button = await SwalWrapper.button('Sei sicuro?', 'Vuoi eliminare questo Contatto?', 'info');
 
         if (button) {
             Ajax('scheda/contatti/contact_ajax.php', {
@@ -28,7 +28,7 @@ $(function () {
             if (datas.response) {
                 $('.contatti_list').html(datas.contatti_list)
 
-                Swal.fire(datas.swal_title, datas.swal_message, datas.swal_type)
+                SwalWrapper.fire(datas.swal_title, datas.swal_message, datas.swal_type)
 
             }
 

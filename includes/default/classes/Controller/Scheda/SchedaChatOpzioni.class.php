@@ -27,11 +27,9 @@ class SchedaChatOpzioni extends Scheda
     public function indexSchedaChatOpzioni(string $op): string
     {
 
-        switch ( $op ) {
-            default:
-                $page = 'update.php';
-                break;
-        }
+        $page = match ($op) {
+            default => 'update.php',
+        };
 
         return Filters::out($page);
     }
@@ -43,6 +41,7 @@ class SchedaChatOpzioni extends Scheda
      * @note Creazione della sezione della gestione delle opzioni chat
      * @param int $pg
      * @return string
+     * @throws Throwable
      */
     public function optionsList(int $pg): string
     {
@@ -70,9 +69,10 @@ class SchedaChatOpzioni extends Scheda
 
     /**
      * @fn updateOptions
-     * @note Funzione per l'update delle opzioni chat
+     * @note Funzione per update delle opzioni chat
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public final function updateOptions(array $post): array
     {
@@ -81,7 +81,7 @@ class SchedaChatOpzioni extends Scheda
 
         if ( $this->isAccessible($pg) ) {
 
-            DB::query("DELETE FROM personaggio_chat_opzioni WHERE personaggio='{$pg}'");
+            DB::queryStmt("DELETE FROM personaggio_chat_opzioni WHERE personaggio=:pg",[ 'pg' => $pg ]);
 
             $options_list = ChatOpzioni::getInstance()->getAllOptions();
 
@@ -98,7 +98,7 @@ class SchedaChatOpzioni extends Scheda
             }
 
             if ( !empty($empty_const) ) {
-                return $this->errorOptions($empty_const, 'save');
+                return $this->errorOptions($empty_const);
             } else {
                 return [
                     'response' => true,
@@ -125,9 +125,10 @@ class SchedaChatOpzioni extends Scheda
      * @param string $type
      * @param mixed $val
      * @param int $pg
-     * @return bool|int|mixed|string
+     * @return bool
+     * @throws Throwable
      */
-    private final function saveOption(string $name, string $type, $val, int $pg)
+    private function saveOption(string $name, string $type, mixed $val, int $pg): bool
     {
 
         $name = Filters::in($name);
@@ -145,10 +146,10 @@ class SchedaChatOpzioni extends Scheda
                     } else {
                         $val = Filters::int($val);
                     }
-                    break;
                 } else {
                     $val = '';
                 }
+                break;
 
             default:
             case 'string':
@@ -162,20 +163,20 @@ class SchedaChatOpzioni extends Scheda
     /**
      * @fn errorConstant
      * @note Crea l'errore e la lista delle opzioni in errore
-     * @param array $consts
-     * @param string $type
+     * @param array $constants
      * @return array
      */
-    private final function errorOptions(array $consts, string $type): array
+    private function errorOptions(array $constants): array
     {
+        $resp = '';
 
-        switch ( $type ) {
+        switch ( 'save' ) {
             case 'save':
                 $resp = 'Errore durante l\'update delle opzioni, controllare i valori di: ';
                 break;
         }
 
-        foreach ( $consts as $e ) {
+        foreach ( $constants as $e ) {
 
             $resp .= " {$e},";
         }

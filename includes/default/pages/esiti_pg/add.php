@@ -54,7 +54,7 @@ if ( $_POST['op'] == 'add' ) {
             </div>
             <!-- Link a piè di pagina -->
             <div class="link_back">
-                <a href="main.php?page=servizi_esiti">Torna indietro</a>
+                <a href="main.php?page=servizi/esiti/esiti_index">Torna indietro</a>
             </div>
         <?php }
     } else {

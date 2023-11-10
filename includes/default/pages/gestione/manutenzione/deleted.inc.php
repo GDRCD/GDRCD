@@ -4,16 +4,12 @@
 gdrcd_query("DELETE FROM clgpersonaggioabilita WHERE nome IN (SELECT nome FROM personaggio WHERE permessi = -1)");
 gdrcd_query("OPTIMIZE TABLE clgpersonaggioabilita");
 
-gdrcd_query("DELETE FROM clgpersonaggiomostrine WHERE nome IN (SELECT nome FROM personaggio WHERE permessi = -1)");
-gdrcd_query("OPTIMIZE TABLE clgpersonaggiomostrine");
 
 gdrcd_query("DELETE FROM clgpersonaggioruolo WHERE personaggio IN (SELECT nome AS personaggio FROM personaggio WHERE permessi = -1)");
 gdrcd_query("OPTIMIZE TABLE clgpersonaggioruolo");
 
 gdrcd_query("DELETE FROM messaggi WHERE mittente IN (SELECT nome AS personaggio FROM personaggio WHERE permessi = -1)");
 gdrcd_query("DELETE FROM messaggi WHERE destinatario IN (SELECT nome AS personaggio FROM personaggio WHERE permessi = -1)");
-gdrcd_query("DELETE FROM backmessaggi WHERE mittente IN (SELECT nome AS personaggio FROM personaggio WHERE permessi = -1)");
-gdrcd_query("DELETE FROM backmessaggi WHERE destinatario IN (SELECT nome AS personaggio FROM personaggio WHERE permessi = -1)");
 gdrcd_query("OPTIMIZE TABLE messaggi");
 
 gdrcd_query("DELETE FROM araldo_letto WHERE nome IN (SELECT nome AS personaggio FROM personaggio WHERE permessi = -1)");

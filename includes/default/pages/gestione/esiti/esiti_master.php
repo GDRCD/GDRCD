@@ -32,7 +32,6 @@ if ( $esiti->esitoMembersPermission($id_record) ) {
             <div class="single_input">
                 <div class="label">Masters</div>
                 <select name="personaggio" required>
-                    <option value=""></option>
                     <?= $esiti->esitiManagersList(); ?>
                 </select>
             </div>

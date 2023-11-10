@@ -8,15 +8,21 @@
 class Abilita extends BaseClass
 {
 
-    protected
-        $abi_public,
-        $abi_level_cap,
-        $default_px_lvl,
+    protected bool
         $abi_requirement,
-        $requisito_abi,
-        $requisito_stat,
         $abi_extra;
 
+    protected int
+        $requisito_abi,
+        $requisito_stat,
+        $abi_level_cap,
+        $default_px_lvl;
+
+    /**
+     * @fn __construct
+     * @note Costruttore della classe
+     * @throws Throwable
+     */
     public function __construct()
     {
         parent::__construct();
@@ -40,48 +46,54 @@ class Abilita extends BaseClass
         $this->abi_extra = Functions::get_constant('ABI_EXTRA');
     }
 
+
+    /*** PERMISSIONS ***/
+
+    /**
+     * @fn permissionManageAbility
+     * @note Controlla se l'utente ha i permessi per gestire le abilita
+     * @return bool
+     * @throws Throwable
+     */
+    public function permissionManageAbility(): bool
+    {
+        return Permissions::permission('MANAGE_ABILITY');
+    }
+
+
     /*** TABLE HELPER */
 
     /**
-     * @fn getAbilita
+     * @fn getAbility
      * @note Ottiene i dati di un'abilita'
      * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAbilita(int $id, string $val = '*')
+    public function getAbility(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM abilita WHERE id = '{$id}' LIMIT 1");
+        return DB::queryStmt("SELECT {$val} FROM abilita WHERE id = :id LIMIT 1", ['id' => $id]);
     }
 
     /**
      * @fn getAllAbilita
      * @note Estrae la lista abilita, se specificato un pg ci associa anche il grado
      * @param string $val
-     * @return bool|int|array
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllAbilita(string $val = 'abilita.*')
+    public function getAllAbilita(string $val = 'abilita.*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM abilita WHERE 1 ORDER BY nome", 'result');
+        return DB::queryStmt("SELECT {$val} FROM abilita WHERE 1 ORDER BY nome", []);
     }
 
-    /**
-     * @fn getAllAbilitaByRace
-     * @note Estrae la lista abilita da razza
-     * @param int $race
-     * @param string $val
-     * @return bool|int
-     */
-    public function getAllAbilitaByRace(int $race, string $val = 'abilita.*')
-    {
-        return DB::query("SELECT {$val} FROM abilita WHERE razza='{$race}' ORDER BY nome", 'result');
-    }
 
     /**** CONTROLS ****/
 
     /**
      * @fn extraActive
-     * @note Controlla se la tabella `abilita_extra` e' attiva
+     * @note Controlla se la tabella `abilita_extra` è attiva
      * @return bool
      */
     public function extraActive(): bool
@@ -91,7 +103,7 @@ class Abilita extends BaseClass
 
     /**
      * @fn requirementActive
-     * @note Controlla se la tabella `abilita_requisiti` e' attiva
+     * @note Controlla se la tabella `abilita_requisiti` è attiva
      * @return bool
      */
     public function requirementActive(): bool
@@ -99,31 +111,48 @@ class Abilita extends BaseClass
         return $this->abi_requirement;
     }
 
+    /**
+     * @fn abiLevelCap
+     * @note Restituisce il livello massimo di un'abilita'
+     * @return int
+     */
     public function abiLevelCap(): int
     {
         return $this->abi_level_cap;
     }
+
 
     /***** LISTS *****/
 
     /**
      * @fn ListaAbilita
      * @note Ritorna una serie di option per una select contenente la lista abilita'
+     * @param int $selected
      * @return string
+     * @throws Throwable
      */
-    public function listAbilita($selected = 0): string
+    public function listAbility(int $selected = 0): string
     {
-        $html = '<option value=""></option>';
-        $abis = $this->getAllAbilita();
+        $abilities = $this->getAllAbilita();
+        return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', $selected, $abilities);
+    }
 
-        foreach ( $abis as $abi ) {
-            $nome = Filters::out($abi['nome']);
-            $id = Filters::int($abi['id']);
-            $sel = ($id == $selected) ? 'selected' : '';
-            $html .= "<option value='{$id}' {$sel}>{$nome}</option>";
+
+    /***** AJAX *****/
+
+    /**
+     * @fn ajaxAbilityData
+     * @note Estrae i dati di un'abilita'
+     * @param array $post
+     * @return DBQueryInterface|void
+     * @throws Throwable
+     */
+    public function ajaxAbilityData(array $post)
+    {
+        if ( $this->permissionManageAbility() ) {
+            $id = Filters::int($post['id']);
+            return $this->getAbility($id)->getData()[0];
         }
-
-        return $html;
     }
 
     /*** FUNCTIONS ***/
@@ -137,6 +166,144 @@ class Abilita extends BaseClass
     public function defaultCalcUp(int $grado): int
     {
         return round(Filters::int($grado) * $this->default_px_lvl);
+    }
+
+
+    /**** GESTIONE ****/
+
+    /**
+     * @fn newAbility
+     * @note Inserisce una nuova abilita'
+     * @param array $post
+     * @return array
+     * @throws Throwable
+     */
+    public function newAbility(array $post): array
+    {
+
+        if ( $this->permissionManageAbility() ) {
+
+            $name = Filters::in($post['nome']);
+            $stat = Filters::in($post['statistica']);
+            $desc = Filters::in($post['descrizione']);
+            $race = Filters::in($post['razza']);
+
+            DB::queryStmt("INSERT INTO abilita (nome, descrizione,statistica,razza) VALUES (:name, :description,:stat,:race)", [
+                'name' => $name,
+                'description' => $desc,
+                'stat' => $stat,
+                'race' => $race,
+            ]);
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Abilita creata correttamente.',
+                'swal_type' => 'success',
+                'ability_list' => $this->listAbility(),
+            ];
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error',
+            ];
+        }
+    }
+
+    /**
+     * @fn modAbility
+     * @note Modifica i dati di un'abilita'
+     * @param array $post
+     * @return array
+     * @throws Throwable
+     */
+    public function modAbility(array $post): array
+    {
+
+        if ( $this->permissionManageAbility() ) {
+
+            $id = Filters::int($post['id']);
+            $name = Filters::in($post['nome']);
+            $stat = Filters::in($post['statistica']);
+            $desc = Filters::in($post['descrizione']);
+            $race = Filters::in($post['razza']);
+
+            DB::queryStmt("UPDATE abilita SET nome = :name, descrizione = :description,statistica = :stat,razza = :race WHERE id=:id", [
+                'id' => $id,
+                'name' => $name,
+                'description' => $desc,
+                'stat' => $stat,
+                'race' => $race,
+            ]);
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Abilita modificata correttamente.',
+                'swal_type' => 'success',
+                'ability_list' => $this->listAbility(),
+            ];
+
+        } else {
+
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error',
+            ];
+        }
+    }
+
+    /**
+     * @fn delAbility
+     * @note Elimina un'abilita'
+     * @param array $post
+     * @return array
+     * @throws Throwable
+     */
+    public function delAbility(array $post): array
+    {
+
+        if ( $this->permissionManageAbility() ) {
+
+            $id = Filters::int($post['id']);
+
+            DB::queryStmt("DELETE FROM abilita_extra WHERE abilita=:id", [
+                'id' => $id,
+            ]);
+
+            DB::queryStmt("DELETE FROM abilita_requisiti WHERE abilita=:id", [
+                'id' => $id,
+            ]);
+
+            DB::queryStmt("DELETE FROM personaggio_abilita WHERE abilita=:id", [
+                'id' => $id,
+            ]);
+
+            DB::queryStmt("DELETE FROM abilita WHERE id=:id", [
+                'id' => $id,
+            ]);
+
+            return [
+                'response' => true,
+                'swal_title' => 'Operazione riuscita!',
+                'swal_message' => 'Abilita eliminata correttamente.',
+                'swal_type' => 'success',
+                'ability_list' => $this->listAbility(),
+            ];
+
+        } else {
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permesso negato.',
+                'swal_type' => 'error',
+            ];
+        }
+
     }
 
 }

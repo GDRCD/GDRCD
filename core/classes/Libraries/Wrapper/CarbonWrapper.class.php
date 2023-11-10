@@ -2,15 +2,22 @@
 
 require ROOT . 'plugins/Carbon/autoload.php';
 
+# ! Non eliminare!
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
 
 class CarbonWrapper
 {
-
-    public function __construct()
+    /**
+     * @fn format
+     * @note Formatta una data in base al formato passato
+     * @param string $date
+     * @param string $format
+     * @return string
+     */
+    public static function format(string $date, string $format = 'd/m/Y H:i:s'): string
     {
-
+        return Carbon::parse($date)->format($format);
     }
 
     /**
@@ -39,7 +46,7 @@ class CarbonWrapper
 
     /**
      * @fn AddDays
-     * @note Aggiunge un numero preciso di giorni ad una data
+     * @note Aggiunge un numero preciso di giorni a una data
      * @param string $date
      * @param int $days
      * @return string
@@ -106,6 +113,13 @@ class CarbonWrapper
         return $start->diffInMinutes($end);
     }
 
+    /**
+     * @fn greaterThan
+     * @note Verifica se una data è maggiore di un'altra
+     * @param string $greater
+     * @param string $than
+     * @return int
+     */
     public static function greaterThan(string $greater, string $than): int
     {
         $date1 = Carbon::createFromFormat('Y-m-d H:i:s', $greater);
@@ -113,9 +127,16 @@ class CarbonWrapper
         return $date1->greaterThan($date2);
     }
 
-    public static function lowerThan(string $greater, string $than): int
+    /**
+     * @fn lowerThan
+     * @note Verifica se una data è minore di un'altra
+     * @param string $lower
+     * @param string $than
+     * @return int
+     */
+    public static function lowerThan(string $lower, string $than): int
     {
-        $date1 = Carbon::createFromFormat('Y-m-d H:i:s', $greater);
+        $date1 = Carbon::createFromFormat('Y-m-d H:i:s', $lower);
         $date2 = Carbon::createFromFormat('Y-m-d H:i:s', $than);
         return $date1->lessThan($date2);
     }
@@ -136,25 +157,15 @@ class CarbonWrapper
             return true;
         } else {
             // Altrimenti estraggo la differenza in base al tipo
-            switch ( $interval_type ) {
-                case 'months':
-                    $diff = CarbonWrapper::DatesDifferenceMonths(date('Y-m-d'), Filters::date($last_exec, 'Y-m-d'));
-                    break;
-                case 'days':
-                    $diff = CarbonWrapper::DatesDifferenceDays(date('Y-m-d'), Filters::date($last_exec, 'Y-m-d'));
-                    break;
-                case 'hours':
-                    $diff = CarbonWrapper::DatesDifferenceHours(date('Y-m-d H:i:s'), Filters::date($last_exec, 'Y-m-d H:i:s'));
-                    break;
-                case 'minutes':
-                    $diff = CarbonWrapper::DatesDifferenceMinutes(date('Y-m-d H:i:s'), Filters::date($last_exec, 'Y-m-d H:i:s'));
-                    break;
-                default:
-                    $diff = 0;
-                    break;
-            }
+            $diff = match ($interval_type) {
+                'months' => CarbonWrapper::DatesDifferenceMonths(date('Y-m-d'), Filters::date($last_exec, 'Y-m-d')),
+                'days' => CarbonWrapper::DatesDifferenceDays(date('Y-m-d'), Filters::date($last_exec, 'Y-m-d')),
+                'hours' => CarbonWrapper::DatesDifferenceHours(date('Y-m-d H:i:s'), Filters::date($last_exec, 'Y-m-d H:i:s')),
+                'minutes' => CarbonWrapper::DatesDifferenceMinutes(date('Y-m-d H:i:s'), Filters::date($last_exec, 'Y-m-d H:i:s')),
+                default => 0,
+            };
 
-            // Controllo se e' superato il timer richiesto
+            // Controllo se è superato il timer richiesto
             return ($diff >= $interval);
         }
     }

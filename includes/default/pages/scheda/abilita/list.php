@@ -5,7 +5,7 @@ $remained_exp = PersonaggioAbilita::getInstance()->RemainedExp($id_pg);
 ?>
 
 <div class="scheda_abilita_box">
-    <div class="fake-table ability_table">
+    <div class="fake-table user_ability_table">
         <?= $scheda_class->abilityPage($id_pg); ?>
     </div>
 </div>

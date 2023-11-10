@@ -3,7 +3,7 @@
 /**
  * @class ContattiCategorie
  * @note Classe per la gestione centralizzata delle categorie dei contatti
- * @required PHP 7.1+
+ * @required PHP 8+
  */
 class ContattiCategorie extends Contatti
 {
@@ -14,6 +14,7 @@ class ContattiCategorie extends Contatti
      * @fn permissionManageCategories
      * @note Controlla se si hanno i permessi per vedere i contatti o se sono i propri
      * @return bool
+     * @throws Throwable
      */
     public function permissionManageCategories(): bool
     {
@@ -27,31 +28,49 @@ class ContattiCategorie extends Contatti
      * @note Estrae una categoria precisa
      * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getCategory(int $id, string $val = '*')
+    public function getCategory(int $id, string $val = '*'):DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM contatti_categorie WHERE id='{$id}' LIMIT 1");
+        return DB::queryStmt("SELECT {$val} FROM contatti_categorie WHERE id=:id LIMIT 1", ['id' => $id]);
     }
 
     /**
      * @fn getAllCategories
      * @note Estrae tutte le categorie
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllCategories(string $val = '*')
+    public function getAllCategories(string $val = '*'):DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM contatti_categorie WHERE 1", 'result');
+        return DB::queryStmt("SELECT {$val} FROM contatti_categorie WHERE 1", []);
     }
 
-    /** LISTE */
+    /**** AJAX ****/
+
+    /**
+     * @fn ajaxCategoriesData
+     * @note Restituisce i dati delle categorie
+     * @param $post
+     * @return array
+     * @throws Throwable
+     */
+    public function ajaxCategoriesData($post): array
+    {
+        $id = Filters::int($post['id']);
+        return $this->getCategory($id)->getData()[0];
+    }
+
+    /**** LISTE ****/
 
     /**
      * @fn listCategories
      * @note Genera gli option per i tipi di categorie
      * @param int $selected
      * @return string
+     * @throws Throwable
      */
     public function listCategories(int $selected = 0): string
     {
@@ -59,23 +78,26 @@ class ContattiCategorie extends Contatti
         return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', $selected, $types);
     }
 
-    /** GESTIONE */
+    /**** GESTIONE ****/
 
     /**
      * @fn NewCategory
      * @note Inserisce una categoria contatto
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function NewCategory(array $post): array
     {
         if ( $this->permissionManageCategories() ) {
 
             $nome = Filters::in($post['nome']);
-            $creato_il = date("Y-m-d H:i:s");
             $creato_da = Filters::int($post['creato_da']);
 
-            DB::query("INSERT INTO contatti_categorie (nome, creato_il, creato_da )  VALUES ('{$nome}','{$creato_il}','{$creato_da}') ");
+            DB::queryStmt("INSERT INTO contatti_categorie (nome, creato_il, creato_da) VALUES (:nome, NOW(), :creato_da)", [
+                'nome' => $nome,
+                'creato_da' => $creato_da
+            ]);
 
             return [
                 'response' => true,
@@ -99,6 +121,7 @@ class ContattiCategorie extends Contatti
      * @note Aggiorna una categoria contatto
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function ModCategory(array $post): array
     {
@@ -106,7 +129,10 @@ class ContattiCategorie extends Contatti
             $id = Filters::int($post['id']);
             $nome = Filters::in($post['nome']);
 
-            DB::query("UPDATE  contatti_categorie SET nome = '{$nome}' WHERE id='{$id}'");
+            DB::queryStmt("UPDATE contatti_categorie SET nome=:nome WHERE id=:id", [
+                'id' => $id,
+                'nome' => $nome
+            ]);
 
             return [
                 'response' => true,
@@ -130,6 +156,7 @@ class ContattiCategorie extends Contatti
      * @note Cancella un gruppo
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function DelCategory(array $post): array
     {
@@ -137,7 +164,9 @@ class ContattiCategorie extends Contatti
 
             $id = Filters::int($post['id']);
 
-            DB::query("DELETE FROM contatti_categorie WHERE id='{$id}'");
+            DB::queryStmt("DELETE FROM contatti_categorie WHERE id=:id", [
+                'id' => $id
+            ]);
 
             return [
                 'response' => true,

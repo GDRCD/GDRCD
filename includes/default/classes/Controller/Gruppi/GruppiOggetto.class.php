@@ -3,7 +3,7 @@
 class GruppiOggetto extends Gruppi
 {
 
-    private
+    private bool
         $active_storage;
 
     protected function __construct()
@@ -14,17 +14,23 @@ class GruppiOggetto extends Gruppi
 
     /*** CONFIG ***/
 
-    public function activeStorage()
+    /**
+     * @fn activeStorage
+     * @note Ritorna se il sistema di gestione magazzino dei gruppi è attivo
+     * @return bool
+     */
+    public function activeStorage(): bool
     {
         return $this->active_storage;
     }
 
-    /** PERMESSI */
+    /**** PERMESSI ****/
 
     /**
      * @fn permissionManageStorages
      * @note Controlla permessi sulla gestione dei depositi
      * @return bool
+     * @throws Throwable
      */
     public function permissionManageStorages(): bool
     {
@@ -36,6 +42,7 @@ class GruppiOggetto extends Gruppi
      * @note Controlla permessi sulla visualizzazione dei depositi
      * @param int $group
      * @return bool
+     * @throws Throwable
      */
     public function permissionViewStorage(int $group): bool
     {
@@ -47,6 +54,7 @@ class GruppiOggetto extends Gruppi
      * @note Controlla permessi sul ritiro degli oggetti dei depositi
      * @param int $group
      * @return bool
+     * @throws Throwable
      */
     public function permissionGetObjectFromStorage(int $group): bool
     {
@@ -54,17 +62,18 @@ class GruppiOggetto extends Gruppi
     }
 
 
-    /** TABLE HELPERS */
+    /**** TABLE HELPERS ****/
 
     /**
      * @fn existGroupObject
      * @note Controlla se un oggetto esiste nel deposito gruppo
      * @param int $id
      * @return bool
+     * @throws Throwable
      */
     public function existGroupObject(int $id): bool
     {
-        $data = DB::query("SELECT * FROM gruppi_oggetto WHERE id='{$id}' LIMIT 1");
+        $data = DB::queryStmt("SELECT * FROM gruppi_oggetto WHERE id=:id LIMIT 1", ['id' => $id]);
         return (DB::rowsNumber($data) > 0);
     }
 
@@ -73,22 +82,24 @@ class GruppiOggetto extends Gruppi
      * @note Estrae un oggetto preciso di un gruppo
      * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getGroupObject(int $id, string $val = 'gruppi_oggetto.*,oggetto.nome,oggetto.immagine')
+    public function getGroupObject(int $id, string $val = 'gruppi_oggetto.*,oggetto.nome,oggetto.immagine'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM gruppi_oggetto LEFT JOIN oggetto ON oggetto.id = gruppi_oggetto.oggetto WHERE gruppi_oggetto.id='{$id}' LIMIT 1");
+        return DB::queryStmt("SELECT {$val} FROM gruppi_oggetto LEFT JOIN oggetto ON gruppi_oggetto.oggetto=oggetto.id WHERE gruppi_oggetto.id=:id LIMIT 1", ['id' => $id]);
     }
 
     /**
      * @fn getAllObjects
      * @note Estrae tutti gli oggetti
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllObjects(string $val = '*')
+    public function getAllObjects(string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM gruppi_oggetto WHERE 1", 'result');
+        return DB::queryStmt("SELECT {$val} FROM gruppi_oggetto WHERE 1",[]);
     }
 
     /**
@@ -96,19 +107,21 @@ class GruppiOggetto extends Gruppi
      * @note Estrae tutti gli oggetti di un gruppo specifico
      * @param int $group
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllObjectsDataByGroup(int $group, string $val = 'gruppi_oggetto.id,oggetto.immagine,oggetto.nome')
+    public function getAllObjectsDataByGroup(int $group, string $val = 'gruppi_oggetto.id,oggetto.immagine,oggetto.nome'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM gruppi_oggetto LEFT JOIN oggetto ON oggetto.id = gruppi_oggetto.oggetto WHERE gruppo='{$group}'", 'result');
+        return DB::queryStmt("SELECT {$val} FROM gruppi_oggetto LEFT JOIN oggetto ON gruppi_oggetto.oggetto=oggetto.id WHERE gruppi_oggetto.gruppo=:group", ['group' => $group]);
     }
 
-    /** LISTS */
+    /**** LISTS ****/
 
     /**
      * @fn listFounds
      * @note Genera gli option per i fondi
      * @return string
+     * @throws Throwable
      */
     public function listFounds(): string
     {
@@ -121,6 +134,7 @@ class GruppiOggetto extends Gruppi
      * @note Genera gli option per i fondi
      * @param int $group
      * @return string
+     * @throws Throwable
      */
     public function listFoundsByGroup(int $group): string
     {
@@ -136,6 +150,7 @@ class GruppiOggetto extends Gruppi
      * @note Ordina i dati per il render degli oggetti
      * @param int $group
      * @return array[]
+     * @throws Throwable
      */
     public function renderStorageObject(int $group): array
     {
@@ -160,6 +175,7 @@ class GruppiOggetto extends Gruppi
      * @note Renderizza la lista degli oggetti nel magazzino
      * @param int $group
      * @return string
+     * @throws Throwable
      */
     public function objectListRender(int $group): string
     {
@@ -172,9 +188,9 @@ class GruppiOggetto extends Gruppi
     /**
      * @fn renderAjaxSingleObjectData
      * @note Render in ajax dei dati del singolo oggetto
-     * TODO aggiungere dati necessari per il render dell'oggetto
      * @param array $data
      * @return array
+     * @throws Throwable
      */
     public function renderAjaxSingleObjectData(array $data): array
     {
@@ -183,7 +199,7 @@ class GruppiOggetto extends Gruppi
         $object_data = [
             "id" => Filters::out($object['id']),
             "nome" => Filters::out($object['nome']),
-            'immagine' => Router::getThemeDir() . 'imgs/items/' . Filters::out($object['immagine']),
+            'immagine' => Router::getImgsDir() . 'items/' . Filters::out($object['immagine']),
             'get_permission' => $this->permissionGetObjectFromStorage($id),
         ];
 
@@ -203,6 +219,7 @@ class GruppiOggetto extends Gruppi
      * @note Ritiro oggetti dal magazzino
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function retireObjectFromStorage(array $post): array
     {
@@ -219,10 +236,14 @@ class GruppiOggetto extends Gruppi
                 $cariche = Filters::int($gruppi_oggetti['cariche']);
                 $commento = Filters::in($gruppi_oggetti['commento']);
 
-                DB::query("INSERT INTO personaggio_oggetto(`personaggio`,`oggetto`,`cariche`,`commento`) 
-                            VALUES('{$this->me_id}','{$oggetto}','{$cariche}','{$commento}')");
+                DB::queryStmt("INSERT INTO personaggio_oggetto(`personaggio`,`oggetto`,`cariche`,`commento`) VALUES(:personaggio,:oggetto,:cariche,:commento)", [
+                    'personaggio' => $this->me_id,
+                    'oggetto' => $oggetto,
+                    'cariche' => $cariche,
+                    'commento' => $commento,
+                ]);
 
-                DB::query("DELETE FROM gruppi_oggetto WHERE id='{$id}'");
+                DB::queryStmt("DELETE FROM gruppi_oggetto WHERE id=:id", ['id' => $id]);
 
                 return [
                     'response' => true,

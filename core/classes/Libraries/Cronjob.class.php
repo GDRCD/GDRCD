@@ -4,13 +4,13 @@ date_default_timezone_set('Europe/Rome');
 
 class Cronjob extends BaseClass
 {
-
-    protected function __construct()
-    {
-        parent::__construct();
-    }
-
-    public function inlineCronjob()
+    /**
+     * @fn inlineCronjob
+     * @note Controlla se i Cronjob sono inline o via call
+     * @return bool
+     * @throws Throwable
+     */
+    public function inlineCronjob():bool
     {
         return Functions::get_constant('INLINE_CRONJOB');
     }
@@ -22,31 +22,36 @@ class Cronjob extends BaseClass
      * @note Ottieni i dati di un cronjob
      * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getCron(int $id, string $val = '*')
+    public function getCron(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM cronjob WHERE id='{$id}' LIMIT 1");
+        return DB::queryStmt("SELECT {$val} FROM cronjob WHERE id=:id LIMIT 1",[
+            'id' => $id
+        ]);
     }
 
     /**
-     * @fn getAllCrons
+     * @fn getAllCronjobs
      * @note Ottieni i dati di tutti i cronjob
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllCrons(string $val = '*')
+    public function getAllCronjobs(string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM cronjob WHERE 1", 'result');
+        return DB::queryStmt("SELECT {$val} FROM cronjob WHERE 1", []);
     }
 
     /*** CONTROLS ***/
 
     /**
      * @fn isInExec
-     * @note Controlla se un cron e' gia' in esecuzione
+     * @note Controlla se un cron è gia' in esecuzione
      * @param int $id
      * @return bool
+     * @throws Throwable
      */
     public function isInExec(int $id): bool
     {
@@ -59,6 +64,7 @@ class Cronjob extends BaseClass
      * @note Controlla se un cron necessita di esecuzione
      * @param int $id
      * @return bool
+     * @throws Throwable
      */
     public function needExec(int $id): bool
     {
@@ -67,32 +73,7 @@ class Cronjob extends BaseClass
         $last_exec = Filters::out($data['last_exec']);
         $interval_type = Filters::out($data['interval_type']);
 
-        // Se non e' mai stato eseguito, lo eseguo
-        if ( empty($last_exec) ) {
-            return true;
-        } else {
-            // Altrimenti estraggo la differenza in base al tipo
-            switch ( $interval_type ) {
-                case 'months':
-                    $diff = CarbonWrapper::DatesDifferenceMonths(date('Y-m-d'), Filters::date($last_exec, 'Y-m-d'));
-                    break;
-                case 'days':
-                    $diff = CarbonWrapper::DatesDifferenceDays(date('Y-m-d'), Filters::date($last_exec, 'Y-m-d'));
-                    break;
-                case 'hours':
-                    $diff = CarbonWrapper::DatesDifferenceHours(date('Y-m-d H:i:s'), Filters::date($last_exec, 'Y-m-d H:i:s'));
-                    break;
-                case 'minutes':
-                    $diff = CarbonWrapper::DatesDifferenceMinutes(date('Y-m-d H:i:s'), Filters::date($last_exec, 'Y-m-d H:i:s'));
-                    break;
-                default:
-                    $diff = 0;
-                    break;
-            }
-
-            // Controllo se e' superato il timer richiesto
-            return ($diff >= $interval);
-        }
+        return CarbonWrapper::needExec($interval, $interval_type, $last_exec);
     }
 
     /**
@@ -100,10 +81,13 @@ class Cronjob extends BaseClass
      * @note Esegue le operazioni prima del cron
      * @param int $id
      * @return void
+     * @throws Throwable
      */
     public function startExec(int $id): void
     {
-        DB::query("UPDATE cronjob SET in_exec=1 WHERE id='{$id}' LIMIT 1");
+        DB::queryStmt("UPDATE cronjob SET in_exec=1 WHERE id=:id LIMIT 1",[
+            'id' => $id
+        ]);
     }
 
     /**
@@ -111,10 +95,13 @@ class Cronjob extends BaseClass
      * @note Esegue le operazioni dopo il cron
      * @param int $id
      * @return void
+     * @throws Throwable
      */
     public function endExec(int $id): void
     {
-        DB::query("UPDATE cronjob SET in_exec=0,last_exec=NOW() WHERE id='{$id}' LIMIT 1");
+        DB::queryStmt("UPDATE cronjob SET in_exec=0,last_exec=NOW() WHERE id=:id LIMIT 1",[
+            'id' => $id
+        ]);
     }
 
     /*** FUNCTIONS ***/
@@ -123,17 +110,17 @@ class Cronjob extends BaseClass
      * @fn startCron
      * @note Esecuzione dei cronjob
      * @return void
+     * @throws Throwable
      */
-    public function startCron()
+    public function startCron(): void
     {
+        $cronjobs = $this->getAllCronjobs();
 
-        $crons = $this->getAllCrons();
-
-        foreach ( $crons as $cron ) {
-            $id = Filters::out($cron['id']);
-            $name = Filters::out($cron['name']);
-            $class = Filters::out($cron['class']);
-            $function = Filters::out($cron['function']);
+        foreach ( $cronjobs as $cronjob ) {
+            $id = Filters::out($cronjob['id']);
+            $name = Filters::out($cronjob['name']);
+            $class = Filters::out($cronjob['class']);
+            $function = Filters::out($cronjob['function']);
 
             if ( $this->needExec($id) && !$this->isInExec($id) ) {
                 if ( method_exists($class, $function) ) {

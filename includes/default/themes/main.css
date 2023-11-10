@@ -119,7 +119,7 @@ div.innertube h2, div.output h2, div.page_title h2 {
 
 /** * Stile dei contenitori grigi con i bordini arrotondati
 */
-div.pagina_info_location, div.messages, div.forums, div.menu, div.presenti, div.output {
+div.pagina_info_location, div.messages, div.box_forums, div.box_messages, div.menu, div.presenti, div.output, div.box_news, div.mappa_rapida {
     margin: 5px auto;
     padding: 10px;
     width: 180px;
@@ -129,6 +129,10 @@ div.pagina_info_location, div.messages, div.forums, div.menu, div.presenti, div.
     -webkit-border-radius: 5px;
     -khtml-border-radius: 5px;
     border-radius: 5px;
+}
+
+div.mappa_rapida {
+    color: black;
 }
 
 div.output {
@@ -169,19 +173,16 @@ div.meteo_luna img {
 
 /** * Frame Messaggi 
 */
-iframe.iframe_messages,
-iframe.iframe_forums {
-    height: 20px;
-    width: 180px;
-}
 
-div.box_messages, .box_forums {
+div.box_messages, .box_forums,
+div.box_news {
     text-align: center;
     font-size: 14px;
 }
 
 div.box_messages a,
 div.box_forums a,
+div.box_news a,
 div.box_messages a:visited,
 div.box_forums a:visited {
     text-decoration: none;
@@ -613,7 +614,8 @@ div.innertube {
     font-size: 15px;
 }
 
-.fake-table .header .header-title {
+.fake-table .header .header-title,
+.fake-table .footer .pagination {
     background: #23272a !important;
     color: #ccc !important;
     font-size: 15px;
@@ -621,6 +623,10 @@ div.innertube {
     padding-top: 0;
     border-bottom: 1px solid #4d5259;
     margin-bottom: 5px;
+}
+
+.fake-table .footer .pagination .current {
+    color: #7289da;
 }
 
 .fake-table .footer a,
@@ -1294,4 +1300,200 @@ div.innertube {
 .groups_storage_container .group_objects_info .single_object_info .object_info .object_sub_info .info_box.info_right {
     width: 5%;
     text-align: center;
+}
+
+
+/**** REGISTRAZIONI GESTIONE ****/
+
+.manage_registrazioni_table .tr .td {
+    width: 15% !important;
+}
+
+.manage_registrazioni_table .commands a,
+.manage_registrazioni_table .commands form {
+    display: inline-block;
+    width: 20px;
+}
+
+.gestione_registrazione {
+    height: 80% !important;
+    width: 800px !important;
+    margin: 0 auto;
+    overflow: auto;
+}
+
+/**** ANAGRAFE ****/
+
+.anagrafe_table .tr .td {
+    width: 24% !important;
+}
+
+.anagrafe_table .tr:not(.header) .td {
+    vertical-align: middle;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 35px;
+    font-size: 17px;
+}
+
+.anagrafe_table .tr .td img {
+    width: 30px;
+    height: 30px;
+}
+
+/**** NEWS ****/
+
+.news_list_table .tr .td {
+    width: 32% !important;
+}
+
+.news_list_table .to_read {
+    color: darkred;
+}
+
+.news_container .single_news {
+    position: relative;
+}
+
+.news_container .single_news.inactive:before {
+    position: absolute;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    content: 'INACTIVE';
+    background: rgba(178, 34, 34, 0.3);
+    z-index: 1;
+    color: red;
+    text-align: right;
+    padding: 0;
+    box-sizing: border-box;
+    pointer-events: none;
+    top: 0;
+    left: 0;
+    justify-content: end;
+    align-items: center;
+}
+
+.news_container .single_news .bottom_box {
+    background: #7289da;
+    border: 1px solid black;
+    padding: 10px 0;
+    min-height: 120px;
+    display: flex;
+    align-items: stretch;
+    margin-bottom: 10px;
+}
+
+.news_container .single_news .bottom_box .post_left {
+    width: 150px;
+}
+
+.news_container .single_news .bottom_box .post_left .avatar {
+    width: 100px;
+    height: 100px;
+    border: 1px solid black;
+    text-align: center;
+    overflow: hidden;
+    margin: 0 auto;
+    border-radius: 5px;
+}
+
+.news_container .single_news .bottom_box .post_left .avatar img {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.news_container .single_news .bottom_box .post_left .name,
+.news_container .single_news .bottom_box .post_left .date {
+    margin: 5px 0;
+}
+
+.news_container .single_news .bottom_box .post_left a {
+    color: #ccc;
+}
+
+.news_container .single_news .bottom_box .post_left a:hover {
+    color: white;
+    text-decoration: none;
+}
+
+.news_container .single_news .bottom_box .post_right {
+    width: calc(100% - 150px);
+    border-left: 1px solid black;
+    text-align: left;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.news_container .single_news .bottom_box .post_right .updated_at {
+    margin-top: 20px;
+    font-style: italic;
+}
+
+.news_container .single_news .bottom_box .post_right .updated_at a {
+    color: #ccc;
+}
+
+.news_container .comment_button {
+    width: 100%;
+    background: #23272a;
+}
+
+.news_container .comment_button a {
+    color: #ccc;
+}
+
+.news_container .comment_button a:hover {
+    color: white;
+}
+
+/**** UTENTI ABILITA ****/
+
+.user_service_ability_table div.abilita_scheda_nome span {
+    width: 98%;
+    font-size: 12px;
+    background: #222222;
+    border: 1px solid black;
+    color: white;
+    cursor: pointer;
+    border-radius: 10px;
+    padding: 2px 5px;
+}
+
+
+.user_service_ability_table div.abilita_scheda_nome span:hover {
+    background: #555555;
+}
+
+.user_service_ability_table div.abilita_scheda_text {
+    width: 100%;
+    background: grey;
+    border: 1px solid black;
+    border-radius: 5px;
+    margin: 10px 0;
+    padding: 0 5px;
+    box-sizing: border-box;
+    display: none;
+}
+
+.user_service_ability_table div.abilita_scheda_text .table-subtitle {
+    border-bottom: 1px solid black;
+    width: 90%;
+    margin: 15px auto;
+}
+
+.user_service_ability_table .tr .td {
+    width: 23% !important;
+}
+
+.user_service_ability_table .abilita_scheda_sub form {
+    display: inline-block;
+    width: 25%;
+}
+
+.user_service_ability_table .extra_level{
+    border-top: 1px solid black;
+    margin: 15px auto;
 }

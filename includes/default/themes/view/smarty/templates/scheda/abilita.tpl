@@ -2,7 +2,7 @@
     <div class="tr">
         <div class="sub-tr">
             <div class="abilita_scheda_nome td" title="Clicca per aprire/chiudere la descrizione.">
-                {{$ability.nome}}
+                <span>{{$ability.nome}}</span>
             </div>
             <div class="abilita_scheda_car td">
                 {{$ability.stat}}

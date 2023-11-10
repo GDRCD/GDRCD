@@ -3,11 +3,12 @@
 class SchedaDiario extends Scheda
 {
 
-    private $diary_active;
+    private bool $diary_active;
 
     /**
      * @fn __construct
      * @note Class constructor
+     * @throws Throwable
      */
     protected function __construct()
     {
@@ -23,11 +24,12 @@ class SchedaDiario extends Scheda
      * @note Restituisce una pagina di diario
      * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getDiary(int $id, string $val = '*')
+    public function getDiary(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM diario WHERE id = '{$id}' LIMIT 1");
+        return DB::queryStmt("SELECT {$val} FROM diario WHERE id = :id LIMIT 1", ['id' => $id]);
     }
 
     /**
@@ -36,12 +38,13 @@ class SchedaDiario extends Scheda
      * @param int $pg
      * @param bool $private_too
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllDiaryByCharacter(int $pg, bool $private_too = false, string $val = '*')
+    public function getAllDiaryByCharacter(int $pg, bool $private_too = false, string $val = '*'): DBQueryInterface
     {
         $extra_query = (!$private_too) ? "AND visibile = '1'" : '';
-        return DB::query("SELECT {$val} FROM diario WHERE personaggio = '{$pg}' {$extra_query} ORDER BY `data` DESC", 'result');
+        return DB::queryStmt("SELECT {$val} FROM diario WHERE personaggio = :pg {$extra_query} ORDER BY `data` DESC", ['pg' => $pg]);
     }
 
     /***** CONFIG ****/
@@ -49,9 +52,9 @@ class SchedaDiario extends Scheda
     /**
      * @fn diaryActive
      * @note Restituisce se il diario è attivo
-     * @return false|mixed
+     * @return bool
      */
-    public function diaryActive()
+    public function diaryActive(): bool
     {
         return $this->diary_active;
     }
@@ -64,6 +67,7 @@ class SchedaDiario extends Scheda
      * @note Permessi per visualizzare la scheda diario privata
      * @param int $id_pg
      * @return bool
+     * @throws Throwable
      */
     public function permessiViewPrivateDiary(int $id_pg): bool
     {
@@ -75,6 +79,7 @@ class SchedaDiario extends Scheda
      * @note Permessi per visualizzare la scheda diario privata
      * @param int $id_pg
      * @return bool
+     * @throws Throwable
      */
     public function permessiUpdateDiary(int $id_pg): bool
     {
@@ -88,6 +93,7 @@ class SchedaDiario extends Scheda
      * @note Crea una nuova pagina diario
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function newDiary(array $post): array
     {
@@ -101,9 +107,17 @@ class SchedaDiario extends Scheda
             $visibile = Filters::checkbox($post['visibile']);
             $testo = Filters::in($post['testo']);
 
-            DB::query("INSERT INTO diario (`personaggio`, `titolo`, `data`, `visibile`, `testo`) 
-                    VALUES 
-                        ('{$pg}', '{$titolo}', '{$date}', '{$visibile}', '{$testo}')");
+            DB::queryStmt(
+                "INSERT INTO diario (`personaggio`, `titolo`, `data`, `visibile`, `testo`)  
+                        VALUES (:pg, :titolo, :data, :visibile, :testo)",
+                [
+                    'pg' => $pg,
+                    'titolo' => $titolo,
+                    'data' => $date,
+                    'visibile' => $visibile,
+                    'testo' => $testo,
+                ]
+            );
 
             return [
                 'response' => true,
@@ -127,6 +141,7 @@ class SchedaDiario extends Scheda
      * @note Modifica una pagina diario
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function editDiary(array $post): array
     {
@@ -142,11 +157,18 @@ class SchedaDiario extends Scheda
             $visibile = Filters::checkbox($post['visibile']);
             $testo = Filters::in($post['testo']);
 
-            DB::query("UPDATE diario 
-                            SET `titolo` = '{$titolo}', `data` = '{$date}', 
-                                `visibile` = '{$visibile}', `testo` = '{$testo}',
-                                `data_modifica` = NOW()
-                            WHERE id = '{$id}'");
+            DB::queryStmt(
+                "UPDATE diario 
+                      SET `titolo` = :titolo, `data` = :data, `visibile` = :visibile, `testo` = :testo, `data_modifica` = NOW()
+                      WHERE id = :id",
+                [
+                    'id' => $id,
+                    'titolo' => $titolo,
+                    'data' => $date,
+                    'visibile' => $visibile,
+                    'testo' => $testo,
+                ]
+            );
 
             return [
                 'response' => true,
@@ -170,6 +192,7 @@ class SchedaDiario extends Scheda
      * @note Elimina una pagina diario
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function deleteDiary(array $post): array
     {
@@ -178,7 +201,12 @@ class SchedaDiario extends Scheda
         $owner = Filters::int($diary_data['personaggio']);
 
         if ( $this->permessiUpdateDiary($owner) ) {
-            DB::query("DELETE FROM diario WHERE id='{$id}' LIMIT 1");
+            DB::queryStmt(
+                "DELETE FROM diario WHERE id=:id LIMIT 1",
+                [
+                    'id' => $id,
+                ]
+            );
 
             return [
                 'response' => true,
@@ -206,6 +234,7 @@ class SchedaDiario extends Scheda
      * @note Elabora i dati della pagina del diario
      * @param int $id_pg
      * @return array
+     * @throws Throwable
      */
     public function renderDiaryPage(int $id_pg): array
     {
@@ -250,6 +279,7 @@ class SchedaDiario extends Scheda
      * @note Renderizza la lista del diario
      * @param int $id_pg
      * @return string
+     * @throws Throwable
      */
     public function diaryList(int $id_pg): string
     {
@@ -265,6 +295,7 @@ class SchedaDiario extends Scheda
      * @note Elabora i dati della pagina del diario
      * @param int $id
      * @return array
+     * @throws Throwable
      */
     public function renderDiaryView(int $id): array
     {
@@ -295,6 +326,7 @@ class SchedaDiario extends Scheda
      * @note Renderizza la pagina del diario
      * @param int $id
      * @return string
+     * @throws Throwable
      */
     public function diaryView(int $id): string
     {

@@ -11,11 +11,11 @@ if ( $cls->permissionManageAvailabilities() ) { # Metodo di controllo per access
         <div class="title"> Gestione Disponibilità</div>
         <div class="subtitle">Gestione dei Disponibilità presenti</div>
 
-        Da questa pagina e' possibile:
+        Da questa pagina è possibile:
         <ul>
-            <li>Creare un nuovo sesso</li>
-            <li>Modificare un sesso esistente</li>
-            <li>Eliminare un sesso</li>
+            <li>Creare una nuova disponibilità</li>
+            <li>Modificare una disponibilità</li>
+            <li>Eliminare una disponibilità</li>
         </ul>
 
     </div>
@@ -49,7 +49,7 @@ if ( $cls->permissionManageAvailabilities() ) { # Metodo di controllo per access
         <form class="form ajax_form edit_form" action="gestione/disponibilita/gestione_disponibilita_ajax.php"
               data-callback="updateAvailabilities">
 
-            <div class="form_title">Modifica fondo gruppo</div>
+            <div class="form_title">Modifica disponibilità</div>
 
             <div class="single_input">
                 <div class="label">Disponibilità</div>
@@ -80,7 +80,7 @@ if ( $cls->permissionManageAvailabilities() ) { # Metodo di controllo per access
         <form class="form ajax_form" action="gestione/disponibilita/gestione_disponibilita_ajax.php"
               data-callback="updateAvailabilities">
 
-            <div class="form_title">Elimina un sesso</div>
+            <div class="form_title">Elimina una disponibilità</div>
 
             <div class="single_input">
                 <div class="label">Disponibilità</div>

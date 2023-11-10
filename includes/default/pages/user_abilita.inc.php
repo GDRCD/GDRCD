@@ -4,7 +4,7 @@
     </div>
     <div class="page_body">
         <?php
-        $query = "SELECT nome, car, descrizione FROM abilita ORDER BY nome";
+        $query = "SELECT nome, statistica, descrizione FROM abilita ORDER BY nome";
         $result = gdrcd_query($query, 'result'); ?>
         <div class="panels_box">
             <div class="elenco_record_gioco">
@@ -14,7 +14,7 @@
                             <div class="titoli_elenco"><?php echo gdrcd_filter('out', $MESSAGE['interface']['skills']['skill']); ?></div>
                         </td>
                         <td class="casella_titolo">
-                            <div class="titoli_elenco"><?php echo gdrcd_filter('out', $MESSAGE['interface']['skills']['car']); ?></div>
+                            <div class="titoli_elenco"><?php echo gdrcd_filter('out', $MESSAGE['interface']['skills']['statistica']); ?></div>
                         </td>
                         <td class="casella_titolo">
                             <div class="titoli_elenco"><?php echo gdrcd_filter('out', $MESSAGE['interface']['skills']['desc']); ?></div>
@@ -26,7 +26,7 @@
                                 <div class="elementi_elenco"><?php echo gdrcd_filter('out', $row['nome']); ?></div>
                             </td>
                             <td class="casella_elemento">
-                                <div class="elementi_elenco"><?php echo gdrcd_filter('out', $PARAMETERS['names']['stats']['car'.$row['car']]); ?></div>
+                                <div class="elementi_elenco"><?php echo gdrcd_filter('out', $PARAMETERS['names']['stats']['car'.$row['statistica']]); ?></div>
                             </td>
                             <td class="casella_elemento">
                                 <div class="elementi_elenco"><?php echo gdrcd_bbcoder(gdrcd_filter('out', $row['descrizione'])); ?></div>

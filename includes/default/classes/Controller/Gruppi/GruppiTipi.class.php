@@ -6,18 +6,13 @@
  */
 class GruppiTipi extends Gruppi
 {
-
-    protected function __construct()
-    {
-        parent::__construct();
-    }
-
-    /** PERMESSI */
+    /**** PERMESSI ****/
 
     /**
      * @fn permissionManageTypes
      * @note Controlla permessi sulla gestione dei tipi
      * @return bool
+     * @throws Throwable
      */
     public function permissionManageTypes(): bool
     {
@@ -31,30 +26,33 @@ class GruppiTipi extends Gruppi
      * @note Estrae un tipo preciso
      * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getType(int $id, string $val = '*')
+    public function getType(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM gruppi_tipo WHERE id='{$id}' LIMIT 1");
+        return DB::queryStmt("SELECT {$val} FROM gruppi_tipo WHERE id=:id LIMIT 1", ['id' => $id]);
     }
 
     /**
      * @fn getAllTypes
      * @note Estrae tutti i tipi
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllTypes(string $val = '*')
+    public function getAllTypes(string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM gruppi_tipo WHERE 1", 'result');
+        return DB::queryStmt("SELECT {$val} FROM gruppi_tipo WHERE 1", []);
     }
 
-    /** LISTE */
+    /**** LISTE ****/
 
     /**
      * @fn listTypes
      * @note Genera gli option per i tipi di gruppo
      * @return string
+     * @throws Throwable
      */
     public function listTypes(): string
     {
@@ -62,27 +60,29 @@ class GruppiTipi extends Gruppi
         return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $types);
     }
 
-    /** AJAX */
+    /**** AJAX ****/
 
     /**
      * @fn ajaxTypeData
      * @note Estrae i dati di un tipo dinamicamente
      * @param array $post
-     * @return array|bool|int|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function ajaxTypeData(array $post): array
+    public function ajaxTypeData(array $post): DBQueryInterface
     {
         $id = Filters::int($post['id']);
-        return $this->getType($id);
+        return $this->getType($id)->getData()[0];
     }
 
-    /** GESTIONE */
+    /**** GESTIONE ****/
 
     /**
      * @fn NewType
      * @note Inserisce un tipo gruppo
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function NewType(array $post): array
     {
@@ -91,8 +91,10 @@ class GruppiTipi extends Gruppi
             $nome = Filters::in($post['nome']);
             $descr = Filters::in($post['descrizione']);
 
-            DB::query("INSERT INTO gruppi_tipo (nome,descrizione )  
-                        VALUES ('{$nome}','{$descr}') ");
+            DB::queryStmt(
+                "INSERT INTO gruppi_tipo (nome,descrizione) VALUES (:nome,:descr)",
+                ['nome' => $nome, 'descr' => $descr]
+            );
 
             return [
                 'response' => true,
@@ -116,6 +118,7 @@ class GruppiTipi extends Gruppi
      * @note Aggiorna un ruolo gruppo
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function ModType(array $post): array
     {
@@ -124,9 +127,10 @@ class GruppiTipi extends Gruppi
             $nome = Filters::in($post['nome']);
             $descr = Filters::in($post['descrizione']);
 
-            DB::query("UPDATE  gruppi_tipo 
-                SET nome = '{$nome}', 
-                    descrizione='{$descr}' WHERE id='{$id}'");
+            DB::queryStmt(
+                "UPDATE gruppi_tipo SET nome=:nome,descrizione=:descr WHERE id=:id",
+                ['id' => $id, 'nome' => $nome, 'descr' => $descr]
+            );
 
             return [
                 'response' => true,
@@ -150,6 +154,7 @@ class GruppiTipi extends Gruppi
      * @note Cancella un ruolo gruppo
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function DelType(array $post): array
     {
@@ -157,7 +162,10 @@ class GruppiTipi extends Gruppi
 
             $id = Filters::in($post['id']);
 
-            DB::query("DELETE FROM gruppi_tipo WHERE id='{$id}'");
+            DB::queryStmt(
+                "DELETE FROM gruppi_tipo WHERE id=:id",
+                ['id' => $id]
+            );
 
             return [
                 'response' => true,

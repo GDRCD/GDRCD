@@ -44,4 +44,19 @@ if ( !DbMigrationEngine::dbNeedsInstallation() ) {
             </div>
         </div>
     <?php }
-} ?>
+} else { ?>
+    <div class="pagina_ambientazione">
+        <h2>GDRCD 6.0</h2>
+        <p>Il database non è stato installato.</p>
+        <div class="link_back">
+            <a href="installer.php">
+                Vai alla pagina di installazione
+            </a>
+        </div>
+        <div class="link_back">
+            <a href="index.php">
+                Indietro
+            </a>
+        </div>
+    </div>
+<?php } ?>

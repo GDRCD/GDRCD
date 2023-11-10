@@ -56,7 +56,7 @@ class Form {
 
         //*** SWAL CONFIRM
         if (cls.swal_alert) {
-            accepted = await Swal.button(
+            accepted = await SwalWrapper.button(
                 'Confermi l\'invio del form?',
                 '',
                 'info',
@@ -96,16 +96,6 @@ class Form {
                 if (data) {
                     let json = JSON.parse(data);
 
-                    //*** CALLBACK
-                    if (success != false) {
-
-                        let callback = eval(success)
-
-                        if (typeof callback === "function") {
-                            callback.call(this, data);
-                        }
-                    }
-
                     //**** RESET
                     if (cls.form_reset && json.response === true) {
                         await cls.FormReset(form);
@@ -116,15 +106,33 @@ class Form {
 
                         if (json.swal_title) {
 
-                            await Swal.fire(
+                        await SwalWrapper.fire(
                                 json.swal_title,
                                 (json.swal_message) ? json.swal_message : '',
                                 (json.swal_type) ? json.swal_type : ''
-                            )
+                        ).then(() => {
+                            if (success != false) {
 
+                                let callback = eval(success)
+
+                                if (typeof callback === "function") {
+                                    callback.call(this, data);
+                                }
+                            }
+                        })
+                    }
+                } else{
+                    //*** CALLBACK
+                    if (success != false) {
+
+                        let callback = eval(success)
+
+                        if (typeof callback === "function") {
+                            callback.call(this, data);
                         }
                     }
                 }
+
             }
         });
     }
@@ -133,6 +141,7 @@ class Form {
         $(form).find('input[type="file"]').val('');
         $(form).find('input[type="number"]').val('');
         $(form).find('input[type="text"]').val('');
+        $(form).find('input[type="datetime-local"]').val('');
         $(form).find('input[type="checkbox"]').prop('checked', false);
         $(form).find('input[type="email"]').val('');
         $(form).find('input[type="password"]').val('');

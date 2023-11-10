@@ -5,7 +5,7 @@ Router::loadRequired();
 $cls = ContattiCategorie::getInstance();
 
 switch ( $_POST['action'] ) {
-    case 'get_group_data':
+    case 'get_category_data':
         echo json_encode($cls->ajaxCategoriesData($_POST));
         break;
 

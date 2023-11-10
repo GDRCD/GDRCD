@@ -23,8 +23,8 @@ class Login extends BaseClass
     /**
      * @fn isAccountBanned
      * @note Permette di sapere se il personaggio è stato bannato
-     * @param string $username lo username del personaggio da verificare
-     * @return false|array false se il personaggio non è stato esiliato, altrimenti un array con i dettagli del ban
+     * @param string $username Lo username del personaggio da verificare
+     * @return false|array False se il personaggio non è stato esiliato, altrimenti un array con i dettagli del ban
      * @throws Throwable
      */
     public static function isAccountBanned(string $username): false|array {
@@ -113,7 +113,7 @@ class Login extends BaseClass
      */
     public function afterLogin(): void
     {
-        if ( Functions::get_constant('LOGIN_BACK_LOCATION') ) {
+        if ( !Functions::get_constant('LOGIN_BACK_LOCATION') ) {
             Session::store('luogo', -1);
             $redirectUrl = 'main.php?page=mappaclick&map_id=' . Session::read('mappa');
         } else {

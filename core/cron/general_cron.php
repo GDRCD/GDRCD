@@ -4,4 +4,8 @@ require_once(__DIR__ . '/../required.php');
 
 $cron = Cronjob::getInstance();
 
-$cron->startCron();
+try {
+    $cron->startCron();
+} catch ( Throwable $e ) {
+    die($e->getMessage());
+}

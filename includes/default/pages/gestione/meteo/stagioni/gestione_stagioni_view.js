@@ -6,7 +6,7 @@ $(function () {
         let id = $(this).data('id'),
             action = $(this).data('action');
 
-        let button = await Swal.button('Sei sicuro?', 'Vuoi eliminare questa stagione? Azione irreversibile.', 'question');
+        let button = await SwalWrapper.button('Sei sicuro?', 'Vuoi eliminare questa stagione? Azione irreversibile.', 'info');
 
         if (button) {
             Ajax('gestione/meteo/stagioni/gestione_stagioni_ajax.php', {
@@ -26,7 +26,7 @@ $(function () {
             if (datas.response) {
                 $('.stagioni-table').html(datas.stagioni_list)
 
-                Swal.fire(datas.swal_title, datas.swal_message, datas.swal_type)
+                SwalWrapper.fire(datas.swal_title, datas.swal_message, datas.swal_type)
 
             }
 

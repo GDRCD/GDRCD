@@ -1,5 +1,7 @@
 <?php
 
+# TODO REFACTORING
+
 class Quest extends BaseClass
 {
 
@@ -443,7 +445,7 @@ class Quest extends BaseClass
                 <a href="main.php?page=gestione/quest/gestione_quest_index&op=insert_quest">
                     Registra nuova quest
                 </a> |
-                <a href="main.php?page=gestione">
+                <a href="/main.php?page=gestione">
                     Indietro
                 </a>
             </div>';
@@ -535,12 +537,12 @@ class Quest extends BaseClass
         $html .= '<div class="tr footer">';
 
         if ( $this->manageTramePermission() ) {
-            $html .= '<a href="main.php?page=gestione_trame&op=insert_trama">
+            $html .= '<a href="/main.php?page=gestione_trame&op=insert_trama">
                 Registra nuova trama
             </a> |';
         }
 
-        $html .= '<a href="main.php?page=gestione">
+        $html .= '<a href="/main.php?page=gestione">
                     Indietro
                 </a>
             </div>';
@@ -917,6 +919,7 @@ VALUES('{$titolo}','','{$descr}','{$trama}',NOW(),'{$this->me_id}')");
      * @param string $titolo
      * @param int $quest_id
      * @return array
+     * @throws Throwable
      */
     private function assignExp(array $partecipanti, string $titolo, int $quest_id): array
     {
@@ -936,7 +939,7 @@ VALUES('{$titolo}','','{$descr}','{$trama}',NOW(),'{$this->me_id}')");
                 DB::query("INSERT INTO personaggio_quest(id_quest, personaggio, data, commento, px_assegnati, autore)
 VALUES('{$quest_id}','{$id_pg}',NOW(),'{$pg_comm}','{$pg_px}','{$this->me_id}')");
 
-                Personaggio::updatePgData($id_pg, "esperienza = esperienza + '{$pg_px}'");
+                Personaggio::updatePgData($id_pg, "esperienza = esperienza + :exp", ['exp' => $pg_px]);
 
                 Log::newLog([
                     "autore" => $this->me_id,

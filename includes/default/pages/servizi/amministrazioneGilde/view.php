@@ -61,5 +61,5 @@ $gruppi = Gruppi::getInstance();
 </div>
 
 <div class="link_back">
-    <a href="main.php?page=uffici">Torna indietro</a>
+    <a href="main.php?page=servizi">Torna indietro</a>
 </div>

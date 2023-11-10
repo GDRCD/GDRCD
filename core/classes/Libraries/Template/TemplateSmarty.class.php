@@ -2,7 +2,7 @@
 
 class TemplateSmarty extends Template
 {
-    private $smarty;
+    private mixed $smarty;
 
     public function startTemplate(): Template
     {
@@ -26,7 +26,7 @@ class TemplateSmarty extends Template
         if ( file_exists($this->smarty->getTemplateDir()[0] . $file_name . '.tpl') ) {
             $render = $this->smarty->fetch($file_name . '.tpl');
         } else {
-            $render = $this->renderRaw($file_name . '.php', $data);
+            $render = $this->renderRaw($file_name . '.php');
         }
 
         return $render;
@@ -46,9 +46,14 @@ class TemplateSmarty extends Template
         $this->smarty->assign($container, $old_val);
     }
 
-    public function renderSelect($value_cell, $name_cell, $selected, $data): string
+    public function renderSelect($value_cell, $name_cell, $selected, $data, $label = ''): string
     {
-        return $this->render('select', ['options' => $data, 'value_cell' => $value_cell, 'name_cell' => $name_cell, 'selected_value' => $selected]);
+        return $this->render('select', ['options' => $data, 'value_cell' => $value_cell, 'name_cell' => $name_cell, 'selected_value' => $selected,'label'=>$label]);
+    }
+
+    public function renderSelectMulti($value_cell, $name_cell, $selected, $data, $label = ''): string
+    {
+        return $this->render('select_multi', ['options' => $data, 'value_cell' => $value_cell, 'name_cell' => $name_cell, 'selected_value' => $selected,'label'=>$label]);
     }
 
     public function renderTable($body_file, $data): string

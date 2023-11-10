@@ -5,11 +5,11 @@ class Filters extends BaseClass
     /**
      * @fn gdrcd_filter
      * @note Funzione per il filtraggio dei dati
-     * @param mixed $type
+     * @param string $type
      * @param mixed $val
      * @return mixed
      */
-    public static function gdrcd_filter($type, $val)
+    public static function gdrcd_filter(string $type, mixed $val): mixed
     {
 
         switch ( strtolower($type) ) {
@@ -32,11 +32,11 @@ class Filters extends BaseClass
                 break;
 
             case 'email':
-                $val = (preg_match("#^[a-z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,4}$#is", $val)) ? $val : false;
+                $val = (preg_match("#^[a-z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,4}$#i", $val)) ? $val : false;
                 break;
 
             case 'includes':
-                $val = (preg_match("#[^:]#is")) ? htmlentities($val, ENT_QUOTES) : false;
+                $val = (preg_match("#[^:]#i")) ? htmlentities($val, ENT_QUOTES) : false;
                 break;
 
             case 'url':
@@ -78,10 +78,10 @@ class Filters extends BaseClass
     /**
      * @fn html
      * @note Filtro di tipo html
-     * @param mixed $val
+     * @param string|null $val
      * @return mixed
      */
-    public static function html($val)
+    public static function html(?string $val): string
     {
         return self::gdrcd_filter('html', $val);
     }
@@ -89,10 +89,10 @@ class Filters extends BaseClass
     /**
      * @fn out
      * @note Filtro di tipo out
-     * @param mixed $val
-     * @return mixed
+     * @param string|null $val
+     * @return string
      */
-    public static function out($val)
+    public static function out(?string $val): string
     {
         return self::gdrcd_filter('out', $val);
     }
@@ -100,10 +100,10 @@ class Filters extends BaseClass
     /**
      * @fn in
      * @note Filtro di tipo in
-     * @param mixed $val
+     * @param string|null $val
      * @return mixed
      */
-    public static function in($val)
+    public static function in(string|null $val): string
     {
         return self::gdrcd_filter('in', $val);
     }
@@ -111,10 +111,10 @@ class Filters extends BaseClass
     /**
      * @fn int
      * @note Filtro di tipo int
-     * @param mixed $val
+     * @param string|null|int $val
      * @return int
      */
-    public static function int($val): int
+    public static function int(string|int|null $val): int
     {
         return self::gdrcd_filter('int', $val);
     }
@@ -122,10 +122,10 @@ class Filters extends BaseClass
     /**
      * @fn int
      * @note Filtro di tipo int
-     * @param mixed $val
+     * @param int|null|bool $val
      * @return bool
      */
-    public static function bool($val): bool
+    public static function bool(int|null|bool $val): bool
     {
         return (bool)self::gdrcd_filter('int', $val);
     }
@@ -133,10 +133,10 @@ class Filters extends BaseClass
     /**
      * @fn url
      * @note Filtro di tipo url
-     * @param mixed $val
+     * @param string|null $val
      * @return string
      */
-    public static function url($val): string
+    public static function url(?string $val): string
     {
         return self::gdrcd_filter('url', $val);
     }
@@ -144,10 +144,10 @@ class Filters extends BaseClass
     /**
      * @fn email
      * @note Filtro di tipo email
-     * @param mixed $val
+     * @param string|null $val
      * @return string
      */
-    public static function email($val): string
+    public static function email(?string $val): string
     {
         return self::gdrcd_filter('email', $val);
     }
@@ -155,10 +155,10 @@ class Filters extends BaseClass
     /**
      * @fn get
      * @note Filtro di tipo get
-     * @param mixed $val
-     * @return mixed
+     * @param string|null $val
+     * @return string
      */
-    public static function get($val)
+    public static function get(?string $val): string
     {
         return self::gdrcd_filter('get', $val);
     }
@@ -166,10 +166,10 @@ class Filters extends BaseClass
     /**
      * @fn text
      * @note Filtro per testi
-     * @param mixed $val
+     * @param string|null $val
      * @return string
      */
-    public static function text($val): string
+    public static function text(?string $val): string
     {
         return nl2br(trim(self::gdrcd_filter('out', $val)));
     }
@@ -177,11 +177,11 @@ class Filters extends BaseClass
     /**
      * @fn date
      * @note Funzione di rendering delle date in base al formato
-     * @param string $val
-     * @param string $format
+     * @param string|null $val
+     * @param string|null $format
      * @return string
      */
-    public static function date(string $val, string $format): string
+    public static function date(?string $val, ?string $format): string
     {
         if ( !empty($val) ) {
             return date($format, strtotime($val));
@@ -193,10 +193,10 @@ class Filters extends BaseClass
     /**
      * @fn checkbox
      * @note Filtro di tipo checkbox per inserimento in db
-     * @param string $val
+     * @param string|null $val
      * @return int
      */
-    public static function checkbox($val): int
+    public static function checkbox(?string $val): int
     {
         return !empty($val) ? 1 : 0;
     }
@@ -204,10 +204,10 @@ class Filters extends BaseClass
     /**
      * @fn string
      * @note Filtro di tipo string per estrazione da db
-     * @param string $val
+     * @param string|null $val
      * @return string
      */
-    public static function string(string $val): string
+    public static function string(?string $val): string
     {
         return self::gdrcd_filter('string', $val);
     }

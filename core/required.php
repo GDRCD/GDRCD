@@ -1,4 +1,8 @@
 <?php
+
+# Setto la timezone corretta
+date_default_timezone_set('Europe/Rome');
+
 # Inizializzo funzioni necessarie
 require_once(dirname(__FILE__) . '/../core/functions.php');
 

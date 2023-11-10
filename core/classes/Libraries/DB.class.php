@@ -14,7 +14,7 @@ interface DBQueryInterface extends ArrayAccess, Countable, Iterator {
 
     /**
      * @fn getAffectedRows
-     * @note Ritorna il numero di righe coinvolte nella query di INSERT/UPDATE/DELETE eseguita
+     * @note Ritorna il numero di righe coinvolte nella query d'INSERT/UPDATE/DELETE eseguita
      * @return int
      */
     public function getAffectedRows(): int;
@@ -28,7 +28,7 @@ interface DBQueryInterface extends ArrayAccess, Countable, Iterator {
 
     /**
      * @fn getInsertId
-     * @note Ritorna l'ultimo id autoincrementante generato per la query di INSERT eseguita
+     * @note Ritorna l'ultimo id auto incrementante generato per la query d'INSERT eseguita
      * @return string|false
      */
     public function getInsertId(): string|false;
@@ -58,7 +58,7 @@ class DB extends BaseClass
     /**
      * @var int ERROR_STANDARD
      * @note Questo flag indica di usare la modalità di segnalazione errori standard di GDRCD. Al primo errore la classe terminerà
-     * l'esecuzione inviando in uscita l'errore formattato in html
+     * L'esecuzione inviando in uscita l'errore formattato in html
      */
     const ERROR_STANDARD = 0;
 
@@ -93,16 +93,7 @@ class DB extends BaseClass
     {
         if (is_null(self::$PDO))
         {
-            /**
-             * TODO: le tabelle del db devono essere in utf8mb4 (e preferibilmente innoDB). Anche la connessione dovrà usare lo stesso charset
-             * @note la codifica utf8 di PHP utilizza gruppi di 4 byte, mentre "utf8" di mysql ne utilizza 3.
-             * Per essere al riparo in maniera certa da qualsiasi potenziale errore di codifica, quella
-             * corretta in mysql dovrebbe essere "utf8mb4", ma al momento le tabelle del db vengono dichiarate
-             * in "utf8". Dal momento che avere un set di caratteri differente tra connessione e tabelle è
-             * tendenzialmente più problematico, la connessione per il momento verrà istanziata in codifica
-             * "utf8" a 3 byte.
-             */
-            $db_charset = 'utf8';
+            $db_charset = 'utf8mb4';
             $db_port = 3306;
             $db_user = $GLOBALS['PARAMETERS']['database']['username'];
             $db_pass = $GLOBALS['PARAMETERS']['database']['password'];
@@ -138,7 +129,7 @@ class DB extends BaseClass
 
                 self::error(
                     new Exception(
-                        $GLOBALS['MESSAGE']['error']['db_not_found']?? 'Impossibile stabilire la connesione al database',
+                        $GLOBALS['MESSAGE']['error']['db_not_found']?? 'Impossibile stabilire la connessione al database',
                         0,
                         $e
                     )
@@ -365,9 +356,10 @@ class DB extends BaseClass
             /**
              * @fn key
              * @note Ottieni la chiave della riga corrente
-             * @return mixed
+             * @return int
              */
-            public function key(): mixed {
+            public function key(): int
+            {
                 return $this->iteratorIndex;
             }
 
@@ -573,7 +565,7 @@ class DB extends BaseClass
         while ( $field = self::query($describe, 'object') ) {
             $defInfo = $result->getColumnMeta($i);
 
-            $field->auto_increment = (strpos($field->Extra, 'auto_increment') === false ? 0 : 1);
+            $field->auto_increment = (!str_contains($field->Extra, 'auto_increment') ? 0 : 1);
             $field->definition = $field->Type;
 
             if ( $field->Null == 'NO' && $field->Key != 'PRI' ) {
@@ -642,7 +634,7 @@ class DB extends BaseClass
             throw $e;
         }
 
-        //> In primis, rendiamo partecipe PHP del problema. Che averne traccia su un file di log aiuta non poco
+        //> Rendiamo partecipe PHP del problema. Che averne traccia su un file di log aiuta non poco
         error_log(
             sprintf(
                 'GDRCD Database Error: %s%s',

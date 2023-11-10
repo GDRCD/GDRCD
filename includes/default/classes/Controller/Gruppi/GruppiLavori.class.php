@@ -7,11 +7,18 @@
 class GruppiLavori extends Gruppi
 {
 
-    private
+    private int
         $max_works,
-        $dimissions_days,
+        $dimissions_days;
+
+    private bool
         $active_works;
 
+    /**
+     * @fn __construct
+     * @note Costruttore della classe
+     * @throws Throwable
+     */
     protected function __construct()
     {
         parent::__construct();
@@ -22,58 +29,54 @@ class GruppiLavori extends Gruppi
 
     /*** CONFIG ***/
 
-    public function activeWorks()
+    /**
+     * @fn activeWorks
+     * @note Ritorna se i lavori sono attivi
+     * @return bool
+     */
+    public function activeWorks(): bool
     {
         return $this->active_works;
     }
 
-    /** PERMESSI */
+    /**** PERMESSI ****/
 
     /**
      * @fn permissionManageWorks
      * @note Controlla permessi sulla gestione dei lavori
      * @return bool
+     * @throws Throwable
      */
     public function permissionManageWorks(): bool
     {
         return Permissions::permission('MANAGE_WORKS');
     }
 
-    /**
-     * @fn permissionManageWorks
-     * @note Controlla permessi sulla gestione dei lavori
-     * @param int $pg
-     * @param int $id
-     * @return bool
-     */
-    public function haveWork(int $pg, int $id): bool
-    {
-        return Permissions::permission('MANAGE_WORKS');
-    }
-
-    /** TABLE HELPERS */
+    /**** TABLE HELPERS ****/
 
     /**
      * @fn getWork
      * @note Estrae un lavoro preciso
      * @param int $id
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getWork(int $id, string $val = '*')
+    public function getWork(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM lavori WHERE id='{$id}' LIMIT 1");
+        return DB::queryStmt("SELECT $val FROM gruppi_lavori WHERE id = :id", ['id' => $id]);
     }
 
     /**
      * @fn getAllWorks
      * @note Estrae tutti i lavori
      * @param string $val
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllWorks(string $val = '*')
+    public function getAllWorks(string $val = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$val} FROM lavori WHERE 1", 'result');
+        return DB::queryStmt("SELECT {$val} FROM lavori WHERE 1", []);
     }
 
     /**
@@ -81,13 +84,16 @@ class GruppiLavori extends Gruppi
      * @note Conta quanti lavori ha un personaggio
      * @param int $pg
      * @return int
+     * @throws Throwable
      */
     public function getCharacterWorksNumbers(int $pg): int
     {
 
-        $groups = DB::query("
+        $groups = DB::queryStmt("
                 SELECT COUNT(personaggio_lavoro.id) AS 'TOT' FROM personaggio_lavoro 
-                WHERE personaggio_lavoro.personaggio ='{$pg}'");
+                WHERE personaggio_lavoro.personaggio =:pg",
+            ['pg' => $pg]
+        );
 
         return Filters::int($groups['TOT']);
     }
@@ -97,36 +103,43 @@ class GruppiLavori extends Gruppi
      * @note Conta quanti lavori ha un personaggio
      * @param int $pg
      * @param int $work
-     * @return mixed
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getCharacterWork(int $pg, int $work)
+    public function getCharacterWork(int $pg, int $work): DBQueryInterface
     {
 
-        return DB::query("
+        return DB::queryStmt("
                 SELECT * FROM personaggio_lavoro 
-                WHERE personaggio_lavoro.personaggio ='{$pg}' AND personaggio_lavoro.lavoro='{$work}'");
+                WHERE personaggio_lavoro.personaggio =:pg AND personaggio_lavoro.lavoro=:work",
+            ['pg' => $pg, 'work' => $work]
+        );
     }
 
     /**
      * @fn getCharacterSalaries
      * @note Ottiene tutti gli stipendi dei ruoli di un personaggio
      * @param int $pg
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getCharacterWorksSalaries(int $pg)
+    public function getCharacterWorksSalaries(int $pg): DBQueryInterface
     {
-        return DB::query(
+        return DB::queryStmt(
             "SELECT lavori.stipendio FROM personaggio_lavoro 
                     LEFT JOIN lavori ON (personaggio_lavoro.lavoro = lavori.id)
-                    WHERE personaggio_lavoro.personaggio ='{$pg}'", 'result');
+                    WHERE personaggio_lavoro.personaggio =:pg",
+            ['pg' => $pg]
+        );
     }
 
-    /** LISTE */
+    /**** LISTE ****/
 
     /**
      * @fn listWorks
      * @note Genera gli option per i lavori
      * @return string
+     * @throws Throwable
      */
     public function listWorks(): string
     {
@@ -140,11 +153,11 @@ class GruppiLavori extends Gruppi
      * @fn groupsList
      * @note Render html della lista dei gruppi
      * @return string
+     * @throws Throwable
      */
     public function worksList(): string
     {
-        $template = Template::getInstance()->startTemplate();
-        return $template->renderTable(
+        return Template::getInstance()->startTemplate()->renderTable(
             'servizi/works_list',
             $this->renderWorksList($this->getAllWorks())
         );
@@ -153,8 +166,9 @@ class GruppiLavori extends Gruppi
     /**
      * @fn renderGroupsList
      * @note Render html lista gruppi
-     * @param array $list
+     * @param object $list
      * @return array
+     * @throws Throwable
      */
     public function renderWorksList(object $list): array
     {
@@ -181,7 +195,7 @@ class GruppiLavori extends Gruppi
             'Comandi',
         ];
         $links = [
-            ['href' => "/main.php?page=uffici", 'text' => 'Indietro'],
+            ['href' => "/main.php?page=servizi", 'text' => 'Indietro'],
         ];
         return [
             'body_rows' => $row_data,
@@ -190,27 +204,29 @@ class GruppiLavori extends Gruppi
         ];
     }
 
-    /** AJAX */
+    /**** AJAX ****/
 
     /**
      * @fn ajaxWorkData
      * @note Estrae i dati di un lavoro dinamicamente
      * @param array $post
-     * @return array|bool|int|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function ajaxWorkData(array $post): array
+    public function ajaxWorkData(array $post): DBQueryInterface
     {
         $id = Filters::int($post['id']);
-        return $this->getWork($id);
+        return $this->getWork($id)->getData()[0];
     }
 
-    /** GESTIONE */
+    /**** GESTIONE ****/
 
     /**
      * @fn NewWork
      * @note Inserisce un lavoro
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function NewWork(array $post): array
     {
@@ -221,8 +237,14 @@ class GruppiLavori extends Gruppi
             $img = Filters::in($post['immagine']);
             $stipendio = Filters::int($post['stipendio']);
 
-            DB::query("INSERT INTO lavori (nome,descrizione,immagine,stipendio)  
-                        VALUES ('{$nome}','{$descr}','{$img}','{$stipendio}') ");
+            DB::queryStmt("INSERT INTO lavori (nome, descrizione, immagine, stipendio) VALUES (:nome, :descr, :img, :stipendio)",
+                [
+                    'nome' => $nome,
+                    'descr' => $descr,
+                    'img' => $img,
+                    'stipendio' => $stipendio,
+                ]
+            );
 
             return [
                 'response' => true,
@@ -246,6 +268,7 @@ class GruppiLavori extends Gruppi
      * @note Aggiorna un lavoro
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function ModWork(array $post): array
     {
@@ -256,12 +279,15 @@ class GruppiLavori extends Gruppi
             $img = Filters::in($post['immagine']);
             $stipendio = Filters::int($post['stipendio']);
 
-            DB::query("UPDATE  lavori 
-                SET nome = '{$nome}', 
-                    descrizione='{$descr}',
-                    immagine ='{$img}',
-                    stipendio='{$stipendio}'
-                    WHERE id='{$id}'");
+            DB::queryStmt("UPDATE lavori SET nome=:nome, descrizione=:descr, immagine=:img, stipendio=:stipendio WHERE id=:id",
+                [
+                    'id' => $id,
+                    'nome' => $nome,
+                    'descr' => $descr,
+                    'img' => $img,
+                    'stipendio' => $stipendio,
+                ]
+            );
 
             return [
                 'response' => true,
@@ -285,6 +311,7 @@ class GruppiLavori extends Gruppi
      * @note Cancella un lavoro
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function DelWork(array $post): array
     {
@@ -292,7 +319,7 @@ class GruppiLavori extends Gruppi
 
             $id = Filters::in($post['id']);
 
-            DB::query("DELETE FROM lavori WHERE id='{$id}'");
+            DB::queryStmt("DELETE FROM lavori WHERE id=:id", ['id' => $id]);
 
             return [
                 'response' => true,
@@ -316,6 +343,7 @@ class GruppiLavori extends Gruppi
      * @note  Assegnazione lato gestione dei lavori
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function assignWork(array $post): array
     {
@@ -331,9 +359,13 @@ class GruppiLavori extends Gruppi
 
                     $scadenza = CarbonWrapper::AddDays(date("Y-m-d"), $this->dimissions_days);
 
-                    DB::query(
-                        "INSERT INTO personaggio_lavoro(personaggio,lavoro,scadenza) 
-                                VALUES('{$pg}','{$id}','{$scadenza}') ");
+                    DB::queryStmt("INSERT INTO lavori_personaggi (personaggio, lavoro, scadenza) VALUES (:pg, :lavoro, :scadenza)",
+                        [
+                            'pg' => $pg,
+                            'lavoro' => $id,
+                            'scadenza' => $scadenza,
+                        ]
+                    );
 
                     return [
                         'response' => true,
@@ -375,6 +407,7 @@ class GruppiLavori extends Gruppi
      * @note Rimozione lato player dei lavori
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function removeWork(array $post): array
     {
@@ -386,7 +419,13 @@ class GruppiLavori extends Gruppi
             $work_data = $this->getCharacterWork($pg, $id);
 
             if ( !empty($work_data) ) {
-                DB::query("DELETE FROM personaggio_lavoro WHERE personaggio='{$pg}' AND lavoro='{$id}' LIMIT 1");
+                DB::queryStmt("DELETE FROM lavori_personaggi WHERE personaggio=:pg AND lavoro=:lavoro",
+                    [
+                        'pg' => $pg,
+                        'lavoro' => $id,
+                    ]
+                );
+
                 return [
                     'response' => true,
                     'swal_title' => 'Operazione riuscita!',
@@ -415,13 +454,14 @@ class GruppiLavori extends Gruppi
 
     }
 
-    /** SERVIZI */
+    /**** SERVIZI ****/
 
     /**
      * @fn autoAssignWork
      * @note Auto Assegnazione lato player dei lavori
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function autoAssignWork(array $post): array
     {
@@ -436,9 +476,13 @@ class GruppiLavori extends Gruppi
 
                     $scadenza = CarbonWrapper::AddDays(date("Y-m-d"), $this->dimissions_days);
 
-                    DB::query(
-                        "INSERT INTO personaggio_lavoro(personaggio,lavoro,scadenza) 
-                                VALUES('{$this->me_id}','{$id}','{$scadenza}') ");
+                    DB::queryStmt("INSERT INTO lavori_personaggi (personaggio, lavoro, scadenza) VALUES (:pg, :lavoro, :scadenza)",
+                        [
+                            'pg' => $this->me_id,
+                            'lavoro' => $id,
+                            'scadenza' => $scadenza,
+                        ]
+                    );
 
                     return [
                         'response' => true,
@@ -480,6 +524,7 @@ class GruppiLavori extends Gruppi
      * @note Auto Rimozione lato player dei lavori
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function autoRemoveWork(array $post): array
     {
@@ -498,7 +543,12 @@ class GruppiLavori extends Gruppi
 
                 if ( $diff > $this->dimissions_days ) {
 
-                    DB::query("DELETE FROM personaggio_lavoro WHERE personaggio='{$this->me_id}' AND lavoro='{$id}' LIMIT 1");
+                    DB::queryStmt("DELETE FROM lavori_personaggi WHERE personaggio=:pg AND lavoro=:lavoro LIMIT 1",
+                        [
+                            'pg' => $this->me_id,
+                            'lavoro' => $id,
+                        ]
+                    );
 
                     return [
                         'response' => true,

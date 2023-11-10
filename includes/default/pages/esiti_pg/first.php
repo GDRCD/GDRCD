@@ -6,7 +6,7 @@ if ( $_GET['op'] == 'first' ) { ?>
     <div class="form_info">
         <?php echo $MESSAGE['interface']['esitiserie']['intro_pg']; ?>
     </div>
-    <form action="main.php?page=servizi_esitinew"
+    <form action="main.php?page=servizi/esiti/esiti_index"
           method="post"
           class="form_gestione">
 
