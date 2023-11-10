@@ -123,7 +123,8 @@ class GDRCD6 extends DbMigration
                 ('NEWS_ENABLED',1,'News','News attive','News attive?','bool',1,NULL),
                 ('CONVERSATIONS_ENABLED',1,'Conversazioni','Conversazioni attive','Conversazioni attive?','bool',1,NULL),
                 ('CALENDAR_ENABLED',1,'Calendario','Calendario attivo','Calendario attivo?','bool',1,NULL),
-                ('CALENDAR_ONLY_FUTURE_SELECTABLE',1,'Calendario','Solo date future selezionabili per nuovi eventi','Solo date future selezionabili per nuovi eventi?','bool',1,NULL)
+                ('CALENDAR_ONLY_FUTURE_SELECTABLE',1,'Calendario','Solo date future selezionabili per nuovi eventi','Solo date future selezionabili per nuovi eventi?','bool',1,NULL),
+                ('TICKET_ENABLED',1,'Ticket','Ticket attivi','Ticket attivi?','bool',1,NULL)
         ;");
 
         DB::query("
@@ -262,6 +263,7 @@ class GDRCD6 extends DbMigration
               ('Gestione', 'News', 'Gestione News', 'gestione/news/news/gestione_news', 'MANAGE_NEWS'),
               ('Gestione', 'News', 'Gestione Tipologia News', 'gestione/news/tipo/gestione_news_tipo', 'MANAGE_NEWS_TYPE'),
               ('Gestione', 'Calendario', 'Gestione Tipologia Eventi Calendario', 'gestione/calendario/gestione_tipi', 'MANAGE_CALENDAR_EVENTS_TYPES'),
+              ('Gestione', 'Ticket', 'Gestione Stati Ticket', 'gestione/ticket/gestione_status', 'MANAGE_TICKET_STATUS'),
               ('Servizi', 'Anagrafe', 'Anagrafe', 'servizi/anagrafe/index', NULL),
               ('Servizi', 'Lavoro', 'Amministrazione Gruppi', 'servizi/amministrazioneGilde/index', NULL),
               ('Servizi', 'Lavoro', 'Lavoro', 'servizi/lavori/index', NULL),
@@ -434,7 +436,8 @@ class GDRCD6 extends DbMigration
                 ('CHAT_MODERATOR','Azioni moderatore in chat'),
                 ('CALENDAR_ADD_QUEST','Aggiungi quest al calendario'),
                 ('CALENDAR_ADD_AMBIENT','Aggiungi quest al calendario'),
-                ('MANAGE_CALENDAR_EVENTS_TYPES','Gestione tipologie eventi calendario')
+                ('MANAGE_CALENDAR_EVENTS_TYPES','Gestione tipologie eventi calendario'),
+                ('MANAGE_TICKET_STATUS','Gestione stati ticket')
                ;"
         );
 
@@ -481,6 +484,14 @@ class GDRCD6 extends DbMigration
             ('Carisma',5,1,'Carisma','1'),
             ('Costituzione',5,1,'Costituzione','1'),
             ('Saggezza',5,1,'Saggezza','1');"
+        );
+
+        DB::query("
+            INSERT INTO ticket_status(`titolo`,`descrizione`,`colore`,`is_initial_state`,`is_blocked`,`creato_da`) VALUES
+            ('Nuovo','Ticket appena aperti','red',true,false,'1'),
+            ('Aperto','Ticket in lavorazione','yellow',false,false,'1'),
+            ('In discussione','Ticket in attesa di qualcosa','grey',false,false,'1'),
+            ('Chiuso','Ticket appena aperti','green',false,true,'1');"
         );
     }
 

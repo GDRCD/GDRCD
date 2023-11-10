@@ -247,6 +247,41 @@ CREATE TABLE IF NOT EXISTS `config_options` (
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `conversazioni`
+--
+
+CREATE TABLE IF NOT EXISTS `conversazioni` (
+    `id` bigint NOT NULL AUTO_INCREMENT,
+    `nome` varchar(255) NOT NULL,
+    `immagine` varchar(255) NOT NULL,
+    `ultimo_messaggio` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `creato_da` int NOT NULL,
+    `eliminato_il` datetime DEFAULT NULL,
+    `eliminato_da` int DEFAULT NULL,
+    PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `conversazioni_membri`
+--
+
+CREATE TABLE IF NOT EXISTS `conversazioni_membri` (
+    `id` bigint NOT NULL AUTO_INCREMENT,
+    `conversazione` int NOT NULL,
+    `personaggio` varchar(255) NOT NULL,
+    `proprietario` tinyint(1) NOT NULL DEFAULT 0,
+    `ultima_lettura` datetime DEFAULT NULL,
+    `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `creato_da` int NOT NULL,
+    PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `cronjob`
 --
 
@@ -705,41 +740,6 @@ CREATE TABLE IF NOT EXISTS `mappa_click` (
   `altezza` smallint NOT NULL DEFAULT '330',
   PRIMARY KEY (`id_click`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `conversazioni`
---
-
-CREATE TABLE IF NOT EXISTS `conversazioni` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `nome` varchar(255) NOT NULL,
-  `immagine` varchar(255) NOT NULL,
-  `ultimo_messaggio` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `creato_da` int NOT NULL,
-  `eliminato_il` datetime DEFAULT NULL,
-  `eliminato_da` int DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `conversazioni_membri`
---
-
-CREATE TABLE IF NOT EXISTS `conversazioni_membri` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `conversazione` int NOT NULL,
-  `personaggio` varchar(255) NOT NULL,
-  `proprietario` tinyint(1) NOT NULL DEFAULT 0,
-  `ultima_lettura` datetime DEFAULT NULL,
-  `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `creato_da` int NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -1400,6 +1400,69 @@ CREATE TABLE IF NOT EXISTS `statistiche` (
   `min_val` int NOT NULL,
   `descrizione` text DEFAULT NULL,
   `iscrizione` bool DEFAULT 0,
+  `creato_da` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `ticket`
+--
+
+CREATE TABLE IF NOT EXISTS `ticket` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `sezione` int NOT NULL,
+  `titolo` varchar(255) NOT NULL,
+  `testo` text NOT NULL,
+  `status` int NOT NULL DEFAULT '0',
+  `assegnato_a` int NOT NULL,
+  `creato_da` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `ticket_messaggi`
+--
+
+CREATE TABLE IF NOT EXISTS `ticket_messaggi` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `testo` text NOT NULL,
+  `creato_da` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `ticket_sezioni`
+--
+
+CREATE TABLE IF NOT EXISTS `ticket_sezioni` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `titolo` varchar(255) NOT NULL,
+  `descrizione` text NOT NULL,
+  `sezione_padre` int DEFAULT NULL,
+  `creabile` tinyint(1) NOT NULL DEFAULT 1,
+  `creato_da` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `ticket_status`
+--
+
+CREATE TABLE IF NOT EXISTS `ticket_status` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `titolo` varchar(255) NOT NULL,
+  `descrizione` text NOT NULL,
+  `colore` varchar(255) DEFAULT NULL,
+  `is_initial_state` tinyint(1) NOT NULL DEFAULT 0,
+  `is_blocked` tinyint(1) NOT NULL DEFAULT 0,
   `creato_da` int DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
