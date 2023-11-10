@@ -106,33 +106,34 @@ class Form {
 
                         if (json.swal_title) {
 
-                        await SwalWrapper.fire(
+                            await SwalWrapper.fire(
                                 json.swal_title,
                                 (json.swal_message) ? json.swal_message : '',
                                 (json.swal_type) ? json.swal_type : ''
-                        ).then(() => {
-                            if (success != false) {
+                            ).then(() => {
+                                if (success != false) {
 
-                                let callback = eval(success)
+                                    let callback = eval(success)
 
-                                if (typeof callback === "function") {
-                                    callback.call(this, data);
+                                    if (typeof callback === "function") {
+                                        callback.call(this, data);
+                                    }
                                 }
+                            })
+                        }
+                    } else {
+                        //*** CALLBACK
+                        if (success != false) {
+
+                            let callback = eval(success)
+
+                            if (typeof callback === "function") {
+                                callback.call(this, data);
                             }
-                        })
-                    }
-                } else{
-                    //*** CALLBACK
-                    if (success != false) {
-
-                        let callback = eval(success)
-
-                        if (typeof callback === "function") {
-                            callback.call(this, data);
                         }
                     }
-                }
 
+                }
             }
         });
     }
