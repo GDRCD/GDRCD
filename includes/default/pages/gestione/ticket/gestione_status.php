@@ -29,7 +29,7 @@ if ( $cls->manageStatusPermission() ) { # Metodo di controllo per accesso alla p
                 </li>
                 <li>
                     <div class="subtitle_gst">Stato iniziale</div>
-                    Se selezionato, il ticket verrà creato con questo stato
+                    Se selezionato, il ticket verrà creato con questo stato <div class="highlight">Fare attenzione che ce ne sia uno</div>
                 </li>
                 <li>
                     <div class="subtitle_gst">Utente bloccato</div>
@@ -87,7 +87,7 @@ if ( $cls->manageStatusPermission() ) { # Metodo di controllo per accesso alla p
                   action="gestione/ticket/gestione_status_ajax.php"
                   data-callback="refreshStatusList">
 
-                <div class="form_title">Modifica stato esistente</div>
+                <div class="form_title">Modifica stato ticket</div>
 
                 <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
                     <div class="label">Stato da modificare</div>
@@ -133,7 +133,7 @@ if ( $cls->manageStatusPermission() ) { # Metodo di controllo per accesso alla p
                   action="gestione/ticket/gestione_status_ajax.php"
                   data-callback="refreshStatusList">
 
-                <div class="form_title">Elimina stato</div>
+                <div class="form_title">Elimina stato ticket</div>
 
                 <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
                     <div class="label">Stato da eliminare</div>
