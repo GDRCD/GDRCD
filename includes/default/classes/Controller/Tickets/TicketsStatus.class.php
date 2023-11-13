@@ -29,7 +29,7 @@ class TicketsStatus extends BaseClass
      */
     public function manageStatusPermission(): bool
     {
-        return Permissions::permission('MANAGE_TICKET_STATUS');
+        return Permissions::permission('MANAGE_TICKETS_STATUS');
     }
 
 
@@ -45,7 +45,7 @@ class TicketsStatus extends BaseClass
      */
     public function getStatus(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM ticket_status WHERE id=:id LIMIT 1", [
+        return DB::queryStmt("SELECT {$val} FROM tickets_status WHERE id=:id LIMIT 1", [
             'id' => $id,
         ]);
     }
@@ -59,7 +59,7 @@ class TicketsStatus extends BaseClass
      */
     public function getAllStatus(string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM ticket_status", []);
+        return DB::queryStmt("SELECT {$val} FROM tickets_status", []);
     }
 
     /**
@@ -72,7 +72,7 @@ class TicketsStatus extends BaseClass
      */
     public function getTicketStatus(int $ticket, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM ticket LEFT JOIN ticket_status ON ticket.status = ticket_status.id WHERE ticket.id=:ticket LIMIT 1", [
+        return DB::queryStmt("SELECT {$val} FROM ticket LEFT JOIN tickets_status ON ticket.status = tickets_status.id WHERE ticket.id=:ticket LIMIT 1", [
             'ticket' => $ticket,
         ]);
     }
@@ -143,7 +143,7 @@ class TicketsStatus extends BaseClass
             $is_initial_state = Filters::checkbox($post['is_initial_state']);
             $is_blocked = Filters::checkbox($post['is_blocked']);
 
-            DB::queryStmt("INSERT INTO ticket_status (titolo,descrizione,colore,is_initial_state,is_blocked,creato_da) VALUES (:titolo,:descrizione,:colore,:is_initial_state,:is_blocked,:creato_da)", [
+            DB::queryStmt("INSERT INTO tickets_status (titolo,descrizione,colore,is_initial_state,is_blocked,creato_da) VALUES (:titolo,:descrizione,:colore,:is_initial_state,:is_blocked,:creato_da)", [
                 'titolo' => $titolo,
                 'descrizione' => $descrizione,
                 'colore' => $colore,
@@ -190,7 +190,7 @@ class TicketsStatus extends BaseClass
             $is_initial_state = Filters::checkbox($post['is_initial_state']);
             $is_blocked = Filters::checkbox($post['is_blocked']);
 
-            DB::queryStmt("UPDATE ticket_status SET titolo=:titolo, descrizione=:descrizione, colore=:colore, is_initial_state=:is_initial_state, is_blocked=:is_blocked WHERE id=:id LIMIT 1", [
+            DB::queryStmt("UPDATE tickets_status SET titolo=:titolo, descrizione=:descrizione, colore=:colore, is_initial_state=:is_initial_state, is_blocked=:is_blocked WHERE id=:id LIMIT 1", [
                 'id' => $id,
                 'titolo' => $titolo,
                 'descrizione' => $descrizione,
@@ -231,7 +231,7 @@ class TicketsStatus extends BaseClass
 
             $id = Filters::int($post['id']);
 
-            DB::queryStmt("DELETE FROM ticket_status WHERE id=:id LIMIT 1", [
+            DB::queryStmt("DELETE FROM tickets_status WHERE id=:id LIMIT 1", [
                 'id' => $id,
             ]);
 

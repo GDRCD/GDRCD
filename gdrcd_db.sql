@@ -1407,17 +1407,19 @@ CREATE TABLE IF NOT EXISTS `statistiche` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `ticket`
+-- Struttura della tabella `tickets`
 --
 
-CREATE TABLE IF NOT EXISTS `ticket` (
+CREATE TABLE IF NOT EXISTS `tickets` (
   `id` int NOT NULL AUTO_INCREMENT,
   `sezione` int NOT NULL,
   `titolo` varchar(255) NOT NULL,
   `testo` text NOT NULL,
   `status` int NOT NULL DEFAULT '0',
+  `archived` tinyint(1) NOT NULL DEFAULT '0',
   `assegnato_a` int NOT NULL,
   `creato_da` int DEFAULT NULL,
+  `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
@@ -1427,20 +1429,21 @@ CREATE TABLE IF NOT EXISTS `ticket` (
 -- Struttura della tabella `ticket_messaggi`
 --
 
-CREATE TABLE IF NOT EXISTS `ticket_messaggi` (
+CREATE TABLE IF NOT EXISTS `tickets_messaggi` (
   `id` int NOT NULL AUTO_INCREMENT,
   `testo` text NOT NULL,
   `creato_da` int DEFAULT NULL,
+  `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `ticket_sezioni`
+-- Struttura della tabella `tickets_sezioni`
 --
 
-CREATE TABLE IF NOT EXISTS `ticket_sezioni` (
+CREATE TABLE IF NOT EXISTS `tickets_sezioni` (
   `id` int NOT NULL AUTO_INCREMENT,
   `titolo` varchar(255) NOT NULL,
   `descrizione` text NOT NULL,
@@ -1453,10 +1456,10 @@ CREATE TABLE IF NOT EXISTS `ticket_sezioni` (
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `ticket_status`
+-- Struttura della tabella `tickets_status`
 --
 
-CREATE TABLE IF NOT EXISTS `ticket_status` (
+CREATE TABLE IF NOT EXISTS `tickets_status` (
   `id` int NOT NULL AUTO_INCREMENT,
   `titolo` varchar(255) NOT NULL,
   `descrizione` text NOT NULL,

@@ -177,6 +177,8 @@ $PARAMETERS['left_column']['box']['frame_forum']['class'] = 'forums';
 $PARAMETERS['left_column']['box']['frame_forum']['page'] = 'forum/frame'; //Link al forum
 $PARAMETERS['left_column']['box']['frame_news']['class'] = 'news';
 $PARAMETERS['left_column']['box']['frame_news']['page'] = 'news/frame'; //Link al forum
+$PARAMETERS['left_column']['box']['frame_tickets']['class'] = 'tickets';
+$PARAMETERS['left_column']['box']['frame_tickets']['page'] = 'tickets/frame'; //Link al forum
 $PARAMETERS['left_column']['box']['link_menu']['class'] = 'menu';
 $PARAMETERS['left_column']['box']['link_menu']['page'] = 'link_menu'; //Menu' del gioco.
 

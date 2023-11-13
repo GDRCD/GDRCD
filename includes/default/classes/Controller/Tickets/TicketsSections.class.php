@@ -29,7 +29,7 @@ class TicketsSections extends BaseClass
      */
     public function manageSectionsPermission(): bool
     {
-        return Permissions::permission('MANAGE_TICKET_SECTIONS');
+        return Permissions::permission('MANAGE_TICKETS_SECTIONS');
     }
 
 
@@ -45,7 +45,7 @@ class TicketsSections extends BaseClass
      */
     public function getSection(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM ticket_sezioni WHERE id=:id LIMIT 1", [
+        return DB::queryStmt("SELECT {$val} FROM tickets_sezioni WHERE id=:id LIMIT 1", [
             'id' => $id,
         ]);
     }
@@ -59,7 +59,7 @@ class TicketsSections extends BaseClass
      */
     public function getAllSections(string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM ticket_sezioni", []);
+        return DB::queryStmt("SELECT {$val} FROM tickets_sezioni", []);
     }
 
     /**
@@ -72,7 +72,7 @@ class TicketsSections extends BaseClass
      */
     public function getTicketSection(int $ticket, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM ticket LEFT JOIN ticket_sezioni ON ticket.sezione = ticket_sezioni.id WHERE ticket.id=:ticket LIMIT 1", [
+        return DB::queryStmt("SELECT {$val} FROM ticket LEFT JOIN tickets_sezioni ON ticket.sezione = tickets_sezioni.id WHERE ticket.id=:ticket LIMIT 1", [
             'ticket' => $ticket,
         ]);
     }
@@ -141,7 +141,7 @@ class TicketsSections extends BaseClass
             $sezione_padre = Filters::int($post['sezione_padre']);
             $creabile = Filters::checkbox($post['creabile']);
 
-            DB::queryStmt("INSERT INTO ticket_sezioni (titolo,descrizione,sezione_padre,creabile,creato_da) VALUES (:titolo,:descrizione,:sezione_padre,:creabile,:creato_da)", [
+            DB::queryStmt("INSERT INTO tickets_sezioni (titolo,descrizione,sezione_padre,creabile,creato_da) VALUES (:titolo,:descrizione,:sezione_padre,:creabile,:creato_da)", [
                 'titolo' => $titolo,
                 'descrizione' => $descrizione,
                 'sezione_padre' => $sezione_padre > 0 ? $sezione_padre : null,
@@ -186,7 +186,7 @@ class TicketsSections extends BaseClass
             $sezione_padre = Filters::int($post['sezione_padre']);
             $creabile = Filters::checkbox($post['creabile']);
 
-            DB::queryStmt("UPDATE ticket_sezioni SET titolo=:titolo,descrizione=:descrizione,sezione_padre=:sezione_padre,creabile=:creabile WHERE id=:id LIMIT 1", [
+            DB::queryStmt("UPDATE tickets_sezioni SET titolo=:titolo,descrizione=:descrizione,sezione_padre=:sezione_padre,creabile=:creabile WHERE id=:id LIMIT 1", [
                 'id' => $id,
                 'titolo' => $titolo,
                 'descrizione' => $descrizione,
@@ -226,11 +226,11 @@ class TicketsSections extends BaseClass
 
             $id = Filters::int($post['id']);
 
-            DB::queryStmt("UPDATE ticket_sezioni SET sezione_padre = NULL WHERE sezione_padre=:id LIMIT 1", [
+            DB::queryStmt("UPDATE tickets_sezioni SET sezione_padre = NULL WHERE sezione_padre=:id LIMIT 1", [
                 'id' => $id,
             ]);
 
-            DB::queryStmt("DELETE FROM ticket_sezioni WHERE id=:id LIMIT 1", [
+            DB::queryStmt("DELETE FROM tickets_sezioni WHERE id=:id LIMIT 1", [
                 'id' => $id,
             ]);
 

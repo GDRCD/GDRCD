@@ -263,8 +263,8 @@ class GDRCD6 extends DbMigration
               ('Gestione', 'News', 'Gestione News', 'gestione/news/news/gestione_news', 'MANAGE_NEWS'),
               ('Gestione', 'News', 'Gestione Tipologia News', 'gestione/news/tipo/gestione_news_tipo', 'MANAGE_NEWS_TYPE'),
               ('Gestione', 'Calendario', 'Gestione Tipologia Eventi Calendario', 'gestione/calendario/gestione_tipi', 'MANAGE_CALENDAR_EVENTS_TYPES'),
-              ('Gestione', 'Ticket', 'Gestione Stati Ticket', 'gestione/tickets/gestione_status', 'MANAGE_TICKET_STATUS'),
-              ('Gestione', 'Ticket', 'Gestione Sezioni Ticket', 'gestione/tickets/gestione_sezioni', 'MANAGE_TICKET_SECTIONS'),
+              ('Gestione', 'Ticket', 'Gestione Stati Ticket', 'gestione/tickets/gestione_status', 'MANAGE_TICKETS_STATUS'),
+              ('Gestione', 'Ticket', 'Gestione Sezioni Ticket', 'gestione/tickets/gestione_sezioni', 'MANAGE_TICKETS_SECTIONS'),
               ('Servizi', 'Anagrafe', 'Anagrafe', 'servizi/anagrafe/index', NULL),
               ('Servizi', 'Lavoro', 'Amministrazione Gruppi', 'servizi/amministrazioneGilde/index', NULL),
               ('Servizi', 'Lavoro', 'Lavoro', 'servizi/lavori/index', NULL),
@@ -438,8 +438,10 @@ class GDRCD6 extends DbMigration
                 ('CALENDAR_ADD_QUEST','Aggiungi quest al calendario'),
                 ('CALENDAR_ADD_AMBIENT','Aggiungi quest al calendario'),
                 ('MANAGE_CALENDAR_EVENTS_TYPES','Gestione tipologie eventi calendario'),
-                ('MANAGE_TICKET_STATUS','Gestione stati ticket'),
-                ('MANAGE_TICKET_SECTIONS','Gestione sezioni ticket')
+                ('TICKET_MANAGER','Gestione tickets'),
+                ('TICKET_RESOLVER','Puo ricevere ticket'),
+                ('MANAGE_TICKETS_STATUS','Gestione stati ticket'),
+                ('MANAGE_TICKETS_SECTIONS','Gestione sezioni ticket')
                ;"
         );
 
@@ -489,7 +491,7 @@ class GDRCD6 extends DbMigration
         );
 
         DB::query("
-            INSERT INTO ticket_status(`titolo`,`descrizione`,`colore`,`is_initial_state`,`is_blocked`,`creato_da`) VALUES
+            INSERT INTO tickets_status(`titolo`,`descrizione`,`colore`,`is_initial_state`,`is_blocked`,`creato_da`) VALUES
             ('Nuovo','Ticket appena aperti','red',true,false,'1'),
             ('Aperto','Ticket in lavorazione','yellow',false,false,'1'),
             ('In discussione','Ticket in attesa di qualcosa','grey',false,false,'1'),
