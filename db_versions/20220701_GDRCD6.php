@@ -263,7 +263,8 @@ class GDRCD6 extends DbMigration
               ('Gestione', 'News', 'Gestione News', 'gestione/news/news/gestione_news', 'MANAGE_NEWS'),
               ('Gestione', 'News', 'Gestione Tipologia News', 'gestione/news/tipo/gestione_news_tipo', 'MANAGE_NEWS_TYPE'),
               ('Gestione', 'Calendario', 'Gestione Tipologia Eventi Calendario', 'gestione/calendario/gestione_tipi', 'MANAGE_CALENDAR_EVENTS_TYPES'),
-              ('Gestione', 'Ticket', 'Gestione Stati Ticket', 'gestione/ticket/gestione_status', 'MANAGE_TICKET_STATUS'),
+              ('Gestione', 'Ticket', 'Gestione Stati Ticket', 'gestione/tickets/gestione_status', 'MANAGE_TICKET_STATUS'),
+              ('Gestione', 'Ticket', 'Gestione Sezioni Ticket', 'gestione/tickets/gestione_sezioni', 'MANAGE_TICKET_SECTIONS'),
               ('Servizi', 'Anagrafe', 'Anagrafe', 'servizi/anagrafe/index', NULL),
               ('Servizi', 'Lavoro', 'Amministrazione Gruppi', 'servizi/amministrazioneGilde/index', NULL),
               ('Servizi', 'Lavoro', 'Lavoro', 'servizi/lavori/index', NULL),
@@ -437,7 +438,8 @@ class GDRCD6 extends DbMigration
                 ('CALENDAR_ADD_QUEST','Aggiungi quest al calendario'),
                 ('CALENDAR_ADD_AMBIENT','Aggiungi quest al calendario'),
                 ('MANAGE_CALENDAR_EVENTS_TYPES','Gestione tipologie eventi calendario'),
-                ('MANAGE_TICKET_STATUS','Gestione stati ticket')
+                ('MANAGE_TICKET_STATUS','Gestione stati ticket'),
+                ('MANAGE_TICKET_SECTIONS','Gestione sezioni ticket')
                ;"
         );
 

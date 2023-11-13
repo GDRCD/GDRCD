@@ -4,13 +4,12 @@ $(function () {
 
     form.find('select[name="id"]').on('change', function () {
         let id = $(this).val()
-        Ajax('gestione/ticket/gestione_status_ajax.php', {'id': id, 'action': 'get_status_data'}, setEditInput)
+        Ajax('gestione/tickets/gestione_status_ajax.php', {'id': id, 'action': 'get_status_data'}, setEditInput)
     });
 
     function setEditInput(data) {
         if (data != '') {
             let datas = JSON.parse(data);
-            console.log(datas);
             form.find('input[name="titolo"]').val(datas.titolo);
             form.find('textarea[name="descrizione"]').val(datas.descrizione);
             form.find('input[name="colore"]').val(datas.colore);

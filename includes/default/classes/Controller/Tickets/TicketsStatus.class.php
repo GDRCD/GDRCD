@@ -1,7 +1,7 @@
 <?php
 
 
-class TicketStatus extends BaseClass
+class TicketsStatus extends BaseClass
 {
 
     /**

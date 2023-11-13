@@ -2,7 +2,7 @@
 
 Router::loadRequired(); # Inserisco il required se non presente, per futuro spostamento in modale/ajax
 
-$cls = TicketStatus::getInstance(); # Inizializzo classe
+$cls = TicketsStatus::getInstance(); # Inizializzo classe
 
 if ( $cls->manageStatusPermission() ) { # Metodo di controllo per accesso alla pagina di gestione
 
@@ -44,7 +44,7 @@ if ( $cls->manageStatusPermission() ) { # Metodo di controllo per accesso alla p
 
             <!-- INSERT -->
             <form class="form ajax_form"
-                  action="gestione/ticket/gestione_status_ajax.php"
+                  action="gestione/tickets/gestione_status_ajax.php"
                   data-callback="refreshStatusList">
 
                 <div class="form_title">Inserisci stato ticket</div>
@@ -84,7 +84,7 @@ if ( $cls->manageStatusPermission() ) { # Metodo di controllo per accesso alla p
 
             <!-- EDIT -->
             <form class="form edit-form ajax_form"
-                  action="gestione/ticket/gestione_status_ajax.php"
+                  action="gestione/tickets/gestione_status_ajax.php"
                   data-callback="refreshStatusList">
 
                 <div class="form_title">Modifica stato ticket</div>
@@ -130,7 +130,7 @@ if ( $cls->manageStatusPermission() ) { # Metodo di controllo per accesso alla p
 
             <!-- DELETE -->
             <form class="form ajax_form"
-                  action="gestione/ticket/gestione_status_ajax.php"
+                  action="gestione/tickets/gestione_status_ajax.php"
                   data-callback="refreshStatusList">
 
                 <div class="form_title">Elimina stato ticket</div>
@@ -152,7 +152,7 @@ if ( $cls->manageStatusPermission() ) { # Metodo di controllo per accesso alla p
         </div>
     </div>
 
-    <script src="<?= Router::getPagesLink('gestione/ticket/gestione_status.js'); ?>"></script>
+    <script src="<?= Router::getPagesLink('gestione/tickets/gestione_status.js'); ?>"></script>
 
     <div class="link_back"><a href="/main.php?page=gestione">Indietro</a></div>
 

@@ -2,7 +2,7 @@
 
 Router::loadRequired();
 
-$cls = TicketStatus::getInstance();
+$cls = TicketsStatus::getInstance();
 
 switch ( $_POST['action'] ) {
     case 'get_status_data':
