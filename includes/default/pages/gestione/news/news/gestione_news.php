@@ -2,10 +2,11 @@
 
 Router::loadRequired(); # Inserisco il required se non presente, per futuro spostamento in modale/ajax
 
-$cls = News::getInstance(); # Inizializzo classe
+$cls = NewsTipo::getInstance(); # Inizializzo classe
+$news = News::getInstance(); # Inizializzo classe
 
 if ( $cls->permissionManageNewsType() ) { # Metodo di controllo per accesso alla pagina di gestione
-    if ( News::getInstance()->newsEnabled() ) {
+    if ( $news->newsEnabled() ) {
         ?>
         <div class="general_incipit">
             <div class="title"> Gestione News</div>
@@ -46,7 +47,7 @@ if ( $cls->permissionManageNewsType() ) { # Metodo di controllo per accesso alla
                 <div class="single_input">
                     <div class="label">Tipo</div>
                     <select name="tipo">
-                        <?= NewsTipo::getInstance()->listNewsType(false); ?>
+                        <?= $cls->listNewsType(false); ?>
                     </select>
                 </div>
 
@@ -71,7 +72,7 @@ if ( $cls->permissionManageNewsType() ) { # Metodo di controllo per accesso alla
                 <div class="single_input">
                     <div class="label">News</div>
                     <select name="id" required>
-                        <?= $cls->listNews(false); ?>
+                        <?= $news->listNews(false) ?>
                     </select>
                 </div>
 
@@ -93,7 +94,7 @@ if ( $cls->permissionManageNewsType() ) { # Metodo di controllo per accesso alla
                 <div class="single_input">
                     <div class="label">Tipo</div>
                     <select name="tipo">
-                        <?= NewsTipo::getInstance()->listNewsType(false); ?>
+                        <?= $cls->listNewsType(false) ?>
                     </select>
                 </div>
 
@@ -119,7 +120,7 @@ if ( $cls->permissionManageNewsType() ) { # Metodo di controllo per accesso alla
                 <div class="single_input">
                     <div class="label">News</div>
                     <select name="id" required>
-                        <?= $cls->listNews(false); ?>
+                        <?= $cls->listNews(false) ?>
                     </select>
                 </div>
 
