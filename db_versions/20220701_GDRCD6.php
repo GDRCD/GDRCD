@@ -123,7 +123,8 @@ class GDRCD6 extends DbMigration
                 ('NEWS_ENABLED',1,'News','News attive','News attive?','bool',1,NULL),
                 ('CONVERSATIONS_ENABLED',1,'Conversazioni','Conversazioni attive','Conversazioni attive?','bool',1,NULL),
                 ('CALENDAR_ENABLED',1,'Calendario','Calendario attivo','Calendario attivo?','bool',1,NULL),
-                ('CALENDAR_ONLY_FUTURE_SELECTABLE',1,'Calendario','Solo date future selezionabili per nuovi eventi','Solo date future selezionabili per nuovi eventi?','bool',1,NULL)
+                ('CALENDAR_ONLY_FUTURE_SELECTABLE',1,'Calendario','Solo date future selezionabili per nuovi eventi','Solo date future selezionabili per nuovi eventi?','bool',1,NULL),
+                ('RECOVERY_TOKEN_VALIDITY_HOUR',24,'Recupero Password','Numero di ore per il ripristino password','Numero di ore di validità del link inviato per email per il ripristino della password dimenticata','int',1,NULL)
         ;");
 
         DB::query("
@@ -275,7 +276,7 @@ class GDRCD6 extends DbMigration
               ('Utenti', 'Ambientazione', 'Razze', 'user_razze', NULL),
               ('Utenti', 'Regolamento', 'Regolamento', 'user_regolamento', NULL),
               ('Utenti', 'Gestione Utente', 'Cambio nome', 'user_cambio_nome', 'MANAGE_NAMES'),
-              ('Utenti', 'Gestione Utente', 'Cambio password', 'user_cambio_pass', NULL),
+              ('Utenti', 'Gestione Utente', 'Cambio password', 'servizi/password/index', NULL),
               ('Utenti', 'Gestione Utente', 'Cancella account', 'user_cancella_pg', NULL),
               ('Utenti', 'Statistiche', 'Statistiche Sito', 'user_stats', NULL),
               ('Rapido', 'Scheda', 'Scheda', 'scheda/index', NULL),
@@ -451,13 +452,17 @@ class GDRCD6 extends DbMigration
                 (1, 1);"
         );
 
+        $MailCrypter = CrypterAlgo::withAlgo('CrypterSha256');
+
         DB::queryStmt("
             INSERT INTO `personaggio` (`nome`, `cognome`, `pass`, `ultimo_cambiopass`, `data_iscrizione`, `email`, `permessi`, `ultima_mappa`, `ultimo_luogo`, `esilio`, `data_esilio`, `motivo_esilio`, `autore_esilio`, `sesso`, `razza`, `descrizione`, `affetti`, `stato`, `online_status`, `disponibile`, `url_img`, `url_img_chat`, `url_media`, `blocca_media`, `esperienza`, `salute`, `salute_max`, `soldi`, `banca`, `last_ip`, `is_invisible`, `ultimo_refresh`, `ora_entrata`, `ora_uscita`, `posizione`) VALUES
-                ('Super', 'User', :superpassword, NULL, '2011-06-04 00:47:48', '\$P\$BNZYtz9JOQE.O4Tv7qZyl3SzIoZzzR.', 5, 1, -1, '2009-01-01', '2009-01-01', '', '', 1, 1, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 100, 100, 300, 50000,  '127.0.0.1', 0, '2021-10-08 00:28:13', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1),
-                ('Test', 'Di Funzionalità', :testpassword, NULL, '2011-06-04 00:47:48', '\$P\$Bd1amPCKkOF9GdgYsibZ96U92D5CtR0', 0, 1, -1, '2009-01-01', '2009-01-01', '', '', 1, 1, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000',  100, 100, 50, 50, '127.0.0.1', 0, '2009-01-01 00:00:00', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1);",
+                ('Super', 'User', :superpassword, NULL, '2011-06-04 00:47:48', :superemail, 5, 1, -1, '2009-01-01', '2009-01-01', '', '', 1, 1, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000', 100, 100, 300, 50000,  '127.0.0.1', 0, '2021-10-08 00:28:13', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1),
+                ('Test', 'Di Funzionalità', :testpassword, NULL, '2011-06-04 00:47:48', :testemail, 0, 1, -1, '2009-01-01', '2009-01-01', '', '', 1, 1, '', '', 'Nella norma', '', 1, 'imgs/avatars/empty.png', '', '', '0', '1000.0000',  100, 100, 50, 50, '127.0.0.1', 0, '2009-01-01 00:00:00', '2009-01-01 00:00:00', '2009-01-01 00:00:00', 1);",
             [
                 'superpassword' => Password::hash('super'),
+                'superemail' => $MailCrypter->crypt('super@gdrcd6.land'),
                 'testpassword' => Password::hash('test'),
+                'testemail' => $MailCrypter->crypt('test@gdrcd6.land')
             ]
         );
 

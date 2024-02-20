@@ -93,46 +93,47 @@ class Form {
             contentType: false,
             processData: false,
             success: async function (data) {
-
-                //**** RESET
-                if (cls.form_reset) {
-                    await cls.FormReset(form);
-                }
-
-                //*** SWAL ALERT
-                if (cls.swal_alert) {
-
+                if (data) {
                     let json = JSON.parse(data);
 
-                    if (json.swal_title) {
-
-                        await SwalWrapper.fire(
-                            json.swal_title,
-                            (json.swal_message) ? json.swal_message : '',
-                            (json.swal_type) ? json.swal_type : ''
-                        ).then(() => {
-                            if (success != false) {
-
-                                let callback = eval(success)
-
-                                if (typeof callback === "function") {
-                                    callback.call(this, data);
-                                }
-                            }
-                        })
+                    //**** RESET
+                    if (cls.form_reset && json.response === true) {
+                        await cls.FormReset(form);
                     }
-                } else{
-                    //*** CALLBACK
-                    if (success != false) {
 
-                        let callback = eval(success)
+                    //*** SWAL ALERT
+                    if (cls.swal_alert) {
 
-                        if (typeof callback === "function") {
-                            callback.call(this, data);
+                        if (json.swal_title) {
+
+                            await SwalWrapper.fire(
+                                json.swal_title,
+                                (json.swal_message) ? json.swal_message : '',
+                                (json.swal_type) ? json.swal_type : ''
+                            ).then(() => {
+                                if (success != false) {
+
+                                    let callback = eval(success)
+
+                                    if (typeof callback === "function") {
+                                        callback.call(this, data);
+                                    }
+                                }
+                            })
+                        }
+                    } else {
+                        //*** CALLBACK
+                        if (success != false) {
+
+                            let callback = eval(success)
+
+                            if (typeof callback === "function") {
+                                callback.call(this, data);
+                            }
                         }
                     }
-                }
 
+                }
             }
         });
     }
@@ -143,6 +144,8 @@ class Form {
         $(form).find('input[type="text"]').val('');
         $(form).find('input[type="datetime-local"]').val('');
         $(form).find('input[type="checkbox"]').prop('checked', false);
+        $(form).find('input[type="email"]').val('');
+        $(form).find('input[type="password"]').val('');
         $(form).find('select').val('');
         $(form).find('textarea').val('');
     }

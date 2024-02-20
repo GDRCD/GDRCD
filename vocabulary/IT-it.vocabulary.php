@@ -85,6 +85,13 @@ $MESSAGE['register']['error']['email_needed'] = 'Specificare un\'email valida.';
 $MESSAGE['register']['error']['invalid_name'] = 'Il nome scelto è non valido.';
 
 
+/********** Recupero Password **********/
+$MESSAGE['recoverypassword']['forms']['mail']['text'] = 'Clicca il seguente link per modificare la password';
+$MESSAGE['recoverypassword']['status']['success']['text'] = 'Password aggiornata con successo';
+$MESSAGE['recoverypassword']['status']['invalidtoken']['text'] = 'Token scaduto o non valido';
+$MESSAGE['recoverypassword']['status']['mismatch']['text'] = 'Le due password non corrispondono';
+
+
 /********** Pagine utente **********/
 /* Logout Page */
 $MESSAGE['logout']['confirmation'] = 'è uscito dal gioco.';
@@ -669,8 +676,10 @@ $MESSAGE['interface']['administration']['log']['chat']['sender'] = 'Personaggio'
 /********** Pagine del menu' utente *********/
 /*Cambio pass*/
 $MESSAGE['interface']['user']['pass']['page_name'] = 'Cambio password';
-$MESSAGE['interface']['user']['pass']['email'] = 'Inserire la EMail di registrazione per conferma';
+$MESSAGE['interface']['user']['pass']['email'] = 'Inserire la Email di registrazione per conferma';
+$MESSAGE['interface']['user']['pass']['old'] = 'Inserire la vecchia password';
 $MESSAGE['interface']['user']['pass']['new'] = 'Inserire la nuova password';
+$MESSAGE['interface']['user']['pass']['repeat'] = 'Ripeti la nuova password';
 $MESSAGE['interface']['user']['pass']['force'] = 'Cambia password ad un account';
 $MESSAGE['interface']['user']['pass']['submit']['user'] = 'Salva';
 $MESSAGE['interface']['user']['pass']['change_to'] = 'Cambia a...';
