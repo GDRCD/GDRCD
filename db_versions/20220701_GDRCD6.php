@@ -123,7 +123,8 @@ class GDRCD6 extends DbMigration
                 ('NEWS_ENABLED',1,'News','News attive','News attive?','bool',1,NULL),
                 ('CONVERSATIONS_ENABLED',1,'Conversazioni','Conversazioni attive','Conversazioni attive?','bool',1,NULL),
                 ('CALENDAR_ENABLED',1,'Calendario','Calendario attivo','Calendario attivo?','bool',1,NULL),
-                ('CALENDAR_ONLY_FUTURE_SELECTABLE',1,'Calendario','Solo date future selezionabili per nuovi eventi','Solo date future selezionabili per nuovi eventi?','bool',1,NULL)
+                ('CALENDAR_ONLY_FUTURE_SELECTABLE',1,'Calendario','Solo date future selezionabili per nuovi eventi','Solo date future selezionabili per nuovi eventi?','bool',1,NULL),
+                ('RECOVERY_TOKEN_VALIDITY_HOUR',24,'Recupero Password','Numero di ore per il ripristino password','Numero di ore di validità del link inviato per email per il ripristino della password dimenticata','int',1,NULL)
         ;");
 
         DB::query("
