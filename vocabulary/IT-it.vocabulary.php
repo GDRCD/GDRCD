@@ -85,6 +85,13 @@ $MESSAGE['register']['error']['email_needed'] = 'Specificare un\'email valida.';
 $MESSAGE['register']['error']['invalid_name'] = 'Il nome scelto è non valido.';
 
 
+/********** Recupero Password **********/
+$MESSAGE['recoverypassword']['forms']['mail']['text'] = 'Clicca il seguente link per modificare la password';
+$MESSAGE['recoverypassword']['status']['success']['text'] = 'Password aggiornata con successo';
+$MESSAGE['recoverypassword']['status']['invalidtoken']['text'] = 'Token scaduto o non valido';
+$MESSAGE['recoverypassword']['status']['mismatch']['text'] = 'Le due password non corrispondono';
+
+
 /********** Pagine utente **********/
 /* Logout Page */
 $MESSAGE['logout']['confirmation'] = 'è uscito dal gioco.';
