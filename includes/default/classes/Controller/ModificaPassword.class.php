@@ -99,7 +99,7 @@ class ModificaPassword extends BaseClass
 
         // Inserimento nuova password e risposta positiva
         DB::queryStmt(
-            'UPDATE personaggio SET pass = :user_password WHERE id = :user_id', [
+            'UPDATE personaggio SET pass = :user_password, ultimo_cambiopass = NOW() WHERE id = :user_id', [
                 'user_password' => Password::hash($repeated_password),
                 'user_id' => Session::read('login_id'),
             ]
