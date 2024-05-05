@@ -269,9 +269,15 @@
                             </form>
                         </div>
                     <?php } else {
-                        $r_gen = ($_POST['genere'] == 'm') ? 'm' : 'f';
+                        // Ottengo l'etichetta del genere
+                        $genereId = ($_POST['genere'] == 'm') ? 'm' : 'f';
+                        $genere =  $MESSAGE['register']['fields']['gender_'.$_POST['genere']];
 
-                        $razza = gdrcd_query("SELECT sing_" . gdrcd_filter('in', $r_gen) . " AS nome_razza FROM razza WHERE id_razza = " . (0 + gdrcd_filter('num', $_POST['razza'])) . " LIMIT 1");
+                        // Ottengo le informazioni della razza
+                        $razza = gdrcd_query("SELECT sing_" . gdrcd_filter('in', $genereId) . " AS nome_razza FROM razza WHERE id_razza = " . (0 + gdrcd_filter('num', $_POST['razza'])) . " LIMIT 1");
+
+
+
                         ?>
                         <div class="elenco_gioco">
                             <table>
@@ -304,7 +310,7 @@
                                 <tr>
                                     <td class='casella_elemento'>
                                         <div class='elementi_elenco'>
-                                            <?php echo gdrcd_filter('out', $_POST['genere']) ?>
+                                            <?php echo gdrcd_filter('out', $genere) ?>
                                         </div>
                                     </td>
                                 </tr>
