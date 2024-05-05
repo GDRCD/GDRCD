@@ -147,7 +147,7 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
  * b     corrispondende a valori di tipo blob
  *
  * @return mysqli_result
-*/
+ */
 function gdrcd_stmt($sql, $binds = array())
 {
     $db_link = gdrcd_connect();
