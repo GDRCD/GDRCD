@@ -66,6 +66,7 @@ function Azione($azione)
 {
     $add_chat="";
     $PARAMETERS = $GLOBALS['PARAMETERS'];
+
     if($PARAMETERS['mode']['chaticons'] == 'ON') {
         $icone_chat = explode(";", gdrcd_filter('out', $azione['imgs']));
         $add_icon = '<span class="chat_icons"> <img class="presenti_ico" src="themes/'.$PARAMETERS['themes']['current_theme'].'/imgs/races/'.$icone_chat[1].'"><img class="presenti_ico" src="imgs/icons/testamini'.$icone_chat[0].'.png"> </span>';
@@ -131,6 +132,7 @@ function Sussurri($azione)
 {
     $add_chat="";
     //sussurri
+    $MESSAGE = $GLOBALS['MESSAGE'];
     if($_SESSION['login'] == $azione['destinatario']) {
         $add_chat .= '<span class="chat_name">'.$azione['mittente'].' '.$MESSAGE['chat']['whisper']['by'].': </span> ';
         $add_chat .= '<span class="chat_msg">'.gdrcd_filter('out', $azione['testo']).'</span>';

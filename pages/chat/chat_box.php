@@ -14,14 +14,7 @@
             <?php require_once(__DIR__ . '/chat_input.php'); ?>
         </div>
 </div>
-    <div style="height:0;">
-        <?php
-        // Prevedo la notifica in caso di nuovi messaggi
-        if($_SESSION['last_message'] > 0 && (isset($isLastMessageFromUser) && !$isLastMessageFromUser) && (isset($add_chat) && $add_chat != '')){
-        $playAudioController = AudioController::play('chat', TRUE);;
-        }
-        ?>
-    </div>
+
 
     <script>
             document.addEventListener('DOMContentLoaded', function() {
@@ -33,14 +26,6 @@
                 var chatElement = document.getElementById('chat_azioni_box');
                 chatElement.scrollTop = chatElement.scrollHeight;
 
-                // Riferimento all'elemento audio
-                var audioElement = parent.document.getElementById('sound_player');
-
-                // Evento 'loadedmetadata' per assicurarsi che l'audio sia pronto
-                audioElement.addEventListener('loadedmetadata', function() {
-                    console.log('Audio ready');
-                    audioElement.pause();
-                });
 
                 function checkForNewMessages(callback) {
                     $.post('/pages/chat.inc.php', { op: "check_chat" }, function(data) {
@@ -66,10 +51,6 @@
                                     var chatElement = document.getElementById('chat_azioni_box');
                                     chatElement.scrollTop = chatElement.scrollHeight;
 
-                                    if(lastMessageCount>0){
-                                        audioElement.play();
-                                    }
-
                                     if (document.hidden && lastMessageCount>0) {
 
                                         parent.blink_title("Nuova azione!", true);
@@ -77,9 +58,6 @@
                                     }, 600);
                             });
                             lastMessageCount = newMessageCount;
-                        } else {
-                            audioElement.pause();
-
                         }
                     });
                 }

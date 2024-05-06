@@ -4,7 +4,7 @@ include('../ref_header.inc.php'); /*Header comune*/
 
 ?>
 
-    <meta http-equiv="refresh" content="60">
+    <meta http-equiv="refresh" content="30"><!--refresh della pagina impostato a 30 secondi-->
     <!-- Box presenti-->
     <div class="pagina_presenti">
         <div class="page_title">
