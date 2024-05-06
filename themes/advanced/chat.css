@@ -28,7 +28,7 @@ div.chat_box {
     right: 10px;
 
     overflow: auto;
-    font-size: 16px;
+    font-size: 12px;
     text-align: left;
 }
 
@@ -171,3 +171,105 @@ input#message {
 }
 
 /****************************************************************************/
+/*** GENERAL CHAT ***/
+
+div.chat_box {
+    width: 99%;
+    height: 95%;
+    box-sizing: border-box;
+
+}
+
+div.chat_box .chat_azioni_box {
+    height: calc(100% - 200px);
+    width: 95%;
+    padding: 10px 0;
+    box-sizing: border-box;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+}
+
+.chat_box .chat_azioni_box .chat_azioni {
+    width: 100%;
+    height: 100%;
+
+}
+
+.chat_box .chat_azioni_box .chat_azioni .chat_ico {
+    width: 35px;
+    height: 35px;
+    margin-right: 5px;
+}
+
+.chat_box .chat_input_box {
+
+    width: 95%;
+}
+
+.chat_box .chat_input_box .chat_row {
+    width: 100%;
+
+
+    display: block;
+    justify-content: start;
+    align-items: center;
+    margin-top: 10px;
+}
+.chat_box .chat_input_box .chat_row input,
+.chat_box .chat_input_box .chat_row select{
+    margin-bottom: 0 ;
+}
+
+
+.chat_box .chat_input_box .chat_row input,
+.chat_box .chat_input_box .chat_row select{
+    margin-bottom: 0 ;
+}
+div.chat_row_D, div.chat_row_O, div.chat_row_C{
+    margin-top: 3px;
+    color: #6a6a6a;
+    font-family: 'Verdana';
+    font-style: italic;
+    text-align: left;
+}
+
+.chat_box .chat_input_box .chat_row.chat_align_top{
+    align-items: flex-start;
+}
+
+.chat_box .chat_input_box .chat_row.chat_align_top input,
+.chat_box .chat_input_box .chat_row.chat_align_top select{
+    margin-bottom: 5px;
+}
+
+.chat_box .chat_input_box .chat_row .input_container {
+    display: inline-block;
+    vertical-align: top;
+    margin: 0 1%;
+}
+
+.chat_box .chat_input_box .chat_row .input_container input,
+.chat_box .chat_input_box .chat_row .input_container select {
+    width: 100%;
+}
+
+.chat_box .chat_input_box .chat_row .input_container.invia {
+    width: 5%;
+}
+
+.chat_box .chat_input_box .chat_row .input_container.small {
+    width: 8%;
+}
+
+.chat_box .chat_input_box .chat_row .input_container.medium {
+    width: 20%;
+}
+
+.chat_box .chat_input_box .chat_row .input_container.big {
+    width: 41%;
+}
+
+.chat_box .chat_input_box .chat_row .input_container .single_input{
+    width: 90%;
+    margin: 0 auto;
+}

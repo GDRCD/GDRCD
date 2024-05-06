@@ -1,4 +1,12 @@
-<?php include('../ref_header.inc.php'); /*Header comune*/ ?>
+<?php include('../ref_header.inc.php'); /*Header comune*/
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+
+?>
+    <meta http-equiv="refresh" content="60">
     <!-- Box presenti-->
     <div class="pagina_presenti">
         <div class="page_title">
