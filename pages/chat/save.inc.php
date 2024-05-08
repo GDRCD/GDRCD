@@ -3,12 +3,6 @@
 $arrayReturn = array();
 
  switch ($_REQUEST['op']) {
-    case 'azione':
-
-
-
-        break;
-
     case 'check_chat':
         $last_message = $_SESSION['last_message'];
         if(empty($last_message)) $last_message = 0;
@@ -30,11 +24,6 @@ $arrayReturn = array();
         $testo=gdrcd_filter("in",$_REQUEST['testo']);
         $tag=gdrcd_filter("in",$_REQUEST['tag']);
         $primoCarattere = substr($testo, 0, 1);
-
-
-        if(($primoCarattere=="*")&&($_SESSION['permessi'] )){
-            $tipo='H';
-        }
 
         switch ($tipo){
             case 'P':
@@ -64,37 +53,23 @@ $arrayReturn = array();
                 break;
 */
         }
-/*
+
         break;
-     case 'invio_stat':
-         $forma=gdrcd_filter("in",$_REQUEST['forma']);
-         $id_stats=gdrcd_filter("in",$_REQUEST['id_stats']);
-         $dice=gdrcd_filter("in",$_REQUEST['dice']);
-         $id_item=gdrcd_filter("in",$_REQUEST['id_item']);
-         $number_item=gdrcd_filter("in",$_REQUEST['number_item']);
-         $locationValue = gdrcd_filter("in",$_REQUEST['location']);
-         if($id_stats!="no_stats"){
-             $chat->inviaStatistiche($forma, $id_stats, $dice);
-         }elseif($dice!="no_dice" && $id_stats=="no_stats"){
-             $chat->inviaDado($dice);
-         }else if($id_item!="no_item"){
-             $chat->inviaOggetto($id_item, $number_item);
+     case 'take_action':
+        if(($PARAMETERS['mode']['skillsystem'] == 'ON') || ($PARAMETERS['mode']['dices'] == 'ON')) {
+             $abilita=gdrcd_filter("in", $_POST['id_ab']);
+             if ((gdrcd_filter('get', $_POST['id_ab']) != 'no_skill') && !empty($_POST['id_ab'])) {
+
+                     inviaAbilita($abilita);
+
+             }
          }
-         break;
-     case 'get_max_number':
-
-         $id=gdrcd_filter("in",$_REQUEST['id_item']);
 
 
-         $arrayReturn['esito'] = $chat->contaOggetti($id);;
+
 
 
          break;
-
-
-*/
-
-
 
 
 

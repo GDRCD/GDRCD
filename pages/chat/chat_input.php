@@ -148,8 +148,8 @@ $info = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprieta
                         echo '<input type="hidden" name="id_item" id="id_item" value="no_item">';
                     } ?>
                     <div class="casella_chat">
-                        <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>" />
-                        <input type="hidden" name="op" value="take_action">
+                        <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>" onclick="inviaStat()" />
+                        <input type="hidden" name="op" id="opstat" value="take_action">
                     </div>
                 </form>
             </div>
@@ -210,78 +210,31 @@ $info = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprieta
     }
     setInterval(conta,10);
 
-    function updateNumberOptions() {
-        var selectedItem = $('#id_item').val(); // Ottieni il valore selezionato dal primo select
-        var numberSelect = $('#number_item'); // Riferimento al secondo select
 
-
-        // Pulisci le opzioni precedenti
-        numberSelect.empty();
-        // Aggiungi nuove opzioni in base al numero massimo dell'oggetto selezionato
-        if (selectedItem !== 'no_item') {
-            $.ajax({
-                url: '/pages/chat.inc.php', // Sostituisci con il percorso del tuo script PHP per ottenere il numero massimo
-                method: 'POST',
-                data: { id_item: selectedItem, op: 'get_max_number' }, // Passa l'ID dell'oggetto al server
-                success: function(data) {
-                    var jsonData = data.match(/\{.*\}/);
-                    var parsedData = JSON.parse(jsonData[0]);
-                    var maxNumber =  (parsedData.esito);
-
-                  //  var maxNumber = parseInt(response); // Converti la risposta in un numero intero
-                    // Aggiungi le nuove opzioni in base al numero massimo dell'oggetto selezionato
-                    for (var i = 1; i <= maxNumber; i++) {
-                        numberSelect.append($('<option>', {
-                            value: i,
-                            text: i
-                        }));
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('Errore durante il recupero del numero massimo:', error);
-                }
-            });
-        } else {
-            // Aggiungi un'opzione vuota se non è stato selezionato nulla nel primo select
-            numberSelect.append($('<option>', {
-                value: 'no_number',
-                text: ''
-            }));
-        }
-    }
-
-    // Aggiungi un listener per l'evento change sul primo select
-    $('#id_item').change(updateNumberOptions);
-
-    // Chiama la funzione per aggiornare le opzioni iniziali del secondo select
-    updateNumberOptions();
     function inviaStat() {
-        var forma = $("#forma").val().trim();
+
+        var id_ab = $("#id_ab").val();
         var id_stats = $("#id_stats").val();
         var dice = $("#dice").val();
-        var id_item = $("#id_item").val();
-        var number_item = $("#number_item").val();
+        var id_item = $("#number_item").val();
         var locationValue = $("#location").val();
         var op = $("#opstat").val();
 
         // Chiamata AJAX per inviare i dati al server
-        $.post("/pages/chat.inc.php", { forma, id_stats, dice, id_item, number_item, location: locationValue, op })
+        $.post("/pages/chat.inc.php", { id_ab, id_stats, dice, id_item,  location: locationValue, op })
             .done(function () {
                 // Gestisci il caso di successo (puoi aggiungere del codice qui se necessario)
                 $("#chat_azioni_box").load(" #chat_azioni_box > *", function () {
                     var chatElement = document.getElementById('chat_azioni_box');
                     chatElement.scrollTop = chatElement.scrollHeight;
                 });
-                $("#forma").val("nor");
+                $("#id_ab").val("nor");
                 $("#id_stats").val("no_stats");
                 $("#dice").val("no_dice");
                 $("#id_item").val("no_item");
-                $("#number_item").val("no_number");
+
 
             })
 
-
-        // Aggiorna le opzioni del select number_item in base all'oggetto selezionato
-        updateNumberOptions();
     }
 </script>

@@ -20,6 +20,8 @@
                 break;
             case 'C':
                 //visualizzazione lancio stat
+              echo  Statistiche($azione);
+
                 break;
 
             case 'M':
