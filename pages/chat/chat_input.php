@@ -181,7 +181,7 @@ $info = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprieta
         var locationValue = $("#location").val();
         var op = $("#op").val();
 
-        if ((testo !== "")||(tipo == 5)) {
+        if ((testo !== "")||(tipo == 5) || (tipo == 6) || (tipo == 7)) {
             $.post("/pages/chat.inc.php", { tag, testo, tipo, location: locationValue, op  })
                 .done(function () {
                     // Gestisci il caso di successo (puoi aggiungere del codice qui se necessario)
@@ -216,7 +216,7 @@ $info = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprieta
         var id_ab = $("#id_ab").val();
         var id_stats = $("#id_stats").val();
         var dice = $("#dice").val();
-        var id_item = $("#number_item").val();
+        var id_item = $("#id_item").val();
         var locationValue = $("#location").val();
         var op = $("#opstat").val();
 

@@ -46,34 +46,40 @@ $arrayReturn = array();
                 // azione png
                 inviaPNG($testo, $tag);
                 break;
-/*
+
 
             case '5':
-                $chat->invita($tag);
+                invita($tag);
                 break;
-*/
+            case '6':
+                Leave($tag);
+                break;
+            case '7':
+                Elenco();
+                break;
+
         }
 
         break;
      case 'take_action':
         if(($PARAMETERS['mode']['skillsystem'] == 'ON') || ($PARAMETERS['mode']['dices'] == 'ON')) {
              $abilita=gdrcd_filter("in", $_POST['id_ab']);
+             $stat=gdrcd_filter("in", $_POST['id_stats']);
+             $dado=gdrcd_filter("in", $_POST['dice']);
+             $oggetto=gdrcd_filter("in", $_POST['id_item']);
+
              if ((gdrcd_filter('get', $_POST['id_ab']) != 'no_skill') && !empty($_POST['id_ab'])) {
-
-                     inviaAbilita($abilita);
-
+                inviaAbilita($abilita);
+             }elseif( (gdrcd_filter('get', $_POST['id_stats']) != 'no_stats') && (gdrcd_filter('get', $_POST['dice']) != 'no_dice') && !empty($_POST['id_stats']) ) {
+                inviaStatistica($stat,$dado);
+            }elseif( (gdrcd_filter('get', $_POST['dice']) != 'no_dice') && !empty($_POST['dice']) ){
+                 inviaDado($dado);
+             }
+             elseif( ($oggetto != 'no_item') && !empty($oggetto) ) {
+                 inviaOggetto($oggetto);
              }
          }
-
-
-
-
-
-         break;
-
-
-
-
+        break;
 }
 
 

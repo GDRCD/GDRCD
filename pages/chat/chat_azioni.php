@@ -19,6 +19,8 @@
                echo Sussurri($azione);
                 break;
             case 'C':
+            case 'D':
+            case 'O':
                 //visualizzazione lancio stat
               echo  Statistiche($azione);
 

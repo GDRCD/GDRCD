@@ -60,7 +60,7 @@ define('HTML_FILTER_HIGH', 1);
  * Impostazioni registrazioni giocate
  */
 //Azioni minime per poter registrare una giocata
-CONST REG_MIN_AZIONI = 4;
+CONST REG_MIN_AZIONI = 1;
 
 //Attiva o disattiva il pacchetto intero (default: true)
 const REG_ROLE = true;
@@ -104,7 +104,7 @@ const MOON = true;
 const ESITI = true;
 
 //Attiva o disattiva l'invio degli esiti in chat (default: false) -- Funzionalità in sviluppo
-const ESITI_CHAT = false;
+const ESITI_CHAT = true;
 
 //Attiva o disattiva i tiri via esito (default: true)
 const TIRI_ESITO = true;

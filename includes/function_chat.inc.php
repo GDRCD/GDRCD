@@ -7,6 +7,7 @@
 /**
  * Recupera il nome della chat
  */
+
 function chat_name($id)
 {
     $chat_name = gdrcd_query("SELECT nome FROM mappa WHERE id = {$id} ");
@@ -197,8 +198,7 @@ function inviaAbilita($abilita)
 
 
     if($actual_healt['salute'] > 0) {
-
-
+        
         $skill = gdrcd_query("SELECT nome, car FROM abilita WHERE id_abilita = " . gdrcd_filter('num', $abilita) . " LIMIT 1");
         $car = gdrcd_query("SELECT car" . gdrcd_filter('num', $skill['car']) . " AS car_now FROM personaggio WHERE nome = '" . $_SESSION['login'] . "' LIMIT 1");
         $bonus = gdrcd_query("SELECT SUM(oggetto.bonus_car" . gdrcd_filter('num', $skill['car']) . ") as bonus FROM oggetto JOIN clgpersonaggiooggetto ON clgpersonaggiooggetto.id_oggetto=oggetto.id_oggetto WHERE clgpersonaggiooggetto.nome='" . $_SESSION['login'] . "' AND clgpersonaggiooggetto.posizione > 1");
@@ -229,6 +229,119 @@ function inviaAbilita($abilita)
 
 }
 
+function inviaStatistica($statistica,$dado)
+{
+    $PARAMETERS = $GLOBALS['PARAMETERS'];
+    $MESSAGE = $GLOBALS['MESSAGE'];
+    mt_srand((double) microtime() * 1000000);
+    $die = mt_rand(1, gdrcd_filter('num', (int) $dado));
+    $id_stats = explode('_', $statistica);
+    $car = gdrcd_query("SELECT car".gdrcd_filter('num', $id_stats[1])." AS car_now FROM personaggio WHERE nome = '".$_SESSION['login']."' LIMIT 1");
+    $racial_bonus = gdrcd_query("SELECT bonus_car".gdrcd_filter('num', $id_stats[1])." AS racial_bonus FROM razza WHERE id_razza IN (SELECT id_razza FROM personaggio WHERE nome='".$_SESSION['login']."')");
+    $car=gdrcd_filter('num', $car['car_now'] + $racial_bonus['racial_bonus']);
+    $carr=gdrcd_filter('num', $car) + gdrcd_filter('num', $die) ;
+    $testo="{$_SESSION['login']} ".gdrcd_filter('in', $MESSAGE['chat']['commands']['use_skills']['uses'])." ".gdrcd_filter('in', $PARAMETERS['names']['stats']['car'.$id_stats[1]]).": ".gdrcd_filter('in', $PARAMETERS['names']['stats']['car'.$id_stats[1].''])." {$car}, ".gdrcd_filter('in', $MESSAGE['chat']['commands']['use_skills']['die'])." " .gdrcd_filter('num', $die).", ".gdrcd_filter('in', $MESSAGE['chat']['commands']['use_skills']['sum'])."{$carr}";
+    gdrcd_query("INSERT INTO chat ( stanza, imgs, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", '".$_SESSION['sesso'].";".$_SESSION['img_razza']."', '".$_SESSION['login']."', '', NOW(), 'C', '{$testo}')");
+}
+
+function inviaDado($dado)
+{
+    $MESSAGE = $GLOBALS['MESSAGE'];
+    mt_srand((double) microtime() * 1000000);
+    $die = mt_rand(1, gdrcd_filter('num', $dado));
+    gdrcd_query("INSERT INTO chat ( stanza, imgs, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", '".$_SESSION['sesso'].";".$_SESSION['img_razza']."', '".$_SESSION['login']."', '', NOW(), 'D', '".$_SESSION['login'].' '.gdrcd_filter('in', $MESSAGE['chat']['commands']['die']['cast']).gdrcd_filter('num', $dado).': '.gdrcd_filter('in', $MESSAGE['chat']['commands']['die']['sum']).' '.gdrcd_filter('num', $die)."')");
+}
+function inviaOggetto($oggetto)
+{
+    $MESSAGE = $GLOBALS['MESSAGE'];
+    $item = gdrcd_filter('num',$oggetto);
+    $me = gdrcd_filter('in',$_SESSION['login']);
+    $data = gdrcd_query("
+                        SELECT oggetto.nome,oggetto.cariche AS new_cariche, clgpersonaggiooggetto.cariche,clgpersonaggiooggetto.numero
+                        FROM  oggetto 
+                            LEFT JOIN clgpersonaggiooggetto 
+                        ON clgpersonaggiooggetto.id_oggetto = oggetto.id_oggetto
+                        WHERE oggetto.id_oggetto='{$item}' 
+                          AND clgpersonaggiooggetto.nome='{$me}' LIMIT 1");
+    // Informazioni dell'oggetto
+    $nomeOggetto = gdrcd_filter_out($data['nome']);
+    $cariche = gdrcd_filter('num',$data['cariche']);
+    $numero = gdrcd_filter('num',$data['numero']);
+    $new_cariche = gdrcd_filter('num',$data['new_cariche']);
+
+    # Se ho meno di una carica
+    if($cariche <= 1){
+
+        # Se ho un solo oggetto
+        if($numero == 1){
+
+            # Cancello la riga
+            $query = "DELETE FROM clgpersonaggiooggetto WHERE nome ='{$me}' AND id_oggetto='{$item}' LIMIT 1";
+        }
+        # Se ho piu' oggetti
+        else{
+
+            # Ricarico le cariche e scalo il numro di oggetti
+            $query = "UPDATE clgpersonaggiooggetto 
+                                    SET cariche = '{$new_cariche}', numero = numero - 1 
+                                WHERE nome ='{$me}' AND id_oggetto='{$item}' LIMIT 1";
+        }
+    }
+    # SE ho piu' di una sola carica
+    else{
+        $query = "UPDATE clgpersonaggiooggetto SET cariche = cariche -1 WHERE nome ='{$me}' AND id_oggetto='{$item}' LIMIT 1";
+    }
+
+    gdrcd_query($query);
+
+    gdrcd_query("INSERT INTO chat ( stanza, imgs, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", '".$_SESSION['sesso'].";".$_SESSION['img_razza']."', '".$_SESSION['login']."', '', NOW(), 'O', '".$_SESSION['login'].' '.gdrcd_filter('in', $MESSAGE['chat']['commands']['die']['item']).': '.gdrcd_filter('in', $nomeOggetto)."')");
+
+}
+function Invita($tag)
+{
+    $MESSAGE = $GLOBALS['MESSAGE'];
+    $info = gdrcd_query("SELECT invitati, nome, proprietario FROM mappa WHERE id=".$_SESSION['luogo']."");
+    $ok_command = false;
+    if($info['proprietario'] == $_SESSION['login'] || strpos($_SESSION['gilda'], $info['proprietario']) != false) {
+        $ok_command = true;
+    }
+    gdrcd_query("UPDATE mappa SET invitati = '".$info['invitati'].','.gdrcd_capital_letter(strtolower(gdrcd_filter('in', $tag)))."' WHERE id=".$_SESSION['luogo']." LIMIT 1");
+    gdrcd_query("INSERT INTO chat ( stanza, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", 'System message', '".$_SESSION['login']."', NOW(), 'S', '".gdrcd_capital_letter(gdrcd_filter('in', $tag)).' '.$MESSAGE['chat']['warning']['invited']."')");
+    if(empty($_POST['tag']) === false) {
+        gdrcd_query("INSERT INTO messaggi ( mittente, destinatario, spedito, letto, testo ) VALUES ('System message', '".gdrcd_capital_letter(gdrcd_filter('in', $tag))."', NOW(), 0,  '".$_SESSION['login'].' '.$MESSAGE['chat']['warning']['invited_message'].' '.$info['nome']."')");
+    }
+}
+
+function Leave($tag_n_beyond)
+{
+    $MESSAGE = $GLOBALS['MESSAGE'];
+    $info = gdrcd_query("SELECT invitati, nome, proprietario FROM mappa WHERE id=".$_SESSION['luogo']."");
+
+    $ok_command = false;
+    if($info['proprietario'] == $_SESSION['login'] || strpos($_SESSION['gilda'], $info['proprietario']) != false) {
+        $ok_command = true;
+    }
+    if($ok_command === true){
+        $scaccia = str_replace(','.gdrcd_capital_letter(gdrcd_filter('in', $tag_n_beyond)), '', $info['invitati']);
+        gdrcd_query("UPDATE mappa SET invitati = '".$scaccia."' WHERE id=".$_SESSION['luogo']." LIMIT 1");
+        gdrcd_query("INSERT INTO chat ( stanza, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", 'System message', '".$_SESSION['login']."', NOW(), 'S', '".gdrcd_capital_letter(gdrcd_filter('in', $tag_n_beyond)).' '.$MESSAGE['chat']['warning']['expelled']."')");
+    }
+
+}
+function Elenco()
+{
+    $MESSAGE = $GLOBALS['MESSAGE'];
+    $info = gdrcd_query("SELECT invitati, nome, proprietario FROM mappa WHERE id=".$_SESSION['luogo']."");
+    $ok_command = false;
+    if($info['proprietario'] == $_SESSION['login'] || strpos($_SESSION['gilda'], $info['proprietario']) != false) {
+        $ok_command = true;
+    }
+    if($ok_command === true){
+        $ospiti = str_replace(',', '', $info['invitati']);
+        gdrcd_query("INSERT INTO chat ( stanza, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", 'System message', '".$_SESSION['login']."', NOW(), 'S', '".$MESSAGE['chat']['warning']['list'].': '.$ospiti."')");
+    }
+
+}
 function Statistiche($azione)
 {
 
