@@ -258,6 +258,14 @@ $PARAMETERS['settings']['cars_sum'] = 40;//Punteggio totale da distribuire tra l
 $PARAMETERS['settings']['view_logs'] = 10; //Numero di log visualizzato.
 $PARAMETERS['settings']['auto_salary'] = 'OFF'; //ON per attivare l'accredito automatico dello stipendio al primo login
 
+/**
+ * Attesa di riconnessione
+ * Imposta l'intervallo di attesa per la riconessione, in modo da evitare i doppi login.
+ * Il valore è espresso in secondi (300 = 5 minuti)
+ * Se il valore è impostato a 0, il sistema non effettua alcun controllo
+ */
+$PARAMETERS['settings']['reconnection_cooldown'] = 300;
+
 
 
 /** * Abilitazione dell'audio in land
