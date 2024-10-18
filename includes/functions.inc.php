@@ -35,7 +35,7 @@ function gdrcd_connect()
 
 /**
  * Chiusura della connessione col db MySql
- * @param resource $db : una connessione mysqli
+ * @param mysqli $db : una connessione mysqli
  */
 function gdrcd_close_connection($db)
 {
@@ -56,7 +56,7 @@ function gdrcd_close_connection($db)
  *  free: libera la memoria occupata dalla risorsa mysqli passata in $sql
  *  last_id: ritorna l'id del record generato dall'ultima query, se non era una INSERT o UPDATE ritorna 0. In questo caso $sql non viene considerato
  *  affected: ritorna il numero di record toccati dall'ultima query (INSERT, UPDATE, DELETE o SELECT). In questo caso $sql non viene considerato
- * @return boolean : un booleano in caso di esecuzione di query non SELECT e modalità 'query'. Altrimenti ritorna come specificato nella descrizione di $mode
+ * @return mixed boolean : un booleano in caso di esecuzione di query non SELECT e modalità 'query'. Altrimenti ritorna come specificato nella descrizione di $mode
  * @throws Exception
  */
 function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
@@ -253,6 +253,7 @@ function gdrcd_check_tables($table)
 function gdrcd_mysql_error($details = false)
 {
     $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 50);
+    $history = '';
 
     foreach($backtrace as $v) {
         if($v['function'] == 'gdrcd_query') {
@@ -356,7 +357,7 @@ function gdrcd_filter($what, $str)
             break;
 
         case 'includes':
-            $str = (preg_match("#[^:]#is")) ? htmlentities($str, ENT_QUOTES) : false;
+            $str = (preg_match("#[^:]#is", $str)) ? htmlentities($str, ENT_QUOTES) : false;
             break;
 
         case 'url':
