@@ -46,6 +46,8 @@ a:hover {
 
 div.form_field table {
     margin: 5px auto;
+    table-layout: fixed;
+    width: 100%;
 }
 
 input, textarea, select {
@@ -205,7 +207,6 @@ div.sidecontent ul {
     list-style-type: none;
     -moz-border-radius: 5px; /* Bordi arrotondati */
     -webkit-border-radius: 5px;
-    -khtml-border-radius: 5px;
     border-radius: 5px;
 }
 
@@ -236,12 +237,11 @@ div.sidecontent ul li a:hover {
 div.side_modules {
     margin: 10px 0 0 10px;
     background-color: #b9b9b9;
-    font-color: #333;
+    color: #333;
     padding: 10px;
     text-align: center;
     -moz-border-radius: 5px; /* Bordi arrotondati */
     -webkit-border-radius: 5px;
-    -khtml-border-radius: 5px;
     border-radius: 5px;
 }
 
@@ -379,7 +379,6 @@ div.elenco_record_gioco table {
     background-color: #d1d1d1;
     -moz-border-radius: 5px; /* Bordi arrotondati */
     -webkit-border-radius: 5px;
-    -khtml-border-radius: 5px;
     border-radius: 5px;
 }
 

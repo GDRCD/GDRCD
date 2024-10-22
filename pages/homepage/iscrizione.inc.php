@@ -119,87 +119,48 @@
                                 <?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['stats']); ?>
                             </div>
                             <div class="form_field">
-                                <table>
-                                    <tr>
-                                        <td>
-                                            <?php echo gdrcd_filter('out', $PARAMETERS['names']['stats']['car0']); ?>
-                                            <br/>
-                                            <select name="car0">
-                                                <?php for ($i = 1; $i <= $PARAMETERS['settings']['initial_cars_cap']; $i++) { ?>
-                                                    <option value="<?php echo $i; ?>" <?php if (gdrcd_filter('num', $_POST['car0']) == $i) {
-                                                        echo 'SELECTED';
-                                                    } ?> >
-                                                        <?php echo $i; ?>
-                                                    </option>
-                                                <?php } ?>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <?php echo gdrcd_filter('out', $PARAMETERS['names']['stats']['car1']); ?>
-                                            <br/>
-                                            <select name="car1">
-                                                <?php for ($i = 1; $i <= $PARAMETERS['settings']['initial_cars_cap']; $i++) { ?>
-                                                    <option value="<?php echo $i; ?>" <?php if (gdrcd_filter('num', $_POST['car1']) == $i) {
-                                                        echo 'SELECTED';
-                                                    } ?> >
-                                                        <?php echo $i; ?>
-                                                    </option>
-                                                <?php } ?>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <?php echo gdrcd_filter('out', $PARAMETERS['names']['stats']['car2']); ?>
-                                            <br/>
-                                            <select name="car2">
-                                                <?php for ($i = 1; $i <= $PARAMETERS['settings']['initial_cars_cap']; $i++) { ?>
-                                                    <option value="<?php echo $i; ?>" <?php if (gdrcd_filter('num', $_POST['car2']) == $i) {
-                                                        echo 'SELECTED';
-                                                    } ?> >
-                                                        <?php echo $i; ?>
-                                                    </option>
-                                                <?php } ?>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <?php echo gdrcd_filter('out', $PARAMETERS['names']['stats']['car3']); ?>
-                                            <br/>
-                                            <select name="car3">
-                                                <?php for ($i = 1; $i <= $PARAMETERS['settings']['initial_cars_cap']; $i++) { ?>
-                                                    <option value="<?php echo $i; ?>" <?php if (gdrcd_filter('num', $_POST['car3']) == $i) {
-                                                        echo 'SELECTED';
-                                                    } ?> >
-                                                        <?php echo $i; ?>
-                                                    </option>
-                                                <?php } ?>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <?php echo gdrcd_filter('out', $PARAMETERS['names']['stats']['car4']); ?>
-                                            <br/>
-                                            <select name="car4">
-                                                <?php for ($i = 1; $i <= $PARAMETERS['settings']['initial_cars_cap']; $i++) { ?>
-                                                    <option value="<?php echo $i; ?>" <?php if (gdrcd_filter('num', $_POST['car4']) == $i) {
-                                                        echo 'SELECTED';
-                                                    } ?> >
-                                                        <?php echo $i; ?>
-                                                    </option>
-                                                <?php } ?>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <?php echo gdrcd_filter('out', $PARAMETERS['names']['stats']['car5']); ?>
-                                            <br/>
-                                            <select name="car5">
-                                                <?php for ($i = 1; $i <= $PARAMETERS['settings']['initial_cars_cap']; $i++) { ?>
-                                                    <option value="<?php echo $i; ?>" <?php if (gdrcd_filter('num', $_POST['car5']) == $i) {
-                                                        echo 'SELECTED';
-                                                    } ?> >
-                                                        <?php echo $i; ?>
-                                                    </option>
-                                                <?php } ?>
-                                            </select>
-                                        </td>
-                                    <tr>
+                                <table >
+                                    <?php
+                                        // In base al numero di caratteristiche impostate nel pannello di controllo
+                                        // vengono visualizzate le tabelle con le caratteristiche
+
+                                        // Controllo che ci siano caratteristiche
+                                        if (is_array($PARAMETERS['names']['stats']) && count($PARAMETERS['names']['stats']) > 0) {
+                                            // Costruisco le intestazioni
+                                            $intestazioni = '';
+                                            foreach ($PARAMETERS['names']['stats'] as $key => $value) {
+                                                // Se non inizia con 'car' non è una caratteristica
+                                                if (substr($key, 0, 3) != 'car') {
+                                                    continue;
+                                                }
+
+                                                $intestazioni .= '<th>' . gdrcd_filter('out', $value) . '</th>';
+                                            }
+                                            // Stampo le intestazioni
+                                            $intestazioni = '<tr>' . $intestazioni . '</tr>';
+
+                                            // Costruisco le righe
+                                            $righe = '<tr>';
+                                            foreach ($PARAMETERS['names']['stats'] as $key => $value) {
+                                                // Se non inizia con 'car' non è una caratteristica
+                                                if (substr($key, 0, 3) != 'car') {
+                                                    continue;
+                                                }
+
+                                                // Indico i valori da poter scegliere per ogni caratteristica
+                                                $valori = '';
+                                                for ($j = 1; $j <= $PARAMETERS['settings']['initial_cars_cap']; $j++) {
+                                                    $valori .= '<option value="' . $j . '" ' . (gdrcd_filter('num', $_POST[$key]) == $j ? 'SELECTED' : '') . '>' . $j . '</option>';
+                                                }
+                                                $righe .= '<td><select name="' . $key .'">' . $valori . '</select></td>';
+                                            }
+                                            $righe .= '</tr>';
+
+                                            // Stampo la tabella
+                                            echo $intestazioni . $righe;
+                                        }
+
+                                    ?>
                                 </table>
                             </div>
                             <div class="form_info">
@@ -308,9 +269,15 @@
                             </form>
                         </div>
                     <?php } else {
-                        $r_gen = ($_POST['genere'] == 'm') ? 'm' : 'f';
+                        // Ottengo l'etichetta del genere
+                        $genereId = ($_POST['genere'] == 'm') ? 'm' : 'f';
+                        $genere =  $MESSAGE['register']['fields']['gender_'.$_POST['genere']];
 
-                        $razza = gdrcd_query("SELECT sing_" . gdrcd_filter('in', $r_gen) . " AS nome_razza FROM razza WHERE id_razza = " . (0 + gdrcd_filter('num', $_POST['razza'])) . " LIMIT 1");
+                        // Ottengo le informazioni della razza
+                        $razza = gdrcd_query("SELECT sing_" . gdrcd_filter('in', $genereId) . " AS nome_razza FROM razza WHERE id_razza = " . (0 + gdrcd_filter('num', $_POST['razza'])) . " LIMIT 1");
+
+
+
                         ?>
                         <div class="elenco_gioco">
                             <table>
@@ -343,7 +310,7 @@
                                 <tr>
                                     <td class='casella_elemento'>
                                         <div class='elementi_elenco'>
-                                            <?php echo gdrcd_filter('out', $_POST['genere']) ?>
+                                            <?php echo gdrcd_filter('out', $genere) ?>
                                         </div>
                                     </td>
                                 </tr>
@@ -484,8 +451,6 @@
                         $lastpasschange_field = ", ultimo_cambiopass";
                         $lastpasschange_value = ", NOW()";
                     }
-
-                    $email = strtolower(gdrcd_filter_email($_POST['email']));
 
                     $email = gdrcd_filter_email($_POST['email']);
                     $result = gdrcd_query("SELECT email FROM personaggio", 'result');
