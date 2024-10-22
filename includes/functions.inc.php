@@ -581,7 +581,7 @@ function gdrcd_load_modules($page, $params = [])
         }
 
         // Includo il modulo
-        include($modulePath);
+        include_once($modulePath);
     }
     catch(Exception $e) {
         echo $e->getMessage();
