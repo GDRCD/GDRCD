@@ -2,6 +2,7 @@
 
 //Includio i parametri, la configurazione, la lingua e le funzioni
 require ('includes/required.php');
+gdrcd_controllo_sessione();
 
 $last_message = isset($_SESSION['last_message']) ? $_SESSION['last_message'] : 0;
 
@@ -13,6 +14,12 @@ if(!empty($_SESSION['theme']) and array_key_exists($_SESSION['theme'], $PARAMETE
 $handleDBConnection = gdrcd_connect();
 //Ricevo il tempo di reload
 $i_ref_time = gdrcd_filter_get($_GET['ref']);
+
+if($i_ref_time < 30) {
+
+    $i_ref_time = 30;
+
+}
 
 if((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) === false)) {
     /*Aggiornamento chat*/
