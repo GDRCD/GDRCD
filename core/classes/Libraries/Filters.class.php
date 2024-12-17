@@ -36,7 +36,7 @@ class Filters extends BaseClass
                 break;
 
             case 'includes':
-                $val = (preg_match("#[^:]#i")) ? htmlentities($val, ENT_QUOTES) : false;
+                $val = (preg_match("#[^:]#", $val)) ? htmlentities($val, ENT_QUOTES) : false;
                 break;
 
             case 'url':
@@ -57,7 +57,7 @@ class Filters extends BaseClass
                     "#(javascript:[^\s\"']+)#is" => "",
                 ];
 
-                if ( $GLOBALS['PARAMETERS']['settings']['html'] == HTML_FILTER_HIGH ) {
+                if ( $GLOBALS['PARAMETERS']['settings']['html'] === HTML_FILTER_HIGH ) {
                     $notAllowed = array_merge($notAllowed, [
                         "#(<img.*?\/?>)#is" => "Immagini non consentite",
                         "#(url\(.*?\))#is" => "none",

@@ -98,9 +98,9 @@ class Session extends BaseClass
      */
     public static function store(string $key, mixed $value): void
     {
-        Session::start();
+        self::start();
         $_SESSION[$key] = $value;
-        Session::commit();
+        self::commit();
     }
 
     /**
@@ -164,30 +164,28 @@ class Session extends BaseClass
             ['username' => $username]
         );
 
-        if ( count($User) ) {
-            if ( Password::verify($User['pass'], $password, $User['id']) ) {
-                // Valorizzo la sessione se tutto ok
-                self::storeForCommit('login', $User['nome']);
-                self::storeForCommit('login_id', $User['id']);
-                self::storeForCommit('cognome', $User['cognome']);
-                self::storeForCommit('permessi', $User['permessi']);
-                self::storeForCommit('sesso', $User['sesso']);
-                self::storeForCommit('blocca_media', $User['blocca_media']);
-                self::storeForCommit('ultima_entrata', $User['ora_entrata']);
-                self::storeForCommit('ultima_uscita', $User['ora_uscita']);
-                self::storeForCommit('ultimo_refresh', $User['ultimo_refresh']);
-                self::storeForCommit('razza', $User['sing_' . $User['sesso']] ?? $User['sing_m']);
-                self::storeForCommit('img_razza', $User['icona_razza']);
-                self::storeForCommit('id_razza', $User['razza']);
-                self::storeForCommit('posizione', $User['posizione']);
-                self::storeForCommit('mappa', empty($User['ultima_mappa']) ? 1 : $User['ultima_mappa']);
-                self::storeForCommit('luogo', empty($User['ultimo_luogo']) ? -1 : $User['ultimo_luogo']);
-                self::storeForCommit('tag', '');
-                self::storeForCommit('last_message', 0);
-                self::storeForCommit('last_action_id', 0);
+        if ( count($User) && Password::verify($User['pass'], $password, $User['id']) ) {
+            // Valorizzo la sessione se tutto ok
+            self::storeForCommit('login', $User['nome']);
+            self::storeForCommit('login_id', $User['id']);
+            self::storeForCommit('cognome', $User['cognome']);
+            self::storeForCommit('permessi', $User['permessi']);
+            self::storeForCommit('sesso', $User['sesso']);
+            self::storeForCommit('blocca_media', $User['blocca_media']);
+            self::storeForCommit('ultima_entrata', $User['ora_entrata']);
+            self::storeForCommit('ultima_uscita', $User['ora_uscita']);
+            self::storeForCommit('ultimo_refresh', $User['ultimo_refresh']);
+            self::storeForCommit('razza', $User['sing_' . $User['sesso']] ?? $User['sing_m']);
+            self::storeForCommit('img_razza', $User['icona_razza']);
+            self::storeForCommit('id_razza', $User['razza']);
+            self::storeForCommit('posizione', $User['posizione']);
+            self::storeForCommit('mappa', empty($User['ultima_mappa']) ? 1 : $User['ultima_mappa']);
+            self::storeForCommit('luogo', empty($User['ultimo_luogo']) ? -1 : $User['ultimo_luogo']);
+            self::storeForCommit('tag', '');
+            self::storeForCommit('last_message', 0);
+            self::storeForCommit('last_action_id', 0);
 
-                return true;
-            }
+            return true;
         }
 
         return false;
@@ -326,14 +324,5 @@ class Session extends BaseClass
 
         // disattiva la gestione degli id di sessione trasparenti, impedendo di esibirli/riceverli tramite url
         ini_set('session.use_trans_sid', 'Off');
-
-        // Id di sessione più lunghi sono anche più robusti. Molti provider ancora li configurano a 26 caratteri
-        ini_set('session.sid_length', '48');
-
-        // quanti più bit sono indicati, tanto più robusto sarà l'id di sessione generato a parità di lunghezza
-        ini_set('session.sid_bits_per_character', '6');
-
-        // garantiamo l'uso di un algoritmo di hashing bello robusto per generare i nostri id di sessione
-        ini_set('session.hash_function', 'sha256');
     }
 }

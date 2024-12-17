@@ -18,7 +18,6 @@ class Functions extends BaseClass
      */
     public static function get_constant(string $name, bool $die_on_fail = true): string|bool
     {
-
         $name = Filters::in($name);
 
         $search = DB::queryStmt("SELECT const_name,val FROM config WHERE const_name=:name", [
@@ -26,25 +25,23 @@ class Functions extends BaseClass
         ]);
         $num = $search->getNumRows();
 
-        if ( $num == 0 ) {
-            $message = "Costante {$name} inesistente nella tabella config.";
-
+        if ( $num === 0 ) {
+            $message = "Costante $name inesistente nella tabella config.";
             if ( $die_on_fail ) {
                 die($message);
-            } else {
-                return false;
             }
-        } else if ( $num > 1 ) {
-            $message = "Esistono più costanti con il nome '{$name}'. Correggere e riprovare.";
-
-            if ( $die_on_fail ) {
-                die($message);
-            } else {
-                return false;
-            }
-        } else {
-            return Filters::out($search['val']);
+            return false;
         }
+
+        if ( $num > 1 ) {
+            $message = "Esistono più costanti con il nome '$name'. Correggere e riprovare.";
+            if ( $die_on_fail ) {
+                die($message);
+            }
+            return false;
+        }
+
+        return Filters::out($search['val']);
     }
 
     /**
@@ -65,17 +62,19 @@ class Functions extends BaseClass
         ]);
         $num = $search->getNumRows();
 
-        if ( $num == 0 ) {
-            die("Costante {$name} inesistente nella tabella config.");
-        } else if ( $num > 1 ) {
-            die("Esistono più costanti con il nome '{$name}'. Correggere e riprovare.");
-        } else {
-            DB::queryStmt("UPDATE config SET val = :val WHERE const_name=:name",[
-                'val' => $val,
-                'name' => $name,
-            ]);
-            return true;
+        if ( $num === 0 ) {
+            die("Costante $name inesistente nella tabella config.");
         }
+
+        if ( $num > 1 ) {
+            die("Esistono più costanti con il nome '$name'. Correggere e riprovare.");
+        }
+
+        DB::queryStmt("UPDATE config SET val = :val WHERE const_name=:name",[
+            'val' => $val,
+            'name' => $name,
+        ]);
+        return true;
     }
 
     /**
@@ -144,13 +143,13 @@ class Functions extends BaseClass
      * @note Funzione di redirect della pagina
      * @param string $url
      * @param bool|int $tempo
-     * @return void
+     * @return never
      */
-    public static function redirect(string $url, bool|int $tempo = false): void
+    public static function redirect(string $url, bool|int $tempo = false): never
     {
-        if ( !headers_sent() && !$tempo ) {
+        if ( !$tempo && !headers_sent() ) {
             header('Location:' . $url);
-        } else if ( !headers_sent() && $tempo ) {
+        } else if ( $tempo && !headers_sent() ) {
             header('Refresh:' . $tempo . ';' . $url);
         } else {
             if ( !$tempo ) {

@@ -8,37 +8,37 @@ $id_pg = isset($_GET['id_pg']) ? Filters::out($_GET['id_pg']) : Functions::getIn
 
     <!-- ABILITA -->
     <a href="main.php?page=scheda/index&op=abilita&id_pg=<?= $id_pg; ?>">
-        <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['skill']); ?>
+        Abilità
     </a>
 
     <a href="main.php?page=scheda/index&op=stats&id_pg=<?= $id_pg; ?>">
-        <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['stats']); ?>
+       Statistiche
     </a>
 
 <?php if ( Contatti::getInstance()->contactEnables() ) { ?>
     <a href="main.php?page=scheda/index&op=contatti&id_pg=<?= $id_pg; ?>">
-        <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['contatti']); ?>
+       Contatti
     </a>
 <?php } ?>
 
     <a href="main.php?page=scheda/index&op=storia&id_pg=<?= $id_pg; ?>">
-        <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['background']); ?>
+        Storia
     </a>
 
     <!-- TRASFERIMENTI -->
     <a href="main.php?page=scheda/index&op=transazioni&id_pg=<?= $id_pg; ?>">
-        <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['transictions']); ?>
+        Transazioni
     </a>
 
     <!-- INVENTARIO -->
     <a href="main.php?page=scheda/index&op=oggetti&id_pg=<?= $id_pg; ?>">
-        <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['equipment']); ?>
+        Oggetti
     </a>
 
     <!-- DIARIO -->
 <?php if ( SchedaDiario::getInstance()->diaryActive() ) { ?>
     <a href="main.php?page=scheda/index&op=diario&id_pg=<?= $id_pg; ?>">
-        <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['diary']); ?>
+        Diario
     </a>
 <?php } ?>
 
@@ -54,26 +54,25 @@ if (RegistrazioneGiocate::getInstance()->activeRegistrazioni() && RegistrazioneG
     <!-- CHAT OPTIONS -->
 <?php if ( Personaggio::isMyPg($id_pg) ) { ?>
     <a href="main.php?page=scheda/chat/opzioni/index&id_pg=<?= $id_pg; ?>">
-        <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['chat_options']); ?>
+        Opzioni chat
     </a>
 <?php } ?>
 
 <?php if ( Log::getInstance()->permissionViewLogs() ) { ?>
     <a href="main.php?page=scheda/index&op=log&id_pg=<?= $id_pg; ?>">
-        <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['log']); ?>
+        Log
     </a>
 <?php } ?>
 
     <!-- MODIFICA -->
 <?php if ( Scheda::getInstance()->permissionUpdateCharacter($id_pg) ) { ?>
     <a href="main.php?page=scheda/index&op=modifica&id_pg=<?= $id_pg; ?>">
-        <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['update']); ?>
+        Modifica
     </a>
 <?php } ?>
 
 <?php if ( Scheda::getInstance()->permissionAdministrationCharacter() ) { ?>
     <a href="main.php?page=scheda/index&op=amministra&id_pg=<?= $id_pg; ?>">
-        <?php echo Filters::out($MESSAGE['interface']['sheet']['menu']['gst']); ?>
-
+        Amministra
     </a>
 <?php } ?>

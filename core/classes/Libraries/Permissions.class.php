@@ -135,7 +135,7 @@ class Permissions extends BaseClass
 
         if ( self::permissionExist($permission) ) {
 
-            $pg_id = ($pg == 0) ? Functions::getInstance()->getMyId() : $pg;
+            $pg_id = ($pg === 0) ? Functions::getInstance()->getMyId() : $pg;
 
             # Estraggo i gruppi del pg collegato
             $perm_groups = self::getInstance()->extractPermissionGroups($pg_id);
@@ -147,20 +147,20 @@ class Permissions extends BaseClass
                 self::getInstance()->isSuperUser($perm_groups)
             );
 
-        } else {
-            die("Permesso {$permission} inesistente.");
         }
+
+        die("Permesso $permission inesistente.");
     }
 
     /**
      * @fn permissionInGroups
      * @note Controlla che un permesso sia disponibile nei gruppi specificati
      * @param array|DBQueryInterface $groups
-     * @param string $permission
+     * @param string|int $permission
      * @return bool
      * @throws Throwable
      */
-    public function permissionInGroups(array|DBQueryInterface $groups, string $permission): bool
+    public function permissionInGroups(array|DBQueryInterface $groups, string|int $permission): bool
     {
 
         $resp = false;
@@ -222,7 +222,7 @@ class Permissions extends BaseClass
             $pg_id = Filters::int($pg['id']);
             $pg_name = Filters::out($pg['nome']);
 
-            if ( !in_array($pg_id, $pg_array) ) {
+            if ( !in_array($pg_id, $pg_array, true) ) {
                 foreach ( $permissions as $permission ) {
 
                     $permission = Filters::in($permission);

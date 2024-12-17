@@ -60,9 +60,9 @@ class Template extends BaseClass
 
             // End buffering and return its contents
             return ob_get_clean();
-        } else {
-            die('TEMPLATE_NOT_EXIST');
         }
+
+        die('TEMPLATE_NOT_EXIST');
     }
 
 }
