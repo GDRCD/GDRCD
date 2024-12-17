@@ -540,6 +540,7 @@ function gdrcd_controllo_chat($location) {
     global $PARAMETERS;
 
     $location = gdrcd_filter('num', $location);
+    
     $chat_data = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprietario, scadenza FROM mappa WHERE id=".$location." LIMIT 1");
     $private = gdrcd_filter('num', $chat_data['privata']);
 
