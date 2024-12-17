@@ -28,7 +28,6 @@ if( ! empty($_SESSION['login'])) {
     }
 
     if(isset($_REQUEST['dir']) && is_numeric($_REQUEST['dir'])) {
-        $_SESSION['luogo_precedente'] = $_SESSION['luogo'];
         $_SESSION['luogo'] = $_REQUEST['dir'];
     }
 }

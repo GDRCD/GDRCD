@@ -27,8 +27,7 @@ $info = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprieta
         //se e' privata e l'utente non ha titolo di leggerla
         if($allowance === false) {
             echo '<div class="warning">'.$MESSAGE['chat']['whisper']['privat'].'</div>';
-            $_SESSION['luogo'] = $_SESSION['luogo_precedente'];
-
+            
             //echo $info['invitati']; echo gdrcd_capital_letter($_SESSION['login']);
         } else {
             ?>

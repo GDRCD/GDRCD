@@ -82,8 +82,7 @@ if( ! empty($record) and gdrcd_password_check($pass1, $record['pass']) && ($reco
     $_SESSION['luogo'] = (empty($record['ultimo_luogo']) === true) ? -1 :  $_SESSION['luogo'] = $record['ultimo_luogo'];
     $_SESSION['tag'] = "";
     $_SESSION['last_message'] = 0;
-    $_SESSION['luogo_precedente'] = -1; 
-
+     
     $res = gdrcd_query("SELECT ruolo.gilda, ruolo.immagine FROM ruolo JOIN clgpersonaggioruolo ON clgpersonaggioruolo.id_ruolo = ruolo.id_ruolo WHERE clgpersonaggioruolo.personaggio = '".gdrcd_filter('in', $record['nome'])."'", 'result');
 
     while($row = gdrcd_query($res, 'fetch')) {

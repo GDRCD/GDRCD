@@ -325,107 +325,119 @@ if((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) 
      * facendo risultare quindi sempre veritiero il controllo in questo caso.
      * @author Blancks
      */
-    $query = gdrcd_query("	SELECT chat.id, chat.imgs, chat.mittente, chat.destinatario, chat.tipo, chat.ora, chat.testo, personaggio.url_img_chat, mappa.ora_prenotazione
-            FROM chat
-            INNER JOIN mappa ON mappa.id = chat.stanza
-            LEFT JOIN personaggio ON personaggio.nome = chat.mittente
-            WHERE chat.id > ".$last_message." AND stanza = ".$_SESSION['luogo']." AND chat.ora > IFNULL(mappa.ora_prenotazione, '0000-00-00 00:00:00') AND DATE_SUB(NOW(), INTERVAL 30 MINUTE) < ora ORDER BY id ".$typeOrder, 'result');
-    while($row = gdrcd_query($query, 'fetch')) {
-        //Impedisci XSS nelle immagini
-        $row['url_img_chat'] = gdrcd_filter('fullurl', $row['url_img_chat']);
+    $info = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprietario, scadenza FROM mappa WHERE id=".$_SESSION['luogo']." LIMIT 1");
+    $invitati = explode(',', $info['invitati']);
 
-        if($PARAMETERS['mode']['chaticons'] == 'ON') {
-            $icone_chat = explode(";", gdrcd_filter('out', $row['imgs']));
-            $add_icon = '<span class="chat_icons"> <img class="presenti_ico" src="themes/'.$PARAMETERS['themes']['current_theme'].'/imgs/races/'.$icone_chat[1].'"><img class="presenti_ico" src="imgs/icons/testamini'.$icone_chat[0].'.png"> </span>';
-        }
-        /**    * Fix problema visualizzazione spazi vuoti con i sussurri
-         * @author eLDiabolo
-         */
-        $add_chat .= '<div class="chat_row_'.$row['tipo'].'">';
-
-        // identifico se l'ultimo messaggio è dell'utente o meno
-        $isLastMessageFromUser = ($row['mittente'] == $_SESSION['login']);
-
-        switch($row['tipo']) {
-            case 'A':
-            case 'P':
-                /** * Avatar di chat
-                 * @author Blancks
-                 */
-                if($PARAMETERS['mode']['chat_avatar'] == 'ON' && ! empty($row['url_img_chat'])) {
-                    $chat_avatar = '<img src="'.$row['url_img_chat'].'" class="chat_avatar" style="width:'.$PARAMETERS['settings']['chat_avatar']['width'].'px; height:'.$PARAMETERS['settings']['chat_avatar']['height'].'px;" />';
-
-                    // Se è stato impostato il link sull'avatar di chat, avvio la costruzione
-                    if(isset($PARAMETERS['settings']['chat_avatar']['link']['mode']) and ($PARAMETERS['settings']['chat_avatar']['link']['mode']  == 'ON')) {
-                        $chat_avatar_url = ( isset($PARAMETERS['settings']['chat_avatar']['link']['popup']) and ($PARAMETERS['settings']['chat_avatar']['link']['popup'] == 'ON') )
-                            ? "javascript:modalWindow('scheda', 'Scheda di ". $row['mittente'] ."', 'popup.php?page=scheda&pg=". $row['mittente'] ."');"
-                            : "main.php?page=scheda&pg=".$row['mittente'];
-
-                        // Inserisco l'avatar di chat cliccabile
-                        $add_chat .= '<a href="'.$chat_avatar_url.'">'.$chat_avatar.'</a>';
-                    }
-                    // Altrimenti mostro solo l'avatar di chat
-                    else {
-                        $add_chat .= $chat_avatar;
-                    }
-                }
-
-                $add_chat .= '<span class="chat_time">'.gdrcd_format_time($row['ora']).'</span>';
-
-                if($PARAMETERS['mode']['chaticons'] == 'ON') {
-                    $add_chat .= $add_icon;
-                }
-                $add_chat .= '<span class="chat_name"><a href="#" onclick="Javascript: document.getElementById(\'tag\').value=\''.$row['mittente'].'\'; document.getElementById(\'type\')[2].selected = \'1\'; document.getElementById(\'message\').focus();">'.$row['mittente'].'</a>';
-
-                if(empty ($row['destinatario']) === false) {
-                    $add_chat .= '<span class="chat_tag"> ['.gdrcd_filter('out', $row['destinatario']).']</span>';
-                }
-                $add_chat .=  ($row['tipo'] === 'P') ? ': </span> ' : '</span> ';
-                $add_chat .= '<span class="chat_msg">'.gdrcd_chatme($_SESSION['login'], gdrcd_chatcolor(gdrcd_filter('out', $row['testo']))).'</span>';
-
-                /**    * Fix problema visualizzazione spazi vuoti con i sussurri
-                 * @author eLDiabolo
-                 */
-                if($PARAMETERS['mode']['chat_avatar'] == 'ON') {
-                    $add_chat .= '<br style="clear:both;" />';
-                }
-                break;
-            case 'S':
-                if($_SESSION['login'] == $row['destinatario']) {
-                    $add_chat .= '<span class="chat_name">'.$row['mittente'].' '.$MESSAGE['chat']['whisper']['by'].': </span> ';
-                    $add_chat .= '<span class="chat_msg">'.gdrcd_filter('out', $row['testo']).'</span>';
-                } elseif($_SESSION['login'] == $row['mittente']) {
-                    $add_chat .= '<span class="chat_msg">'.$MESSAGE['chat']['whisper']['to'].' '.gdrcd_filter('out', $row['destinatario']).': </span>';
-                    $add_chat .= '<span class="chat_msg">'.gdrcd_filter('out', $row['testo']).'</span>';
-                } elseif(($_SESSION['permessi'] >= MODERATOR) && ($PARAMETERS['mode']['spyprivaterooms'] == 'ON')) {
-                    $add_chat .= '<span class="chat_msg">'.$row['mittente'].' '.$MESSAGE['chat']['whisper']['from_to'].' '.gdrcd_filter('out', $row['destinatario']).' </span>';
-                    $add_chat .= '<span class="chat_msg">'.gdrcd_filter('out', $row['testo']).'</span>';
-                }
-                break;
-            case 'N':
-                $add_chat .= '<span class="chat_time">'.gdrcd_format_time($row['ora']).'</span>';
-                $add_chat .= '<span class="chat_name">'.$row['destinatario'].'</span> ';
-                $add_chat .= '<span class="chat_msg">'.gdrcd_chatcolor(gdrcd_filter('out', $row['testo'])).'</span>';
-                break;
-            case 'M':
-                $add_chat .= '<span class="chat_master">'.gdrcd_chatme($_SESSION['login'], gdrcd_chatcolor(gdrcd_filter('out', $row['testo'])), true).'</span>';
-                break;
-            case 'I':
-                $add_chat .= '<img class="chat_img" src="'.gdrcd_filter('fullurl', $row['testo']).'" />';
-                break;
-            case 'C':
-            case 'D':
-            case 'O':
-                $add_chat .= '<span class="chat_time">'.gdrcd_format_time($row['ora']).'</span>';
-                $add_chat .= '<span class="chat_msg">'.gdrcd_filter('out', $row['testo']).'</span>';
-                break;
-        }
-        $add_chat .= '</div>';
-
-        if($row['id'] > (int) $last_message) {
-            $last_message = $row['id'];
-        }
+    if((($info['proprietario'] == gdrcd_capital_letter($_SESSION['login'])) || strpos($_SESSION['gilda'], $info['proprietario']) || in_array(gdrcd_capital_letter($_SESSION['login']), $invitati) || (($PARAMETERS['mode']['spyprivaterooms'] == 'ON') && ($_SESSION['permessi'] > MODERATOR))) && ($info['scadenza'] > strftime('%Y-%m-%d %H:%M:%S'))) {
+        $allowance = true;
+    } else {
+        $allowance = true;
     }
+
+    if(!$info['privata'] || $allowance) { 
+     
+        $query = gdrcd_query("	SELECT chat.id, chat.imgs, chat.mittente, chat.destinatario, chat.tipo, chat.ora, chat.testo, personaggio.url_img_chat, mappa.ora_prenotazione
+                FROM chat
+                INNER JOIN mappa ON mappa.id = chat.stanza
+                LEFT JOIN personaggio ON personaggio.nome = chat.mittente
+                WHERE chat.id > ".$last_message." AND stanza = ".$_SESSION['luogo']." AND chat.ora > IFNULL(mappa.ora_prenotazione, '0000-00-00 00:00:00') AND DATE_SUB(NOW(), INTERVAL 30 MINUTE) < ora ORDER BY id ".$typeOrder, 'result');
+        while($row = gdrcd_query($query, 'fetch')) {
+            //Impedisci XSS nelle immagini
+            $row['url_img_chat'] = gdrcd_filter('fullurl', $row['url_img_chat']);
+
+            if($PARAMETERS['mode']['chaticons'] == 'ON') {
+                $icone_chat = explode(";", gdrcd_filter('out', $row['imgs']));
+                $add_icon = '<span class="chat_icons"> <img class="presenti_ico" src="themes/'.$PARAMETERS['themes']['current_theme'].'/imgs/races/'.$icone_chat[1].'"><img class="presenti_ico" src="imgs/icons/testamini'.$icone_chat[0].'.png"> </span>';
+            }
+            /**    * Fix problema visualizzazione spazi vuoti con i sussurri
+             * @author eLDiabolo
+             */
+            $add_chat .= '<div class="chat_row_'.$row['tipo'].'">';
+
+            // identifico se l'ultimo messaggio è dell'utente o meno
+            $isLastMessageFromUser = ($row['mittente'] == $_SESSION['login']);
+
+            switch($row['tipo']) {
+                case 'A':
+                case 'P':
+                    /** * Avatar di chat
+                     * @author Blancks
+                     */
+                    if($PARAMETERS['mode']['chat_avatar'] == 'ON' && ! empty($row['url_img_chat'])) {
+                        $chat_avatar = '<img src="'.$row['url_img_chat'].'" class="chat_avatar" style="width:'.$PARAMETERS['settings']['chat_avatar']['width'].'px; height:'.$PARAMETERS['settings']['chat_avatar']['height'].'px;" />';
+
+                        // Se è stato impostato il link sull'avatar di chat, avvio la costruzione
+                        if(isset($PARAMETERS['settings']['chat_avatar']['link']['mode']) and ($PARAMETERS['settings']['chat_avatar']['link']['mode']  == 'ON')) {
+                            $chat_avatar_url = ( isset($PARAMETERS['settings']['chat_avatar']['link']['popup']) and ($PARAMETERS['settings']['chat_avatar']['link']['popup'] == 'ON') )
+                                ? "javascript:modalWindow('scheda', 'Scheda di ". $row['mittente'] ."', 'popup.php?page=scheda&pg=". $row['mittente'] ."');"
+                                : "main.php?page=scheda&pg=".$row['mittente'];
+
+                            // Inserisco l'avatar di chat cliccabile
+                            $add_chat .= '<a href="'.$chat_avatar_url.'">'.$chat_avatar.'</a>';
+                        }
+                        // Altrimenti mostro solo l'avatar di chat
+                        else {
+                            $add_chat .= $chat_avatar;
+                        }
+                    }
+
+                    $add_chat .= '<span class="chat_time">'.gdrcd_format_time($row['ora']).'</span>';
+
+                    if($PARAMETERS['mode']['chaticons'] == 'ON') {
+                        $add_chat .= $add_icon;
+                    }
+                    $add_chat .= '<span class="chat_name"><a href="#" onclick="Javascript: document.getElementById(\'tag\').value=\''.$row['mittente'].'\'; document.getElementById(\'type\')[2].selected = \'1\'; document.getElementById(\'message\').focus();">'.$row['mittente'].'</a>';
+
+                    if(empty ($row['destinatario']) === false) {
+                        $add_chat .= '<span class="chat_tag"> ['.gdrcd_filter('out', $row['destinatario']).']</span>';
+                    }
+                    $add_chat .=  ($row['tipo'] === 'P') ? ': </span> ' : '</span> ';
+                    $add_chat .= '<span class="chat_msg">'.gdrcd_chatme($_SESSION['login'], gdrcd_chatcolor(gdrcd_filter('out', $row['testo']))).'</span>';
+
+                    /**    * Fix problema visualizzazione spazi vuoti con i sussurri
+                     * @author eLDiabolo
+                     */
+                    if($PARAMETERS['mode']['chat_avatar'] == 'ON') {
+                        $add_chat .= '<br style="clear:both;" />';
+                    }
+                    break;
+                case 'S':
+                    if($_SESSION['login'] == $row['destinatario']) {
+                        $add_chat .= '<span class="chat_name">'.$row['mittente'].' '.$MESSAGE['chat']['whisper']['by'].': </span> ';
+                        $add_chat .= '<span class="chat_msg">'.gdrcd_filter('out', $row['testo']).'</span>';
+                    } elseif($_SESSION['login'] == $row['mittente']) {
+                        $add_chat .= '<span class="chat_msg">'.$MESSAGE['chat']['whisper']['to'].' '.gdrcd_filter('out', $row['destinatario']).': </span>';
+                        $add_chat .= '<span class="chat_msg">'.gdrcd_filter('out', $row['testo']).'</span>';
+                    } elseif(($_SESSION['permessi'] >= MODERATOR) && ($PARAMETERS['mode']['spyprivaterooms'] == 'ON')) {
+                        $add_chat .= '<span class="chat_msg">'.$row['mittente'].' '.$MESSAGE['chat']['whisper']['from_to'].' '.gdrcd_filter('out', $row['destinatario']).' </span>';
+                        $add_chat .= '<span class="chat_msg">'.gdrcd_filter('out', $row['testo']).'</span>';
+                    }
+                    break;
+                case 'N':
+                    $add_chat .= '<span class="chat_time">'.gdrcd_format_time($row['ora']).'</span>';
+                    $add_chat .= '<span class="chat_name">'.$row['destinatario'].'</span> ';
+                    $add_chat .= '<span class="chat_msg">'.gdrcd_chatcolor(gdrcd_filter('out', $row['testo'])).'</span>';
+                    break;
+                case 'M':
+                    $add_chat .= '<span class="chat_master">'.gdrcd_chatme($_SESSION['login'], gdrcd_chatcolor(gdrcd_filter('out', $row['testo'])), true).'</span>';
+                    break;
+                case 'I':
+                    $add_chat .= '<img class="chat_img" src="'.gdrcd_filter('fullurl', $row['testo']).'" />';
+                    break;
+                case 'C':
+                case 'D':
+                case 'O':
+                    $add_chat .= '<span class="chat_time">'.gdrcd_format_time($row['ora']).'</span>';
+                    $add_chat .= '<span class="chat_msg">'.gdrcd_filter('out', $row['testo']).'</span>';
+                    break;
+            }
+            $add_chat .= '</div>';
+
+            if($row['id'] > (int) $last_message) {
+                $last_message = $row['id'];
+            }
+        }
+    } 
     gdrcd_query($query, 'free');
 
     // Prevedo la notifica in caso di nuovi messaggi
