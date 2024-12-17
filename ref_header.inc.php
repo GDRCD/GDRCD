@@ -325,17 +325,46 @@ if((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) 
      * facendo risultare quindi sempre veritiero il controllo in questo caso.
      * @author Blancks
      */
-    $info = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprietario, scadenza FROM mappa WHERE id=".$_SESSION['luogo']." LIMIT 1");
-    $invitati = explode(',', $info['invitati']);
+    $allowance = false;
 
-    if((($info['proprietario'] == gdrcd_capital_letter($_SESSION['login'])) || strpos($_SESSION['gilda'], $info['proprietario']) || in_array(gdrcd_capital_letter($_SESSION['login']), $invitati) || (($PARAMETERS['mode']['spyprivaterooms'] == 'ON') && ($_SESSION['permessi'] > MODERATOR))) && ($info['scadenza'] > strftime('%Y-%m-%d %H:%M:%S'))) {
-        $allowance = true;
+    $chat_data = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprietario, scadenza FROM mappa WHERE id=".$_SESSION['luogo']." LIMIT 1");
+    $chat_invited = explode(',', $chat_data['invitati']);
+    $private = gdrcd_filter('num', $chat_data['privata']);
+
+    // Se la stanza è privata
+    if($private) {
+
+        // Controllo permessi utente
+        $spy_room_enabled = ($PARAMETERS['mode']['spyprivaterooms'] === 'ON');
+        $isModerator = ($_SESSION['permessi'] >= MODERATOR);
+        if($spy_room_enabled && $isModerator){
+            $allowance = true;
+        } else {
+
+            // Controllo scadenza stanza, se non scaduta
+            $expiring = $chat_data['scadenza'];
+            $actual_time = strftime('%Y-%m-%d %H:%M:%S');
+            if($expiring > $actual_time) {
+
+                // Controllo membri della stanza
+                $owner = gdrcd_filter('out', $chat_data['proprietario']);
+                $me = gdrcd_filter('out',gdrcd_capital_letter($_SESSION['login']));
+                $mineGuild = gdrcd_filter('out', $_SESSION['gilda']);
+
+                if ($owner === $me) { // Se l'utente è il proprietario
+                    $allowance = true;
+                } else if (strpos($mineGuild, $owner)) {  // Se l'utente è nella gilda del proprietario
+                    $allowance = true;
+                } else if (in_array($me, $chat_invited, true)) { // Se l'utente è tra gli invitati
+                    $allowance = true;
+                }
+            }
+        }
     } else {
         $allowance = true;
     }
 
-    if(!$info['privata'] || $allowance) { 
-     
+    if($allowance) {
         $query = gdrcd_query("	SELECT chat.id, chat.imgs, chat.mittente, chat.destinatario, chat.tipo, chat.ora, chat.testo, personaggio.url_img_chat, mappa.ora_prenotazione
                 FROM chat
                 INNER JOIN mappa ON mappa.id = chat.stanza
@@ -437,8 +466,8 @@ if((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) 
                 $last_message = $row['id'];
             }
         }
-    } 
-    gdrcd_query($query, 'free');
+        gdrcd_query($query, 'free');
+    }
 
     // Prevedo la notifica in caso di nuovi messaggi
     if($_SESSION['last_message'] > 0 && (isset($isLastMessageFromUser) && !$isLastMessageFromUser) && (isset($add_chat) && $add_chat != '')){
