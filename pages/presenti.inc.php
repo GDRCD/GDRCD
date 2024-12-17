@@ -15,6 +15,7 @@
         }
         gdrcd_query($query);
         echo '<div class="elenco_presenti">';
+          if(gdrcd_controllo_chat($_SESSION['luogo'])) {
 
         //Carico la lista presenti (Entrati).
         $query = "SELECT personaggio.nome, personaggio.cognome, personaggio.permessi, personaggio.sesso, personaggio.id_razza, razza.sing_m, razza.sing_f, razza.icon, personaggio.disponibile, personaggio.is_invisible FROM personaggio LEFT JOIN razza ON personaggio.id_razza = razza.id_razza WHERE DATE_ADD(personaggio.ora_entrata, INTERVAL 2 MINUTE) > NOW() ORDER BY personaggio.ora_entrata, personaggio.nome";
@@ -245,6 +246,7 @@
             echo '<div class="page_title"><h2 class="presenti_title">'.$record['numero'].' '.gdrcd_filter('out', $PARAMETERS['names']['users_name']['plur']).' '.gdrcd_filter('out', $MESSAGE['interface']['logged_users']['plur']).'</h2></div>';
         }
         echo '</a></div>';
+    }
         ?>
     </div>
     <!-- Chiudura finestra del gioco -->
