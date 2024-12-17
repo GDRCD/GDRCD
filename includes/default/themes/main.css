@@ -1497,3 +1497,23 @@ div.innertube {
     border-top: 1px solid black;
     margin: 15px auto;
 }
+
+/**** PRESTAVOLTO ****/
+
+.prestavolto_table .tr .td {
+    width: 24% !important;
+}
+
+.prestavolto_table .tr:not(.header) .td {
+    vertical-align: middle;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 35px;
+    font-size: 17px;
+}
+
+.prestavolto_table .tr .td img {
+    width: 30px;
+    height: 30px;
+}
