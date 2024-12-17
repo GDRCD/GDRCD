@@ -540,7 +540,7 @@ function gdrcd_controllo_chat($location) {
     global $PARAMETERS;
 
     $location = gdrcd_filter('num', $location);
-    
+
     $chat_data = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprietario, scadenza FROM mappa WHERE id=".$location." LIMIT 1");
     $private = gdrcd_filter('num', $chat_data['privata']);
 
@@ -552,26 +552,29 @@ function gdrcd_controllo_chat($location) {
         $isModerator = ($_SESSION['permessi'] >= MODERATOR);
         if($spy_room_enabled && $isModerator){
             return true;
-        } else {
+        }
 
-            // Controllo scadenza stanza, se non scaduta
-            $expiring = $chat_data['scadenza'];
-            $actual_time = strftime('%Y-%m-%d %H:%M:%S');
-            if($expiring > $actual_time) {
+        // Controllo scadenza stanza, se non scaduta
+        $expiring = $chat_data['scadenza'];
+        $actual_time = strftime('%Y-%m-%d %H:%M:%S');
+        if($expiring > $actual_time) {
 
-                // Controllo membri della stanza
-                $owner = gdrcd_filter('out', $chat_data['proprietario']);
-                $me = gdrcd_filter('out',gdrcd_capital_letter($_SESSION['login']));
-                $mineGuild = gdrcd_filter('out', $_SESSION['gilda']);
-                $chat_invited = explode(',', $chat_data['invitati']);
+            // Controllo membri della stanza
+            $owner = gdrcd_filter('out', $chat_data['proprietario']);
+            $me = gdrcd_filter('out',gdrcd_capital_letter($_SESSION['login']));
+            $mineGuild = gdrcd_filter('out', $_SESSION['gilda']);
+            $chat_invited = explode(',', $chat_data['invitati']);
 
-                if ($owner === $me) { // Se l'utente è il proprietario
-                    return true;
-                } else if (strpos($mineGuild, $owner)) {  // Se l'utente è nella gilda del proprietario
-                    return true;
-                } else if (in_array($me, $chat_invited, true)) { // Se l'utente è tra gli invitati
-                    return true;
-                }
+            if ($owner === $me) { // Se l'utente è il proprietario
+                return true;
+            }
+
+            if (strpos($mineGuild, $owner)) {  // Se l'utente è nella gilda del proprietario
+                return true;
+            }
+
+            if (in_array($me, $chat_invited, true)) { // Se l'utente è tra gli invitati
+                return true;
             }
         }
     } else {
