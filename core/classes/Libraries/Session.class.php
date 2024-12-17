@@ -327,12 +327,6 @@ class Session extends BaseClass
         // disattiva la gestione degli id di sessione trasparenti, impedendo di esibirli/riceverli tramite url
         ini_set('session.use_trans_sid', 'Off');
 
-        // Id di sessione più lunghi sono anche più robusti. Molti provider ancora li configurano a 26 caratteri
-        ini_set('session.sid_length', '48');
-
-        // quanti più bit sono indicati, tanto più robusto sarà l'id di sessione generato a parità di lunghezza
-        ini_set('session.sid_bits_per_character', '6');
-
         // garantiamo l'uso di un algoritmo di hashing bello robusto per generare i nostri id di sessione
         ini_set('session.hash_function', 'sha256');
     }
