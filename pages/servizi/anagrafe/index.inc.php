@@ -122,15 +122,15 @@ foreach ($genders as $gender) {
 
 ?>
     <!-- INIZIO FILTRI -->
-    <div id="FiltriAnagrafe" class="servizi_form_container">
+    <div id="FiltriAnagrafe" class="form_container form_container_bg">
 
-        <div class="servizi_form_title"><?= gdrcd_filter('out', $MESSAGE['interface']['pg_list']['search']['title']); ?></div>
+        <form method="POST" id="FiltriAnagrafeForm" class="form" action="main.php?page=servizi_anagrafe">
 
-        <form method="POST" id="FiltriAnagrafeForm" class="servizi_form" action="main.php?page=servizi_anagrafe">
+            <div class="title"><?= gdrcd_filter('out', $MESSAGE['interface']['pg_list']['search']['title']); ?></div>
 
             <!-- NOME -->
             <div class="single_input">
-                <div class="label"><?= $MESSAGE['interface']['pg_list']['search']['personaggio']; ?></div>
+                <div class="label"><?= $MESSAGE['interface']['pg_list']['search']['nome']; ?></div>
                 <input type="text" name="nome" value="<?= gdrcd_filter('out', $_REQUEST['nome']); ?>"/>
             </div>
 
@@ -155,8 +155,8 @@ foreach ($genders as $gender) {
             <!-- LIMITE PG -->
             <div class="single_input">
                 <div class="label"><?= $MESSAGE['interface']['pg_list']['search']['limit']; ?></div>
-                <input type="number" name="limit"
-                       value="<?= isset($_REQUEST['limit']) ? gdrcd_filter('out', $_REQUEST['limit']) : 0; ?>"/>
+                <input type="number" name="limit" value="<?= isset($_REQUEST['limit']) ? gdrcd_filter('out', $_REQUEST['limit']) : 0; ?>"/>
+                <div class="subtitle"><?= $MESSAGE['interface']['pg_list']['search']['limit_info']; ?></div>
             </div>
 
             <!-- SUBMIT + EXTRA -->

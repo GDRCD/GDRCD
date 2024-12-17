@@ -23,7 +23,7 @@ if ($_REQUEST['pg'] == $_SESSION['login']) {
 						LEFT JOIN personaggio ON personaggio.nome = chat.mittente 
 						WHERE stanza = " . $_POST['luogo'] . " AND ora >= '" . gdrcd_filter('in', $date_a) . "' 
 						AND ora <= '" . gdrcd_filter('in', $date_b) . "' 
-						AND (tipo = 'A' || tipo = 'P' || tipo = 'M' || tipo = 'N') 
+						AND (chat.tipo = 'A' || chat.tipo = 'P' || chat.tipo = 'M' || chat.tipo = 'N') 
 						GROUP BY mittente ORDER BY ora", 'result');
 
     $tot= gdrcd_query($query, 'num_rows');
@@ -52,7 +52,7 @@ if ($_REQUEST['pg'] == $_SESSION['login']) {
                             WHERE stanza = " . $_POST['luogo'] . " AND ora >= '" . gdrcd_filter('in', $date_a) . "' 
                             AND ora <= '" . gdrcd_filter('in', $date_b) . "' 
                             AND mittente = '" . gdrcd_filter('in', $_REQUEST['pg']) . "'  
-                            AND (tipo = 'A' || tipo = 'P' || tipo = 'M' || tipo = 'N') ORDER BY ora ", 'result');
+                            AND (chat.tipo = 'A' || chat.tipo = 'P' || chat.tipo = 'M' || chat.tipo = 'N') ORDER BY ora ", 'result');
             $record = gdrcd_query($start, 'fetch');
             $num_az = gdrcd_query($start, 'num_rows');
             $time_end = gdrcd_query("SELECT chat.id, chat.ora
@@ -62,7 +62,7 @@ if ($_REQUEST['pg'] == $_SESSION['login']) {
 						WHERE stanza = " . $_POST['luogo'] . " AND ora >= '" . gdrcd_filter('in', $date_a) . "' 
 						AND ora <= '" . gdrcd_filter('in', $date_b) . "' 
 						AND mittente = '" . gdrcd_filter('in', $_REQUEST['pg']) . "' 
-						AND (tipo = 'A' || tipo = 'P' || tipo = 'M' || tipo = 'N') ORDER BY ora DESC LIMIT 1 ", 'result');
+						AND (chat.tipo = 'A' || chat.tipo = 'P' || chat.tipo = 'M' || chat.tipo = 'N') ORDER BY ora DESC LIMIT 1 ", 'result');
             $rte = gdrcd_query($time_end, 'fetch');
             $end_time = date("Y-m-d H:i:s", strtotime("+1 hours", strtotime($rte['ora'])));
 
@@ -73,7 +73,7 @@ if ($_REQUEST['pg'] == $_SESSION['login']) {
 						WHERE stanza = " . $_POST['luogo'] . " AND ora >= '" . gdrcd_filter('in', $date_a) . "' 
 						AND ora <= '" . gdrcd_filter('in', $date_b) . "' 
 						AND mittente = '" . gdrcd_filter('in', $_REQUEST['pg']) . "' 
-						AND (tipo = 'A' || tipo = 'P' || tipo = 'M' || tipo = 'N') ORDER BY ora ASC LIMIT 1 ", 'result');
+						AND (chat.tipo = 'A' || chat.tipo = 'P' || chat.tipo = 'M' || chat.tipo = 'N') ORDER BY ora ASC LIMIT 1 ", 'result');
             $rts = gdrcd_query($time_start, 'fetch');
             $start_time = date("Y-m-d H:i:s", strtotime("-1 hours", strtotime($rts['ora'])));
 
