@@ -28,9 +28,9 @@ abstract class BaseClass
      * @note Self Instance for static recall (BaseClass::__construct();)
      * @return static
      */
-    public static function getInstance()
+    public static function getInstance(): BaseClass|static
     {
-        $className = get_called_class();
+        $className = static::class;
 
         if ( !($className::$_instance instanceof $className) ) {
             $className::$_instance = new $className();
