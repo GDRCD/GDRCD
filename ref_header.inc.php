@@ -16,9 +16,7 @@ $handleDBConnection = gdrcd_connect();
 $i_ref_time = gdrcd_filter_get($_GET['ref']);
 
 if($i_ref_time < 30) {
-
     $i_ref_time = 30;
-
 }
 
 if((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) === false)) {
@@ -332,9 +330,9 @@ if((gdrcd_filter_get($_REQUEST['chat']) == 'yes') && (empty($_SESSION['login']) 
      * facendo risultare quindi sempre veritiero il controllo in questo caso.
      * @author Blancks
      */
- 
+
     if(gdrcd_controllo_chat($_SESSION['luogo'])) {
-      
+
        $query = gdrcd_query("	SELECT chat.id, chat.imgs, chat.mittente, chat.destinatario, chat.tipo, chat.ora, chat.testo, personaggio.url_img_chat, mappa.ora_prenotazione
                 FROM chat
                 INNER JOIN mappa ON mappa.id = chat.stanza
