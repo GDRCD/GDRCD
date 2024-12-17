@@ -530,12 +530,17 @@ function gdrcd_controllo_permessi_forum($tipo, $proprietari = '')
     }
 }
 
+/**
+ * Funzione controllo permessi chat
+ * @param $location
+ * @return bool
+ * @throws Exception
+ */
 function gdrcd_controllo_chat($location) {
     global $PARAMETERS;
 
     $location = gdrcd_filter('num', $location);
     $chat_data = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprietario, scadenza FROM mappa WHERE id=".$location." LIMIT 1");
-    $chat_invited = explode(',', $chat_data['invitati']);
     $private = gdrcd_filter('num', $chat_data['privata']);
 
     // Se la stanza è privata
@@ -557,6 +562,7 @@ function gdrcd_controllo_chat($location) {
                 $owner = gdrcd_filter('out', $chat_data['proprietario']);
                 $me = gdrcd_filter('out',gdrcd_capital_letter($_SESSION['login']));
                 $mineGuild = gdrcd_filter('out', $_SESSION['gilda']);
+                $chat_invited = explode(',', $chat_data['invitati']);
 
                 if ($owner === $me) { // Se l'utente è il proprietario
                     return true;
