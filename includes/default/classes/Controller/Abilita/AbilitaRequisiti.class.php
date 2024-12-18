@@ -20,7 +20,7 @@ class AbilitaRequisiti extends Abilita
      */
     public function getRequisitiByRow(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM abilita_requisiti WHERE id=:id LIMIT 1", ['id' => $id]);
+        return DB::queryStmt("SELECT $val FROM abilita_requisiti WHERE id=:id LIMIT 1", ['id' => $id]);
     }
 
     /**
@@ -35,7 +35,7 @@ class AbilitaRequisiti extends Abilita
     public function getRequisitiByGrado(int $id, int $grado, string $val = '*'): DBQueryInterface
     {
         return DB::queryStmt(
-            "SELECT {$val} FROM abilita_requisiti WHERE abilita = :id AND grado = :grado ",
+            "SELECT $val FROM abilita_requisiti WHERE abilita = :id AND grado = :grado ",
             ['id' => $id, 'grado' => $grado]
         );
     }
@@ -51,7 +51,7 @@ class AbilitaRequisiti extends Abilita
     public function getRequisitiByType(int $type, string $val = 'abilita_requisiti.*,abilita.nome'): DBQueryInterface
     {
         return DB::queryStmt("
-            SELECT {$val} FROM abilita_requisiti 
+            SELECT $val FROM abilita_requisiti 
                 LEFT JOIN abilita ON (abilita.id = abilita_requisiti.abilita) 
             WHERE tipo=  :tipo ORDER BY abilita.nome",
             ['tipo' => $type]
@@ -81,7 +81,7 @@ class AbilitaRequisiti extends Abilita
      */
     public function isTypeAbilita(string $type): bool
     {
-        return ($type == $this->requisito_abi);
+        return ($type === $this->requisito_abi);
     }
 
     /**
@@ -92,18 +92,18 @@ class AbilitaRequisiti extends Abilita
      */
     public function isTypeStat(string $type): bool
     {
-        return ($type == $this->requisito_stat);
+        return ($type === $this->requisito_stat);
     }
 
     /**
      * @fn requirementControl
-     * @param string $pg
+     * @param string|int $pg
      * @param int $abi
      * @param int $grado
      * @return bool
      * @throws Throwable
      */
-    public function requirementControl(string $pg, int $abi, int $grado): bool
+    public function requirementControl(string|int $pg, int $abi, int $grado): bool
     {
 
         if ( $this->requirementActive() ) {
@@ -136,9 +136,9 @@ class AbilitaRequisiti extends Abilita
             }
 
             return $esito;
-        } else {
-            return true;
         }
+
+        return true;
     }
 
     /*** FUNCTIONS  */
@@ -205,7 +205,7 @@ class AbilitaRequisiti extends Abilita
             $dati_rif = $this->getAbility($id_riferimento, 'nome');
             $nome_riferimento = Filters::out($dati_rif['nome']);
 
-            $html .= "<option value='{$id}'>{$nome_abi} {$grado} - {$nome_riferimento} {$lvl_rif}</option>";
+            $html .= "<option value='$id'>$nome_abi $grado - $nome_riferimento $lvl_rif</option>";
         }
         $html .= "</optgroup>";
 
@@ -224,7 +224,7 @@ class AbilitaRequisiti extends Abilita
 
             $nome_riferimento = Filters::out($stat_data['nome']);
 
-            $html .= "<option value='{$id}'>{$nome_abi} {$grado} - {$nome_riferimento} {$lvl_rif}</option>";
+            $html .= "<option value='$id'>$nome_abi $grado - $nome_riferimento $lvl_rif</option>";
         }
         $html .= "</optgroup>";
 
@@ -236,6 +236,7 @@ class AbilitaRequisiti extends Abilita
      * @fn ListaRequisiti
      * @note Lista dei requisiti abilita', ritorna valori per una select
      * @return string
+     * @throws Throwable
      * @example return : <option value='id'>nome</option>
      */
     public function listRequisitiType(): string
@@ -333,14 +334,14 @@ class AbilitaRequisiti extends Abilita
                 'swal_message' => 'Nuovo requisito abilità creato.',
                 'swal_type' => 'success',
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -379,14 +380,14 @@ class AbilitaRequisiti extends Abilita
                 'swal_message' => 'Requisito abilità modificato.',
                 'swal_type' => 'success',
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -415,13 +416,13 @@ class AbilitaRequisiti extends Abilita
                 'swal_message' => 'Requisito abilità eliminato.',
                 'swal_type' => 'success',
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 }

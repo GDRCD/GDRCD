@@ -10,17 +10,17 @@ class Quest extends BaseClass
      * @var bool $trame_enabled
      * @var int $result_for_page
      */
-    private
-        $quest_enabled,
-        $trame_enabled,
-        $result_for_page,
-        $notify_enabled,
-        $px_code = PX,
-        $num_log_scheda = 10;
+    private int $num_log_scheda = 10;
+    private int $px_code = PX;
+    private bool $notify_enabled;
+    private int $result_for_page;
+    private bool $trame_enabled;
+    private bool $quest_enabled;
 
     /**
      * @fn __construct
      * @note Inizializzo le variabili di classe con all'interno le costanti necessarie
+     * @throws Throwable
      */
     public function __construct()
     {
@@ -43,12 +43,12 @@ class Quest extends BaseClass
      * @fn createMemberInput
      * @note Creazione degli input di inserimento pg
      * @return array
+     * @throws Throwable
      */
     public function createMemberInput(): array
     {
-        $html = '';
-
-        $html .= "<div class='form_subtitle'>Partecipante</div>";
+        //TODO - Spostare in template
+        $html = "<div class='form_subtitle'>Partecipante</div>";
         $html .= '<div class="single_input">';
 
         $html .= '<div class="label"> Nome </div>';
@@ -75,11 +75,12 @@ class Quest extends BaseClass
      * @note Estrae i dati di una trama dalla tabella quest_trama
      * @param int $trama
      * @param string $value
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getTrama(int $trama, string $value = '*')
+    public function getTrama(int $trama, string $value = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$value} FROM quest_trama WHERE id = '{$trama}' LIMIT 1");
+        return DB::query("SELECT $value FROM quest_trama WHERE id = '$trama' LIMIT 1");
     }
 
     /**
@@ -87,11 +88,12 @@ class Quest extends BaseClass
      * @note Estrae i dati di una trama dalla tabella quest_trama
      * @param int $quest
      * @param string $value
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getQuest(int $quest, string $value = '*')
+    public function getQuest(int $quest, string $value = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$value} FROM quest WHERE id = '{$quest}' LIMIT 1");
+        return DB::query("SELECT $value FROM quest WHERE id = '$quest' LIMIT 1");
     }
 
     /**
@@ -99,11 +101,12 @@ class Quest extends BaseClass
      * @note Estrae la lista personaggi di una quest
      * @param int $quest
      * @param string $value
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getQuestMembers(int $quest, string $value = '*')
+    public function getQuestMembers(int $quest, string $value = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$value} FROM personaggio_quest WHERE id_quest = '{$quest}'", 'result');
+        return DB::query("SELECT $value FROM personaggio_quest WHERE id_quest = '$quest'", 'result');
     }
 
     /**
@@ -112,11 +115,12 @@ class Quest extends BaseClass
      * @param int $quest
      * @param int $pg
      * @param string $value
-     * @return bool|int|mixed|string
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getQuestMemberData(int $quest, int $pg, string $value = '*')
+    public function getQuestMemberData(int $quest, int $pg, string $value = '*'): DBQueryInterface
     {
-        return DB::query("SELECT {$value} FROM personaggio_quest WHERE id_quest = '{$quest}' AND personaggio='{$pg}' LIMIT 1");
+        return DB::query("SELECT $value FROM personaggio_quest WHERE id_quest = '$quest' AND personaggio='$pg' LIMIT 1");
     }
 
     /**
@@ -124,10 +128,11 @@ class Quest extends BaseClass
      * @note Estrae il numero di quest associate ad una trama
      * @param int $id_trama
      * @return int
+     * @throws Throwable
      */
     public function getTrameQuestNums(int $id_trama): int
     {
-        $tot = DB::query("SELECT count(*) as tot FROM quest WHERE trama='{$id_trama}'");
+        $tot = DB::query("SELECT count(*) as tot FROM quest WHERE trama='$id_trama'");
         return Filters::int($tot['tot']);
     }
 
@@ -138,10 +143,11 @@ class Quest extends BaseClass
      * @note Controlla l'esistenza di una quest
      * @param int $id
      * @return bool
+     * @throws Throwable
      */
     public function questExist(int $id): bool
     {
-        $data = DB::query("SELECT COUNT(id) AS tot FROM quest WHERE id='{$id}' LIMIT 1");
+        $data = DB::query("SELECT COUNT(id) AS tot FROM quest WHERE id='$id' LIMIT 1");
         return ($data['tot'] > 0);
     }
 
@@ -150,10 +156,11 @@ class Quest extends BaseClass
      * @note Controlla l'esistenza di una trama
      * @param int $id
      * @return bool
+     * @throws Throwable
      */
     public function tramaExist(int $id): bool
     {
-        $data = DB::query("SELECT COUNT(id) AS tot FROM quest_trama WHERE id='{$id}' LIMIT 1");
+        $data = DB::query("SELECT COUNT(id) AS tot FROM quest_trama WHERE id='$id' LIMIT 1");
         return ($data['tot'] > 0);
     }
 
@@ -186,6 +193,7 @@ class Quest extends BaseClass
      * @fn managePermission
      * @note Controllo se se ho i permessi per gestire le quest
      * @return bool
+     * @throws Throwable
      */
     public function manageQuestPermission(): bool
     {
@@ -196,6 +204,7 @@ class Quest extends BaseClass
      * @fn viewTramePermission
      * @note Controllo se ho i permessi per visualizzare le trame
      * @return bool
+     * @throws Throwable
      */
     public function viewTramePermission(): bool
     {
@@ -206,6 +215,7 @@ class Quest extends BaseClass
      * @fn manageTramePermission
      * @note Controllo se ho i permessi per gestire le trame
      * @return bool
+     * @throws Throwable
      */
     public function manageTramePermission(): bool
     {
@@ -297,6 +307,7 @@ class Quest extends BaseClass
      * @note Estrae la lista select delle trame esistenti
      * @param int $selected
      * @return string
+     * @throws Throwable
      */
     public function getTrameList(int $selected = 0): string
     {
@@ -308,9 +319,9 @@ class Quest extends BaseClass
         foreach ( $list as $item ) {
             $name = Filters::out($item['titolo']);
             $id = Filters::int($item['id']);
-            $sel = ($selected == $id) ? 'selected' : '';
+            $sel = ($selected === $id) ? 'selected' : '';
 
-            $html .= "<option value='{$id}' {$sel}>{$name}</option>";
+            $html .= "<option value='$id' $sel>$name</option>";
         }
 
         return $html;
@@ -330,9 +341,9 @@ class Quest extends BaseClass
         $array = [0 => 'In Corso', 1 => 'Chiusa'];
 
         foreach ( $array as $index => $item ) {
-            $sel = ($selected == $index) ? 'selected' : '';
+            $sel = ($selected === $index) ? 'selected' : '';
 
-            $html .= "<option value='{$index}' {$sel}>{$item}</option>";
+            $html .= "<option value='$index' $sel>$item</option>";
         }
 
         return $html;
@@ -344,13 +355,14 @@ class Quest extends BaseClass
      * @fn renderQuestList
      * @param int $page
      * @return string
+     * @throws Throwable
      */
     public function renderQuestList(int $page): string
     {
         $html = '';
-        $pagebegin = $page * 10;
-        $pageend = 10;
-        $quests = $this->getAllQuests($pagebegin, $pageend);
+        $page_begin = $page * $this->num_log_scheda;
+        $page_end = $this->num_log_scheda;
+        $quests = $this->getAllQuests($page_begin, $page_end);
 
         $html .= '
                 <div class="tr header">
@@ -430,10 +442,10 @@ class Quest extends BaseClass
                     </div>
                 
                     <div class='td commands'><!-- Iconcine dei controlli -->
-                        <a href='/main.php?page=gestione/quest/gestione_quest_index&op=edit_quest&id_record={$id}'>
+                        <a href='/main.php?page=gestione/quest/gestione_quest_index&op=edit_quest&id_record=$id'>
                             <i class='fas fa-edit'></i>
                         </a>
-                        <a class='ajax_link' data-id='{$id}' data-page='{$page}' data-action='delete_quest' href='#'>
+                        <a class='ajax_link' data-id='$id' data-page='$page' data-action='delete_quest' href='#'>
                             <i class='fas fa-eraser'></i>
                         </a>
                     </div>
@@ -442,7 +454,7 @@ class Quest extends BaseClass
 
         $html .= '
             <div class="tr footer">
-                <a href="main.php?page=gestione/quest/gestione_quest_index&op=insert_quest">
+                <a href="/main.php?page=gestione/quest/gestione_quest_index&op=insert_quest">
                     Registra nuova quest
                 </a> |
                 <a href="/main.php?page=gestione">
@@ -453,14 +465,17 @@ class Quest extends BaseClass
         return $html;
     }
 
-    public function renderTrameList(int $page)
+    /**
+     * @throws Throwable
+     */
+    public function renderTrameList(int $page): string
     {
         $html = '';
 
-        $pagebegin = (int)$_REQUEST['offset'] * 10;
-        $pageend = 10;
+        $page_begin = (int)$_REQUEST['offset'] * $this->num_log_scheda;
+        $page_end = $this->num_log_scheda;
 
-        $trame = $this->getAllTrame($pagebegin, $pageend);
+        $trame = $this->getAllTrame($page_begin, $page_end);
 
         $html .= '<div class="tr header">
                 <div class="td">
@@ -524,10 +539,10 @@ class Quest extends BaseClass
                     </div>
         
                     <div class='td commands'><!-- Iconcine dei controlli -->
-                        <a href='/main.php?page=gestione_trame&op=edit_trama&id_record={$id}'>
+                        <a href='/main.php?page=gestione_trame&op=edit_trama&id_record=$id'>
                             <i class='fas fa-edit'></i>
                         </a>
-                        <a class ='ajax_link' data-id='{$id}' data-action='delete_trama' data-page='{$page}' href='#'>
+                        <a class ='ajax_link' data-id='$id' data-action='delete_trama' data-page='$page' href='#'>
                             <i class='fas fa-eraser'></i>
                         </a>
                     </div>
@@ -557,23 +572,30 @@ class Quest extends BaseClass
      * @note Estrae tutte le trame che si possono leggere
      * @param int $start
      * @param int $end
-     * @return mixed
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllTrame(int $start, int $end)
+    public function getAllTrame(int $start, int $end): DBQueryInterface
     {
-        $where = (Permissions::permission('MANAGE_TRAME_OTHER')) ? '1' : "autore = '{$this->me_id}'";
-        return gdrcd_query("SELECT * FROM quest_trama WHERE {$where} GROUP BY id ORDER BY titolo, data DESC LIMIT {$start}, {$end}", 'result');
+        $where = (Permissions::permission('MANAGE_TRAME_OTHER')) ? '1' : "autore = '$this->me_id'";
+        return DB::queryStmt("SELECT * FROM quest_trama WHERE $where GROUP BY id ORDER BY titolo, data DESC LIMIT :start,:end", [
+            'start' => $start,
+            'end' => $end
+        ]);
     }
 
     /**
      * @fn getTotalTrameNumber
      * @note Estrae il numero totale di trame visibili
      * @return int
+     * @throws Throwable
      */
     public function getTotalTrameNumber(): int
     {
-        $where = (Permissions::permission('MANAGE_TRAME_OTHER')) ? '1' : "autore = '{$this->me}'";
-        $list = gdrcd_query("SELECT count(*) as total FROM quest_trama WHERE {$where} GROUP BY id ORDER BY titolo, data");
+        $where = (Permissions::permission('MANAGE_TRAME_OTHER')) ? '1' : "autore = '$this->me'";
+        $list = DB::queryStmt("SELECT count(*) as total FROM quest_trama WHERE :where GROUP BY id ORDER BY titolo, data", [
+            'where' => $where
+        ]);
         return Filters::int($list['total']);
     }
 
@@ -582,6 +604,7 @@ class Quest extends BaseClass
      * @note Estrae l'impaginazione delle trame
      * @param int $offset
      * @return string
+     * @throws Throwable
      */
     public function getTramePageNumbers(int $offset): string
     {
@@ -592,7 +615,7 @@ class Quest extends BaseClass
 
         if ( $total > $this->result_for_page ) {
             for ( $i = 0; $i <= floor($total / $this->result_for_page); $i++ ) {
-                $html .= ($i != $offset) ? "<a href='main.php?page=gestione_trame&offset={$i}'>" . ($i + 1) .
+                $html .= ($i !== $offset) ? "<a href='main.php?page=gestione_trame&offset=$i'>" . ($i + 1) .
                     "</a>" : ' ' . ($i + 1) . ' ';
             }
         }
@@ -630,23 +653,31 @@ class Quest extends BaseClass
      * @note Estrae tutte le quest che si possono leggere
      * @param int $start
      * @param int $end
-     * @return mixed
+     * @return DBQueryInterface
+     * @throws Throwable
      */
-    public function getAllQuests(int $start, int $end)
+    public function getAllQuests(int $start, int $end): DBQueryInterface
     {
-        $where = (Permissions::permission('MANAGE_QUESTS_OTHER')) ? '1' : "autore = '{$this->me}'";
-        return gdrcd_query("SELECT * FROM quest WHERE {$where} GROUP BY id ORDER BY trama, data DESC LIMIT {$start}, {$end}", 'result');
+        $where = (Permissions::permission('MANAGE_QUESTS_OTHER')) ? '1' : "autore = '$this->me'";
+        return DB::queryStmt("SELECT * FROM quest WHERE :where GROUP BY id ORDER BY trama, data DESC LIMIT :start,:end", [
+            'where' => $where,
+            'start' => $start,
+            'end' => $end
+        ]);
     }
 
     /**
      * @fn getTotalQuestsNumber
      * @note Estrae il numero totale di quest visibili
      * @return int
+     * @throws Throwable
      */
     public function getTotalQuestsNumber(): int
     {
-        $where = (Permissions::permission('MANAGE_QUESTS_OTHER')) ? '1' : "autore = '{$this->me}'";
-        $list = gdrcd_query("SELECT count(*) as total FROM quest WHERE {$where} GROUP BY id ORDER BY trama, data");
+        $where = (Permissions::permission('MANAGE_QUESTS_OTHER')) ? '1' : "autore = '$this->me'";
+        $list = DB::queryStmt("SELECT count(*) as total FROM quest WHERE :where GROUP BY id ORDER BY trama, data", [
+            'where' => $where
+        ]);
         return Filters::int($list['total']);
     }
 
@@ -655,6 +686,7 @@ class Quest extends BaseClass
      * @note Estrae l'impaginazione delle quest
      * @param int $offset
      * @return string
+     * @throws Throwable
      */
     public function getQuestsPageNumbers(int $offset): string
     {
@@ -665,7 +697,7 @@ class Quest extends BaseClass
 
         if ( $total > $this->result_for_page ) {
             for ( $i = 0; $i <= floor($total / $this->result_for_page); $i++ ) {
-                $html .= ($i != $offset) ? "<a href='main.php?page=gestione_quest&offset={$i}'>" . ($i + 1) .
+                $html .= ($i !== $offset) ? "<a href='main.php?page=gestione_quest&offset=$i'>" . ($i + 1) .
                     "</a>" : ' ' . ($i + 1) . ' ';
             }
         }
@@ -678,6 +710,7 @@ class Quest extends BaseClass
      * @note Estraggo la lista dei membri di una quest
      * @param int $id
      * @return string
+     * @throws Throwable
      */
     public function getQuestMembersList(int $id): string
     {
@@ -699,7 +732,7 @@ class Quest extends BaseClass
             $html .= '
     <div class="label"> Nome</div>
     ';
-            $html .= "<select name='part[{$pg_id}]'>";
+            $html .= "<select name='part[$pg_id]'>";
             $html .= "
         <option value=''></option>
         ";
@@ -709,12 +742,12 @@ class Quest extends BaseClass
             $html .= '
     <div class="label"> Px</div>
     ';
-            $html .= " <input name='part[{$pg_id}][px]' value='{$px}'>";
+            $html .= " <input name='part[$pg_id][px]' value='$px'>";
 
             $html .= '
     <div class="label"> Commento</div>
     ';
-            $html .= "<textarea name='part[{$pg_id}][commento]'>{$commento}</textarea>";
+            $html .= "<textarea name='part[$pg_id][commento]'>$commento</textarea>";
 
             $html .= "
 </div>";
@@ -729,6 +762,7 @@ class Quest extends BaseClass
      * @note Converte la lista di id dei partecipanti in nomi
      * @param string $members
      * @return string
+     * @throws Throwable
      */
     public function getPartecipantsNames(string $members): string
     {
@@ -747,7 +781,14 @@ class Quest extends BaseClass
 
     /*** INSERT TRAME ***/
 
-    public function insertTrama($post)
+    /**
+     * @fn insertTrama
+     * @note Inserimento di una nuova trama
+     * @param $post
+     * @return array
+     * @throws Throwable
+     */
+    public function insertTrama($post): array
     {
 
         if ( $this->manageTramePermission() ) {
@@ -756,8 +797,7 @@ class Quest extends BaseClass
             $descr = Filters::in($post['descrizione']);
             $stato = Filters::int($post['stato']);
 
-            DB::query("INSERT INTO quest_trama(titolo, descrizione, data, autore, stato)
-VALUES('{$titolo}','{$descr}',NOW(),'{$this->me_id}','{$stato}') ");
+            DB::query("INSERT INTO quest_trama(titolo, descrizione, data, autore, stato) VALUES('$titolo','$descr',NOW(),'$this->me_id','$stato') ");
 
             return [
                 'response' => true,
@@ -766,20 +806,27 @@ VALUES('{$titolo}','{$descr}',NOW(),'{$this->me_id}','{$stato}') ");
                 'swal_type' => 'success',
             ];
 
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 
     /*** EDIT TRAME ***/
 
-    public function editTrama($post)
+    /**
+     * @fn editTrama
+     * @note Modifica una trama
+     * @param $post
+     * @return array
+     * @throws Throwable
+     */
+    public function editTrama($post): array
     {
 
         $id_trama = Filters::int($post['trama']);
@@ -791,8 +838,8 @@ VALUES('{$titolo}','{$descr}',NOW(),'{$this->me_id}','{$stato}') ");
                 $descr = Filters::in($post['descrizione']);
                 $status = Filters::int($post['stato']);
 
-                DB::query("UPDATE quest_trama SET titolo='{$titolo}',descrizione='{$descr}',stato='{$status}'
-                    WHERE id='{$id_trama}' LIMIT 1");
+                DB::query("UPDATE quest_trama SET titolo='$titolo',descrizione='$descr',stato='$status'
+                    WHERE id='$id_trama' LIMIT 1");
 
                 return [
                     'response' => true,
@@ -801,22 +848,22 @@ VALUES('{$titolo}','{$descr}',NOW(),'{$this->me_id}','{$stato}') ");
                     'swal_type' => 'success',
                 ];
 
-            } else {
-                return [
-                    'response' => false,
-                    'swal_title' => 'Operazione fallita!',
-                    'swal_message' => 'Trama inesistente.',
-                    'swal_type' => 'error',
-                ];
             }
-        } else {
+
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
+                'swal_message' => 'Trama inesistente.',
                 'swal_type' => 'error',
             ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /*** DELETE TRAME ***/
@@ -826,6 +873,7 @@ VALUES('{$titolo}','{$descr}',NOW(),'{$this->me_id}','{$stato}') ");
      * @note Elimina una trama
      * @param $post array
      * @return array
+     * @throws Throwable
      */
     public function deleteTrama(array $post): array
     {
@@ -835,8 +883,8 @@ VALUES('{$titolo}','{$descr}',NOW(),'{$this->me_id}','{$stato}') ");
         if ( $this->manageTramePermission() ) {
             if ( $this->tramaExist($id_trama) ) {
 
-                DB::query("DELETE FROM quest_trama WHERE id='{$id_trama}' LIMIT 1");
-                DB::query("UPDATE quest SET trama=0 WHERE trama='{$id_trama}'");
+                DB::query("DELETE FROM quest_trama WHERE id='$id_trama' LIMIT 1");
+                DB::query("UPDATE quest SET trama=0 WHERE trama='$id_trama'");
 
                 return [
                     'response' => true,
@@ -846,22 +894,22 @@ VALUES('{$titolo}','{$descr}',NOW(),'{$this->me_id}','{$stato}') ");
                     'trame_list' => $this->renderTrameList($page),
                 ];
 
-            } else {
-                return [
-                    'response' => false,
-                    'swal_title' => 'Operazione fallita!',
-                    'swal_message' => 'Trama inesistente.',
-                    'swal_type' => 'error',
-                ];
             }
-        } else {
+
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
+                'swal_message' => 'Trama inesistente.',
                 'swal_type' => 'error',
             ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /*** INSERT QUEST */
@@ -871,6 +919,7 @@ VALUES('{$titolo}','{$descr}',NOW(),'{$this->me_id}','{$stato}') ");
      * @note Inserimento di una nuova quest
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function insertQuest(array $post): array
     {
@@ -883,7 +932,7 @@ VALUES('{$titolo}','{$descr}',NOW(),'{$this->me_id}','{$stato}') ");
             $partecipanti = $post['new_part'];
 
             DB::query("INSERT INTO quest(titolo, partecipanti, descrizione, trama, data, autore)
-VALUES('{$titolo}','','{$descr}','{$trama}',NOW(),'{$this->me_id}')");
+VALUES('$titolo','','$descr','$trama',NOW(),'$this->me_id')");
 
             $last_quest = DB::query("SELECT max(id) AS id FROM quest WHERE 1 LIMIT 1");
 
@@ -892,7 +941,7 @@ VALUES('{$titolo}','','{$descr}','{$trama}',NOW(),'{$this->me_id}')");
                 $data_exp = $this->assignExp($partecipanti, $titolo, $quest_id);
                 $assigned = Filters::in($data_exp['assigned']);
 
-                DB::query("UPDATE quest SET partecipanti = '{$assigned}' WHERE id= {$quest_id}");
+                DB::query("UPDATE quest SET partecipanti = '$assigned' WHERE id= $quest_id");
             }
 
             return [
@@ -902,14 +951,14 @@ VALUES('{$titolo}','','{$descr}','{$trama}',NOW(),'{$this->me_id}')");
                 'swal_type' => 'success',
             ];
 
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -930,14 +979,14 @@ VALUES('{$titolo}','','{$descr}','{$trama}',NOW(),'{$this->me_id}')");
 
         foreach ( $partecipanti['pg'] as $index => $id_pg ) {
 
-            if ( !in_array($id_pg, $assigned) ) {
+            if ( !in_array($id_pg, $assigned, true) ) {
 
                 $pg_px = $partecipanti['px'][$index];
                 $pg_comm = $partecipanti['commento'][$index];
                 $pg_name = Personaggio::nameFromId(Filters::int($id_pg));
 
                 DB::query("INSERT INTO personaggio_quest(id_quest, personaggio, data, commento, px_assegnati, autore)
-VALUES('{$quest_id}','{$id_pg}',NOW(),'{$pg_comm}','{$pg_px}','{$this->me_id}')");
+VALUES('$quest_id','$id_pg',NOW(),'$pg_comm','$pg_px','$this->me_id')");
 
                 Personaggio::updatePgData($id_pg, "esperienza = esperienza + :exp", ['exp' => $pg_px]);
 
@@ -945,13 +994,13 @@ VALUES('{$quest_id}','{$id_pg}',NOW(),'{$pg_comm}','{$pg_px}','{$this->me_id}')"
                     "autore" => $this->me_id,
                     "destinatario" => $id_pg,
                     "tipo" => $this->px_code,
-                    "testo" => Filters::in("Creata nuova quest '{$titolo}' ed assegnati '{$pg_px}' px a {$pg_name}"),
+                    "testo" => Filters::in("Creata nuova quest '$titolo' ed assegnati '$pg_px' px a $pg_name"),
                 ]);
 
                 if ( $this->notify_enabled ) {
-                    $notify_text = Filters::in("Creata nuova quest '{$titolo}");
+                    $notify_text = Filters::in("Creata nuova quest '$titolo");
                     $notify_title = Filters::in("Nuova quest");
-                    DB::query("INSERT INTO messaggi (mittente, destinatario,oggetto, testo) VALUES ('Resoconti Quest','{$pg_name}','{$notify_title}','{$notify_text}')");
+                    DB::query("INSERT INTO messaggi (mittente, destinatario,oggetto, testo) VALUES ('Resoconti Quest','$pg_name','$notify_title','$notify_text')");
                 }
 
                 $assigned[] = $id_pg;
@@ -968,6 +1017,7 @@ VALUES('{$quest_id}','{$id_pg}',NOW(),'{$pg_comm}','{$pg_px}','{$this->me_id}')"
      * @note Modifica di una quest esistente
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function editQuest(array $post): array
     {
@@ -994,16 +1044,16 @@ VALUES('{$quest_id}','{$id_pg}',NOW(),'{$pg_comm}','{$pg_px}','{$this->me_id}')"
 
                 if ( Permissions::permission('MANAGE_TRAME') ) {
                     $trama = Filters::in($post['trama']);
-                    $extra_set = ",trama='{$trama}' ";
+                    $extra_set = ",trama='$trama' ";
                 }
 
                 DB::query("UPDATE quest SET
-                    titolo='{$titolo}',
+                    titolo='$titolo',
                     ultima_modifica=NOW(),
-                    descrizione='{$descr}',
-                    partecipanti = '{$partecipanti_id}'
+                    descrizione='$descr',
+                    partecipanti = '$partecipanti_id'
                     {$extra_set}
-                    WHERE id='{$quest}' LIMIT 1");
+                    WHERE id='$quest' LIMIT 1");
 
                 return [
                     'response' => true,
@@ -1011,23 +1061,23 @@ VALUES('{$quest_id}','{$id_pg}',NOW(),'{$pg_comm}','{$pg_px}','{$this->me_id}')"
                     'swal_message' => 'Quest aggiornata con successo.',
                     'swal_type' => 'success',
                 ];
-            } else {
-                return [
-                    'response' => false,
-                    'swal_title' => 'Operazione fallita!',
-                    'swal_message' => 'Quest inesistente.',
-                    'swal_type' => 'error',
-                ];
             }
 
-        } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
+                'swal_message' => 'Quest inesistente.',
                 'swal_type' => 'error',
             ];
+
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -1052,6 +1102,7 @@ VALUES('{$quest_id}','{$id_pg}',NOW(),'{$pg_comm}','{$pg_px}','{$this->me_id}')"
      * @note Update dell'exp per chi ha gia' avuto un'assegnazione per quella questa
      * @param array $post
      * @return void
+     * @throws Throwable
      */
     private function updateQuestExp(array $post): void
     {
@@ -1087,54 +1138,52 @@ VALUES('{$quest_id}','{$id_pg}',NOW(),'{$pg_comm}','{$pg_px}','{$this->me_id}')"
                 if ( !empty($pg_quest_data['id']) ) {
 
                     # Se l'esperienza e' cambiata
-                    if ( $pg_px != $pg_original_exp ) {
+                    if ( $pg_px !== $pg_original_exp ) {
 
                         # Calcolo la nuova esperienza
                         $new_px = ($pg_px - $pg_original_exp);
 
                         # Aggiorno l'esperienza
-                        DB::query("UPDATE personaggio SET esperienza = esperienza + {$new_px} WHERE id = '{$pg_id}' LIMIT 1 ");
+                        DB::query("UPDATE personaggio SET esperienza = esperienza + $new_px WHERE id = '$pg_id' LIMIT 1 ");
 
-                        $log_text = "({$new_px} px) Modifica Quest : {$title}";;
+                        $log_text = "($new_px px) Modifica Quest : $title";
 
                         $notify_title = Filters::in("Modifica esperienza resoconto.");
-                        $notify_text = Filters::in("Il resoconto quest relativo alla Quest: <b>{$title}</b> è stato modificato. Puoi consultarlo andando su Scheda > Esperienza > Resoconti quest");
+                        $notify_text = Filters::in("Il resoconto quest relativo alla Quest: <b>$title</b> è stato modificato. Puoi consultarlo andando su Scheda > Esperienza > Resoconti quest");
                         $notify = true;
                     }
 
                     #Modifico il record in personaggio_quest
-                    DB::query("UPDATE personaggio_quest SET commento='{$pg_commento}',px_assegnati='{$pg_px}' WHERE id_quest='{$quest}' AND personaggio ='{$pg_id}' LIMIT 1");
+                    DB::query("UPDATE personaggio_quest SET commento='$pg_commento',px_assegnati='$pg_px' WHERE id_quest='$quest' AND personaggio ='$pg_id' LIMIT 1");
                 } # Se non ha un'assegnazione per la quest
                 else {
 
                     # Aggiunto il personaggio alla quest
-                    DB::query("INSERT INTO personaggio_quest(id_quest, commento, personaggio, px_assegnati, autore) VALUES('{$quest}','{$pg_commento}','{$pg_id}','{$pg_px}','{$this->me_id}')");
+                    DB::query("INSERT INTO personaggio_quest(id_quest, commento, personaggio, px_assegnati, autore) VALUES('$quest','$pg_commento','$pg_id','$pg_px','$this->me_id')");
 
                     # Update dell'esperienza
-                    DB::query("UPDATE personaggio SET esperienza = esperienza + {$pg_px} WHERE id='{$pg_id}' LIMIT 1");
+                    DB::query("UPDATE personaggio SET esperienza = esperienza + $pg_px WHERE id='$pg_id' LIMIT 1");
 
-                    $notify_text = Filters::in("Il resoconto quest relativo alla Quest: <b>{$title}</b> è stato inserito. Puoi consultarlo andando su Scheda > Esperienza > Resoconti quest");
+                    $notify_text = Filters::in("Il resoconto quest relativo alla Quest: <b>$title</b> è stato inserito. Puoi consultarlo andando su Scheda > Esperienza > Resoconti quest");
                     $notify_title = Filters::in("Inserimento nuovo resoconto.");
                     $notify = true;
 
-                    $log_text = Filters::in("({$pg_px} xp) Assegnazione quest.");
+                    $log_text = Filters::in("($pg_px xp) Assegnazione quest.");
                 }
 
                 # Inserisco il log
-                if ( isset($log_text) ) {
+                if ( $log_text !== '' ) {
                     Log::newLog([
                         "autore" => $this->me_id,
                         "destinatario" => $pg_id,
                         "tipo" => $this->px_code,
-                        "testo" => "{$log_text}",
+                        "testo" =>$log_text
                     ]);
                 }
 
                 # Notifico l'utente
-                if ( $notify ) {
-                    if ( $this->notify_enabled ) {
-                        DB::query("INSERT INTO messaggi (mittente, destinatario,oggetto, testo) VALUES ('Resoconti Quest','{$pg_nome}','{$notify_title}','{$notify_text}')");
-                    }
+                if ( $notify && $this->notify_enabled ) {
+                    DB::query("INSERT INTO messaggi (mittente, destinatario,oggetto, testo) VALUES ('Resoconti Quest','$pg_nome','$notify_title','$notify_text')");
                 }
             }
         }
@@ -1148,6 +1197,7 @@ VALUES('{$quest_id}','{$id_pg}',NOW(),'{$pg_comm}','{$pg_px}','{$this->me_id}')"
      * @note Eliminazione di una quest
      * @param array $post
      * @return array
+     * @throws Throwable
      */
     public function deleteQuest(array $post): array
     {
@@ -1160,9 +1210,9 @@ VALUES('{$quest_id}','{$id_pg}',NOW(),'{$pg_comm}','{$pg_px}','{$this->me_id}')"
 
                 $quest_data = $this->getQuest($quest_id);
 
-                $this->deleteQuestExp($quest_data);
+                $this->deleteQuestExp($quest_data->getData());
 
-                DB::query("DELETE FROM quest WHERE id='{$quest_id}' LIMIT 1");
+                DB::query("DELETE FROM quest WHERE id='$quest_id' LIMIT 1");
 
                 return [
                     'response' => true,
@@ -1171,22 +1221,22 @@ VALUES('{$quest_id}','{$id_pg}',NOW(),'{$pg_comm}','{$pg_px}','{$this->me_id}')"
                     'swal_type' => 'success',
                     'quest_list' => $this->renderQuestList($page),
                 ];
-            } else {
-                return [
-                    'response' => false,
-                    'swal_title' => 'Operazione fallita!',
-                    'swal_message' => 'Quest inesistente.',
-                    'swal_type' => 'info',
-                ];
             }
-        } else {
+
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
+                'swal_message' => 'Quest inesistente.',
+                'swal_type' => 'info',
             ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -1194,8 +1244,9 @@ VALUES('{$quest_id}','{$id_pg}',NOW(),'{$pg_comm}','{$pg_px}','{$this->me_id}')"
      * @note Elimina le assegnazioni di exp per la quest
      * @param array $data
      * @return void
+     * @throws Throwable
      */
-    private function deleteQuestExp(array $data): bool
+    private function deleteQuestExp(array $data): void
     {
 
         $quest_id = Filters::int($data['id']);
@@ -1204,7 +1255,7 @@ VALUES('{$quest_id}','{$id_pg}',NOW(),'{$pg_comm}','{$pg_px}','{$this->me_id}')"
         $membri = explode(',', $partecipanti);
 
         if ( empty($membri) ) {
-            return false;
+            return;
         }
 
         foreach ( $membri as $membro ) {
@@ -1214,11 +1265,11 @@ VALUES('{$quest_id}','{$id_pg}',NOW(),'{$pg_comm}','{$pg_px}','{$this->me_id}')"
             $pg_name = Personaggio::nameFromId($membro_id);
             $exp = Filters::int($data_quest['px_assegnati']);
 
-            DB::query("DELETE FROM personaggio_quest WHERE personaggio='{$membro_id}' AND id_quest='{$quest_id}'");
+            DB::query("DELETE FROM personaggio_quest WHERE personaggio='$membro_id' AND id_quest='$quest_id'");
 
-            DB::query("UPDATE personaggio SET esperienza = esperienza - {$exp} WHERE id='{$membro_id}' LIMIT 1");
+            DB::query("UPDATE personaggio SET esperienza = esperienza - $exp WHERE id='$membro_id' LIMIT 1");
 
-            $log_text = Filters::in("La Quest '{$titolo}' è stata eliminata.");
+            $log_text = Filters::in("La Quest '$titolo' è stata eliminata.");
 
             Log::newLog([
                 "autore" => $this->me_id,
@@ -1230,13 +1281,12 @@ VALUES('{$quest_id}','{$id_pg}',NOW(),'{$pg_comm}','{$pg_px}','{$this->me_id}')"
             if ( $this->notify_enabled ) {
 
                 $notify_title = Filters::in('Cancellazione quest.');
-                $notify_text = Filters::in("La Quest '{$titolo}' è stata eliminata.");
+                $notify_text = Filters::in("La Quest '$titolo' è stata eliminata.");
 
-                DB::query("INSERT INTO messaggi (mittente, destinatario,oggetto, testo) VALUES ('Resoconti Quest','{$pg_name}','{$notify_title}','{$notify_text}')");
+                DB::query("INSERT INTO messaggi (mittente, destinatario,oggetto, testo) VALUES ('Resoconti Quest','$pg_name','$notify_title','$notify_text')");
             }
         }
 
-        return true;
     }
 
 }

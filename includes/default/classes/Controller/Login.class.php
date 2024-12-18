@@ -12,7 +12,7 @@ class Login extends BaseClass
      */
     public static function isBlacklistedIp(string $ip): bool
     {
-        return !!count(
+        return count(
             DB::queryStmt(
                 'SELECT * FROM blacklist WHERE ip = :address AND granted = 0',
                 ['address' => $ip]
@@ -51,17 +51,17 @@ class Login extends BaseClass
 
         // Controllo che l'account esista
         if ( !$wasAlreadyLoggedIn && !Session::login($login, $pass) ) {
-            throw new Exception($GLOBALS['MESSAGE']['error']['unknown_username']);
+            throw new RuntimeException($GLOBALS['MESSAGE']['error']['unknown_username']);
         }
 
         // Controllo che l'indirizzo ip non sia bloccato
         if ( self::isBlacklistedIp($ip) ) {
-            throw new Exception($GLOBALS['MESSAGE']['warning']['blacklisted']);
+            throw new RuntimeException($GLOBALS['MESSAGE']['warning']['blacklisted']);
         }
 
         // Controllo che l'account non sia bloccato
         if ( self::isAccountBanned($login) ) {
-            throw new Exception($GLOBALS['MESSAGE']['warning']['blacklisted']);
+            throw new RuntimeException($GLOBALS['MESSAGE']['warning']['blacklisted']);
         }
 
         // Controllo che l'account non sia già attivo
@@ -70,7 +70,7 @@ class Login extends BaseClass
             CarbonWrapper::DatesDifferenceMinutes(Session::read('ultimo_refresh'), CarbonWrapper::getNow()) < 2 &&
             CarbonWrapper::greaterThan(Session::read('ultima_entrata'), Session::read('ultima_uscita'))
         ) {
-            throw new Exception($GLOBALS['MESSAGE']['warning']['double_connection']);
+            throw new RuntimeException($GLOBALS['MESSAGE']['warning']['double_connection']);
         }
     }
 
@@ -128,7 +128,7 @@ class Login extends BaseClass
     /**
      * @throws Throwable
      */
-    public function logout()
+    public function logout(): void
     {
         // Aggiorno alcune informazioni utili sul personaggio
         DB::queryStmt(

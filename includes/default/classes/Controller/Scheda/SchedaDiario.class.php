@@ -29,7 +29,7 @@ class SchedaDiario extends Scheda
      */
     public function getDiary(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM diario WHERE id = :id LIMIT 1", ['id' => $id]);
+        return DB::queryStmt("SELECT $val FROM diario WHERE id = :id LIMIT 1", ['id' => $id]);
     }
 
     /**
@@ -44,7 +44,7 @@ class SchedaDiario extends Scheda
     public function getAllDiaryByCharacter(int $pg, bool $private_too = false, string $val = '*'): DBQueryInterface
     {
         $extra_query = (!$private_too) ? "AND visibile = '1'" : '';
-        return DB::queryStmt("SELECT {$val} FROM diario WHERE personaggio = :pg {$extra_query} ORDER BY `data` DESC", ['pg' => $pg]);
+        return DB::queryStmt("SELECT $val FROM diario WHERE personaggio = :pg $extra_query ORDER BY `data` DESC", ['pg' => $pg]);
     }
 
     /***** CONFIG ****/
@@ -126,14 +126,14 @@ class SchedaDiario extends Scheda
                 'swal_type' => 'success',
             ];
 
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -177,14 +177,14 @@ class SchedaDiario extends Scheda
                 'swal_type' => 'success',
             ];
 
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -216,14 +216,14 @@ class SchedaDiario extends Scheda
                 'new_template' => $this->diaryList($owner),
             ];
 
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
 
@@ -307,11 +307,11 @@ class SchedaDiario extends Scheda
 
         $titolo = Filters::out($data['titolo']);
         $date = Filters::date($data['data'], 'd/m/Y');
-        $title = "{$titolo} - {$date}";
+        $title = "$titolo - $date";
 
         $insert = Filters::date($data['data_inserimento'], 'd/m/Y');
         $edit = ($data['data_modifica']) ? Filters::date($data['data_modifica'], 'd/m/Y') : '';
-        $footer_text = " Data inserimento: {$insert} - Data modifica: {$edit}";
+        $footer_text = " Data inserimento: $insert - Data modifica: $edit";
 
         return [
             'data' => $diary_data,

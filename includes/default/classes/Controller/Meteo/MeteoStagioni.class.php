@@ -27,7 +27,7 @@ class MeteoStagioni extends Meteo
      */
     public function getAllSeason(string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val}  FROM meteo_stagioni WHERE 1 ORDER BY nome", []);
+        return DB::queryStmt("SELECT $val  FROM meteo_stagioni WHERE 1 ORDER BY nome", []);
     }
 
     /**
@@ -40,7 +40,7 @@ class MeteoStagioni extends Meteo
      */
     public function getSeason(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM meteo_stagioni WHERE id=:id LIMIT 1", ['id' => $id]);
+        return DB::queryStmt("SELECT $val FROM meteo_stagioni WHERE id=:id LIMIT 1", ['id' => $id]);
     }
 
     /**
@@ -54,7 +54,7 @@ class MeteoStagioni extends Meteo
     public function getAllSeasonCondition(int $id, string $val = 'meteo_stagioni_condizioni.*, meteo_condizioni.*'): array
     {
         $stmt = DB::queryStmt(
-            "SELECT {$val} FROM meteo_stagioni_condizioni 
+            "SELECT $val FROM meteo_stagioni_condizioni 
                   LEFT JOIN meteo_condizioni ON meteo_stagioni_condizioni.condizione = meteo_condizioni.id 
                   WHERE meteo_stagioni_condizioni.stagione=:id",
             ['id' => $id]
@@ -79,7 +79,7 @@ class MeteoStagioni extends Meteo
      */
     public function getCurrentSeason(string $val = '*'): array
     {
-        return DB::queryStmt("SELECT {$val} FROM meteo_stagioni WHERE data_fine > NOW() AND data_inizio < NOW() LIMIT 1", [])->getData()[0];
+        return DB::queryStmt("SELECT $val FROM meteo_stagioni WHERE data_fine > NOW() AND data_inizio < NOW() LIMIT 1", [])->getData()[0];
     }
 
     /**** RENDER ***/
@@ -256,14 +256,14 @@ class MeteoStagioni extends Meteo
                 'swal_message' => 'Stagione creata.',
                 'swal_type' => 'success',
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -307,14 +307,14 @@ class MeteoStagioni extends Meteo
                 'swal_message' => 'Stagione modificata.',
                 'swal_type' => 'success',
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 
@@ -339,14 +339,14 @@ class MeteoStagioni extends Meteo
                 'swal_type' => 'success',
                 'stagioni_list' => $this->seasonListManagement(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -381,14 +381,14 @@ class MeteoStagioni extends Meteo
                 'swal_type' => 'success',
                 'stagioni_conditions' => $this->seasonConditionsManageList($id),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 
@@ -422,14 +422,14 @@ class MeteoStagioni extends Meteo
                 'swal_type' => 'success',
                 'stagioni_conditions' => $this->seasonConditionsManageList($id),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 

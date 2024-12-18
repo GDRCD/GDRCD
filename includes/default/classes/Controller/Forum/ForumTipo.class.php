@@ -14,7 +14,7 @@ class ForumTipo extends Forum
      */
     public function getForumType(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM forum_tipo WHERE id=:id LIMIT 1", ['id' => $id]);
+        return DB::queryStmt("SELECT $val FROM forum_tipo WHERE id=:id LIMIT 1", ['id' => $id]);
     }
 
     /**
@@ -26,7 +26,7 @@ class ForumTipo extends Forum
      */
     public function getAllForumTypes(string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM forum_tipo WHERE 1  ORDER BY id", []);
+        return DB::queryStmt("SELECT $val FROM forum_tipo WHERE 1  ORDER BY id", []);
     }
 
 
@@ -122,14 +122,14 @@ class ForumTipo extends Forum
                 'swal_type' => 'success',
                 'forums_types_list' => $this->listTypes(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -164,15 +164,14 @@ class ForumTipo extends Forum
                 'forums_types_list' => $this->listTypes(),
             ];
 
-        } else {
-
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -201,14 +200,14 @@ class ForumTipo extends Forum
                 'forums_types_list' => $this->listTypes(),
             ];
 
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 }

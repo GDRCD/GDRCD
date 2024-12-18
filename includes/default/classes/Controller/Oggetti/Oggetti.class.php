@@ -15,7 +15,7 @@ class Oggetti extends BaseClass
      */
     public function getObject(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM oggetto WHERE id=:id LIMIT 1", [
+        return DB::queryStmt("SELECT $val FROM oggetto WHERE id=:id LIMIT 1", [
             'id' => $id,
         ]);
     }
@@ -29,7 +29,7 @@ class Oggetti extends BaseClass
      */
     private function getAllObjects(string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM oggetto WHERE 1 ORDER BY nome", []);
+        return DB::queryStmt("SELECT $val FROM oggetto WHERE 1 ORDER BY nome", []);
     }
 
     /*** TABLES CONTROLS ***/
@@ -175,14 +175,14 @@ class Oggetti extends BaseClass
                 'swal_type' => 'success',
                 'obj_list' => $this->listObjects(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -224,14 +224,14 @@ class Oggetti extends BaseClass
                 'swal_type' => 'success',
                 'obj_list' => $this->listObjects(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -259,14 +259,14 @@ class Oggetti extends BaseClass
                 'swal_type' => 'success',
                 'obj_list' => $this->listObjects(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -292,14 +292,14 @@ class Oggetti extends BaseClass
                 'swal_type' => 'success'
             ];
 
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 

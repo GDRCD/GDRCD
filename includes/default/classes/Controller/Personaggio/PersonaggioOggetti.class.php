@@ -19,10 +19,10 @@ class PersonaggioOggetti extends Personaggio
     {
 
         return DB::queryStmt(
-            "SELECT {$val} FROM personaggio_oggetto 
+            "SELECT $val FROM personaggio_oggetto 
                   LEFT JOIN oggetto ON (oggetto.id = personaggio_oggetto.oggetto)
                   WHERE personaggio_oggetto.indossato = 1 AND oggetto.posizione = :position AND personaggio_oggetto.personaggio = :pg
-                  LIMIT {$limit}",
+                  LIMIT $limit",
             [
                 'pg' => $id_pg,
                 'position' => $position,
@@ -43,7 +43,7 @@ class PersonaggioOggetti extends Personaggio
     public static function getAllPgObjectsByEquipped(int $id_pg, int $equipped, string $val = '*'): DBQueryInterface
     {
         return DB::queryStmt(
-            "SELECT {$val} FROM personaggio_oggetto 
+            "SELECT $val FROM personaggio_oggetto 
                   LEFT JOIN oggetto ON (oggetto.id = personaggio_oggetto.oggetto)
                   WHERE personaggio_oggetto.indossato = :equipped AND personaggio_oggetto.personaggio = :pg",
             [
@@ -64,7 +64,7 @@ class PersonaggioOggetti extends Personaggio
     public static function getAllPgObjects(int $id_pg, string $val = '*'): DBQueryInterface
     {
         return DB::queryStmt(
-            "SELECT {$val} FROM personaggio_oggetto 
+            "SELECT $val FROM personaggio_oggetto 
                   LEFT JOIN oggetto ON (oggetto.id = personaggio_oggetto.oggetto) AND personaggio_oggetto.personaggio = :pg",
             [
                 'pg' => $id_pg,
@@ -83,7 +83,7 @@ class PersonaggioOggetti extends Personaggio
     public static function getPgObject(int $id, string $val = 'oggetto.*,personaggio_oggetto.*'): DBQueryInterface
     {
         return DB::queryStmt(
-            "SELECT {$val} FROM personaggio_oggetto 
+            "SELECT $val FROM personaggio_oggetto 
                 LEFT JOIN oggetto ON (oggetto.id = personaggio_oggetto.oggetto)
                 WHERE personaggio_oggetto.id = :id LIMIT 1",
             [
@@ -106,7 +106,7 @@ class PersonaggioOggetti extends Personaggio
      */
     public function listChatPgEquipments(int $id_pg, bool $equipped,int $selected = 0, string $label = 'Oggetti'): string
     {
-        $list = $this->getAllPgObjectsByEquipped($id_pg, $equipped,'personaggio_oggetto.id,oggetto.nome');
+        $list = self::getAllPgObjectsByEquipped($id_pg, $equipped,'personaggio_oggetto.id,oggetto.nome');
         return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', $selected, $list, $label);
     }
 
@@ -122,7 +122,7 @@ class PersonaggioOggetti extends Personaggio
      */
     public static function isPgObject(int $obj, int $pg): bool
     {
-        $data = PersonaggioOggetti::getPgObject($obj, 'personaggio_oggetto.personaggio');
+        $data = self::getPgObject($obj, 'personaggio_oggetto.personaggio');
         $personaggio = Filters::int($data['personaggio']);
         return ($pg === $personaggio);
     }

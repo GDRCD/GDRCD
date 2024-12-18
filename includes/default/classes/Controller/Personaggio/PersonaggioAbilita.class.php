@@ -3,11 +3,6 @@
 class PersonaggioAbilita extends Personaggio
 {
 
-    protected function __construct()
-    {
-        parent::__construct();
-    }
-
     /**** TABLES HELPERS ***/
 
     /**
@@ -21,7 +16,7 @@ class PersonaggioAbilita extends Personaggio
     public function getAllPgAbility(int $pg, string $val = 'abilita.*,personaggio_abilita.*'): DBQueryInterface
     {
         return DB::queryStmt(
-            "SELECT {$val} FROM personaggio_abilita
+            "SELECT $val FROM personaggio_abilita
                                 LEFT JOIN abilita ON (personaggio_abilita.abilita = abilita.id)
                                 WHERE personaggio_abilita.personaggio=:pg",
             [
@@ -42,7 +37,7 @@ class PersonaggioAbilita extends Personaggio
     public function getPgAbility(int $id, int $pg, string $val = 'abilita.*,personaggio_abilita.*'): DBQueryInterface
     {
         return DB::queryStmt(
-            "SELECT {$val} FROM personaggio_abilita 
+            "SELECT $val FROM personaggio_abilita 
                                 LEFT JOIN abilita ON (personaggio_abilita.abilita = abilita.id)
                                 WHERE personaggio=:pg AND abilita =:id LIMIT 1",
             [
@@ -62,7 +57,7 @@ class PersonaggioAbilita extends Personaggio
      */
     public function getPgGenericAbility(int $pg, string $val = 'abilita.*,personaggio_abilita.*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM personaggio_abilita 
+        return DB::queryStmt("SELECT $val FROM personaggio_abilita 
                                 LEFT JOIN abilita ON (personaggio_abilita.abilita = abilita.id)
                                 WHERE personaggio_abilita.personaggio=:pg AND abilita.razza = '-1'", ['pg' => $pg]);
     }
@@ -82,7 +77,7 @@ class PersonaggioAbilita extends Personaggio
         $race = Filters::int($pg_data['razza']);
 
         return DB::queryStmt(
-            "SELECT {$val} FROM personaggio_abilita 
+            "SELECT $val FROM personaggio_abilita 
                                 LEFT JOIN abilita ON (personaggio_abilita.abilita = abilita.id)
                                 WHERE personaggio_abilita.personaggio=:pg AND abilita.razza = :race",
             [
@@ -97,12 +92,12 @@ class PersonaggioAbilita extends Personaggio
     /**
      * @fn upgradeSkillPermission
      * @note Controlla i permessi per upgrade delle skill
-     * @param string $pg
+     * @param int $pg
      * @param int $grado
      * @return bool
      * @throws Throwable
      */
-    public function permissionUpgradeAbilita(string $pg, int $grado): bool
+    public function permissionUpgradeAbilita(int $pg, int $grado): bool
     {
         $pg = Filters::int($pg);
         $grado = Filters::int($grado);
@@ -159,7 +154,7 @@ class PersonaggioAbilita extends Personaggio
                 $extra = AbilitaExtra::getInstance()->getAbilitaExtra($abi_id, $count, 'costo');
 
                 # Se non c'e' un costo, calcolo quello di default per quel livello
-                if ( Abilita::getInstance()->extraActive() && !empty($extra['costo']) && ($extra['costo'] > 0) ) {
+                if ( !empty($extra['costo']) && ($extra['costo'] > 0) && Abilita::getInstance()->extraActive() ) {
                     $px_abi = Filters::int($extra['costo']);
                 } else {
                     $px_abi = Abilita::getInstance()->defaultCalcUp($count);
@@ -215,7 +210,7 @@ class PersonaggioAbilita extends Personaggio
 
                 if ( $exp_remained >= $costo ) {
 
-                    if ( $grado == 0 ) {
+                    if ( $grado === 0 ) {
                         DB::queryStmt(
                             "INSERT INTO personaggio_abilita(personaggio,abilita,grado) VALUES(:pg,:abi,:grado)",
                             [
@@ -241,33 +236,33 @@ class PersonaggioAbilita extends Personaggio
                         'swal_message' => 'Abilità aumentata con successo.',
                         'swal_type' => 'success',
                         'new_template' => SchedaAbilita::getInstance()->abilityPage($pg),
-                        'remained_exp' => PersonaggioAbilita::getInstance()->RemainedExp($pg),
+                        'remained_exp' => self::getInstance()->RemainedExp($pg),
                     ];
 
-                } else {
-                    return [
-                        'response' => false,
-                        'swal_title' => 'Operazione negata!',
-                        'swal_message' => 'Non hai abbastanza esperienza per l\'acquisto.',
-                        'swal_type' => 'error',
-                    ];
                 }
-            } else {
+
                 return [
                     'response' => false,
                     'swal_title' => 'Operazione negata!',
-                    'swal_message' => 'Non hai i requisiti necessari per questa abilita.',
+                    'swal_message' => 'Non hai abbastanza esperienza per l\'acquisto.',
                     'swal_type' => 'error',
                 ];
             }
-        } else {
+
             return [
                 'response' => false,
                 'swal_title' => 'Operazione negata!',
-                'swal_message' => 'Non hai i permessi per effettuare questa operazione.',
+                'swal_message' => 'Non hai i requisiti necessari per questa abilita.',
                 'swal_type' => 'error',
             ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione negata!',
+            'swal_message' => 'Non hai i permessi per effettuare questa operazione.',
+            'swal_type' => 'error',
+        ];
 
     }
 
@@ -290,7 +285,7 @@ class PersonaggioAbilita extends Personaggio
 
             $new_grado = ($grado - 1);
 
-            if ( $new_grado == 0 ) {
+            if ( $new_grado === 0 ) {
                 DB::queryStmt(
                     "DELETE FROM personaggio_abilita WHERE personaggio=:pg AND abilita=:abi LIMIT 1",
                     [
@@ -315,17 +310,17 @@ class PersonaggioAbilita extends Personaggio
                 'swal_message' => 'Abilità diminuita correttamente.',
                 'swal_type' => 'success',
                 'new_template' => SchedaAbilita::getInstance()->abilityPage($pg),
-                'remained_exp' => PersonaggioAbilita::getInstance()->RemainedExp($pg),
+                'remained_exp' => self::getInstance()->RemainedExp($pg),
 
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione negata!',
-                'swal_message' => 'Non hai i permessi per effettuare questa operazione.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione negata!',
+            'swal_message' => 'Non hai i permessi per effettuare questa operazione.',
+            'swal_type' => 'error',
+        ];
 
     }
 

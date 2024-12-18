@@ -26,24 +26,24 @@ class Gestione extends BaseClass
         switch ( $type ) {
             case 'bool':
                 $checked = ($val == 1) ? 'checked' : '';
-                $html = "<input type='checkbox' name='{$name}' {$checked} />";
+                $html = "<input type='checkbox' name='$name' $checked />";
                 break;
 
             case 'int':
-                $html = "<input type='number' name='{$name}' value='{$val}' />";
+                $html = "<input type='number' name='$name' value='$val' />";
                 break;
 
             case 'select':
                 $options_list = $this->getOptions($options);
 
-                $html = "<select name='{$name}'>";
+                $html = "<select name='$name'>";
                 $html .= Template::getInstance()->startTemplate()->renderSelect('value', 'label', $val, $options_list);
                 $html .= "</select>";
                 break;
 
             default:
             case 'string':
-                $html = "<input type='text' name='{$name}' value='{$val}' />";
+                $html = "<input type='text' name='$name' value='$val' />";
                 break;
 
         }
@@ -110,7 +110,7 @@ class Gestione extends BaseClass
                     'description' => Filters::out($const['description'])
                 ];
             }
-            
+
             $data[] = [
                 "name" => $section,
                 "constants" => $constants
@@ -127,7 +127,7 @@ class Gestione extends BaseClass
      * @return array
      * @throws Throwable
      */
-    public final function updateConstants(array $post): array
+    final public function updateConstants(array $post): array
     {
         if ( $this->constantsPermission() ) {
 
@@ -135,7 +135,7 @@ class Gestione extends BaseClass
             $empty_const = [];
 
             foreach ( $const_list as $const ) {
-                if ( ($post[$const['const_name']] == '') && ($const['type'] != 'bool') ) {
+                if ( ($post[$const['const_name']] === '') && ($const['type'] !== 'bool') ) {
                     $empty_const[] = $const['const_name'];
                 }
             }
@@ -157,27 +157,27 @@ class Gestione extends BaseClass
 
                 if ( !empty($empty_const) ) {
                     return $this->errorConstant($empty_const, 'save');
-                } else {
-                    return [
-                        'response' => true,
-                        'swal_title' => 'Operazione riuscita!',
-                        'swal_message' => 'Costanti salvate con successo.',
-                        'swal_type' => 'success',
-                    ];
                 }
 
-            } else {
-                return $this->errorConstant($empty_const, 'empty');
+                return [
+                    'response' => true,
+                    'swal_title' => 'Operazione riuscita!',
+                    'swal_message' => 'Costanti salvate con successo.',
+                    'swal_type' => 'success',
+                ];
+
             }
 
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
+            return $this->errorConstant($empty_const, 'empty');
+
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -203,9 +203,9 @@ class Gestione extends BaseClass
             case 'int':
                 if ( !is_numeric($val) || is_float($val) ) {
                     return false;
-                } else {
-                    $val = Filters::int($val);
                 }
+
+                $val = Filters::int($val);
                 break;
 
             default:
@@ -239,7 +239,7 @@ class Gestione extends BaseClass
 
         foreach ( $constants as $e ) {
 
-            $resp .= " {$e},";
+            $resp .= " $e,";
         }
 
         return [

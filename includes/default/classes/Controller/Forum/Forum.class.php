@@ -45,7 +45,7 @@ class Forum extends BaseClass
      */
     public function getForum(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM forum WHERE id=:id LIMIT 1", ['id' => $id]);
+        return DB::queryStmt("SELECT $val FROM forum WHERE id=:id LIMIT 1", ['id' => $id]);
     }
 
     /**
@@ -57,7 +57,7 @@ class Forum extends BaseClass
      */
     public function getAllForums(string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM forum WHERE 1");
+        return DB::queryStmt("SELECT $val FROM forum WHERE 1");
     }
 
     /**
@@ -70,7 +70,7 @@ class Forum extends BaseClass
      */
     public function getAllForumsByType(int $type, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM forum WHERE tipo = :tipo  ORDER BY tipo DESC", ["tipo" => $type]);
+        return DB::queryStmt("SELECT $val FROM forum WHERE tipo = :tipo  ORDER BY tipo DESC", ["tipo" => $type]);
     }
 
 
@@ -262,14 +262,14 @@ class Forum extends BaseClass
                 'swal_type' => 'success',
                 'forums_list' => $this->listForums(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -304,15 +304,14 @@ class Forum extends BaseClass
                 'forums_list' => $this->listForums(),
             ];
 
-        } else {
-
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -341,14 +340,14 @@ class Forum extends BaseClass
                 'forums_list' => $this->listForums(),
             ];
 
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 }

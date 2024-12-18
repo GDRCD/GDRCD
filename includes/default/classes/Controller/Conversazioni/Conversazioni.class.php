@@ -50,14 +50,14 @@ class Conversazioni extends BaseClass
 
             if ( Filters::bool($conversation_data['proprietario']) ) {
                 return true;
-            } else {
-                $members = $this->getConversationMembers($id, true, 'conversazioni_membri.personaggio')->getData();
-                $members_list = array_column($members, 'personaggio');
-                return in_array($this->me_id, $members_list);
             }
-        } else {
-            return false;
+
+            $members = $this->getConversationMembers($id, true, 'conversazioni_membri.personaggio')->getData();
+            $members_list = array_column($members, 'personaggio');
+            return in_array($this->me_id, $members_list, true);
         }
+
+        return false;
     }
 
     /**
@@ -105,10 +105,10 @@ class Conversazioni extends BaseClass
         $extra_query = '';
 
         if ( !empty($title) ) {
-            $extra_query .= " AND conversazioni.nome LIKE \"%{$title}%\" ";
+            $extra_query .= " AND conversazioni.nome LIKE \"%$title%\" ";
         }
 
-        $results = DB::queryStmt("SELECT {$val} FROM conversazioni 
+        $results = DB::queryStmt("SELECT $val FROM conversazioni 
                 LEFT JOIN conversazioni_membri 
                     ON conversazioni_membri.conversazione = conversazioni.id 
                     AND conversazioni_membri.personaggio = :pg
@@ -144,7 +144,7 @@ class Conversazioni extends BaseClass
      */
     public function getConversation(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM conversazioni 
+        return DB::queryStmt("SELECT $val FROM conversazioni 
                         WHERE conversazioni.id=:id LIMIT 1", ['id' => $id]);
     }
 
@@ -158,7 +158,7 @@ class Conversazioni extends BaseClass
      */
     public function getConversationAttachments(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM conversazioni_messaggi_allegati 
+        return DB::queryStmt("SELECT $val FROM conversazioni_messaggi_allegati 
                         WHERE conversazioni_messaggi_allegati.messaggio=:id", ['id' => $id]);
     }
 
@@ -172,8 +172,8 @@ class Conversazioni extends BaseClass
      */
     public function getConversationMessages(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM conversazioni_messaggi 
-                        WHERE conversazioni_messaggi.conversazione=:id ORDER BY creato_il ASC", ['id' => $id]);
+        return DB::queryStmt("SELECT $val FROM conversazioni_messaggi 
+                        WHERE conversazioni_messaggi.conversazione=:id ORDER BY creato_il", ['id' => $id]);
     }
 
     /**
@@ -193,9 +193,9 @@ class Conversazioni extends BaseClass
             $extra_query = " AND conversazioni_membri.proprietario=0";
         }
 
-        return DB::queryStmt("SELECT {$val} FROM conversazioni_membri 
+        return DB::queryStmt("SELECT $val FROM conversazioni_membri 
                         LEFT JOIN personaggio ON personaggio.id = conversazioni_membri.personaggio
-                        WHERE conversazioni_membri.conversazione=:id {$extra_query}", ['id' => $id]);
+                        WHERE conversazioni_membri.conversazione=:id $extra_query", ['id' => $id]);
     }
 
     /**
@@ -209,7 +209,7 @@ class Conversazioni extends BaseClass
      */
     public function getConversationMember(int $pg, int $conversation, string $val = 'personaggio.*,conversazioni_membri.*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM conversazioni_membri 
+        return DB::queryStmt("SELECT $val FROM conversazioni_membri 
                         LEFT JOIN personaggio ON personaggio.id = conversazioni_membri.personaggio
                         WHERE conversazioni_membri.conversazione=:conversazione AND conversazioni_membri.personaggio=:pg LIMIT 1",
             ['conversazione' => $conversation, 'pg' => $pg]
@@ -226,7 +226,7 @@ class Conversazioni extends BaseClass
      */
     public function getConversationOwner(int $conversation, string $val = 'personaggio.*,conversazioni_membri.*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM conversazioni_membri 
+        return DB::queryStmt("SELECT $val FROM conversazioni_membri 
                         LEFT JOIN personaggio ON personaggio.id = conversazioni_membri.personaggio
                         WHERE conversazioni_membri.conversazione=:conversazione AND conversazioni_membri.proprietario=1 LIMIT 1",
             ['conversazione' => $conversation]
@@ -546,11 +546,11 @@ class Conversazioni extends BaseClass
                 'new_messages' => $this->conversation($id),
                 'new_conversations' => $this->conversationsList(),
             ];
-        } else {
-            return [
-                'response' => false,
-            ];
         }
+
+        return [
+            'response' => false,
+        ];
     }
 
     /**
@@ -649,7 +649,7 @@ class Conversazioni extends BaseClass
             foreach ( $members as $member ) {
                 $member_data = $this->getConversationMember(Filters::int($member), $id);
 
-                if ( $member_data->getNumRows() == 0 ) {
+                if ( $member_data->getNumRows() === 0 ) {
                     DB::queryStmt("INSERT INTO conversazioni_membri(conversazione,personaggio,proprietario,creato_da) VALUES (:conversazione, :pg,:proprietario,:creato_da)", [
                         'conversazione' => $id,
                         'pg' => $member,
@@ -675,14 +675,14 @@ class Conversazioni extends BaseClass
                 'swal_type' => 'success',
                 'conv_id' => $id,
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Non hai i permessi per modificare questa conversazione.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Non hai i permessi per modificare questa conversazione.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -711,14 +711,14 @@ class Conversazioni extends BaseClass
                 'swal_type' => 'success',
                 'new_conversations' => $this->conversationsList(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Non hai i permessi per eliminare questa conversazione.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Non hai i permessi per eliminare questa conversazione.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**

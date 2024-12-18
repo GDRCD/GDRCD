@@ -15,7 +15,7 @@ class Disponibilita extends BaseClass
      */
     public function getAvailability(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM disponibilita WHERE id=:id LIMIT 1", ['id' => $id]);
+        return DB::queryStmt("SELECT $val FROM disponibilita WHERE id=:id LIMIT 1", ['id' => $id]);
     }
 
     /**
@@ -27,7 +27,7 @@ class Disponibilita extends BaseClass
      */
     public function getAllAvailabilities(string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM disponibilita WHERE 1", []);
+        return DB::queryStmt("SELECT $val FROM disponibilita WHERE 1", []);
     }
 
 
@@ -105,15 +105,14 @@ class Disponibilita extends BaseClass
                 'swal_type' => 'success',
                 'availabilities_list' => $this->listAvailabilities(),
             ];
-        } else {
-
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -146,15 +145,14 @@ class Disponibilita extends BaseClass
                 'availabilities_list' => $this->listAvailabilities(),
             ];
 
-        } else {
-
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -183,14 +181,14 @@ class Disponibilita extends BaseClass
                 'availabilities_list' => $this->listAvailabilities(),
             ];
 
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 }

@@ -79,7 +79,7 @@ class ForumPermessi extends Forum
         return (
             $this->permissionForumAdmin() ||
             Permissions::permission('FORUM_EDIT_ALL') ||
-            (!Filters::bool($post_data['eliminato']) && (Filters::int($post_data['autore']) == $this->me_id))
+            (!Filters::bool($post_data['eliminato']) && (Filters::int($post_data['autore']) === $this->me_id))
         );
     }
 
@@ -184,7 +184,7 @@ class ForumPermessi extends Forum
      */
     public function getForumPermissionForPg(int $forum, int $pg, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM forum_permessi WHERE forum=:forum AND personaggio=:pg LIMIT 1",
+        return DB::queryStmt("SELECT $val FROM forum_permessi WHERE forum=:forum AND personaggio=:pg LIMIT 1",
             ['forum' => $forum, 'pg' => $pg]
         );
     }
@@ -204,14 +204,14 @@ class ForumPermessi extends Forum
         $extra_query = '';
 
         if ( $pg > 0 ) {
-            $extra_query .= " AND personaggio = {$pg}";
+            $extra_query .= " AND personaggio = $pg";
         }
 
         if ( $forum > 0 ) {
-            $extra_query .= " AND forum = {$forum}";
+            $extra_query .= " AND forum = $forum";
         }
 
-        return DB::queryStmt("SELECT {$val} FROM forum_permessi WHERE 1 {$extra_query}", []);
+        return DB::queryStmt("SELECT $val FROM forum_permessi WHERE 1 $extra_query", []);
     }
 
     /*** AJAX ***/
@@ -299,7 +299,7 @@ class ForumPermessi extends Forum
     public function newPermission(array $post): array
     {
 
-        if ( ForumPermessi::getInstance()->permissionForumAdmin() ) {
+        if ( self::getInstance()->permissionForumAdmin() ) {
 
             $pg = Filters::in($post['personaggio']);
             $forum = Filters::in($post['forum']);
@@ -316,23 +316,23 @@ class ForumPermessi extends Forum
                     'swal_message' => 'Permesso forum assegnato correttamente.',
                     'swal_type' => 'success',
                 ];
-            } else {
-                return [
-                    'response' => true,
-                    'swal_title' => 'Operazione negata!',
-                    'swal_message' => 'Permesso gia presente per questa coppia forum-personaggio.',
-                    'swal_type' => 'info',
-                ];
             }
 
-        } else {
             return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
+                'response' => true,
+                'swal_title' => 'Operazione negata!',
+                'swal_message' => 'Permesso gia presente per questa coppia forum-personaggio.',
+                'swal_type' => 'info',
             ];
+
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -345,7 +345,7 @@ class ForumPermessi extends Forum
     public function delPermission(array $post): array
     {
 
-        if ( ForumPermessi::getInstance()->permissionForumAdmin() ) {
+        if ( self::getInstance()->permissionForumAdmin() ) {
 
             $pg = Filters::in($post['personaggio']);
             $forum = Filters::in($post['forum']);
@@ -362,23 +362,23 @@ class ForumPermessi extends Forum
                     'swal_message' => 'Permesso forum rimosso correttamente.',
                     'swal_type' => 'success',
                 ];
-            } else {
-                return [
-                    'response' => true,
-                    'swal_title' => 'Operazione negata!',
-                    'swal_message' => 'Permesso non presente per questa coppia forum-personaggio.',
-                    'swal_type' => 'info',
-                ];
             }
 
-        } else {
             return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
+                'response' => true,
+                'swal_title' => 'Operazione negata!',
+                'swal_message' => 'Permesso non presente per questa coppia forum-personaggio.',
+                'swal_type' => 'info',
             ];
+
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 }

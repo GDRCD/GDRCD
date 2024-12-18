@@ -3,16 +3,6 @@
 class Scheda extends BaseClass
 {
 
-    /**
-     * @fn __construct
-     * @note Class constructor
-     */
-    protected function __construct()
-    {
-        parent::__construct();
-    }
-
-
     /*** CONTROLS ***/
 
     /**
@@ -197,11 +187,11 @@ class Scheda extends BaseClass
     /**
      * @fn getGroupIcons
      * @note Funzione che si occupa dell'estrazione delle icone della scheda
-     * @param string $pg_id
+     * @param int $pg_id
      * @return string
      * @throws Throwable
      */
-    private function getGroupIcons(string $pg_id): string
+    private function getGroupIcons(int $pg_id): string
     {
         # Filtro il mittente passato
         $pg_id = Filters::int($pg_id);
@@ -213,7 +203,7 @@ class Scheda extends BaseClass
 
             foreach ( $roles as $role ) {
                 $link = Router::getImgsDir() . $role['immagine'];
-                $icons .= "<img src='{$link}' title='{$role['gruppo_nome']} - {$role['nome']}' alt='{$role['nome']}'>";
+                $icons .= "<img src='$link' title='{$role['gruppo_nome']} - {$role['nome']}' alt='{$role['nome']}'>";
             }
         }
 
@@ -223,11 +213,11 @@ class Scheda extends BaseClass
     /**
      * @fn getRaceIcon
      * @note Funzione che si occupa dell'estrazione dell'icone della razza
-     * @param string $pg_id
+     * @param int $pg_id
      * @return string
      * @throws Throwable
      */
-    private function getRaceIcon(string $pg_id): string
+    private function getRaceIcon(int $pg_id): string
     {
         # Filtro il mittente passato
         $pg_id = Filters::int($pg_id);
@@ -238,7 +228,7 @@ class Scheda extends BaseClass
         $name = Filters::out($race_data['nome']);
 
         $link = Router::getImgsDir() . $icon;
-        return "<img src='{$link}' title='{$name}' alt='{$name}'>";
+        return "<img src='$link' title='$name' alt='$name'>";
     }
 
     /**
@@ -329,14 +319,14 @@ class Scheda extends BaseClass
                 'swal_message' => 'Modifica effettuata correttamente.',
                 'swal_type' => 'success',
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 
@@ -371,14 +361,14 @@ class Scheda extends BaseClass
                 'swal_message' => 'Modifica stato effettuata correttamente.',
                 'swal_type' => 'success',
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 
@@ -417,14 +407,14 @@ class Scheda extends BaseClass
                 'swal_message' => 'Modifica amministrazione effettuata correttamente.',
                 'swal_type' => 'success',
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 
@@ -460,14 +450,14 @@ class Scheda extends BaseClass
                 'swal_message' => 'Ban effettuato correttamente.',
                 'swal_type' => 'success',
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 

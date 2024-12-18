@@ -57,7 +57,7 @@ class SchedaChatOpzioni extends Scheda
             $val = Filters::out($option['valore']);
 
             $html .= "<div class='single_input w-33'>";
-            $html .= "<div class='label'>{$label}</div>";
+            $html .= "<div class='label'>$label</div>";
             $html .= Gestione::getInstance()->inputByType($name, $val, $tipo);
             $html .= "</div>";
         }
@@ -74,7 +74,7 @@ class SchedaChatOpzioni extends Scheda
      * @return array
      * @throws Throwable
      */
-    public final function updateOptions(array $post): array
+    final public function updateOptions(array $post): array
     {
 
         $pg = Filters::int($post['pg']);
@@ -99,23 +99,23 @@ class SchedaChatOpzioni extends Scheda
 
             if ( !empty($empty_const) ) {
                 return $this->errorOptions($empty_const);
-            } else {
-                return [
-                    'response' => true,
-                    'swal_title' => 'Completato!',
-                    'swal_message' => 'Opzioni modificate con successo!',
-                    'swal_type' => 'success',
-                ];
             }
 
-        } else {
             return [
-                'response' => false,
-                'swal_title' => 'Permesso negato!',
-                'swal_message' => 'Permesso negato!',
+                'response' => true,
+                'swal_title' => 'Completato!',
+                'swal_message' => 'Opzioni modificate con successo!',
                 'swal_type' => 'success',
             ];
+
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Permesso negato!',
+            'swal_message' => 'Permesso negato!',
+            'swal_type' => 'success',
+        ];
     }
 
     /**
@@ -143,9 +143,9 @@ class SchedaChatOpzioni extends Scheda
                 if ( $val ) {
                     if ( !is_numeric($val) || is_float($val) ) {
                         return false;
-                    } else {
-                        $val = Filters::int($val);
                     }
+
+                    $val = Filters::int($val);
                 } else {
                     $val = '';
                 }
@@ -157,7 +157,7 @@ class SchedaChatOpzioni extends Scheda
                 break;
         }
 
-        return DB::query("INSERT INTO personaggio_chat_opzioni(personaggio,opzione,valore) VALUES ('{$pg}','{$name}','{$val}')");
+        return DB::query("INSERT INTO personaggio_chat_opzioni(personaggio,opzione,valore) VALUES ('$pg','$name','$val')");
     }
 
     /**
@@ -178,7 +178,7 @@ class SchedaChatOpzioni extends Scheda
 
         foreach ( $constants as $e ) {
 
-            $resp .= " {$e},";
+            $resp .= " $e,";
         }
 
         return [

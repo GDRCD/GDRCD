@@ -14,7 +14,7 @@ interface DBQueryInterface extends ArrayAccess, Countable, Iterator {
 
     /**
      * @fn getAffectedRows
-     * @note Ritorna il numero di righe coinvolte nella query d'INSERT/UPDATE/DELETE eseguita
+     * @note Ritorna il numero di righe coinvolte nella query INSERT/UPDATE/DELETE eseguita
      * @return int
      */
     public function getAffectedRows(): int;
@@ -28,7 +28,7 @@ interface DBQueryInterface extends ArrayAccess, Countable, Iterator {
 
     /**
      * @fn getInsertId
-     * @note Ritorna l'ultimo id auto incrementante generato per la query d'INSERT eseguita
+     * @note Ritorna l'ultimo id auto incrementante generato per la query INSERT eseguita
      * @return string|false
      */
     public function getInsertId(): string|false;

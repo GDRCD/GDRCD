@@ -25,7 +25,7 @@ class ChatOpzioni extends BaseClass
      */
     public function getOption(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM chat_opzioni WHERE id=:id LIMIT 1", ['id' => $id]);
+        return DB::queryStmt("SELECT $val FROM chat_opzioni WHERE id=:id LIMIT 1", ['id' => $id]);
     }
 
     /**
@@ -37,7 +37,7 @@ class ChatOpzioni extends BaseClass
      */
     public function getAllOptions(string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM chat_opzioni WHERE 1", []);
+        return DB::queryStmt("SELECT $val FROM chat_opzioni WHERE 1", []);
     }
 
     /*** PERMESSI ****/
@@ -59,6 +59,7 @@ class ChatOpzioni extends BaseClass
      * @fn listTypes
      * @note Genera gli option per il tipo di valore
      * @return string
+     * @throws Throwable
      */
     public function listTypes(): string
     {
@@ -150,14 +151,14 @@ class ChatOpzioni extends BaseClass
                 'swal_type' => 'success',
                 "options_list" => $this->listOptions(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -191,14 +192,14 @@ class ChatOpzioni extends BaseClass
                 'swal_type' => 'success',
                 'options_list' => $this->listOptions(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -229,13 +230,13 @@ class ChatOpzioni extends BaseClass
                 'swal_type' => 'success',
                 'options_list' => $this->listOptions(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 }
