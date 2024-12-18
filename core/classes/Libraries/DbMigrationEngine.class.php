@@ -28,7 +28,7 @@ class DbMigrationEngine extends BaseClass
 
         // EXECUTE MIGRATIONS
         if ( self::dbNeedsUpdate() ) {
-            self::updateDbSchema();
+            self::updateDbSchema(null);
         }
     }
 
@@ -90,12 +90,12 @@ class DbMigrationEngine extends BaseClass
     /**
      * @fn updateDbSchema
      * @note Esegue le modifiche allo schema del DB portandolo alla versione specificata
-     * @param int|null $migration_id Versione a cui portare il DB, corrispondente all'identificativo di una
-     * Migrazione specifica. Se vuoto porta il DB all'ultima versione disponibile
+     * @param int|null $migration_id Versione a cui portare il DB, corrispondente all'identificativo di una migrazione specifica. Se vuoto porta il DB all'ultima versione disponibile
      * @return int Il numero di migrazioni applicate
+     * @throws ReflectionException
      * @throws Throwable
      */
-    public static function updateDbSchema(int $migration_id = null): int
+    public static function updateDbSchema(int|null $migration_id): int
     {
         $migrations = self::loadMigrationClasses();
         self::createVersioningTable();//Per sicurezza cerchiamo di crearla sempre
