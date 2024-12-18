@@ -16,7 +16,7 @@ class PersonaggioStats extends Personaggio
     public static function getPgAllStats(int $id_pg, string $val = 'statistiche.*,personaggio_statistiche.valore'): DBQueryInterface
     {
         return DB::queryStmt(
-            "SELECT {$val} FROM statistiche 
+            "SELECT $val FROM statistiche 
                   LEFT JOIN personaggio_statistiche ON (statistiche.id = personaggio_statistiche.statistica AND personaggio_statistiche.personaggio =:pg)
                   WHERE 1 ORDER BY statistiche.nome",
             ['pg' => $id_pg]
@@ -35,7 +35,7 @@ class PersonaggioStats extends Personaggio
     public function getPgStat(int $id, int $pg, string $val = 'statistiche.*,personaggio_statistiche.*'): DBQueryInterface
     {
         return DB::queryStmt(
-            "SELECT {$val} FROM personaggio_statistiche 
+            "SELECT $val FROM personaggio_statistiche 
                   LEFT JOIN statistiche ON (statistiche.id = personaggio_statistiche.statistica)
                   WHERE personaggio_statistiche.statistica = :id AND personaggio_statistiche.personaggio =:pg LIMIT 1",
             ['id' => $id, 'pg' => $pg]
@@ -54,7 +54,7 @@ class PersonaggioStats extends Personaggio
     public static function getPgStatByStatId(int $id, int $pg, string $val = '*'): DBQueryInterface
     {
         return DB::queryStmt(
-            "SELECT {$val} FROM personaggio_statistiche 
+            "SELECT $val FROM personaggio_statistiche 
                   WHERE personaggio_statistiche.statistica = :id AND personaggio_statistiche.personaggio = :pg
                   LIMIT 1",
             ['id' => $id, 'pg' => $pg]
@@ -106,7 +106,7 @@ class PersonaggioStats extends Personaggio
             $max_val = Filters::int($stat_data['max_val']);
 
             $pg_stat_data = self::getPgStatByStatId($id, $pg);
-            $pg_val = !empty($pg_stat_data) ? Filters::int($pg_stat_data['valore']) : 0;
+            $pg_val = $pg_stat_data->getNumRows() ? Filters::int($pg_stat_data['valore']) : 0;
 
             if ( $pg_val < $max_val ) {
                 return true;
@@ -137,7 +137,7 @@ class PersonaggioStats extends Personaggio
             $min_val = Filters::int($stat_data['min_val']);
 
             $pg_stat_data = self::getPgStatByStatId($id, $pg);
-            $pg_val = !empty($pg_stat_data) ? Filters::int($pg_stat_data['valore']) : 0;
+            $pg_val = $pg_stat_data->getNumRows() ? Filters::int($pg_stat_data['valore']) : 0;
 
             if ( $pg_val > $min_val ) {
                 return true;
@@ -158,7 +158,7 @@ class PersonaggioStats extends Personaggio
      */
     public static function existPgStat(int $id, int $pg): bool
     {
-        $data = self::getPgStat($id, $pg);
+        $data = self::getInstance()->getPgStat($id, $pg);
         return (DB::rowsNumber($data) > 0);
     }
 
@@ -183,13 +183,11 @@ class PersonaggioStats extends Personaggio
                             WHERE personaggio_statistiche.statistica=:id AND personaggio_statistiche.personaggio=:pg",
                     ['id' => $id, 'pg' => $pg]
                 );
-            } else {
-                if ( Statistiche::existStat($id) ) {
-                    DB::queryStmt(
-                        "INSERT INTO personaggio_statistiche(personaggio, statistica, valore) VALUES(:pg,:id,1)",
-                        ['id' => $id, 'pg' => $pg]
-                    );
-                }
+            } else if ( Statistiche::existStat($id) ) {
+                DB::queryStmt(
+                    "INSERT INTO personaggio_statistiche(personaggio, statistica, valore) VALUES(:pg,:id,1)",
+                    ['id' => $id, 'pg' => $pg]
+                );
             }
             return [
                 'response' => true,
@@ -198,14 +196,14 @@ class PersonaggioStats extends Personaggio
                 'swal_type' => 'success',
                 'new_template' => SchedaStats::getInstance()->statsPage($pg),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione negata!',
-                'swal_message' => 'Statistica non aumentabile ulteriormente.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione negata!',
+            'swal_message' => 'Statistica non aumentabile ulteriormente.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -237,14 +235,14 @@ class PersonaggioStats extends Personaggio
                 'swal_type' => 'success',
                 'new_template' => SchedaStats::getInstance()->statsPage($pg),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione negata!',
-                'swal_message' => 'Statistica non aumentabile ulteriormente.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione negata!',
+            'swal_message' => 'Statistica non aumentabile ulteriormente.',
+            'swal_type' => 'error',
+        ];
 
     }
 }

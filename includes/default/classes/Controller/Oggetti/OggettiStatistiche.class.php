@@ -16,7 +16,7 @@ class OggettiStatistiche extends Oggetti
      */
     public function getObjectStat(int $object, int $stat, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM oggetto_statistiche WHERE oggetto=:object AND statistica=:stat LIMIT 1", [
+        return DB::queryStmt("SELECT $val FROM oggetto_statistiche WHERE oggetto=:object AND statistica=:stat LIMIT 1", [
             'object' => $object,
             'stat' => $stat,
         ]);
@@ -32,7 +32,7 @@ class OggettiStatistiche extends Oggetti
      */
     public function getObjectStats(int $object, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM oggetto_statistiche WHERE oggetto=:object", [
+        return DB::queryStmt("SELECT $val FROM oggetto_statistiche WHERE oggetto=:object", [
             'object' => $object,
         ]);
     }
@@ -83,9 +83,9 @@ class OggettiStatistiche extends Oggetti
 
         if ( $this->permissionManageObjectsStats() && $this->existObjectStat($object, $stat) ) {
             return $this->getObjectStat($object, $stat)->getData()[0];
-        } else {
-            return [];
         }
+
+        return [];
     }
 
     /*** MANAGEMENT FUNCTIONS - OBJECT TYPES **/
@@ -120,22 +120,22 @@ class OggettiStatistiche extends Oggetti
                     'swal_message' => 'Statistica Oggetto inserita correttamente.',
                     'swal_type' => 'success',
                 ];
-            } else {
-                return [
-                    'response' => false,
-                    'swal_title' => 'Operazione fallita!',
-                    'swal_message' => 'La statistica per questo oggetto esiste già.',
-                    'swal_type' => 'error',
-                ];
             }
-        } else {
+
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
+                'swal_message' => 'La statistica per questo oggetto esiste già.',
                 'swal_type' => 'error',
             ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -168,22 +168,22 @@ class OggettiStatistiche extends Oggetti
                     'swal_message' => 'Statistica Oggetto modificata correttamente.',
                     'swal_type' => 'success',
                 ];
-            } else {
-                return [
-                    'response' => false,
-                    'swal_title' => 'Operazione fallita!',
-                    'swal_message' => 'La statistica per questo oggetto non esiste.',
-                    'swal_type' => 'error',
-                ];
             }
-        } else {
+
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
+                'swal_message' => 'La statistica per questo oggetto non esiste.',
                 'swal_type' => 'error',
             ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -212,14 +212,14 @@ class OggettiStatistiche extends Oggetti
                 'swal_message' => 'Statistica Oggetto eliminata correttamente.',
                 'swal_type' => 'success',
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
 }

@@ -15,7 +15,7 @@ class OggettiTipo extends Oggetti {
      */
     public function getObjectType(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM oggetto_tipo WHERE id=:id LIMIT 1",[
+        return DB::queryStmt("SELECT $val FROM oggetto_tipo WHERE id=:id LIMIT 1",[
             'id' => $id
         ]);
     }
@@ -29,7 +29,7 @@ class OggettiTipo extends Oggetti {
      */
     public function getAllObjectTypes(string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM oggetto_tipo WHERE 1 ORDER BY nome", []);
+        return DB::queryStmt("SELECT $val FROM oggetto_tipo WHERE 1 ORDER BY nome", []);
     }
 
 
@@ -116,14 +116,14 @@ class OggettiTipo extends Oggetti {
                 'swal_type' => 'success',
                 'obj_type_list' => $this->listObjectTypes(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -155,14 +155,14 @@ class OggettiTipo extends Oggetti {
                 'swal_type' => 'success',
                 'obj_type_list' => $this->listObjectTypes(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -190,14 +190,14 @@ class OggettiTipo extends Oggetti {
                 'swal_type' => 'success',
                 'obj_type_list' => $this->listObjectTypes(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
 }

@@ -56,7 +56,7 @@ class Mercato extends BaseClass
      */
     private function getObject(int $id, int $shop, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM mercato WHERE oggetto=:id AND negozio=:shop LIMIT 1", [
+        return DB::queryStmt("SELECT $val FROM mercato WHERE oggetto=:id AND negozio=:shop LIMIT 1", [
             'id' => $id,
             'shop' => $shop,
         ]);
@@ -73,7 +73,7 @@ class Mercato extends BaseClass
     public function getAllShopObjects(int $shop, string $val = 'oggetto.*,mercato.*'): DBQueryInterface
     {
         return DB::queryStmt(
-            "SELECT {$val}  FROM mercato 
+            "SELECT $val  FROM mercato 
                 LEFT JOIN oggetto ON (oggetto.id = mercato.oggetto)
                 WHERE mercato.negozio=:shop AND oggetto.id IS NOT NULL AND mercato.quantity > 0
                 ORDER BY nome",
@@ -92,7 +92,7 @@ class Mercato extends BaseClass
      */
     private function getAllShops(string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} 
+        return DB::queryStmt("SELECT $val 
                 FROM mercato_negozi 
                 WHERE 1 ORDER BY nome", []);
     }
@@ -107,7 +107,7 @@ class Mercato extends BaseClass
      */
     private function getShopFromObject(int $obj, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM mercato WHERE oggetto=:obj LIMIT 1",[
+        return DB::queryStmt("SELECT $val FROM mercato WHERE oggetto=:obj LIMIT 1",[
             'obj' => $obj,
         ]);
     }
@@ -122,7 +122,7 @@ class Mercato extends BaseClass
      */
     public function getShop(int $shop, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM mercato_negozi WHERE id=:shop LIMIT 1",[
+        return DB::queryStmt("SELECT $val FROM mercato_negozi WHERE id=:shop LIMIT 1",[
             'shop' => $shop,
         ]);
     }
@@ -141,9 +141,9 @@ class Mercato extends BaseClass
         if ( $this->manageShopPermission() ) {
             $shop = Filters::int($post['shop']);
             return $this->getShop($shop)->getData()[0];
-        } else {
-            return [];
         }
+
+        return [];
     }
 
     /*** MERCATO TABLE CONTROLS ***/
@@ -263,7 +263,7 @@ class Mercato extends BaseClass
                     return ['response' => false, 'mex' => 'Non hai abbastanza denaro.'];
                 }
 
-                Personaggio::updatePgData($this->me_id, "{$cell}={$cell}-:costo", ['costo' => $costo]);
+                Personaggio::updatePgData($this->me_id, "$cell=$cell-:costo", ['costo' => $costo]);
                 Oggetti::getInstance()->addObjectToPg($object, $this->me_id);
 
                 if ( $quantity > 1 ) {
@@ -276,13 +276,13 @@ class Mercato extends BaseClass
                     ]);
                 }
 
-                return ['response' => true, 'mex' => "Oggetto acquistato. Soldi sottratti da '{$text}'."];
-            } else {
-                return ['response' => false, 'mex' => "Oggetto non disponibile."];
+                return ['response' => true, 'mex' => "Oggetto acquistato. Soldi sottratti da '$text'."];
             }
-        } else {
-            return ['response' => false, 'mex' => "Oggetto inesistente o non esistente in questo negozio."];
+
+            return ['response' => false, 'mex' => "Oggetto non disponibile."];
         }
+
+        return ['response' => false, 'mex' => "Oggetto inesistente o non esistente in questo negozio."];
 
     }
 
@@ -321,24 +321,23 @@ class Mercato extends BaseClass
                     'swal_message' => 'Oggetto inserito correttamente in negozio.',
                     'swal_type' => 'success',
                 ];
-            } else {
-
-                return [
-                    'response' => false,
-                    'swal_title' => 'Operazione fallita!',
-                    'swal_message' => 'Oggetto già presente in negozio. Procedere alla modifica o alla sua eliminazione.',
-                    'swal_type' => 'error',
-                ];
             }
 
-        } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
+                'swal_message' => 'Oggetto già presente in negozio. Procedere alla modifica o alla sua eliminazione.',
                 'swal_type' => 'error',
             ];
+
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -373,24 +372,23 @@ class Mercato extends BaseClass
                     'swal_message' => 'Oggetto modificato correttamente.',
                     'swal_type' => 'success',
                 ];
-            } else {
-                return [
-                    'response' => false,
-                    'swal_title' => 'Operazione fallita!',
-                    'swal_message' => 'Oggetto non presente in negozio. Procedere al suo inserimento.',
-                    'swal_type' => 'error',
-                ];
             }
-
-        } else {
 
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
+                'swal_message' => 'Oggetto non presente in negozio. Procedere al suo inserimento.',
                 'swal_type' => 'error',
             ];
+
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -421,22 +419,22 @@ class Mercato extends BaseClass
                     'swal_message' => 'Oggetto eliminato correttamente.',
                     'swal_type' => 'success',
                 ];
-            } else {
-                return [
-                    'response' => false,
-                    'swal_title' => 'Operazione fallita!',
-                    'swal_message' => 'Oggetto non presente in negozio. Procedere al suo inserimento.',
-                    'swal_type' => 'error',
-                ];
             }
-        } else {
+
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
+                'swal_message' => 'Oggetto non presente in negozio. Procedere al suo inserimento.',
                 'swal_type' => 'error',
             ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 
@@ -456,7 +454,7 @@ class Mercato extends BaseClass
             $descr = Filters::in($post['descrizione']);
             $img = Filters::in($post['immagine']);
 
-            DB::queryStmt("INSERT INTO negozi (nome, descrizione, immagine) VALUES (:nome, :descrizione, :immagine)",[
+            DB::queryStmt("INSERT INTO mercato_negozi (nome, descrizione, immagine) VALUES (:nome, :descrizione, :immagine)",[
                 'nome' => $nome,
                 'descrizione' => $descr,
                 'immagine' => $img,
@@ -469,15 +467,14 @@ class Mercato extends BaseClass
                 'swal_type' => 'success',
                 'shop_list' => $this->listShops(),
             ];
-        } else {
-
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -499,7 +496,7 @@ class Mercato extends BaseClass
 
             if ( $this->existShop($shop) ) {
 
-                DB::queryStmt("UPDATE negozi SET nome=:nome, descrizione=:descrizione, immagine=:immagine WHERE id=:id LIMIT 1",[
+                DB::queryStmt("UPDATE mercato_negozi SET nome=:nome, descrizione=:descrizione, immagine=:immagine WHERE id=:id LIMIT 1",[
                     'id' => $shop,
                     'nome' => $nome,
                     'descrizione' => $descr,
@@ -513,25 +510,23 @@ class Mercato extends BaseClass
                     'swal_type' => 'success',
                     'shop_list' => $this->listShops(),
                 ];
-            } else {
-
-                return [
-                    'response' => false,
-                    'swal_title' => 'Operazione fallita!',
-                    'swal_message' => 'Negozio inesistente',
-                    'swal_type' => 'error',
-                ];
             }
-
-        } else {
 
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
+                'swal_message' => 'Negozio inesistente',
                 'swal_type' => 'error',
             ];
+
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -550,7 +545,7 @@ class Mercato extends BaseClass
 
             if ( $this->existShop($shop) ) {
 
-                DB::queryStmt("DELETE FROM negozi WHERE id=:id LIMIT 1",[
+                DB::queryStmt("DELETE FROM mercato_negozi WHERE id=:id LIMIT 1",[
                     'id' => $shop,
                 ]);
 
@@ -561,22 +556,22 @@ class Mercato extends BaseClass
                     'swal_type' => 'success',
                     'shop_list' => $this->listShops(),
                 ];
-            } else {
-                return [
-                    'response' => false,
-                    'swal_title' => 'Operazione fallita!',
-                    'swal_message' => 'Negozio inesistente',
-                    'swal_type' => 'error',
-                ];
             }
-        } else {
+
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
+                'swal_message' => 'Negozio inesistente',
                 'swal_type' => 'error',
             ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 }

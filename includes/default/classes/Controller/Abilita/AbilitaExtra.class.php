@@ -22,7 +22,7 @@ class AbilitaExtra extends Abilita
     public function getAbilitaExtra(int $id, int $grado, string $val = '*'): DBQueryInterface
     {
         return DB::queryStmt(
-            "SELECT {$val} FROM abilita_extra WHERE abilita = :id AND grado =:grado LIMIT 1",
+            "SELECT $val FROM abilita_extra WHERE abilita = :id AND grado =:grado LIMIT 1",
             [ 'id' => $id, 'grado' => $grado]
         );
     }
@@ -66,12 +66,12 @@ class AbilitaExtra extends Abilita
                 $costo = Filters::int($data['costo']);
 
                 return ['response' => true, 'Descr' => $descr, 'Costo' => $costo];
-            } else {
-                return ['response' => false];
             }
-        } else {
+
             return ['response' => false];
         }
+
+        return ['response' => false];
 
     }
 
@@ -99,7 +99,7 @@ class AbilitaExtra extends Abilita
                 'grado' => $grado,
             ]);
 
-            if ( $contr['TOT'] == 0 ) {
+            if ( $contr['TOT'] === 0 ) {
                 DB::queryStmt("INSERT INTO abilita_extra (abilita, grado, descrizione, costo) VALUES (:abi, :grado, :descr, :costo)", [
                     'abi' => $abi,
                     'grado' => $grado,
@@ -114,14 +114,14 @@ class AbilitaExtra extends Abilita
                 'swal_message' => 'Dati extra abilità creati.',
                 'swal_type' => 'success',
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -140,7 +140,7 @@ class AbilitaExtra extends Abilita
             $descr = Filters::in($post['descr']);
             $costo = Filters::int($post['costo']);
 
-            DB::queryStmt("UPDATE abilita_extra SET abilita='{$abi}',grado='{$grado}',descrizione='{$descr}',costo='{$costo}' WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1", [
+            DB::queryStmt('UPDATE abilita_extra SET abilita=:abi,grado=:grado,descrizione=:descr,costo=:costo WHERE abilita=:abi AND grado=:grado LIMIT 1', [
                 'abi' => $abi,
                 'grado' => $grado,
                 'descr' => $descr,
@@ -153,14 +153,14 @@ class AbilitaExtra extends Abilita
                 'swal_message' => 'Dati extra abilità modificati.',
                 'swal_type' => 'success',
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -177,7 +177,7 @@ class AbilitaExtra extends Abilita
             $abi = Filters::int($post['abilita']);
             $grado = Filters::int($post['grado']);
 
-            DB::queryStmt("DELETE FROM abilita_extra WHERE abilita='{$abi}' AND grado='{$grado}' LIMIT 1", [
+            DB::queryStmt("DELETE FROM abilita_extra WHERE abilita=:abi AND grado=:grado LIMIT 1", [
                 'abi' => $abi,
                 'grado' => $grado,
             ]);
@@ -188,14 +188,14 @@ class AbilitaExtra extends Abilita
                 'swal_message' => 'Dati extra abilità eliminati.',
                 'swal_type' => 'success',
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
 }

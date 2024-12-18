@@ -1,5 +1,7 @@
 <?php
 
+use Random\RandomException;
+
 /**
  * @class Stagioni
  * @note Classe per la gestione delle stagioni
@@ -127,7 +129,7 @@ class Meteo extends BaseClass
         $chat_meteo = $this->getMeteoChat($id);
 
         // Se non esiste un meteo impostato, lo aggiorno a prescindere
-        if ( empty($chat_meteo) ) {
+        if ( !$chat_meteo->getNumRows() ) {
             return true;
         }
 
@@ -174,7 +176,7 @@ class Meteo extends BaseClass
     public function getMeteoChat(int $id, string $val = 'meteo_chat.*,mappa.meteo_city'): DBQueryInterface
     {
         return DB::queryStmt(
-            "SELECT {$val} FROM meteo_chat LEFT JOIN mappa ON mappa.id = meteo_chat.id_chat WHERE id_chat=:id LIMIT 1",
+            "SELECT $val FROM meteo_chat LEFT JOIN mappa ON mappa.id = meteo_chat.id_chat WHERE id_chat=:id LIMIT 1",
             ['id' => $id]
         );
     }
@@ -243,9 +245,9 @@ class Meteo extends BaseClass
 
         if ( !empty($meteo_data['meteo']) ) {
             return $meteo_data;
-        } else {
-            die('Impossibile derivare il meteo');
         }
+
+        die('Impossibile derivare il meteo');
     }
 
     /**
@@ -425,7 +427,7 @@ class Meteo extends BaseClass
         $condizioni = MeteoStagioni::getInstance()->getAllSeasonCondition($stagione_id);
         shuffle($condizioni);
 
-        $rand = rand(0, 100);
+        $rand = random_int(0, 100);
         $percentage = 0;
         foreach ( $condizioni as $condizione ) {
             $percentage += Filters::int($condizione['percentuale']);
@@ -467,10 +469,11 @@ class Meteo extends BaseClass
      * @note Calcola la temperatura di una stagione
      * @param array $stagione
      * @return int
+     * @throws RandomException
      */
     public function generateTemp(array $stagione): int
     {
-        $temp = rand($stagione['minima'], $stagione['massima']);
+        $temp = random_int($stagione['minima'], $stagione['massima']);
         return Filters::int($temp);
     }
 
@@ -512,18 +515,18 @@ class Meteo extends BaseClass
                 CURLOPT_TIMEOUT => 0,
                 CURLOPT_FOLLOWLOCATION => true,
                 CURLOPT_CUSTOMREQUEST => 'GET',
-                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_SSL_VERIFYPEER => true,
             ]);
             $response = curl_exec($curl);
-            $result = json_decode($response, true);
+            $result = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
             if ( curl_errno($curl) ) {
                 echo 'Error:' . curl_error($curl);
             }
             curl_close($curl);
             return ($result);
-        } else {
-            die('Città non selezionata per il meteo o apikey mancante');
         }
+
+        die('Città non selezionata per il meteo o apikey mancante');
     }
 
     /**
@@ -538,7 +541,7 @@ class Meteo extends BaseClass
     {
 
         if ( empty($city) ) {
-            $city = Functions::get_constant('WEATHER_WEBAPI_CITY');
+            $city = (string)Functions::get_constant('WEATHER_WEBAPI_CITY');
         }
 
         $api = $this->getWebApiWeather($city);
@@ -546,10 +549,10 @@ class Meteo extends BaseClass
         $weather = $api['weather'][0];
         $icon = $weather['icon'];
         $meteo = $weather['description'];
-        $vento = ($this->activeWind()) ? "{$this->windValToText($api['wind']['speed'])}" : '';
+        $vento = ($this->activeWind()) ? $this->windValToText($api['wind']['speed']) : '';
         $temp = Filters::int($api['main']['temp']);
 
-        $img = ($this->weather_webapi_icon) ? "http://openweathermap.org/img/wn/{$icon}" : "imgs/meteo/{$icon}";
+        $img = ($this->weather_webapi_icon) ? "http://openweathermap.org/img/wn/$icon" : "imgs/meteo/$icon";
         $img .= (!$this->weather_webapi_icon) ? ".png" : $this->weather_webapi_icon_format;
 
         return [
@@ -636,14 +639,14 @@ class Meteo extends BaseClass
                 'swal_message' => 'Condizioni meteo chat modificate.',
                 'swal_type' => 'success',
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 
@@ -661,22 +664,22 @@ class Meteo extends BaseClass
         # Inizializzo dati necessari
         $year = date('Y');
         $month = date('n');
-        $days = date('j');
+        $days = (int)date('j');
 
         # Se è prima di aprile sottraggo un anno
         if ( $month < 4 ) {
-            $year = $year - 1;
-            $month = $month + 12;
+            --$year;
+            $month += 12;
         }
         # Eseguo calcoli astronomici
         $days_y = 365.25 * $year;
         $days_m = 30.42 * $month;
-        $plenilunio = $days_y + $days_m + $days - 694039.09;
-        $plenilunio = $plenilunio / 29.53;
-        $phase = intval($plenilunio);
-        $plenilunio = $plenilunio - $phase;
+        $plenilunio = ($days_y + $days_m + $days) - 694039.09;
+        $plenilunio /= 29.53;
+        $phase = $plenilunio;
+        $plenilunio -= $phase;
         $phase = round($plenilunio * 8 + 0.5);
-        if ( $phase == 8 ) {
+        if ( (int)$phase === 8 ) {
             $phase = 0;
         }
         # Creo gli array delle fasi
@@ -684,7 +687,7 @@ class Meteo extends BaseClass
         $phase_title = ['Nuova', 'Crescente', 'Primo Quarto', 'Gibbosa crescente', 'Piena', 'Gibbosa calante', 'Ultimo quarto', 'Calante'];
         # Estraggo e ritorno la fase calcolata
 
-        $img = Router::getImgsDir() . "luna/{$phase_array[$phase]}.png";
+        $img = Router::getImgsDir() . "luna/$phase_array[$phase].png";
 
         return [
             'Img' => $img,

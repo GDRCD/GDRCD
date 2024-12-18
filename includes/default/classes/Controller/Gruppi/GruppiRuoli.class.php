@@ -57,7 +57,7 @@ class GruppiRuoli extends Gruppi
      */
     public function getAllRoles(string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM gruppi_ruoli WHERE 1", []);
+        return DB::queryStmt("SELECT $val FROM gruppi_ruoli WHERE 1", []);
     }
 
     /**
@@ -71,7 +71,7 @@ class GruppiRuoli extends Gruppi
     public function getAllRolesByIds(array $ids, string $val = '*'): DBQueryInterface
     {
         $toSearch = implode(',', $ids);
-        return DB::queryStmt("SELECT {$val} FROM gruppi_ruoli WHERE gruppo IN ({$toSearch})", []);
+        return DB::queryStmt("SELECT $val FROM gruppi_ruoli WHERE gruppo IN ($toSearch)", []);
     }
 
     /**
@@ -84,7 +84,7 @@ class GruppiRuoli extends Gruppi
      */
     public function getAllGroupRoles(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM gruppi_ruoli WHERE gruppo = :id", ['id' => $id]);
+        return DB::queryStmt("SELECT $val FROM gruppi_ruoli WHERE gruppo = :id", ['id' => $id]);
     }
 
     /**
@@ -98,7 +98,7 @@ class GruppiRuoli extends Gruppi
     public function getAllGroupMembers(int $id, string $val = 'personaggio.nome,gruppi_ruoli.nome as role,gruppi_ruoli.immagine'): DBQueryInterface
     {
         return DB::queryStmt("
-                SELECT {$val} FROM gruppi_ruoli 
+                SELECT $val FROM gruppi_ruoli 
                     LEFT JOIN personaggio_ruolo ON personaggio_ruolo.ruolo = gruppi_ruoli.id 
                     LEFT JOIN personaggio ON personaggio_ruolo.personaggio = personaggio.id 
                 WHERE gruppi_ruoli.gruppo=:id AND personaggio_ruolo.id IS NOT NULL", ['id' => $id]);
@@ -116,7 +116,7 @@ class GruppiRuoli extends Gruppi
     {
 
         return DB::queryStmt("
-                SELECT {$val} FROM gruppi_ruoli 
+                SELECT $val FROM gruppi_ruoli 
                     LEFT JOIN personaggio_ruolo ON personaggio_ruolo.ruolo = gruppi_ruoli.id 
                     LEFT JOIN personaggio ON personaggio_ruolo.personaggio = personaggio.id 
                 WHERE gruppi_ruoli.gruppo=:id AND personaggio_ruolo.id IS NOT NULL AND gruppi_ruoli.poteri = 1",
@@ -362,14 +362,14 @@ class GruppiRuoli extends Gruppi
                 'swal_type' => 'success',
                 'roles_list' => $this->listRoles(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -408,14 +408,14 @@ class GruppiRuoli extends Gruppi
                 'swal_type' => 'success',
                 'roles_list' => $this->listRoles(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -440,14 +440,14 @@ class GruppiRuoli extends Gruppi
                 'swal_type' => 'success',
                 'roles_list' => $this->listRoles(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
 
@@ -485,23 +485,23 @@ class GruppiRuoli extends Gruppi
                     'swal_message' => 'Ruolo assegnato correttamente!',
                     'swal_type' => 'success',
                 ];
-            } else {
-                return [
-                    'response' => false,
-                    'swal_title' => 'Operazione fallita!',
-                    'swal_message' => 'Il personaggio ha raggiunto il numero massimo di ruoli disponibili.',
-                    'swal_type' => 'error',
-                ];
             }
 
-        } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
+                'swal_message' => 'Il personaggio ha raggiunto il numero massimo di ruoli disponibili.',
                 'swal_type' => 'error',
             ];
+
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 
@@ -534,14 +534,14 @@ class GruppiRuoli extends Gruppi
                 'swal_type' => 'success',
             ];
 
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 

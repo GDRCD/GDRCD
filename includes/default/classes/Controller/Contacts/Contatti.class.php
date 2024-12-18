@@ -201,7 +201,7 @@ class Contatti extends BaseClass
      */
     public function getAllCharacterContact(int $pg, string $val = '*'):DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM contatti WHERE personaggio = :pg  ", ['pg' => $pg]);
+        return DB::queryStmt("SELECT $val FROM contatti WHERE personaggio = :pg  ", ['pg' => $pg]);
     }
 
     /**
@@ -214,7 +214,7 @@ class Contatti extends BaseClass
      */
     public function getContact(int $id, string $val = '*'):DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM contatti WHERE id = :id", ['id' => $id]);
+        return DB::queryStmt("SELECT $val FROM contatti WHERE id = :id", ['id' => $id]);
     }
 
     /*** CONTACT INDEX ***/
@@ -264,8 +264,8 @@ class Contatti extends BaseClass
             'Controlli',
         ];
         $links = [
-            ['href' => "/main.php?page=scheda/index&op=contatti_new&id_pg={$id_pg}", 'text' => 'Nuovo contatto', 'separator' => true],
-            ['href' => "/main.php?page=scheda/index&id_pg={$id_pg}", 'text' => ' Torna indietro'],
+            ['href' => "/main.php?page=scheda/index&op=contatti_new&id_pg=$id_pg", 'text' => 'Nuovo contatto', 'separator' => true],
+            ['href' => "/main.php?page=scheda/index&id_pg=$id_pg", 'text' => ' Torna indietro'],
         ];
 
         return [
@@ -333,8 +333,8 @@ class Contatti extends BaseClass
     public function filteredCharactersList(int $id_pg): string
     {
         $contattiPresenti = $this->contattiPresenti($id_pg);
-        $extraQuery = !empty($contattiPresenti) ? ",{$contattiPresenti}" : '';
-        $lista = Personaggio::getInstance()->getAllPG('id, nome', "id NOT IN ('{$id_pg}'{$extraQuery})", 'ORDER BY nome');
+        $extraQuery = !empty($contattiPresenti) ? ",$contattiPresenti" : '';
+        $lista = Personaggio::getInstance()->getAllPG('id, nome', "id NOT IN ('$id_pg'$extraQuery)", 'ORDER BY nome');
         return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', '', $lista);
     }
 
@@ -370,14 +370,14 @@ class Contatti extends BaseClass
                 'swal_type' => 'success',
             ];
 
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Permesso negato!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Permesso negato!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -408,14 +408,14 @@ class Contatti extends BaseClass
                 'swal_message' => 'Contatto modificato con successo.',
                 'swal_type' => 'success',
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Permesso negato!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Permesso negato!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -444,13 +444,13 @@ class Contatti extends BaseClass
                 'swal_type' => 'success',
                 'contatti_list' => $this->ContactList($owner),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Permesso negato!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Permesso negato!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 }

@@ -58,7 +58,7 @@ class OnlineStatus extends BaseClass
         $last_refresh = Filters::out($pg_data['online_last_refresh']);
         $entrata = Filters::out($pg_data['ora_entrata']);
 
-        return (($last_refresh < $entrata) || empty($last_refresh) || ($last_refresh == 0));
+        return (($last_refresh < $entrata) || empty($last_refresh));
     }
 
 
@@ -88,7 +88,7 @@ class OnlineStatus extends BaseClass
      */
     public function getStatus(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM online_status WHERE id=:id LIMIT 1", [
+        return DB::queryStmt("SELECT $val FROM online_status WHERE id=:id LIMIT 1", [
             'id' => $id,
         ]);
     }
@@ -105,8 +105,8 @@ class OnlineStatus extends BaseClass
      */
     public function getPgStatus(int $pg, int $type, string $last_refresh = '', string $val = '*'): DBQueryInterface
     {
-        $last_refresh = (!empty($last_refresh)) ? " AND last_refresh >= '{$last_refresh}' " : '';
-        return DB::queryStmt("SELECT {$val} FROM personaggio_online_status WHERE personaggio=:pg AND type=:type {$last_refresh} LIMIT 1", [
+        $last_refresh = (!empty($last_refresh)) ? " AND last_refresh >= '$last_refresh' " : '';
+        return DB::queryStmt("SELECT $val FROM personaggio_online_status WHERE personaggio=:pg AND type=:type $last_refresh LIMIT 1", [
             'pg' => $pg,
             'type' => $type,
         ]);
@@ -201,13 +201,13 @@ class OnlineStatus extends BaseClass
 
             $list = OnlineStatusType::getInstance()->getStatusByType($type_id);
 
-            $html .= "<optgroup label='{$type_label}'>";
+            $html .= "<optgroup label='$type_label'>";
 
             foreach ( $list as $row ) {
                 $id = Filters::int($row['id']);
                 $name = Filters::out($row['text']);
 
-                $html .= "<option value='{$id}'>{$name}</option>";
+                $html .= "<option value='$id'>$name</option>";
             }
 
             $html .= "</optgroup>";
@@ -301,14 +301,14 @@ class OnlineStatus extends BaseClass
                 'swal_message' => 'Status online settato correttamente.',
                 'swal_type' => 'success',
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Errore, funzione non abilitata.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Errore, funzione non abilitata.',
+            'swal_type' => 'error',
+        ];
 
     }
 
@@ -343,14 +343,14 @@ class OnlineStatus extends BaseClass
                 'status_list' => $this->listStatus(),
             ];
 
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 
@@ -384,14 +384,14 @@ class OnlineStatus extends BaseClass
                 'status_list' => $this->listStatus(),
             ];
 
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -420,13 +420,13 @@ class OnlineStatus extends BaseClass
                 'status_list' => $this->listStatus(),
             ];
 
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 }

@@ -33,7 +33,7 @@ class ContattiCategorie extends Contatti
      */
     public function getCategory(int $id, string $val = '*'):DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM contatti_categorie WHERE id=:id LIMIT 1", ['id' => $id]);
+        return DB::queryStmt("SELECT $val FROM contatti_categorie WHERE id=:id LIMIT 1", ['id' => $id]);
     }
 
     /**
@@ -45,7 +45,7 @@ class ContattiCategorie extends Contatti
      */
     public function getAllCategories(string $val = '*'):DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM contatti_categorie WHERE 1", []);
+        return DB::queryStmt("SELECT $val FROM contatti_categorie WHERE 1", []);
     }
 
     /**** AJAX ****/
@@ -106,14 +106,14 @@ class ContattiCategorie extends Contatti
                 'swal_type' => 'success',
                 'categories_list' => $this->listCategories(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -141,14 +141,14 @@ class ContattiCategorie extends Contatti
                 'swal_type' => 'success',
                 'categories_list' => $this->listCategories(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -175,13 +175,13 @@ class ContattiCategorie extends Contatti
                 'swal_type' => 'success',
                 'categories_list' => $this->listCategories(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 }

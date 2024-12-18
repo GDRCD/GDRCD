@@ -195,7 +195,7 @@ class SchedaAbilita extends Scheda
                         $req_data = $abi_class->getAbility($rif, 'nome');
                         $nome = Filters::out($req_data['nome']);
 
-                        $data['requirement'] .= " {$nome} {$rif_lvl}, ";
+                        $data['requirement'] .= " $nome $rif_lvl, ";
 
                         break;
                     case $req_class->isTypeStat($tipo):
@@ -203,7 +203,7 @@ class SchedaAbilita extends Scheda
                             $stat_class = Statistiche::getInstance();
                             $stat_data = $stat_class->getStat($rif);
                             $nome = Filters::out($stat_data['nome']);
-                            $data['requirement'] .= " {$nome} {$rif_lvl}, ";
+                            $data['requirement'] .= " $nome $rif_lvl, ";
                         }
                         break;
                 }

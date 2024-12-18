@@ -57,7 +57,7 @@ class Personaggio extends BaseClass
      */
     public static function getPgData(int $pg, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM personaggio WHERE id=:id LIMIT 1", ['id' => $pg]);
+        return DB::queryStmt("SELECT $val FROM personaggio WHERE id=:id LIMIT 1", ['id' => $pg]);
     }
 
     /**
@@ -71,7 +71,7 @@ class Personaggio extends BaseClass
      */
     public function getAllPG(string $val = '*', string $where = '1', string $order = ''):DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM personaggio  WHERE {$where} {$order}", []);
+        return DB::queryStmt("SELECT $val FROM personaggio  WHERE $where $order", []);
     }
 
     /***** LISTS *****/
@@ -80,10 +80,11 @@ class Personaggio extends BaseClass
      * @fn listPgs
      * @note Genera gli option per i personaggi
      * @param int $selected
+     * @param string $label
      * @return string
      * @throws Throwable
      */
-    public function listPgs(int $selected = 0, $label = 'Personaggi'): string
+    public function listPgs(int $selected = 0, string $label = 'Personaggi'): string
     {
         $pgs = $this->getAllPg();
         return Template::getInstance()->startTemplate()->renderSelect('id', 'nome', $selected, $pgs, $label);
@@ -126,10 +127,10 @@ class Personaggio extends BaseClass
     public static function isMyPg(int $pg): bool
     {
 
-        $pg = Filters::in($pg);
+        $pg = Filters::int($pg);
         $me = Functions::getInstance()->getMyId();
 
-        return ($pg == $me);
+        return ($pg === $me);
     }
 
     /*** FUNCTIONS  ***/
@@ -159,6 +160,6 @@ class Personaggio extends BaseClass
      */
     public static function updatePgData(int $id, string $set, array $params): void
     {
-        DB::queryStmt("UPDATE personaggio SET {$set} WHERE id='{$id}' LIMIT 1", $params);
+        DB::queryStmt("UPDATE personaggio SET $set WHERE id='$id' LIMIT 1", $params);
     }
 }

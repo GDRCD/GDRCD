@@ -168,7 +168,7 @@ class Banca extends BaseClass
                         "autore" => $this->me_id,
                         "destinatario" => $pg,
                         "tipo" => BONIFICO,
-                        "testo" => "Inviati {$money} a {$pg_name} per '{$causal}'",
+                        "testo" => "Inviati $money a $pg_name per '$causal'",
                     ]);
 
                     #TODO Aggiunta messaggio destinatario

@@ -28,7 +28,7 @@ class MeteoVenti extends Meteo
      */
     public function getAllWinds(string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM meteo_venti ORDER BY nome", []);
+        return DB::queryStmt("SELECT $val FROM meteo_venti ORDER BY nome", []);
     }
 
     /**
@@ -41,7 +41,7 @@ class MeteoVenti extends Meteo
      */
     public function getWind(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM meteo_venti WHERE id=:id LIMIT 1", ['id' => $id]);
+        return DB::queryStmt("SELECT $val FROM meteo_venti WHERE id=:id LIMIT 1", ['id' => $id]);
     }
 
     /**** LIST ****/
@@ -140,14 +140,14 @@ class MeteoVenti extends Meteo
                 'swal_type' => 'success',
                 'meteo_venti' => $this->listWinds(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -179,14 +179,14 @@ class MeteoVenti extends Meteo
                 'meteo_venti' => $this->listWinds(),
 
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -211,14 +211,14 @@ class MeteoVenti extends Meteo
                 'swal_type' => 'success',
                 'meteo_venti' => $this->listWinds(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
 }

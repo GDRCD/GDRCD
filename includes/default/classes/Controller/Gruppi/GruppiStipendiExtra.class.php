@@ -40,7 +40,7 @@ class GruppiStipendiExtra extends Gruppi
     public function getAllExtraEarn(string $val = '*'): DBQueryInterface
     {
         return DB::queryStmt(
-            "SELECT {$val} FROM gruppi_stipendi_extra  WHERE 1",
+            "SELECT $val FROM gruppi_stipendi_extra  WHERE 1",
             []
         );
     }
@@ -56,7 +56,7 @@ class GruppiStipendiExtra extends Gruppi
     public function getExtraEarn(int $id, string $val = '*'): DBQueryInterface
     {
         return DB::queryStmt(
-            "SELECT {$val} FROM gruppi_stipendi_extra WHERE id = :id LIMIT 1",
+            "SELECT $val FROM gruppi_stipendi_extra WHERE id = :id LIMIT 1",
             [ 'id' => $id ]
         );
     }
@@ -72,7 +72,7 @@ class GruppiStipendiExtra extends Gruppi
     public function getPgExtraEarns(int $pg, string $val = '*'): DBQueryInterface
     {
         return DB::queryStmt(
-            "SELECT {$val} FROM gruppi_stipendi_extra 
+            "SELECT $val FROM gruppi_stipendi_extra 
                    LEFT JOIN gruppi ON (gruppi.id = gruppi_stipendi_extra.gruppo)
                    WHERE gruppi_stipendi_extra.personaggio = :pg ",
             [ 'pg' => $pg ]
@@ -92,13 +92,13 @@ class GruppiStipendiExtra extends Gruppi
         if(!empty($groups)) {
             $toSearch = implode(',', $groups);
             return DB::queryStmt(
-                "SELECT {$val} FROM gruppi_stipendi_extra 
-                  WHERE gruppi_stipendi_extra.gruppo IN ({$toSearch}) ",
+                "SELECT $val FROM gruppi_stipendi_extra 
+                  WHERE gruppi_stipendi_extra.gruppo IN ($toSearch) ",
                 []
             );
-        } else{
-            return [];
         }
+
+        return [];
     }
 
 
@@ -214,14 +214,14 @@ class GruppiStipendiExtra extends Gruppi
                 'swal_type' => 'success',
                 'earns_list' => $this->listExtraEarns(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -264,14 +264,14 @@ class GruppiStipendiExtra extends Gruppi
                 'swal_type' => 'success',
                 'earns_list' => $this->listExtraEarns(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -301,14 +301,14 @@ class GruppiStipendiExtra extends Gruppi
                 'swal_type' => 'success',
                 'earns_list' => $this->listExtraEarns(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /*** AMMINISTRAZIONE GILDE ***/
@@ -355,14 +355,14 @@ class GruppiStipendiExtra extends Gruppi
                 'swal_type' => 'success',
                 'earns_list' => $this->listAvailableExtraEarns(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -405,14 +405,14 @@ class GruppiStipendiExtra extends Gruppi
                 'swal_type' => 'success',
                 'earns_list' => $this->listAvailableExtraEarns(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -442,13 +442,13 @@ class GruppiStipendiExtra extends Gruppi
                 'swal_type' => 'success',
                 'earns_list' => $this->listAvailableExtraEarns(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 }

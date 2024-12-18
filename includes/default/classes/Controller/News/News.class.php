@@ -69,7 +69,7 @@ class News extends BaseClass
     public function getNews
     (int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM news WHERE id=:id LIMIT 1", ['id' => $id]);
+        return DB::queryStmt("SELECT $val FROM news WHERE id=:id LIMIT 1", ['id' => $id]);
     }
 
     /**
@@ -88,7 +88,7 @@ class News extends BaseClass
             $extra_query = ' AND attiva = true ';
         }
 
-        return DB::queryStmt("SELECT {$val} FROM news WHERE 1 {$extra_query} ORDER BY creata_il DESC", []);
+        return DB::queryStmt("SELECT $val FROM news WHERE 1 $extra_query ORDER BY creata_il DESC", []);
     }
 
     /**
@@ -108,7 +108,7 @@ class News extends BaseClass
             $extra_query = ' AND attiva = true ';
         }
 
-        return DB::queryStmt("SELECT {$val} FROM news WHERE tipo=:type {$extra_query}", [
+        return DB::queryStmt("SELECT $val FROM news WHERE tipo=:type $extra_query", [
             'type' => $type,
         ]);
     }
@@ -135,7 +135,7 @@ class News extends BaseClass
      */
     public function getCountNewsToRead(int $pg_id): int
     {
-        $news_list = News::getInstance()->getAllNews();
+        $news_list = self::getInstance()->getAllNews();
         $total = 0;
 
         foreach ( $news_list as $news ) {
@@ -426,15 +426,14 @@ class News extends BaseClass
                 'swal_type' => 'success',
                 'news_list' => $this->listNews(false),
             ];
-        } else {
-
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -473,15 +472,14 @@ class News extends BaseClass
                 'news_list' => $this->listNews(false),
             ];
 
-        } else {
-
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -510,14 +508,14 @@ class News extends BaseClass
                 'news_list' => $this->listNews(false),
             ];
 
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 }

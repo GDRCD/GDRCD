@@ -40,7 +40,7 @@ class ForumPosts extends Forum
      */
     public function getPost(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM forum_posts WHERE id=:id LIMIT 1", ['id' => $id]);
+        return DB::queryStmt("SELECT $val FROM forum_posts WHERE id=:id LIMIT 1", ['id' => $id]);
     }
 
     /**
@@ -57,10 +57,10 @@ class ForumPosts extends Forum
         $comments_number = Functions::get_constant('FORUM_COMMENTS_FOR_PAGE');
         $initial_index = ($pagination - 1) * $comments_number;
 
-        return DB::queryStmt("SELECT {$val} FROM forum_posts 
+        return DB::queryStmt("SELECT $val FROM forum_posts 
              WHERE (id=:id OR id_padre =:id_padre )
-             ORDER BY id_padre ASC, data ASC
-             LIMIT {$initial_index}, {$comments_number}
+             ORDER BY id_padre , data
+             LIMIT $initial_index, $comments_number
              ", ['id' => $id, 'id_padre' => $id]);
     }
 
@@ -95,7 +95,7 @@ class ForumPosts extends Forum
         $posts_number = Functions::get_constant('FORUM_POSTS_FOR_PAGE');
         $initial_index = ($pagination - 1) * $posts_number;
 
-        return DB::queryStmt("SELECT * FROM forum_posts WHERE id_forum = :forum AND eliminato=0 AND id_padre = 0 ORDER BY importante DESC, `data` DESC LIMIT {$initial_index}, {$posts_number}",
+        return DB::queryStmt("SELECT * FROM forum_posts WHERE id_forum = :forum AND eliminato=0 AND id_padre = 0 ORDER BY importante DESC, `data` DESC LIMIT $initial_index, $posts_number",
             ['forum' => $forum_id]
         );
     }
@@ -158,7 +158,7 @@ class ForumPosts extends Forum
      */
     public function getPostHistory(int $post_id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM forum_posts_updates WHERE post = :post ORDER BY modificato_il DESC", ['post' => $post_id]);
+        return DB::queryStmt("SELECT $val FROM forum_posts_updates WHERE post = :post ORDER BY modificato_il DESC", ['post' => $post_id]);
     }
 
     /*** CONTROLS ***/
@@ -209,14 +209,14 @@ class ForumPosts extends Forum
                 'swal_message' => 'Post inserito correttamente.',
                 'swal_type' => 'success',
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Errore!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Errore!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 
@@ -261,14 +261,14 @@ class ForumPosts extends Forum
                 'swal_message' => 'Post modificato correttamente.',
                 'swal_type' => 'success',
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Errore!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Errore!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 
@@ -300,14 +300,14 @@ class ForumPosts extends Forum
                 'swal_type' => 'success',
                 'new_view' => $this->singlePost($this->getOriginalPostId($post_id), $pagination),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Errore!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Errore!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 
@@ -345,14 +345,14 @@ class ForumPosts extends Forum
                 'swal_message' => 'Post commentato correttamente.',
                 'swal_type' => 'success',
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Errore!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Errore!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 
@@ -384,14 +384,14 @@ class ForumPosts extends Forum
                 'swal_type' => 'success',
                 'new_view' => $this->singlePost($this->getOriginalPostId($post_id), $pagination),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Errore!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Errore!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 
@@ -423,14 +423,14 @@ class ForumPosts extends Forum
                 'swal_type' => 'success',
                 'new_view' => $this->singlePost($this->getOriginalPostId($post_id), $pagination),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Errore!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Errore!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 
@@ -462,14 +462,14 @@ class ForumPosts extends Forum
                 'swal_type' => 'success',
                 'new_view' => $this->singlePost($this->getOriginalPostId($post_id), $pagination),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Errore!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Errore!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 
@@ -572,7 +572,7 @@ class ForumPosts extends Forum
 
         for ( $i = 1; $i <= ceil($posts_number / $posts_number_for_page); $i++ ) {
             $pages[] = [
-                'url' => "/main.php?page=forum/index&op=posts&forum_id={$forum_id}&pagination={$i}",
+                'url' => "/main.php?page=forum/index&op=posts&forum_id=$forum_id&pagination=$i",
                 'page' => $i,
             ];
         }
@@ -597,7 +597,7 @@ class ForumPosts extends Forum
         $original_post = $this->getPost($post_id);
         $admin_permission = ForumPermessi::getInstance()->permissionForumAdmin();
 
-        if ( !Filters::bool($original_post['eliminato']) || $admin_permission ) {
+        if ( $admin_permission || !Filters::bool($original_post['eliminato']) ) {
             $posts = $this->getPostCommentsPaginated($post_id, $pagination);
 
             foreach ( $posts as $post ) {
@@ -753,14 +753,14 @@ class ForumPosts extends Forum
                 'swal_type' => 'success',
             ];
 
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Non hai i permessi per condividere questo post.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Non hai i permessi per condividere questo post.',
+            'swal_type' => 'error',
+        ];
 
     }
 }

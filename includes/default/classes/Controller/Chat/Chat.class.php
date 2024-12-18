@@ -1,5 +1,7 @@
 <?php
 
+use Random\RandomException;
+
 /**
  * @class Chat
  * @note Classe che gestisce la chat
@@ -192,7 +194,7 @@ class Chat extends BaseClass
     public function getChatData(int $id, string $val = '*'): DBQueryInterface
     {
         return DB::queryStmt(
-            "SELECT {$val} FROM mappa WHERE id=:id LIMIT 1",
+            "SELECT $val FROM mappa WHERE id=:id LIMIT 1",
             [
                 'id' => $id,
             ]
@@ -202,13 +204,13 @@ class Chat extends BaseClass
     /**
      * @fn getActions
      * @note Estrai le azioni in chat che devono essere visualizzate
-     * @param int $chat
+     * @param int|string $chat
      * @param string $start
      * @param string $end
      * @return DBQueryInterface
      * @throws Throwable
      */
-    public function getActionsByTime(int $chat, string $start, string $end): DBQueryInterface
+    public function getActionsByTime(int|string $chat, string $start, string $end): DBQueryInterface
     {
 
         $start = Filters::out($start);
@@ -237,7 +239,7 @@ class Chat extends BaseClass
         $last_action_id = Session::read('last_action_id');
 
         # Se l'ultima azione non è zero e quindi non sono appena entrato in chat
-        $extra_query = ($last_action_id > 0) ? " AND chat.id > '{$last_action_id}' " : '';
+        $extra_query = ($last_action_id > 0) ? " AND chat.id > '$last_action_id' " : '';
 
         # Estraggo le azioni n base alle condizioni indicate
         # ! Lasciare extra_query in questo modo, altrimenti non funziona
@@ -293,16 +295,16 @@ class Chat extends BaseClass
 
         if ( !empty($excluded) ) {
             $implode = implode(',', $excluded);
-            $extra_query = " AND personaggio_oggetto.id NOT IN ({$implode})";
+            $extra_query = " AND personaggio_oggetto.id NOT IN ($implode)";
         }
 
         # Estraggo i bonus di tutti gli oggetti equipaggiati
-        $objects = DB::query("SELECT oggetto.bonus_car{$car},personaggio_oggetto.id
+        $objects = DB::query("SELECT oggetto.bonus_car$car,personaggio_oggetto.id
                                         FROM personaggio_oggetto 
                                         LEFT JOIN oggetto 
                                         ON (personaggio_oggetto.oggetto = oggetto.id)
                                          
-                                        WHERE personaggio_oggetto.personaggio ='{$pg}' {$extra_query}
+                                        WHERE personaggio_oggetto.personaggio ='$pg' {$extra_query}
                                         AND personaggio_oggetto.indossato > 0 AND oggetto.indossabile = 1
 
                                         ", 'result');
@@ -310,7 +312,7 @@ class Chat extends BaseClass
         # Per ogni oggetto equipaggiato
         foreach ( $objects as $object ) {
             # Aggiungo il suo bonus al totale
-            $total_bonus += Filters::int($object["bonus_car{$car}"]);
+            $total_bonus += Filters::int($object["bonus_car$car"]);
         }
 
         return $total_bonus;
@@ -336,7 +338,7 @@ class Chat extends BaseClass
         $luogo_id = Filters::int($luogo['ultimo_luogo']);
 
         // Ritorno il risultato ed eventuale nuova direzione per redirect
-        return ['response' => ($dir == $luogo_id), 'new_dir' => $luogo_id];
+        return ['response' => ($dir === $luogo_id), 'new_dir' => $luogo_id];
     }
 
     /**
@@ -380,11 +382,8 @@ class Chat extends BaseClass
         if ( !$privata ) {
             $resp = true;
         } # Se e' privata - TODO da testare per bene
-        else {
-            # Se faccio parte degli invitati o sono il proprietario e la stanza non è scaduta
-            if ( $this->pvtExpired($scadenza) && $this->pvtInvited($proprietario, $invitati) ) {
-                $resp = true;
-            }
+        else if ( $this->pvtExpired($scadenza) && $this->pvtInvited($proprietario, $invitati) ) {
+            $resp = true;
         }
 
         # Ritorno il risultato
@@ -411,7 +410,7 @@ class Chat extends BaseClass
         $invitato = in_array($this->me, $inv_array);
 
         # Se sono invitato o sono il proprietario, posso accedere
-        return (($proprietario == $this->me) || ($invitato));
+        return (($proprietario === $this->me) || ($invitato));
     }
 
     /**
@@ -530,12 +529,12 @@ class Chat extends BaseClass
         $colore_parlato = ($colore_parlato) ?? '';
 
         $search = [
-            '#\&lt;(.+?)\&gt;#is',
-            '#\[(.+?)\]#is',
+            '#&lt;(.+?)&gt;#is',
+            '#\[(.+?)]#is',
         ];
         $replace = [
-            "<span class='color2' style='color:{$colore_parlato}'>&lt;$1&gt;</span>",
-            "<span class='color2' style='color:{$colore_parlato}'>&lt;$1&gt;</span>",
+            "<span class='color2' style='color:$colore_parlato'>&lt;$1&gt;</span>",
+            "<span class='color2' style='color:$colore_parlato'>&lt;$1&gt;</span>",
         ];
 
         return preg_replace($search, $replace, $str);
@@ -544,11 +543,11 @@ class Chat extends BaseClass
     /**
      * @fn chatIcons
      * @note Funzione che si occupa dell'estrazione delle icone chat
-     * @param string $mittente
+     * @param string|int $mittente
      * @return array
      * @throws Throwable
      */
-    private function chatIcons(string $mittente): array
+    private function chatIcons(string|int $mittente): array
     {
         # Filtro il mittente passato
         $mittente = Filters::int($mittente);
@@ -561,7 +560,7 @@ class Chat extends BaseClass
                 SELECT razze.icon,razze.nome AS nome_razza,personaggio.sesso
                 FROM personaggio 
                 LEFT JOIN razze ON (razze.id = personaggio.razza)
-                WHERE personaggio.id = '{$mittente}'", 'result');
+                WHERE personaggio.id = '$mittente'", 'result');
 
         foreach ( $races as $race ) {
             $icons[] = [
@@ -630,7 +629,7 @@ class Chat extends BaseClass
             $id = Filters::out($azione['id']);
 
             # Inizio html con una classe comune e una di tipologia, uguale per tutte
-            $html .= "<div class='singola_azione chat_row_{$tipo}'>";
+            $html .= "<div class='singola_azione chat_row_$tipo'>";
 
             # Creo html in base al tipo indicato
             switch ( $tipo ) {
@@ -748,14 +747,14 @@ class Chat extends BaseClass
         $testo = $this->formattedText($testo);
 
         # Se sono io il mittente
-        if ( $this->me_id == $mittente ) {
-            $intestazione = "Hai sussurrato a {$destinatario_nome}: ";
+        if ( $this->me_id === $mittente ) {
+            $intestazione = "Hai sussurrato a $destinatario_nome: ";
         } # Se sono io il destinatario
-        else if ( $this->me_id == $destinatario ) {
-            $intestazione = "{$mittente_nome} ti ha sussurrato: ";
+        else if ( $this->me_id === $destinatario ) {
+            $intestazione = "$mittente_nome ti ha sussurrato: ";
         } # Se non sono nessuno di entrambi ma sono uno staffer
         else if ( $this->permissionChatModerator() ) {
-            $intestazione = "{$mittente_nome} ha sussurrato a {$destinatario_nome}";
+            $intestazione = "$mittente_nome ha sussurrato a $destinatario_nome";
         }
 
         # Se l'intestazione non è vuota, significa che posso leggere il messaggio e lo stampo
@@ -926,7 +925,7 @@ class Chat extends BaseClass
 
     /**
      * @fn htmlOnlyText
-     * @note Stampa html per le tipologie che necessitano solo di ora e messaggio (Dado,Oggetto,Caccia/Invita)
+     * @note Stampa html per le tipologie che necessitano solo di ora e messaggio (Dado, Oggetto, Caccia/Invita)
      * @param array $azione
      * @return string
      * @throws Throwable
@@ -962,6 +961,7 @@ class Chat extends BaseClass
      * @note Stampa il testo passato come immagine
      * @param array $azione
      * @return string
+     * @throws Throwable
      */
     private function htmlImage(array $azione): string
     {
@@ -1024,12 +1024,12 @@ class Chat extends BaseClass
 
             # Ritorno il risultato dell'invio ed eventuale messaggio di errore
             return $resp;
-        } else {
-            return [
-                'response' => false,
-                'error' => 'Permesso negato.',
-            ];
         }
+
+        return [
+            'response' => false,
+            'error' => 'Permesso negato.',
+        ];
     }
 
     /**
@@ -1111,8 +1111,9 @@ class Chat extends BaseClass
      * @note Funzione che si occupa del salvataggio dell'azione in DB
      * @param array $post
      * @throws Throwable
+     *  @return void
      */
-    private function saveAction(array $post)
+    private function saveAction(array $post): void
     {
         # Filtro le variabili necessarie
         $tag = Filters::in($post['tag']);
@@ -1177,13 +1178,13 @@ class Chat extends BaseClass
                 'swal_message' => 'Lancio dadi avvenuto con successo.',
                 'swal_type' => 'success',
             ];
-        } else {
-            return ['response' => true,
-                'swal_title' => 'Operazione riuscita!',
-                'swal_message' => 'Lancio dadi non abilitato in questa chat.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return ['response' => true,
+            'swal_title' => 'Operazione riuscita!',
+            'swal_message' => 'Lancio dadi non abilitato in questa chat.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -1220,13 +1221,13 @@ class Chat extends BaseClass
                 'swal_type' => 'success',
             ];
 
-        } else {
-            return ['response' => true,
-                'swal_title' => 'Operazione riuscita!',
-                'swal_message' => 'Lancio dadi non abilitato in questa chat.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return ['response' => true,
+            'swal_title' => 'Operazione riuscita!',
+            'swal_message' => 'Lancio dadi non abilitato in questa chat.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -1287,7 +1288,6 @@ class Chat extends BaseClass
         $equipped_objects = PersonaggioOggetti::getInstance()->getAllPgObjectsByEquipped($this->me_id, true, 'oggetto.id');
 
         $total = 0;
-        $number = 0;
 
         foreach ( $equipped_objects as $object ) {
             $object_id = Filters::int($object['id']);
@@ -1296,7 +1296,6 @@ class Chat extends BaseClass
 
             if ( $object_val > 0 ) {
                 $total += $object_val;
-                $number++;
             }
         }
 
@@ -1310,11 +1309,12 @@ class Chat extends BaseClass
      * @fn calcBaseRollDice
      * @note Funzione che si occupa del lancio del dado base
      * @return int
+     * @throws RandomException
      */
     private function calcBaseRollDice(): int
     {
         # Lancio il dado
-        return ($this->chat_dice) ? rand(1, $this->chat_dice_base) : 0;
+        return ($this->chat_dice) ? random_int(1, $this->chat_dice_base) : 0;
     }
 
     /**
@@ -1323,6 +1323,7 @@ class Chat extends BaseClass
      * @param int $num
      * @param int $face
      * @return int
+     * @throws RandomException
      */
     public function rollCustomDice(int $num, int $face): int
     {
@@ -1331,7 +1332,7 @@ class Chat extends BaseClass
         $diced = 0;
 
         while ( $diced < $num ) {
-            $total += rand(1, $face);
+            $total += random_int(1, $face);
             $diced++;
         }
 
@@ -1368,7 +1369,7 @@ class Chat extends BaseClass
 
                 $pg_name = Personaggio::nameFromId($this->me_id);
 
-                $text = "{$pg_name} utilizza {$used_charges} cariche dell'oggetto '{$obj_name}'.";
+                $text = "$pg_name utilizza $used_charges cariche dell'oggetto '$obj_name'.";
 
                 $this->sendAction([
                     'tipo' => 'O',
@@ -1385,13 +1386,8 @@ class Chat extends BaseClass
                     );
 
                     $new_charges = ($obj_charges - $used_charges);
-                    $alert = "Cariche rimaste per {$obj_name}: $new_charges.";
+                    $alert = "Cariche rimaste per $obj_name: $new_charges.";
 
-                    $this->sendSussurro([
-                        'tipo' => 'S',
-                        'wispTo' => $this->me_id,
-                        'testo' => $alert,
-                    ]);
                 } else {
                     DB::queryStmt(
                         'DELETE FROM personaggio_oggetto WHERE id = :id',
@@ -1400,34 +1396,35 @@ class Chat extends BaseClass
                         ]
                     );
 
-                    $alert = "L'oggetto {$obj_name} è stato distrutto.";
+                    $alert = "L'oggetto $obj_name è stato distrutto.";
 
-                    $this->sendSussurro([
-                        'tipo' => 'S',
-                        'wispTo' => $this->me_id,
-                        'testo' => $alert,
-                    ]);
                 }
+
+                $this->sendSussurro([
+                    'tipo' => 'S',
+                    'wispTo' => $this->me_id,
+                    'testo' => $alert,
+                ]);
 
                 return ['response' => true,
                     'swal_title' => 'Operazione riuscita!',
                     'swal_message' => 'Lancio dadi avvenuto con successo.',
                     'swal_type' => 'success',
                 ];
-            } else {
-                return ['response' => false,
-                    'swal_title' => 'Operazione fallita!',
-                    'swal_message' => 'Non hai abbastanza cariche su questo oggetto.',
-                    'swal_type' => 'info',
-                ];
             }
-        } else {
-            return ['response' => true,
-                'swal_title' => 'Operazione riuscita!',
-                'swal_message' => 'Lancio dadi non abilitato in questa chat.',
-                'swal_type' => 'error',
+
+            return ['response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Non hai abbastanza cariche su questo oggetto.',
+                'swal_type' => 'info',
             ];
         }
+
+        return ['response' => true,
+            'swal_title' => 'Operazione riuscita!',
+            'swal_message' => 'Lancio dadi non abilitato in questa chat.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -1450,34 +1447,34 @@ class Chat extends BaseClass
         $total = 0;
 
         # Inizializzo il testo con una parte comune
-        $html = "{$pg_name} ha lanciato: ";
+        $html = "$pg_name ha lanciato: ";
 
         # Se ho lanciato un'abilita' ne aggiungo il testo
         if ( $abi_name ) {
-            $html .= "{$abi_name} {$abi_bonus}, ";
+            $html .= "$abi_name $abi_bonus, ";
             $total += $abi_bonus;
         }
 
         if ( $stat_name ) {
             # Aggiungo la caratteristica
-            $html .= "{$stat_name} {$stat_bonus}, ";
+            $html .= "$stat_name $stat_bonus, ";
             $total += $stat_bonus;
         }
 
         # Se ho lanciato un oggetto ne aggiungo il testo
         if ( $obj_bonus > 0 ) {
-            $html .= "Oggetti {$obj_bonus}, ";
+            $html .= "Oggetti $obj_bonus, ";
             $total += $obj_bonus;
         }
 
         # Aggiungo il valore del dado al testo
         if ( $this->chat_dice ) {
-            $html .= "Dado: {$dice}, ";
+            $html .= "Dado: $dice, ";
             $total += $dice;
         }
 
         # Aggiungo il totale al dado
-        $html .= " Totale : {$total}";
+        $html .= " Totale : $total";
 
         $this->sendAction([
             'tipo' => 'O',
@@ -1504,13 +1501,12 @@ class Chat extends BaseClass
             $esiti->rollEsito($post);
 
             return ['response' => true, 'error' => ''];
-        } else {
-            $error = "Non hai accesso all'esito selezionato.";
-
-            # Ritorno il risultato dell'invio ed eventuale messaggio di errore
-            return ['response' => false, 'error' => $error];
         }
 
+        $error = "Non hai accesso all'esito selezionato.";
+
+        # Ritorno il risultato dell'invio ed eventuale messaggio di errore
+        return ['response' => false, 'error' => $error];
     }
 
 }

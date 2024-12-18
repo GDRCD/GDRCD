@@ -87,7 +87,7 @@ class GruppiOggetto extends Gruppi
      */
     public function getGroupObject(int $id, string $val = 'gruppi_oggetto.*,oggetto.nome,oggetto.immagine'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM gruppi_oggetto LEFT JOIN oggetto ON gruppi_oggetto.oggetto=oggetto.id WHERE gruppi_oggetto.id=:id LIMIT 1", ['id' => $id]);
+        return DB::queryStmt("SELECT $val FROM gruppi_oggetto LEFT JOIN oggetto ON gruppi_oggetto.oggetto=oggetto.id WHERE gruppi_oggetto.id=:id LIMIT 1", ['id' => $id]);
     }
 
     /**
@@ -99,7 +99,7 @@ class GruppiOggetto extends Gruppi
      */
     public function getAllObjects(string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM gruppi_oggetto WHERE 1",[]);
+        return DB::queryStmt("SELECT $val FROM gruppi_oggetto WHERE 1",[]);
     }
 
     /**
@@ -112,7 +112,7 @@ class GruppiOggetto extends Gruppi
      */
     public function getAllObjectsDataByGroup(int $group, string $val = 'gruppi_oggetto.id,oggetto.immagine,oggetto.nome'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM gruppi_oggetto LEFT JOIN oggetto ON gruppi_oggetto.oggetto=oggetto.id WHERE gruppi_oggetto.gruppo=:group", ['group' => $group]);
+        return DB::queryStmt("SELECT $val FROM gruppi_oggetto LEFT JOIN oggetto ON gruppi_oggetto.oggetto=oggetto.id WHERE gruppi_oggetto.gruppo=:group", ['group' => $group]);
     }
 
     /**** LISTS ****/
@@ -252,22 +252,22 @@ class GruppiOggetto extends Gruppi
                     'swal_type' => 'success',
                     'new_view' => $this->objectListRender($group),
                 ];
-            } else {
-                return [
-                    'response' => false,
-                    'swal_title' => 'Errore!',
-                    'swal_message' => 'Oggetto non presente nel magazzino.',
-                    'swal_type' => 'error',
-                ];
             }
-        } else {
+
             return [
                 'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
+                'swal_title' => 'Errore!',
+                'swal_message' => 'Oggetto non presente nel magazzino.',
                 'swal_type' => 'error',
             ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 
