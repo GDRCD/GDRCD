@@ -75,7 +75,7 @@ class DbMigrationEngine extends BaseClass
      */
     public static function deleteDb($db): void
     {
-        $tables = DB::queryStmt("SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = :db  ORDER BY table_name ASC",
+        $tables = DB::queryStmt("SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = :db  ORDER BY table_name",
             [
                 'db' => $db,
             ]);

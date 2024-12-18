@@ -5,7 +5,6 @@ class Esiti extends BaseClass
 
     private bool
         $esiti_enabled,
-        $esiti_chat,
         $esiti_from_player,
         $esiti_tiri;
 
@@ -18,9 +17,6 @@ class Esiti extends BaseClass
 
         # Gli esiti sono attivi in chat?
         $this->esiti_enabled = Functions::get_constant('ESITI_ENABLE');
-
-        # Gli esiti sono attivabili in chat?
-        $this->esiti_chat = Functions::get_constant('ESITI_CHAT');
 
         # Gli esiti prevedono dei tiri dado?
         $this->esiti_tiri = Functions::get_constant('ESITI_TIRI');

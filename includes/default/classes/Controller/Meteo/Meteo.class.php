@@ -664,7 +664,7 @@ class Meteo extends BaseClass
         # Inizializzo dati necessari
         $year = date('Y');
         $month = date('n');
-        $days = date('j');
+        $days = (int)date('j');
 
         # Se è prima di aprile sottraggo un anno
         if ( $month < 4 ) {
