@@ -28,7 +28,7 @@ class MeteoVenti extends Meteo
      */
     public function getAllWinds(string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM meteo_venti ORDER BY nome", []);
+        return DB::queryStmt("SELECT $val FROM meteo_venti ORDER BY nome", []);
     }
 
     /**
@@ -41,7 +41,7 @@ class MeteoVenti extends Meteo
      */
     public function getWind(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM meteo_venti WHERE id=:id LIMIT 1", ['id' => $id]);
+        return DB::queryStmt("SELECT $val FROM meteo_venti WHERE id=:id LIMIT 1", ['id' => $id]);
     }
 
     /**** LIST ****/
