@@ -51,6 +51,10 @@ class GDRCD6 extends DbMigration
                 ('ABI_EXTRA',1,'Abilita','Dati abilita extra','Abilitare i dati abilita extra?','int',0,NULL),
                 ('CHAT_TIME',2,'Chat','Ore storico chat','Ore di caricamento nella chat','int',1,NULL),
                 ('CHAT_EXP',1,'Chat Exp','Exp in chat','Esperienza in chat, attiva?','bool',1,NULL),
+                ('CHAT_EXP_CAP',1,'Chat Exp','Cap su Exp','Cap su esperienza, attiva?','bool',1,NULL),
+                ('CHAT_EXP_CAP_PERIOD','Giorno','Chat Exp','Periodo Cap Exp','Periodo del cap','select',1,'TimePeriod'),
+                ('CHAT_EXP_CAP_LENGTH', '1', 'Chat Exp', 'Lunghezza Periodo Cap', 'Numero di giorni, settimane o mesi per il cap', 'int', 1, NULL),
+                ('CHAT_EXP_CAP_LIMIT', '100', 'Chat Exp', 'Exp Cap', 'Punti exp per  raggiungere il cap', 'int', 1, NULL),
                 ('CHAT_PVT_EXP',0,'Chat Exp','Exp in chat pvt','Esperienza in chat pvt, attiva?','bool',1,NULL),
                 ('CHAT_EXP_MASTER',1,'Chat Exp','Exp master','Esperienza per ogni azione master','int',1,NULL),
                 ('CHAT_EXP_AZIONE',1,'Chat Exp','Exp azione','Esperienza per ogni azione normale','int',1,NULL),
@@ -135,7 +139,10 @@ class GDRCD6 extends DbMigration
                 ('PasswordHash','SHA-256','CrypterPasswordSha256,sha256'),
                 ('ImageExtensions','.png','png'),
                 ('ImageExtensions','.jpg','jpg'),
-                ('ImageExtensions','.gif','gif');
+                ('ImageExtensions','.gif','gif'),
+                ('TimePeriod','Giorno','GIORNO' ),
+                ('TimePeriod','Settimana','SETTIMANA' ),
+                ('TimePeriod','Mese','MESE' );
         ");
 
         DB::query("

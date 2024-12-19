@@ -22,6 +22,7 @@ class Chat extends BaseClass
         $chat_exp_master,
         $chat_exp_azione,
         $chat_exp_min,
+        $chat_exp_cap,
         $chat_icone,
         $chat_avatar,
         $chat_dice,
@@ -30,7 +31,10 @@ class Chat extends BaseClass
         $chat_equip_bonus,
         $chat_equip_equipped,
         $chat_esiti,
-        $chat_notify;
+        $chat_notify,
+        $chat_exp_cap_period,
+        $chat_exp_cap_length,
+        $chat_exp_cap_limit;
 
     /**** BASE ****/
 
@@ -100,6 +104,18 @@ class Chat extends BaseClass
 
         # Attivare gli esiti in chat?
         $this->chat_esiti = Functions::get_constant('ESITI_CHAT');
+
+        # Attivare Cap per exp?
+        $this->chat_exp_cap = Functions::get_constant('CHAT_EXP_CAP');
+
+        # Periodo Cap esperienza (Giorno, Settimana, Mese)
+        //$this->chat_exp_cap_period = Functions::get_constant('CHAT_EXP_CAP_PERIOD');
+
+        # Numero di Gioni, Settimane, Mesi
+        $this->chat_exp_cap_length = Functions::get_constant('CHAT_EXP_CAP_LENGTH') ?? 1; 
+
+        # Punti esperienza necessari per raggiungere il cap
+        $this->chat_exp_cap_limit = Functions::get_constant('CHAT_EXP_CAP_LIMIT') ?? 100; 
     }
 
     /*** PERMISSIONS ***/
@@ -442,6 +458,47 @@ class Chat extends BaseClass
 
     /**** FUNCTIONS ****/
 
+        /**
+     * @fn canHaveExp
+     * @note Controlla se il giocatore può ricevere exp basandosi sul cap configurato.
+     * @param int $userId L'ID del giocatore.
+     * @return bool True se il giocatore può ricevere exp, False altrimenti.
+     * @throws Exception Se il periodo configurato non è valido.
+     */
+    private function canHaveExp(int $userId): bool
+    {
+        # Controlla se il cap exp è attivo
+        if (!$this->chat_exp_cap) {
+            return true; # Se il cap non è attivo, il giocatore può sempre ricevere exp.
+        }
+
+        # Determina l'intervallo basandosi sul periodo configurato e la lunghezza
+        $interval = match (strtolower($this->chat_exp_cap_period)) {
+            'giorno' => $this->chat_exp_cap_length . 'GIORNO',
+            'settimana' => $this->chat_exp_cap_length . 'SETTIMANA',
+            'mese' => $this->chat_exp_cap_length . 'MESE',
+            default => throw new Exception('Periodo non valido per il cap esperienza.')
+        };
+
+        # Recupera i punti esperienza totali accumulati nel periodo
+        $result = DB::query("
+            SELECT SUM(exp_points) AS total_exp 
+            FROM personaggio_esperienza 
+            WHERE user_id = :userId 
+            AND date >= (CURRENT_DATE - INTERVAL $interval)
+        ", 'query', ['userId' => (string)$userId]);
+
+        $totalExp = $result[0]['total_exp'] ?? 0;
+
+        # Controlla se il giocatore ha raggiunto o superato il cap
+        if ($totalExp >= $this->chat_exp_cap_limit) {
+            return false; # Il giocatore ha raggiunto il cap, non può ricevere ulteriori exp.
+        }
+
+        return true; # Il giocatore è ancora sotto il cap e può ricevere exp.
+    }
+
+
     /**
      * @fn assignExp
      * @note Assegna l'esperienza indicata al personaggio che ha inviato l'azione
@@ -454,6 +511,10 @@ class Chat extends BaseClass
         # Filtro i valori passati
         $tipo = Filters::in($azione['tipo']);
         $testo = Filters::in($azione['testo']);
+
+        // if (!$this->canHaveExp($this->me_id)) {
+        //     return; // Se il giocatore ha raggiunto il cap, esce dalla funzione.
+        // }
 
         # Calcolo la lunghezza del testo
         $lunghezza_testo = strlen($testo);
@@ -477,6 +538,12 @@ class Chat extends BaseClass
                 # Assegno l'esperienza se è maggiore di zero
                 if ( $exp > 0 ) {
                     Personaggio::updatePgData($this->me_id, "esperienza = esperienza + :exp", ['exp' => $exp]);
+
+                    # Inserisco un record in personaggio_esperienza per tracciare l'esperienza assegnata
+                    DB::queryStmt("INSERT INTO personaggio_esperienza (user_id, exp_points, date) VALUES (:userId, :exp, NOW())", [
+                        'userId' => $this->me_id,
+                        'exp' => $exp,
+                    ]);
                 }
             }
         }
