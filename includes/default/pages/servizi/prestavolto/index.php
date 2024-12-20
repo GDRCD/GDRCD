@@ -1,4 +1,12 @@
+<?php
+
+Router::loadRequired();
+
+$prestavolto = SchedaPrestavolto::getInstance();
+
+?>
 <div id="prestavolto">
+<?php if ( $prestavolto->PvActive() ) { ?>
 
     <div class="general_title">Prestavolto</div>
 
@@ -37,3 +45,9 @@
 </div>
 
 <script src="<?= Router::getPagesLink('servizi/prestavolto/index.js'); ?>"></script>
+<?php } else { ?>
+
+<div class="warning"> Funzione disabilitata.</div>
+
+<div class="link_back"><a href="/main.php?page=servizi/index">Indietro</a></div>
+<?php } ?>

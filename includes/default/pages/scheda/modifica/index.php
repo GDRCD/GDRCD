@@ -5,6 +5,7 @@ $id_pg = Filters::in($_GET['id_pg']);
 if ( Scheda::getInstance()->permissionUpdateCharacter($id_pg) ) {
 
     $pg_data = Personaggio::getPgData($id_pg);
+   
     ?>
 
 
@@ -16,7 +17,7 @@ if ( Scheda::getInstance()->permissionUpdateCharacter($id_pg) ) {
             <div class="label">Cognome</div>
             <input type="text" name="cognome" value="<?= Filters::out($pg_data['cognome']); ?>" required>
         </div>
-
+            
         <div class="single_input">
             <div class="label">Url Avatar</div>
             <input type="text" name="url_img" value="<?= Filters::out($pg_data['url_img']); ?>" required>
@@ -57,8 +58,56 @@ if ( Scheda::getInstance()->permissionUpdateCharacter($id_pg) ) {
             <input type="hidden" name="pg" value="<?= $id_pg; ?>">
             <input type="submit" value="Modifica">
         </div>
-    </form>
+        </form>
+        <?php if ( SchedaPrestavolto::getInstance()->PvActive() ) {// controllo che il pv è attivo
+                
+                $pv_data = Prestavolto::getPvData($id_pg);
+                $check_pv= $pv_data->getNumRows();
+                $creato_il = Filters::date($pv_data['creato_il'], 'Y-m-d');
+                //controllo se c'è un pv o se posso modificare
+                if  (!$check_pv || (SchedaPrestavolto::getInstance()->PvInsertEdit()&&CarbonWrapper::DatesDifferenceDays($creato_il,date('Y-m-d') )<= SchedaPrestavolto::getInstance()->PvInsertDayEdit()  )){
+                ?>
+                <form method="POST" class="ajax_form chat_form_ajax" action="scheda/modifica/ajax.php" data-reset="false">
+                    <div class="general_title">Prestavolto</div>
+                    <div class="single_input">
+                        <div class="label">Nome Prestavolto</div>
+                        <input type="text" name="pv_nome" value="<?= Filters::out($pv_data['nome']); ?>" >
+                    </div>
+                    <div class="single_input">
+                        <div class="label">Cognome Prestavolto</div>
+                        <input type="text" name="pv_cognome" value="<?= Filters::out($pv_data['cognome']); ?>" >
+                    </div>
+                    <div class="single_input">
+                        <div class="label">Fonte</div>
+                        <input type="text" name="fonte" value="<?= Filters::out($pv_data['fonte']); ?>" >
+                    </div>
+                    <?php if ( SchedaPrestavolto::getInstance()->PvShareable() ) { ?>
 
+                        <div class="single_input">
+                            <div class="label">Il prestavolto è condivisibile?</div>
+                            <input type="checkbox" name="pv_condivisibile" <?= Filters::bool($pv_data['condivisibile']) ? 'checked' : ''; ?>>
+                        </div>
+                        <?php if ( SchedaPrestavolto::getInstance()->PvHaveImage() ) { ?>
+                        <div class="single_input">
+                            <div class="label">UrL immagine Prestavolto</div>
+                            <input type="text" name="pv_condivisibile_immagine" value="<?= Filters::out($pv_data['condivisibile_immagine']); ?>" >
+                        </div>
+                        <?php } ?>
+                        <div class="single_input">
+                            <div class="label">Descrizione condivisibilità</div>
+                            <input type="text" name="pv_condivisibile_descrizione" value="<?= Filters::out($pv_data['condivisibile_descrizione']); ?>" >
+                        </div>
+                    <?php } ?>
+                    Potrai editare il prestavolto entro <?=SchedaPrestavolto::getInstance()->PvInsertDayEdit()?> giorni dal momento in cui lo inserisci
+                    
+                    <div class="single_input">
+                        <input type="hidden" name="action" value="update_character_pv">
+                        <input type="hidden" name="pg" value="<?= $id_pg; ?>">
+                        <input type="submit" value="Modifica">
+                    </div>
+            </form>
+            <?php } ?>
+        <?php }  ?>            
 
     <?php if ( Scheda::getInstance()->permissionStatusCharacter() ) { ?>
 

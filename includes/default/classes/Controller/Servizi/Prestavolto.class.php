@@ -26,7 +26,8 @@ class Prestavolto extends BaseClass
         };
         
         $pgs_list = DB::queryStmt(
-            "SELECT prestavolto.nome as prestavolto_nome, prestavolto.cognome as prestavolto_cognome, personaggio.nome, personaggio.cognome
+            "SELECT prestavolto.nome as prestavolto_nome, prestavolto.cognome as prestavolto_cognome, personaggio.nome, personaggio.cognome, prestavolto.fonte,
+            prestavolto.condivisibile, prestavolto.condivisibile_immagine, prestavolto.condivisibile_descrizione
                     
                     FROM prestavolto
                     LEFT JOIN personaggio ON personaggio.id = prestavolto.personaggio
@@ -60,22 +61,33 @@ class Prestavolto extends BaseClass
         foreach ( $pgs_list as $pg_data ) {
  
             $pgs[] = [
-                "id" => Filters::int($pg_data['id']),
-                "name_pv" => Filters::out($pg_data['prestavolto_nome']),
+                'id' => Filters::int($pg_data['id']),
+                'name_pv' => Filters::out($pg_data['prestavolto_nome']),
                 'surname_pv' => Filters::out($pg_data['prestavolto_cognome']),
-                "name" => Filters::out($pg_data['nome']),
+                'name' => Filters::out($pg_data['nome']),
                 'surname' => Filters::out($pg_data['cognome']),
+                'fonte'=> Filters::out($pg_data['fonte']),
+
+                'condivisibile' => (Filters::out($pg_data['condivisibile']))?'Si':'No',
+                'condivisibile_immagine' => Filters::out($pg_data['condivisibile_immagine']),
+                'condivisibile_descrizione' => Filters::out($pg_data['condivisibile_descrizione']),
+                'condivisione_attiva'=> SchedaPrestavolto::getInstance()->PvShareable(),
+                'condivisione_img_attiva'=> SchedaPrestavolto::getInstance()->PvHaveImage(),
+
                  
             ];
         }
 
         $cells = [
-           'Nome Prestavolto',
+            'Nome Prestavolto',
             'Cognome Prestavolto',
-           
+            'Fonte',
             'Nome',
             'Cognome',
-           
+            'Condivisibile',
+            'Immagine',
+            
+            'Condizioni condivisione',
         ];
 
         return Template::getInstance()->startTemplate()->renderTable('servizi/prestavolto/results', [
@@ -84,5 +96,19 @@ class Prestavolto extends BaseClass
             'links' => [],
         ]);
     }
+    
+    /**
+     * @fn getPvData
+     * @note Ottiene i dati di un prestavolto
+     * @param int $pg
+     * @param string $val
+     * @return DBQueryInterface
+     * @throws Throwable
+     */
+    public static function getPvData(int $pg, string $val = '*'): DBQueryInterface
+    {
+        return DB::queryStmt("SELECT {$val} FROM prestavolto WHERE personaggio=:id LIMIT 1", ['id' => $pg]);
+    }
+   
 
 }
