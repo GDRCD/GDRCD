@@ -1219,10 +1219,12 @@ CREATE TABLE IF NOT EXISTS `personaggio_chat_opzioni` (
 CREATE TABLE IF NOT EXISTS `personaggio_esperienza` (
     `id` int NOT NULL AUTO_INCREMENT,
     `personaggio` int NOT NULL,
-    `exp_points` int NOT NULL,
-    `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `punti` int NOT NULL,
+    `azione` int DEFAULT NULL,
+    `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `creato_da` int DEFAULT NULL,
     PRIMARY KEY (`id`),
-    UNIQUE INDEX `user_id_exp_idx` (`personaggio`, `date`)
+    UNIQUE INDEX `user_id_exp_idx` (`personaggio`, `creato_il`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------

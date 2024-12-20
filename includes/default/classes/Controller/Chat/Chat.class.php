@@ -506,8 +506,8 @@ class Chat extends BaseClass
      */
     private function periodExpControl(int $pg, string $period): bool
     {
-        $result = DB::queryStmt("SELECT SUM(exp_points) AS total_exp FROM personaggio_esperienza WHERE personaggio = :pg 
-            AND date >= (CURRENT_DATE - INTERVAL $period)", ['pg' => $pg]);
+        $result = DB::queryStmt("SELECT SUM(punti) AS total_exp FROM personaggio_esperienza WHERE personaggio = :pg 
+            AND creato_il >= (CURRENT_DATE - INTERVAL $period)", ['pg' => $pg]);
 
         $totalExp = $result[0]['total_exp'] ?? 0;
 
@@ -538,6 +538,7 @@ class Chat extends BaseClass
     private function assignExp(array $azione): void
     {
         # Filtro i valori passati
+        $id = Filters::int($azione['id']);
         $tipo = Filters::in($azione['tipo']);
         $testo = Filters::in($azione['testo']);
 
@@ -570,9 +571,11 @@ class Chat extends BaseClass
                     Personaggio::updatePgData($this->me_id, "esperienza = esperienza + :exp", ['exp' => $exp]);
 
                     # Inserisco un record in personaggio_esperienza per tracciare l'esperienza assegnata
-                    DB::queryStmt("INSERT INTO personaggio_esperienza (personaggio, exp_points, date) VALUES (:pg, :exp, NOW())", [
+                    DB::queryStmt("INSERT INTO personaggio_esperienza (personaggio, punti, azione, creato_il, creato_da) VALUES (:pg, :exp, :id, NOW(), :created_by)", [
                         'pg' => $this->me_id,
+                        'id' => $id,
                         'exp' => $exp,
+                        'created_by' => $this->me_id,
                     ]);
                 }
             }
@@ -1116,6 +1119,7 @@ class Chat extends BaseClass
 
             # Se l'esperienza è attiva assegno l'esperienza
             if ( $this->chat_exp ) {
+                $post['id'] = Filters::int($resp['id']);
                 $this->assignExp($post);
             }
 
@@ -1146,10 +1150,10 @@ class Chat extends BaseClass
         if ( $permission ) {
 
             # Salvo l'azione in db
-            $this->saveAction($post);
+            $id = $this->saveAction($post);
 
             # Setto il responso riuscito
-            $response = ['response' => true, 'error' => ''];
+            $response = ['response' => true, 'error' => '', 'id' => $id];
 
         } # Se non ho i permessi per quel tipo di azione
         else {
@@ -1186,10 +1190,10 @@ class Chat extends BaseClass
             $post['tag'] = $sussurraA;
 
             # Salvo l'azione in DB
-            $this->saveAction($post);
+            $id = $this->saveAction($post);
 
             # Setto il responso riuscito
-            $response = ['response' => true, 'error' => ''];
+            $response = ['response' => true, 'error' => '', 'id' => $id];
 
         } # Se il personaggio non è presente in chat, setto il responso come fallito
         else {
@@ -1207,10 +1211,10 @@ class Chat extends BaseClass
      * @fn saveAction
      * @note Funzione che si occupa del salvataggio dell'azione in DB
      * @param array $post
+     * @return string
      * @throws Throwable
-     *  @return void
      */
-    private function saveAction(array $post): void
+    private function saveAction(array $post): string
     {
         # Filtro le variabili necessarie
         $tag = Filters::in($post['tag']);
@@ -1221,7 +1225,7 @@ class Chat extends BaseClass
         Session::store('tag', $tag);
 
         # Salvo l'azione in DB
-        DB::queryStmt(
+       $query = DB::queryStmt(
             "INSERT INTO chat(stanza,imgs,mittente,destinatario,tipo,testo)
                     VALUE(:luogo,'test',:mittente,:tag,:tipo,:testo)",
             [
@@ -1232,6 +1236,8 @@ class Chat extends BaseClass
                 "testo" => $testo,
             ]
         );
+
+        return $query->getInsertId();
     }
 
 
