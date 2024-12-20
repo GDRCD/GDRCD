@@ -460,129 +460,6 @@ class Chat extends BaseClass
     /**** FUNCTIONS ****/
 
     /**
-     * @fn canHaveExp
-     * @note Controlla se il giocatore può ricevere exp basandosi sul cap configurato.
-     * @param int $pg
-     * @return bool True se il giocatore può ricevere exp, False altrimenti.
-     * @throws Throwable
-     */
-    private function canHaveExp(int $pg): bool
-    {
-        # Controlla se il cap exp è attivo
-        if (!$this->chat_exp_cap_enabled) {
-            return true; # Se il cap non è attivo, il giocatore può sempre ricevere exp.
-        }
-
-        if($this->chat_exp_cap_total > 0 && !$this->totalExpControl($pg)) {
-            return false;
-        }
-
-        // Controllo se il giocatore ha già ricevuto exp nel periodo indicato (Giorno)
-        if ( ($this->chat_exp_cap_day > 0) && !$this->periodExpControl($pg, '1 DAY') ) {
-            return false;
-        }
-
-        // Controllo se il giocatore ha già ricevuto exp nel periodo indicato (Settimana)
-        if ( ($this->chat_exp_cap_week > 0) && !$this->periodExpControl($pg, '1 WEEK') ) {
-            return false;
-        }
-
-        // Controllo se il giocatore ha già ricevuto exp nel periodo indicato (Mese)
-        if ( ($this->chat_exp_cap_month > 0) && !$this->periodExpControl($pg, '1 MONTH') ) {
-            return false;
-        }
-
-        # Il giocatore è ancora sotto il cap e può ricevere exp
-        return true;
-    }
-
-    /**
-     * @fn periodExpControl
-     * @note Controlla se il giocatore ha già ricevuto exp nel periodo indicato
-     * @param int $pg
-     * @param string $period
-     * @return bool True se il giocatore può ricevere exp, False altrimenti.
-     * @throws Throwable
-     */
-    private function periodExpControl(int $pg, string $period): bool
-    {
-        $result = DB::queryStmt("SELECT SUM(punti) AS total_exp FROM personaggio_esperienza WHERE personaggio = :pg 
-            AND creato_il >= (CURRENT_DATE - INTERVAL $period)", ['pg' => $pg]);
-
-        $totalExp = $result[0]['total_exp'] ?? 0;
-
-        # Controlla se il giocatore ha raggiunto o superato il cap
-        return $totalExp < $this->chat_exp_cap_month;
-    }
-
-    /**
-     * @fn totalExpControl
-     * @note Controlla se il giocatore ha già superato il cap totale di esperienza
-     * @param int $pg
-     * @return bool
-     * @throws Throwable
-     */
-    private function totalExpControl(int $pg){
-        $pg_data = Personaggio::getPgData($pg, 'esperienza');
-        return Filters::int($pg_data['esperienza']) < $this->chat_exp_cap_total;
-    }
-
-
-    /**
-     * @fn assignExp
-     * @note Assegna l'esperienza indicata al personaggio che ha inviato l'azione
-     * @param array $azione
-     * @return void
-     * @throws Throwable
-     */
-    private function assignExp(array $azione): void
-    {
-        # Filtro i valori passati
-        $id = Filters::int($azione['id']);
-        $tipo = Filters::in($azione['tipo']);
-        $testo = Filters::in($azione['testo']);
-
-        // Controllo se il giocatore può ricevere exp per via dei cap
-         if (!$this->canHaveExp($this->me_id)) {
-             return;
-         }
-
-        # Calcolo la lunghezza del testo
-        $lunghezza_testo = strlen($testo);
-
-        # Controllo se la chat è privata
-        $luogo_pvt = $this->getChatData($this->luogo, 'privata')['privata'];
-
-        # Se è privata e l'assegnazione privata è attivo, oppure non è privata
-        if ( ($luogo_pvt && $this->chat_pvt_exp) || (!$luogo_pvt) ) {
-
-            # Se la lunghezza del testo supera il minimo caratteri necessari all'assegnazione esperienza
-            if ( $lunghezza_testo >= $this->chat_exp_min ) {
-
-                # In base al tipo scelgo quanta esperienza assegnare
-                $exp = match ($tipo) {
-                    'A', 'P' => $this->chat_exp_azione,
-                    'M' => $this->chat_exp_master,
-                    default => 0,
-                };
-
-                # Assegno l'esperienza se è maggiore di zero
-                if ( $exp > 0 ) {
-                    Personaggio::updatePgData($this->me_id, "esperienza = esperienza + :exp", ['exp' => $exp]);
-
-                    # Inserisco un record in personaggio_esperienza per tracciare l'esperienza assegnata
-                    DB::queryStmt("INSERT INTO personaggio_esperienza (personaggio, punti, azione, creato_il, creato_da) VALUES (:pg, :exp, :id, NOW(), :created_by)", [
-                        'pg' => $this->me_id,
-                        'id' => $id,
-                        'exp' => $exp,
-                        'created_by' => $this->me_id,
-                    ]);
-                }
-            }
-        }
-    }
-
-    /**
      * @fn formattedText
      * @note Formatta il testo con le giuste funzioni di gdrcd
      * @param string $testo
@@ -1611,5 +1488,131 @@ class Chat extends BaseClass
         # Ritorno il risultato dell'invio ed eventuale messaggio di errore
         return ['response' => false, 'error' => $error];
     }
+
+    /***** EXP CHAT ****/
+
+    /**
+     * @fn canHaveExp
+     * @note Controlla se il giocatore può ricevere exp basandosi sul cap configurato.
+     * @param int $pg
+     * @return bool True se il giocatore può ricevere exp, False altrimenti.
+     * @throws Throwable
+     */
+    private function canHaveExp(int $pg): bool
+    {
+        # Controlla se il cap exp è attivo
+        if ( !$this->chat_exp_cap_enabled ) {
+            return true; # Se il cap non è attivo, il giocatore può sempre ricevere exp.
+        }
+
+        if ( $this->chat_exp_cap_total > 0 && !$this->totalExpControl($pg) ) {
+            return false;
+        }
+
+        // Controllo se il giocatore ha già ricevuto exp nel periodo indicato (Giorno)
+        if ( ($this->chat_exp_cap_day > 0) && !$this->periodExpControl($pg, '1 DAY') ) {
+            return false;
+        }
+
+        // Controllo se il giocatore ha già ricevuto exp nel periodo indicato (Settimana)
+        if ( ($this->chat_exp_cap_week > 0) && !$this->periodExpControl($pg, '1 WEEK') ) {
+            return false;
+        }
+
+        // Controllo se il giocatore ha già ricevuto exp nel periodo indicato (Mese)
+        if ( ($this->chat_exp_cap_month > 0) && !$this->periodExpControl($pg, '1 MONTH') ) {
+            return false;
+        }
+
+        # Il giocatore è ancora sotto il cap e può ricevere exp
+        return true;
+    }
+
+    /**
+     * @fn periodExpControl
+     * @note Controlla se il giocatore ha già ricevuto exp nel periodo indicato
+     * @param int $pg
+     * @param string $period
+     * @return bool True se il giocatore può ricevere exp, False altrimenti.
+     * @throws Throwable
+     */
+    private function periodExpControl(int $pg, string $period): bool
+    {
+        $result = DB::queryStmt("SELECT SUM(punti) AS total_exp FROM personaggio_esperienza WHERE personaggio = :pg 
+            AND creato_il >= (CURRENT_DATE - INTERVAL $period)", ['pg' => $pg]);
+
+        $totalExp = $result[0]['total_exp'] ?? 0;
+
+        # Controlla se il giocatore ha raggiunto o superato il cap
+        return $totalExp < $this->chat_exp_cap_month;
+    }
+
+    /**
+     * @fn totalExpControl
+     * @note Controlla se il giocatore ha già superato il cap totale di esperienza
+     * @param int $pg
+     * @return bool
+     * @throws Throwable
+     */
+    private function totalExpControl(int $pg): bool
+    {
+        $pg_data = Personaggio::getPgData($pg, 'esperienza');
+        return Filters::int($pg_data['esperienza']) < $this->chat_exp_cap_total;
+    }
+
+    /**
+     * @fn assignExp
+     * @note Assegna l'esperienza indicata al personaggio che ha inviato l'azione
+     * @param array $azione
+     * @return void
+     * @throws Throwable
+     */
+    private function assignExp(array $azione): void
+    {
+        # Filtro i valori passati
+        $id = Filters::int($azione['id']);
+        $tipo = Filters::in($azione['tipo']);
+        $testo = Filters::in($azione['testo']);
+
+        // Controllo se il giocatore può ricevere exp per via dei cap
+        if ( !$this->canHaveExp($this->me_id) ) {
+            return;
+        }
+
+        # Calcolo la lunghezza del testo
+        $lunghezza_testo = strlen($testo);
+
+        # Controllo se la chat è privata
+        $luogo_pvt = $this->getChatData($this->luogo, 'privata')['privata'];
+
+        # Se è privata e l'assegnazione privata è attivo, oppure non è privata
+        if ( ($luogo_pvt && $this->chat_pvt_exp) || (!$luogo_pvt) ) {
+
+            # Se la lunghezza del testo supera il minimo caratteri necessari all'assegnazione esperienza
+            if ( $lunghezza_testo >= $this->chat_exp_min ) {
+
+                # In base al tipo scelgo quanta esperienza assegnare
+                $exp = match ($tipo) {
+                    'A', 'P' => $this->chat_exp_azione,
+                    'M' => $this->chat_exp_master,
+                    default => 0,
+                };
+
+                # Assegno l'esperienza se è maggiore di zero
+                if ( $exp > 0 ) {
+                    Personaggio::updatePgData($this->me_id, "esperienza = esperienza + :exp", ['exp' => $exp]);
+
+                    # Inserisco un record in personaggio_esperienza per tracciare l'esperienza assegnata
+                    DB::queryStmt("INSERT INTO personaggio_esperienza (personaggio, punti, azione, creato_il, creato_da) VALUES (:pg, :exp, :id, NOW(), :created_by)", [
+                        'pg' => $this->me_id,
+                        'id' => $id,
+                        'exp' => $exp,
+                        'created_by' => $this->me_id,
+                    ]);
+                }
+            }
+        }
+    }
+
 
 }
