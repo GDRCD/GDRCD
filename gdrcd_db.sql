@@ -609,7 +609,7 @@ CREATE TABLE IF NOT EXISTS `gruppi_stipendi_extra` (
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
------------------------------------------------------------
+-- ---------------------------------------------------------
 
 --
 -- Struttura della tabella `gruppi_tipo`
@@ -1218,11 +1218,11 @@ CREATE TABLE IF NOT EXISTS `personaggio_chat_opzioni` (
 
 CREATE TABLE IF NOT EXISTS `personaggio_esperienza` (
     `id` int NOT NULL AUTO_INCREMENT,
-    `user_id` int NOT NULL,
+    `personaggio` int NOT NULL,
     `exp_points` int NOT NULL,
     `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
-    UNIQUE INDEX `user_id_exp_idx` (`user_id`, `date`)
+    UNIQUE INDEX `user_id_exp_idx` (`personaggio`, `date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
