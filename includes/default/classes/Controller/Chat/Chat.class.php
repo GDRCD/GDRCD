@@ -1492,6 +1492,60 @@ class Chat extends BaseClass
     /***** EXP CHAT ****/
 
     /**
+     * @fn assignExp
+     * @note Assegna l'esperienza indicata al personaggio che ha inviato l'azione
+     * @param array $azione
+     * @return void
+     * @throws Throwable
+     */
+    private function assignExp(array $azione): void
+    {
+        # Filtro i valori passati
+        $id = Filters::int($azione['id']);
+        $tipo = Filters::in($azione['tipo']);
+        $testo = Filters::in($azione['testo']);
+
+        // Controllo se il giocatore può ricevere exp per via dei cap
+        if ( !$this->canHaveExp($this->me_id) ) {
+            return;
+        }
+
+        # Calcolo la lunghezza del testo
+        $lunghezza_testo = strlen($testo);
+
+        # Controllo se la chat è privata
+        $luogo_pvt = $this->getChatData($this->luogo, 'privata')['privata'];
+
+        # Se è privata e l'assegnazione privata è attivo, oppure non è privata
+        if ( ($luogo_pvt && $this->chat_pvt_exp) || (!$luogo_pvt) ) {
+
+            # Se la lunghezza del testo supera il minimo caratteri necessari all'assegnazione esperienza
+            if ( $lunghezza_testo >= $this->chat_exp_min ) {
+
+                # In base al tipo scelgo quanta esperienza assegnare
+                $exp = match ($tipo) {
+                    'A', 'P' => $this->chat_exp_azione,
+                    'M' => $this->chat_exp_master,
+                    default => 0,
+                };
+
+                # Assegno l'esperienza se è maggiore di zero
+                if ( $exp > 0 ) {
+                    Personaggio::updatePgData($this->me_id, "esperienza = esperienza + :exp", ['exp' => $exp]);
+
+                    # Inserisco un record in personaggio_esperienza per tracciare l'esperienza assegnata
+                    DB::queryStmt("INSERT INTO personaggio_esperienza (personaggio, punti, azione, creato_il, creato_da) VALUES (:pg, :exp, :id, NOW(), :created_by)", [
+                        'pg' => $this->me_id,
+                        'id' => $id,
+                        'exp' => $exp,
+                        'created_by' => $this->me_id,
+                    ]);
+                }
+            }
+        }
+    }
+
+    /**
      * @fn canHaveExp
      * @note Controlla se il giocatore può ricevere exp basandosi sul cap configurato.
      * @param int $pg
@@ -1560,59 +1614,7 @@ class Chat extends BaseClass
         return Filters::int($pg_data['esperienza']) < $this->chat_exp_cap_total;
     }
 
-    /**
-     * @fn assignExp
-     * @note Assegna l'esperienza indicata al personaggio che ha inviato l'azione
-     * @param array $azione
-     * @return void
-     * @throws Throwable
-     */
-    private function assignExp(array $azione): void
-    {
-        # Filtro i valori passati
-        $id = Filters::int($azione['id']);
-        $tipo = Filters::in($azione['tipo']);
-        $testo = Filters::in($azione['testo']);
 
-        // Controllo se il giocatore può ricevere exp per via dei cap
-        if ( !$this->canHaveExp($this->me_id) ) {
-            return;
-        }
-
-        # Calcolo la lunghezza del testo
-        $lunghezza_testo = strlen($testo);
-
-        # Controllo se la chat è privata
-        $luogo_pvt = $this->getChatData($this->luogo, 'privata')['privata'];
-
-        # Se è privata e l'assegnazione privata è attivo, oppure non è privata
-        if ( ($luogo_pvt && $this->chat_pvt_exp) || (!$luogo_pvt) ) {
-
-            # Se la lunghezza del testo supera il minimo caratteri necessari all'assegnazione esperienza
-            if ( $lunghezza_testo >= $this->chat_exp_min ) {
-
-                # In base al tipo scelgo quanta esperienza assegnare
-                $exp = match ($tipo) {
-                    'A', 'P' => $this->chat_exp_azione,
-                    'M' => $this->chat_exp_master,
-                    default => 0,
-                };
-
-                # Assegno l'esperienza se è maggiore di zero
-                if ( $exp > 0 ) {
-                    Personaggio::updatePgData($this->me_id, "esperienza = esperienza + :exp", ['exp' => $exp]);
-
-                    # Inserisco un record in personaggio_esperienza per tracciare l'esperienza assegnata
-                    DB::queryStmt("INSERT INTO personaggio_esperienza (personaggio, punti, azione, creato_il, creato_da) VALUES (:pg, :exp, :id, NOW(), :created_by)", [
-                        'pg' => $this->me_id,
-                        'id' => $id,
-                        'exp' => $exp,
-                        'created_by' => $this->me_id,
-                    ]);
-                }
-            }
-        }
-    }
 
 
 }
