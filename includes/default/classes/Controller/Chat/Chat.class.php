@@ -1591,15 +1591,24 @@ class Chat extends BaseClass
      * @throws Throwable
      */
     private function periodExpControl(int $pg, string $period): bool
-    {
-        $result = DB::queryStmt("SELECT SUM(punti) AS total_exp FROM personaggio_esperienza WHERE personaggio = :pg 
-            AND creato_il >= (CURRENT_DATE - INTERVAL $period)", ['pg' => $pg]);
+{
+    $cap = match ($period) {
+        '1 DAY' => $this->chat_exp_cap_day,
+        '1 WEEK' => $this->chat_exp_cap_week,
+        '1 MONTH' => $this->chat_exp_cap_month,
+        default => throw new Exception('Invalid period type'),
+    };
 
-        $totalExp = $result[0]['total_exp'] ?? 0;
+    $result = DB::queryStmt("SELECT SUM(punti) AS total_exp FROM personaggio_esperienza WHERE personaggio = :pg 
+      AND is_manual = 0 
+      AND creato_il >= (CURRENT_DATE - INTERVAL $period)", ['pg' => $pg]);
 
-        # Controlla se il giocatore ha raggiunto o superato il cap
-        return $totalExp < $this->chat_exp_cap_month;
-    }
+    $totalExp = $result[0]['total_exp'] ?? 0;
+
+    # Return true se sotto il cap
+    return $totalExp < $cap;
+}
+
 
     /**
      * @fn totalExpControl

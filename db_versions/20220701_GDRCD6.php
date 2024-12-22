@@ -55,7 +55,7 @@ class GDRCD6 extends DbMigration
                 ('CHAT_EXP_CAP_DAY',10,'Chat Exp','Cap giornaliera su Exp','Quanta esperienza massima in un giorno?','bool',1,NULL),
                 ('CHAT_EXP_CAP_WEEK',50,'Chat Exp','Cap settimanale su Exp','Quanta esperienza massima in una settimana?','bool',1,NULL),
                 ('CHAT_EXP_CAP_MONTH',100,'Chat Exp','Cap mensile su Exp','Quanta esperienza massima in un mese?','bool',1,NULL),
-                ('CHAT_EXP_CAP_TOTAL',1000,'Chat Exp','Cap mensile su Exp','Quanta esperienza massima in totale?','bool',1,NULL),
+                ('CHAT_EXP_CAP_TOTAL',1000,'Chat Exp','Exp Totale','Quanta esperienza massima in totale?','int',1,NULL),
                 ('CHAT_PVT_EXP',0,'Chat Exp','Exp in chat pvt','Esperienza in chat pvt, attiva?','bool',1,NULL),
                 ('CHAT_EXP_MASTER',1,'Chat Exp','Exp master','Esperienza per ogni azione master','int',1,NULL),
                 ('CHAT_EXP_AZIONE',1,'Chat Exp','Exp azione','Esperienza per ogni azione normale','int',1,NULL),
