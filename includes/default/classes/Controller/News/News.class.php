@@ -222,14 +222,14 @@ class News extends BaseClass
     }
 
     /**
-     * @fn ajaxFrameText
+     * @fn ajaxNewNews
      * @note Ritorna il testo del frame laterale
      * @return array
      * @throws Throwable
      */
-    public function ajaxFrameText(): array
+    public function ajaxNewNews(): array
     {
-        return ['text' => $this->renderFrameText()];
+        return ['new_news' => $this->getCountNewsToRead($this->me_id)];
     }
 
     /*** RENDER ***/

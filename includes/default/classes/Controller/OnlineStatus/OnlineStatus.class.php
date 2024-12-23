@@ -136,6 +136,20 @@ class OnlineStatus extends BaseClass
         return [];
     }
 
+    /**
+     * @fn ajaxStatusData
+     * @note Estrae i dati di uno stato
+     * @param array $post
+     * @return array
+     * @throws Throwable
+     */
+    public function ajaxRenderSetPage(array $post): array
+    {
+        return ['content' => $this->renderOnlineStatusOptions()];
+    }
+
+
+
 
     /**** LIST ****/
 
@@ -156,6 +170,8 @@ class OnlineStatus extends BaseClass
             $type_request = Filters::out($type['request']);
 
             $list = OnlineStatusType::getInstance()->getStatusByType($type_id);
+            $get_mine = $this->getPgStatus($this->me_id, $type_id);
+            $mine_value = Filters::int($get_mine['value']);
 
             if ( $list->getNumRows() > 0 ) {
 
@@ -163,14 +179,18 @@ class OnlineStatus extends BaseClass
                 foreach ( $list as $row ) {
                     $id = Filters::int($row['id']);
                     $name = Filters::out($row['text']);
+                    $selected = $mine_value === $id;
+
 
                     $options[] = [
                         'id' => $id,
                         'name' => $name,
+                        'selected' => $selected,
                     ];
                 }
 
                 $data[] = [
+                    'id' => $type_id,
                     'title' => $type_request,
                     'options' => $options,
                 ];

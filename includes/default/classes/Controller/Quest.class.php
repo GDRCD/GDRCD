@@ -1031,14 +1031,17 @@ VALUES(:quest_id,:id_pg,NOW(),:pg_comm,:pg_exp,:autore)", [
                     "autore" => $this->me_id,
                     "destinatario" => $id_pg,
                     "tipo" => $this->px_code,
-                    "testo" => Filters::in("Creata nuova quest '$titolo' ed assegnati '$pg_px' px a $pg_name"),
+                    "testo" => Filters::string("Creata nuova quest '$titolo' ed assegnati '$pg_px' px a $pg_name"),
                 ]);
 
-                if ( $this->notify_enabled ) {
-                    $notify_text = Filters::in("Creata nuova quest '$titolo");
-                    $notify_title = Filters::in("Nuova quest");
-                    //TODO - Adattare
-//                    DB::queryStmt("INSERT INTO messaggi (mittente, destinatario,oggetto, testo) VALUES ('Resoconti Quest','$pg_name','$notify_title','$notify_text')");
+                if ( $this->notify_enabled && Notifiche::getInstance()->isEnabled() ) {
+                    $notify_text = Filters::string("Creata nuova quest '$titolo' ed assegnati $pg_px px");
+                    $notify_title = Filters::string("Nuova quest");
+                    DB::queryStmt("INSERT INTO personaggio_notifiche (personaggio, titolo, testo) VALUES (:pg,:title,:text)", [
+                        'pg' => $id_pg,
+                        'title' => $notify_title,
+                        'text' => $notify_text,
+                    ]);
                 }
 
                 $assigned[] = $id_pg;
@@ -1241,12 +1244,12 @@ VALUES(:quest_id,:id_pg,NOW(),:pg_comm,:pg_exp,:autore)", [
                 }
 
                 # Notifico l'utente
-                if ( $notify && $this->notify_enabled ) {
-//                    DB::queryStmt("INSERT INTO personaggio_notifiche (personaggio,titolo, testo) VALUES (:pg_nome,:notify_title,:notify_text)", [
-//                        'pg_nome' => $pg_nome,
-//                        'notify_title' => $notify_title,
-//                        'notify_text' => $notify_text
-//                    ]);
+                if ( $notify && $this->notify_enabled && Notifiche::getInstance()->isEnabled() ) {
+                    DB::queryStmt("INSERT INTO personaggio_notifiche (personaggio,titolo, testo) VALUES (:pg,:notify_title,:notify_text)", [
+                        'pg' => $pg_id,
+                        'notify_title' => $notify_title,
+                        'notify_text' => $notify_text
+                    ]);
                 }
             }
         }
@@ -1349,16 +1352,16 @@ VALUES(:quest_id,:id_pg,NOW(),:pg_comm,:pg_exp,:autore)", [
                 "testo" => $log_text,
             ]);
 
-            if ( $this->notify_enabled ) {
+            if ( $this->notify_enabled && Notifiche::getInstance()->isEnabled() ) {
 
                 $notify_title = Filters::in('Cancellazione quest.');
                 $notify_text = Filters::in("La Quest '$titolo' è stata eliminata.");
 
-//                DB::queryStmt("INSERT INTO personaggio_notifiche(personaggio,titolo, testo) VALUES (:pg,:notify_title,:notify_text)", [
-//                    'pg' => $pg_name,
-//                    'notify_title' => $notify_title,
-//                    'notify_text' => $notify_text
-//                ]);
+                DB::queryStmt("INSERT INTO personaggio_notifiche(personaggio,titolo, testo) VALUES (:pg,:notify_title,:notify_text)", [
+                    'pg' => $membro_id,
+                    'notify_title' => $notify_title,
+                    'notify_text' => $notify_text
+                ]);
             }
         }
 

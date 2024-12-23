@@ -3,9 +3,10 @@
 Router::loadRequired(); # Inserisco il required se non presente, per futuro spostamento in modale/ajax
 
 $cls = News::getInstance(); # Inizializzo classe
+$cls_type = NewsTipo::getInstance();
 
-if ( $cls->permissionManageNewsType() ) { # Metodo di controllo per accesso alla pagina di gestione
-    if ( News::getInstance()->newsEnabled() ) {
+if ( $cls_type->permissionManageNewsType() ) { # Metodo di controllo per accesso alla pagina di gestione
+    if ( $cls->newsEnabled() ) {
         ?>
         <div class="general_incipit">
             <div class="title"> Gestione News</div>
@@ -46,7 +47,7 @@ if ( $cls->permissionManageNewsType() ) { # Metodo di controllo per accesso alla
                 <div class="single_input">
                     <div class="label">Tipo</div>
                     <select name="tipo">
-                        <?= NewsTipo::getInstance()->listNewsType(false); ?>
+                        <?= $cls_type->listNewsType(false); ?>
                     </select>
                 </div>
 
@@ -93,7 +94,7 @@ if ( $cls->permissionManageNewsType() ) { # Metodo di controllo per accesso alla
                 <div class="single_input">
                     <div class="label">Tipo</div>
                     <select name="tipo">
-                        <?= NewsTipo::getInstance()->listNewsType(false); ?>
+                        <?= $cls_type->listNewsType(false); ?>
                     </select>
                 </div>
 

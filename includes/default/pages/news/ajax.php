@@ -5,8 +5,8 @@ Router::loadRequired();
 $cls = News::getInstance();
 
 switch ( $_POST['action'] ) {
-    case 'frame_text':
-        echo json_encode($cls->ajaxFrameText());
+    case 'have_new_news':
+        echo json_encode($cls->ajaxNewNews());
         break;
 }
 

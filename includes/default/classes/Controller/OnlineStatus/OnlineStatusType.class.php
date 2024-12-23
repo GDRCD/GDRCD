@@ -15,7 +15,7 @@ class OnlineStatusType extends OnlineStatus
      */
     public function getStatusByType(int $type, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT $val FROM online_status WHERE type=:type ORDER by text", [
+        return DB::queryStmt("SELECT $val FROM online_status WHERE type=:type", [
             'type' => $type,
         ]);
     }

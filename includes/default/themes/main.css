@@ -171,7 +171,7 @@ div.meteo_luna img {
     display: block;
 }
 
-/** * Frame Messaggi 
+/** * Frame Messaggi
 */
 
 div.box_messages, .box_forums,
@@ -193,6 +193,128 @@ div.messaggio_forum_nuovo a, div.messaggio_forum_nuovo a:visited {
     font-weight: bolder;
     font-style: italic;
     color: #111;
+}
+
+/*** FRAME ICONE **/
+div.box_menu_icons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    .frame_single_icon {
+        cursor: pointer;
+
+        &.new_messages {
+            a i {
+                color: red;
+            }
+        }
+
+        a {
+            color: black !important;
+        }
+    }
+}
+
+
+div.container_notifications {
+    padding: 5px;
+    max-height: 250px;
+    width: 300px;
+    overflow: auto;
+
+    .container_notifications_top_bar {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+
+        .container_notifications_title {
+            font-size: 15px;
+            font-weight: bold;
+            padding: 0 0 5px 0;
+            margin: 0 0 5px 0;
+            text-align: center;
+        }
+
+        .container_notifications_read_all {
+            cursor: pointer;
+            color: red;
+
+            button {
+                background: transparent;
+                border: none;
+                color: red;
+                cursor: pointer;
+            }
+        }
+    }
+
+
+    .single_notification {
+        color: black;
+        border: 1px solid black;
+        border-radius: 10px;
+        margin: 5px;
+        text-align: left;
+        padding: 2px 5px
+    }
+
+    .notification_title {
+        font-weight: bold;
+        font-size: 13px;
+        margin-bottom: 2px;
+        text-align: center;
+    }
+
+    .notification_text {
+        font-size: 11px;
+        margin-bottom: 5px;
+        text-align: center;
+    }
+
+    .notification_date {
+        font-size: 9px;
+        font-style: italic;
+        text-align: right;
+    }
+}
+
+#notifiche_view_container {
+
+    .notifications_container {
+        width: 100%;
+        text-align: left;
+        padding: 10px;
+        box-sizing: border-box;
+        overflow: auto;
+
+        .single_notification {
+            background: #7289da;
+            padding: 5px 10px;
+            border-radius: 10px;
+            margin: 5px 0;
+
+            .notification_title {
+                font-weight: bold;
+                font-size: 15px;
+                margin-bottom: 2px;
+                text-align: center;
+            }
+
+            .notification_text {
+                font-size: 13px;
+                margin-bottom: 5px;
+                text-align: center;
+            }
+
+            .notification_date {
+                font-size: 12px;
+                font-style: italic;
+                text-align: right;
+            }
+        }
+    }
 }
 
 /** * Men� di gioco
@@ -236,7 +358,7 @@ div.link_menu a.sprite:hover {
 
 /** * Mappa cliccabile */
 
-/** * Posizionamento mappa cliccabile 
+/** * Posizionamento mappa cliccabile
 */
 div.mappaclick_map {
     margin: 20px auto;
@@ -248,7 +370,7 @@ div.mappaclick_map a {
     font-weight: bolder;
 }
 
-/** * stile della tooltip di descrizione sulla mappa 
+/** * stile della tooltip di descrizione sulla mappa
 */
 div#descriptionLoc {
     position: absolute;
@@ -384,7 +506,7 @@ div.elenco_record_gestione table {
 
 /** * Accorgimenti Layout */
 
-/** * Allineamento verticale delle colonne 
+/** * Allineamento verticale delle colonne
 */
 #framecontentLeft, #framecontentRight {
     display: table;
@@ -1094,65 +1216,45 @@ div.innertube {
 }
 
 /** ONLINE STATUS ***/
-
-.floating_box_status {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    width: 200px;
-    background: grey;
-    border: 1px solid black;
-    border-radius: 15px;
-    min-height: 150px;
-    z-index: 999;
-    padding: 5px;
-    box-sizing: border-box;
-    text-align: center;
-}
-
-.floating_box_status.minimized {
-    width: 20px !important;
-    height: 20px !important;
-    overflow: hidden;
-    min-height: 0;
-}
-
-.floating_box_status.minimized > * {
-    display: none;
-}
-
-.floating_box_status .change-dimension {
-    display: block !important;
-    cursor: pointer;
-    background: white;
-    color: black;
-    border-radius: 100%;
-    position: absolute;
-    right: -1px;
-    top: -1px;
-    height: 20px;
-    width: 20px;
-    line-height: 20px;
-}
-
-.floating_box_status .subtitle {
-    margin-top: 5px;
-    font-size: 13px;
-    font-weight: bold;
-}
-
-.floating_box_status ul {
-    list-style: none;
+.container_set_online_status {
+    width: 100%;
     text-align: left;
-    margin-top: 5px;
-}
+    padding: 10px 5px;
+    max-height: 250px;
+    overflow: auto;
 
-.floating_box_status ul li {
+    .container_status_title {
+        font-size: 15px;
+        font-weight: bold;
+        padding: 0 0 5px 0;
+        margin: 0 0 5px 0;
+        text-align: center;
+    }
 
-}
+    .status_type_container {
+        width: 100%;
+        padding: 10px 0 0 0;
+        margin: 5px 0;
+        text-align: left;
+        border-top: 1px solid black;
+    }
 
-.floating_box_status ul li input {
-    width: 20px;
+    form {
+        text-align: left;
+
+        li {
+            list-style: none;
+            margin: 5px 0 0 0;
+
+            input {
+                width: auto;
+            }
+        }
+
+        .submit_input {
+            text-align: center;
+        }
+    }
 }
 
 #form_meteo_edit {
