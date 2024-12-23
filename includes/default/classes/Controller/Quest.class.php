@@ -1226,8 +1226,8 @@ VALUES(:quest_id,:id_pg,NOW(),:pg_comm,:pg_exp,:autore)", [
                         'pg_id' => $pg_id
                     ]);
 
-                    $notify_text = Filters::in("Il resoconto quest relativo alla Quest: <b>$title</b> è stato inserito. Puoi consultarlo andando su Scheda > Esperienza > Resoconti quest");
-                    $notify_title = Filters::in("Inserimento nuovo resoconto.");
+                    $notify_text = Filters::string("Il resoconto quest relativo alla Quest: <b>$title</b> è stato inserito. Puoi consultarlo andando su Scheda > Esperienza > Resoconti quest");
+                    $notify_title = Filters::string("Inserimento nuovo resoconto.");
                     $notify = true;
 
                     $log_text = Filters::in("($pg_px xp) Assegnazione quest.");
