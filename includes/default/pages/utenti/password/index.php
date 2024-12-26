@@ -12,7 +12,7 @@
 
         <div class="form_container">
 
-            <form class="form ajax_form" action="servizi/password/ajax.php">
+            <form class="form ajax_form" action="utenti/password/ajax.php">
 
                 <div class="single_input">
                     <div class="label">Email</div>
