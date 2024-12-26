@@ -1221,6 +1221,7 @@ CREATE TABLE IF NOT EXISTS `personaggio_esperienza` (
     `personaggio` int NOT NULL,
     `punti` int NOT NULL,
     `azione` int DEFAULT NULL,
+    `causale` text DEFAULT NULL,
     `is_manual` bool DEFAULT 0,
     `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `creato_da` int DEFAULT NULL,

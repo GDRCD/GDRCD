@@ -249,6 +249,7 @@ class GDRCD6 extends DbMigration
               ('Gestione', 'Meteo', 'Gestione venti', 'gestione/meteo/venti/gestione_venti', 'MANAGE_WEATHER'),
               ('Gestione', 'Quest', 'Gestione Quest', 'gestione/quest/gestione_quest_index', 'MANAGE_QUESTS'),
               ('Gestione', 'Quest', 'Gestione Trame', 'gestione/trame/gestione_trame_index', 'MANAGE_TRAME_VIEW'),
+              ('Gestione', 'Quest', 'Assegna Esperienza', 'gestione/esperienza/assegna/gestione_exp_assegna', 'MANAGE_EXP'),
               ('Gestione', 'Esiti', 'Esiti', 'gestione/esiti/esiti_index', 'MANAGE_ESITI'),
               ('Gestione', 'Stato Online', 'Gestione stati', 'gestione/online_status/gestione_status', 'MANAGE_ONLINE_STATUS'),
               ('Gestione', 'Stato Online', 'Gestione tipi stati', 'gestione/online_status/gestione_status_type', 'MANAGE_ONLINE_STATUS'),
@@ -442,7 +443,8 @@ class GDRCD6 extends DbMigration
                 ('CHAT_MODERATOR','Azioni moderatore in chat'),
                 ('CALENDAR_ADD_QUEST','Aggiungi quest al calendario'),
                 ('CALENDAR_ADD_AMBIENT','Aggiungi quest al calendario'),
-                ('MANAGE_CALENDAR_EVENTS_TYPES','Gestione tipologie eventi calendario')
+                ('MANAGE_CALENDAR_EVENTS_TYPES','Gestione tipologie eventi calendario'),
+                ('MANAGE_EXP','Gestione assegnazione o rimozione esperienza')
                ;"
         );
 
