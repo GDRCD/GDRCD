@@ -1330,7 +1330,6 @@ VALUES(:quest_id,:id_pg,NOW(),:pg_comm,:pg_exp,:autore)", [
             $membro_id = Filters::int($membro);
             $data_quest = $this->getQuestMemberData($quest_id, $membro_id);
 
-            $pg_name = Personaggio::nameFromId($membro_id);
             $exp = Filters::int($data_quest['px_assegnati']);
 
             DB::queryStmt("DELETE FROM personaggio_quest WHERE personaggio=:membro_id AND id_quest=:id_quest",[

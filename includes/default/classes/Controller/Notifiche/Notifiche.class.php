@@ -217,6 +217,12 @@ class Notifiche extends BaseClass
 
     /*** FUNCTIONS ***/
 
+    /**
+     * @fn setAllNotificationsRead
+     * @note Segna tutte le notifiche come lette
+     * @return array
+     * @throws Throwable
+     */
     public function setAllNotificationsRead(): array
     {
         DB::queryStmt("UPDATE personaggio_notifiche SET letto=1 WHERE personaggio=:pg", [
