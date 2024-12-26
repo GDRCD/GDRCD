@@ -14,7 +14,7 @@ class ModificaPassword extends BaseClass
     public static function render(): string
     {
         return Template::getInstance()->startTemplate()->render(
-            'servizi/password/password_update', [
+            'utenti/password/password_update', [
             'pagetitle' => $GLOBALS['MESSAGE']['interface']['user']['pass']['page_name'],
             'formlabel' => [
                 'email' => $GLOBALS['MESSAGE']['interface']['user']['pass']['email'],
@@ -43,7 +43,6 @@ class ModificaPassword extends BaseClass
         $old_password = $post['old_pass'];
         $new_password = $post['new_pass'];
         $repeated_password = $post['repeat_pass'];
-
 
         $user_data = DB::queryStmt(
             'SELECT email, pass FROM personaggio WHERE id = :user_id', [
@@ -94,8 +93,6 @@ class ModificaPassword extends BaseClass
                 'swal_type' => 'error',
             ];
         }
-
-
 
         // Inserimento nuova password e risposta positiva
         DB::queryStmt(
