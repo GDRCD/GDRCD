@@ -73,7 +73,7 @@ class Abilita extends BaseClass
      */
     public function getAbility(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM abilita WHERE id = :id LIMIT 1", ['id' => $id]);
+        return DB::queryStmt("SELECT $val FROM abilita WHERE id = :id LIMIT 1", ['id' => $id]);
     }
 
     /**
@@ -85,7 +85,7 @@ class Abilita extends BaseClass
      */
     public function getAllAbilita(string $val = 'abilita.*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM abilita WHERE 1 ORDER BY nome", []);
+        return DB::queryStmt("SELECT $val FROM abilita WHERE 1 ORDER BY nome", []);
     }
 
 
@@ -202,14 +202,14 @@ class Abilita extends BaseClass
                 'swal_type' => 'success',
                 'ability_list' => $this->listAbility(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -246,15 +246,14 @@ class Abilita extends BaseClass
                 'ability_list' => $this->listAbility(),
             ];
 
-        } else {
-
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -295,14 +294,14 @@ class Abilita extends BaseClass
                 'ability_list' => $this->listAbility(),
             ];
 
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 

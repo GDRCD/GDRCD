@@ -23,16 +23,20 @@ class ContattiNote extends Contatti
         if ( $this->contactView($id_pg) ) {
             //se sei il proprietario, visualizzi le tue note
             return DB::queryStmt("SELECT * FROM contatti_nota WHERE id_contatto=:id AND eliminato=0", ['id' => $id]);
-        } else if ( $this->contactSecret() && (Permissions::permission('VIEW_CONTACTS')) ) {
+        }
+
+        if ( $this->contactSecret() && (Permissions::permission('VIEW_CONTACTS')) ) {
             //se le note sono segrete e hai il permesso di visualizzarle
             return DB::queryStmt("SELECT * FROM contatti_nota WHERE id_contatto=:id AND eliminato=0", ['id' => $id]);
-        } else if ( $this->contactPublic() ) {
+        }
+
+        if ( $this->contactPublic() ) {
             //se la configurazione è impostata su pubblico
             return DB::queryStmt("SELECT * FROM contatti_nota WHERE id_contatto=:id AND eliminato=0", ['id' => $id]);
-        } else {
-            //altrimenti, prende solo quelli impostati come pubblico dall'utente
-            return DB::queryStmt("SELECT * FROM contatti_nota WHERE id_contatto=:id AND pubblica IN ('si', '') AND eliminato=0", ['id' => $id]);
         }
+
+        //altrimenti, prende solo quelli impostati come pubblico dall'utente
+        return DB::queryStmt("SELECT * FROM contatti_nota WHERE id_contatto=:id AND pubblica IN ('si', '') AND eliminato=0", ['id' => $id]);
     }
 
     /**
@@ -45,7 +49,7 @@ class ContattiNote extends Contatti
      */
     public function getNota(string $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM contatti_nota WHERE id = :id", ['id' => $id]);
+        return DB::queryStmt("SELECT $val FROM contatti_nota WHERE id = :id", ['id' => $id]);
     }
 
     /*** CONTACT INDEX ***/
@@ -93,13 +97,13 @@ class ContattiNote extends Contatti
             'Controlli',
         ];
         $links = [
-            ['href' => "/main.php?page=scheda/index&op=contatti_nota_new&id_pg={$id_pg}&id={$id_contatto}", 'text' => 'Nuova nota', 'separator' => true],
-            ['href' => "/main.php?page=scheda/index&op=contatti&id_pg={$id_pg}", 'text' => 'Torna indietro'],
+            ['href' => "/main.php?page=scheda/index&op=contatti_nota_new&id_pg=$id_pg&id=$id_contatto", 'text' => 'Nuova nota', 'separator' => true],
+            ['href' => "/main.php?page=scheda/index&op=contatti&id_pg=$id_pg", 'text' => 'Torna indietro'],
         ];
 
         $contact_name = Personaggio::nameFromId($contact);
         $contact_created = Filters::date($contact_data['creato_il'], 'd/m/Y');
-        $table_title = "{$contact_name} - Creato il: {$contact_created}";
+        $table_title = "$contact_name - Creato il: $contact_created";
 
         return [
             'body' => 'scheda/contatti/note_list',
@@ -166,14 +170,14 @@ class ContattiNote extends Contatti
                 'swal_message' => 'Nota creata con successo.',
                 'swal_type' => 'success',
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Permesso negato!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Permesso negato!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -213,14 +217,14 @@ class ContattiNote extends Contatti
                 'swal_message' => 'Nota modificata con successo.',
                 'swal_type' => 'success',
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Permesso negato!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Permesso negato!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 
@@ -256,13 +260,13 @@ class ContattiNote extends Contatti
                 'swal_type' => 'success',
                 'note_list' => $this->NoteList($contact_id),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Permesso negato!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Permesso negato!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 }

@@ -12,13 +12,13 @@ class CrypterPasswordSha512 extends CrypterAlgo implements CrypterInterface
      * @var string
      * @note Il nome interno usato da php per riconoscere la funzione di hashing
      */
-    const ALGO = 'sha512';
+    public const ALGO = 'sha512';
 
     /**
      * @var int
      * @note Rappresenta il numero di rounds di criptazione per garantire la sicurezza dell'hash
      */
-    const COST = 120_000;
+    public const COST = 120_000;
 
     /*
      * @fn __construct

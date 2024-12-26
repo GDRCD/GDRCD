@@ -98,13 +98,13 @@ class Gruppi extends BaseClass
         $extra_query = '';
 
         if ( $id ) {
-            $extra_query = "AND gruppi_ruoli.gruppo = '{$id}'";
+            $extra_query = "AND gruppi_ruoli.gruppo = '$id'";
         }
 
         $sql = DB::queryStmt(
             "SELECT COUNT(personaggio_ruolo.id) AS 'TOT' FROM gruppi_ruoli 
                     LEFT JOIN personaggio_ruolo ON personaggio_ruolo.ruolo = gruppi_ruoli.id AND personaggio_ruolo.personaggio =:pg
-                    WHERE gruppi_ruoli.poteri = 1 AND personaggio_ruolo.id IS NOT NULL {$extra_query}",
+                    WHERE gruppi_ruoli.poteri = 1 AND personaggio_ruolo.id IS NOT NULL $extra_query",
             ['pg' => $this->me_id]
         );
 
@@ -123,7 +123,7 @@ class Gruppi extends BaseClass
         $sql = DB::queryStmt(
             "SELECT COUNT(personaggio_ruolo.id) AS 'TOT' FROM gruppi_ruoli 
                     LEFT JOIN personaggio_ruolo ON personaggio_ruolo.ruolo = gruppi_ruoli.id AND personaggio_ruolo.personaggio =:pg
-                    WHERE personaggio_ruolo.id IS NOT NULL AND gruppi_ruoli.gruppo = '{$id}'",
+                    WHERE personaggio_ruolo.id IS NOT NULL AND gruppi_ruoli.gruppo = '$id'",
             ['pg' => $this->me_id]
         );
 
@@ -154,7 +154,7 @@ class Gruppi extends BaseClass
      */
     public function getGroup(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM gruppi WHERE id=:id LIMIT 1", ['id' => $id]);
+        return DB::queryStmt("SELECT $val FROM gruppi WHERE id=:id LIMIT 1", ['id' => $id]);
     }
 
     /**
@@ -166,7 +166,7 @@ class Gruppi extends BaseClass
      */
     public function getAllGroups(string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM gruppi WHERE 1 ", []);
+        return DB::queryStmt("SELECT $val FROM gruppi WHERE 1 ", []);
     }
 
     /**
@@ -179,7 +179,7 @@ class Gruppi extends BaseClass
      */
     public function getAllGroupsByType(string $type, string $val = 'gruppi.*,gruppi_tipo.nome AS tipo_name'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM gruppi LEFT JOIN gruppi_tipo ON gruppi_tipo.id = gruppi.tipo WHERE tipo=:tipo ", ['tipo' => $type]);
+        return DB::queryStmt("SELECT $val FROM gruppi LEFT JOIN gruppi_tipo ON gruppi_tipo.id = gruppi.tipo WHERE tipo=:tipo ", ['tipo' => $type]);
     }
 
     /**
@@ -235,7 +235,7 @@ class Gruppi extends BaseClass
     public function getAllGroupsByIds(array $ids, string $val = '*'): DBQueryInterface
     {
         $toSearch = implode(',', $ids);
-        return DB::queryStmt("SELECT {$val} FROM gruppi WHERE id IN ({$toSearch})", []);
+        return DB::queryStmt("SELECT $val FROM gruppi WHERE id IN ($toSearch)", []);
     }
 
 
@@ -433,14 +433,14 @@ class Gruppi extends BaseClass
                 'swal_type' => 'success',
                 'groups_list' => $this->listGroups(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -484,14 +484,14 @@ class Gruppi extends BaseClass
                 'swal_type' => 'success',
                 'groups_list' => $this->listGroups(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -517,14 +517,14 @@ class Gruppi extends BaseClass
                 'swal_type' => 'success',
                 'groups_list' => $this->listGroups(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /*** CRONJOB ***/
@@ -557,32 +557,30 @@ class Gruppi extends BaseClass
                 $corp_money = Filters::int($ruolo['denaro']);
                 $stipendio = Filters::int($ruolo['stipendio']);
 
-                if ( !Gruppi::getInstance()->payFromMoney() ) {
+                if ( !self::getInstance()->payFromMoney() ) {
                     $totale_ruoli += Filters::int($stipendio);
+                } else if ( $corp_money && ($corp_money >= $stipendio) ) {
+                    $totale_ruoli += Filters::int($stipendio);
+                    DB::queryStmt(
+                        "UPDATE gruppi SET denaro=denaro-:stipendio WHERE id=:id LIMIT 1",
+                        [
+                            'id' => $group_id,
+                            'stipendio' => $stipendio,
+                        ]
+                    );
                 } else {
+                    $titolo = Filters::in('Stipendio non depositato');
+                    $testo = Filters::in("Il gruppo '$group_name' non ha abbastanza soldi per pagare il tuo stipendio di $stipendio dollari.");
 
-                    if ( $corp_money && ($corp_money >= $stipendio) ) {
-                        $totale_ruoli += Filters::int($stipendio);
-                        DB::queryStmt(
-                            "UPDATE gruppi SET denaro=denaro-:stipendio WHERE id=:id LIMIT 1",
-                            [
-                                'id' => $group_id,
-                                'stipendio' => $stipendio,
-                            ]
-                        );
-                    } else {
-                        $titolo = Filters::in('Stipendio non depositato');
-                        $testo = Filters::in("Il gruppo '{$group_name}' non ha abbastanza soldi per pagare il tuo stipendio di {$stipendio} dollari.");
-                        DB::queryStmt(
-                            "INSERT INTO messaggi(mittente,destinatario,tipo,oggetto,testo) VALUES('System',:id,0,:titolo,:testo) ",
-                            [
-                                'id' => $id,
-                                'titolo' => $titolo,
-                                'testo' => $testo,
-                            ]
-                        );
-                    }
-
+                    //! TODO: Convertire con nuove tabelle
+//                        DB::queryStmt(
+//                            "INSERT INTO coversazioni_messaggi(mittente,destinatario,tipo,oggetto,testo) VALUES('System',:id,0,:titolo,:testo) ",
+//                            [
+//                                'id' => $id,
+//                                'titolo' => $titolo,
+//                                'testo' => $testo,
+//                            ]
+//                        );
                 }
             }
 
@@ -607,30 +605,30 @@ class Gruppi extends BaseClass
 
                     if ( CarbonWrapper::needExec($interval, $interval_type, $last_exec) ) {
 
-                        if ( !Gruppi::getInstance()->payFromMoney() ) {
+                        if ( !self::getInstance()->payFromMoney() ) {
                             $totale_extra += Filters::int($extra_val);
+                        } else if ( $corp_money && ($corp_money >= $extra_val) ) {
+                            $totale_extra += Filters::int($extra_val);
+                            DB::queryStmt(
+                                "UPDATE gruppi SET denaro=denaro-:extra WHERE id=:id LIMIT 1",
+                                [
+                                    'id' => $group_id,
+                                    'extra' => $extra_val,
+                                ]
+                            );
                         } else {
-                            if ( $corp_money && ($corp_money >= $extra_val) ) {
-                                $totale_extra += Filters::int($extra_val);
-                                DB::queryStmt(
-                                    "UPDATE gruppi SET denaro=denaro-:extra WHERE id=:id LIMIT 1",
-                                    [
-                                        'id' => $group_id,
-                                        'extra' => $extra_val,
-                                    ]
-                                );
-                            } else {
-                                $titolo = Filters::in('Stipendio non depositato');
-                                $testo = Filters::in("Il gruppo '{$group_name}' non ha abbastanza soldi per pagare il tuo stipendio extra di {$extra_val} dollari.");
-                                DB::queryStmt(
-                                    "INSERT INTO messaggi(mittente,destinatario,tipo,oggetto,testo) VALUES('System',:id,0,:titolo,:testo) ",
-                                    [
-                                        'id' => $id,
-                                        'titolo' => $titolo,
-                                        'testo' => $testo,
-                                    ]
-                                );
-                            }
+                            $titolo = Filters::in('Stipendio non depositato');
+                            $testo = Filters::in("Il gruppo '$group_name' non ha abbastanza soldi per pagare il tuo stipendio extra di $extra_val dollari.");
+
+                            //! TODO: Convertire con nuove tabelle
+//                                DB::queryStmt(
+//                                    "INSERT INTO messaggi(mittente,destinatario,tipo,oggetto,testo) VALUES('System',:id,0,:titolo,:testo) ",
+//                                    [
+//                                        'id' => $id,
+//                                        'titolo' => $titolo,
+//                                        'testo' => $testo,
+//                                    ]
+//                                );
                         }
 
                         DB::queryStmt(

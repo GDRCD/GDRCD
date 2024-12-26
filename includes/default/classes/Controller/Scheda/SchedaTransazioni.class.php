@@ -2,15 +2,6 @@
 
 class SchedaTransazioni extends Scheda
 {
-    /**
-     * @fn __construct
-     * @note Class constructor
-     */
-    protected function __construct()
-    {
-        parent::__construct();
-    }
-
     /**** PERMISSION ***/
 
     /**
@@ -125,7 +116,7 @@ class SchedaTransazioni extends Scheda
             $causale = Filters::in($post['causale']);
             $px = Filters::int($post['px']);
 
-            if ( !empty($causale) && ($px != 0) && !empty($pg) ) {
+            if ( !empty($causale) && ($px !== 0) && !empty($pg) ) {
 
                 Personaggio::updatePgData(
                     $pg,
@@ -139,7 +130,7 @@ class SchedaTransazioni extends Scheda
                     "autore" => $this->me_id,
                     "destinatario" => $pg,
                     "tipo" => PX,
-                    "testo" => "Assegnati {$px}px a {$pg_name} per '{$causale}'",
+                    "testo" => "Assegnati {$px}px a $pg_name per '$causale'",
                 ]);
 
                 return [
@@ -149,23 +140,23 @@ class SchedaTransazioni extends Scheda
                     'swal_type' => 'success',
                     'new_template' => Log::getInstance()->logTable($pg, PX, 10, 'Esperienza'),
                 ];
-            } else {
-                return [
-                    'response' => false,
-                    'swal_title' => 'Operazione fallita!',
-                    'swal_message' => 'Compila tutti i campi.',
-                    'swal_type' => 'error',
-                ];
             }
 
-        } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
+                'swal_message' => 'Compila tutti i campi.',
                 'swal_type' => 'error',
             ];
+
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 }

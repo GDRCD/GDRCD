@@ -18,9 +18,9 @@ class Anagrafe extends BaseClass
         $order_by = Filters::out($post['order_by']);
         $order_for = Filters::out($post['order_for']);
 
-        $name_search = ($name) ? " AND personaggio.nome LIKE \"%{$name}%\" " : '';
-        $race_search = ($race && Razze::getInstance()->activeRaces()) ? " AND personaggio.razza = {$race}" : '';
-        $gender_search = ($gender) ? " AND personaggio.sesso = {$gender}" : '';
+        $name_search = ($name) ? " AND personaggio.nome LIKE \"%$name%\" " : '';
+        $race_search = ($race && Razze::getInstance()->activeRaces()) ? " AND personaggio.razza = $race" : '';
+        $gender_search = ($gender) ? " AND personaggio.sesso = $gender" : '';
         $order_by_search = match ($order_by) {
             default => 'personaggio.nome',
             'race' => 'razze.nome',
@@ -40,11 +40,11 @@ class Anagrafe extends BaseClass
                     FROM personaggio
                     LEFT JOIN razze ON personaggio.razza = razze.id
                     LEFT JOIN sessi ON personaggio.sesso = sessi.id
-                    WHERE 1 = 1
+                    WHERE 1
                     {$name_search}
                     {$race_search}
                     {$gender_search}
-                    ORDER BY {$order_by_search} {$order_for_search}
+                    ORDER BY $order_by_search {$order_for_search}
                     LIMIT 500 ", []);
 
         return [
@@ -62,6 +62,7 @@ class Anagrafe extends BaseClass
      * @note Ritorna il markup HTML della lista dei personaggi
      * @param $pgs_list
      * @return string
+     * @throws Throwable
      */
     public function renderResults($pgs_list): string
     {

@@ -27,7 +27,7 @@ class PersonaggioChatOpzioni extends Personaggio
     public function getOptionValue(string $option, int $pg, string $val = '*'): DBQueryInterface
     {
         return DB::queryStmt(
-            "SELECT {$val} FROM personaggio_chat_opzioni WHERE opzione=:option AND personaggio=:pg LIMIT 1",
+            "SELECT $val FROM personaggio_chat_opzioni WHERE opzione=:option AND personaggio=:pg LIMIT 1",
             [
                 'option' => $option,
                 'pg' => $pg,
@@ -45,7 +45,7 @@ class PersonaggioChatOpzioni extends Personaggio
      */
     public function getAllOptionsValues(int $pg, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM personaggio_chat_opzioni WHERE personaggio=:pg", [
+        return DB::queryStmt("SELECT $val FROM personaggio_chat_opzioni WHERE personaggio=:pg", [
             'pg' => $pg,
         ]);
     }
@@ -61,7 +61,7 @@ class PersonaggioChatOpzioni extends Personaggio
     public function getAllOptionsWithValues(int $pg, string $val = 'chat_opzioni.*,personaggio_chat_opzioni.*'): DBQueryInterface
     {
 
-        return DB::queryStmt("SELECT {$val} FROM chat_opzioni 
+        return DB::queryStmt("SELECT $val FROM chat_opzioni 
                 LEFT JOIN personaggio_chat_opzioni ON chat_opzioni.nome = personaggio_chat_opzioni.opzione AND personaggio_chat_opzioni.personaggio=:pg
                 WHERE 1
                 ", ['pg' => $pg]);

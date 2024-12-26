@@ -56,7 +56,7 @@ $id_contatto = Filters::int($_REQUEST['id']);
                 <input type="hidden" id="url"
                        value="/main.php?page=scheda/index&id_pg=<?= $id_pg ?>&op=contatti_view&id=<?= $id_contatto ?>">
                 <input type="submit"
-                       value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>"/>
+                       value="Crea"/>
             </div>
         </div>
 

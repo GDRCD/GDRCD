@@ -26,7 +26,7 @@ class MeteoCondizioni extends Meteo
      */
     public function getAllCondition(string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM meteo_condizioni", []);
+        return DB::queryStmt("SELECT $val FROM meteo_condizioni", []);
     }
 
     /**
@@ -39,7 +39,7 @@ class MeteoCondizioni extends Meteo
      */
     public function getCondition(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM meteo_condizioni WHERE id=:id LIMIT 1", ['id' => $id]);
+        return DB::queryStmt("SELECT $val FROM meteo_condizioni WHERE id=:id LIMIT 1", ['id' => $id]);
     }
 
     /** LISTS  */
@@ -147,14 +147,14 @@ class MeteoCondizioni extends Meteo
                 'swal_type' => 'success',
                 'condition_list' => $this->listConditions(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -190,14 +190,14 @@ class MeteoCondizioni extends Meteo
                 'swal_type' => 'success',
                 'condition_list' => $this->listConditions(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -222,14 +222,14 @@ class MeteoCondizioni extends Meteo
                 'swal_type' => 'success',
                 'condition_list' => $this->listConditions(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
 }

@@ -32,7 +32,7 @@ abstract class DbMigration
     public function getMigrationId(): int
     {
         if ( $this->migration_id <= 0 ) {
-            throw new Exception("Migration ID non configurato per " . get_called_class());
+            throw new RuntimeException("Migration ID non configurato per " . static::class);
         }
 
         return $this->migration_id;

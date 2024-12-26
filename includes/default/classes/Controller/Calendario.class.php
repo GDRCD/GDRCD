@@ -81,7 +81,7 @@ class Calendario extends BaseClass
      */
     public function getCalendarEvent(int $id, string $val = 'calendario_tipi.*,calendario.*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM calendario 
+        return DB::queryStmt("SELECT $val FROM calendario 
                 LEFT JOIN calendario_tipi ON calendario.tipo = calendario_tipi.id 
                 WHERE calendario.id=:id LIMIT 1", ['id' => $id]);
     }
@@ -96,7 +96,7 @@ class Calendario extends BaseClass
      */
     public function getCalendarPersonalEvents(int $id, string $val = 'calendario.*,calendario_tipi.colore_bg,calendario_tipi.colore_testo'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM calendario 
+        return DB::queryStmt("SELECT $val FROM calendario 
                 LEFT JOIN calendario_tipi ON calendario.tipo = calendario_tipi.id 
                 WHERE (calendario.personaggio=:id AND calendario_tipi.pubblico = 0) OR (calendario_tipi.pubblico = 1)", ['id' => $id]);
     }
@@ -110,7 +110,7 @@ class Calendario extends BaseClass
      */
     public function getCalendarAllTypes(string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM calendario_tipi WHERE 1 ", []);
+        return DB::queryStmt("SELECT $val FROM calendario_tipi WHERE 1 ", []);
     }
 
     /**
@@ -123,7 +123,7 @@ class Calendario extends BaseClass
      */
     public function getCalendarTypeData(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM calendario_tipi WHERE id=:id LIMIT 1", ['id' => $id]);
+        return DB::queryStmt("SELECT $val FROM calendario_tipi WHERE id=:id LIMIT 1", ['id' => $id]);
     }
 
     /**
@@ -229,22 +229,24 @@ class Calendario extends BaseClass
         $event_data = $this->getCalendarEvent($event_id)->getData()[0];
         $edit_permission = $this->permissionEditEvent($event_id);
 
-        if ( Filters::bool($event_data['pubblico']) && $edit_permission ) {
+        if ( $edit_permission && Filters::bool($event_data['pubblico']) ) {
             return [
                 'data' => $event_data,
                 'action' => 'edit',
             ];
-        } else if ( $edit_permission ) {
+        }
+
+        if ( $edit_permission ) {
             return [
                 'data' => $event_data,
                 'action' => 'delete',
             ];
-        } else {
-            return [
-                'data' => $event_data,
-                'action' => 'view',
-            ];
         }
+
+        return [
+            'data' => $event_data,
+            'action' => 'view',
+        ];
     }
 
     /**
@@ -426,22 +428,22 @@ class Calendario extends BaseClass
                     'event_id' => $calendar_id,
                     'tooltip' => $this->renderEventTooltip($this->getCalendarEvent($calendar_id)->getData()[0]),
                 ];
-            } else {
-                return [
-                    'response' => false,
-                    'swal_title' => 'Errore!',
-                    'swal_message' => 'Titolo mancante.',
-                    'swal_type' => 'error',
-                ];
             }
-        } else {
+
             return [
                 'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Tipo evento mancante.',
+                'swal_title' => 'Errore!',
+                'swal_message' => 'Titolo mancante.',
                 'swal_type' => 'error',
             ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Tipo evento mancante.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -466,14 +468,14 @@ class Calendario extends BaseClass
                 'swal_message' => 'Evento rimosso.',
                 'swal_type' => 'success',
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Non hai i permessi per rimuovere questo evento.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Non hai i permessi per rimuovere questo evento.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -491,7 +493,7 @@ class Calendario extends BaseClass
         $owner = Filters::int($event_data['personaggio']);
 
         // Controllo che non sia un mio evento
-        if ( $owner != $this->me_id ) {
+        if ( $owner !== $this->me_id ) {
 
             $already_copied = $this->countCopiedEvent($event_id, $pg_id);
 
@@ -507,30 +509,30 @@ class Calendario extends BaseClass
                     return [
                         'response' => true,
                     ];
-                } else {
-                    return [
-                        'response' => false,
-                        'swal_title' => 'Operazione fallita!',
-                        'swal_message' => 'Evento pubblico, gia presente nel calendario.',
-                        'swal_type' => 'info',
-                    ];
                 }
-            } else {
+
                 return [
                     'response' => false,
                     'swal_title' => 'Operazione fallita!',
-                    'swal_message' => 'Hai già copiato questo evento.',
+                    'swal_message' => 'Evento pubblico, gia presente nel calendario.',
                     'swal_type' => 'info',
                 ];
             }
-        } else {
+
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Non puoi copiare un evento che hai creato.',
+                'swal_message' => 'Hai già copiato questo evento.',
                 'swal_type' => 'info',
             ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Non puoi copiare un evento che hai creato.',
+            'swal_type' => 'info',
+        ];
 
     }
 
@@ -569,9 +571,9 @@ class Calendario extends BaseClass
                 'swal_message' => 'Evento duplicato nel tuo calendario personale.',
                 'swal_type' => 'success',
             ];
-        } else {
-            return $control;
         }
+
+        return $control;
     }
 
 
@@ -610,14 +612,14 @@ class Calendario extends BaseClass
                 'swal_type' => 'success',
                 'event_types' => $this->listCalendarEventTypes(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -655,15 +657,14 @@ class Calendario extends BaseClass
                 'swal_type' => 'success',
                 'event_types' => $this->listCalendarEventTypes(),
             ];
-        } else {
-
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -691,14 +692,14 @@ class Calendario extends BaseClass
                 'swal_type' => 'success',
                 'event_types' => $this->listCalendarEventTypes(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 

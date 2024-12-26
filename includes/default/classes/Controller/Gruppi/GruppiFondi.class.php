@@ -55,7 +55,7 @@ class GruppiFondi extends Gruppi
      */
     public function getFound(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM gruppi_fondi WHERE id=:id LIMIT 1", ['id' => $id]);
+        return DB::queryStmt("SELECT $val FROM gruppi_fondi WHERE id=:id LIMIT 1", ['id' => $id]);
     }
 
     /**
@@ -67,7 +67,7 @@ class GruppiFondi extends Gruppi
      */
     public function getAllFounds(string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM gruppi_fondi WHERE 1", []);
+        return DB::queryStmt("SELECT $val FROM gruppi_fondi WHERE 1", []);
     }
 
     /**
@@ -80,7 +80,7 @@ class GruppiFondi extends Gruppi
      */
     public function getAllFoundsByGroup(int $group, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM gruppi_fondi WHERE gruppo=:id", ['id' => $group]);
+        return DB::queryStmt("SELECT $val FROM gruppi_fondi WHERE gruppo=:id", ['id' => $group]);
     }
 
     /**** LISTS ****/
@@ -114,6 +114,7 @@ class GruppiFondi extends Gruppi
      * @fn listIntervalsTypes
      * @note Genera gli option per i tipi d'intervallo
      * @return string
+     * @throws Throwable
      */
     public function listIntervalsTypes(): string
     {
@@ -160,12 +161,12 @@ class GruppiFondi extends Gruppi
             $interval_type = Filters::in($post['interval_type']);
             $last_exec = Filters::in($post['last_exec']);
 
-            DB::queryStmt("INSERT INTO gruppi_fondi (nome, gruppo, denaro, intervallo, intervallo_tipo, last_exec) VALUES (:nome, :gruppo, :denaro, :intervallo, :intervallo_tipo, :last_exec)", [
+            DB::queryStmt("INSERT INTO gruppi_fondi (nome, gruppo, denaro, `interval`, interval_type, last_exec) VALUES (:nome, :gruppo, :denaro, :interval, :interval_type, :last_exec)", [
                 'nome' => $nome,
                 'gruppo' => $group,
                 'denaro' => $denaro,
-                'intervallo' => $interval,
-                'intervallo_tipo' => $interval_type,
+                'interval' => $interval,
+                'interval_type' => $interval_type,
                 'last_exec' => $last_exec,
             ]);
 
@@ -176,14 +177,14 @@ class GruppiFondi extends Gruppi
                 'swal_type' => 'success',
                 'founds_list' => $this->listFounds(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -203,7 +204,7 @@ class GruppiFondi extends Gruppi
             $interval = Filters::int($post['interval']);
             $interval_type = Filters::in($post['interval_type']);
 
-            DB::queryStmt("UPDATE gruppi_fondi SET nome=:nome, gruppo=:gruppo, denaro=:denaro, intervallo=:intervallo, intervallo_tipo=:intervallo_tipo WHERE id=:id", [
+            DB::queryStmt("UPDATE gruppi_fondi SET nome=:nome, gruppo=:gruppo, denaro=:denaro, gruppi_fondi.interval=:intervallo, interval_type=:intervallo_tipo WHERE id=:id", [
                 'id' => $id,
                 'nome' => $nome,
                 'gruppo' => $group,
@@ -219,14 +220,14 @@ class GruppiFondi extends Gruppi
                 'swal_type' => 'success',
                 'founds_list' => $this->listFounds(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -251,14 +252,14 @@ class GruppiFondi extends Gruppi
                 'swal_type' => 'success',
                 'founds_list' => $this->listFounds(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
 
@@ -316,15 +317,16 @@ class GruppiFondi extends Gruppi
                         $pg = Filters::in($capo['id']);
 
                         $titolo = Filters::in('Resoconto fondi assegnati oggi.');
-                        $testo = Filters::in("Il gruppo '{$group_name}' ha ricevuto un totale di '{$total_given}' dollari.");
+                        $testo = Filters::in("Il gruppo '$group_name' ha ricevuto un totale di '$total_given' dollari.");
 
-                        DB::queryStmt("INSERT INTO messaggi (mittente, destinatario, oggetto, testo, tipo) VALUES (:mittente, :destinatario, :oggetto, :testo, :tipo)", [
-                            'mittente' => 'System',
-                            'destinatario' => $pg,
-                            'oggetto' => $titolo,
-                            'testo' => $testo,
-                            'tipo' => 0
-                        ]);
+                        //! TODO: Implementare nuove tabelle
+//                        DB::queryStmt("INSERT INTO messaggi (mittente, destinatario, oggetto, testo, tipo) VALUES (:mittente, :destinatario, :oggetto, :testo, :tipo)", [
+//                            'mittente' => 'System',
+//                            'destinatario' => $pg,
+//                            'oggetto' => $titolo,
+//                            'testo' => $testo,
+//                            'tipo' => 0
+//                        ]);
                     }
 
                 }

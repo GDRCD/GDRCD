@@ -5,7 +5,6 @@ class Esiti extends BaseClass
 
     private bool
         $esiti_enabled,
-        $esiti_chat,
         $esiti_from_player,
         $esiti_tiri;
 
@@ -18,9 +17,6 @@ class Esiti extends BaseClass
 
         # Gli esiti sono attivi in chat?
         $this->esiti_enabled = Functions::get_constant('ESITI_ENABLE');
-
-        #
-        $this->esiti_chat = Functions::get_constant('ESITI_CHAT');
 
         # Gli esiti prevedono dei tiri dado?
         $this->esiti_tiri = Functions::get_constant('ESITI_TIRI');
@@ -139,14 +135,14 @@ class Esiti extends BaseClass
 
         if ( $this->esitiManageAll() ) {
             return true;
-        } else {
-            $data = $this->getEsito($id, 'autore,master');
-            $autore = Filters::int($data['autore']);
-            $master = Filters::int($data['master']);
-            $player_perm = $this->esitoPlayerExist($id, $this->me_id);
-
-            return (in_array($this->me_id, [$autore, $master]) || $player_perm);
         }
+
+        $data = $this->getEsito($id, 'autore,master');
+        $autore = Filters::int($data['autore']);
+        $master = Filters::int($data['master']);
+        $player_perm = $this->esitoPlayerExist($id, $this->me_id);
+
+        return (in_array($this->me_id, [$autore, $master], true) || $player_perm);
     }
 
     /**
@@ -162,14 +158,14 @@ class Esiti extends BaseClass
 
         if ( $this->esitiManageAll() ) {
             return true;
-        } else {
-            $data = $this->getEsito($id, 'autore,master');
-            $autore = Filters::int($data['autore']);
-            $master = Filters::int($data['master']);
-            $player_perm = $this->esitoPlayerExist($id, $this->me_id);
-
-            return (in_array($this->me_id, [$autore, $master]) || $player_perm);
         }
+
+        $data = $this->getEsito($id, 'autore,master');
+        $autore = Filters::int($data['autore']);
+        $master = Filters::int($data['master']);
+        $player_perm = $this->esitoPlayerExist($id, $this->me_id);
+
+        return (in_array($this->me_id, [$autore, $master], true) || $player_perm);
     }
 
     /**
@@ -185,12 +181,12 @@ class Esiti extends BaseClass
 
         if ( $this->esitiManageAll() ) {
             return true;
-        } else {
-            $data = $this->getEsito($id, 'master');
-            $master = Filters::int($data['master']);
-
-            return ($this->me_id == $master);
         }
+
+        $data = $this->getEsito($id, 'master');
+        $master = Filters::int($data['master']);
+
+        return ($this->me_id === $master);
     }
 
     /**
@@ -206,12 +202,12 @@ class Esiti extends BaseClass
 
         if ( $this->esitiManageAll() ) {
             return true;
-        } else {
-            $data = $this->getEsito($id, 'master');
-            $master = Filters::int($data['master']);
-
-            return ($this->me_id == $master);
         }
+
+        $data = $this->getEsito($id, 'master');
+        $master = Filters::int($data['master']);
+
+        return ($this->me_id === $master);
     }
 
     /**
@@ -227,12 +223,12 @@ class Esiti extends BaseClass
 
         if ( $this->esitiManageAll() ) {
             return true;
-        } else {
-            $data = $this->getEsito($id, 'master');
-            $master = Filters::int($data['master']);
-
-            return ($this->me_id == $master);
         }
+
+        $data = $this->getEsito($id, 'master');
+        $master = Filters::int($data['master']);
+
+        return ($this->me_id === $master);
     }
 
     /*** TABLES HELPERS ***/
@@ -247,9 +243,9 @@ class Esiti extends BaseClass
      */
     public function getAllEsito(string $val = '*', string $order = ''): DBQueryInterface
     {
-        $where = ($this->esitiManageAll()) ? '1' : "(master = '0' OR master = '{$this->me_id}')";
+        $where = ($this->esitiManageAll()) ? '1' : "(master = '0' OR master = '$this->me_id')";
 
-        return DB::queryStmt("SELECT {$val} FROM esiti WHERE {$where} {$order}", []);
+        return DB::queryStmt("SELECT $val FROM esiti WHERE $where $order", []);
     }
 
     /**
@@ -264,9 +260,9 @@ class Esiti extends BaseClass
     public function getAllEsitoPlayer(int $pg, string $val = 'esiti.*', string $order = ''): DBQueryInterface
     {
         return DB::queryStmt(
-            "SELECT {$val} FROM esiti
+            "SELECT $val FROM esiti
                     LEFT JOIN esiti_personaggio ON (esiti.id = esiti_personaggio.esito) 
-                    WHERE esiti_personaggio.personaggio = :pg AND esiti.closed = 0 {$order}",
+                    WHERE esiti_personaggio.personaggio = :pg AND esiti.closed = 0 $order",
             [
                 'pg' => $pg,
             ]
@@ -284,7 +280,7 @@ class Esiti extends BaseClass
     public function getEsito(int $id, string $val = '*'): DBQueryInterface
     {
         return DB::queryStmt(
-            "SELECT {$val} FROM esiti WHERE id=:id LIMIT 1",
+            "SELECT $val FROM esiti WHERE id=:id LIMIT 1",
             [
                 'id' => $id,
             ]
@@ -302,7 +298,7 @@ class Esiti extends BaseClass
     public function getAnswer(int $id, string $val = '*'): DBQueryInterface
     {
         return DB::queryStmt(
-            "SELECT {$val} FROM esiti_risposte WHERE id=:id LIMIT 1",
+            "SELECT $val FROM esiti_risposte WHERE id=:id LIMIT 1",
             [
                 'id' => $id,
             ]
@@ -319,7 +315,7 @@ class Esiti extends BaseClass
      */
     public function getAnswerResults(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM esiti_risposte_risultati WHERE esito=:id",
+        return DB::queryStmt("SELECT $val FROM esiti_risposte_risultati WHERE esito=:id",
             [
                 'id' => $id,
             ]
@@ -337,7 +333,7 @@ class Esiti extends BaseClass
      */
     public function getEsitoAllAnswers(int $id, string $val = '*', string $dir = 'ASC'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM esiti_risposte WHERE esito = :id ORDER BY data {$dir}",
+        return DB::queryStmt("SELECT $val FROM esiti_risposte WHERE esito = :id ORDER BY data $dir",
             [
                 'id' => $id,
             ]
@@ -398,7 +394,7 @@ class Esiti extends BaseClass
     public function getPlayerEsito(int $id, int $pg, string $val = '*'): DBQueryInterface
     {
         return DB::queryStmt(
-            "SELECT {$val} FROM esiti_personaggio WHERE esito=:id AND personaggio=:pg LIMIT 1",
+            "SELECT $val FROM esiti_personaggio WHERE esito=:id AND personaggio=:pg LIMIT 1",
             [
                 'id' => $id,
                 'pg' => $pg,
@@ -417,7 +413,7 @@ class Esiti extends BaseClass
     public function getAllPlayerEsito(int $id, string $val = 'esiti_personaggio.*'): DBQueryInterface
     {
         return DB::queryStmt(
-            "SELECT {$val} FROM esiti_personaggio 
+            "SELECT $val FROM esiti_personaggio 
                                 LEFT JOIN personaggio ON (personaggio.id = esiti_personaggio.personaggio) 
                                 WHERE esito=:id ORDER BY personaggio.nome",
             ['id' => $id]
@@ -573,7 +569,7 @@ class Esiti extends BaseClass
                     'id' => $id,
                     "titolo" => Filters::out($esito['titolo']),
                     "data" => CarbonWrapper::format($esito['data'], 'd/m/Y H:i'),
-                    "dice" => "{$dice_num} dadi da {$dice_face}",
+                    "dice" => "$dice_num dadi da $dice_face",
                     "abi_name" => Filters::out($abi_data['nome']),
                 ];
             }
@@ -586,9 +582,9 @@ class Esiti extends BaseClass
                     'table_title' => 'Lista Esiti',
                 ]
             );
-        } else {
-            return '';
         }
+
+        return '';
     }
 
     /**
@@ -670,7 +666,7 @@ class Esiti extends BaseClass
             foreach ( $list as $cd ) {
                 $text = Filters::text($cd['testo']);
 
-                $html .= "  {$text}  |";
+                $html .= "  $text  |";
             }
         } else {
             $html = 'Non hai scoperto nulla.';
@@ -744,14 +740,14 @@ class Esiti extends BaseClass
     public function renderEsitiList(object $list, string $page): array
     {
         $row_data = [];
-        $path = ($page == 'servizi') ? 'servizi/esiti/esiti_index' : 'gestione/esiti/esiti_index';
-        $backlink = ($page == 'servizi') ? 'servizi' : 'gestione';
+        $path = ($page === 'servizi') ? 'servizi/esiti/esiti_index' : 'gestione/esiti/esiti_index';
+        $backlink = ($page === 'servizi') ? 'servizi' : 'gestione';
 
         foreach ( $list as $row ) {
 
             $id = Filters::int($row['id']);
 
-            if ( Filters::int($row['master']) != 0 ) {
+            if ( Filters::int($row['master']) !== 0 ) {
                 $master = 'Presa in carico';
             } else if ( $row['closed'] ) {
                 $master = 'Chiuso';
@@ -789,8 +785,8 @@ class Esiti extends BaseClass
             'Controlli',
         ];
         $links = [
-            ['href' => "/main.php?page={$path}&op=new", 'text' => 'Nuovo esito'],
-            ['href' => "/main.php?page={$backlink}", 'text' => 'Indietro'],
+            ['href' => "/main.php?page=$path&op=new", 'text' => 'Nuovo esito'],
+            ['href' => "/main.php?page=$backlink", 'text' => 'Indietro'],
         ];
         return [
             'body' => 'gestione/esiti/list',
@@ -806,6 +802,7 @@ class Esiti extends BaseClass
      * @fn htmlCDAdd
      * @note Aggiunge un form alla pagina per aggiungere una cd
      * @return array
+     * @throws Throwable
      */
     public function htmlCDAdd(): array
     {
@@ -867,14 +864,14 @@ class Esiti extends BaseClass
                 'swal_message' => 'Esito creato con successo.',
                 'swal_type' => 'success',
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -920,9 +917,9 @@ class Esiti extends BaseClass
             );
 
             return ['response' => true, 'mex' => 'Esito creato con successo.'];
-        } else {
-            return ['response' => false, 'mex' => 'Permesso negato'];
         }
+
+        return ['response' => false, 'mex' => 'Permesso negato'];
     }
 
     /*** READ ESITO */
@@ -969,7 +966,7 @@ class Esiti extends BaseClass
                         $res_text = Filters::text($result['testo']);
                         $res_num = Filters::int($result['risultato']);
 
-                        if ( $this->esitoResultPermission($id) || ($pg == $this->me_id) ) {
+                        if ( ($pg === $this->me_id) || $this->esitoResultPermission($id) ) {
                             $lanciati[] = [
                                 'pg' => $pg_name,
                                 'res_text' => $res_text,
@@ -985,7 +982,7 @@ class Esiti extends BaseClass
                     $to_push['lanciati'] = $lanciati;
                 }
 
-                $to_push['mine'] = ($autore == $this->me_id) ? 'mine' : 'other';
+                $to_push['mine'] = ($autore === $this->me_id) ? 'mine' : 'other';
                 $to_push['contenuto'] = Filters::text($answer['contenuto']);
                 $to_push['dice_num'] = Filters::int($answer['dice_num']);
                 $to_push['dice_face'] = Filters::int($answer['dice_face']);
@@ -1069,14 +1066,14 @@ class Esiti extends BaseClass
                 'new_view' => $this->renderEsitoAnswers($id),
             ];
 
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -1186,23 +1183,23 @@ class Esiti extends BaseClass
                     'swal_type' => 'success',
                     'members_list' => $this->membersList($id),
                 ];
-            } else {
-                return [
-                    'response' => false,
-                    'swal_title' => 'Operazione fallita!',
-                    'swal_message' => 'Personaggio già esistente.',
-                    'swal_type' => 'error',
-                ];
             }
 
-        } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
+                'swal_message' => 'Personaggio già esistente.',
                 'swal_type' => 'error',
             ];
+
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 
@@ -1236,14 +1233,14 @@ class Esiti extends BaseClass
                 'members_list' => $this->membersList($id_esito),
             ];
 
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 
@@ -1289,15 +1286,14 @@ class Esiti extends BaseClass
                 'swal_type' => 'success',
             ];
 
-        } else {
-
-            return [
-                'response' => true,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => true,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 
@@ -1330,14 +1326,14 @@ class Esiti extends BaseClass
                 'swal_type' => 'success',
                 'esiti_list' => $this->esitiListManagement(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /*** CLOSE ESITO ***/
@@ -1369,13 +1365,13 @@ class Esiti extends BaseClass
                 'swal_type' => 'success',
                 'esiti_list' => $this->esitiListManagement(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 }

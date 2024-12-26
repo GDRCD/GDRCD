@@ -27,7 +27,7 @@ class Cronjob extends BaseClass
      */
     public function getCron(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM cronjob WHERE id=:id LIMIT 1",[
+        return DB::queryStmt("SELECT $val FROM cronjob WHERE id=:id LIMIT 1",[
             'id' => $id
         ]);
     }
@@ -41,7 +41,7 @@ class Cronjob extends BaseClass
      */
     public function getAllCronjobs(string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM cronjob WHERE 1", []);
+        return DB::queryStmt("SELECT $val FROM cronjob WHERE 1", []);
     }
 
     /*** CONTROLS ***/
@@ -128,7 +128,7 @@ class Cronjob extends BaseClass
                     $class::getInstance()->$function();
                     $this->endExec($id);
                 } else {
-                    die("La funzione <span style='color:red; font-weight: bold;'>{$function}</span> del Cronjob <span style='color:red; font-weight: bold;'>{$name}</span> non esiste.");
+                    die("La funzione <span style='color:red; font-weight: bold;'>$function</span> del Cronjob <span style='color:red; font-weight: bold;'>$name</span> non esiste.");
                 }
             }
         }

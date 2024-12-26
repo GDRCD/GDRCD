@@ -32,7 +32,7 @@ class TemplateSmarty extends Template
         return $render;
     }
 
-    public function addValues($container, $values)
+    public function addValues($container, $values): void
     {
 
         $old_val = $this->smarty->getTemplateVars($container);

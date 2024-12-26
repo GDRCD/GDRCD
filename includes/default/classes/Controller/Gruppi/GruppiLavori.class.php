@@ -76,7 +76,7 @@ class GruppiLavori extends Gruppi
      */
     public function getAllWorks(string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM lavori WHERE 1", []);
+        return DB::queryStmt("SELECT $val FROM lavori WHERE 1", []);
     }
 
     /**
@@ -181,8 +181,8 @@ class GruppiLavori extends Gruppi
                 'name' => Filters::out($row['nome']),
                 'stipendio' => Filters::int($row['stipendio']),
                 'immagine' => Filters::out($row['immagine']),
-                'buyable' => ($this->getCharacterWorksNumbers($this->me_id) < $this->max_works) && empty($this->getCharacterWork($this->me_id, $row['id'])),
-                'dimissions' => !empty($this->getCharacterWork($this->me_id, $row['id'])),
+                'buyable' => ($this->getCharacterWorksNumbers($this->me_id) < $this->max_works) && $this->getCharacterWork($this->me_id, $row['id']) === null,
+                'dimissions' => $this->getCharacterWork($this->me_id, $row['id']) !== null,
             ];
 
             $row_data[] = $array;
@@ -253,14 +253,14 @@ class GruppiLavori extends Gruppi
                 'swal_type' => 'success',
                 'works_list' => $this->listWorks(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -296,14 +296,14 @@ class GruppiLavori extends Gruppi
                 'swal_type' => 'success',
                 'works_list' => $this->listWorks(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -328,14 +328,14 @@ class GruppiLavori extends Gruppi
                 'swal_type' => 'success',
                 'works_list' => $this->listWorks(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -355,11 +355,11 @@ class GruppiLavori extends Gruppi
 
             if ( $this->getCharacterWorksNumbers($pg) < $this->max_works ) {
 
-                if ( empty($this->getCharacterWork($pg, $id)) ) {
+                if ( $this->getCharacterWork($pg, $id) === null ) {
 
                     $scadenza = CarbonWrapper::AddDays(date("Y-m-d"), $this->dimissions_days);
 
-                    DB::queryStmt("INSERT INTO lavori_personaggi (personaggio, lavoro, scadenza) VALUES (:pg, :lavoro, :scadenza)",
+                    DB::queryStmt("INSERT INTO personaggio_lavoro(personaggio, lavoro, scadenza) VALUES (:pg, :lavoro, :scadenza)",
                         [
                             'pg' => $pg,
                             'lavoro' => $id,
@@ -374,31 +374,31 @@ class GruppiLavori extends Gruppi
                         'swal_type' => 'success',
                         'works_table' => $this->worksList(),
                     ];
-                } else {
-                    return [
-                        'response' => false,
-                        'swal_title' => 'Operazione fallita!',
-                        'swal_message' => 'Lavoro gia preso.',
-                        'swal_type' => 'error',
-                    ];
                 }
-            } else {
+
                 return [
                     'response' => false,
                     'swal_title' => 'Operazione fallita!',
-                    'swal_message' => 'Raggiunto numero massimo di lavori.',
+                    'swal_message' => 'Lavoro gia preso.',
                     'swal_type' => 'error',
                 ];
             }
 
-        } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
+                'swal_message' => 'Raggiunto numero massimo di lavori.',
                 'swal_type' => 'error',
             ];
+
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 
@@ -418,8 +418,8 @@ class GruppiLavori extends Gruppi
             $pg = Filters::int($post['personaggio']);
             $work_data = $this->getCharacterWork($pg, $id);
 
-            if ( !empty($work_data) ) {
-                DB::queryStmt("DELETE FROM lavori_personaggi WHERE personaggio=:pg AND lavoro=:lavoro",
+            if ( $work_data->getNumRows() ) {
+                DB::queryStmt("DELETE FROM personaggio_lavoro WHERE personaggio=:pg AND lavoro=:lavoro",
                     [
                         'pg' => $pg,
                         'lavoro' => $id,
@@ -434,23 +434,23 @@ class GruppiLavori extends Gruppi
                     'works_table' => $this->worksList(),
 
                 ];
-            } else {
-                return [
-                    'response' => false,
-                    'swal_title' => 'Operazione fallita!',
-                    'swal_message' => 'Lavoro mai preso.',
-                    'swal_type' => 'error',
-                ];
             }
 
-        } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
+                'swal_message' => 'Lavoro mai preso.',
                 'swal_type' => 'error',
             ];
+
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 
@@ -472,11 +472,11 @@ class GruppiLavori extends Gruppi
 
             if ( $this->getCharacterWorksNumbers($this->me_id) < $this->max_works ) {
 
-                if ( empty($this->getCharacterWork($this->me_id, $id)) ) {
+                if ( $this->getCharacterWork($this->me_id, $id) === null ) {
 
                     $scadenza = CarbonWrapper::AddDays(date("Y-m-d"), $this->dimissions_days);
 
-                    DB::queryStmt("INSERT INTO lavori_personaggi (personaggio, lavoro, scadenza) VALUES (:pg, :lavoro, :scadenza)",
+                    DB::queryStmt("INSERT INTO personaggio_lavoro (personaggio, lavoro, scadenza) VALUES (:pg, :lavoro, :scadenza)",
                         [
                             'pg' => $this->me_id,
                             'lavoro' => $id,
@@ -491,31 +491,31 @@ class GruppiLavori extends Gruppi
                         'swal_type' => 'success',
                         'works_table' => $this->worksList(),
                     ];
-                } else {
-                    return [
-                        'response' => false,
-                        'swal_title' => 'Operazione fallita!',
-                        'swal_message' => 'Lavoro gia preso.',
-                        'swal_type' => 'error',
-                    ];
                 }
-            } else {
+
                 return [
                     'response' => false,
                     'swal_title' => 'Operazione fallita!',
-                    'swal_message' => 'Raggiunto numero massimo di lavori.',
+                    'swal_message' => 'Lavoro gia preso.',
                     'swal_type' => 'error',
                 ];
             }
 
-        } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
+                'swal_message' => 'Raggiunto numero massimo di lavori.',
                 'swal_type' => 'error',
             ];
+
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 
@@ -534,7 +534,7 @@ class GruppiLavori extends Gruppi
             $id = Filters::int($post['id']);
             $work_data = $this->getCharacterWork($this->me_id, $id);
 
-            if ( !empty($work_data) ) {
+            if ( $work_data->getNumRows() ) {
 
                 $scadenza = Filters::date($work_data['scadenza'], 'Y-m-d');
                 $scadenza_visual = Filters::date($work_data['scadenza'], 'd/m/Y');
@@ -543,7 +543,7 @@ class GruppiLavori extends Gruppi
 
                 if ( $diff > $this->dimissions_days ) {
 
-                    DB::queryStmt("DELETE FROM lavori_personaggi WHERE personaggio=:pg AND lavoro=:lavoro LIMIT 1",
+                    DB::queryStmt("DELETE FROM personaggio_lavoro WHERE personaggio=:pg AND lavoro=:lavoro LIMIT 1",
                         [
                             'pg' => $this->me_id,
                             'lavoro' => $id,
@@ -558,31 +558,31 @@ class GruppiLavori extends Gruppi
                         'works_table' => $this->worksList(),
 
                     ];
-                } else {
-                    return [
-                        'response' => false,
-                        'swal_title' => 'Operazione fallita!',
-                        'swal_message' => "Potrai licenziarti solo dopo il {$scadenza_visual}.",
-                        'swal_type' => 'error',
-                    ];
                 }
-            } else {
+
                 return [
                     'response' => false,
                     'swal_title' => 'Operazione fallita!',
-                    'swal_message' => 'Lavoro mai preso.',
+                    'swal_message' => "Potrai licenziarti solo dopo il $scadenza_visual.",
                     'swal_type' => 'error',
                 ];
             }
 
-        } else {
             return [
                 'response' => false,
                 'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
+                'swal_message' => 'Lavoro mai preso.',
                 'swal_type' => 'error',
             ];
+
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 }

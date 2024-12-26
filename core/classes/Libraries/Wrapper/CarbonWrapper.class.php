@@ -4,7 +4,6 @@ require ROOT . 'plugins/Carbon/autoload.php';
 
 # ! Non eliminare!
 use Carbon\Carbon;
-use Carbon\CarbonInterval;
 
 class CarbonWrapper
 {
@@ -155,18 +154,18 @@ class CarbonWrapper
         // Se non e' mai stato eseguito, lo eseguo
         if ( empty($last_exec) ) {
             return true;
-        } else {
-            // Altrimenti estraggo la differenza in base al tipo
-            $diff = match ($interval_type) {
-                'months' => CarbonWrapper::DatesDifferenceMonths(date('Y-m-d'), Filters::date($last_exec, 'Y-m-d')),
-                'days' => CarbonWrapper::DatesDifferenceDays(date('Y-m-d'), Filters::date($last_exec, 'Y-m-d')),
-                'hours' => CarbonWrapper::DatesDifferenceHours(date('Y-m-d H:i:s'), Filters::date($last_exec, 'Y-m-d H:i:s')),
-                'minutes' => CarbonWrapper::DatesDifferenceMinutes(date('Y-m-d H:i:s'), Filters::date($last_exec, 'Y-m-d H:i:s')),
-                default => 0,
-            };
-
-            // Controllo se è superato il timer richiesto
-            return ($diff >= $interval);
         }
+
+        // Altrimenti estraggo la differenza in base al tipo
+        $diff = match ($interval_type) {
+            'months' => self::DatesDifferenceMonths(date('Y-m-d'), Filters::date($last_exec, 'Y-m-d')),
+            'days' => self::DatesDifferenceDays(date('Y-m-d'), Filters::date($last_exec, 'Y-m-d')),
+            'hours' => self::DatesDifferenceHours(date('Y-m-d H:i:s'), Filters::date($last_exec, 'Y-m-d H:i:s')),
+            'minutes' => self::DatesDifferenceMinutes(date('Y-m-d H:i:s'), Filters::date($last_exec, 'Y-m-d H:i:s')),
+            default => 0,
+        };
+
+        // Controllo se è superato il timer richiesto
+        return ($diff >= $interval);
     }
 }

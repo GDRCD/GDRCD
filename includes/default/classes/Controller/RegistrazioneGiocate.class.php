@@ -42,7 +42,7 @@ class RegistrazioneGiocate extends BaseClass
      */
     public function getRecord(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM giocate_registrate WHERE id=:id LIMIT 1", ['id' => $id]);
+        return DB::queryStmt("SELECT $val FROM giocate_registrate WHERE id=:id LIMIT 1", ['id' => $id]);
     }
 
     /**
@@ -54,7 +54,7 @@ class RegistrazioneGiocate extends BaseClass
      */
     public function getAllRecords(string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM giocate_registrate WHERE 1  ORDER BY creato_il DESC", []);
+        return DB::queryStmt("SELECT $val FROM giocate_registrate WHERE 1  ORDER BY creato_il DESC", []);
     }
 
     /**
@@ -67,7 +67,7 @@ class RegistrazioneGiocate extends BaseClass
      */
     public function getAllRecordsByCharacter(int $pg, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM giocate_registrate WHERE autore=:autore ORDER BY creato_il DESC",
+        return DB::queryStmt("SELECT $val FROM giocate_registrate WHERE autore=:autore ORDER BY creato_il DESC",
             ['autore' => $pg]
         );
     }
@@ -81,7 +81,7 @@ class RegistrazioneGiocate extends BaseClass
      */
     public function getAllNewRecords(string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM giocate_registrate WHERE bloccata = 0 AND controllata = 0  ORDER BY creato_il DESC", []);
+        return DB::queryStmt("SELECT $val FROM giocate_registrate WHERE bloccata = 0 AND controllata = 0  ORDER BY creato_il DESC", []);
     }
 
     /**
@@ -93,7 +93,7 @@ class RegistrazioneGiocate extends BaseClass
      */
     public function getAllBlockedRecords(string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM giocate_registrate WHERE bloccata = 1 AND controllata = 0  ORDER BY creato_il DESC", []);
+        return DB::queryStmt("SELECT $val FROM giocate_registrate WHERE bloccata = 1 AND controllata = 0  ORDER BY creato_il DESC", []);
     }
 
     /**
@@ -105,7 +105,7 @@ class RegistrazioneGiocate extends BaseClass
      */
     public function getAllControlledRecords(string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM giocate_registrate WHERE controllata = 1 ORDER BY creato_il DESC", []);
+        return DB::queryStmt("SELECT $val FROM giocate_registrate WHERE controllata = 1 ORDER BY creato_il DESC", []);
     }
 
 
@@ -216,7 +216,7 @@ class RegistrazioneGiocate extends BaseClass
         }
 
         $links = [
-            ["href" => "main.php?page=scheda/index&op=registrazioni_new&id_pg={$id_pg}", "text" => "Nuova registrazione"],
+            ["href" => "main.php?page=scheda/index&op=registrazioni_new&id_pg=$id_pg", "text" => "Nuova registrazione"],
         ];
 
         return [
@@ -390,14 +390,14 @@ class RegistrazioneGiocate extends BaseClass
                 'swal_type' => 'success',
             ];
 
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 
@@ -440,14 +440,14 @@ class RegistrazioneGiocate extends BaseClass
                 'swal_type' => 'success',
             ];
 
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 
@@ -477,14 +477,14 @@ class RegistrazioneGiocate extends BaseClass
                 'completed_template' => $this->allRecords('controlled'),
             ];
 
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 
@@ -512,14 +512,14 @@ class RegistrazioneGiocate extends BaseClass
                 'completed_template' => $this->allRecords('controlled'),
             ];
 
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -545,14 +545,14 @@ class RegistrazioneGiocate extends BaseClass
                 'blocked_template' => $this->allRecords('blocked'),
                 'completed_template' => $this->allRecords('controlled'),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
 }

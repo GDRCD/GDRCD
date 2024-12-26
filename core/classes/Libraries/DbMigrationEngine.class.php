@@ -5,8 +5,8 @@
  */
 class DbMigrationEngine extends BaseClass
 {
-    const MIGRATIONS_FOLDER = __DIR__ . '/../../../db_versions/';
-    const SQL_FILE = ROOT . '/gdrcd_db.sql';
+    public const MIGRATIONS_FOLDER = __DIR__ . '/../../../db_versions/';
+    public const SQL_FILE = ROOT . '/gdrcd_db.sql';
 
     /**
      * @fn migrateDb
@@ -28,7 +28,7 @@ class DbMigrationEngine extends BaseClass
 
         // EXECUTE MIGRATIONS
         if ( self::dbNeedsUpdate() ) {
-            self::updateDbSchema();
+            self::updateDbSchema(null);
         }
     }
 
@@ -75,7 +75,7 @@ class DbMigrationEngine extends BaseClass
      */
     public static function deleteDb($db): void
     {
-        $tables = DB::queryStmt("SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = :db  ORDER BY table_name ASC",
+        $tables = DB::queryStmt("SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = :db  ORDER BY table_name",
             [
                 'db' => $db,
             ]);
@@ -90,12 +90,12 @@ class DbMigrationEngine extends BaseClass
     /**
      * @fn updateDbSchema
      * @note Esegue le modifiche allo schema del DB portandolo alla versione specificata
-     * @param int|null $migration_id Versione a cui portare il DB, corrispondente all'identificativo di una
-     * Migrazione specifica. Se vuoto porta il DB all'ultima versione disponibile
+     * @param int|null $migration_id Versione a cui portare il DB, corrispondente all'identificativo di una migrazione specifica. Se vuoto porta il DB all'ultima versione disponibile
      * @return int Il numero di migrazioni applicate
+     * @throws ReflectionException
      * @throws Throwable
      */
-    public static function updateDbSchema(int $migration_id = null): int
+    public static function updateDbSchema(int|null $migration_id): int
     {
         $migrations = self::loadMigrationClasses();
         self::createVersioningTable();//Per sicurezza cerchiamo di crearla sempre
@@ -127,7 +127,7 @@ class DbMigrationEngine extends BaseClass
                 //Attenzione questa è una misura di sicurezza debole: le DDL (CREATE TABLE, ALTER TABLE...) provocano
                 // dei commit automatici, a questo punto in realtà non è già più possibile fare rollback
                 DB::rollback();
-                throw new Exception("Aggiornamento del database fallito: " . $e->getMessage(), 0, $e);
+                throw new RuntimeException("Aggiornamento del database fallito: " . $e->getMessage(), 0, $e);
             }
         }
 
@@ -180,7 +180,7 @@ class DbMigrationEngine extends BaseClass
         self::createVersioningTable();//Per sicurezza cerchiamo di crearla sempre
         $lastApplied = self::getLastAppliedMigration();
 
-        return empty($lastApplied) or $migrations[count($migrations) - 1]->getMigrationId() != (int)$lastApplied['migration_id'];
+        return $lastApplied->getNumRows() or $migrations[count($migrations) - 1]->getMigrationId() !== (int)$lastApplied['migration_id'];
     }
 
     /**
@@ -197,8 +197,7 @@ class DbMigrationEngine extends BaseClass
     /**
      * @fn loadMigrationClasses
      * @note Carica in memoria le classi di migrazione
-     * @return DbMigration[] Un array con un oggetto già instanziato per ogni migrazione, nel corretto ordine di
-     * Esecuzione temporale delle migrazioni
+     * @return DbMigration[] Un array con un oggetto già creato per ogni migrazione, nel corretto ordine di esecuzione temporale delle migrazioni
      * @throws ReflectionException
      */
     private static function loadMigrationClasses(): array
@@ -227,11 +226,11 @@ class DbMigrationEngine extends BaseClass
         }
 
         //Ordinamento per id, da l'ordine di esecuzione
-        usort($migrations, function ($a, $b) {
+        usort($migrations, static function ($a, $b) {
             $aId = $a->getMigrationId();
             $bId = $b->getMigrationId();
 
-            if ( $aId == $bId ) {
+            if ( $aId === $bId ) {
                 return 0;
             }
             return $aId < $bId ? -1 : 1;
@@ -247,7 +246,7 @@ class DbMigrationEngine extends BaseClass
      * @param DbMigration[] $migrations
      * @throws Throwable
      */
-    private static function performDbSetup(array $migrations, &$lastApplied)
+    private static function performDbSetup(array $migrations, &$lastApplied): void
     {
         $tablesCount = self::getTablesCountInDb();
 
@@ -272,7 +271,7 @@ class DbMigrationEngine extends BaseClass
     private static function getMigrationsToApply(array $migrations, array $lastApplied, int|null $targetMigrationId, bool &$directionUp): array
     {
         $directionUp = true;
-        if ( empty($targetMigrationId) ) {//Auto migration
+        if ( $targetMigrationId === null ) {//Auto migration
             $firstToApply = 0;
             foreach ( $migrations as $k => $m ) {
                 if ( (int)$m->getMigrationId() > (int)$lastApplied['migration_id'] ) {
@@ -285,18 +284,18 @@ class DbMigrationEngine extends BaseClass
             $lastAppliedIdx = 0;
             $targetIdx = -1;
             foreach ( $migrations as $k => $m ) {
-                if ( (int)$m->getMigrationId() == $lastApplied['migration_id'] ) {
+                if ( (int)$m->getMigrationId() === $lastApplied['migration_id'] ) {
                     $lastAppliedIdx = $k;
                 }
-                if ( (int)$m->getMigrationId() == $targetMigrationId ) {
+                if ( (int)$m->getMigrationId() === $targetMigrationId ) {
                     $targetIdx = $k;
                 }
-                if ( $targetIdx != -1 && $lastAppliedIdx != 0 ) {
+                if ( $targetIdx !== -1 && $lastAppliedIdx !== 0 ) {
                     break;
                 }
             }
-            if ( $targetIdx == -1 ) {
-                throw new Exception("La Versione del Database specificata non è stata trovata");
+            if ( $targetIdx === -1 ) {
+                throw new RuntimeException("La Versione del Database specificata non è stata trovata");
             }
 
             if ( $lastAppliedIdx > $targetIdx ) {
@@ -370,37 +369,6 @@ class DbMigrationEngine extends BaseClass
         DB::queryStmt("DELETE FROM _gdrcd_db_versions WHERE migration_id = :id", [
             'id' => $migration_id,
         ]);
-    }
-
-    /**
-     * @fn isMigrationAlreadyApplied
-     * @note Controlla a DB se una migrazione è già stata applicata
-     * @param $migration_id
-     * @return bool
-     * @throws Throwable
-     */
-    private static function isMigrationAlreadyApplied($migration_id): bool
-    {
-        $result = DB::queryStmt("SELECT * FROM _gdrcd_db_versions WHERE migration_id = :id", [
-            'id' => $migration_id,
-        ]);
-        return $result->getNumRows() > 0;
-    }
-
-    /**
-     * @fn getAllAppliedMigrations
-     * @note Trova tutte le migrazioni già applicate a DB
-     * @return array Elenco di migrazioni applicate, ordinate per id. Chiavi disponibili: migration_id, applied_on
-     * @throws Throwable
-     */
-    private static function getAllAppliedMigrations(): array
-    {
-        $result = DB::queryStmt("SELECT * FROM _gdrcd_db_versions ORDER BY migration_id", []);
-        $all = [];
-        while ( $row = DB::query($result, 'assoc') ) {
-            $all[] = $row;
-        }
-        return $all;
     }
 
     /**

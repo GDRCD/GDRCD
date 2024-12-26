@@ -2,12 +2,6 @@
 
 class Log extends BaseClass
 {
-    protected function __construct()
-    {
-        parent::__construct();
-    }
-
-
     /**** TABLE HELPERS ****/
 
     /**
@@ -20,7 +14,7 @@ class Log extends BaseClass
      */
     public function getLog(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM logs WHERE id = :id", [
+        return DB::queryStmt("SELECT $val FROM logs WHERE id = :id", [
             'id' => $id
         ]);
     }
@@ -35,7 +29,7 @@ class Log extends BaseClass
      */
     public function getAllLogs(int $limit = 500, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM log WHERE 1 LIMIT :limit", [
+        return DB::queryStmt("SELECT $val FROM log WHERE 1 LIMIT :limit", [
             'limit' => $limit
         ]);
     }
@@ -51,7 +45,7 @@ class Log extends BaseClass
      */
     public function getAllLogsByType(string $type, int $limit = 500, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM log WHERE tipo=:type LIMIT :limit",[
+        return DB::queryStmt("SELECT $val FROM log WHERE tipo=:type LIMIT :limit",[
             'type' => $type,
             'limit' => $limit
         ]);
@@ -68,7 +62,7 @@ class Log extends BaseClass
      */
     public function getAllLogsByDestinatario(int $destinatario, int $limit = 500, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM log WHERE destinatario=:destinatario LIMIT :limit", [
+        return DB::queryStmt("SELECT $val FROM log WHERE destinatario=:destinatario LIMIT :limit", [
             'destinatario' => $destinatario,
             'limit' => $limit
         ]);
@@ -86,7 +80,7 @@ class Log extends BaseClass
      */
     public function getAllLogsByDestinatarioAndType(int $destinatario, string $type, int $limit = 500, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM log WHERE destinatario=:destinatario AND tipo=:type LIMIT :limit", [
+        return DB::queryStmt("SELECT $val FROM log WHERE destinatario=:destinatario AND tipo=:type LIMIT :limit", [
             'destinatario' => $destinatario,
             'type' => $type,
             'limit' => $limit
@@ -120,7 +114,7 @@ class Log extends BaseClass
         $testo = Filters::in($data['testo']);
         $destinatario = Filters::int($data['destinatario']);
 
-        DB::queryStmt("INSERT INTO logs (autore, tipo, testo, destinatario) VALUES (:autore, :tipo, :testo, :destinatario)", [
+        DB::queryStmt("INSERT INTO log (autore, tipo, testo, destinatario) VALUES (:autore, :tipo, :testo, :destinatario)", [
             'autore' => $autore,
             'tipo' => $tipo,
             'testo' => $testo,
@@ -143,7 +137,7 @@ class Log extends BaseClass
     public function renderLogTable(int $id_pg, int $type, int $limit, string $title): array
     {
 
-        $logs = Log::getInstance()->getAllLogsByDestinatarioAndType($id_pg, $type, $limit);
+        $logs = self::getInstance()->getAllLogsByDestinatarioAndType($id_pg, $type, $limit);
         $logs_data = [];
 
         $cells = [

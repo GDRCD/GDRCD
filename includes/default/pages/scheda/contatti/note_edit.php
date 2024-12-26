@@ -21,8 +21,8 @@ $nota = $contatti_note->getNota($id, 'titolo, nota, pubblica');
                     Pubblica
                 </div>
                 <select name="pubblica">
-                    <option value="si" <?= ($nota['pubblica'] == 'si' ? 'selected' : '') ?> >Si</option>
-                    <option value="no" <?= ($nota['pubblica'] == 'no' ? 'selected' : '') ?>>No</option>
+                    <option value="si" <?= ($nota['pubblica'] === 'si' ? 'selected' : '') ?> >Si</option>
+                    <option value="no" <?= ($nota['pubblica'] === 'no' ? 'selected' : '') ?>>No</option>
                 </select>
             </div>
             <?php
@@ -46,7 +46,7 @@ $nota = $contatti_note->getNota($id, 'titolo, nota, pubblica');
         </div>
 
         <div class='single_input'>
-            <input type="submit" value="<?= gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>"/>
+            <input type="submit" value="Modifica"/>
             <input type="hidden" name="action" value="note_edit">
             <input type="hidden" name="id" value="<?= Filters::int($id); ?>">
 

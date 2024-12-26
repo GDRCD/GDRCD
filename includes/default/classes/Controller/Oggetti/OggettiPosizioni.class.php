@@ -15,7 +15,7 @@ class OggettiPosizioni extends Oggetti
      */
     public function getObjectPosition(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM oggetto_posizioni WHERE id=:id LIMIT 1",[
+        return DB::queryStmt("SELECT $val FROM oggetto_posizioni WHERE id=:id LIMIT 1",[
             'id' => $id
         ]);
     }
@@ -29,7 +29,7 @@ class OggettiPosizioni extends Oggetti
      */
     public function getAllObjectPositions(string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM oggetto_posizioni WHERE 1 ORDER BY nome", []);
+        return DB::queryStmt("SELECT $val FROM oggetto_posizioni WHERE 1 ORDER BY nome", []);
     }
 
     /*** PERMISSION ***/
@@ -117,14 +117,14 @@ class OggettiPosizioni extends Oggetti
                 'swal_type' => 'success',
                 'obj_position_list' => $this->listObjectPositions(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -158,14 +158,14 @@ class OggettiPosizioni extends Oggetti
                 'swal_type' => 'success',
                 'obj_position_list' => $this->listObjectPositions(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -193,14 +193,14 @@ class OggettiPosizioni extends Oggetti
                 'swal_type' => 'success',
                 'obj_position_list' => $this->listObjectPositions(),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
 }

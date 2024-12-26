@@ -15,7 +15,7 @@ class NewsTipo extends News
      */
     public function getNewsType(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM news_tipo WHERE id=:id LIMIT 1", ['id' => $id]);
+        return DB::queryStmt("SELECT $val FROM news_tipo WHERE id=:id LIMIT 1", ['id' => $id]);
     }
 
     /**
@@ -35,7 +35,7 @@ class NewsTipo extends News
             $extra_query = ' AND attiva = true ';
         }
 
-        return DB::queryStmt("SELECT {$val} FROM news_tipo WHERE 1 {$extra_query} ORDER BY nome", []);
+        return DB::queryStmt("SELECT $val FROM news_tipo WHERE 1 $extra_query ORDER BY nome", []);
     }
 
     /**** PERMISSIONS ****/
@@ -118,7 +118,7 @@ class NewsTipo extends News
             $description = Filters::in($post['descrizione']);
             $active = Filters::checkbox($post['attiva']);
 
-            DB::queryStmt("INSERT INTO news_tipo (nome, descrizione, attiva, creata_da) VALUES (:name, :description, :active)", [
+            DB::queryStmt("INSERT INTO news_tipo (nome, descrizione, attiva, creata_da) VALUES (:name, :description, :active,:created_by)", [
                 'name' => $name,
                 'description' => $description,
                 'active' => $active,
@@ -132,15 +132,14 @@ class NewsTipo extends News
                 'swal_type' => 'success',
                 'news_types_list' => $this->listNewsType(false),
             ];
-        } else {
-
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -175,15 +174,14 @@ class NewsTipo extends News
                 'news_types_list' => $this->listNewsType(false),
             ];
 
-        } else {
-
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -212,14 +210,14 @@ class NewsTipo extends News
                 'news_types_list' => $this->listNewsType(false),
             ];
 
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 }

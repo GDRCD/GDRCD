@@ -120,20 +120,20 @@ class SchedaOggetti extends Scheda
             return [
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
-                'swal_message' => "Oggetto {$indossato_text} correttamente.",
+                'swal_message' => "Oggetto $indossato_text correttamente.",
                 'swal_type' => 'success',
                 'new_equip' => $this->renderPgEquipment($owner),
                 'new_inventory' => $this->renderPgInventory($owner),
             ];
 
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Errore!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Errore!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 
@@ -163,14 +163,14 @@ class SchedaOggetti extends Scheda
                 'new_equip' => $this->renderPgEquipment($owner),
                 'new_inventory' => $this->renderPgInventory($owner),
             ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Errore!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Errore!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
 
     }
 
@@ -199,7 +199,7 @@ class SchedaOggetti extends Scheda
             $objs = PersonaggioOggetti::getPgObjectsByPosition($pg, $position_id, $position_limit, 'personaggio_oggetto.id,personaggio_oggetto.oggetto,oggetto.immagine,oggetto.nome');
             $obj_num = DB::rowsNumber($objs);
 
-            $html .= $this->renderObjects($objs);
+            $html .= self::renderObjects($objs);
 
             while ( $obj_num < $position_limit ) {
 
@@ -234,7 +234,7 @@ class SchedaOggetti extends Scheda
     {
         $pg = Filters::int($pg);
         $objs = PersonaggioOggetti::getAllPgObjectsByEquipped($pg, false, 'personaggio_oggetto.id,personaggio_oggetto.oggetto,oggetto.nome,oggetto.immagine');
-        return $this->renderObjects($objs);
+        return self::renderObjects($objs);
     }
 
     /**

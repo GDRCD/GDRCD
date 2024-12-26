@@ -14,7 +14,7 @@ interface DBQueryInterface extends ArrayAccess, Countable, Iterator {
 
     /**
      * @fn getAffectedRows
-     * @note Ritorna il numero di righe coinvolte nella query d'INSERT/UPDATE/DELETE eseguita
+     * @note Ritorna il numero di righe coinvolte nella query INSERT/UPDATE/DELETE eseguita
      * @return int
      */
     public function getAffectedRows(): int;
@@ -28,7 +28,7 @@ interface DBQueryInterface extends ArrayAccess, Countable, Iterator {
 
     /**
      * @fn getInsertId
-     * @note Ritorna l'ultimo id auto incrementante generato per la query d'INSERT eseguita
+     * @note Ritorna l'ultimo id auto incrementante generato per la query INSERT eseguita
      * @return string|false
      */
     public function getInsertId(): string|false;
@@ -60,7 +60,7 @@ class DB extends BaseClass
      * @note Questo flag indica di usare la modalità di segnalazione errori standard di GDRCD. Al primo errore la classe terminerà
      * L'esecuzione inviando in uscita l'errore formattato in html
      */
-    const ERROR_STANDARD = 0;
+    public const ERROR_STANDARD = 0;
 
     /**
      * @var int ERROR_EXCEPTION
@@ -68,7 +68,7 @@ class DB extends BaseClass
      * Database come eccezioni di modo che possano essere gestite
      * dall'esterno e senza interrompere forzatamente lo script.
      */
-    const ERROR_EXCEPTION = 1;
+    public const ERROR_EXCEPTION = 1;
 
     /**
      * @var PDO|null
@@ -496,7 +496,7 @@ class DB extends BaseClass
         switch (strtolower(trim($mode))) {
             case 'query':
                 $stmt = self::queryStmt($sql);
-                if (strtoupper(substr(trim($sql), 0, 6)) !== 'SELECT') {
+                if ( stripos(trim($sql), 'SELECT') !== 0 ) {
                     return $stmt;
                 }
                 return $stmt->current();
@@ -568,7 +568,7 @@ class DB extends BaseClass
             $field->auto_increment = (!str_contains($field->Extra, 'auto_increment') ? 0 : 1);
             $field->definition = $field->Type;
 
-            if ( $field->Null == 'NO' && $field->Key != 'PRI' ) {
+            if ( $field->Null === 'NO' && $field->Key !== 'PRI' ) {
                 $field->definition .= ' NOT NULL';
             }
 

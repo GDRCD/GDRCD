@@ -31,7 +31,7 @@ class Presenti extends BaseClass
         return DB::queryStmt('
              SELECT * FROM `personaggio` 
              WHERE `ora_entrata` > `ora_uscita` AND `ultimo_refresh` > DATE_SUB(NOW(), INTERVAL 45 MINUTE)
-             ORDER BY `ultimo_luogo` ASC, `is_invisible` ASC',
+             ORDER BY `ultimo_luogo` , `is_invisible` ',
             []
         );
     }
@@ -49,7 +49,7 @@ class Presenti extends BaseClass
         return DB::queryStmt("
              SELECT * FROM `personaggio` 
              WHERE `ora_entrata` > `ora_uscita` AND `ultimo_refresh` > DATE_SUB(NOW(), INTERVAL 45 MINUTE)
-             AND `ultimo_luogo` = '{$location}' AND ( (`is_invisible` = 0 AND `id` != :me_1) OR `id`=:me_2)",
+             AND `ultimo_luogo` = '$location' AND ( (`is_invisible` = 0 AND `id` != :me_1) OR `id`=:me_2)",
             [
                 "me_1" => $this->me_id,
                 "me_2" => $this->me_id,
@@ -80,8 +80,7 @@ class Presenti extends BaseClass
      */
     public function numberOfPresences(): int
     {
-        $presences = $this->getPresenti();
-        return $presences->getNumRows();
+        return $this->getPresenti()->getNumRows();
     }
 
     /**
@@ -163,7 +162,7 @@ class Presenti extends BaseClass
                 'invisible' => Filters::bool($character['is_invisible']),
             ];
 
-            if ( $position != $last_position ) {
+            if ( $position !== $last_position ) {
                 $last_position = $position;
                 // TODO Sostituire query con funzione get di classe Mappa, quando sarà disponibile
                 if ( $position > 0 ) {

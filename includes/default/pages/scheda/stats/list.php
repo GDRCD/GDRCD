@@ -13,7 +13,7 @@ $id_pg = Filters::int($_GET['id_pg']);
     </div>
 
     <div class="form_info">
-        <?php echo Filters::out($MESSAGE['interface']['sheet']['info_stats']); ?>
+        Le stastiche sono aumentabili solo dallo staff.
     </div>
 
 </div>

@@ -15,7 +15,7 @@ class OnlineStatusType extends OnlineStatus
      */
     public function getStatusByType(int $type, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM online_status WHERE type=:type ORDER by text", [
+        return DB::queryStmt("SELECT $val FROM online_status WHERE type=:type ORDER by text", [
             'type' => $type,
         ]);
     }
@@ -29,7 +29,7 @@ class OnlineStatusType extends OnlineStatus
      */
     public function getStatusTypes(string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM online_status_type WHERE 1 ORDER BY label", []);
+        return DB::queryStmt("SELECT $val FROM online_status_type WHERE 1 ORDER BY label", []);
     }
 
     /**
@@ -42,7 +42,7 @@ class OnlineStatusType extends OnlineStatus
      */
     public function getStatusType(int $id, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT {$val} FROM online_status_type WHERE id=:id LIMIT 1", [
+        return DB::queryStmt("SELECT $val FROM online_status_type WHERE id=:id LIMIT 1", [
             'id' => $id,
         ]);
     }
@@ -62,7 +62,7 @@ class OnlineStatusType extends OnlineStatus
 
         if ( $this->manageStatusPermission() ) {
             $id = Filters::int($post['id']);
-            $data = OnlineStatusType::getInstance()->getStatusType($id);
+            $data = self::getInstance()->getStatusType($id);
             return [
                 'label' => Filters::out($data['label']),
                 'request' => Filters::out($data['request']),
@@ -84,7 +84,7 @@ class OnlineStatusType extends OnlineStatus
      */
     public function listStatusType(int $selected = 0): string
     {
-        $types = OnlineStatusType::getInstance()->getStatusTypes();
+        $types = self::getInstance()->getStatusTypes();
         return Template::getInstance()->startTemplate()->renderSelect('id','label',$selected,$types);
     }
 
@@ -116,16 +116,16 @@ class OnlineStatusType extends OnlineStatus
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Tipo di stato inserito correttamente.',
                 'swal_type' => 'success',
-                'status_list' => OnlineStatusType::getInstance()->listStatusType(),
-            ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
+                'status_list' => self::getInstance()->listStatusType(),
             ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -155,16 +155,16 @@ class OnlineStatusType extends OnlineStatus
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Tipo di stato modificato correttamente.',
                 'swal_type' => 'success',
-                'status_list' => OnlineStatusType::getInstance()->listStatusType(),
-            ];
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
+                'status_list' => self::getInstance()->listStatusType(),
             ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 
     /**
@@ -193,16 +193,16 @@ class OnlineStatusType extends OnlineStatus
                 'swal_title' => 'Operazione riuscita!',
                 'swal_message' => 'Tipo di stato eliminato correttamente.',
                 'swal_type' => 'success',
-                'status_list' => OnlineStatusType::getInstance()->listStatusType(),
+                'status_list' => self::getInstance()->listStatusType(),
             ];
 
-        } else {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Permesso negato.',
-                'swal_type' => 'error',
-            ];
         }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Permesso negato.',
+            'swal_type' => 'error',
+        ];
     }
 }
