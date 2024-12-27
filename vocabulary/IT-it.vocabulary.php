@@ -693,6 +693,10 @@ $MESSAGE['interface']['user']['pass']['old'] = 'Inserire la vecchia password';
 $MESSAGE['interface']['user']['pass']['new'] = 'Inserire la nuova password';
 $MESSAGE['interface']['user']['pass']['repeat'] = 'Ripeti la nuova password';
 $MESSAGE['interface']['user']['pass']['force'] = 'Cambia password ad un account';
+$MESSAGE['interface']['user']['pass']['error'] = 'Password o email dell\'account non corretta!';
+$MESSAGE['interface']['user']['pass']['mismatch-password'] = 'Le nuove password inserite non corrispondono';
+$MESSAGE['interface']['user']['pass']['success'] = 'Password aggiornata con successo!';
+$MESSAGE['interface']['user']['pass']['unknown-email'] = 'Nessuna corrispondenza trovata per la mail fornita';
 $MESSAGE['interface']['user']['pass']['submit']['user'] = 'Salva';
 $MESSAGE['interface']['user']['pass']['change_to'] = 'Cambia a...';
 /*Cancella account*/

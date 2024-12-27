@@ -98,15 +98,15 @@ class ModificaEmail extends BaseClass
             return [
                 'response' => false,
                 'swal_title' => $GLOBALS['MESSAGE']['warning']['cant_do'],
-                'swal_message' => $GLOBALS['MESSAGES']['interface']['user']['email']['mailserver-error'],
+                'swal_message' => $GLOBALS['MESSAGE']['interface']['user']['email']['mailserver-error'],
                 'swal_type' => 'error',
             ];
         }
 
         return [
             'response' => true,
-            'swal_title' => $GLOBALS['MESSAGES']['warning']['success'],
-            'swal_message' => $GLOBALS['MESSAGES']['interface']['user']['email']['awaiting-verification'],
+            'swal_title' => $GLOBALS['MESSAGE']['warning']['success'],
+            'swal_message' => $GLOBALS['MESSAGE']['interface']['user']['email']['awaiting-verification'],
             'swal_type' => 'success',
         ];
     }

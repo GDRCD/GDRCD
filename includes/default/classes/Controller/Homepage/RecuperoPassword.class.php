@@ -166,12 +166,12 @@ class RecuperoPassword extends BaseClass
      * @fn sendRecoveryEmail
      * @note Verifica se la mail esiste nel db e provvede all'invio di un link per il recupero password
      * @param string $userEmail
+     * @param string $token
      * @return bool true se la mail è stata inviata, false altrimenti
      * @throws Throwable
      */
-    public static function sendRecoveryEmail(string $userEmail): bool
+    protected static function sendRecoveryEmail(string $userEmail, string $token): bool
     {
-        $token = self::makePasswordRecoveryToken($userEmail);
         $url =  "{$GLOBALS['PARAMETERS']['info']['site_url']}/index.php?page=homepage&content=password/edit_form&token={$token}";
 
         # TODO Creare una classe Email
@@ -246,15 +246,16 @@ class RecuperoPassword extends BaseClass
      */
     public function recoverPassword(array $post): array
     {
-        $user_email = Filters::email($post['email']);
-
         try {
 
-            if (self::sendRecoveryEmail($user_email)) {
+            $user_email = Filters::email($post['email']);
+            $token = self::makePasswordRecoveryToken($user_email);
+
+            if (self::sendRecoveryEmail($user_email, $token)) {
                 return [
                     'response' => true,
-                    'swal_title' => 'Operazione riuscita!',
-                    'swal_message' => 'Inviato link di recupero alla mail indicata.',
+                    'swal_title' => $GLOBALS['MESSAGE']['warning']['success'],
+                    'swal_message' => $GLOBALS['MESSAGE']['interface']['user']['pass']['success'],
                     'swal_type' => 'success',
                 ];
             }
@@ -263,8 +264,8 @@ class RecuperoPassword extends BaseClass
 
             return [
                 'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Nessuna corrispondenza trovata per la mail fornita.',
+                'swal_title' => $GLOBALS['MESSAGE']['warning']['cant_do'],
+                'swal_message' => $GLOBALS['MESSAGE']['interface']['user']['pass']['unknown-email'],
                 'swal_type' => 'error',
             ];
 
@@ -272,8 +273,8 @@ class RecuperoPassword extends BaseClass
 
         return [
             'response' => false,
-            'swal_title' => 'Operazione fallita!',
-            'swal_message' => 'Operazione non riuscita per problemi interni, si invita a riprovare più tardi',
+            'swal_title' => $GLOBALS['MESSAGE']['warning']['cant_do'],
+            'swal_message' => '',
             'swal_type' => 'error',
         ];
     }

@@ -10,6 +10,7 @@ class ModificaPassword extends BaseClass
      * @fn renderEditForm
      * @note si occupa di renderizzare il form di modifica password
      * @return string
+     * @throws Throwable
      */
     public static function render(): string
     {
@@ -44,42 +45,11 @@ class ModificaPassword extends BaseClass
         $new_password = $post['new_pass'];
         $repeated_password = $post['repeat_pass'];
 
-        $user_data = DB::queryStmt(
-            'SELECT email, pass FROM personaggio WHERE id = :user_id', [
-            'user_id' => Session::read('login_id'),
-        ]);
-
-        // Non esiste un pg in database
-        if ( !count($user_data) ) {
+        if ( !self::isValidUser(Session::read('login_id'), $old_password, $user_email) ) {
             return [
                 'response' => false,
-                'swal_title' => sprintf(
-                    'La user connessa non ha una riga corrispondente nel db! (login_id: %s; IP: %s; UA: %s)',
-                    Session::read('login_id'),
-                    $_SERVER['REMOTE_ADDR'],
-                    $_SERVER['HTTP_USER_AGENT']
-                ),
-                'swal_message' => 'La mail non corrisponde.',
-                'swal_type' => 'error',
-            ];
-        }
-
-        // Controllo che la mail inserita sia corretta
-        if ( !CrypterAlgo::withAlgo('CrypterSha256')->verify($user_data['email'], $user_email) ) {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'La mail non corrisponde.',
-                'swal_type' => 'error',
-            ];
-        }
-
-        // Controllo che la vecchia password inserita sia corretta
-        if ( !Password::verify($user_data['pass'], $old_password) ) {
-            return [
-                'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'La vecchia password non corrisponde.',
+                'swal_title' => $GLOBALS['MESSAGE']['warning']['cant_do'],
+                'swal_message' => $GLOBALS['MESSAGE']['interface']['user']['pass']['error'],
                 'swal_type' => 'error',
             ];
         }
@@ -88,13 +58,12 @@ class ModificaPassword extends BaseClass
         if ( !is_null($repeated_password) && $new_password !== $repeated_password ) {
             return [
                 'response' => false,
-                'swal_title' => 'Operazione fallita!',
-                'swal_message' => 'Le nuove password inserite non corrispondono.',
+                'swal_title' => $GLOBALS['MESSAGE']['warning']['cant_do'],
+                'swal_message' => $GLOBALS['MESSAGE']['interface']['user']['pass']['mismatch-password'],
                 'swal_type' => 'error',
             ];
         }
 
-        // Inserimento nuova password e risposta positiva
         DB::queryStmt(
             'UPDATE personaggio SET pass = :user_password, ultimo_cambiopass = NOW() WHERE id = :user_id', [
                 'user_password' => Password::hash($repeated_password),
@@ -104,9 +73,30 @@ class ModificaPassword extends BaseClass
 
         return [
             'response' => true,
-            'swal_title' => 'Operazione riuscita!',
-            'swal_message' => 'Le password è stata modificata con successo.',
+            'swal_title' => $GLOBALS['MESSAGE']['warning']['modified'],
+            'swal_message' => $GLOBALS['MESSAGE']['interface']['user']['pass']['success'],
             'swal_type' => 'success',
         ];
+    }
+
+    /**
+     * @fn isValidUser
+     * @note verifica che la user esista sul db e che password e email siano corrette
+     * @param int $accountId
+     * @param string $password
+     * @param string $email
+     * @return bool
+     * @throws Throwable
+     */
+    protected static function isValidUser(int $accountId, string $password, string $email): bool
+    {
+        $user_data = DB::queryStmt(
+            'SELECT email, pass FROM personaggio WHERE id = :user_id', [
+            'user_id' => $accountId,
+        ]);
+
+        return $user_data->getNumRows()
+            && Password::verify($user_data['pass'], $password)
+            && CrypterAlgo::withAlgo('CrypterSha256')->verify($user_data['email'], $email);
     }
 }
