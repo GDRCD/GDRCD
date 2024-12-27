@@ -63,7 +63,7 @@ class RecuperoPassword extends BaseClass
     public static function renderEditForm(): string
     {
         return Template::getInstance()->startTemplate()->render(
-            'servizi/password/recovery_form', [
+            'homepage/password/recovery_form', [
             'pagetitle' => $GLOBALS['MESSAGE']['interface']['user']['pass']['page_name'],
             'formaction' => $_SERVER['REQUEST_URI'],
             'formlabel' => [
@@ -84,7 +84,7 @@ class RecuperoPassword extends BaseClass
     public static function renderPasswordUpdatedStatus(): string
     {
         return Template::getInstance()->startTemplate()->render(
-            'servizi/password/recovery_status', [
+            'homepage/password/recovery_status', [
             'pagetitle' => $GLOBALS['MESSAGE']['interface']['user']['pass']['page_name'],
             'message' => $GLOBALS['MESSAGE']['recoverypassword']['status']['success']['text'],
         ]);
@@ -99,7 +99,7 @@ class RecuperoPassword extends BaseClass
     public static function renderInvalidTokenStatus(): string
     {
         return Template::getInstance()->startTemplate()->render(
-            'servizi/password/recovery_status', [
+            'homepage/password/recovery_status', [
             'pagetitle' => $GLOBALS['MESSAGE']['interface']['user']['pass']['page_name'],
             'message' => $GLOBALS['MESSAGE']['recoverypassword']['status']['invalidtoken']['text'],
         ]);
@@ -114,7 +114,7 @@ class RecuperoPassword extends BaseClass
     public static function renderMismatchingPassword(): string
     {
         return Template::getInstance()->startTemplate()->render(
-            'servizi/password/recovery_status', [
+            'homepage/password/recovery_status', [
             'pagetitle' => $GLOBALS['MESSAGE']['interface']['user']['pass']['page_name'],
             'message' => $GLOBALS['MESSAGE']['recoverypassword']['status']['mismatch']['text'],
         ]);
@@ -183,7 +183,7 @@ class RecuperoPassword extends BaseClass
     public static function sendRecoveryEmail(string $userEmail): bool
     {
         $token = self::makePasswordRecoveryToken($userEmail);
-        $url =  "{$GLOBALS['PARAMETERS']['info']['site_url']}/index.php?page=homepage&content=resetpassword&token={$token}";
+        $url =  "{$GLOBALS['PARAMETERS']['info']['site_url']}/index.php?page=homepage&content=password/edit_form&token={$token}";
 
         # TODO Creare una classe Email
 
@@ -202,7 +202,7 @@ class RecuperoPassword extends BaseClass
         );
 
         $message = Template::getInstance()->startTemplate()->render(
-            'servizi/password/recovery_mail', [
+            'homepage/password/recovery_mail', [
             'mailtext' => $GLOBALS['MESSAGE']['recoverypassword']['forms']['mail']['text'],
             'recoveryurl' => $url,
         ]);
