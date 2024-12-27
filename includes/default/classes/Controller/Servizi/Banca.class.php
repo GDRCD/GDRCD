@@ -149,6 +149,7 @@ class Banca extends BaseClass
             if ( $money <= Filters::int($pg_data['banca']) ) {
                 $new_bank = Filters::int($pg_data['banca']) - $money;
 
+                $my_name = Personaggio::nameFromId($this->me_id);
                 $pg_name = Personaggio::nameFromId($pg);
                 $pg_data = $this->extractBankData($pg);
                 $pg_new_bank = Filters::int($pg_data['banca']) + $money;
@@ -171,7 +172,14 @@ class Banca extends BaseClass
                         "testo" => "Inviati $money a $pg_name per '$causal'",
                     ]);
 
-                    #TODO Aggiunta messaggio destinatario
+                    $title = 'Bonifico ricevuto!';
+                    $text = "Hai ricevuto $money dollari da <b>$my_name</b> per <b>'$causal'</b>";
+
+                    DB::queryStmt("INSERT INTO personaggio_notifiche (personaggio, titolo, testo) VALUES (:pg, :title, :text)", [
+                        'pg' => $pg,
+                        'title' => Filters::string($title),
+                        'text' => Filters::string($text),
+                    ]);
 
                     return [
                         'response' => true,

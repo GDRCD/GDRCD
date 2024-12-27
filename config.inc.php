@@ -171,12 +171,8 @@ $PARAMETERS['right_column']['activate'] = 'ON';
 /*COLONNA SINISTRA */
 $PARAMETERS['left_column']['box']['info_location']['class'] = 'info';
 $PARAMETERS['left_column']['box']['info_location']['page'] = 'info_location'; //Meteo e informazioni sul luogo.
-$PARAMETERS['left_column']['box']['frame_messages']['class'] = 'conversazioni';
-$PARAMETERS['left_column']['box']['frame_messages']['page'] = 'conversazioni/frame'; //Link ai messaggi
-$PARAMETERS['left_column']['box']['frame_forum']['class'] = 'forums';
-$PARAMETERS['left_column']['box']['frame_forum']['page'] = 'forum/frame'; //Link al forum
-$PARAMETERS['left_column']['box']['frame_news']['class'] = 'news';
-$PARAMETERS['left_column']['box']['frame_news']['page'] = 'news/frame'; //Link al forum
+$PARAMETERS['left_column']['box']['frame_icons']['class'] = 'frame_icons';
+$PARAMETERS['left_column']['box']['frame_icons']['page'] = 'frame_left'; //Link ai messaggi
 $PARAMETERS['left_column']['box']['link_menu']['class'] = 'menu';
 $PARAMETERS['left_column']['box']['link_menu']['page'] = 'link_menu'; //Menu' del gioco.
 

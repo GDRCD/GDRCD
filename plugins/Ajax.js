@@ -1,4 +1,4 @@
-async function Ajax(path, data, success, type = 'POST') {
+function Ajax(path, data, success, type = 'POST') {
 
     data.path = path;
 

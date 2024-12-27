@@ -733,7 +733,7 @@ CREATE TABLE IF NOT EXISTS `conversazioni` (
 CREATE TABLE IF NOT EXISTS `conversazioni_membri` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `conversazione` int NOT NULL,
-  `personaggio` varchar(255) NOT NULL,
+  `personaggio` int NOT NULL,
   `proprietario` tinyint(1) NOT NULL DEFAULT 0,
   `ultima_lettura` datetime DEFAULT NULL,
   `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -1223,6 +1223,22 @@ CREATE TABLE IF NOT EXISTS `personaggio_lavoro` (
     `scadenza` date NOT NULL DEFAULT '2010-01-01',
     PRIMARY KEY (`id`),
     UNIQUE INDEX `pg_work` (`personaggio`, `lavoro`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `personaggio_notifiche`
+--
+
+CREATE TABLE `personaggio_notifiche` (
+    `id` int NOT NULL AUTO_INCREMENT,
+    `personaggio` int NOT NULL,
+    `titolo` text NOT NULL,
+    `testo` text NOT NULL,
+    `letto` int DEFAULT 0,
+    `creato_il` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
