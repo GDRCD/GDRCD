@@ -1,7 +1,7 @@
 <?php
 Router::loadRequired();
 $scheda_class = Scheda::getInstance();
-
+$pv_class = SchedaPrestavolto::getInstance();
 switch ( $_POST['action'] ) {
 
     case 'update_character_data':
@@ -19,5 +19,9 @@ switch ( $_POST['action'] ) {
     case 'update_character_administration':
         echo json_encode($scheda_class->updateAdministrationCharacter($_POST));
         break;
+
+        case 'update_character_pv':
+            echo json_encode($pv_class->updateCharacterPV($_POST));
+            break;
 
 }
