@@ -5,12 +5,6 @@
  */
 class UnknownEmailException extends UnexpectedValueException {}
 
-/**
- * @class UnknownTokenException
- * @note tipo di eccezione usata per avvisare che un token di ripristino è invalido o scaduto
- */
-class UnknownTokenException extends UnexpectedValueException {}
-
 
 /**
  * @class RecuperoPassword
