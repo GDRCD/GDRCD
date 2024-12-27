@@ -674,6 +674,18 @@ $MESSAGE['interface']['administration']['log']['chat']['text'] = 'Testo';
 $MESSAGE['interface']['administration']['log']['chat']['room'] = 'Luogo';
 $MESSAGE['interface']['administration']['log']['chat']['sender'] = 'Personaggio';
 /********** Pagine del menu' utente *********/
+/*Cambio email*/
+$MESSAGE['interface']['user']['email']['page_name'] = 'Cambio Email';
+$MESSAGE['interface']['user']['email']['password'] = 'Inserire la password dell\'account per conferma';
+$MESSAGE['interface']['user']['email']['email'] = 'Inserire la nuova email';
+$MESSAGE['interface']['user']['email']['unknown-user'] = 'Utente non trovato nel database!';
+$MESSAGE['interface']['user']['email']['wrong-password'] = 'La password dell\'account non è corretta';
+$MESSAGE['interface']['user']['email']['already-exists'] = 'La mail inserita è già in uso';
+$MESSAGE['interface']['user']['email']['mailserver-error'] = 'Impossibile inviare l\'email';
+$MESSAGE['interface']['user']['email']['awaiting-verification'] = 'Clicca sul link inviato alla nuova email per completare la procedura di aggiornamento';
+$MESSAGE['interface']['user']['email']['success'] = 'Email aggiornata con successo!';
+$MESSAGE['interface']['user']['email']['submit']['user'] = 'Salva';
+$MESSAGE['interface']['user']['email']['change_to'] = 'Cambia a...';
 /*Cambio pass*/
 $MESSAGE['interface']['user']['pass']['page_name'] = 'Cambio password';
 $MESSAGE['interface']['user']['pass']['email'] = 'Inserire la Email di registrazione per conferma';
@@ -772,6 +784,7 @@ $MESSAGE['warning']['deleted'] = 'Cancellazione eseguita';
 $MESSAGE['warning']['buyed'] = 'Oggetto acquisito';
 $MESSAGE['warning']['sold'] = 'Oggetto ceduto';
 $MESSAGE['warning']['cant_do'] = 'Impossibile eseguire';
+$MESSAGE['warning']['success'] = 'Operazione Riuscita!';
 $MESSAGE['warning']['unactive'] = 'La funzione richiesta non è attiva. Per attivare, modificare il file config.inc.php.';
 $MESSAGE['warning']['character_exiled'] = 'è stato esiliato fino al';
 $MESSAGE['warning']['pass_not_encripted'] = '** ATTENZIONE ** sul database sono state rivelate password non criptate mentre nel foglio di configurazione di GDRCD5.4 è attualmente settato su ON l\'encript delle password, mediante l\'algoritmo ' . $PARAMETERS['mode']['encriptalgorithm'] . '. Proseguendo tutte le password verranno criptate, il processo è IRREVERSIBILE. Se non vuoi che le password vengano criptate disabilita l\'encript delle password da config.inc.php';

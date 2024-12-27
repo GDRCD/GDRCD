@@ -1177,7 +1177,8 @@ CREATE TABLE IF NOT EXISTS `personaggio` (
     `online_last_refresh` DATETIME DEFAULT NULL,
     `data_iscrizione` datetime DEFAULT NULL,
     `last_ip` varchar(255) DEFAULT NULL,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    INDEX `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------

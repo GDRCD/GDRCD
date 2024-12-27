@@ -125,7 +125,8 @@ class GDRCD6 extends DbMigration
                 ('NOTIFICATIONS_ENABLED',1,'Notifiche','Notifiche attive','Notifiche attive?','bool',1,NULL),
                 ('CALENDAR_ENABLED',1,'Calendario','Calendario attivo','Calendario attivo?','bool',1,NULL),
                 ('CALENDAR_ONLY_FUTURE_SELECTABLE',1,'Calendario','Solo date future selezionabili per nuovi eventi','Solo date future selezionabili per nuovi eventi?','bool',1,NULL),
-                ('RECOVERY_TOKEN_VALIDITY_HOUR',24,'Recupero Password','Numero di ore per il ripristino password','Numero di ore di validità del link inviato per email per il ripristino della password dimenticata','int',1,NULL)
+                ('RECOVERY_TOKEN_VALIDITY_HOUR',24,'Recupero Password','Numero di ore per il ripristino password','Numero di ore di validità del link inviato per email per il ripristino della password dimenticata','int',1,NULL),
+                ('EMAIL_TOKEN_VALIDITY_HOUR',24,'Cambio Email','Numero di ore di validità per il cambio email','Numero di ore di validità del link inviato per email per la verifica del nuovo indirizzo','int',1,NULL)
         ;");
 
         DB::query("
@@ -278,6 +279,7 @@ class GDRCD6 extends DbMigration
               ('Utenti', 'Regolamento', 'Regolamento', 'user_regolamento', NULL),
               ('Utenti', 'Gestione Utente', 'Cambio nome', 'user_cambio_nome', 'MANAGE_NAMES'),
               ('Utenti', 'Gestione Utente', 'Cambio password', 'utenti/password/index', NULL),
+              ('Utenti', 'Gestione Utente', 'Cambio email', 'utenti/email/index', NULL),
               ('Utenti', 'Gestione Utente', 'Cancella account', 'user_cancella_pg', NULL),
               ('Utenti', 'Statistiche', 'Statistiche Sito', 'user_stats', NULL),
               ('Rapido', 'Scheda', 'Scheda', 'scheda/index', NULL),
