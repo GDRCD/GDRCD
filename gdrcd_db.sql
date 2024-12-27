@@ -1368,12 +1368,15 @@ CREATE TABLE IF NOT EXISTS `razze` (
 -- Struttura della tabella `recupero_password`
 --
 
-CREATE TABLE `recupero_password` (
-  `personaggio` INT(10) NOT NULL,
+CREATE TABLE `personaggio_tokens` (
+  `personaggio` INT NOT NULL,
   `token` CHAR(36) NOT NULL,
+  `tipo` ENUM('recupero-password','cambio-email') NOT NULL,
   `scadenza` TIMESTAMP NOT NULL,
-  PRIMARY KEY (`personaggio`),
-  UNIQUE INDEX `token` (`token`)
+  `dati` TEXT NULL DEFAULT NULL,
+  UNIQUE INDEX `token` (`token`),
+  INDEX `scadenza` (`scadenza`),
+  INDEX `personaggio` (`personaggio`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------

@@ -150,15 +150,9 @@ class RecuperoPassword extends BaseClass
      */
     public static function updateUserPasswordFromToken(string $recoveryToken, string $newPassword): void
     {
-        $recovery = DB::queryStmt(
-            'SELECT personaggio, UNIX_TIMESTAMP(scadenza) AS scadenza_timestamp 
-            FROM recupero_password 
-                INNER JOIN personaggio ON(personaggio.id = recupero_password.personaggio)
-            WHERE token = :token',
-            ['token' => $recoveryToken]
-        );
+        $Token = AccessToken::fromToken($recoveryToken);
 
-        if (!$recovery->getNumRows() || $recovery['scadenza_timestamp'] < time()) {
+        if (!$Token->isValid($Token::TYPE_PASSWORD_RECOVERY)) {
             throw new UnknownTokenException('Token invalido o personaggio non trovato');
         }
 
@@ -166,11 +160,12 @@ class RecuperoPassword extends BaseClass
             'UPDATE personaggio SET pass = :password, ultimo_cambiopass = NOW() WHERE id = :personaggio',
             [
                 'password' => Password::hash($newPassword),
-                'personaggio' => $recovery['personaggio']
+                'personaggio' => $Token->getAccountId()
             ]
         );
 
-        DB::queryStmt('DELETE FROM recupero_password WHERE token = :token', ['token' => $recoveryToken]);
+        // elimino tutti i token disponibili
+        AccessToken::deleteByAccountId($Token->getAccountId(), $Token::TYPE_PASSWORD_RECOVERY);
     }
 
     /**
@@ -235,26 +230,17 @@ class RecuperoPassword extends BaseClass
             $validity_hours = 24;
         }
 
-        // Cancello eventuali token presenti in precedenza per uno stesso account
-        DB::queryStmt(
-            'DELETE FROM recupero_password WHERE personaggio = :personaggio',
-            ['personaggio' => $user_data['id']]
+        $Token = AccessToken::create(
+            $user_data['id'],
+            AccessToken::TYPE_PASSWORD_RECOVERY,
+            $validity_hours * 3600
         );
 
-        // Genero un token casuale. random_bytes è crittograficamente sicuro, non serve altro
-        $token = bin2hex(random_bytes(18));
+        if (!$Token->isValid(AccessToken::TYPE_PASSWORD_RECOVERY)) {
+            throw new LogicException('Errore nella creazione del token di recupero password');
+        }
 
-        // Salvo il token nel database con la relativa scadenza. Se ne esisteva uno vecchio lo sovrascrivo
-        DB::queryStmt(
-            'INSERT INTO recupero_password (token, personaggio, scadenza) VALUES (:token, :personaggio, :scadenza)',
-            [
-                'token' => $token,
-                'personaggio' => $user_data['id'],
-                'scadenza' => (new Datetime)->add(new DateInterval("PT{$validity_hours}H"))->format('Y-m-d H:i:s')
-            ]
-        );
-
-        return $token;
+        return $Token->toString();
     }
 
     /**
