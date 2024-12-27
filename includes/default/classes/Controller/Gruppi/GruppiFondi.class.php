@@ -315,18 +315,14 @@ class GruppiFondi extends Gruppi
 
                     foreach ( $capi as $capo ) {
                         $pg = Filters::in($capo['id']);
+                        $titolo = Filters::string('Resoconto fondi assegnati oggi.');
+                        $testo = Filters::string("Il gruppo '$group_name' ha ricevuto un totale di '$total_given' dollari.");
 
-                        $titolo = Filters::in('Resoconto fondi assegnati oggi.');
-                        $testo = Filters::in("Il gruppo '$group_name' ha ricevuto un totale di '$total_given' dollari.");
-
-                        //! TODO: Implementare nuove tabelle
-//                        DB::queryStmt("INSERT INTO messaggi (mittente, destinatario, oggetto, testo, tipo) VALUES (:mittente, :destinatario, :oggetto, :testo, :tipo)", [
-//                            'mittente' => 'System',
-//                            'destinatario' => $pg,
-//                            'oggetto' => $titolo,
-//                            'testo' => $testo,
-//                            'tipo' => 0
-//                        ]);
+                        DB::queryStmt("INSERT INTO personaggio_notifiche (personaggio, titolo,testo, creato_il) VALUES (:pg, :title, :text, NOW())", [
+                            'pg' => $pg,
+                            'title' => $titolo,
+                            'text' => $testo,
+                        ]);
                     }
 
                 }

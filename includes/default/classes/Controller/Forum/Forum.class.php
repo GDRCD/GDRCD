@@ -102,14 +102,14 @@ class Forum extends BaseClass
     /*** AJAX ***/
 
     /**
-     * @fn ajaxFrameText
-     * @note Ritorna il testo del frame laterale
+     * @fn ajaxNewPosts
+     * @note Ritorna
      * @return array
      * @throws Throwable
      */
-    public function ajaxFrameText(): array
+    public function ajaxNewPosts(): array
     {
-        return ['text' => $this->renderFrameText()];
+        return ['new_posts' => ForumPosts::getInstance()->getCountPostsAllForum()];
     }
 
     /**

@@ -29,8 +29,8 @@ switch ( $_POST['action'] ) {
         echo json_encode($cls->addEventFromConversation($_POST));
         break;
 
-    case 'frame_text':
-        echo json_encode($cls->ajaxFrameText($_POST));
+    case 'have_new_messages':
+        echo json_encode($cls->ajaxNewMessages($_POST));
         break;
 }
 

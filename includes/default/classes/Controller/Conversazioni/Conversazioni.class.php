@@ -247,7 +247,7 @@ class Conversazioni extends BaseClass
                     AND conversazioni_membri.personaggio = :member
                 WHERE conversazioni_membri.personaggio IS NOT NULL
                     AND conversazioni.eliminato_il IS NULL
-                    AND conversazioni.ultimo_messaggio > conversazioni_membri.ultima_lettura",
+                    AND (conversazioni.ultimo_messaggio > conversazioni_membri.ultima_lettura OR conversazioni_membri.ultima_lettura IS NULL)",
             ['member' => $this->me_id]
         );
     }
@@ -273,14 +273,14 @@ class Conversazioni extends BaseClass
     /*** AJAX ***/
 
     /**
-     * @fn ajaxFrameText
-     * @note Ritorna il testo del frame laterale
+     * @fn ajaxNewMessages
+     * @note Ritorna il numero di nuovi messaggi
      * @return array
      * @throws Throwable
      */
-    public function ajaxFrameText(): array
+    public function ajaxNewMessages(): array
     {
-        return ['text' => $this->renderFrameText()];
+        return ['new_messages' => $this->getConversationsToRead()->getNumRows()];
     }
 
     /**

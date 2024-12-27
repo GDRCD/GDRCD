@@ -33,8 +33,8 @@ switch ( $_POST['action'] ) {
         echo json_encode($cls->importantPost($_POST));
         break;
 
-    case 'frame_text':
-        echo json_encode($cls->ajaxFrameText());
+    case 'have_new_posts':
+        echo json_encode($cls->ajaxNewPosts());
         break;
 
     case 'share_post':
