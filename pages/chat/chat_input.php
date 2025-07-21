@@ -1,14 +1,16 @@
 <?php
-$info = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprietario, scadenza FROM mappa WHERE id=".$_SESSION['luogo']." LIMIT 1");
+
+    // Recupero le informazioni sulla chat corrente
+    $chat_info ??= gdrcd_chat_info($_SESSION['luogo']);
 
 ?>
 <div class="chat_bottom">
-<form action="/main.php?dir=<?=$_REQUEST['dir'] ?>" method="post" id="azioneForm">
+<form action="pages/chat/ajax.php?op=chat_write" method="post" id="azioneForm">
 
         <div class="chat_text chat_row" >
 
             <div class="input_container small">
-                <select name="tipo" id="tipo">
+                <select name="type" id="type">
                     <option value="P"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][0]);//parlato?></option>
                     <option value="A"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][1]);//azione?></option>
                     <option value="S"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][4]);//sussurro?></option>
@@ -16,7 +18,7 @@ $info = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprieta
                         <option value="M"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][2]);//master?></option>
                         <option value="N"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][3]);//png?></option>
                     <?php } ?>
-                    <?php if(($info['privata'] == 1) && (($info['proprietario'] == $_SESSION['login']) || ((is_numeric($info['proprietario']) === true) && (strpos($_SESSION['gilda'], ''.$info['proprietario']))))) { ?>
+                    <?php if(($chat_info['privata'] == 1) && (($chat_info['proprietario'] == $_SESSION['login']) || ((is_numeric($chat_info['proprietario']) === true) && (strpos($_SESSION['gilda'], ''.$chat_info['proprietario']))))) { ?>
                         <option value="5"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][5]);//invita?></option>
                         <option value="6"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][6]);//caccia?></option>
                         <option value="7"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][7]);//elenco?></option>
@@ -34,7 +36,7 @@ $info = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprieta
             </span>
             </div>
             <div class="input_container big">
-                <input type="text" name="testo" id="testo" placeholder="Testo azione">
+                <input type="text" name="message" id="testo" placeholder="Testo azione">
 
                 <br /><span class="casella_info">
 	                                    <?php echo gdrcd_filter('out', $MESSAGE['chat']['tag']['info']['msg']); ?>
@@ -59,12 +61,12 @@ $info = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprieta
             <div class="input_container invia">
                 <input type="hidden" name="op" id="op" value="send_action">
                 <input type="hidden" name="location" id="location" value="<?=$_REQUEST['dir']  ?>">
-                <button type="button"  class="casella_chat" id="inviaAzione" onclick="postChat()">Invia</button>
+                <button class="casella_chat" id="inviaAzione">Invia</button>
             </div>
         </div>
 
 </form>
-    <?php if(($PARAMETERS['mode']['skillsystem'] == 'ON') || ($PARAMETERS['mode']['dices'] == 'ON')) { ?>
+    <?php if($PARAMETERS['mode']['skillsystem'] == 'ON' || $PARAMETERS['mode']['dices'] == 'ON') { ?>
     <form action="/main.php?dir=<?=$_REQUEST['dir'] ?>" method="post" id="statForm">
 
         <div class="chat_text chat_row">
@@ -164,7 +166,7 @@ $info = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprieta
     $(function() {
         $("#azioneForm").submit(function(event) {
             event.preventDefault(); // Previeni l'invio del form normale
-            postChat();
+            postChat($(this).prop('action'), $(this).serialize());
         });
 
         $("#testo").on('keypress', function (event) {
@@ -174,40 +176,30 @@ $info = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprieta
             }
         });
     });
-    function postChat() {
-        var testo = $("#testo").val().trim();
-        var tag = $("#tag").val();
-        var tipo = $("#tipo").val();
-        var locationValue = $("#location").val();
-        var op = $("#op").val();
 
-        if ((testo !== "")||(tipo == 5) || (tipo == 6) || (tipo == 7)) {
-            $.post("/pages/chat.inc.php", { tag, testo, tipo, location: locationValue, op  })
-                .done(function () {
-                    // Gestisci il caso di successo (puoi aggiungere del codice qui se necessario)
-                    $("#testo").val("");
-                    $("#chat_azioni_box").load(" #chat_azioni_box > *", function() {
-
-                        var chatElement = document.getElementById('chat_azioni_box');
-                        chatElement.scrollTop = chatElement.scrollHeight;
-                    });
-                })
-                .fail(function () {
-                    alert("Si è verificato un errore durante l'invio.");
-                });
-        }
+    function postChat(url, data) {
+        $.post(url, data)
+            .done(function () {
+                httpGetChatRead();
+            })
+            .fail(function () {
+                alert("Si è verificato un errore durante l'invio.");
+            });
     }
+
     function open_notes() {
         var notes = window.open('popup.php?page=blocco_note','Blocco','width=500,height=250,toolbar=no');
         notes.onload = function() {
-            notes.document.getElementById('tipo').value = document.getElementById('tipo').value;
+            notes.document.getElementById('type').value = document.getElementById('type').value;
             notes.document.getElementById('testo').value = document.getElementById('testo').value;
             notes.document.getElementById('tag').value = document.getElementById('tag').value;
         }
     }
+
     function conta() {
         document.getElementById("conta").innerHTML = 'Caratteri: '+document.getElementById("testo").value.length;
     }
+
     setInterval(conta,10);
 
 
