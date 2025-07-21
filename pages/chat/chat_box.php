@@ -1,96 +1,158 @@
 <?php
 
-    $chat_id = gdrcd_filter("num",$_GET['dir']);
+    // All'apertura della chat, resetto il lastmessage, in questo modo verranno
+    // caricati tutti i messaggi disponibili con la prima richiesta.
+    gdrcd_chat_set_lastmessage_id(0);
+
+    // Recupero le informazioni sulla chat corrente
+    $chat_info = gdrcd_chat_info($_SESSION['luogo']);
 
 ?>
 <div class="chat_box">
-    <div class="page_title"><?=chat_name($chat_id)?></div>
-    <?php
-    if(controlloChat($chat_id)) {?>
-        <div class="chat_azioni_box" id="chat_azioni_box">
-            <?php require_once(__DIR__ . '/chat_azioni.php'); ?>
+    <div class="page_title"><?= gdrcd_chat_name($chat_info) ?></div>
+
+    <?php if( !gdrcd_chat_is_accessible($chat_info) ) { ?>
+
+        <div class="warning">Non sei abilitato a visualizzare questa chat.</div>
+
+    <?php } else { ?>
+
+        <div id="chat_azioni_box" class="chat_azioni_box">
+            <div id="chat_azioni" class="chat_azioni"></div>
         </div>
+
         <div class="chat_input_box">
-            <?php require_once(__DIR__ . '/chat_input.php'); ?>
+            <?php require dirname(__FILE__) . '/chat_input.php'; ?>
         </div>
-</div>
 
+        <script>
 
-    <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                var isFirstLoad = true;
-                var lastMessageCount = document.getElementById('countmessages').value;
+            /**
+             * Script responsabile del caricamento delle nuove azioni in chat
+             */
 
+            // TODO: icona di caricamento di default in chat che viene rimossa appena completata la prima richiesta
 
-                // Imposta lo scroll verso il basso durante la prima carica
-                var chatElement = document.getElementById('chat_azioni_box');
-                chatElement.scrollTop = chatElement.scrollHeight;
+            $(document).ready(() => {
+                // Avvio lettura azioni chat - inizializza il polling automatico
+                let chatInterval = chatReadStart();
 
-
-                function checkForNewMessages(callback) {
-                    $.post('/pages/chat.inc.php', { op: "check_chat" }, function(data) {
-                        var jsonData = data.match(/\{.*\}/);
-
-                        if (jsonData) {
-                            var parsedData = JSON.parse(jsonData[0]);
-                            callback(parsedData.esito);
-                            console.log("Controllo chat: " + parsedData.esito);
-                        } else {
-                            console.error("Errore nella risposta del server: nessun dato JSON trovato");
-                        }
-                    });
-                }
-
-                function updateChat() {
-                    checkForNewMessages(function(newMessageCount) {
-                        if ((newMessageCount != lastMessageCount) || isFirstLoad) {
-                            isFirstLoad = false;
-
-                            $("#chat_azioni_box").load(" #chat_azioni_box > *", function() {
-                                setTimeout(function() {
-                                    var chatElement = document.getElementById('chat_azioni_box');
-                                    chatElement.scrollTop = chatElement.scrollHeight;
-
-                                    if (document.hidden && lastMessageCount>0) {
-
-                                        parent.blink_title("Nuova azione!", true);
-                                    }
-                                    }, 600);
-                            });
-                            lastMessageCount = newMessageCount;
-                        }
-                    });
-                }
-
-                setInterval(function() {
-                    updateChat();
-                    console.log("Messaggi presenti: " + lastMessageCount);
-                }, 15000);
-
-                // Aggiungi un listener per l'evento visibilitychange
-                document.addEventListener("visibilitychange", function() {
-                    // Se la finestra diventa visibile, ferma il lampeggio
-                    if (!document.hidden) {
-                        parent.stop_blinking_title();
-                    }
-                });
+                /**
+                 * Event listener per il cambio di visibilità della pagina
+                 * Ferma il lampeggiamento del titolo quando l'utente torna sulla tab
+                 */
+                $(document).on('visibilitychange', 'chatBlinkTitleStop');
             });
 
-    </script>
+            /**
+             * Inizializza il sistema di aggiornamento automatico della chat
+             * Esegue subito una lettura e poi imposta un intervallo di 15 secondi
+             * @returns {number} ID dell'intervallo per eventuali cancellazioni future
+             */
+            function chatReadStart()
+            {
+                // Prima esecuzione immediata
+                httpGetChatRead();
 
+                // Imposta polling ogni 15 secondi (15000 ms)
+                return setInterval('httpGetChatRead', 15000);
+            }
 
-    <?php
+            /**
+             * Effettua la richiesta AJAX per leggere i nuovi messaggi della chat
+             */
+            function httpGetChatRead()
+            {
+                $.get('pages/chat/ajax.php?op=chat_read')
+                    .done(function(json) {
 
-    }else{
-        echo  '<div class="warning">Non hai i permessi per visualizzare questa chat.</div>';
-    }
-    ?>
+                        const data = chatReadResponseDecode(json);
 
+                        // Se non ci sono nuove azioni usciamo qui
+                        if (data.length === 0) {
+                            return;
+                        }
 
+                        chatScreenAppendMessages(data.join(''));
 
+                    })
+                    .fail(function(jqXHR, textStatus, errorThrown) {
 
+                        // TODO: scrivere errore in chat e interrompere il pollig in caso di 403
 
+                        console.error('[GDRCD] HTTP Error Status:', jqXHR.status);
 
+                    });
+            }
 
+            /**
+             * Decodifica la risposta JSON ricevuta dal server
+             * @param {string} json - Stringa JSON da decodificare
+             * @returns {string[]} Array di messaggi decodificati o undefined in caso di errore
+             */
+            function chatReadResponseDecode(json)
+            {
+                if (typeof json !== 'string') {
+                    return json;
+                }
 
+                try {
+                    return JSON.parse(json);
+                } catch (e) {
+                    console.error("[GDRCD] Impossibile decodificare la risposta:", e);
+                    throw e;
+                }
+            }
 
+            /**
+             * Aggiunge i nuovi messaggi alla chat e gestisce lo scroll automatico
+             * @param {string} html - HTML dei messaggi da aggiungere al container della chat
+             */
+            function chatScreenAppendMessages(html)
+            {
+                // Aggiunge i nuovi messaggi al contenitore della chat
+                $('#chat_azioni').append(html);
+
+                // Timeout per permettere al DOM di aggiornarsi prima dello scroll (aspetta 500ms)
+                setTimeout(function() {
+                    chatScreenAutoScroll();
+                    chatBlinkTitleStart();
+                }, 500);
+            }
+
+            /**
+             * Gestisce lo scroll automatico della chat verso il basso
+             * @param {number} time - Durata dell'animazione in millisecondi (default: 300)
+             */
+            function chatScreenAutoScroll(time = 300)
+            {
+                const $chatAzioniBox = $('#chat_azioni_box');
+                $chatAzioniBox.animate({ scrollTop: $chatAzioniBox.height() }, time);
+            }
+
+            /**
+             * Avvia il lampeggiamento del titolo della pagina se la finestra non è visibile
+             * Utilizzato per notificare all'utente la presenza di nuovi messaggi
+             */
+            function chatBlinkTitleStart()
+            {
+                if (document.hidden) {
+                    blink_title("Nuova azione!", true);
+                }
+            }
+
+            /**
+             * Ferma il lampeggiamento del titolo della pagina se la finestra è visibile
+             * Utilizzato quando l'utente torna a visualizzare la chat
+             */
+            function chatBlinkTitleStop()
+            {
+                if (!document.hidden) {
+                    stop_blinking_title();
+                }
+            }
+
+        </script>
+
+    <?php } ?>
+</div>
