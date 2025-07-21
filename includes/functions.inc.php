@@ -62,7 +62,7 @@ function gdrcd_close_connection($db)
  *  free: libera la memoria occupata dalla risorsa mysqli passata in $sql
  *  last_id: ritorna l'id del record generato dall'ultima query, se non era una INSERT o UPDATE ritorna 0. In questo caso $sql non viene considerato
  *  affected: ritorna il numero di record toccati dall'ultima query (INSERT, UPDATE, DELETE o SELECT). In questo caso $sql non viene considerato
- * @return un booleano in caso di esecuzione di query non SELECT e modalità 'query'. Altrimenti ritorna come specificato nella descrizione di $mode
+ * @return mixed un booleano in caso di esecuzione di query non SELECT e modalità 'query'. Altrimenti ritorna come specificato nella descrizione di $mode
  */
 function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
 {
@@ -333,7 +333,7 @@ function gdrcd_check_pass($str)
  * Funzione di filtraggio di codici malevoli negli input utente
  * @param string $what : modalità da utilizzare per controllare la stringa. Sono opzioni valide: in o get, num, out, addslashes, email, includes
  * @param string $str : la stringa da controllare
- * @return una versione filtrata di $str
+ * @return string|int|false una versione filtrata di $str
  */
 function gdrcd_filter($what, $str)
 {
@@ -949,4 +949,3 @@ function gdrcd_brute_debug($args)
     }
     die('FINE');
 }
-
