@@ -360,7 +360,7 @@ function gdrcd_filter($what, $str)
             break;
 
         case 'includes':
-            $str = (preg_match("#[^:]#is")) ? htmlentities($str, ENT_QUOTES) : false;
+            $str = (preg_match("#[^:]#is", $str)) ? htmlentities($str, ENT_QUOTES) : false;
             break;
 
         case 'url':
