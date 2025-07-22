@@ -1418,6 +1418,34 @@ function gdrcd_chat_player_skills($nome)
 }
 
 /**
+ * Recupera tutte le caratteristiche disponibili per il personaggio.
+ * Estrae le statistiche dai parametri globali filtrando solo quelle con ID numerico.
+ *
+ * @return array<array{id_stats: int, nome: string}> Array di caratteristiche
+ */
+function gdrcd_chat_player_stats()
+{
+    $PARAMETERS = $GLOBALS['PARAMETERS'];
+
+    $stats = [];
+
+    foreach($PARAMETERS['names']['stats'] as $id_stats => $name_stats) {
+        $id_stats = substr($id_stats, 3);
+
+        if(is_numeric($id_stats)) {
+            continue;
+        }
+
+        $stats[] = [
+            'id_stats' => (int) $id_stats,
+            'nome' => $name_stats,
+        ];
+    }
+
+    return $stats;
+}
+
+/**
  * Settaggio dei SESSION per tag e tipo
  */
 function settaTag($tag)
