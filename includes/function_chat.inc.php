@@ -1386,6 +1386,38 @@ function gdrcd_chat_info($luogo)
 }
 
 /**
+ * Recupera tutte le abilità disponibili per un giocatore specifico.
+ * Include le abilità universali (id_razza = -1) e quelle specifiche
+ * della razza del personaggio.
+ *
+ * @param string $nome Nome del personaggio per cui recuperare le abilità
+ * @return array<array{id_abilita: int, nome: string}> Array di abilità
+ */
+function gdrcd_chat_player_skills($nome)
+{
+    $skills = [];
+
+    $stmt = gdrcd_stmt(
+        'SELECT id_abilita, nome
+        FROM abilita
+        WHERE id_razza = -1
+            OR id_razza IN(SELECT id_razza FROM personaggio WHERE nome = ?)
+        ORDER BY nome',
+        ['s', $nome]
+    );
+
+    if (gdrcd_query($stmt, 'num_rows') > 0) {
+        while ($row = gdrcd_query($stmt, 'fetch')) {
+            $skills[] = $row;
+        }
+
+        gdrcd_query($stmt, 'free');
+    }
+
+    return $skills;
+}
+
+/**
  * Settaggio dei SESSION per tag e tipo
  */
 function settaTag($tag)
