@@ -1487,6 +1487,27 @@ function gdrcd_chat_player_items($nome)
 }
 
 /**
+ * Recupera tutti i dadi disponibili per la chat.
+ *
+ * @return array<array{nome: string, facce: int}> Array di dadi
+ */
+function gdrcd_chat_dice_list()
+{
+    $PARAMETERS = $GLOBALS['PARAMETERS'];
+
+    $dice = [];
+
+    foreach($PARAMETERS['settings']['skills_dices'] as $dice_name => $dice_value) {
+        $dice[] = [
+            'nome' => $dice_name,
+            'facce' => $dice_value,
+        ];
+    }
+
+    return $dice;
+}
+
+/**
  * Settaggio dei SESSION per tag e tipo
  */
 function settaTag($tag)
