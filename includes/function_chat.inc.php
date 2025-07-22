@@ -1446,6 +1446,47 @@ function gdrcd_chat_player_stats()
 }
 
 /**
+ * Recupera tutti gli oggetti utilizzabili in chat posseduti da un giocatore specifico.
+ * Include solo gli oggetti in posizioni > 0 (equipaggiati o nell'inventario).
+ *
+ * @param string $nome Nome del personaggio per cui recuperare gli oggetti
+ * @return array<array{id_oggetto: int, nome: string, cariche: int}> Ogni elemento contiene:
+ *               - id_oggetto: ID univoco dell'oggetto
+ *               - nome: Nome dell'oggetto
+ *               - cariche: Numero di cariche disponibili per l'oggetto
+ */
+function gdrcd_chat_player_items($nome)
+{
+    $items = [];
+
+    $stmt = gdrcd_stmt(
+        'SELECT
+            clgpersonaggiooggetto.id_oggetto,
+            oggetto.nome,
+            clgpersonaggiooggetto.cariche
+
+        FROM clgpersonaggiooggetto
+            JOIN oggetto ON clgpersonaggiooggetto.id_oggetto = oggetto.id_oggetto
+
+        WHERE clgpersonaggiooggetto.nome = ?
+            AND posizione > 0
+
+        ORDER BY oggetto.nome',
+        ['s', $nome]
+    );
+
+    if (gdrcd_query($stmt, 'num_rows') > 0) {
+        while ($row = gdrcd_query($stmt, 'fetch')) {
+            $items[] = $row;
+        }
+
+        gdrcd_query($stmt, 'free');
+    }
+
+    return $items;
+}
+
+/**
  * Settaggio dei SESSION per tag e tipo
  */
 function settaTag($tag)
