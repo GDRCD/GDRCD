@@ -762,8 +762,8 @@ function gdrcd_chat_icons_format($azione)
  */
 function gdrcd_chat_image_save(
     $testo,
-    $tipo = GDRCD_CHAT_MASTER_TYPE,
-    $symbol = GDRCD_CHAT_MASTER_SYMBOL
+    $tipo = GDRCD_CHAT_IMAGE_TYPE,
+    $symbol = GDRCD_CHAT_IMAGE_SYMBOL
 ) {
     // Se non si dispone dei permessi
     if ($_SESSION['permessi'] < GAMEMASTER) {
