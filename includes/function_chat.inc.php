@@ -911,7 +911,7 @@ function gdrcd_chat_dice_save(
 
     $dice_number_regex = '(?:[1-9][0-9]?|100)';
     $dice_faces_regex = '2|4|6|8|10|12|20|100';
-    $dice_modifier_regexp = '(?:+|-)(?:[1-9][0-9]?|100|0)';
+    $dice_modifier_regexp = '(?:\+|-)(?:[1-9][0-9]?|100|0)';
     $dice_threshold_regex = '(?:[1-9][0-9]?|100|0)';
 
     $dice_regex = "($dice_number_regex)?"
