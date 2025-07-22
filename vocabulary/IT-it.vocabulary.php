@@ -780,11 +780,12 @@ $MESSAGE['status_pg']['invisible'][1] = 'Invisibile';
 
 /********** Chat **********/
 $MESSAGE['chat']['type']['info'] = 'Tipo';
-$MESSAGE['chat']['type'][0] = 'Parlato';
-$MESSAGE['chat']['type'][1] = 'Azione';
-$MESSAGE['chat']['type'][2] = 'Master';
-$MESSAGE['chat']['type'][3] = 'PNG';
-$MESSAGE['chat']['type'][4] = 'Sussurro';
+$MESSAGE['chat']['type'][GDRCD_CHAT_MESSAGE_TYPE] = 'Parlato';
+$MESSAGE['chat']['type'][GDRCD_CHAT_ACTION_TYPE] = 'Azione';
+$MESSAGE['chat']['type'][GDRCD_CHAT_MASTER_TYPE] = 'Master';
+$MESSAGE['chat']['type'][GDRCD_CHAT_PNG_TYPE] = 'PNG';
+$MESSAGE['chat']['type'][GDRCD_CHAT_WHISPER_TYPE] = 'Sussurro';
+$MESSAGE['chat']['type'][GDRCD_CHAT_IMAGE_TYPE] = 'Immagine';
 $MESSAGE['chat']['type'][5] = 'Invita';
 $MESSAGE['chat']['type'][6] = 'Caccia';
 $MESSAGE['chat']['type'][7] = 'Elenco';
