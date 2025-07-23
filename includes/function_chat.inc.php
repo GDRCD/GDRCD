@@ -1432,7 +1432,7 @@ function gdrcd_chat_player_stats()
     foreach($PARAMETERS['names']['stats'] as $id_stats => $name_stats) {
         $id_stats = substr($id_stats, 3);
 
-        if(is_numeric($id_stats)) {
+        if(!is_numeric($id_stats)) {
             continue;
         }
 
