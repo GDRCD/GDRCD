@@ -154,7 +154,7 @@
     <?php if ($skills || $stats || $dice || $items) { ?>
 
         <!-- Form per tiro caratteristica/abilità/dadi e utilizzo oggetti in chat -->
-        <form action="pages/chat/ajax.php?op=chat_skillsystem" method="post" id="statForm">
+        <form action="pages/chat/ajax.php?op=chat_skillsystem" method="post" id="skillsystemForm">
             <div class="chat_text chat_row">
 
                 <?php if ($skills) { ?>
@@ -272,36 +272,92 @@
 
 <script type="text/javascript" src="/includes/jquery-3.7.1.min.js"></script>
 <script>
+
+    /**
+     * Script responsabile per l'invio dei form di chat
+     */
+
     $(function() {
+
         // Conteggio caratteri nell'input di testo
         const $conta = $('#conta');
         const contaCaratteri = e => $conta.html(e.target.value.length);
 
+        // Registra la funzione di conteggio caratteri alla pressione dei tasti nell'input di testo
         $('#testo')
             .keypress(e => contaCaratteri(e))
             .keyup(e => contaCaratteri(e));
 
-        $("#azioneForm").submit(function(event) {
-            event.preventDefault(); // Previeni l'invio del form normale
+        // Invio form azione
+        $('#azioneForm').submit(function(event) {
+            event.preventDefault();
             postChat($(this).prop('action'), $(this).serialize());
+
         });
 
-        $("#testo").on('keypress', function (event) {
-            if (event.which == 13) { // 13 corrisponde al tasto Invio
-                event.preventDefault(); // Previeni il comportamento predefinito del tasto Invio
-                $("#azioneForm").submit(); // Simula l'invio del form
-            }
+        // Invio form skillsystem
+        $('#skillsystemForm').submit(function(event) {
+            event.preventDefault();
+            postSkillsystem($(this).prop('action'), $(this).serialize());
         });
+
     });
 
-    function postChat(url, data) {
-        $.post(url, data)
-            .done(function () {
-                httpGetChatRead();
-            })
-            .fail(function () {
-                alert("Si è verificato un errore durante l'invio.");
+    /**
+     * Invia un messaggio con metodo POST e aggiorna automaticamente la chat
+     * Dopo l'invio riuscito, ricarica i messaggi della chat per mostrare il nuovo contenuto
+     * @param {string} url - URL dell'endpoint per l'invio del messaggio
+     * @param {Object} data - Dati del messaggio da inviare al server
+     */
+    function postChat(url, data)
+    {
+        httpPostRequest(url, data)
+            .then(() => {
+                // svuota l'input di testo
+                $('#testo').val('');
             });
+    }
+
+    /**
+     * Invia dati del sistema di abilità tramite POST
+     * Dopo l'invio riuscito, azzera le tendine di selezione e aggiorna la chat
+     * @param {string} url - URL dell'endpoint per l'invio dei dati del skillsystem
+     * @param {Object} data - Dati delle abilità/caratteristiche/dadi/oggetti da inviare
+     */
+    function postSkillsystem(url, data)
+    {
+        httpPostRequest(url, data)
+            .then(() => {
+                // reset tendine
+                $('#id_ab').val('nor');
+                $('#id_stats').val('no_stats');
+                $('#dice').val('no_dice');
+                $('#id_item').val('no_item');
+            });
+    }
+
+    /**
+     * Esegue una richiesta POST HTTP e restituisce una Promise
+     * Aggiorna automaticamente la chat in caso di successo e gestisce gli errori
+     * @param {string} url - URL dell'endpoint per la richiesta POST
+     * @param {Object} data - Dati da inviare con la richiesta POST
+     * @returns {Promise} Promise che si risolve con la risposta del server o si rifiuta con i dettagli dell'errore
+     */
+    function httpPostRequest(url, data)
+    {
+        return new Promise((resolve, reject) => {
+            $.post(url, data)
+                .done(function(response) {
+                    httpGetChatRead();
+                    resolve(response);
+                })
+                .fail(function(jqXHR, textStatus, errorThrown) {
+                    // TODO: scrivere errore in chat
+                    console.error('[GDRCD] HTTP Error Status:', jqXHR.status);
+
+                    reject(jqXHR.status, textStatus, errorThrown);
+                });
+        });
     }
 
     function open_notes() {
@@ -311,32 +367,5 @@
             notes.document.getElementById('testo').value = document.getElementById('testo').value;
             notes.document.getElementById('tag').value = document.getElementById('tag').value;
         }
-    }
-
-    function inviaStat() {
-
-        var id_ab = $("#id_ab").val();
-        var id_stats = $("#id_stats").val();
-        var dice = $("#dice").val();
-        var id_item = $("#id_item").val();
-        var locationValue = $("#location").val();
-        var op = $("#opstat").val();
-
-        // Chiamata AJAX per inviare i dati al server
-        $.post("/pages/chat.inc.php", { id_ab, id_stats, dice, id_item,  location: locationValue, op })
-            .done(function () {
-                // Gestisci il caso di successo (puoi aggiungere del codice qui se necessario)
-                $("#chat_azioni_box").load(" #chat_azioni_box > *", function () {
-                    var chatElement = document.getElementById('chat_azioni_box');
-                    chatElement.scrollTop = chatElement.scrollHeight;
-                });
-                $("#id_ab").val("nor");
-                $("#id_stats").val("no_stats");
-                $("#dice").val("no_dice");
-                $("#id_item").val("no_item");
-
-
-            })
-
     }
 </script>
