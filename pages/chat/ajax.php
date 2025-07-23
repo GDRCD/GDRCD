@@ -39,12 +39,9 @@ switch ($operation) {
     // Se ne servono di nuovi basterà creare il file nella
     // cartella /pages/chat/op/ e specificarlo qui di seguito.
 
-    case 'chat_read':   // Legge i messaggi nuovi in chat
-    case 'chat_write':  // Scrive un nuovo messaggio in chat
-    case 'roll_dice':   // Tira un dado e scrive l'esito in chat
-    case 'roll_skill':  // Tira un dado col valore dell'abilità e scrive l'esito in chat
-    case 'roll_stats':  // Tira un dado col valore della caratteristica e scrive l'esito in chat
-    case 'use_item':    // Utilizza un oggetto e scrive il responso in chat
+    case 'chat_read':           // Legge i messaggi nuovi in chat
+    case 'chat_write':          // Scrive un nuovo messaggio in chat
+    case 'chat_skillsystem':    // Esegue le operazioni relative allo skillsystem (dadi, abilità, caratteristiche e uso oggetti)
 
         $operation_file = dirname(__FILE__) . '/op/'. $operation .'.inc.php';
 

@@ -152,7 +152,7 @@
     <?php if ($skills || $stats || $dice || $items) { ?>
 
         <!-- Form per tiro caratteristica/abilità/dadi e utilizzo oggetti in chat -->
-        <form action="pages/chat/ajax.php?op={operation}" method="post" id="statForm">
+        <form action="pages/chat/ajax.php?op=chat_skillsystem" method="post" id="statForm">
             <div class="chat_text chat_row">
 
                 <?php if ($skills) { ?>
