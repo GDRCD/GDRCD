@@ -143,7 +143,9 @@
 
             <!-- Tasto invio azione -->
             <div class="input_container invia">
-                <button class="casella_chat" id="inviaAzione">Invia</button>
+                <button class="casella_chat" id="inviaAzione">
+                    <?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>
+                </button>
             </div>
 
         </div>
@@ -158,7 +160,7 @@
                 <?php if ($skills) { ?>
 
                     <!-- Tendina abilità -->
-                    <div class="casella_chat">
+                    <div class="input_container small">
                         <select name="id_ab" id="id_ab">
 
                             <option value="no_skill"></option>
@@ -183,7 +185,7 @@
                 <?php if ($stats) { ?>
 
                     <!-- Tendina caratteristiche -->
-                    <div class="casella_chat">
+                    <div class="input_container small">
                         <select name="id_stats" id="id_stats">
 
                             <option value="no_stats"></option>
@@ -208,7 +210,7 @@
                 <?php if ($dice) { ?>
 
                     <!-- Tendina dadi -->
-                    <div class="casella_chat">
+                    <div class="input_container small">
                         <select name="dice" id="dice">
 
                             <option value="no_dice"></option>
@@ -233,7 +235,7 @@
                 <?php if ($items) { ?>
 
                     <!-- Tendina oggetti -->
-                    <div class="casella_chat">
+                    <div class="input_container small">
                         <select name="id_item" id="id_item">
 
                             <option value="no_item"></option>
@@ -255,8 +257,10 @@
 
                 <?php } ?>
 
-                <div class="casella_chat">
-                    <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>" onclick="inviaStat()" />
+                <div class="input_container small">
+                    <button class="casella_chat" id="inviaSkill">
+                        <?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>
+                    </button>
                 </div>
 
             </div>
