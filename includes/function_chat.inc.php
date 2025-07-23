@@ -910,7 +910,7 @@ function gdrcd_chat_dice_save(
     // * Il 7 seguito da una virgola permette di evidenziare i dadi che hanno raggiunto o superato quel valore. Facoltativo. Valori possibili: 0...100  ($dice_threshold_regex)
 
     $dice_number_regex = '(?:[1-9][0-9]?|100)';
-    $dice_faces_regex = '2|4|6|8|10|12|20|100';
+    $dice_faces_regex = implode('|', array_column(gdrcd_chat_dice_list(), 'facce'));
     $dice_modifier_regexp = '(?:\+|-)(?:[1-9][0-9]?|100|0)';
     $dice_threshold_regex = '(?:[1-9][0-9]?|100|0)';
 
