@@ -114,7 +114,7 @@
 
             <!-- Campo Testo Azione -->
             <div class="input_container big">
-                <input type="text" name="message" id="testo" placeholder="Testo azione">
+                <input type="text" name="message" id="testo" placeholder="Testo azione" autocomplete="off">
 
                 <br />
 
@@ -273,6 +273,14 @@
 <script type="text/javascript" src="/includes/jquery-3.7.1.min.js"></script>
 <script>
     $(function() {
+        // Conteggio caratteri nell'input di testo
+        const $conta = $('#conta');
+        const contaCaratteri = e => $conta.html(e.target.value.length);
+
+        $('#testo')
+            .keypress(e => contaCaratteri(e))
+            .keyup(e => contaCaratteri(e));
+
         $("#azioneForm").submit(function(event) {
             event.preventDefault(); // Previeni l'invio del form normale
             postChat($(this).prop('action'), $(this).serialize());
@@ -304,13 +312,6 @@
             notes.document.getElementById('tag').value = document.getElementById('tag').value;
         }
     }
-
-    function conta() {
-        document.getElementById("conta").innerHTML = 'Caratteri: '+document.getElementById("testo").value.length;
-    }
-
-    setInterval(conta,10);
-
 
     function inviaStat() {
 
