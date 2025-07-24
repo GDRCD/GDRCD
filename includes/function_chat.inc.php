@@ -200,6 +200,49 @@ function gdrcd_chat_get_type_from_message($message)
 }
 
 /**
+ * Gestisce l'utilizzo del sistema di abilità/caratteristiche/dadi/oggetti tramite chat.
+ *
+ * Questa funzione consente di inviare automaticamente messaggi in chat per l'utilizzo
+ * di diversi elementi del sistema di gioco. Accetta uno solo dei parametri alla volta
+ * e genera il messaggio appropriato in chat per la tipologia scelta.
+ *
+ * Utilizza internamente gdrcd_chat_write_message() per l'effettivo salvataggio del messaggio.
+ *
+ * @param int|null $id_ab Facoltativo. ID dell'abilità da utilizzare. Se fornito, genera un messaggio di tipo "Tiro su Abilità"
+ * @param int|null $id_stats Facoltativo. ID della caratteristica da utilizzare. Se fornito, genera un messaggio di tipo "Tiro Caratteristica"
+ * @param int|null $dice Facoltativo. Numero di facce del dado da lanciare. Se fornito, genera un messaggio di tipo "Tiro Dado"
+ * @param int|null $id_item Facoltativo. ID dell'oggetto da utilizzare. Se fornito, genera un messaggio di tipo "Utilizzo Oggetto"
+ * @return int Il codice di esito dell'operazione:
+ *      - 1: messaggio salvato con successo
+ *      - 0: errore nei dati forniti
+ *      - -1: permessi insufficienti per l'operazione
+ */
+function gdrcd_chat_use_skillsystem(
+    $id_ab = null,
+    $id_stats = null,
+    $dice = null,
+    $id_item = null
+) {
+    if (!empty($id_ab)) {
+        return gdrcd_chat_write_message(GDRCD_CHAT_SKILL_SYMBOL . $id_ab);
+    }
+
+    if (!empty($id_stats)) {
+        return gdrcd_chat_write_message(GDRCD_CHAT_STATS_SYMBOL . $id_stats);
+    }
+
+    if (!empty($dice)) {
+        return gdrcd_chat_write_message(GDRCD_CHAT_DICE_SYMBOL . "d{$dice}");
+    }
+
+    if (!empty($id_item)) {
+        return gdrcd_chat_write_message(GDRCD_CHAT_ITEM_SYMBOL . $id_item);
+    }
+
+    return 0;
+}
+
+/**
  * Ritorna la formattazione html per un messaggio di tipo "Immagine" ( I ) in chat.
  *
  * @param array{
@@ -1047,6 +1090,84 @@ function gdrcd_chat_dice_save(
     );
 
     return 1;
+}
+
+function gdrcd_chat_stats_save(
+    $testo,
+    $tipo = GDRCD_CHAT_STATS_TYPE,
+    $symbol = GDRCD_CHAT_STATS_SYMBOL
+) {
+    // Rimuove il primo carattere se il messaggio inizia col simbolo dedicato
+    $testo = gdrcd_chat_strip_message_symbol($testo, $symbol);
+
+    // Se il testo è vuoto l'inserimento fallisce
+    if (empty($testo)) {
+        return 0;
+    }
+}
+
+function gdrcd_chat_skill_save(
+    $testo,
+    $tipo = GDRCD_CHAT_SKILL_TYPE,
+    $symbol = GDRCD_CHAT_SKILL_SYMBOL
+) {
+    $MESSAGE = $GLOBALS['MESSAGE'];
+
+    // Rimuove il primo carattere se il messaggio inizia col simbolo dedicato
+    $id_skill = (int) gdrcd_chat_strip_message_symbol($testo, $symbol);
+
+    if (empty($id_skill)) {
+        return 0;
+    }
+
+    // Cerca le informazioni sul destinatario nel database
+    $personaggio = gdrcd_chat_character_info($_SESSION['login']);
+
+    // Se il personaggio ha terminato la salute
+    if ($personaggio['salute'] <= 0) {
+
+        gdrcd_chat_db_insert_for_login(
+            $_SESSION['login'],
+            GDRCD_CHAT_WHISPER_TYPE,
+            $MESSAGE['status_pg']['exausted']
+        );
+
+        return 1;
+
+    }
+
+    // Recupero informazioni sull'abilità
+    $skill_stmt = gdrcd_stmt(
+        'SELECT nome, car
+        FROM abilita
+        WHERE id_abilita = ?
+        LIMIT 1'
+    );
+    $skill_record = gdrcd_query($skill_stmt, 'fetch');
+    gdrcd_query($skill_stmt, 'free');
+
+    // determina il valore della caratteristica di riferimento
+    $stats = $personaggio['car' . $skill_record['car']] ?? null;
+
+    if ( !$stats ) {
+        return 0;
+    }
+
+    // TODO: complete this function
+}
+
+function gdrcd_chat_item_save(
+    $testo,
+    $tipo = GDRCD_CHAT_ITEM_TYPE,
+    $symbol = GDRCD_CHAT_ITEM_SYMBOL
+) {
+    // Rimuove il primo carattere se il messaggio inizia col simbolo dedicato
+    $testo = gdrcd_chat_strip_message_symbol($testo, $symbol);
+
+    // Se il testo è vuoto l'inserimento fallisce
+    if (empty($testo)) {
+        return 0;
+    }
 }
 
 /**
