@@ -5,6 +5,31 @@
  */
 
 /**
+ * Converte il codice di esito delle funzioni di chat in un codice di stato HTTP appropriato.
+ *
+ * Mappa i valori di ritorno delle funzioni di salvataggio messaggi di chat
+ * (gdrcd_chat_write_message, gdrcd_chat_use_skillsystem)
+ * ai corrispondenti codici di stato HTTP standard per le risposte API.
+ *
+ * @param int $status Il codice di esito della funzione di chat. Valori supportati:
+ *      - 1: operazione completata con successo
+ *      - 0: errore nei dati forniti, operazione fallita
+ *      - -1: permessi insufficienti per l'operazione
+ * @return int Il codice di stato HTTP corrispondente:
+ *      - 201 (Created): per $status = 1, messaggio salvato correttamente
+ *      - 400 (Bad Request): per $status = 0, dati non validi
+ *      - 403 (Forbidden): per $status = -1, permessi insufficienti
+ */
+function gdrcd_chat_status_to_http_code(int $status)
+{
+    return match ($status) {
+        1 => 201,
+        0 => 400,
+        -1 => 403,
+    };
+}
+
+/**
  * Ritorna la formattazione HTML più appropriata per l'azione in chat.
  * Sono supportati i seguenti tipi di azione:
  *  - P: parlato
