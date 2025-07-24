@@ -1,0 +1,34 @@
+<?php
+
+/**
+ * Questo file gestisce l'esecuzione di tutta la parte statistica
+ * riguardante lo skillsystem di GDRCD, in particolare:
+ *  - Lancio dado
+ *  - Lancio su Caratteristica
+ *  - Lancio su Abilità
+ *  - Utilizzo Oggetti
+ */
+
+// Garantisce che che questo file sia utilizzato unicamente da /pages/chat/ajax.php
+gdrcd_chat_op_require_enabled();
+
+// Dati in input inviati dal giocatore
+$id_ab = $_POST['id_ab'] ?? '';
+$id_stats = $_POST['id_stats'] ?? '';
+$dice = $_POST['dice'] ?? '';
+$id_item = $_POST['id_item'] ?? '';
+
+// Prova ad eseguire l'azione richiesta
+$chat_skillsystem_status = gdrcd_chat_use_skillsystem(
+    $id_ab,
+    $id_stats,
+    $dice,
+    $id_item
+);
+
+// Converte lo stato ritornato da gdrcd_chat_use_skillsystem
+// in un codice di risposta http appropriato da inviare al browser
+$http_status = gdrcd_chat_status_to_http_code($chat_skillsystem_status);
+
+// Invia in uscita il codice di stato http
+http_response_code($http_status);
