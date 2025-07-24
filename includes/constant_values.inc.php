@@ -109,8 +109,17 @@ const GDRCD_CHAT_ACTION_SYMBOL = '+';
 /** @var string Symbolo per indicare i messaggi di tipo Sussurro. Subito dopo va inserito il nome del destinatario e poi nuovamente lo stesso simbolo affinché abbia effetto */
 const GDRCD_CHAT_WHISPER_SYMBOL = '@';
 
+/** @var string Symbolo per indicare i messaggi di tipo Tiro su Caratteristica */
+const GDRCD_CHAT_STATS_SYMBOL = '%';
+
+/** @var string Symbolo per indicare i messaggi di tipo Tiro su Abilità */
+const GDRCD_CHAT_SKILL_SYMBOL = '^';
+
 /** @var string Symbolo per indicare i messaggi di tipo Tiro Dado. Permette di definire il lancio di un dado con le seguenti espressioni: d6, 3d6, 8d10-7. La sintassi è: (numero-di-dadi)d(facce-del-dado)-(evidenzia-se-risultato-pari-o-maggiore) */
 const GDRCD_CHAT_DICE_SYMBOL = '#';
+
+/** @var string Symbolo per indicare i messaggi di tipo Utilizzo Oggetto */
+const GDRCD_CHAT_ITEM_SYMBOL = '=';
 
 /** @var string Symbolo per indicare i messaggi di tipo Master */
 const GDRCD_CHAT_MASTER_SYMBOL = '§';
