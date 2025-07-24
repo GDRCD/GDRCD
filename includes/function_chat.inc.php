@@ -122,17 +122,17 @@ function gdrcd_chat_write_message(
         case GDRCD_CHAT_WHISPER_TYPE:
             return gdrcd_chat_whisper_save($tag_o_destinatario, $message);
 
-        // case GDRCD_CHAT_STATS_TYPE:
-        //     return gdrcd_chat_stats_save($message);
+        case GDRCD_CHAT_STATS_TYPE:
+            return gdrcd_chat_stats_save($message);
 
-        // case GDRCD_CHAT_SKILL_TYPE:
-        //     return gdrcd_chat_skill_format($message);
+        case GDRCD_CHAT_SKILL_TYPE:
+            return gdrcd_chat_skill_save($message);
 
         case GDRCD_CHAT_DICE_TYPE:
             return gdrcd_chat_dice_save($message);
 
-        // case GDRCD_CHAT_ITEM_TYPE:
-        //     return gdrcd_chat_item_format($message);
+        case GDRCD_CHAT_ITEM_TYPE:
+            return gdrcd_chat_item_save($message);
 
         case GDRCD_CHAT_MASTER_TYPE:
             return gdrcd_chat_master_save($message);
@@ -145,6 +145,57 @@ function gdrcd_chat_write_message(
 
         default:
             return 0;
+    }
+}
+
+/**
+ * Ritorna il codice interno della tipologia di azione determinato
+ * in base al primo carattere presente in $message.
+ * Se il primo carattere non permette di determinare la tipologia di azione,
+ * viene ritornato il valore di GDRCD_CHAT_DEFAULT_TYPE
+ *
+ * @param string $message
+ * @return string
+ */
+function gdrcd_chat_get_type_from_message($message)
+{
+    $first_char = substr($message, 0, 1);
+
+    switch ($first_char) {
+
+        case GDRCD_CHAT_MESSAGE_SYMBOL:
+            return GDRCD_CHAT_MESSAGE_TYPE;
+
+        case GDRCD_CHAT_ACTION_SYMBOL:
+            return GDRCD_CHAT_ACTION_TYPE;
+
+        case GDRCD_CHAT_WHISPER_SYMBOL:
+            return GDRCD_CHAT_WHISPER_TYPE;
+
+        case GDRCD_CHAT_STATS_SYMBOL:
+            return GDRCD_CHAT_STATS_TYPE;
+
+        case GDRCD_CHAT_SKILL_SYMBOL:
+            return GDRCD_CHAT_SKILL_TYPE;
+
+        case GDRCD_CHAT_DICE_SYMBOL:
+            return GDRCD_CHAT_DICE_TYPE;
+
+        case GDRCD_CHAT_ITEM_SYMBOL:
+            return GDRCD_CHAT_ITEM_TYPE;
+
+        case GDRCD_CHAT_MASTER_SYMBOL:
+            return GDRCD_CHAT_MASTER_TYPE;
+
+        case GDRCD_CHAT_PNG_SYMBOL:
+            return GDRCD_CHAT_PNG_TYPE;
+
+        case GDRCD_CHAT_IMAGE_SYMBOL:
+            return GDRCD_CHAT_IMAGE_TYPE;
+
+        default:
+            return GDRCD_CHAT_DEFAULT_TYPE;
+
     }
 }
 
@@ -1305,45 +1356,6 @@ function gdrcd_chat_set_lastmessage_id($id)
 function gdrcd_chat_get_lastmessage_id()
 {
     return empty($_SESSION['last_message'])? 0 : $_SESSION['last_message'];
-}
-
-/**
- * Ritorna il codice interno della tipologia di azione determinato
- * in base al primo carattere presente in $message.
- * Se il primo carattere non permette di determinare la tipologia di azione,
- * viene ritornato il valore di GDRCD_CHAT_DEFAULT_TYPE
- *
- * @param string $message
- * @return string
- */
-function gdrcd_chat_get_type_from_message($message)
-{
-    $first_char = substr($message, 0, 1);
-
-    switch ($first_char) {
-
-        case GDRCD_CHAT_MESSAGE_SYMBOL:
-            return GDRCD_CHAT_MESSAGE_TYPE;
-
-        case GDRCD_CHAT_ACTION_SYMBOL:
-            return GDRCD_CHAT_ACTION_TYPE;
-
-        case GDRCD_CHAT_WHISPER_SYMBOL:
-            return GDRCD_CHAT_WHISPER_TYPE;
-
-        case GDRCD_CHAT_DICE_SYMBOL:
-            return GDRCD_CHAT_DICE_TYPE;
-
-        case GDRCD_CHAT_MASTER_SYMBOL:
-            return GDRCD_CHAT_MASTER_TYPE;
-
-        case GDRCD_CHAT_IMAGE_SYMBOL:
-            return GDRCD_CHAT_IMAGE_TYPE;
-
-        default:
-            return GDRCD_CHAT_DEFAULT_TYPE;
-
-    }
 }
 
 /**
