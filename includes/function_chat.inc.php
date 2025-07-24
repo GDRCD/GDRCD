@@ -1216,14 +1216,13 @@ function gdrcd_chat_whisper_save(
     // formatta il nome del destinatario. E' necessario per la ricerca nel database.
     $destinatario = gdrcd_capital_letter($destinatario);
 
-    $stmt = gdrcd_stmt('SELECT nome FROM personaggio WHERE nome = ?', ['s', $destinatario]);
+    // Cerca le informazioni sul destinatario nel database
+    $personaggio = gdrcd_chat_character_info($destinatario);
 
     // se destinatario non esiste nel database, ritorna fallimento
-    if (gdrcd_query($stmt, 'num_rows') === 0) {
+    if ($personaggio === null) {
         return 0;
     }
-
-    gdrcd_query($stmt, 'free');
 
     // Giunti a questo punto abbiamo:
     //  - verificato che il sussurro sia formattato correttamente
@@ -1663,6 +1662,34 @@ function gdrcd_chat_dice_list()
     }
 
     return $dice;
+}
+
+/**
+ * Recupera le informazioni di base di un personaggio dal database.
+ *
+ * Questa funzione esegue una query per ottenere i dati essenziali
+ * di un personaggio specifico dalla tabella `personaggio`.
+ * Utile per verificare l'esistenza del personaggio e recuperare
+ * informazioni come lo stato di salute per controlli di validazione.
+ *
+ * @param string $nome Il nome del personaggio di cui recuperare le informazioni
+ * @return null|array<string, string|int|float> Null se il personaggio non esiste,
+ * altrimenti ritorna tutti i dati del personaggio
+ */
+function gdrcd_chat_character_info($nome)
+{
+    $stmt = gdrcd_stmt(
+        'SELECT * FROM personaggio WHERE nome = ?',
+        ['s', $nome]
+    );
+
+    if (gdrcd_query($stmt, 'num_rows') === 0) {
+        return null;
+    }
+
+    $record = gdrcd_query($stmt, 'fetch');
+    gdrcd_query($stmt, 'free');
+    return $record;
 }
 
 /**
