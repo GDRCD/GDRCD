@@ -163,7 +163,7 @@
                     <div class="input_container small">
                         <select name="id_ab" id="id_ab">
 
-                            <option value="no_skill"></option>
+                            <option value=""></option>
 
                             <?php foreach ($skills as $row) { ?>
                                 <option value="<?php echo $row['id_abilita']; ?>">
@@ -188,7 +188,7 @@
                     <div class="input_container small">
                         <select name="id_stats" id="id_stats">
 
-                            <option value="no_stats"></option>
+                            <option value=""></option>
 
                             <?php foreach($stats as $row) { ?>
                                 <option value="stats_<?php echo $row['id_stats']; ?>">
@@ -213,7 +213,7 @@
                     <div class="input_container small">
                         <select name="dice" id="dice">
 
-                            <option value="no_dice"></option>
+                            <option value=""></option>
 
                             <?php foreach($dice as $row) { ?>
                                 <option value="<?php echo $row['facce']; ?>">
@@ -238,7 +238,7 @@
                     <div class="input_container small">
                         <select name="id_item" id="id_item">
 
-                            <option value="no_item"></option>
+                            <option value=""></option>
 
                             <?php foreach ($items as $row) { ?>
                                 <option value="<?php echo $row['id_oggetto'];?>">
