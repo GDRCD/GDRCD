@@ -20,13 +20,9 @@ $chat_insert_status = gdrcd_chat_write_message(
     $type
 );
 
-// Converte il codice di esito della funzione gdrcd_chat_write_message()
-// in un codice di stato http idoneo da comunicare in risposta
-$http_status = match ($chat_insert_status) {
-    1 => 201,   // Created: messaggio salvato correttamente
-    0 => 400,   // Bad Request: i dati forniti non sono corretti e non è possibile salvare il messaggio nel db
-    -1 => 403,  // Forbidden: azione non consentita perché non si dispone dei permessi necessari
-};
+// Converte lo stato ritornato da gdrcd_chat_write_message
+// in un codice di risposta http appropriato da inviare al browser
+$http_status = gdrcd_chat_status_to_http_code($chat_skillsystem_status);
 
 // Invia in uscita il codice di stato http
 http_response_code($http_status);
