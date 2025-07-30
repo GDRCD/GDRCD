@@ -1825,7 +1825,7 @@ function gdrcd_chat_dice_list()
     foreach($PARAMETERS['settings']['skills_dices'] as $dice_name => $dice_value) {
         $dice[] = [
             'nome' => $dice_name,
-            'facce' => $dice_value,
+            'facce' => (int) $dice_value,
         ];
     }
 
