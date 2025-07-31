@@ -1883,6 +1883,52 @@ function gdrcd_chat_player_items($nome)
 }
 
 /**
+ * Recupera le informazioni di una specifica razza dal database.
+ *
+ * Questa funzione esegue una query sulla tabella `razza` per ottenere
+ * i dati relativi alla razza identificata dall'id fornito.
+ * Restituisce il nome della razza e i bonus alle caratteristiche.
+ *
+ * @param int $raceId L'ID della razza da recuperare
+ * @return null|array{
+ *     nome: string,
+ *     bonus_car0: int,
+ *     bonus_car1: int,
+ *     bonus_car2: int,
+ *     bonus_car3: int,
+ *     bonus_car4: int,
+ *     bonus_car5: int
+ * } Array associativo con i dati della razza, oppure null se non trovata
+ */
+function gdrcd_chat_get_race($raceId)
+{
+    $racial_stmt = gdrcd_stmt(
+        'SELECT nome_razza AS nome,
+                bonus_car0,
+                bonus_car1,
+                bonus_car2,
+                bonus_car3,
+                bonus_car4,
+                bonus_car5
+
+        FROM razza
+
+        WHERE id_razza = ?',
+        ['i', $raceId]
+    );
+
+    if (gdrcd_query($racial_stmt, 'num_rows') === 0) {
+        return null;
+    }
+
+    $racial_record = gdrcd_query($racial_stmt, 'fetch');
+    gdrcd_query($racial_stmt, 'free');
+
+    return $racial_record;
+
+}
+
+/**
  * Recupera tutti i dadi disponibili per la chat.
  *
  * @return array<array{nome: string, facce: int}> Array di dadi
