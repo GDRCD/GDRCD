@@ -306,6 +306,11 @@ $PARAMETERS['mode']['dices'] = 'ON';
 //ON: E' attivato il tiro di dado.
 //OFF: Non è attivato il tiro di dado
 
+/**
+ * Numero di facce del dado da usare per il "Tiro su Caratteristica" in chat
+ */
+$PARAMETERS['settings']['stats_dice'] = 20;
+
 /* HELP: é possibile aggiungere la possibilità di usare altri tipi di dado implementando questa sezione. E' possibile anche ridurre la scelta dei possibili tipi di dado semplicemente rimuovendo una riga qui.*/
 $PARAMETERS['settings']['skills_dices']['d4'] = 4;
 $PARAMETERS['settings']['skills_dices']['d6'] = 6;
