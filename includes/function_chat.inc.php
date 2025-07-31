@@ -1761,6 +1761,35 @@ function gdrcd_chat_player_skills($nome)
 }
 
 /**
+ * Recupera le informazioni di una specifica abilità dal database.
+ *
+ * Questa funzione chiama internamente gdrcd_chat_player_skills e ritorna
+ * l'abilità identificata dallo $skillId fornito
+ *
+ * @param string $nome Nome del personaggio per cui recuperare le abilità
+ * @param int $skillId L'ID dell'abilità da recuperare
+ * @return null|array{
+ *  id_abilita: int,
+ *  nome: string,
+ *  car: int,
+ *  dice: null|int,
+ *  grado: null|int
+ * } Array associativo con i dati dell'abilità, oppure null se non trovata
+ */
+function gdrcd_chat_player_skill($nome, $skillId)
+{
+    $skills = gdrcd_chat_player_skills($nome);
+
+    foreach ($skills as $skill) {
+        if ($skill['id_abilita'] == $skillId) {
+            return $skill;
+        }
+    }
+
+    return null;
+}
+
+/**
  * Recupera tutte le caratteristiche disponibili per il personaggio.
  * Estrae le statistiche dai parametri globali filtrando solo quelle con ID numerico.
  *
