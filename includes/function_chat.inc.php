@@ -1137,26 +1137,26 @@ function gdrcd_chat_skill_save(
         return 0;
     }
 
+    // Recupero informazioni sull'abilità
+    $skill_record = gdrcd_chat_player_skill($_SESSION['login'], $skillId);
+
+    if (empty($skill_record)) {
+        return 0;
+    }
+
+    // Valore della skill del personaggio.
+    // Se un personaggio non ha mai speso punti per la skill, allora
+    // grado risulterà nullo, in quel caso assumiamo zero come default.
+    $skill_rank = $skill_record['grado'] ?? 0;
+
     // Cerca le informazioni sull'utilizzatore della skill nel database
     $personaggio = gdrcd_chat_character_info($_SESSION['login']);
 
-    // Se il personaggio ha terminato la salute
     if ($personaggio['salute'] <= 0) {
-
-        // Inseriamo un sussurro in chat con un messaggio di avviso
+        // se salute = 0, inseriamo un sussurro in chat con un messaggio di avviso
         gdrcd_chat_whisper_save($_SESSION['login'], $MESSAGE['status_pg']['exausted']);
-
         return 1;
-
     }
-
-    // Recupero informazioni sull'abilità
-    $skill_stmt = gdrcd_stmt(
-        'SELECT nome, car, dice FROM abilita WHERE id_abilita = ? LIMIT 1',
-        ['i', $skillId]
-    );
-    $skill_record = gdrcd_query($skill_stmt, 'fetch');
-    gdrcd_query($skill_stmt, 'free');
 
     // Definisce gli identificativi di car e bonus_car (es: car1 e bonus_car1)
     $carId = 'car' . $skill_record['car'];
@@ -1166,9 +1166,7 @@ function gdrcd_chat_skill_save(
     $stats = $personaggio[$carId] ?? null;
 
     if ( $stats === null ) {
-        // se siamo finiti qui significa che la skill nella tabella "abilita"
-        // ha una "car" con un valore inesistente per la tabella personaggio.
-        // Ritorniamo quindi un codice d'errore
+        // la caratteristica non esiste
         return 0;
     }
 
@@ -1176,68 +1174,36 @@ function gdrcd_chat_skill_save(
     $items_bonus = 0;
 
     // Recupero eventuali bonus dati da oggetti equipaggiati
-    $bonus_stmt = gdrcd_stmt(
-        'SELECT oggetto.id_oggetto AS id,
-                oggetto.nome AS nome,
-                oggetto.'. $bonusCarId .' AS bonus,
-                clgpersonaggiooggetto.posizione
+    $player_items = gdrcd_chat_player_items($_SESSION['login']);
 
-        FROM oggetto
-            JOIN clgpersonaggiooggetto
-                ON clgpersonaggiooggetto.id_oggetto = oggetto.id_oggetto
+    foreach ($player_items as $row) {
+        $bonus = $row[$bonusCarId];
 
-        WHERE clgpersonaggiooggetto.nome = ?
-            AND clgpersonaggiooggetto.posizione > 1
-
-        ORDER BY clgpersonaggiooggetto.posizione',
-        ['s', $_SESSION['login']]
-    );
-
-    if (gdrcd_query($bonus_stmt, 'num_rows') > 0) {
-        while ($row = gdrcd_query($bonus_stmt, 'fetch')) {
-
-            // mi salvo i dati per lo specifico oggetto
-            $items[] = [
-                'id' => $row['id'],
-                'name' => $row['nome'],
-                'value' => $row['bonus'],
-                'position' => $row['posizione'],
-            ];
-
-            // cumulo il bonus fornito dallo specifico oggetto
-            $items_bonus += $row['bonus'];
-
+        if ($bonus === 0) {
+            // Se l'oggetto non da un bonus rilevante per la skill passo al successivo
+            continue;
         }
+
+        // salvo i dati per lo specifico oggetto
+        $items[] = [
+            'id' => $row['id_oggetto'],
+            'name' => $row['nome'],
+            'value' => $bonus,
+            'position' => $row['posizione'],
+        ];
+
+        // cumulo il bonus fornito dallo specifico oggetto
+        $items_bonus += $bonus;
     }
 
-    gdrcd_query($bonus_stmt, 'free');
-
     // Bonus razziali alla caratteristica
-    $racial_stmt = gdrcd_stmt(
-        'SELECT nome_razza AS nome, '. $bonusCarId .' AS bonus
-        FROM razza
-        WHERE id_razza = ?',
-        ['i', $personaggio['id_razza']]
-    );
-    $racial_record = gdrcd_query($racial_stmt, 'fetch');
-    gdrcd_query($racial_stmt, 'free');
+    $racial_record = gdrcd_chat_get_race($personaggio['id_razza']);
 
-    // Recupero valore abilità specifica per login
-    $rank_stmt = gdrcd_stmt(
-        'SELECT grado
-        FROM clgpersonaggioabilita
-        WHERE id_abilita = ?
-            AND nome = ?
-        LIMIT 1',
-        ['is', $skillId, $_SESSION['login']]
-    );
-    $rank_record = gdrcd_query($rank_stmt, 'fetch');
-    gdrcd_query($rank_stmt, 'free');
+    if (empty($racial_record)) {
+        return 0;
+    }
 
-    // Valore della skill del personaggio.
-    // Se un personaggio non ha mai speso punti per la skill, allora
-    // grado risulterà nullo, in quel caso assumiamo zero come default.
-    $skill_rank = $rank_record['grado'] ?? 0;
+    $racial_bonus = $racial_record[$bonusCarId]?? 0;
 
     $die = null;
     $die_name = null;
@@ -1265,7 +1231,7 @@ function gdrcd_chat_skill_save(
 
     // Calcoliamo il totale
     $total = $stats
-        + $racial_record['bonus']
+        + $racial_bonus
         + $skill_rank
         + $items_bonus
         + ($die? $die : 0);
@@ -1294,7 +1260,7 @@ function gdrcd_chat_skill_save(
         'race' => [
             'id' => $personaggio['id_razza'],
             'name' => $racial_record['nome'],
-            'value' => $racial_record['bonus'],
+            'value' => $racial_bonus,
         ],
 
         // dado utilizzato
