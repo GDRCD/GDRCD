@@ -1092,18 +1092,166 @@ function gdrcd_chat_dice_save(
     return 1;
 }
 
+/**
+ * Inserisce nella tabella `chat` del database un messaggio di tipo "Tiro Caratteristica".
+ *
+ * Questa funzione gestisce il salvataggio di un tiro su caratteristica, calcolando il totale
+ * sulla base del valore della caratteristica, bonus razziali, bonus da oggetti equipaggiati
+ * e, se abilitato, il lancio di un dado associato. Se il personaggio ha salute pari o inferiore a zero,
+ * viene inserito un messaggio di avviso come sussurro. I dati del tiro vengono salvati in formato JSON
+ * nel campo testo della tabella chat.
+ *
+ * @param string $testo Il messaggio contenente l'ID della caratteristica da utilizzare (es: %2)
+ * @param string $tipo Facoltativo. La tipologia interna con cui salvare il messaggio nel database
+ * @param string $symbol Facoltativo. Il simbolo da rimuovere se presente come primo carattere
+ * @return int 1 se il messaggio viene inserito nel database,
+ *             0 se non può essere inserito per qualche errore nei dati forniti,
+ *            -1 se non si dispone dei permessi per questa tipologia di messaggio
+ */
 function gdrcd_chat_stats_save(
     $testo,
     $tipo = GDRCD_CHAT_STATS_TYPE,
     $symbol = GDRCD_CHAT_STATS_SYMBOL
 ) {
-    // Rimuove il primo carattere se il messaggio inizia col simbolo dedicato
-    $testo = gdrcd_chat_strip_message_symbol($testo, $symbol);
+    $MESSAGE = $GLOBALS['MESSAGE'];
+    $PARAMETERS = $GLOBALS['PARAMETERS'];
 
-    // Se il testo è vuoto l'inserimento fallisce
-    if (empty($testo)) {
+    // Rimuove il primo carattere se il messaggio inizia col simbolo dedicato
+    $statsId = gdrcd_chat_strip_message_symbol($testo, $symbol);
+
+    if (!is_numeric($statsId)) {
         return 0;
     }
+
+    $carId = 'car' . $statsId;
+    $bonusCarId = 'bonus_car' . $statsId;
+
+    $personaggio = gdrcd_chat_character_info($_SESSION['login']);
+    $stats = $personaggio[$carId] ?? null;
+
+    if ( $stats === null ) {
+        // la caratteristica non esiste
+        return 0;
+    }
+
+    if ($personaggio['salute'] <= 0) {
+        // se salute = 0, inseriamo un sussurro in chat con un messaggio di avviso
+        gdrcd_chat_whisper_save($_SESSION['login'], $MESSAGE['status_pg']['exausted']);
+        return 1;
+    }
+
+    $items = [];
+    $items_bonus = 0;
+
+    // Recupero eventuali bonus dati da oggetti equipaggiati
+    $player_items = gdrcd_chat_player_items($_SESSION['login']);
+
+    foreach ($player_items as $row) {
+        $bonus = $row[$bonusCarId];
+
+        if ($bonus === 0) {
+            // Se l'oggetto non da un bonus rilevante per la skill passo al successivo
+            continue;
+        }
+
+        // salvo i dati per lo specifico oggetto
+        $items[] = [
+            'id' => $row['id_oggetto'],
+            'name' => $row['nome'],
+            'value' => $bonus,
+            'position' => $row['posizione'],
+        ];
+
+        // cumulo il bonus fornito dallo specifico oggetto
+        $items_bonus += $bonus;
+    }
+
+    // Bonus razziali alla caratteristica
+    $racial_record = gdrcd_chat_get_race($personaggio['id_razza']);
+
+    if (empty($racial_record)) {
+        return 0;
+    }
+
+    $racial_bonus = $racial_record[$bonusCarId]?? 0;
+
+    $die = null;
+    $die_name = null;
+
+    $statsDice = $PARAMETERS['settings']['stats_dice'];
+
+    // Se i dadi sono abilitati e l'abilità ha un tipo di dado associato
+    if ($PARAMETERS['mode']['dices'] == 'ON' && !empty($statsDice)) {
+
+        // lancio effettivo del dado associato alla skill
+        $die = random_int(1, (int) $statsDice);
+
+        // recupera il nome del dado filtrando da gdrcd_chat_dice_list
+        // il record che ha un valore di "facce" pari al dado configurato per la skill
+        $dice = array_filter(
+            gdrcd_chat_dice_list(),
+            fn($dice) => $dice['facce'] === (int) $statsDice
+        );
+
+        // se ho trovato qualcosa allora assegno il nome rilevato
+        // nel caso la definizione non esista assegno al numero di facce il prefisso 'd' come nome di default
+        $die_name = !empty($dice)
+            ? current($dice)['nome']
+            : 'd'. (int) $statsDice;
+
+    }
+
+    // Calcoliamo il totale
+    $total = $stats
+        + $racial_bonus
+        + $items_bonus
+        + ($die? $die : 0);
+
+    // salva tutti i dati relativi al tiro abilità
+    $result = [
+
+        // valore totale
+        'sum' => $total,
+
+        // caratteristica usata
+        'stats' => [
+            'id' => $carId,
+            'name' => $PARAMETERS['names']['stats'][$carId],
+            'value' => $stats,
+        ],
+
+        // bonus razziale applicato
+        'race' => [
+            'id' => $personaggio['id_razza'],
+            'name' => $racial_record['nome'],
+            'value' => $racial_bonus,
+        ],
+
+        // dado utilizzato
+        'dice' => $die
+            ? [
+                'id' => (int) $statsDice,
+                'name' => $die_name,
+                'value' => $die,
+            ]
+            : null,
+
+        // valore del bonus ed elenco oggetti equipaggiati che contribuiscono al calcolo
+        'items' => [
+            'value' => $items_bonus,
+            'equip' => $items,
+        ],
+
+    ];
+
+    // inserisce nel database l'array convertito in json con tutti i dati sul tiro abilità
+    gdrcd_chat_db_insert_for_login(
+        '',
+        $tipo,
+        json_encode($result)
+    );
+
+    return 1;
 }
 
 /**
