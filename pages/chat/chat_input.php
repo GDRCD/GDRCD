@@ -191,7 +191,7 @@
                             <option value=""></option>
 
                             <?php foreach($stats as $row) { ?>
-                                <option value="stats_<?php echo $row['id_stats']; ?>">
+                                <option value="<?php echo $row['id_stats']; ?>">
                                     <?php echo $row['nome']; ?>
                                 </option>
                             <?php } ?>
