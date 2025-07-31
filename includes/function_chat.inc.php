@@ -223,19 +223,19 @@ function gdrcd_chat_use_skillsystem(
     $dice = null,
     $id_item = null
 ) {
-    if (!empty($id_ab)) {
+    if ($id_ab != null && $id_ab !== '') {
         return gdrcd_chat_write_message(GDRCD_CHAT_SKILL_SYMBOL . $id_ab);
     }
 
-    if (!empty($id_stats)) {
+    if ($id_stats != null && $id_stats !== '') {
         return gdrcd_chat_write_message(GDRCD_CHAT_STATS_SYMBOL . $id_stats);
     }
 
-    if (!empty($dice)) {
+    if ($dice != null && $dice !== '') {
         return gdrcd_chat_write_message(GDRCD_CHAT_DICE_SYMBOL . "d{$dice}");
     }
 
-    if (!empty($id_item)) {
+    if ($id_item != null && $id_item !== '') {
         return gdrcd_chat_write_message(GDRCD_CHAT_ITEM_SYMBOL . $id_item);
     }
 
