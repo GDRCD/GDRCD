@@ -1822,28 +1822,52 @@ function gdrcd_chat_player_stats()
  * Include solo gli oggetti in posizioni > 0 (equipaggiati o nell'inventario).
  *
  * @param string $nome Nome del personaggio per cui recuperare gli oggetti
- * @return array<array{id_oggetto: int, nome: string, cariche: int}> Ogni elemento contiene:
- *               - id_oggetto: ID univoco dell'oggetto
- *               - nome: Nome dell'oggetto
- *               - cariche: Numero di cariche disponibili per l'oggetto
+ * @return array<array{
+ *  id_oggetto: int,
+ *  nome: string,
+ *  bonus_car0: int,
+ *  bonus_car1: int,
+ *  bonus_car2: int,
+ *  bonus_car3: int,
+ *  bonus_car4: int,
+ *  bonus_car5: int,
+ *  posizione: int,
+ *  cariche: int,
+ * }> Ogni elemento contiene:
+ *      - id_oggetto: ID univoco dell'oggetto
+ *      - nome: Nome dell'oggetto
+ *      - bonus_car0: valore bonus fornito ai tiri di dado sulla caratteristica 0
+ *      - bonus_car1: valore bonus fornito ai tiri di dado sulla caratteristica 1
+ *      - bonus_car2: valore bonus fornito ai tiri di dado sulla caratteristica 2
+ *      - bonus_car3: valore bonus fornito ai tiri di dado sulla caratteristica 3
+ *      - bonus_car4: valore bonus fornito ai tiri di dado sulla caratteristica 4
+ *      - bonus_car5: valore bonus fornito ai tiri di dado sulla caratteristica 5
+ *      - posizione: Posizione oggetto equipaggiato
+ *      - cariche: Numero di cariche disponibili per l'oggetto
  */
 function gdrcd_chat_player_items($nome)
 {
     $items = [];
 
     $stmt = gdrcd_stmt(
-        'SELECT
-            clgpersonaggiooggetto.id_oggetto,
-            oggetto.nome,
-            clgpersonaggiooggetto.cariche
+        'SELECT oggetto.id_oggetto,
+                oggetto.nome,
+                oggetto.bonus_car0,
+                oggetto.bonus_car1,
+                oggetto.bonus_car2,
+                oggetto.bonus_car3,
+                oggetto.bonus_car4,
+                oggetto.bonus_car5,
+                clgpersonaggiooggetto.posizione,
+                clgpersonaggiooggetto.cariche
 
         FROM clgpersonaggiooggetto
-            JOIN oggetto ON clgpersonaggiooggetto.id_oggetto = oggetto.id_oggetto
+            JOIN oggetto USING(id_oggetto)
 
         WHERE clgpersonaggiooggetto.nome = ?
-            AND posizione > 0
+            AND clgpersonaggiooggetto.posizione > 1
 
-        ORDER BY oggetto.nome',
+        ORDER BY clgpersonaggiooggetto.posizione',
         ['s', $nome]
     );
 
