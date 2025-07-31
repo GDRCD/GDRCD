@@ -1716,19 +1716,37 @@ function gdrcd_chat_info($luogo)
  * della razza del personaggio.
  *
  * @param string $nome Nome del personaggio per cui recuperare le abilità
- * @return array<array{id_abilita: int, nome: string}> Array di abilità
+ * @return array<array{
+ *  id_abilita: int,
+ *  nome: string,
+ *  car: int,
+ *  dice: null|int,
+ *  grado: null|int
+ * }> Array di abilità
  */
 function gdrcd_chat_player_skills($nome)
 {
     $skills = [];
 
     $stmt = gdrcd_stmt(
-        'SELECT id_abilita, nome
+        'SELECT abilita.id_abilita,
+                abilita.nome,
+                abilita.car,
+                abilita.dice,
+                clgpersonaggioabilita.grado
+
         FROM abilita
-        WHERE id_razza = -1
-            OR id_razza IN(SELECT id_razza FROM personaggio WHERE nome = ?)
-        ORDER BY nome',
-        ['s', $nome]
+            LEFT JOIN clgpersonaggioabilita
+                ON (
+                    clgpersonaggioabilita.id_abilita = abilita.id_abilita
+                    AND clgpersonaggioabilita.nome = ?
+                )
+
+        WHERE abilita.id_razza = -1
+            OR abilita.id_razza = (SELECT id_razza FROM personaggio WHERE nome = ?)
+
+        ORDER BY abilita.nome',
+        ['ss', $nome, $nome]
     );
 
     if (gdrcd_query($stmt, 'num_rows') > 0) {
