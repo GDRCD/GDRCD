@@ -1438,18 +1438,57 @@ function gdrcd_chat_skill_save(
     return 1;
 }
 
+/**
+ * Inserisce nella tabella `chat` del database un messaggio di tipo "Utilizzo Oggetto".
+ *
+ * Questa funzione gestisce il salvataggio dell'utilizzo di un oggetto da parte del personaggio,
+ * decrementando le cariche o il numero dell'oggetto tramite gdrcd_chat_player_item_consume.
+ * Se l'oggetto non esiste o non è utilizzabile, l'operazione fallisce.
+ * I dati dell'oggetto utilizzato vengono salvati in formato JSON nel campo testo della tabella chat.
+ *
+ * @param string $testo Il messaggio contenente l'ID dell'oggetto da utilizzare (es: =12)
+ * @param string $tipo Facoltativo. La tipologia interna con cui salvare il messaggio nel database
+ * @param string $symbol Facoltativo. Il simbolo da rimuovere se presente come primo carattere
+ * @return int 1 se il messaggio viene inserito nel database,
+ *             0 se non può essere inserito per qualche errore nei dati forniti o oggetto non trovato
+ */
 function gdrcd_chat_item_save(
     $testo,
     $tipo = GDRCD_CHAT_ITEM_TYPE,
     $symbol = GDRCD_CHAT_ITEM_SYMBOL
 ) {
     // Rimuove il primo carattere se il messaggio inizia col simbolo dedicato
-    $testo = gdrcd_chat_strip_message_symbol($testo, $symbol);
+    $id_oggetto = (int) gdrcd_chat_strip_message_symbol($testo, $symbol);
 
     // Se il testo è vuoto l'inserimento fallisce
-    if (empty($testo)) {
+    if (empty($id_oggetto)) {
         return 0;
     }
+
+    $item = gdrcd_chat_player_item($_SESSION['login'], $id_oggetto);
+
+    // Se l'oggetto non esiste l'operazione fallisce
+    if (empty($item)) {
+        return 0;
+    }
+
+    gdrcd_chat_player_item_consume($_SESSION['login'], $item);
+
+    // Informazioni dell'oggetto usato
+    $result = [
+        'id' => $item['id_oggetto'],
+        'name' => $item['nome'],
+        'number' => $item['numero'],
+        'charges' => $item['cariche'],
+        'max_charges' => $item['max_cariche'],
+    ];
+
+    // inserisce nel database l'array convertito in json con tutti i dati sul tiro abilità
+    gdrcd_chat_db_insert_for_login(
+        '',
+        $tipo,
+        json_encode($result)
+    );
 }
 
 /**
