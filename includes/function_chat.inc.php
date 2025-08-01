@@ -1472,7 +1472,7 @@ function gdrcd_chat_item_save(
         return 0;
     }
 
-    gdrcd_chat_player_item_consume($_SESSION['login'], $item);
+    $item = gdrcd_chat_player_item_consume($_SESSION['login'], $item);
 
     // Informazioni dell'oggetto usato
     $result = [
