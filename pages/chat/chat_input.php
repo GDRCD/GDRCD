@@ -97,7 +97,7 @@
 
             <!-- Campo TAG/Destinatario -->
             <div class="input_container small">
-                <input type="text" id="tag" name="tag" placeholder="Tag" value="<?=$_SESSION['tag'] ?>">
+                <input type="text" id="tag" name="tag" placeholder="Tag" value="<?= gdrcd_filter('out', gdrcd_chat_get_tag()) ?>">
                 <span>
                     <?php
                         $descrizione_tag = $MESSAGE['chat']['tag']['info']['tag']

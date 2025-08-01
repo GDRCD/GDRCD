@@ -1585,6 +1585,10 @@ function gdrcd_chat_action_save(
         return 0;
     }
 
+    // Salva il tag in sessione
+    gdrcd_chat_set_tag($tag);
+
+    // Salva l'azione nel database
     gdrcd_chat_db_insert_for_login(
         $tag,
         $tipo,
@@ -1617,6 +1621,10 @@ function gdrcd_chat_message_save(
         return 0;
     }
 
+    // Salva il tag in sessione
+    gdrcd_chat_set_tag($tag);
+
+    // Salva l'azione nel database
     gdrcd_chat_db_insert_for_login(
         $tag,
         $tipo,
