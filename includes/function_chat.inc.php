@@ -2084,6 +2084,8 @@ function gdrcd_chat_player_item($nome, $itemId)
  * Se le cariche terminano, decrementa il numero di oggetti o elimina la riga se era l'ultimo.
  * Aggiorna il database di conseguenza.
  *
+ * La funzione ritorna i dati dello stesso oggetto con i valori di numero e cariche aggiornati.
+ *
  * @param string $nome Nome del personaggio che consuma l'oggetto
  * @param array{
  *  id_oggetto: int,
@@ -2099,7 +2101,20 @@ function gdrcd_chat_player_item($nome, $itemId)
  *  cariche: int,
  *  max_cariche: int
  * } $item oggetto equipaggiato dal personaggio recuperato in precedenza
- * @return void
+ * @return array{
+ *  id_oggetto: int,
+ *  nome: string,
+ *  bonus_car0: int,
+ *  bonus_car1: int,
+ *  bonus_car2: int,
+ *  bonus_car3: int,
+ *  bonus_car4: int,
+ *  bonus_car5: int,
+ *  posizione: int,
+ *  numero: int,
+ *  cariche: int,
+ *  max_cariche: int
+ * }
  */
 function gdrcd_chat_player_item_consume($nome, $item)
 {
@@ -2120,7 +2135,9 @@ function gdrcd_chat_player_item_consume($nome, $item)
             ]
         );
 
-        return;
+        --$item['cariche'];
+
+        return $item;
     }
 
     // Decremento numero di oggetti
@@ -2142,7 +2159,10 @@ function gdrcd_chat_player_item_consume($nome, $item)
             ]
         );
 
-        return;
+        --$item['numero'];
+        $item['cariche'] = $item['max_cariche'];
+
+        return $item;
     }
 
     // Elimino la riga
@@ -2154,6 +2174,10 @@ function gdrcd_chat_player_item_consume($nome, $item)
             $item['id_oggetto']
         ]
     );
+
+    --$item['numero'];
+
+    return $item;
 }
 
 /**
