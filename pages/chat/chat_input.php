@@ -1,16 +1,9 @@
 <?php
 
-    // Recupero le informazioni sulla chat corrente
-    $chat_info ??= gdrcd_chat_info($_SESSION['luogo']);
-
     // Diamo un nome a determinati controlli per semplificare la leggibilità di eventuali condizioni
     $skillsystem_attivo = $PARAMETERS['mode']['skillsystem'] == 'ON';
     $dadi_attivi = $PARAMETERS['mode']['dices'] == 'ON';
     $login_gamemaster = $_SESSION['permessi'] >= GAMEMASTER;
-    $chat_privata = $chat_info['privata'] == 1;
-    $login_proprietario_chat = $chat_info['proprietario'] == $_SESSION['login'];
-    $gilda_proprietaria_chat = is_numeric($chat_info['proprietario'])
-        && str_contains($_SESSION['gilda'], (string)$chat_info['proprietario']);
 
     // Elenco abilità del personaggio connesso
     $skills = $skillsystem_attivo
@@ -78,7 +71,7 @@
 
                     <?php } ?>
 
-                    <?php if ($chat_privata && ($login_proprietario_chat || $gilda_proprietaria_chat)) { ?>
+                    <?php if (gdrcd_chat_is_room_owner($_SERVER['luogo'])) { ?>
 
                         <!-- Invita in chat -->
                         <option value="5"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][5]); ?></option>
