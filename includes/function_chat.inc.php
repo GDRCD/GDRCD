@@ -2039,6 +2039,85 @@ function gdrcd_chat_player_item($nome, $itemId)
 }
 
 /**
+ * Consuma una carica di un oggetto posseduto da un personaggio.
+ *
+ * Questa funzione decrementa il numero di cariche disponibili per un oggetto equipaggiato.
+ * Se le cariche terminano, decrementa il numero di oggetti o elimina la riga se era l'ultimo.
+ * Aggiorna il database di conseguenza.
+ *
+ * @param string $nome Nome del personaggio che consuma l'oggetto
+ * @param array{
+ *  id_oggetto: int,
+ *  nome: string,
+ *  bonus_car0: int,
+ *  bonus_car1: int,
+ *  bonus_car2: int,
+ *  bonus_car3: int,
+ *  bonus_car4: int,
+ *  bonus_car5: int,
+ *  posizione: int,
+ *  numero: int,
+ *  cariche: int,
+ *  max_cariche: int
+ * } $item oggetto equipaggiato dal personaggio recuperato in precedenza
+ * @return void
+ */
+function gdrcd_chat_player_item_consume($nome, $item)
+{
+    // Decremento cariche oggetto
+    if ($item['cariche'] > 1) {
+        gdrcd_stmt(
+            'UPDATE clgpersonaggiooggetto
+                SET cariche = cariche -1
+
+            WHERE nome = ?
+                AND id_oggetto = ?
+
+            LIMIT 1',
+            [
+                'si',
+                $nome,
+                $item['id_oggetto']
+            ]
+        );
+
+        return;
+    }
+
+    // Decremento numero di oggetti
+    if ($item['numero'] > 1) {
+        gdrcd_stmt(
+            'UPDATE clgpersonaggiooggetto
+                SET cariche = ?,
+                    numero = numero - 1
+
+            WHERE nome = ?
+                AND id_oggetto = ?
+
+            LIMIT 1',
+            [
+                'isi',
+                $item['max_cariche'],
+                $nome,
+                $item['id_oggetto']
+            ]
+        );
+
+        return;
+    }
+
+    // Elimino la riga
+    gdrcd_stmt(
+        'DELETE FROM clgpersonaggiooggetto WHERE nome = ? AND id_oggetto = ? LIMIT 1',
+        [
+            'si',
+            $nome,
+            $item['id_oggetto']
+        ]
+    );
+}
+
+/**
  * Recupera le informazioni di una specifica razza dal database.
  *
  * Questa funzione esegue una query sulla tabella `razza` per ottenere
