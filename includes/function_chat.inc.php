@@ -2003,6 +2003,42 @@ function gdrcd_chat_player_items($nome)
 }
 
 /**
+ * Recupera le informazioni di un oggetto specifico posseduto da un giocatore.
+ *
+ * Questa funzione chiama internamente gdrcd_chat_player_items e ritorna
+ * l'oggetto identificato da $itemId tra quelli posseduti dal personaggio $nome.
+ *
+ * @param string $nome Nome del personaggio per cui recuperare l'oggetto
+ * @param int $itemId L'ID dell'oggetto da recuperare
+ * @return null|array{
+ *  id_oggetto: int,
+ *  nome: string,
+ *  bonus_car0: int,
+ *  bonus_car1: int,
+ *  bonus_car2: int,
+ *  bonus_car3: int,
+ *  bonus_car4: int,
+ *  bonus_car5: int,
+ *  posizione: int,
+ *  numero: int,
+ *  cariche: int,
+ *  max_cariche: int
+ * } Array associativo con i dati dell'oggetto, oppure null se non trovato
+ */
+function gdrcd_chat_player_item($nome, $itemId)
+{
+    $items = gdrcd_chat_player_items($nome);
+
+    foreach ($items as $item) {
+        if ($item['id_oggetto'] == $itemId) {
+            return $item;
+        }
+    }
+
+    return null;
+}
+
+/**
  * Recupera le informazioni di una specifica razza dal database.
  *
  * Questa funzione esegue una query sulla tabella `razza` per ottenere
