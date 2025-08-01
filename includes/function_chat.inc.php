@@ -1489,6 +1489,8 @@ function gdrcd_chat_item_save(
         $tipo,
         json_encode($result)
     );
+
+    return 1;
 }
 
 /**
