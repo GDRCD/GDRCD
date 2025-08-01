@@ -54,8 +54,8 @@
                 // Prima esecuzione immediata
                 httpGetChatRead();
 
-                // Imposta polling ogni 15 secondi (15000 ms)
-                return setInterval(() => httpGetChatRead(), 15000);
+                // Imposta polling ogni 10 secondi (10000 ms)
+                return setInterval(() => httpGetChatRead(), 10000);
             }
 
             /**
