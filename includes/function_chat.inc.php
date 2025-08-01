@@ -1756,6 +1756,35 @@ function gdrcd_chat_is_accessible($luogo)
 }
 
 /**
+ * Verifica se il personaggio attualmente connesso è il proprietario della chat privata.
+ *
+ * Una chat privata può essere di proprietà di un personaggio (proprietario) o di una gilda (proprietario numerico presente nella stringa gilda dell'utente).
+ * La funzione ritorna true solo se la chat è privata, non è scaduta e il proprietario corrisponde all'utente loggato o alla sua gilda.
+ *
+ * @param int $luogo ID della chat
+ * @return bool true se l'utente corrente è il proprietario della chat privata, false altrimenti
+ */
+function gdrcd_chat_is_room_owner($luogo)
+{
+    // Recupero le informazioni sulla chat corrente
+    $info = gdrcd_chat_info($luogo);
+    $chat_scaduta = time() >= strtotime($info['scadenza']);
+
+    // Se la chat non è privata oppure è scaduta nessuno può esserne il proprietario
+    if ($info['privata'] != 1 || $chat_scaduta) {
+        return false;
+    }
+
+    $login_proprietario_chat = $info['proprietario'] == $_SESSION['login'];
+    $gilda_proprietaria_chat = is_numeric($info['proprietario'])
+        && str_contains($_SESSION['gilda'], (string)$info['proprietario']);
+
+    // Altrimenti si può essere proprietari se la chat è associata allo specifico personaggio
+    // oppure se la chat appartiene alla gilda di cui fa parte il personaggio
+    return $login_proprietario_chat || $gilda_proprietaria_chat;
+}
+
+/**
  * Definisce la costante GDRCD_ENABLE_CHAT_OP valorizzata a true.
  * Questa funzione, assieme alla sua gemella gdrcd_chat_op_require_enable(),
  * serve ad implementare un controllo di sicurezza per garantire che
