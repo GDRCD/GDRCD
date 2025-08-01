@@ -41,7 +41,7 @@
                  * Event listener per il cambio di visibilità della pagina
                  * Ferma il lampeggiamento del titolo quando l'utente torna sulla tab
                  */
-                $(document).on('visibilitychange', 'chatBlinkTitleStop');
+                $(document).on('visibilitychange', () => chatBlinkTitleStop());
             });
 
             /**
@@ -55,7 +55,7 @@
                 httpGetChatRead();
 
                 // Imposta polling ogni 15 secondi (15000 ms)
-                return setInterval('httpGetChatRead', 15000);
+                return setInterval(() => httpGetChatRead(), 15000);
             }
 
             /**
