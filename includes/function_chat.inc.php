@@ -1802,6 +1802,31 @@ function gdrcd_chat_get_lastmessage_id()
 }
 
 /**
+ * Salva in sessione il tag di locazione da associare ai messaggi di chat inviati.
+ *
+ * Il tag rappresenta una stringa identificativa della posizione o stanza
+ * e viene utilizzato per associare i messaggi di chat a una determinata area.
+ *
+ * @param string $tag Il tag di locazione da salvare in sessione
+ * @return void
+ */
+function gdrcd_chat_set_tag($tag)
+{
+    $_SESSION['tag'] = $tag;
+}
+
+/**
+ * Recupera il tag di locazione attualmente salvato in sessione.
+ * Il tag rappresenta la posizione del personaggio nell'ambiente definito dalla chat.
+ *
+ * @return string|null Il tag di locazione, oppure null se non impostato
+ */
+function gdrcd_chat_get_tag()
+{
+    return $_SESSION['tag'];
+}
+
+/**
  * Ritorna il nome della chat
  *
  * @param null|int|array{nome: ?string} $luogo
