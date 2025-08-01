@@ -1946,7 +1946,9 @@ function gdrcd_chat_player_stats()
  *  bonus_car4: int,
  *  bonus_car5: int,
  *  posizione: int,
+ *  numero: int,
  *  cariche: int,
+ *  max_cariche: int,
  * }> Ogni elemento contiene:
  *      - id_oggetto: ID univoco dell'oggetto
  *      - nome: Nome dell'oggetto
@@ -1957,7 +1959,9 @@ function gdrcd_chat_player_stats()
  *      - bonus_car4: valore bonus fornito ai tiri di dado sulla caratteristica 4
  *      - bonus_car5: valore bonus fornito ai tiri di dado sulla caratteristica 5
  *      - posizione: Posizione oggetto equipaggiato
+ *      - numero: Quantitativo di oggetti posseduti
  *      - cariche: Numero di cariche disponibili per l'oggetto
+ *      - max_cariche: Numero massimo di cariche per l'oggetto
  */
 function gdrcd_chat_player_items($nome)
 {
@@ -1973,7 +1977,9 @@ function gdrcd_chat_player_items($nome)
                 oggetto.bonus_car4,
                 oggetto.bonus_car5,
                 clgpersonaggiooggetto.posizione,
-                clgpersonaggiooggetto.cariche
+                clgpersonaggiooggetto.numero,
+                clgpersonaggiooggetto.cariche,
+                oggetto.cariche AS max_cariche
 
         FROM clgpersonaggiooggetto
             JOIN oggetto USING(id_oggetto)
