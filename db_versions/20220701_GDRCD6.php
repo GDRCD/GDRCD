@@ -51,6 +51,11 @@ class GDRCD6 extends DbMigration
                 ('ABI_EXTRA',1,'Abilita','Dati abilita extra','Abilitare i dati abilita extra?','int',0,NULL),
                 ('CHAT_TIME',2,'Chat','Ore storico chat','Ore di caricamento nella chat','int',1,NULL),
                 ('CHAT_EXP',1,'Chat Exp','Exp in chat','Esperienza in chat, attiva?','bool',1,NULL),
+                ('CHAT_EXP_CAP_ENABLED',1,'Chat Exp','Cap su Exp','Cap su esperienza, attiva?','bool',1,NULL),
+                ('CHAT_EXP_CAP_DAY',10,'Chat Exp','Cap giornaliera su Exp','Quanta esperienza massima in un giorno?','bool',1,NULL),
+                ('CHAT_EXP_CAP_WEEK',50,'Chat Exp','Cap settimanale su Exp','Quanta esperienza massima in una settimana?','bool',1,NULL),
+                ('CHAT_EXP_CAP_MONTH',100,'Chat Exp','Cap mensile su Exp','Quanta esperienza massima in un mese?','bool',1,NULL),
+                ('CHAT_EXP_CAP_TOTAL',1000,'Chat Exp','Exp Totale','Quanta esperienza massima in totale?','int',1,NULL),
                 ('CHAT_PVT_EXP',0,'Chat Exp','Exp in chat pvt','Esperienza in chat pvt, attiva?','bool',1,NULL),
                 ('CHAT_EXP_MASTER',1,'Chat Exp','Exp master','Esperienza per ogni azione master','int',1,NULL),
                 ('CHAT_EXP_AZIONE',1,'Chat Exp','Exp azione','Esperienza per ogni azione normale','int',1,NULL),
@@ -136,7 +141,10 @@ class GDRCD6 extends DbMigration
                 ('PasswordHash','SHA-256','CrypterPasswordSha256,sha256'),
                 ('ImageExtensions','.png','png'),
                 ('ImageExtensions','.jpg','jpg'),
-                ('ImageExtensions','.gif','gif');
+                ('ImageExtensions','.gif','gif'),
+                ('TimePeriod','Giorno','GIORNO' ),
+                ('TimePeriod','Settimana','SETTIMANA' ),
+                ('TimePeriod','Mese','MESE' );
         ");
 
         DB::query("
@@ -242,6 +250,7 @@ class GDRCD6 extends DbMigration
               ('Gestione', 'Meteo', 'Gestione venti', 'gestione/meteo/venti/gestione_venti', 'MANAGE_WEATHER'),
               ('Gestione', 'Quest', 'Gestione Quest', 'gestione/quest/gestione_quest_index', 'MANAGE_QUESTS'),
               ('Gestione', 'Quest', 'Gestione Trame', 'gestione/trame/gestione_trame_index', 'MANAGE_TRAME_VIEW'),
+              ('Gestione', 'Quest', 'Assegna Esperienza', 'gestione/esperienza/assegna/gestione_exp_assegna', 'MANAGE_EXP'),
               ('Gestione', 'Esiti', 'Esiti', 'gestione/esiti/esiti_index', 'MANAGE_ESITI'),
               ('Gestione', 'Stato Online', 'Gestione stati', 'gestione/online_status/gestione_status', 'MANAGE_ONLINE_STATUS'),
               ('Gestione', 'Stato Online', 'Gestione tipi stati', 'gestione/online_status/gestione_status_type', 'MANAGE_ONLINE_STATUS'),
@@ -435,7 +444,8 @@ class GDRCD6 extends DbMigration
                 ('CHAT_MODERATOR','Azioni moderatore in chat'),
                 ('CALENDAR_ADD_QUEST','Aggiungi quest al calendario'),
                 ('CALENDAR_ADD_AMBIENT','Aggiungi quest al calendario'),
-                ('MANAGE_CALENDAR_EVENTS_TYPES','Gestione tipologie eventi calendario')
+                ('MANAGE_CALENDAR_EVENTS_TYPES','Gestione tipologie eventi calendario'),
+                ('MANAGE_EXP','Gestione assegnazione o rimozione esperienza')
                ;"
         );
 
@@ -450,6 +460,11 @@ class GDRCD6 extends DbMigration
         DB::query("
             INSERT INTO `permessi_group_personaggio` (`group_id`, `personaggio`) VALUES
                 (1, 1);"
+        );
+
+        DB::query("
+            INSERT INTO `permessi_group_assignment` (`permission`, `group_id`, `assigned_by`) VALUES
+                (74, 1, 'System');"
         );
 
         DB::queryStmt("

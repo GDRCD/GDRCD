@@ -80,7 +80,7 @@ class Log extends BaseClass
      */
     public function getAllLogsByDestinatarioAndType(int $destinatario, string $type, int $limit = 500, string $val = '*'): DBQueryInterface
     {
-        return DB::queryStmt("SELECT $val FROM log WHERE destinatario=:destinatario AND tipo=:type LIMIT :limit", [
+        return DB::queryStmt("SELECT $val FROM log WHERE destinatario=:destinatario AND tipo=:type ORDER BY creato_il DESC LIMIT :limit", [
             'destinatario' => $destinatario,
             'type' => $type,
             'limit' => $limit
