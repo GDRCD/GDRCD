@@ -1,28 +1,14 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 Router::loadRequired(); # Inserisco il required se non presente, per futuro spostamento in modale/ajax
-
 $cls = PersonaggioEsperienza::getInstance(); # Inizializzo classe
-
 
 if ( $cls->permissionManageExp() ) { # Metodo di controllo per accesso alla pagina di gestione
 
     ?>
-
     <div class="general_incipit">
         <div class="title"> Assegnazione esperienza</div>
         <div class="subtitle"> Sezione per l'assegnazione esperienza</div>
-        <br>
-
-
-        Da questa pagina è possibile:
-        <ul>
-            <li>Assegnare esperienza</li>
-        </ul>
-
+        <br> Da questa pagina è possibile assegnare esperienza
     </div>
 
 

@@ -34,9 +34,8 @@ class PersonaggioEsperienza extends Personaggio
 
     // Extract required fields
     $amount = Filters::int($post['exp']);
-    $action = Filters::string($post['azione']);
     $causale = Filters::string($post['causale']);
-    $creatorId = Filters::int($post['created_by']);
+    $creatorId = Functions::getInstance()->getMyId();
 
     if ($amount <= 0 || !$this->characterId) {
         return [
@@ -49,19 +48,18 @@ class PersonaggioEsperienza extends Personaggio
 
     // Update the experience points in the `personaggio` table
     $updateSuccess = DB::queryStmt(
-        "UPDATE personaggio SET esperienza = esperienza + :amount WHERE id_personaggio = :id",
+        "UPDATE personaggio SET esperienza = esperienza + :amount WHERE id = :id",
         ['amount' => $amount, 'id' => $this->characterId]
     );
 
     if ($updateSuccess) {
         // Log the assignment in `personaggio_esperienza`
         $logSuccess = DB::queryStmt(
-            "INSERT INTO personaggio_esperienza (personaggio, punti, azione, causale, is_manual, creato_il, creato_da) 
-            VALUES (:pg, :exp, :action, :causale, :is_manual, NOW(), :created_by)",
+            "INSERT INTO personaggio_esperienza (personaggio, punti, causale, is_manual, creato_il, creato_da) 
+            VALUES (:pg, :exp, :causale, :is_manual, NOW(), :created_by)",
             [
                 'pg' => $this->characterId,
                 'exp' => $amount,
-                'action' => $action,
                 'causale' => $causale,
                 'is_manual' => 1,
                 'created_by' => $creatorId
@@ -69,6 +67,14 @@ class PersonaggioEsperienza extends Personaggio
         );
 
         if ($logSuccess) {
+            // Add entry to the main log system for user profile
+            Log::newLog([
+                'autore' => $creatorId,
+                'destinatario' => $this->characterId,
+                'tipo' => PX,
+                'testo' => "Assegnati {$amount} punti esperienza. Causale: {$causale}"
+            ]);
+
             return [
                 'response' => true,
                 'swal_title' => 'Operazione riuscita!',
@@ -93,7 +99,7 @@ class PersonaggioEsperienza extends Personaggio
         if ($amount <= 0) return false;
 
         return DB::queryStmt(
-            "UPDATE personaggio SET esperienza = GREATEST(0, esperienza - :amount) WHERE id_personaggio = :id",
+            "UPDATE personaggio SET esperienza = GREATEST(0, esperienza - :amount) WHERE id = :id",
             ['amount' => $amount, 'id' => $this->characterId]
         );
     }
@@ -101,7 +107,7 @@ class PersonaggioEsperienza extends Personaggio
     public function getCurrentExperience(): int
     {
         $result = DB::queryStmt(
-            "SELECT esperienza FROM personaggio WHERE id_personaggio = :id",
+            "SELECT esperienza FROM personaggio WHERE id = :id",
             ['id' => $this->characterId]
         );
 
