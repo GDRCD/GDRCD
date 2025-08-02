@@ -21,26 +21,57 @@ if ( $cls->permissionManageExp() ) { # Metodo di controllo per accesso alla pagi
 
             <div class="form_title">Assegna EXP</div>
 
-            <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
+            <div class="single_input">
                 <div class="label">Esperienza</div>
                 <input type="number" name="exp" min="0" required>
             </div>
 
-            <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
+            <div class="single_input">
                 <div class="label">Personaggio</div>
                 <select name="personaggio">
                     <?= Personaggio::getInstance()->listPgs(); ?>
                 </select>
             </div>
 
-            <div class="single_input"> <!-- STANDARD INPUT CONTAINER -->
+            <div class="single_input">
                 <div class="label">Causale</div>
                 <input type="text" name="causale" required>
             </div>
 
             <div class="single_input">
-                <input type="hidden" name="action" value="op_assign"> <!-- OP NEEDED -->
+                <input type="hidden" name="action" value="op_assign">
                 <input type="submit" value="Assegna">
+            </div>
+
+        </form>
+
+        <!-- REMOVE -->
+        <form class="form ajax_form"
+              action="gestione/esperienza/assegna/gestione_exp_assegna_ajax.php"
+              data-callback="refreshObjectList">
+
+            <div class="form_title">Rimuovi EXP</div>
+
+            <div class="single_input"> 
+                <div class="label">Esperienza da rimuovere</div>
+                <input type="number" name="exp" min="0" required>
+            </div>
+
+            <div class="single_input"> 
+                <div class="label">Personaggio</div>
+                <select name="personaggio">
+                    <?= Personaggio::getInstance()->listPgs(); ?>
+                </select>
+            </div>
+
+            <div class="single_input"> 
+                <div class="label">Causale</div>
+                <input type="text" name="causale" placeholder="Rimozione esperienza" required>
+            </div>
+
+            <div class="single_input">
+                <input type="hidden" name="action" value="op_remove"> 
+                <input type="submit" value="Rimuovi">
             </div>
 
         </form>

@@ -72,7 +72,7 @@ class PersonaggioEsperienza extends Personaggio
                 'autore' => $creatorId,
                 'destinatario' => $this->characterId,
                 'tipo' => PX,
-                'testo' => "Assegnati {$amount} punti esperienza. Causale: {$causale}"
+                'testo' => "Assegnati {$amount}EXP. Causale: {$causale}"
             ]);
 
             return [
@@ -94,14 +94,76 @@ class PersonaggioEsperienza extends Personaggio
 
 
 
-    public function removeExperience(int $amount): bool
+    public function removeExperience(array $post): array
     {
-        if ($amount <= 0) return false;
+        // Check for permissions
+        if (!$this->permissionManageExp()) {
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Permessi insufficienti.',
+                'swal_type' => 'error'
+            ];
+        }
 
-        return DB::queryStmt(
+        // Extract required fields
+        $amount = Filters::int($post['exp']);
+        $causale = Filters::string($post['causale'] ?? 'Rimozione esperienza');
+        $creatorId = Functions::getInstance()->getMyId();
+
+        if ($amount <= 0 || !$this->characterId) {
+            return [
+                'response' => false,
+                'swal_title' => 'Operazione fallita!',
+                'swal_message' => 'Dati non validi.',
+                'swal_type' => 'error'
+            ];
+        }
+
+        // Update the experience points in the `personaggio` table (prevent negative values)
+        $updateSuccess = DB::queryStmt(
             "UPDATE personaggio SET esperienza = GREATEST(0, esperienza - :amount) WHERE id = :id",
             ['amount' => $amount, 'id' => $this->characterId]
         );
+
+        if ($updateSuccess) {
+            // Log the removal in `personaggio_esperienza` (negative value to track removal)
+            $logSuccess = DB::queryStmt(
+                "INSERT INTO personaggio_esperienza (personaggio, punti, causale, is_manual, creato_il, creato_da) 
+                VALUES (:pg, :exp, :causale, :is_manual, NOW(), :created_by)",
+                [
+                    'pg' => $this->characterId,
+                    'exp' => -$amount, // Negative value to indicate removal
+                    'causale' => $causale,
+                    'is_manual' => 1,
+                    'created_by' => $creatorId
+                ]
+            );
+
+            if ($logSuccess) {
+                // Add entry to the main log system for user profile
+                Log::newLog([
+                    'autore' => $creatorId,
+                    'destinatario' => $this->characterId,
+                    'tipo' => PX,
+                    'testo' => "Rimossi {$amount}EXP. Causale: {$causale}"
+                ]);
+
+                return [
+                    'response' => true,
+                    'swal_title' => 'Operazione riuscita!',
+                    'swal_message' => 'Esperienza rimossa correttamente.',
+                    'swal_type' => 'success'
+                ];
+            }
+        }
+
+        return [
+            'response' => false,
+            'swal_title' => 'Operazione fallita!',
+            'swal_message' => 'Errore durante l\'aggiornamento.',
+            'swal_type' => 'error'
+        ];
     }
 
     public function getCurrentExperience(): int
