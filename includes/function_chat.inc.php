@@ -876,6 +876,7 @@ function gdrcd_chat_icons_format($azione)
         urlencode($icone[0])
     );
 
+    // TODO: create a core function gdrcd_current_theme() to fetch the current theme for the user
     $icona_razza_url = sprintf(
         'themes/%s/imgs/races/%s',
         urlencode($PARAMETERS['themes']['current_theme']),
@@ -1625,6 +1626,8 @@ function gdrcd_chat_message_save(
     $symbol = GDRCD_CHAT_MESSAGE_SYMBOL
 ) {
     $MESSAGE = $GLOBALS['MESSAGE'];
+
+    // TODO: calcolo esperienza in chat
 
     // Rimuove il primo carattere se il messaggio inizia col simbolo dedicato
     $testo = gdrcd_chat_strip_message_symbol($testo, $symbol);
