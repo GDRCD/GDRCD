@@ -90,6 +90,15 @@ const GDRCD_CHAT_PNG_TYPE = 'N';
 /** @var string Messaggio di tipo Immagine */
 const GDRCD_CHAT_IMAGE_TYPE = 'I';
 
+/** @var string Messaggio di tipo invito in chat privata */
+const GDRCD_CHAT_PRIVATE_INVITE_TYPE = 'X';
+
+/** @var string Messaggio di tipo caccia da chat privata */
+const GDRCD_CHAT_PRIVATE_KICK_TYPE = 'Y';
+
+/** @var string Messaggio di tipo elenca invitati chat privata */
+const GDRCD_CHAT_PRIVATE_LIST_TYPE = 'Z';
+
 /** @var string Tipologia di messaggio di default quando un utente invia un azione senza indicarne esplicitamente il tipo */
 const GDRCD_CHAT_DEFAULT_TYPE = GDRCD_CHAT_MESSAGE_TYPE;
 
@@ -129,6 +138,16 @@ const GDRCD_CHAT_PNG_SYMBOL = '$';
 
 /** @var string Symbolo per indicare i messaggi di tipo Immagine. Permette di inserire la url di un immagine subito dopo il carattere */
 const GDRCD_CHAT_IMAGE_SYMBOL = '*';
+
+/** @var string Symbolo per indicare i messaggi di tipo invito in chat. Funziona come per i sussurri */
+const GDRCD_CHAT_PRIVATE_INVITE_SYMBOL = '!';
+
+/** @var string Symbolo per indicare i messaggi di tipo espelli da chat. Funziona come per i sussurri */
+const GDRCD_CHAT_PRIVATE_KICK_SYMBOL = '_';
+
+/** @var string Symbolo per indicare i messaggi di tipo elenco invitati in chat privata */
+const GDRCD_CHAT_PRIVATE_LIST_SYMBOL = '?';
+
 
 /**
  * Impostazioni registrazioni giocate
