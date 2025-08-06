@@ -149,6 +149,9 @@ function gdrcd_chat_write_message(
         case GDRCD_CHAT_PRIVATE_INVITE_TYPE:
             return gdrcd_chat_private_invite_save($tag_o_destinatario, $message);
 
+        case GDRCD_CHAT_PRIVATE_KICK_TYPE:
+            return gdrcd_chat_private_kick_save($tag_o_destinatario, $message);
+
         default:
             return 0;
     }
@@ -1742,6 +1745,115 @@ function gdrcd_chat_private_invite_save(
             $destinatario,
             $_SESSION['login']
                 .' '. $MESSAGE['chat']['warning']['invited_message']
+                .' '. $info['nome']
+                ."\n" . $testo
+        ]
+    );
+
+    $result = [
+        'message' => $testo,
+        'invited_list' => $invitati,
+    ];
+
+    // inserisco il messaggio in chat
+    gdrcd_chat_db_insert_for_login(
+        $destinatario,
+        $tipo,
+        json_encode($result)
+    );
+
+    return 1;
+}
+
+/**
+ * Gestisce la rimozione (kick) di un personaggio da una chat privata.
+ *
+ * Questa funzione permette al proprietario della chat privata di espellere un personaggio invitato.
+ * Verifica i permessi, controlla che il destinatario sia valido e presente tra gli invitati,
+ * aggiorna la lista degli invitati nel database e invia una notifica al destinatario espulso.
+ * Inserisce inoltre un messaggio in chat relativo all'espulsione.
+ *
+ * @param string $destinatario Il nome del personaggio da espellere. Se vuoto, viene estratto dal testo.
+ * @param string $testo Il messaggio di accompagnamento per l'espulsione.
+ * @param string $tipo Facoltativo. La tipologia interna con cui salvare il messaggio nel database.
+ * @param string $symbol Facoltativo. Il simbolo da rimuovere se presente come primo carattere o delimitatore del destinatario.
+ * @return int 1 se l'espulsione viene inserita correttamente,
+ *             0 se il destinatario non è valido o non risulta invitato,
+ *            -1 se non si dispone dei permessi per espellere nella chat privata.
+ */
+function gdrcd_chat_private_kick_save(
+    $destinatario,
+    $testo,
+    $tipo = GDRCD_CHAT_PRIVATE_KICK_TYPE,
+    $symbol = GDRCD_CHAT_PRIVATE_KICK_SYMBOL
+) {
+    $MESSAGE = $GLOBALS['MESSAGE'];
+
+    // Recupero le informazioni sulla chat corrente
+    $info = gdrcd_chat_info($_SESSION['luogo']);
+
+    // Se l'utente connesso non ha i permessi per procedere, usciamo subito
+    if (!gdrcd_chat_is_room_owner($info)) {
+        return -1;
+    }
+
+    if (empty($destinatario)) {
+        $destinatario = gdrcd_chat_extract_recipient_from_message($testo, $symbol);
+
+        if (!$destinatario) {
+            return 0;
+        }
+    }
+
+    // Se presente, rimuove il simbolo usato per il messaggio
+    $testo = trim(gdrcd_chat_strip_message_symbol($testo, $symbol));
+
+    // formatta il nome del destinatario.
+    $destinatario = gdrcd_capital_letter($destinatario);
+
+    // Converte la stringa invitati in un array
+    $invitati = !empty($info['invitati'])
+        ? explode(',', $info['invitati'])
+        : [];
+
+    // Se il personaggio non è in elenco, esce con un errore
+    if (!in_array($destinatario, $invitati)) {
+        return 0;
+    }
+
+    // Giunti a questo punto abbiamo:
+    //  - verificato che login abbia i permessi per gestire la chat privata
+    //  - verificato che il destinatario risulti invitato in chat
+
+    // Rimuove il nome del personaggio dalla lista invitati
+    $invitati = array_filter(
+        $invitati,
+        fn($invitato) => $invitato !== $destinatario
+    );
+
+    // Aggiorna la lista invitati sul database
+    gdrcd_stmt(
+        "UPDATE mappa
+            SET invitati = ?
+        WHERE id = ?
+        LIMIT 1",
+        [
+            'si',
+            implode(',', $invitati),
+            $info['id'],
+        ]
+    );
+
+    // Invia un messaggio di posta al personaggio cacciato
+    gdrcd_stmt(
+        'INSERT INTO messaggi ( mittente, destinatario, spedito, letto, testo )
+        VALUES (?, ?, NOW(), 0, ?)',
+        [
+            'sss',
+            'System message',
+            $destinatario,
+            $_SESSION['login']
+                .' '. $MESSAGE['chat']['warning']['expelled_message']
                 .' '. $info['nome']
                 ."\n" . $testo
         ]
