@@ -1635,6 +1635,129 @@ function gdrcd_chat_message_save(
 }
 
 /**
+ * Gestisce l'invito di un personaggio a una chat privata.
+ *
+ * Questa funzione permette al proprietario della chat privata di invitare un altro personaggio.
+ * Verifica i permessi, controlla che il destinatario sia valido e non già invitato,
+ * aggiorna la lista degli invitati nel database e invia una notifica al destinatario.
+ * Inserisce inoltre un messaggio in chat relativo all'invito.
+ *
+ * @param string $destinatario Il nome del personaggio da invitare. Se vuoto, viene estratto dal testo.
+ * @param string $testo Il messaggio di accompagnamento per l'invito.
+ * @param string $tipo Facoltativo. La tipologia interna con cui salvare il messaggio nel database.
+ * @param string $symbol Facoltativo. Il simbolo da rimuovere se presente come primo carattere o delimitatore del destinatario.
+ * @return int 1 se l'invito viene inserito correttamente,
+ *             0 se il destinatario non è valido o già invitato,
+ *            -1 se non si dispone dei permessi per invitare nella chat privata.
+ */
+function gdrcd_chat_private_invite_save(
+    $destinatario,
+    $testo,
+    $tipo = GDRCD_CHAT_PRIVATE_INVITE_TYPE,
+    $symbol = GDRCD_CHAT_PRIVATE_INVITE_SYMBOL
+) {
+    $MESSAGE = $GLOBALS['MESSAGE'];
+
+    // Recupero le informazioni sulla chat corrente
+    $info = gdrcd_chat_info($_SESSION['luogo']);
+
+    // Se l'utente connesso non ha i permessi per procedere, usciamo subito
+    if (!gdrcd_chat_is_room_owner($info)) {
+        return -1;
+    }
+
+    if (empty($destinatario)) {
+
+        // Se non ho il destinatario prova a cercarlo nel testo del messaggio, in stile !nomeutente!
+        $escaped_symbol = preg_quote($symbol);
+
+        if (preg_match("#^{$escaped_symbol}([^{$escaped_symbol}]+?){$escaped_symbol}#i", $testo, $match) !== 1) {
+            // Se il destinatario non è stato fornito ritorno fallimento.
+            return 0;
+        }
+
+        // ripulisce la parte iniziale del messaggio da !nomeutente!
+        $testo = trim(strtr($testo, [$match[0] => '']));
+        $destinatario = $match[1];
+
+    }
+
+    // Se presente, rimuove il simbolo usato per il messaggio
+    $testo = trim(gdrcd_chat_strip_message_symbol($testo, $symbol));
+
+    // formatta il nome del destinatario. E' necessario per la ricerca nel database.
+    $destinatario = gdrcd_capital_letter($destinatario);
+
+    // Cerca le informazioni sul destinatario nel database
+    $personaggio = gdrcd_chat_character_info($destinatario);
+
+    // se destinatario non esiste nel database, ritorna fallimento
+    if ($personaggio === null) {
+        return 0;
+    }
+
+    // Converte la stringa invitati in un array
+    $invitati = !empty($info['invitati'])
+        ? explode(',', $info['invitati'])
+        : [];
+
+    // Se il personaggio è già invitato, esce con un errore
+    if (in_array($destinatario, $invitati)) {
+        return 0;
+    }
+
+    // Giunti a questo punto abbiamo:
+    //  - verificato che login abbia i permessi per gestire la chat privata
+    //  - verificato che il destinatario sia un nome utente valido e realmente esistente
+    //  - verificato che il destinatario non risulti già invitato in chat
+
+    // Aggiunge il nome del personaggio all'array degli invitati
+    $invitati[] = $destinatario;
+
+    // Aggiorna la lista invitati sul database
+    gdrcd_stmt(
+        "UPDATE mappa
+            SET invitati = ?
+        WHERE id = ?
+        LIMIT 1",
+        [
+            'si',
+            implode(',', $invitati),
+            $info['id'],
+        ]
+    );
+
+    // Invia un messaggio di posta al personaggio invitato
+    gdrcd_stmt(
+        'INSERT INTO messaggi ( mittente, destinatario, spedito, letto, testo )
+        VALUES (?, ?, NOW(), 0, ?)',
+        [
+            'sss',
+            'System message',
+            $destinatario,
+            $_SESSION['login']
+                .' '. $MESSAGE['chat']['warning']['invited_message']
+                .' '. $info['nome']
+                ."\n" . $testo
+        ]
+    );
+
+    $result = [
+        'message' => $testo,
+        'invited_list' => $invitati,
+    ];
+
+    // inserisco il messaggio in chat
+    gdrcd_chat_db_insert_for_login(
+        $destinatario,
+        $tipo,
+        json_encode($result)
+    );
+
+    return 1;
+}
+
+/**
  * Inserisce nel database una riga nella tabella `chat` da parte dell'utente connesso al sito.
  *
  * @param string $tag_o_destinatario il tag o il destinatario appropriati per la tipologia di messaggio
