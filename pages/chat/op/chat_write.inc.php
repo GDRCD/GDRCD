@@ -22,7 +22,7 @@ $chat_insert_status = gdrcd_chat_write_message(
 
 // Converte lo stato ritornato da gdrcd_chat_write_message
 // in un codice di risposta http appropriato da inviare al browser
-$http_status = gdrcd_chat_status_to_http_code($chat_skillsystem_status);
+$http_status = gdrcd_chat_status_to_http_code($chat_insert_status);
 
 // Invia in uscita il codice di stato http
 http_response_code($http_status);
