@@ -155,6 +155,9 @@ function gdrcd_chat_write_message(
         case GDRCD_CHAT_PRIVATE_KICK_TYPE:
             return gdrcd_chat_private_kick_save($tag_o_destinatario, $message);
 
+        case GDRCD_CHAT_PRIVATE_LIST_TYPE:
+            return gdrcd_chat_private_list_save($message);
+
         default:
             return 0;
     }
@@ -1876,6 +1879,50 @@ function gdrcd_chat_private_kick_save(
     // inserisco il messaggio in chat
     gdrcd_chat_db_insert_for_login(
         $destinatario,
+        $tipo,
+        json_encode($result)
+    );
+
+    return 1;
+}
+
+/**
+ * Inserisce nella tabella `chat` un messaggio contenente la lista aggiornata degli invitati alla chat privata.
+ *
+ * Questa funzione può essere utilizzata dal proprietario della chat privata per comunicare agli utenti
+ * la lista attuale degli invitati. Verifica i permessi e salva in chat la lista in formato JSON.
+ *
+ * @param string $testo Il messaggio inviato in chat
+ * @param string $tipo Facoltativo. La tipologia interna con cui salvare il messaggio nel database.
+ * @param string $symbol Facoltativo. Il simbolo da rimuovere se presente come primo carattere.
+ * @return int 1 se il messaggio viene inserito correttamente,
+ *            -1 se non si dispone dei permessi per visualizzare la lista degli invitati.
+ */
+function gdrcd_chat_private_list_save(
+    $testo,
+    $tipo = GDRCD_CHAT_PRIVATE_LIST_TYPE,
+    $symbol = GDRCD_CHAT_PRIVATE_LIST_SYMBOL
+) {
+    // Recupero le informazioni sulla chat corrente
+    $info = gdrcd_chat_info($_SESSION['luogo']);
+
+    // Se l'utente connesso non ha i permessi per procedere, usciamo subito
+    if (!gdrcd_chat_is_room_owner($info)) {
+        return -1;
+    }
+
+    // Converte la stringa invitati in un array
+    $invitati = !empty($info['invitati'])
+        ? explode(',', $info['invitati'])
+        : [];
+
+    $result = [
+        'invited_list' => $invitati,
+    ];
+
+    // inserisco il messaggio in chat
+    gdrcd_chat_db_insert_for_login(
+        '',
         $tipo,
         json_encode($result)
     );
