@@ -26,9 +26,5 @@ $chat_skillsystem_status = gdrcd_chat_use_skillsystem(
     $id_item
 );
 
-// Converte lo stato ritornato da gdrcd_chat_use_skillsystem
-// in un codice di risposta http appropriato da inviare al browser
-$http_status = gdrcd_chat_status_to_http_code($chat_skillsystem_status);
-
-// Invia in uscita il codice di stato http
-http_response_code($http_status);
+// Ritorna una risposta al browser formattata in base all'esito dell'operazione precedente
+gdrcd_chat_status_output($chat_skillsystem_status);
