@@ -2672,7 +2672,9 @@ function gdrcd_chat_status_output($status)
     }
 
     http_response_code($status['code']);
-    echo json_encode(['error' => $status['message']]);
+    echo json_encode([
+        'error' => gdrcd_filter_out($status['message'])
+    ]);
 }
 
 /**
@@ -2684,7 +2686,10 @@ function gdrcd_chat_status_output($status)
  */
 function gdrcd_chat_status($code, $message)
 {
-    return ['code' => $code, 'message' => $message];
+    return [
+        'code' => $code,
+        'message' => gdrcd_filter_out($message)
+    ];
 }
 
 /**
