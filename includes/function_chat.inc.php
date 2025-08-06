@@ -1761,13 +1761,21 @@ function gdrcd_chat_is_accessible($luogo)
  * Una chat privata può essere di proprietà di un personaggio (proprietario) o di una gilda (proprietario numerico presente nella stringa gilda dell'utente).
  * La funzione ritorna true solo se la chat è privata, non è scaduta e il proprietario corrisponde all'utente loggato o alla sua gilda.
  *
- * @param int $luogo ID della chat
+ * @param int|array{
+ *  id: int,
+ *  nome: ?string,
+ *  stanza_apparente: ?string,
+ *  invitati: string,
+ *  privata: int,
+ *  proprietario: ?string,
+ *  scadenza: ?string,
+ * } $luogo ID della chat o un array con le info della stanza corrente
  * @return bool true se l'utente corrente è il proprietario della chat privata, false altrimenti
  */
 function gdrcd_chat_is_room_owner($luogo)
 {
     // Recupero le informazioni sulla chat corrente
-    $info = gdrcd_chat_info($luogo);
+    $info = is_array($luogo) ? $luogo : gdrcd_chat_info($luogo);
     $chat_scaduta = time() >= strtotime($info['scadenza']);
 
     // Se la chat non è privata oppure è scaduta nessuno può esserne il proprietario
