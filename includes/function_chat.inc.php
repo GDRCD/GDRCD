@@ -87,6 +87,9 @@ function gdrcd_chat_read_message($azione)
         case GDRCD_CHAT_IMAGE_TYPE:
             return gdrcd_chat_image_format($azione);
 
+        case GDRCD_CHAT_PRIVATE_INVITE_TYPE:
+            return gdrcd_chat_private_invite_format($azione);
+
         default:
             return null;
     }
@@ -143,6 +146,9 @@ function gdrcd_chat_write_message(
         case GDRCD_CHAT_IMAGE_TYPE:
             return gdrcd_chat_image_save($message);
 
+        case GDRCD_CHAT_PRIVATE_INVITE_TYPE:
+            return gdrcd_chat_private_invite_save($tag_o_destinatario, $message);
+
         default:
             return 0;
     }
@@ -192,6 +198,15 @@ function gdrcd_chat_get_type_from_message($message)
 
         case GDRCD_CHAT_IMAGE_SYMBOL:
             return GDRCD_CHAT_IMAGE_TYPE;
+
+        case GDRCD_CHAT_PRIVATE_INVITE_SYMBOL:
+            return GDRCD_CHAT_PRIVATE_INVITE_TYPE;
+
+        case GDRCD_CHAT_PRIVATE_KICK_SYMBOL:
+            return GDRCD_CHAT_PRIVATE_KICK_TYPE;
+
+        case GDRCD_CHAT_PRIVATE_LIST_SYMBOL:
+            return GDRCD_CHAT_PRIVATE_LIST_TYPE;
 
         default:
             return GDRCD_CHAT_DEFAULT_TYPE;
