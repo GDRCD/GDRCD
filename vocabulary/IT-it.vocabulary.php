@@ -795,6 +795,7 @@ $MESSAGE['chat']['warning']['not_invited'] = 'non invitato';
 $MESSAGE['chat']['warning']['expelled'] = 'escluso';
 $MESSAGE['chat']['warning']['invited_list'] = 'Ospiti';
 $MESSAGE['chat']['warning']['invited_message'] = 'ti ha inoltrato un invito per';
+$MESSAGE['chat']['warning']['expelled_message'] = 'ha revocato il tuo invito per';
 $MESSAGE['chat']['tag']['info']['tag'] = 'Tag';
 $MESSAGE['chat']['tag']['info']['png'] = '/PNG';
 $MESSAGE['chat']['tag']['info']['dst'] = '/Dest.';
