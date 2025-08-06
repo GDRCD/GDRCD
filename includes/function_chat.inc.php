@@ -644,6 +644,12 @@ function gdrcd_chat_message_format($azione)
         HTML;
 }
 
+function gdrcd_chat_private_invite_format($azione)
+{
+    // FIXME: va rifattorizzata perché adesso questo tipo di azione contiene un json
+    return gdrcd_chat_stats_format($azione);
+}
+
 /**
  * Ritorna la formattazione html per il corpo dei messaggi in chat.
  *
