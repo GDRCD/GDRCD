@@ -93,6 +93,9 @@ function gdrcd_chat_read_message($azione)
         case GDRCD_CHAT_PRIVATE_KICK_TYPE:
             return gdrcd_chat_private_kick_format($azione);
 
+        case GDRCD_CHAT_PRIVATE_LIST_TYPE:
+            return gdrcd_chat_private_list_format($azione);
+
         default:
             return null;
     }
@@ -675,6 +678,12 @@ function gdrcd_chat_private_invite_format($azione)
 }
 
 function gdrcd_chat_private_kick_format($azione)
+{
+    // FIXME: va rifattorizzata perché adesso questo tipo di azione contiene un json
+    return gdrcd_chat_stats_format($azione);
+}
+
+function gdrcd_chat_private_list_format($azione)
 {
     // FIXME: va rifattorizzata perché adesso questo tipo di azione contiene un json
     return gdrcd_chat_stats_format($azione);
