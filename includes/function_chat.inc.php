@@ -2494,21 +2494,6 @@ function gdrcd_chat_character_info($nome)
     return $record;
 }
 
-function Invita($tag)
-{
-    $MESSAGE = $GLOBALS['MESSAGE'];
-    $info = gdrcd_query("SELECT invitati, nome, proprietario FROM mappa WHERE id=".$_SESSION['luogo']."");
-    $ok_command = false;
-    if($info['proprietario'] == $_SESSION['login'] || strpos($_SESSION['gilda'], $info['proprietario']) != false) {
-        $ok_command = true;
-    }
-    gdrcd_query("UPDATE mappa SET invitati = '".$info['invitati'].','.gdrcd_capital_letter(strtolower(gdrcd_filter('in', $tag)))."' WHERE id=".$_SESSION['luogo']." LIMIT 1");
-    gdrcd_query("INSERT INTO chat ( stanza, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", 'System message', '".$_SESSION['login']."', NOW(), 'S', '".gdrcd_capital_letter(gdrcd_filter('in', $tag)).' '.$MESSAGE['chat']['warning']['invited']."')");
-    if(empty($_POST['tag']) === false) {
-        gdrcd_query("INSERT INTO messaggi ( mittente, destinatario, spedito, letto, testo ) VALUES ('System message', '".gdrcd_capital_letter(gdrcd_filter('in', $tag))."', NOW(), 0,  '".$_SESSION['login'].' '.$MESSAGE['chat']['warning']['invited_message'].' '.$info['nome']."')");
-    }
-}
-
 function Leave($tag_n_beyond)
 {
     $MESSAGE = $GLOBALS['MESSAGE'];
