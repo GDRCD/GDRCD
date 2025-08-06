@@ -2671,9 +2671,13 @@ function gdrcd_chat_status_output($status)
         $status = gdrcd_chat_status_error((string)$status);
     }
 
-    http_response_code($status['code']);
+    $code = $status['code'] ?? 500;
+    $message = $status['message'] ?? $GLOBALS['MESSAGE']['chat']['error']['unknown_error'];
+
+    http_response_code($code);
     echo json_encode([
-        'error' => gdrcd_filter_out($status['message'])
+        'code' => $code,
+        'message' => $message,
     ]);
 }
 
@@ -2681,14 +2685,14 @@ function gdrcd_chat_status_output($status)
  * Crea un array associativo che rappresenta uno stato di risposta per le API della chat.
  *
  * @param int $code Codice di stato HTTP (es: 201, 400, 403, 500)
- * @param string $message Messaggio descrittivo dello stato
+ * @param string|array $message Messaggio descrittivo dello stato o dati di output
  * @return array{code: int, message: string} Array associativo con codice e messaggio
  */
 function gdrcd_chat_status($code, $message)
 {
     return [
         'code' => $code,
-        'message' => gdrcd_filter_out($message)
+        'message' => $message
     ];
 }
 
@@ -2701,7 +2705,7 @@ function gdrcd_chat_status($code, $message)
  */
 function gdrcd_chat_status_created($message = 'Created')
 {
-    return gdrcd_chat_status(201, $message);
+    return gdrcd_chat_status(201, gdrcd_filter_out($message));
 }
 
 /**
@@ -2713,7 +2717,7 @@ function gdrcd_chat_status_created($message = 'Created')
  */
 function gdrcd_chat_status_invalid($message = 'Invalid')
 {
-    return gdrcd_chat_status(400, $message);
+    return gdrcd_chat_status(400, gdrcd_filter_out($message));
 }
 
 /**
@@ -2725,7 +2729,7 @@ function gdrcd_chat_status_invalid($message = 'Invalid')
  */
 function gdrcd_chat_status_forbidden($message = 'Forbidden')
 {
-    return gdrcd_chat_status(403, $message);
+    return gdrcd_chat_status(403, gdrcd_filter_out($message));
 }
 
 /**
@@ -2737,5 +2741,5 @@ function gdrcd_chat_status_forbidden($message = 'Forbidden')
  */
 function gdrcd_chat_status_error($message = 'Internal Error')
 {
-    return gdrcd_chat_status(500, $message);
+    return gdrcd_chat_status(500, gdrcd_filter_out($message));
 }
