@@ -74,13 +74,19 @@
                     <?php if (gdrcd_chat_is_room_owner($_SERVER['luogo'])) { ?>
 
                         <!-- Invita in chat -->
-                        <option value="5"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][5]); ?></option>
+                        <option value="<?php echo gdrcd_filter('out', GDRCD_CHAT_PRIVATE_INVITE_TYPE); ?>">
+                            <?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][GDRCD_CHAT_PRIVATE_INVITE_TYPE]); ?>
+                        </option>
 
                         <!-- Espelli dalla chat -->
-                        <option value="6"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][6]); ?></option>
+                        <option value="<?php echo gdrcd_filter('out', GDRCD_CHAT_PRIVATE_KICK_TYPE); ?>">
+                            <?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][GDRCD_CHAT_PRIVATE_KICK_TYPE]); ?>
+                        </option>
 
                         <!-- Elenco invitati -->
-                        <option value="7"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][7]); ?></option>
+                        <option value="<?php echo gdrcd_filter('out', GDRCD_CHAT_PRIVATE_LIST_TYPE); ?>">
+                            <?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][GDRCD_CHAT_PRIVATE_LIST_TYPE]); ?>
+                        </option>
 
                     <?php } ?>
                 </select>
