@@ -5,31 +5,6 @@
  */
 
 /**
- * Converte il codice di esito delle funzioni di chat in un codice di stato HTTP appropriato.
- *
- * Mappa i valori di ritorno delle funzioni di salvataggio messaggi di chat
- * (gdrcd_chat_write_message, gdrcd_chat_use_skillsystem)
- * ai corrispondenti codici di stato HTTP standard per le risposte API.
- *
- * @param int $status Il codice di esito della funzione di chat. Valori supportati:
- *      - 1: operazione completata con successo
- *      - 0: errore nei dati forniti, operazione fallita
- *      - -1: permessi insufficienti per l'operazione
- * @return int Il codice di stato HTTP corrispondente:
- *      - 201 (Created): per $status = 1, messaggio salvato correttamente
- *      - 400 (Bad Request): per $status = 0, dati non validi
- *      - 403 (Forbidden): per $status = -1, permessi insufficienti
- */
-function gdrcd_chat_status_to_http_code(int $status)
-{
-    return match ($status) {
-        1 => 201,
-        0 => 400,
-        -1 => 403,
-    };
-}
-
-/**
  * Ritorna la formattazione HTML più appropriata per l'azione in chat.
  * Sono supportati i seguenti tipi di azione:
  *  - P: parlato
@@ -109,7 +84,7 @@ function gdrcd_chat_read_message($azione)
  * @param string $message il messaggio da salvare
  * @param string $tag_o_destinatario Facoltativo. Il tag di locazione o il destinatario appropriato per la tipologia di messaggio
  * @param string|null $type Facoltativo. La tipologia del messaggio. Se null, viene dedotta dal primo carattere del messaggio
- * @return int 1 se il messaggio viene inserito nel database, 0 se non può essere inserito per qualche errore nei dati forniti, -1 se non si dispone dei permessi per questa tipologia di messaggio
+ * @return array{code: int, message: string} $status Array associativo proveniente da gdrcd_chat_status()
  */
 function gdrcd_chat_write_message(
     $message,
@@ -162,7 +137,8 @@ function gdrcd_chat_write_message(
             return gdrcd_chat_private_list_save($message);
 
         default:
-            return 0;
+            $MESSAGE = $GLOBALS['MESSAGE'];
+            return gdrcd_chat_status_invalid($MESSAGE['chat']['error']['invalid_message_type'] .': '. $type);
     }
 }
 
@@ -239,10 +215,7 @@ function gdrcd_chat_get_type_from_message($message)
  * @param int|null $id_stats Facoltativo. ID della caratteristica da utilizzare. Se fornito, genera un messaggio di tipo "Tiro Caratteristica"
  * @param int|null $dice Facoltativo. Numero di facce del dado da lanciare. Se fornito, genera un messaggio di tipo "Tiro Dado"
  * @param int|null $id_item Facoltativo. ID dell'oggetto da utilizzare. Se fornito, genera un messaggio di tipo "Utilizzo Oggetto"
- * @return int Il codice di esito dell'operazione:
- *      - 1: messaggio salvato con successo
- *      - 0: errore nei dati forniti
- *      - -1: permessi insufficienti per l'operazione
+ * @return array{code: int, message: string} $status Array associativo proveniente da gdrcd_chat_status()
  */
 function gdrcd_chat_use_skillsystem(
     $id_ab = null,
@@ -266,7 +239,8 @@ function gdrcd_chat_use_skillsystem(
         return gdrcd_chat_write_message(GDRCD_CHAT_ITEM_SYMBOL . $id_item);
     }
 
-    return 0;
+    $MESSAGE = $GLOBALS['MESSAGE'];
+    return gdrcd_chat_status_invalid($MESSAGE['chat']['error']['invalid_skillsystem_type']);
 }
 
 /**
@@ -922,24 +896,26 @@ function gdrcd_chat_icons_format($azione)
  * @param string $testo il messaggio da salvare
  * @param string $tipo Facoltativo. La tipologia interna con cui salvare il messaggio nel database
  * @param string $symbol Facoltativo. il simbolo da rimuovere se presente come primo carattere
- * @return int 1 se il messaggio viene inserito nel database, 0 se non può essere inserito per qualche errore nei dati forniti, -1 se non si dispone dei permessi per questa tipologia di messaggio
+ * @return array{code: int, message: string} $status Array associativo proveniente da gdrcd_chat_status()
  */
 function gdrcd_chat_image_save(
     $testo,
     $tipo = GDRCD_CHAT_IMAGE_TYPE,
     $symbol = GDRCD_CHAT_IMAGE_SYMBOL
 ) {
+    $MESSAGE = $GLOBALS['MESSAGE'];
+
     // Se non si dispone dei permessi
     if ($_SESSION['permessi'] < GAMEMASTER) {
-        return -1;
+        return gdrcd_chat_status_forbidden($MESSAGE['chat']['error']['permissions']);
     }
 
     // Rimuove il primo carattere se il messaggio inizia col simbolo dedicato
     $testo = gdrcd_chat_strip_message_symbol($testo, $symbol);
 
-    // Se il testo è vuoto l'inserimento fallisce
+    // Se il testo è vuoto l'inseriment$MESSAGE['chat']['error']['empty_message']o fallisce
     if (empty($testo)) {
-        return 0;
+        return gdrcd_chat_status_invalid($MESSAGE['chat']['error']['empty_message']);
     }
 
     gdrcd_chat_db_insert_for_login(
@@ -948,7 +924,7 @@ function gdrcd_chat_image_save(
         $testo
     );
 
-    return 1;
+    return gdrcd_chat_status_created();
 }
 
 /**
@@ -958,7 +934,7 @@ function gdrcd_chat_image_save(
  * @param string $testo il messaggio da salvare
  * @param string $tipo Facoltativo. La tipologia interna con cui salvare il messaggio nel database
  * @param string $symbol Facoltativo. il simbolo da rimuovere se presente come primo carattere
- * @return int 1 se il messaggio viene inserito nel database, 0 se non può essere inserito per qualche errore nei dati forniti, -1 se non si dispone dei permessi per questa tipologia di messaggio
+ * @return array{code: int, message: string} $status Array associativo proveniente da gdrcd_chat_status()
  */
 function gdrcd_chat_png_save(
     $nomepng,
@@ -966,25 +942,20 @@ function gdrcd_chat_png_save(
     $tipo = GDRCD_CHAT_PNG_TYPE,
     $symbol = GDRCD_CHAT_PNG_SYMBOL
 ) {
+    $MESSAGE = $GLOBALS['MESSAGE'];
+
     // Se non si dispone dei permessi
     if ($_SESSION['permessi'] < GAMEMASTER) {
-        return -1;
+        return gdrcd_chat_status_forbidden($MESSAGE['chat']['error']['permissions']);
     }
 
     if (empty($nomepng)) {
+        $nomepng = gdrcd_chat_extract_recipient_from_message($testo, $symbol);
 
-        // Se non ho il nomepng prova a cercarlo nel testo del messaggio, in stile $nomepng$
-        $escaped_symbol = preg_quote($symbol);
-
-        if (preg_match("#^{$escaped_symbol}([^{$escaped_symbol}]+?){$escaped_symbol}#i", $testo, $match) !== 1) {
+        if (!$nomepng) {
             // L'azione è formattata male (non ho il nomepng, il messaggio o entrambi), ritorno fallimento.
-            return 0;
+            return gdrcd_chat_status_invalid($MESSAGE['chat']['error']['invalid_recipient']);
         }
-
-        // ripulisce la parte iniziale del messaggio da $nomepng$
-        $testo = trim(strtr($testo, [$match[0] => '']));
-        $nomepng = $match[1];
-
     }
 
     // Se presente, rimuove il simbolo usato per indicare il png dal messaggio
@@ -992,7 +963,7 @@ function gdrcd_chat_png_save(
 
     // Se il testo è vuoto l'inserimento fallisce
     if (empty($testo)) {
-        return 0;
+        return gdrcd_chat_status_invalid($MESSAGE['chat']['error']['empty_message']);
     }
 
     // formatta il nome del png per consistenza
@@ -1005,7 +976,7 @@ function gdrcd_chat_png_save(
         $testo
     );
 
-    return 1;
+    return gdrcd_chat_status_created();
 }
 
 /**
@@ -1014,16 +985,18 @@ function gdrcd_chat_png_save(
  * @param string $testo il messaggio da salvare
  * @param string $tipo Facoltativo. La tipologia interna con cui salvare il messaggio nel database
  * @param string $symbol Facoltativo. il simbolo da rimuovere se presente come primo carattere
- * @return int 1 se il messaggio viene inserito nel database, 0 se non può essere inserito per qualche errore nei dati forniti, -1 se non si dispone dei permessi per questa tipologia di messaggio
+ * @return array{code: int, message: string} $status Array associativo proveniente da gdrcd_chat_status()
  */
 function gdrcd_chat_master_save(
     $testo,
     $tipo = GDRCD_CHAT_MASTER_TYPE,
     $symbol = GDRCD_CHAT_MASTER_SYMBOL
 ) {
+    $MESSAGE = $GLOBALS['MESSAGE'];
+
     // Se non si dispone dei permessi
     if ($_SESSION['permessi'] < GAMEMASTER) {
-        return -1;
+        return gdrcd_chat_status_forbidden($MESSAGE['chat']['error']['permissions']);
     }
 
     // Rimuove il primo carattere se il messaggio inizia col simbolo dedicato
@@ -1031,7 +1004,7 @@ function gdrcd_chat_master_save(
 
     // Se il testo è vuoto l'inserimento fallisce
     if (empty($testo)) {
-        return 0;
+        return gdrcd_chat_status_invalid($MESSAGE['chat']['error']['empty_message']);
     }
 
     gdrcd_chat_db_insert_for_login(
@@ -1040,7 +1013,7 @@ function gdrcd_chat_master_save(
         $testo
     );
 
-    return 1;
+    return gdrcd_chat_status_created();
 }
 
 /**
@@ -1051,19 +1024,21 @@ function gdrcd_chat_master_save(
  * @param string $testo il messaggio da elaborare contenente l'espressione dei dadi
  * @param string $tipo Facoltativo. La tipologia interna con cui salvare il messaggio nel database
  * @param string $symbol Facoltativo. il simbolo da rimuovere se presente come primo carattere
- * @return int 1 se il messaggio viene inserito nel database, 0 se non può essere inserito per qualche errore nei dati forniti, -1 se non si dispone dei permessi per questa tipologia di messaggio
+ * @return array{code: int, message: string} $status Array associativo proveniente da gdrcd_chat_status()
  */
 function gdrcd_chat_dice_save(
     $testo,
     $tipo = GDRCD_CHAT_DICE_TYPE,
     $symbol = GDRCD_CHAT_DICE_SYMBOL
 ) {
+    $MESSAGE = $GLOBALS['MESSAGE'];
+
     // Rimuove il primo carattere se il messaggio inizia col simbolo dedicato
     $testo = gdrcd_chat_strip_message_symbol($testo, $symbol);
 
     // Se il testo è vuoto l'inserimento fallisce
     if (empty($testo)) {
-        return 0;
+        return gdrcd_chat_status_invalid($MESSAGE['chat']['error']['empty_message']);
     }
 
     // Le seguenti espressioni regolari servono ad individuare le diverse
@@ -1085,7 +1060,7 @@ function gdrcd_chat_dice_save(
 
     if (preg_match("#^{$dice_regex}$#i", $testo, $match) !== 1) {
         // se l'espressione è invalida ritorna fallimento
-        return 0;
+        return gdrcd_chat_status_invalid($MESSAGE['chat']['error']['invalid_dice']);
     }
 
     // Recupera il valore effettivo rilevato nel testo inviato in chat
@@ -1134,7 +1109,7 @@ function gdrcd_chat_dice_save(
         json_encode($result)
     );
 
-    return 1;
+    return gdrcd_chat_status_created();
 }
 
 /**
@@ -1149,9 +1124,7 @@ function gdrcd_chat_dice_save(
  * @param string $testo Il messaggio contenente l'ID della caratteristica da utilizzare (es: %2)
  * @param string $tipo Facoltativo. La tipologia interna con cui salvare il messaggio nel database
  * @param string $symbol Facoltativo. Il simbolo da rimuovere se presente come primo carattere
- * @return int 1 se il messaggio viene inserito nel database,
- *             0 se non può essere inserito per qualche errore nei dati forniti,
- *            -1 se non si dispone dei permessi per questa tipologia di messaggio
+ * @return array{code: int, message: string} $status Array associativo proveniente da gdrcd_chat_status()
  */
 function gdrcd_chat_stats_save(
     $testo,
@@ -1165,7 +1138,7 @@ function gdrcd_chat_stats_save(
     $statsId = gdrcd_chat_strip_message_symbol($testo, $symbol);
 
     if (!is_numeric($statsId)) {
-        return 0;
+        return gdrcd_chat_status_invalid($MESSAGE['chat']['error']['invalid_stats']);
     }
 
     $carId = 'car' . $statsId;
@@ -1176,13 +1149,12 @@ function gdrcd_chat_stats_save(
 
     if ( $stats === null ) {
         // la caratteristica non esiste
-        return 0;
+        return gdrcd_chat_status_error($MESSAGE['chat']['error']['unknown_stats'] .': '. $carId);
     }
 
     if ($personaggio['salute'] <= 0) {
-        // se salute = 0, inseriamo un sussurro in chat con un messaggio di avviso
-        gdrcd_chat_whisper_save($_SESSION['login'], $MESSAGE['status_pg']['exausted']);
-        return 1;
+        // se l'utente non ha salute residua non può compiere l'azione
+        return gdrcd_chat_status_forbidden($MESSAGE['status_pg']['exausted']);
     }
 
     $items = [];
@@ -1215,7 +1187,7 @@ function gdrcd_chat_stats_save(
     $racial_record = gdrcd_chat_get_race($personaggio['id_razza']);
 
     if (empty($racial_record)) {
-        return 0;
+        return gdrcd_chat_status_error($MESSAGE['chat']['error']['unknown_race'] .': '. $personaggio['id_razza']);
     }
 
     $racial_bonus = $racial_record[$bonusCarId]?? 0;
@@ -1296,7 +1268,7 @@ function gdrcd_chat_stats_save(
         json_encode($result)
     );
 
-    return 1;
+    return gdrcd_chat_status_created();
 }
 
 /**
@@ -1311,9 +1283,7 @@ function gdrcd_chat_stats_save(
  * @param string $testo Il messaggio contenente l'ID dell'abilità da utilizzare ( es: ^12 )
  * @param string $tipo Facoltativo. La tipologia interna con cui salvare il messaggio nel database
  * @param string $symbol Facoltativo. Il simbolo da rimuovere se presente come primo carattere
- * @return int 1 se il messaggio viene inserito nel database,
- *             0 se non può essere inserito per qualche errore nei dati forniti,
- *            -1 se non si dispone dei permessi per questa tipologia di messaggio
+ * @return array{code: int, message: string} $status Array associativo proveniente da gdrcd_chat_status()
  */
 function gdrcd_chat_skill_save(
     $testo,
@@ -1327,14 +1297,14 @@ function gdrcd_chat_skill_save(
     $skillId = (int) gdrcd_chat_strip_message_symbol($testo, $symbol);
 
     if (empty($skillId)) {
-        return 0;
+        return gdrcd_chat_status_invalid($MESSAGE['chat']['error']['invalid_skill']);
     }
 
     // Recupero informazioni sull'abilità
     $skill_record = gdrcd_chat_player_skill($_SESSION['login'], $skillId);
 
     if (empty($skill_record)) {
-        return 0;
+        return gdrcd_chat_status_error($MESSAGE['chat']['error']['unknown_skill']);
     }
 
     // Valore della skill del personaggio.
@@ -1346,9 +1316,8 @@ function gdrcd_chat_skill_save(
     $personaggio = gdrcd_chat_character_info($_SESSION['login']);
 
     if ($personaggio['salute'] <= 0) {
-        // se salute = 0, inseriamo un sussurro in chat con un messaggio di avviso
-        gdrcd_chat_whisper_save($_SESSION['login'], $MESSAGE['status_pg']['exausted']);
-        return 1;
+        // se l'utente non ha salute residua non può compiere l'azione
+        return gdrcd_chat_status_forbidden($MESSAGE['status_pg']['exausted']);
     }
 
     // Definisce gli identificativi di car e bonus_car (es: car1 e bonus_car1)
@@ -1360,7 +1329,7 @@ function gdrcd_chat_skill_save(
 
     if ( $stats === null ) {
         // la caratteristica non esiste
-        return 0;
+        return gdrcd_chat_status_error($MESSAGE['chat']['error']['unknown_stats'] .': '. $carId);
     }
 
     $items = [];
@@ -1393,7 +1362,7 @@ function gdrcd_chat_skill_save(
     $racial_record = gdrcd_chat_get_race($personaggio['id_razza']);
 
     if (empty($racial_record)) {
-        return 0;
+        return gdrcd_chat_status_error($MESSAGE['chat']['error']['unknown_race'] .': '. $personaggio['id_razza']);
     }
 
     $racial_bonus = $racial_record[$bonusCarId]?? 0;
@@ -1480,7 +1449,7 @@ function gdrcd_chat_skill_save(
         json_encode($result)
     );
 
-    return 1;
+    return gdrcd_chat_status_created();
 }
 
 /**
@@ -1494,27 +1463,28 @@ function gdrcd_chat_skill_save(
  * @param string $testo Il messaggio contenente l'ID dell'oggetto da utilizzare (es: =12)
  * @param string $tipo Facoltativo. La tipologia interna con cui salvare il messaggio nel database
  * @param string $symbol Facoltativo. Il simbolo da rimuovere se presente come primo carattere
- * @return int 1 se il messaggio viene inserito nel database,
- *             0 se non può essere inserito per qualche errore nei dati forniti o oggetto non trovato
+ * @return array{code: int, message: string} $status Array associativo proveniente da gdrcd_chat_status()
  */
 function gdrcd_chat_item_save(
     $testo,
     $tipo = GDRCD_CHAT_ITEM_TYPE,
     $symbol = GDRCD_CHAT_ITEM_SYMBOL
 ) {
+    $MESSAGE = $GLOBALS['MESSAGE'];
+
     // Rimuove il primo carattere se il messaggio inizia col simbolo dedicato
     $id_oggetto = (int) gdrcd_chat_strip_message_symbol($testo, $symbol);
 
     // Se il testo è vuoto l'inserimento fallisce
     if (empty($id_oggetto)) {
-        return 0;
+        return gdrcd_chat_status_invalid($MESSAGE['chat']['error']['empty_message']);
     }
 
     $item = gdrcd_chat_player_item($_SESSION['login'], $id_oggetto);
 
     // Se l'oggetto non esiste l'operazione fallisce
     if (empty($item)) {
-        return 0;
+        return gdrcd_chat_status_invalid($MESSAGE['chat']['error']['invalid_item'] .': '. $id_oggetto);
     }
 
     $item = gdrcd_chat_player_item_consume($_SESSION['login'], $item);
@@ -1535,7 +1505,7 @@ function gdrcd_chat_item_save(
         json_encode($result)
     );
 
-    return 1;
+    return gdrcd_chat_status_created();
 }
 
 /**
@@ -1549,7 +1519,7 @@ function gdrcd_chat_item_save(
  * @param string $testo il messaggio da salvare
  * @param string $tipo Facoltativo. La tipologia interna con cui salvare il messaggio nel database
  * @param string $symbol Facoltativo. il simbolo da rimuovere se presente come primo carattere o se usato come delimitatore del destinatario
- * @return int 1 se il messaggio viene inserito nel database, 0 se non può essere inserito per qualche errore nei dati forniti, -1 se non si dispone dei permessi per questa tipologia di messaggio
+ * @return array{code: int, message: string} $status Array associativo proveniente da gdrcd_chat_status()
  */
 function gdrcd_chat_whisper_save(
     $destinatario,
@@ -1557,11 +1527,13 @@ function gdrcd_chat_whisper_save(
     $tipo = GDRCD_CHAT_WHISPER_TYPE,
     $symbol = GDRCD_CHAT_WHISPER_SYMBOL
 ) {
+    $MESSAGE = $GLOBALS['MESSAGE'];
+
     if (empty($destinatario)) {
         $destinatario = gdrcd_chat_extract_recipient_from_message($testo, $symbol);
 
         if (!$destinatario) {
-            return 0;
+            return gdrcd_chat_status_invalid($MESSAGE['chat']['error']['invalid_recipient']);
         }
     }
 
@@ -1570,7 +1542,7 @@ function gdrcd_chat_whisper_save(
 
     // Se il testo è vuoto l'inserimento fallisce
     if (empty($testo)) {
-        return 0;
+        return gdrcd_chat_status_invalid($MESSAGE['chat']['error']['empty_message']);
     }
 
     // formatta il nome del destinatario. E' necessario per la ricerca nel database.
@@ -1581,7 +1553,7 @@ function gdrcd_chat_whisper_save(
 
     // se destinatario non esiste nel database, ritorna fallimento
     if ($personaggio === null) {
-        return 0;
+        return gdrcd_chat_status_invalid($MESSAGE['chat']['error']['unknown_recipient'] .': '. $destinatario);
     }
 
     // Giunti a questo punto abbiamo:
@@ -1596,7 +1568,7 @@ function gdrcd_chat_whisper_save(
         $testo
     );
 
-    return 1;
+    return gdrcd_chat_status_created();
 }
 
 /**
@@ -1606,7 +1578,7 @@ function gdrcd_chat_whisper_save(
  * @param string $testo il messaggio da salvare
  * @param string $tipo Facoltativo. La tipologia interna con cui salvare il messaggio nel database
  * @param string $symbol Facoltativo. il simbolo da rimuovere se presente come primo carattere
- * @return int 1 se il messaggio viene inserito nel database, 0 se non può essere inserito per qualche errore nei dati forniti, -1 se non si dispone dei permessi per questa tipologia di messaggio
+ * @return array{code: int, message: string} $status Array associativo proveniente da gdrcd_chat_status()
  */
 function gdrcd_chat_action_save(
     $tag,
@@ -1614,12 +1586,14 @@ function gdrcd_chat_action_save(
     $tipo = GDRCD_CHAT_ACTION_TYPE,
     $symbol = GDRCD_CHAT_ACTION_SYMBOL
 ) {
+    $MESSAGE = $GLOBALS['MESSAGE'];
+
     // Rimuove il primo carattere se il messaggio inizia col simbolo dedicato
     $testo = gdrcd_chat_strip_message_symbol($testo, $symbol);
 
     // Se il testo è vuoto l'inserimento fallisce
     if (empty($testo)) {
-        return 0;
+        return gdrcd_chat_status_invalid($MESSAGE['chat']['error']['empty_message']);
     }
 
     // Salva il tag in sessione
@@ -1632,7 +1606,7 @@ function gdrcd_chat_action_save(
         $testo
     );
 
-    return 1;
+    return gdrcd_chat_status_created();
 }
 
 /**
@@ -1642,7 +1616,7 @@ function gdrcd_chat_action_save(
  * @param string $testo il messaggio da salvare
  * @param string $tipo Facoltativo. La tipologia interna con cui salvare il messaggio nel database
  * @param string $symbol Facoltativo. il simbolo da rimuovere se presente come primo carattere
- * @return int 1 se il messaggio viene inserito nel database, 0 se non può essere inserito per qualche errore nei dati forniti, -1 se non si dispone dei permessi per questa tipologia di messaggio
+ * @return array{code: int, message: string} $status Array associativo proveniente da gdrcd_chat_status()
  */
 function gdrcd_chat_message_save(
     $tag,
@@ -1650,12 +1624,14 @@ function gdrcd_chat_message_save(
     $tipo = GDRCD_CHAT_MESSAGE_TYPE,
     $symbol = GDRCD_CHAT_MESSAGE_SYMBOL
 ) {
+    $MESSAGE = $GLOBALS['MESSAGE'];
+
     // Rimuove il primo carattere se il messaggio inizia col simbolo dedicato
     $testo = gdrcd_chat_strip_message_symbol($testo, $symbol);
 
     // Se il testo è vuoto l'inserimento fallisce
     if (empty($testo)) {
-        return 0;
+        return gdrcd_chat_status_invalid($MESSAGE['chat']['error']['empty_message']);
     }
 
     // Salva il tag in sessione
@@ -1668,7 +1644,7 @@ function gdrcd_chat_message_save(
         $testo
     );
 
-    return 1;
+    return gdrcd_chat_status_created();
 }
 
 /**
@@ -1683,9 +1659,7 @@ function gdrcd_chat_message_save(
  * @param string $testo Il messaggio di accompagnamento per l'invito.
  * @param string $tipo Facoltativo. La tipologia interna con cui salvare il messaggio nel database.
  * @param string $symbol Facoltativo. Il simbolo da rimuovere se presente come primo carattere o delimitatore del destinatario.
- * @return int 1 se l'invito viene inserito correttamente,
- *             0 se il destinatario non è valido o già invitato,
- *            -1 se non si dispone dei permessi per invitare nella chat privata.
+ * @return array{code: int, message: string} $status Array associativo proveniente da gdrcd_chat_status()
  */
 function gdrcd_chat_private_invite_save(
     $destinatario,
@@ -1700,14 +1674,14 @@ function gdrcd_chat_private_invite_save(
 
     // Se l'utente connesso non ha i permessi per procedere, usciamo subito
     if (!gdrcd_chat_is_room_owner($info)) {
-        return -1;
+        return gdrcd_chat_status_forbidden($MESSAGE['chat']['error']['permissions']);
     }
 
     if (empty($destinatario)) {
         $destinatario = gdrcd_chat_extract_recipient_from_message($testo, $symbol);
 
         if (!$destinatario) {
-            return 0;
+            return gdrcd_chat_status_invalid($MESSAGE['chat']['error']['invalid_recipient']);
         }
     }
 
@@ -1722,7 +1696,7 @@ function gdrcd_chat_private_invite_save(
 
     // se destinatario non esiste nel database, ritorna fallimento
     if ($personaggio === null) {
-        return 0;
+        return gdrcd_chat_status_invalid($MESSAGE['chat']['error']['unknown_recipient'] .': '. $destinatario);
     }
 
     // Converte la stringa invitati in un array
@@ -1732,7 +1706,7 @@ function gdrcd_chat_private_invite_save(
 
     // Se il personaggio è già invitato, esce con un errore
     if (in_array($destinatario, $invitati)) {
-        return 0;
+        return gdrcd_chat_status_invalid($MESSAGE['chat']['error']['already_invited'] .': '. $destinatario);
     }
 
     // Giunti a questo punto abbiamo:
@@ -1783,7 +1757,7 @@ function gdrcd_chat_private_invite_save(
         json_encode($result)
     );
 
-    return 1;
+    return gdrcd_chat_status_created();
 }
 
 /**
@@ -1798,9 +1772,7 @@ function gdrcd_chat_private_invite_save(
  * @param string $testo Il messaggio di accompagnamento per l'espulsione.
  * @param string $tipo Facoltativo. La tipologia interna con cui salvare il messaggio nel database.
  * @param string $symbol Facoltativo. Il simbolo da rimuovere se presente come primo carattere o delimitatore del destinatario.
- * @return int 1 se l'espulsione viene inserita correttamente,
- *             0 se il destinatario non è valido o non risulta invitato,
- *            -1 se non si dispone dei permessi per espellere nella chat privata.
+ * @return array{code: int, message: string} $status Array associativo proveniente da gdrcd_chat_status()
  */
 function gdrcd_chat_private_kick_save(
     $destinatario,
@@ -1815,14 +1787,14 @@ function gdrcd_chat_private_kick_save(
 
     // Se l'utente connesso non ha i permessi per procedere, usciamo subito
     if (!gdrcd_chat_is_room_owner($info)) {
-        return -1;
+        return gdrcd_chat_status_forbidden($MESSAGE['chat']['error']['permissions']);
     }
 
     if (empty($destinatario)) {
         $destinatario = gdrcd_chat_extract_recipient_from_message($testo, $symbol);
 
         if (!$destinatario) {
-            return 0;
+            return gdrcd_chat_status_invalid($MESSAGE['chat']['error']['invalid_recipient']);
         }
     }
 
@@ -1839,7 +1811,7 @@ function gdrcd_chat_private_kick_save(
 
     // Se il personaggio non è in elenco, esce con un errore
     if (!in_array($destinatario, $invitati)) {
-        return 0;
+        return gdrcd_chat_status_invalid($MESSAGE['chat']['error']['already_kicked'] .': '. $destinatario);
     }
 
     // Giunti a questo punto abbiamo:
@@ -1892,7 +1864,7 @@ function gdrcd_chat_private_kick_save(
         json_encode($result)
     );
 
-    return 1;
+    return gdrcd_chat_status_created();
 }
 
 /**
@@ -1904,20 +1876,21 @@ function gdrcd_chat_private_kick_save(
  * @param string $testo Il messaggio inviato in chat
  * @param string $tipo Facoltativo. La tipologia interna con cui salvare il messaggio nel database.
  * @param string $symbol Facoltativo. Il simbolo da rimuovere se presente come primo carattere.
- * @return int 1 se il messaggio viene inserito correttamente,
- *            -1 se non si dispone dei permessi per visualizzare la lista degli invitati.
+ * @return array{code: int, message: string} $status Array associativo proveniente da gdrcd_chat_status()
  */
 function gdrcd_chat_private_list_save(
     $testo,
     $tipo = GDRCD_CHAT_PRIVATE_LIST_TYPE,
     $symbol = GDRCD_CHAT_PRIVATE_LIST_SYMBOL
 ) {
+    $MESSAGE = $GLOBALS['MESSAGE'];
+
     // Recupero le informazioni sulla chat corrente
     $info = gdrcd_chat_info($_SESSION['luogo']);
 
     // Se l'utente connesso non ha i permessi per procedere, usciamo subito
     if (!gdrcd_chat_is_room_owner($info)) {
-        return -1;
+        return gdrcd_chat_status_forbidden($MESSAGE['chat']['error']['permissions']);
     }
 
     // Converte la stringa invitati in un array
@@ -1936,7 +1909,7 @@ function gdrcd_chat_private_list_save(
         json_encode($result)
     );
 
-    return 1;
+    return gdrcd_chat_status_created();
 }
 
 /**
