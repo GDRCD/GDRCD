@@ -826,6 +826,7 @@ $MESSAGE['chat']['error']['invalid_dice'] = 'Stringa dadi invalida';
 $MESSAGE['chat']['error']['invalid_stats'] = 'Caratteristica invalida';
 $MESSAGE['chat']['error']['invalid_skill'] = 'Abilità invalida';
 $MESSAGE['chat']['error']['invalid_item'] = 'Oggetto invalido';
+$MESSAGE['chat']['error']['unknown_error'] = 'Errore interno sconosciuto';
 $MESSAGE['chat']['error']['unknown_recipient'] = 'Il destinatario non esiste';
 $MESSAGE['chat']['error']['unknown_skill'] = 'Abilità non configurata nel database';
 $MESSAGE['chat']['error']['unknown_stats'] = 'Caratteristica non configurata nel database';
