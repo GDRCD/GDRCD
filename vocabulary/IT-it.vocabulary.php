@@ -817,6 +817,21 @@ $MESSAGE['chat']['commands']['use_skills']['sum'] = 'totale';
 $MESSAGE['chat']['commands']['die']['cast'] = 'lancia 1d';
 $MESSAGE['chat']['commands']['die']['sum'] = 'Risultato';
 $MESSAGE['chat']['commands']['die']['item'] = 'utilizza';
+$MESSAGE['chat']['error']['permissions'] = 'Non hai i permessi per l\'operazione';
+$MESSAGE['chat']['error']['empty_message'] = 'Non puoi inviare messaggi senza testo';
+$MESSAGE['chat']['error']['invalid_recipient'] = 'Non è stato definito il destinatario del messaggio';
+$MESSAGE['chat']['error']['invalid_message_type'] = 'Tipo di messaggio sconosciuto';
+$MESSAGE['chat']['error']['invalid_skillsystem_type'] = 'Nessuna tipologia selezionata per lo skillsystem';
+$MESSAGE['chat']['error']['invalid_dice'] = 'Stringa dadi invalida';
+$MESSAGE['chat']['error']['invalid_stats'] = 'Caratteristica invalida';
+$MESSAGE['chat']['error']['invalid_skill'] = 'Abilità invalida';
+$MESSAGE['chat']['error']['invalid_item'] = 'Oggetto invalido';
+$MESSAGE['chat']['error']['unknown_recipient'] = 'Il destinatario non esiste';
+$MESSAGE['chat']['error']['unknown_skill'] = 'Abilità non configurata nel database';
+$MESSAGE['chat']['error']['unknown_stats'] = 'Caratteristica non configurata nel database';
+$MESSAGE['chat']['error']['unknown_race'] = 'Razza non configurata nel database';
+$MESSAGE['chat']['error']['already_invited'] = 'Personaggio già invitato';
+$MESSAGE['chat']['error']['already_kicked'] = 'Personaggio già cacciato';
 
 
 /********** Eventi **********/
