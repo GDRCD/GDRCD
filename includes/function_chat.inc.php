@@ -1884,6 +1884,7 @@ function gdrcd_chat_name($luogo)
 
 /**
  * Ritorna le seguenti informazioni della chat identificata dall'id fornito:
+ *  - id: ID del luogo
  *  - nome: nome della chat
  *  - stanza_apparente: nome della chat nei presenti
  *  - invitati: lista nomi invitati separata da virgola
@@ -1893,6 +1894,7 @@ function gdrcd_chat_name($luogo)
  *
  * @param int $luogo
  * @return null|array{
+ *  id: int,
  *  nome: ?string,
  *  stanza_apparente: ?string,
  *  invitati: string,
@@ -1905,6 +1907,7 @@ function gdrcd_chat_info($luogo)
 {
     $stmt = gdrcd_stmt(
         'SELECT
+            id,
             nome,
             stanza_apparente,
             invitati,
