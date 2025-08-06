@@ -1534,19 +1534,11 @@ function gdrcd_chat_whisper_save(
     $symbol = GDRCD_CHAT_WHISPER_SYMBOL
 ) {
     if (empty($destinatario)) {
+        $destinatario = gdrcd_chat_extract_recipient_from_message($testo, $symbol);
 
-        // Se non ho il destinatario prova a cercarlo nel testo del messaggio, in stile @nomeutente@
-        $escaped_symbol = preg_quote($symbol);
-
-        if (preg_match("#^{$escaped_symbol}([^{$escaped_symbol}]+?){$escaped_symbol}#i", $testo, $match) !== 1) {
-            // Il sussurro è formattato male (non ho il destinatario, il messaggio o entrambi), ritorno fallimento.
+        if (!$destinatario) {
             return 0;
         }
-
-        // ripulisce la parte iniziale del messaggio da @nomeutente@
-        $testo = trim(strtr($testo, [$match[0] => '']));
-        $destinatario = $match[1];
-
     }
 
     // Se presente, rimuove il simbolo usato per indicare il sussurro dal messaggio
@@ -1688,19 +1680,11 @@ function gdrcd_chat_private_invite_save(
     }
 
     if (empty($destinatario)) {
+        $destinatario = gdrcd_chat_extract_recipient_from_message($testo, $symbol);
 
-        // Se non ho il destinatario prova a cercarlo nel testo del messaggio, in stile !nomeutente!
-        $escaped_symbol = preg_quote($symbol);
-
-        if (preg_match("#^{$escaped_symbol}([^{$escaped_symbol}]+?){$escaped_symbol}#i", $testo, $match) !== 1) {
-            // Se il destinatario non è stato fornito ritorno fallimento.
+        if (!$destinatario) {
             return 0;
         }
-
-        // ripulisce la parte iniziale del messaggio da !nomeutente!
-        $testo = trim(strtr($testo, [$match[0] => '']));
-        $destinatario = $match[1];
-
     }
 
     // Se presente, rimuove il simbolo usato per il messaggio
@@ -1833,6 +1817,34 @@ function gdrcd_chat_db_insert(
             $testo
         ]
     );
+}
+
+/**
+ * Estrae il nome del destinatario da un messaggio delimitato da un simbolo specifico.
+ *
+ * Cerca nel messaggio la prima occorrenza di una sottostringa delimitata dal simbolo fornito
+ * (es: @nomeutente@, !nomeutente!, $nomepng$) e la restituisce come nome destinatario.
+ * Rimuove inoltre la sottostringa trovata dal messaggio originale tramite riferimento.
+ * Se il destinatario non viene trovato, ritorna null.
+ *
+ * @param string $message Il messaggio da cui estrarre il destinatario (passato per riferimento, viene modificato)
+ * @param string $symbol Il simbolo delimitatore da cercare (es: @, !, $)
+ * @return null|string Il nome del destinatario estratto, oppure null se non trovato
+ */
+function gdrcd_chat_extract_recipient_from_message(&$message, $symbol)
+{
+    $escaped_symbol = preg_quote($symbol);
+
+    // Se il destinatario non è stato trovato ritorna null
+    if (preg_match("#^{$escaped_symbol}([^{$escaped_symbol}]+?){$escaped_symbol}#i", $message, $match) !== 1) {
+        return null;
+    }
+
+    // ripulisce la parte iniziale del messaggio da @nomeutente@
+    $message = trim(strtr($message, [$match[0] => '']));
+
+    // ritorna il nome del destinatario trovato
+    return $match[1];
 }
 
 /**
