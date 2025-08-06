@@ -2682,34 +2682,3 @@ function gdrcd_chat_character_info($nome)
     gdrcd_query($stmt, 'free');
     return $record;
 }
-
-function Leave($tag_n_beyond)
-{
-    $MESSAGE = $GLOBALS['MESSAGE'];
-    $info = gdrcd_query("SELECT invitati, nome, proprietario FROM mappa WHERE id=".$_SESSION['luogo']."");
-
-    $ok_command = false;
-    if($info['proprietario'] == $_SESSION['login'] || strpos($_SESSION['gilda'], $info['proprietario']) != false) {
-        $ok_command = true;
-    }
-    if($ok_command === true){
-        $scaccia = str_replace(','.gdrcd_capital_letter(gdrcd_filter('in', $tag_n_beyond)), '', $info['invitati']);
-        gdrcd_query("UPDATE mappa SET invitati = '".$scaccia."' WHERE id=".$_SESSION['luogo']." LIMIT 1");
-        gdrcd_query("INSERT INTO chat ( stanza, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", 'System message', '".$_SESSION['login']."', NOW(), 'S', '".gdrcd_capital_letter(gdrcd_filter('in', $tag_n_beyond)).' '.$MESSAGE['chat']['warning']['expelled']."')");
-    }
-
-}
-function Elenco()
-{
-    $MESSAGE = $GLOBALS['MESSAGE'];
-    $info = gdrcd_query("SELECT invitati, nome, proprietario FROM mappa WHERE id=".$_SESSION['luogo']."");
-    $ok_command = false;
-    if($info['proprietario'] == $_SESSION['login'] || strpos($_SESSION['gilda'], $info['proprietario']) != false) {
-        $ok_command = true;
-    }
-    if($ok_command === true){
-        $ospiti = str_replace(',', '', $info['invitati']);
-        gdrcd_query("INSERT INTO chat ( stanza, mittente, destinatario, ora, tipo, testo ) VALUES (".$_SESSION['luogo'].", 'System message', '".$_SESSION['login']."', NOW(), 'S', '".$MESSAGE['chat']['warning']['list'].': '.$ospiti."')");
-    }
-
-}
