@@ -69,11 +69,11 @@
                         const data = chatReadResponseDecode(json);
 
                         // Se non ci sono nuove azioni usciamo qui
-                        if (data.length === 0) {
+                        if (!data.message || data.message.length === 0) {
                             return;
                         }
 
-                        chatScreenAppendMessages(data.join(''));
+                        chatScreenAppendMessages(data.message.join(''));
 
                     })
                     .fail(function(jqXHR, textStatus, errorThrown) {
