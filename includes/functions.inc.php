@@ -7,11 +7,6 @@
  */
 
 /**
- * Funzionalità di dialogo col database
- * Set di funzioni da core che implementano il dialogo gestito col db
- */
-include ("function_chat.inc.php");
-/**
  * Connettore al database MySql
  */
 function gdrcd_connect()
