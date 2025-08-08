@@ -1,0 +1,753 @@
+<?php
+/**
+ * Questo file contiene tutte le funzioni della chat
+ * responsabili per la lettura e formattazione delle azioni
+ */
+
+/**
+ * Ritorna la formattazione HTML più appropriata per l'azione in chat.
+ * Sono supportati i seguenti tipi di azione:
+ *  - P: parlato
+ *  - A: azione
+ *  - S: sussurro
+ *  - C: tiro su caratteristica
+ *  - F: tiro su abilità
+ *  - D: tiro di dado
+ *  - O: utilizzo oggetto
+ *  - M: azione master
+ *  - N: azione PNG
+ *  - I: immagine
+ *  - X: invito chat privata
+ *  - Y: espulsione chat privata
+ *  - Z: elenco invitati chat privata
+ *
+ * @param array{
+ *      tipo: string,
+ *      mittente: string,
+ *      destinatario: string,
+ *      url_img_chat: string,
+ *      ora: string,
+ *      imgs: string,
+ *      testo: string,
+ * } $azione
+ * @return null|string La formattazione HTML dell'azione. Può ritornare invece `null` se l'azione è
+ * di una tipologia non supportata o l'utente non ha i permessi per visionarla (esempio: sussurri)
+ */
+function gdrcd_chat_read_message($azione)
+{
+    switch ($azione['tipo']) {
+        case GDRCD_CHAT_MESSAGE_TYPE:
+            return gdrcd_chat_message_format($azione);
+
+        case GDRCD_CHAT_ACTION_TYPE:
+            return gdrcd_chat_action_format($azione);
+
+        case GDRCD_CHAT_WHISPER_TYPE:
+            return gdrcd_chat_whisper_format($azione);
+
+        case GDRCD_CHAT_STATS_TYPE:
+            return gdrcd_chat_stats_format($azione);
+
+        case GDRCD_CHAT_SKILL_TYPE:
+            return gdrcd_chat_skill_format($azione);
+
+        case GDRCD_CHAT_DICE_TYPE:
+            return gdrcd_chat_dice_format($azione);
+
+        case GDRCD_CHAT_ITEM_TYPE:
+            return gdrcd_chat_item_format($azione);
+
+        case GDRCD_CHAT_MASTER_TYPE:
+            return gdrcd_chat_master_format($azione);
+
+        case GDRCD_CHAT_PNG_TYPE:
+            return gdrcd_chat_png_format($azione);
+
+        case GDRCD_CHAT_IMAGE_TYPE:
+            return gdrcd_chat_image_format($azione);
+
+        case GDRCD_CHAT_PRIVATE_INVITE_TYPE:
+            return gdrcd_chat_private_invite_format($azione);
+
+        case GDRCD_CHAT_PRIVATE_KICK_TYPE:
+            return gdrcd_chat_private_kick_format($azione);
+
+        case GDRCD_CHAT_PRIVATE_LIST_TYPE:
+            return gdrcd_chat_private_list_format($azione);
+
+        default:
+            return null;
+    }
+}
+
+/**
+ * Ritorna la formattazione html per un messaggio di tipo "Immagine" ( I ) in chat.
+ *
+ * @param array{
+ *      tipo: string,
+ *      mittente: string,
+ *      destinatario: string,
+ *      url_img_chat: string,
+ *      ora: string,
+ *      imgs: string,
+ *      testo: string,
+ * } $azione
+ * @return string
+ */
+function gdrcd_chat_image_format($azione)
+{
+    // URL immagine da mostrare in chat
+    $image_url = gdrcd_filter('fullurl', $azione['testo']);
+
+    // Tipologia di azione. Es: I
+    $azione_tipo = $azione['tipo'];
+
+    // Assemblo la formattazione HTML per la tipologia di messaggio
+    return <<<HTML
+        <div class="chat_row_{$azione_tipo}">
+            <img class="chat_img" src="{$image_url}" />
+        </div>
+        HTML;
+}
+
+/**
+ * Ritorna la formattazione html per un messaggio di tipo "PNG" ( N ) in chat.
+ *
+ * @param array{
+ *      tipo: string,
+ *      mittente: string,
+ *      destinatario: string,
+ *      url_img_chat: string,
+ *      ora: string,
+ *      imgs: string,
+ *      testo: string,
+ * } $azione
+ * @return string
+ */
+function gdrcd_chat_png_format($azione)
+{
+    // formattazione orario del messaggio
+    $chat_time = gdrcd_chat_time_format($azione);
+
+    // formattazione corpo messaggio
+    $chat_body = gdrcd_chat_body_with_colors_format($azione, null);
+
+    $png_name = $azione['destinatario'];
+
+    // Tipologia di azione. Es: N
+    $azione_tipo = $azione['tipo'];
+
+    // Assemblo la formattazione HTML per la tipologia di messaggio
+    return <<<HTML
+        <div class="chat_row_{$azione_tipo}">
+            {$chat_time}
+            <span class="chat_name">{$png_name}</span>
+            {$chat_body}
+            <br style="clear:both;" />
+        </div>
+        HTML;
+}
+
+/**
+ * Ritorna la formattazione html per un messaggio di tipo "Master" ( M ) in chat.
+ *
+ * @param array{
+ *      tipo: string,
+ *      mittente: string,
+ *      destinatario: string,
+ *      url_img_chat: string,
+ *      ora: string,
+ *      imgs: string,
+ *      testo: string,
+ * } $azione
+ * @return string
+ */
+function gdrcd_chat_master_format($azione)
+{
+    // Ora dell'azione
+    $azione_time = gdrcd_format_time($azione['ora']);
+
+    // Formatta il testo per l'azione master
+    $testo = gdrcd_chatme(
+        $_SESSION['login'],
+        gdrcd_bbcoder(gdrcd_filter('out', $azione['testo'])),
+        true
+    );
+
+    // Tipologia di azione. Es: M
+    $azione_tipo = $azione['tipo'];
+
+    // Assemblo la formattazione HTML per la tipologia di messaggio
+    return <<<HTML
+        <div class="chat_row_{$azione_tipo}">
+            <div class="ora_ms">{$azione_time} Master Screen</div>
+            <span class="chat_master">{$testo}</span>
+            <br style="clear:both;" />
+        </div>
+        HTML;
+}
+
+/**
+ * Ritorna la formattazione html per un messaggio di tipo "Utilizzo Oggetto" ( O ) in chat.
+ *
+ * @param array{
+ *      tipo: string,
+ *      mittente: string,
+ *      destinatario: string,
+ *      url_img_chat: string,
+ *      ora: string,
+ *      imgs: string,
+ *      testo: string,
+ * } $azione
+ * @return string
+ */
+function gdrcd_chat_item_format($azione)
+{
+    // Di default la formattazione html per questa tipologia di azione
+    // è identica a quella per il tiro su caratteristica. Qualora si voglia
+    // personalizzare in modo differente l'html basterà sostituire il codice
+    // interno a questa funzione con una copia di quello presente nella funzione
+    // gdrcd_chat_stats_format() e modificare a piacere dove necessario.
+    return gdrcd_chat_stats_format($azione);
+}
+
+/**
+ * Ritorna la formattazione html per un messaggio di tipo "Tiro Dado" ( D ) in chat.
+ *
+ * @param array{
+ *      tipo: string,
+ *      mittente: string,
+ *      destinatario: string,
+ *      url_img_chat: string,
+ *      ora: string,
+ *      imgs: string,
+ *      testo: string,
+ * } $azione
+ * @return string
+ */
+function gdrcd_chat_dice_format($azione)
+{
+    // FIXME: va rifattorizzata perché adesso questo tipo di azione contiene un json
+    return gdrcd_chat_stats_format($azione);
+}
+
+/**
+ * Ritorna la formattazione html per un messaggio di tipo "Tiro su Abilità" ( F ) in chat.
+ *
+ * @param array{
+ *      tipo: string,
+ *      mittente: string,
+ *      destinatario: string,
+ *      url_img_chat: string,
+ *      ora: string,
+ *      imgs: string,
+ *      testo: string,
+ * } $azione
+ * @return string
+ */
+function gdrcd_chat_skill_format($azione)
+{
+    // Di default la formattazione html per questa tipologia di azione
+    // è identica a quella per il tiro su caratteristica. Qualora si voglia
+    // personalizzare in modo differente l'html basterà sostituire il codice
+    // interno a questa funzione con una copia di quello presente nella funzione
+    // gdrcd_chat_stats_format() e modificare a piacere dove necessario.
+    return gdrcd_chat_stats_format($azione);
+}
+
+/**
+ * Ritorna la formattazione html per un messaggio di tipo "Tiro Caratteristica" ( C ) in chat.
+ *
+ * @param array{
+ *      tipo: string,
+ *      mittente: string,
+ *      destinatario: string,
+ *      url_img_chat: string,
+ *      ora: string,
+ *      imgs: string,
+ *      testo: string,
+ * } $azione
+ * @return string
+ */
+function gdrcd_chat_stats_format($azione)
+{
+    // formattazione orario del messaggio
+    $chat_time = gdrcd_chat_time_format($azione);
+
+    // formattazione corpo messaggio
+    $chat_body = gdrcd_chat_body_format($azione);
+
+    // Tipologia di azione. Es: C
+    $azione_tipo = $azione['tipo'];
+
+    // Assemblo la formattazione HTML per la tipologia di messaggio
+    return <<<HTML
+        <div class="chat_row_{$azione_tipo}">
+            {$chat_time}
+            {$chat_body}
+            <br style="clear:both;" />
+        </div>
+        HTML;
+}
+
+/**
+ * Ritorna la formattazione html per un messaggio di tipo "Sussurro" ( S ) in chat.
+ * Un utente può leggere il sussurro:
+ *  - se è il mittente del messaggio
+ *  - se è il destinatario del messaggio
+ *  - se si è MODERATOR o superiore e $PARAMETERS['mode']['spyprivaterooms'] è abilitato
+ *
+ * @param array{
+ *      tipo: string,
+ *      mittente: string,
+ *      destinatario: string,
+ *      url_img_chat: string,
+ *      ora: string,
+ *      imgs: string,
+ *      testo: string,
+ * } $azione
+ * @return null|string
+ */
+function gdrcd_chat_whisper_format($azione)
+{
+    $MESSAGE = $GLOBALS['MESSAGE'];
+    $PARAMETERS = $GLOBALS['PARAMETERS'];
+
+    if ($_SESSION['login'] == $azione['destinatario']) {
+
+        // l'utente connesso riceve il sussurro
+        $mittente_o_destinatario = gdrcd_filter('out', $azione['mittente']) .' '. $MESSAGE['chat']['whisper']['by'];
+
+    } elseif ($_SESSION['login'] == $azione['mittente']) {
+
+        // l'utente connesso ha inviato il sussurro
+        $mittente_o_destinatario = $MESSAGE['chat']['whisper']['to'] .' '. gdrcd_filter('out', $azione['destinatario']);
+
+    } elseif ($_SESSION['permessi'] >= MODERATOR && $PARAMETERS['mode']['spyprivaterooms'] == 'ON') {
+
+        // l'utente connesso può leggere i sussurri di altri giocatori
+        // se è almeno MODERATOR e spyprivaterooms è abilitato
+        $mittente_o_destinatario = gdrcd_filter('out', $azione['mittente'])
+            .' '. $MESSAGE['chat']['whisper']['from_to']
+            .' '. gdrcd_filter('out', $azione['destinatario']);
+
+    } else {
+
+        // l'utente connesso non è abilitato a leggere il sussurro
+        return null;
+
+    }
+
+    $chat_body = gdrcd_chat_body_format($azione);
+
+    // Tipologia di azione. Es: S
+    $azione_tipo = $azione['tipo'];
+
+    // Assemblo la formattazione HTML per la tipologia di messaggio
+    return <<<HTML
+        <div class="chat_row_{$azione_tipo}">
+            <span class="chat_name">{$mittente_o_destinatario}:</span>
+            {$chat_body}
+            <br style="clear:both;" />
+        </div>
+        HTML;
+}
+
+/**
+ * Ritorna la formattazione html per un messaggio di tipo "Azione" ( A ) in chat.
+ *
+ * @param array{
+ *      tipo: string,
+ *      mittente: string,
+ *      destinatario: string,
+ *      url_img_chat: string,
+ *      ora: string,
+ *      imgs: string,
+ *      testo: string,
+ * } $azione
+ * @return string
+ */
+function gdrcd_chat_action_format($azione)
+{
+    $PARAMETERS = $GLOBALS['PARAMETERS'];
+
+    // formattazione avatar di chat
+    $chat_avatar = $PARAMETERS['mode']['chat_avatar'] == 'ON' && !empty($azione['url_img_chat'])
+        ? gdrcd_chat_avatar_format($azione)
+        : '';
+
+    // formattazione orario del messaggio
+    $chat_time = gdrcd_chat_time_format($azione);
+
+    // formattazione icone
+    $chat_icons = $PARAMETERS['mode']['chaticons'] == 'ON'
+        ? gdrcd_chat_icons_format($azione)
+        : '';
+
+    // formattazione nome mittente
+    $chat_sender = gdrcd_chat_sender_format($azione);
+
+    // formattazione tag
+    $chat_tag = !empty($azione['destinatario'])
+        ? gdrcd_chat_tag_format($azione)
+        : '';
+
+    // formattazione corpo messaggio
+    $chat_body = gdrcd_chat_body_with_colors_format($azione);
+
+    // Tipologia di azione. Es: A
+    $azione_tipo = $azione['tipo'];
+
+    // Assemblo la formattazione HTML per la tipologia di messaggio
+    return <<<HTML
+        <div class="chat_row_{$azione_tipo}">
+            {$chat_avatar}
+            {$chat_time}
+            {$chat_icons}
+
+            <span class="chat_name">
+                {$chat_sender}
+                {$chat_tag}
+            </span>
+
+            {$chat_body}
+
+            <br style="clear:both;" />
+        </div>
+        HTML;
+}
+
+/**
+ * Ritorna la formattazione html per un messaggio di tipo "Parlato" ( P ) in chat.
+ *
+ * @param array{
+ *      tipo: string,
+ *      mittente: string,
+ *      destinatario: string,
+ *      url_img_chat: string,
+ *      ora: string,
+ *      imgs: string,
+ *      testo: string,
+ * } $azione
+ * @return string
+ */
+function gdrcd_chat_message_format($azione)
+{
+    $PARAMETERS = $GLOBALS['PARAMETERS'];
+
+    // formattazione avatar di chat
+    $chat_avatar = $PARAMETERS['mode']['chat_avatar'] == 'ON' && !empty($azione['url_img_chat'])
+        ? gdrcd_chat_avatar_format($azione)
+        : '';
+
+    // formattazione orario del messaggio
+    $chat_time = gdrcd_chat_time_format($azione);
+
+    // formattazione icone
+    $chat_icons = $PARAMETERS['mode']['chaticons'] == 'ON'
+        ? gdrcd_chat_icons_format($azione)
+        : '';
+
+    // formattazione nome mittente
+    $chat_sender = gdrcd_chat_sender_format($azione);
+
+    // formattazione tag
+    $chat_tag = !empty($azione['destinatario'])
+        ? gdrcd_chat_tag_format($azione)
+        : '';
+
+    // formattazione corpo messaggio
+    $chat_body = gdrcd_chat_body_with_colors_format($azione);
+
+    // Tipologia di azione. Es: P
+    $azione_tipo = $azione['tipo'];
+
+    // Assemblo la formattazione HTML per la tipologia di messaggio
+    return <<<HTML
+        <div class="chat_row_{$azione_tipo}">
+            {$chat_avatar}
+            {$chat_time}
+            {$chat_icons}
+
+            <span class="chat_name">
+                {$chat_sender}
+                {$chat_tag}
+                :
+            </span>
+
+            {$chat_body}
+
+            <br style="clear:both;" />
+        </div>
+        HTML;
+}
+
+function gdrcd_chat_private_invite_format($azione)
+{
+    // FIXME: va rifattorizzata perché adesso questo tipo di azione contiene un json
+    return gdrcd_chat_stats_format($azione);
+}
+
+function gdrcd_chat_private_kick_format($azione)
+{
+    // FIXME: va rifattorizzata perché adesso questo tipo di azione contiene un json
+    return gdrcd_chat_stats_format($azione);
+}
+
+function gdrcd_chat_private_list_format($azione)
+{
+    // FIXME: va rifattorizzata perché adesso questo tipo di azione contiene un json
+    return gdrcd_chat_stats_format($azione);
+}
+
+/**
+ * Ritorna la formattazione html per il corpo dei messaggi in chat.
+ *
+ * @param array{
+ *      tipo: string,
+ *      mittente: string,
+ *      destinatario: string,
+ *      url_img_chat: string,
+ *      ora: string,
+ *      imgs: string,
+ *      testo: string,
+ * } $azione
+ * @return string
+ */
+function gdrcd_chat_body_format($azione)
+{
+    $message = gdrcd_filter('out', $azione['testo']);
+
+    return <<<HTML
+        <span class="chat_msg">{$message}</span>
+        HTML;
+}
+
+/**
+ * Ritorna la formattazione html per il corpo del messaggio in chat
+ * con supporto alla colorazione interna alle parentesi.
+ *
+ * @param array{
+ *      tipo: string,
+ *      mittente: string,
+ *      destinatario: string,
+ *      url_img_chat: string,
+ *      ora: string,
+ *      imgs: string,
+ *      testo: string,
+ * } $azione
+ * @param null|string $utente Nome utente da evidenziare nel messaggio, se non indicato userà quello in sessione. Si può disattivare indicando esplicitamente null come valore.
+ * @return string
+ */
+function gdrcd_chat_body_with_colors_format($azione, $utente = '')
+{
+    // TODO: refactor gdrcd_chatcolor and gdrcd_chatme and move it to this file
+    $message = gdrcd_chatcolor(gdrcd_filter('out', $azione['testo']));
+
+    if ($utente === '') {
+        $utente = $_SESSION['login'];
+    }
+
+    if ($utente !== null) {
+        $message = gdrcd_chatme($utente, $message);
+    }
+
+    return <<<HTML
+        <span class="chat_msg">{$message}</span>
+        HTML;
+}
+
+/**
+ * Ritorna la formattazione html per il tag del messaggio in chat.
+ *
+ * @param array{
+ *      tipo: string,
+ *      mittente: string,
+ *      destinatario: string,
+ *      url_img_chat: string,
+ *      ora: string,
+ *      imgs: string,
+ *      testo: string,
+ * } $azione
+ * @return string
+ */
+function gdrcd_chat_tag_format($azione)
+{
+    $tag = gdrcd_filter('out', $azione['destinatario']);
+
+    return <<<HTML
+        <span class="chat_tag">[{$tag}]</span>
+        HTML;
+}
+
+/**
+ * Ritorna la formattazione html per il nome del mittente del messaggio in chat.
+ *
+ * @param array{
+ *      tipo: string,
+ *      mittente: string,
+ *      destinatario: string,
+ *      url_img_chat: string,
+ *      ora: string,
+ *      imgs: string,
+ *      testo: string,
+ * } $azione
+ * @return string
+ */
+function gdrcd_chat_sender_format($azione)
+{
+    $mittente = gdrcd_filter('out', $azione['mittente']);
+
+    return <<<HTML
+        <a
+            class="chat_sender"
+            href="#"
+            onclick="
+                javascript:document.getElementById('tag').value='{$mittente}';
+                document.getElementById('tipo')[2].selected = '1';
+                document.getElementById('message').focus();"
+        >
+            {$mittente}
+        </a>
+        HTML;
+}
+
+/**
+ * Ritorna la formattazione html per l'orario del messaggio in chat.
+ *
+ * @param array{
+ *      tipo: string,
+ *      mittente: string,
+ *      destinatario: string,
+ *      url_img_chat: string,
+ *      ora: string,
+ *      imgs: string,
+ *      testo: string,
+ * } $azione
+ * @return string
+ */
+function gdrcd_chat_time_format($azione)
+{
+    $time = gdrcd_format_time($azione['ora']);
+
+    return <<<HTML
+        <span class="chat_time">{$time}</span>
+        HTML;
+}
+
+/**
+ * Ritorna la formattazione html per l'avatar in chat del personaggio.
+ *  - Se $PARAMETERS['settings']['chat_avatar']['link']['mode'] è abilitato, l'avatar sarà cliccabile
+ *  - Se $PARAMETERS['settings']['chat_avatar']['link']['popup'] è abilitato, il link sarà aperto con modalWindow()
+ *
+ * @param array{
+ *      tipo: string,
+ *      mittente: string,
+ *      destinatario: string,
+ *      url_img_chat: string,
+ *      ora: string,
+ *      imgs: string,
+ *      testo: string,
+ * } $azione
+ * @return string
+ */
+function gdrcd_chat_avatar_format($azione)
+{
+    $PARAMETERS = $GLOBALS['PARAMETERS'];
+
+    $larghezza = $PARAMETERS['settings']['chat_avatar']['width'];
+    $altezza = $PARAMETERS['settings']['chat_avatar']['height'];
+    $avatar_url = $azione['url_img_chat'];
+
+    $chat_avatar = <<<HTML
+        <img
+            src="{$avatar_url}"
+            class="chat_avatar"
+            style="width:{$larghezza}px; height:{$altezza}px;"
+        />
+        HTML;
+
+    if(
+        isset($PARAMETERS['settings']['chat_avatar']['link']['mode'])
+        && $PARAMETERS['settings']['chat_avatar']['link']['mode'] == 'ON'
+    ) {
+        $isChatAvatarPoupLink = isset($PARAMETERS['settings']['chat_avatar']['link']['popup'])
+            && $PARAMETERS['settings']['chat_avatar']['link']['popup'] == 'ON';
+
+        $chat_avatar_url = $isChatAvatarPoupLink
+            ? "javascript:modalWindow('scheda', 'Scheda di ". addslashes($azione['mittente']) ."', 'popup.php?page=scheda&pg=". urlencode($azione['mittente']) ."');"
+            : "main.php?page=scheda&pg=". urlencode($azione['mittente']);
+
+        $chat_avatar = <<<HTML
+            <a href="{$chat_avatar_url}">{$chat_avatar}</a>
+            HTML;
+    }
+
+    return $chat_avatar;
+}
+
+/**
+ * Ritorna la formattazione html per le icone in chat del personaggio.
+ * Le icone attualmente formattate da questo metodo sono quelle relative
+ * a razza e genere del personaggio.
+ *
+ * @param array{
+ *      tipo: string,
+ *      mittente: string,
+ *      destinatario: string,
+ *      url_img_chat: string,
+ *      ora: string,
+ *      imgs: string,
+ *      testo: string,
+ * } $azione
+ * @return string
+ */
+function gdrcd_chat_icons_format($azione)
+{
+    $PARAMETERS = $GLOBALS['PARAMETERS'];
+
+    $icone = explode(';', $azione['imgs']);
+
+    $icona_genere_url = sprintf(
+        'imgs/icons/testamini%s.png',
+        urlencode($icone[0])
+    );
+
+    // TODO: create a core function gdrcd_current_theme() to fetch the current theme for the user
+    $icona_razza_url = sprintf(
+        'themes/%s/imgs/races/%s',
+        urlencode($PARAMETERS['themes']['current_theme']),
+        urlencode($icone[1]?? '')
+    );
+
+    return <<<HTML
+        <span class="chat_icons">
+            <img class="presenti_ico" src="{$icona_razza_url}">
+            <img class="presenti_ico" src="{$icona_genere_url}">
+        </span>
+        HTML;
+}
+
+/**
+ * Salva in sessione l'id riferito all'ultimo messaggio letto dalla chat.
+ *
+ * @see gdrcd_chat_get_lastmessage_id
+ * @param int $id
+ * @return void
+ */
+function gdrcd_chat_set_lastmessage_id($id)
+{
+    $_SESSION['last_message'] = $id;
+}
+
+/**
+ * Recupera dalla sessione l'id riferito all'ultimo messaggio letto dalla chat.
+ * Alla primissima esecuzione ritornerà il valore zero.
+ *
+ * @see gdrcd_chat_set_lastmessage_id
+ * @return int
+ */
+function gdrcd_chat_get_lastmessage_id()
+{
+    return empty($_SESSION['last_message'])? 0 : $_SESSION['last_message'];
+}
