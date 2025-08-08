@@ -2674,6 +2674,7 @@ function gdrcd_chat_output($status)
     $code = $status['code'] ?? 500;
     $message = $status['message'] ?? $GLOBALS['MESSAGE']['chat']['error']['unknown_error'];
 
+    header('Content-type: application/json;charset=utf-8');
     http_response_code($code);
     echo json_encode([
         'code' => $code,
