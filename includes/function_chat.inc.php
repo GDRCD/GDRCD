@@ -16,6 +16,10 @@
  *  - O: utilizzo oggetto
  *  - M: azione master
  *  - N: azione PNG
+ *  - I: immagine
+ *  - X: invito chat privata
+ *  - Y: espulsione chat privata
+ *  - Z: elenco invitati chat privata
  *
  * @param array{
  *      tipo: string,
