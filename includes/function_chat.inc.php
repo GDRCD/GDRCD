@@ -929,6 +929,7 @@ function gdrcd_chat_image_save(
         $testo
     );
 
+    // Tutto a buon fine: status "created" è il modo per indicare che l'operazione ha creato dati nel db
     return gdrcd_chat_status_created();
 }
 
@@ -981,6 +982,7 @@ function gdrcd_chat_png_save(
         $testo
     );
 
+    // Tutto a buon fine: status "created" è il modo per indicare che l'operazione ha creato dati nel db
     return gdrcd_chat_status_created();
 }
 
@@ -1021,6 +1023,7 @@ function gdrcd_chat_master_save(
     // Assegna esperienza
     gdrcd_chat_assign_experience($testo);
 
+    // Tutto a buon fine: status "created" è il modo per indicare che l'operazione ha creato dati nel db
     return gdrcd_chat_status_created();
 }
 
@@ -1117,6 +1120,7 @@ function gdrcd_chat_dice_save(
         json_encode($result)
     );
 
+    // Tutto a buon fine: status "created" è il modo per indicare che l'operazione ha creato dati nel db
     return gdrcd_chat_status_created();
 }
 
@@ -1276,6 +1280,7 @@ function gdrcd_chat_stats_save(
         json_encode($result)
     );
 
+    // Tutto a buon fine: status "created" è il modo per indicare che l'operazione ha creato dati nel db
     return gdrcd_chat_status_created();
 }
 
@@ -1457,6 +1462,7 @@ function gdrcd_chat_skill_save(
         json_encode($result)
     );
 
+    // Tutto a buon fine: status "created" è il modo per indicare che l'operazione ha creato dati nel db
     return gdrcd_chat_status_created();
 }
 
@@ -1513,6 +1519,7 @@ function gdrcd_chat_item_save(
         json_encode($result)
     );
 
+    // Tutto a buon fine: status "created" è il modo per indicare che l'operazione ha creato dati nel db
     return gdrcd_chat_status_created();
 }
 
@@ -1576,6 +1583,7 @@ function gdrcd_chat_whisper_save(
         $testo
     );
 
+    // Tutto a buon fine: status "created" è il modo per indicare che l'operazione ha creato dati nel db
     return gdrcd_chat_status_created();
 }
 
@@ -1617,6 +1625,7 @@ function gdrcd_chat_action_save(
     // Assegna esperienza
     gdrcd_chat_assign_experience($testo);
 
+    // Tutto a buon fine: status "created" è il modo per indicare che l'operazione ha creato dati nel db
     return gdrcd_chat_status_created();
 }
 
@@ -1660,6 +1669,7 @@ function gdrcd_chat_message_save(
     // Assegna esperienza
     gdrcd_chat_assign_experience($testo);
 
+    // Tutto a buon fine: status "created" è il modo per indicare che l'operazione ha creato dati nel db
     return gdrcd_chat_status_created();
 }
 
