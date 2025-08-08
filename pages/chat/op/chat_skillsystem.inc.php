@@ -27,4 +27,4 @@ $chat_skillsystem_status = gdrcd_chat_use_skillsystem(
 );
 
 // Ritorna una risposta al browser formattata in base all'esito dell'operazione precedente
-gdrcd_chat_status_output($chat_skillsystem_status);
+gdrcd_chat_output($chat_skillsystem_status);

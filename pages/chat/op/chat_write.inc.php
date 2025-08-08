@@ -21,4 +21,4 @@ $chat_insert_status = gdrcd_chat_write_message(
 );
 
 // Ritorna una risposta al browser formattata in base all'esito dell'operazione precedente
-gdrcd_chat_status_output($chat_insert_status);
+gdrcd_chat_output($chat_insert_status);

@@ -2665,7 +2665,7 @@ function gdrcd_chat_character_info($nome)
  * @param array{code: int, message: string} $status Array associativo proveniente da gdrcd_chat_status()
  * @return void
  */
-function gdrcd_chat_status_output($status)
+function gdrcd_chat_output($status)
 {
     if (!is_array($status)) {
         $status = gdrcd_chat_status_error((string)$status);
