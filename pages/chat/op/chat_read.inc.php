@@ -71,5 +71,4 @@ if (gdrcd_query($query_azioni, 'num_rows') > 0) {
 }
 
 // Output delle azioni trovate
-header('Content-type: application/json;charset=utf-8');
-echo json_encode($azioni);
+gdrcd_chat_output(gdrcd_chat_status_ok($azioni));
