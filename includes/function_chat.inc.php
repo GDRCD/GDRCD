@@ -2697,6 +2697,18 @@ function gdrcd_chat_status($code, $message)
 }
 
 /**
+ * Indica un'operazione completata con successo.
+ * Restituisce uno stato di risposta HTTP 200 (OK) per le API della chat.
+ *
+ * @param string $message Messaggio descrittivo dello stato
+ * @return array{code: int, message: mixed} Array associativo con codice e risposta
+ */
+function gdrcd_chat_status_ok($message)
+{
+    return gdrcd_chat_status(200, $message);
+}
+
+/**
  * Indica un operazione andata a buon fine e che ha creato una risorsa ( come un record nel db ).
  * Restituisce uno stato di risposta HTTP 201 (Created) per le API della chat.
  *
