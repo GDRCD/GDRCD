@@ -1018,6 +1018,9 @@ function gdrcd_chat_master_save(
         $testo
     );
 
+    // Assegna esperienza
+    gdrcd_chat_assign_experience($testo);
+
     return gdrcd_chat_status_created();
 }
 
@@ -1611,6 +1614,9 @@ function gdrcd_chat_action_save(
         $testo
     );
 
+    // Assegna esperienza
+    gdrcd_chat_assign_experience($testo);
+
     return gdrcd_chat_status_created();
 }
 
@@ -1650,6 +1656,9 @@ function gdrcd_chat_message_save(
         $tipo,
         $testo
     );
+
+    // Assegna esperienza
+    gdrcd_chat_assign_experience($testo);
 
     return gdrcd_chat_status_created();
 }
@@ -2566,6 +2575,66 @@ function gdrcd_chat_player_item_consume($nome, $item)
     --$item['numero'];
 
     return $item;
+}
+
+/**
+ * Assegna esperienza al personaggio in base al messaggio inviato in chat.
+ *
+ * La quantità di esperienza assegnata dipende dalla lunghezza del messaggio e dalla configurazione
+ * dei parametri globali. Se la funzionalità è disattivata o se il messaggio è inviato in una chat privata
+ * quando il flag $PARAMETERS['mode']['exp_in_private'] è disattivato, la funzione non esegue alcuna operazione.
+ * L'esperienza viene salvata direttamente nel database del personaggio loggato.
+ *
+ * @param string $message Il messaggio inviato in chat su cui calcolare l'esperienza da assegnare
+ * @return void
+ */
+function gdrcd_chat_assign_experience($message)
+{
+    $PARAMETERS = $GLOBALS['PARAMETERS'];
+
+    // Se da config la funzionalità dell'esperienza in chat è disattivata, usciamo senza far nulla
+    if($PARAMETERS['mode']['exp_by_chat'] != 'ON') {
+        return;
+    }
+
+    $msg_length = strlen($message);
+    $char_needed = gdrcd_filter('num', $PARAMETERS['settings']['exp_by_chat']['number']);
+    $exp_assign = gdrcd_filter('num', $PARAMETERS['settings']['exp_by_chat']['value']);
+
+    if ($char_needed == 0) {
+
+        // A zero caratteri necessari, l'esperienza viene sempre assegnata
+        $exp_bonus = $exp_assign;
+
+    } else {
+
+        // Se non ho un valore fisso di esperienza da assegnare, lo calcolo come lunghezza/caratteri_necessari
+        // Altrimenti assegna il bonus fisso se la lunghezza sel messaggio raggiunge il numero di caratteri
+        $exp_bonus = $exp_assign <= 0
+            ? $msg_length / $char_needed
+            : ( $msg_length >= $char_needed ? $exp_assign : 0);
+
+    }
+
+    // Recupero le informazioni sulla chat corrente
+    $info = gdrcd_chat_info($_SESSION['luogo']);
+    $chat_privata = $info['privata'] == 1;
+    $exp_in_chat_privata_disattivata = $PARAMETERS['mode']['exp_in_private'] != 'ON';
+
+    // Se non è permesso assegnare esperienza nelle chat private esco
+    if ( $chat_privata && $exp_in_chat_privata_disattivata ) {
+        return;
+    }
+
+    // Salva a database l'esperienza assegnata
+    gdrcd_stmt(
+        'UPDATE personaggio SET esperienza = esperienza + ? WHERE nome = ? LIMIT 1',
+        [
+            'ds',
+            $exp_bonus,
+            $_SESSION['login'],
+        ]
+    );
 }
 
 /**
