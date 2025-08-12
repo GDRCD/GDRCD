@@ -314,9 +314,17 @@ function gdrcd_chat_dice_save(
         $rolls[] = $roll;
     }
 
-    // Determina se il modificatore sia positivo o negativo per aggiungerlo correttamente alla somma
-    $modifier_sign = str_starts_with($dice_modifier, '+')? 1 : -1;
-    $modifier_value = $modifier_sign * (int)substr($dice_modifier, 1);
+    // Somma il valore di tutti i dadi lanciati
+    $sum = array_sum($rolls);
+
+    if ($dice_modifier) {
+        // Determina se il modificatore sia positivo o negativo per aggiungerlo correttamente alla somma
+        $modifier_sign = str_starts_with($dice_modifier, '+')? 1 : -1;
+        $modifier_value = $modifier_sign * (int)substr($dice_modifier, 1);
+
+        // Aggiunge il modificatore alla somma dei dadi
+        $sum += $modifier_value;
+    }
 
     // salva tutti i dati relativi al lancio dei dadi in un array
     $result = [
@@ -326,7 +334,7 @@ function gdrcd_chat_dice_save(
         'modifier' => $dice_modifier,
         'threshold' => $dice_threshold,
         'successes' => $dice_threshold !== null? $successes : null,
-        'sum' => array_sum($rolls) + $modifier_value,
+        'sum' => $sum,
         'rolls' => $rolls
     ];
 
