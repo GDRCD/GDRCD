@@ -302,8 +302,70 @@ function gdrcd_chat_item_format($azione)
  */
 function gdrcd_chat_dice_format($azione)
 {
-    // FIXME: va rifattorizzata perché adesso questo tipo di azione contiene un json
-    return gdrcd_chat_stats_format($azione);
+    // formattazione orario del messaggio
+    $chat_time = gdrcd_chat_time_format($azione);
+
+    // Tipologia di azione. Es: C
+    $azione_tipo = $azione['tipo'];
+
+    // decodifica il messaggio
+    $dice = json_decode($azione['testo'], true);
+
+    // Formatta il contenuto dell'azione
+    $info = <<<HTML
+        <span class="chat_name">{$azione['mittente']}</span> ha lanciato
+        <span class="chat_dice_number">{$dice['number']}</span>
+        <span class="chat_dice_faces">d{$dice['faces']}</span>.
+        Somma: <span class="chat_dice_sum">{$dice['sum']}</span>.
+        HTML;
+
+    // Se i dadi hanno un modificatore lo scrive
+    if ($dice['modifier'] !== null) {
+        $info .= <<<HTML
+                Modificatore: <span class="chat_dice_modifier">{$dice['modifier']}</span>.
+            HTML;
+    }
+
+    // Se i dadi hanno sono stati lanciati con un riferimento per i successi, li scrive
+    if ($dice['successes'] !== null) {
+        $info .= <<<HTML
+                Successi: <span class="chat_dice_successes">{$dice['successes']}</span>.
+            HTML;
+    }
+
+    $lanci = '';
+
+    foreach ($dice['rolls'] as $roll) {
+        // Definisce 4 diverse classi css per ciascun dado:
+        // - chat_dice_roll_min se il dado totalizza 1
+        // - chat_dice_roll_max se il dado fa il valore massimo
+        // - chat_dice_roll_success se il dado ha ottenuto un successo
+        // - chat_dice_roll per tutti gli altri casi
+        //
+        $class = match(true) {
+            $roll === 1 => 'chat_dice_roll_min',
+            $roll === $dice['faces'] => 'chat_dice_roll_max',
+            $dice['threshold'] && $roll >= $dice['threshold'] => 'chat_dice_roll_success',
+            default => 'chat_dice_roll'
+        };
+
+        $lanci .= <<<HTML
+            <span class="{$class}">{$roll}</span>
+            HTML;
+    }
+
+    $messaggio_dadi = <<<HTML
+        <span class="chat_dice_info">{$info}</span>
+        <span class="chat_dice_rolls">Lanci: {$lanci}</span>
+        HTML;
+
+    // Assemblo la formattazione HTML per la tipologia di messaggio
+    return <<<HTML
+        <div class="chat_row_{$azione_tipo}">
+            {$chat_time}
+            <span class="chat_dice">{$messaggio_dadi}</span>
+        </div>
+        HTML;
 }
 
 /**
