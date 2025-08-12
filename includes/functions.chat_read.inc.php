@@ -5,6 +5,81 @@
  */
 
 /**
+ * Recupera e formatta tutti i messaggi di chat successivi a un determinato ID per una stanza specifica.
+ *
+ * Esegue una query sul database per ottenere i messaggi della chat relativi alla stanza ($luogo)
+ * con ID maggiore di $last_id e solo se inviati entro le ultime quattro ore.
+ * Ogni messaggio viene formattato in HTML tramite gdrcd_chat_read_message().
+ *
+ * @param int $luogo L'ID della stanza di chat da cui leggere i messaggi
+ * @param int $last_id Facoltativo. L'ID dell'ultimo messaggio già letto (default: 0)
+ * @return array<array{id: int, azione: string}> Elenco dei messaggi formattati in HTML
+ */
+function gdrcd_chat_read_messages($luogo, $last_id = 0)
+{
+    // Query per recuperare i messaggi successivi a $last_id
+    $query_azioni = gdrcd_stmt(
+        "SELECT
+            chat.id,
+            chat.imgs,
+            chat.mittente,
+            chat.destinatario,
+            chat.tipo,
+            chat.ora,
+            chat.testo,
+            personaggio.url_img_chat
+
+        FROM chat
+            INNER JOIN mappa ON mappa.id = chat.stanza
+            LEFT JOIN personaggio ON personaggio.nome = chat.mittente
+
+        WHERE chat.id > ?
+            AND chat.stanza = ?
+
+            -- Nasconde i messaggi nella chat privata precedenti alla prenotazione
+            AND chat.ora > IFNULL(mappa.ora_prenotazione, '0000-00-00 00:00:00')
+
+            -- Impedisce di leggere dalla chat messaggi più vecchi di 4 ore
+            AND chat.ora > DATE_SUB(NOW(), INTERVAL 4 HOUR)
+
+        ORDER BY id ASC",
+        [
+            'ii',
+            $last_id,
+            $luogo,
+        ]
+    );
+
+    // Contenitore per tutte le nuove azioni formattate in html
+    $azioni = [];
+
+    if (gdrcd_query($query_azioni, 'num_rows') > 0) {
+
+        while ($riga_azione = gdrcd_query($query_azioni, 'fetch')) {
+
+            // formatta l'azione da inviare in chat
+            $azione = gdrcd_chat_read_message($riga_azione);
+
+            // se la formattazione ritorna un $azione vuota, skip alla prossima azione
+            if (empty($azione)) {
+                continue;
+            }
+
+            $azioni[] = [
+                'id' => $riga_azione['id'],
+                'azione' => $azione,
+            ];
+
+        }
+
+        gdrcd_query($query_azioni, 'free');
+
+    }
+
+    return $azioni;
+}
+
+/**
  * Ritorna la formattazione HTML più appropriata per l'azione in chat.
  * Sono supportati i seguenti tipi di azione:
  *  - P: parlato

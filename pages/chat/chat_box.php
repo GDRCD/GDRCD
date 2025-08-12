@@ -64,16 +64,15 @@
             function httpGetChatRead()
             {
                 $.get('pages/chat/ajax.php?op=chat_read')
-                    .done(function(json) {
-
-                        const data = chatReadResponseDecode(json);
+                    .done(function(data) {
 
                         // Se non ci sono nuove azioni usciamo qui
                         if (!data.message || data.message.length === 0) {
                             return;
                         }
 
-                        chatScreenAppendMessages(data.message.join(''));
+                        // inserisce le azioni in chat
+                        chatScreenAppendMessages(data.message);
 
                     })
                     .fail(function(jqXHR, textStatus, errorThrown) {
@@ -86,32 +85,24 @@
             }
 
             /**
-             * Decodifica la risposta JSON ricevuta dal server
-             * @param {string} json - Stringa JSON da decodificare
-             * @returns {string[]} Array di messaggi decodificati o undefined in caso di errore
+             * Aggiunge i nuovi messaggi formattati alla chat e gestisce lo scroll automatico.
+             *
+             * Riceve un array di oggetti messaggio, estrae l'HTML da ciascun elemento e lo aggiunge
+             * al contenitore della chat. Dopo l'inserimento, esegue lo scroll automatico verso il basso
+             * e avvia la notifica visiva se la finestra non è attiva.
+             *
+             * @param {Array<{id: number, azione: string}>} data - Array di messaggi da aggiungere, ciascuno con id e HTML formattato
              */
-            function chatReadResponseDecode(json)
+            function chatScreenAppendMessages(data)
             {
-                if (typeof json !== 'string') {
-                    return json;
-                }
+                // Le azioni arrivano in un formato che contiene
+                // l'id del messaggio e l'azione formattata in html.
+                // Questa parte di codice crea un array nella variabile azioni
+                // dove ogni elemento è un azione formattata in html.
+                const azioni = data.map(item => item.azione);
 
-                try {
-                    return JSON.parse(json);
-                } catch (e) {
-                    console.error("[GDRCD] Impossibile decodificare la risposta:", e);
-                    throw e;
-                }
-            }
-
-            /**
-             * Aggiunge i nuovi messaggi alla chat e gestisce lo scroll automatico
-             * @param {string} html - HTML dei messaggi da aggiungere al container della chat
-             */
-            function chatScreenAppendMessages(html)
-            {
                 // Aggiunge i nuovi messaggi al contenitore della chat
-                $('#chat_azioni').append(html);
+                $('#chat_azioni').append(azioni.join(''));
 
                 // Timeout per permettere al DOM di aggiornarsi prima dello scroll (aspetta 500ms)
                 setTimeout(function() {

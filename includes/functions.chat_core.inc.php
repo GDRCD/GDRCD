@@ -583,7 +583,7 @@ function gdrcd_chat_character_info($nome)
 /**
  * Imposta il codice di risposta HTTP e stampa un messaggio di errore in formato JSON.
  *
- * @param array{code: int, message: string} $status Array associativo proveniente da gdrcd_chat_status()
+ * @param array{code: int, message: mixed} $status Array associativo proveniente da gdrcd_chat_status()
  * @return void
  */
 function gdrcd_chat_output($status)
@@ -608,7 +608,7 @@ function gdrcd_chat_output($status)
  *
  * @param int $code Codice di stato HTTP (es: 201, 400, 403, 500)
  * @param string|array $message Messaggio descrittivo dello stato o dati di output
- * @return array{code: int, message: string} Array associativo con codice e messaggio
+ * @return array{code: int, message: mixed} Array associativo con codice e messaggio
  */
 function gdrcd_chat_status($code, $message)
 {
