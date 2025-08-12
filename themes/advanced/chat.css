@@ -227,10 +227,43 @@ div.chat_box .chat_azioni_box {
 }
 div.chat_row_D, div.chat_row_O, div.chat_row_C{
     margin-top: 3px;
-    color: #6a6a6a;
+    padding: 5px;
+    font-size: 12px;
+    color: white;
     font-family: 'Verdana';
-    font-style: italic;
     text-align: left;
+    background-color: rgb(126, 126, 209);
+    border-radius: 6px;
+}
+
+.chat_dice_rolls{
+    margin: 5px 0 0 38px;
+    display:block;
+}
+
+.chat_dice_roll,
+.chat_dice_roll_min,
+.chat_dice_roll_max,
+.chat_dice_roll_success {
+    display: inline-block;
+    padding: 0 3px;
+}
+
+.chat_dice_roll_max,
+.chat_dice_roll_success {
+    font-weight: bold;
+    color: #b6ff00;
+    border: solid 1px #b6ff00;
+    border-radius: 6px;
+    margin: 2px 2px;
+}
+
+.chat_dice_roll_min {
+    font-weight: bold;
+    color: #b42727;
+    border: solid 1px #b42727;
+    border-radius: 6px;
+    margin: 0 2px;
 }
 
 .chat_box .chat_input_box .chat_row.chat_align_top{
