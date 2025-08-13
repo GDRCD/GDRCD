@@ -225,7 +225,10 @@ div.chat_box .chat_azioni_box {
 .chat_box .chat_input_box .chat_row select{
     margin-bottom: 0 ;
 }
-div.chat_row_D, div.chat_row_O, div.chat_row_C{
+div.chat_row_D,
+div.chat_row_O,
+div.chat_row_C,
+div.chat_row_F{
     margin-top: 3px;
     padding: 5px;
     font-size: 12px;
