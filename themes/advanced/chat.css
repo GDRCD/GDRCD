@@ -110,17 +110,11 @@ div.chat_row_S {
 
 div.chat_row_D {
     margin-top: 3px;
-    border-width: 2px;
-    border-color: blue;
-    border-style: solid;
     color: cyan;
 }
 
 div.chat_row_C {
     margin-top: 3px;
-    border-width: 2px;
-    border-color: blue;
-    border-style: solid;
     color: cyan;
 }
 
@@ -249,7 +243,8 @@ div.chat_row_F{
 .chat_dice_roll_max,
 .chat_dice_roll_success,
 .chat_skill_bonus_value,
-.chat_skill_total_value {
+.chat_skill_total_value,
+.chat_items_name {
     display: inline-block;
     padding: 0 3px;
 }
@@ -278,6 +273,14 @@ div.chat_row_F{
     border: solid 1px #ffbb00;
     border-radius: 6px;
     margin: 2px 2px;
+}
+
+.chat_items_name {
+    font-weight: bold;
+    color: #d10000;
+    border: solid 1px #d10000;
+    border-radius: 6px;
+    margin: 0 2px;
 }
 
 .chat_box .chat_input_box .chat_row.chat_align_top{
