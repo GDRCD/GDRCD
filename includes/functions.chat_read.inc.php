@@ -278,12 +278,33 @@ function gdrcd_chat_master_format($azione)
  */
 function gdrcd_chat_item_format($azione)
 {
-    // Di default la formattazione html per questa tipologia di azione
-    // è identica a quella per il tiro su caratteristica. Qualora si voglia
-    // personalizzare in modo differente l'html basterà sostituire il codice
-    // interno a questa funzione con una copia di quello presente nella funzione
-    // gdrcd_chat_stats_format() e modificare a piacere dove necessario.
-    return gdrcd_chat_stats_format($azione);
+    $MESSAGE = $GLOBALS['MESSAGE'];
+
+    // formattazione orario del messaggio
+    $chat_time = gdrcd_chat_time_format($azione);
+
+    // decodifica il messaggio
+    $body = json_decode($azione['testo'], true);
+
+    // Formatta le informazioni da scrivere in chat
+    $messaggio_stats = <<<HTML
+        <span class="chat_name">{$azione['mittente']}</span>
+
+        {$MESSAGE['chat']['commands']['use_items']['uses']}
+        <span class="chat_items_name">{$body['name']}</span>
+        HTML;
+
+    // Tipologia di azione. Es: F
+    $azione_tipo = $azione['tipo'];
+
+    // Assemblo la formattazione HTML per la tipologia di messaggio
+    return <<<HTML
+        <div class="chat_row_{$azione_tipo}">
+            {$chat_time}
+            <span class="chat_items_body">{$messaggio_stats}</span>
+            <br style="clear:both;" />
+        </div>
+        HTML;
 }
 
 /**
