@@ -418,11 +418,37 @@ function gdrcd_chat_skill_format($azione)
  */
 function gdrcd_chat_stats_format($azione)
 {
+    $MESSAGE = $GLOBALS['MESSAGE'];
+
     // formattazione orario del messaggio
     $chat_time = gdrcd_chat_time_format($azione);
 
-    // formattazione corpo messaggio
-    $chat_body = gdrcd_chat_body_format($azione);
+    // decodifica il messaggio
+    $body = json_decode($azione['testo'], true);
+
+    // Formatta le informazioni da scrivere in chat sul lancio
+    $messaggio_stats = <<<HTML
+        <span class="chat_name">{$azione['mittente']}</span>
+
+        {$MESSAGE['chat']['commands']['use_skills']['uses']}
+        {$body['stats']['name']}:
+
+        {$body['stats']['name']}
+        <span class="chat_skill_bonus_value">{$body['stats']['value']}</span>,
+
+        {$body['race']['name']}
+        <span class="chat_skill_bonus_value">{$body['race']['value']}</span>,
+
+        {$MESSAGE['chat']['commands']['use_skills']['items']}
+        <span class="chat_skill_bonus_value">{$body['items']['value']}</span>,
+
+        {$MESSAGE['chat']['commands']['use_skills']['die']}
+        <span class="chat_dice_faces">{$body['dice']['name']}</span>
+        <span class="chat_skill_bonus_value">{$body['dice']['value']}</span>
+
+        {$MESSAGE['chat']['commands']['use_skills']['sum']}
+        <span class="chat_skill_total_value">{$body['sum']}</span>.
+        HTML;
 
     // Tipologia di azione. Es: C
     $azione_tipo = $azione['tipo'];
@@ -431,7 +457,7 @@ function gdrcd_chat_stats_format($azione)
     return <<<HTML
         <div class="chat_row_{$azione_tipo}">
             {$chat_time}
-            {$chat_body}
+            <span class="chat_stats_body">{$messaggio_stats}</span>
             <br style="clear:both;" />
         </div>
         HTML;
