@@ -302,6 +302,8 @@ function gdrcd_chat_item_format($azione)
  */
 function gdrcd_chat_dice_format($azione)
 {
+    $MESSAGE = $GLOBALS['MESSAGE'];
+
     // formattazione orario del messaggio
     $chat_time = gdrcd_chat_time_format($azione);
 
@@ -309,33 +311,40 @@ function gdrcd_chat_dice_format($azione)
     $azione_tipo = $azione['tipo'];
 
     // decodifica il messaggio
-    $dice = json_decode($azione['testo'], true);
+    $body = json_decode($azione['testo'], true);
 
-    // Formatta il contenuto dell'azione
+    // Formatta le informazioni da scrivere in chat sul lancio
     $info = <<<HTML
-        <span class="chat_name">{$azione['mittente']}</span> ha lanciato
-        <span class="chat_dice_number">{$dice['number']}</span>
-        <span class="chat_dice_faces">d{$dice['faces']}</span>.
-        Somma: <span class="chat_dice_sum">{$dice['sum']}</span>.
+        <span class="chat_name">{$azione['mittente']}</span>
+
+        {$MESSAGE['chat']['commands']['die']['cast']}
+        <span class="chat_dice_number">{$body['number']}</span>
+        <span class="chat_dice_faces">d{$body['faces']}</span>.
+
+        {$MESSAGE['chat']['commands']['die']['sum']}
+        <span class="chat_dice_sum">{$body['sum']}</span>.
         HTML;
 
-    // Se i dadi hanno un modificatore lo scrive
-    if ($dice['modifier'] !== null) {
+    // Se i dadi hanno un modificatore lo aggiunge alle info
+    if ($body['modifier'] !== null) {
         $info .= <<<HTML
-                Modificatore: <span class="chat_dice_modifier">{$dice['modifier']}</span>.
+                {$MESSAGE['chat']['commands']['die']['modifier']}
+                <span class="chat_dice_modifier">{$body['modifier']}</span>.
             HTML;
     }
 
-    // Se i dadi hanno sono stati lanciati con un riferimento per i successi, li scrive
-    if ($dice['successes'] !== null) {
+    // Se i dadi hanno sono stati lanciati con un riferimento per i successi, li aggiunge alle info
+    if ($body['successes'] !== null) {
         $info .= <<<HTML
-                Successi: <span class="chat_dice_successes">{$dice['successes']}</span>.
+                {$MESSAGE['chat']['commands']['die']['successes']}
+                <span class="chat_dice_successes">{$body['successes']}</span>.
             HTML;
     }
 
+    // Formatta il risultato di ogni dado lanciato
     $lanci = '';
 
-    foreach ($dice['rolls'] as $roll) {
+    foreach ($body['rolls'] as $roll) {
         // Definisce 4 diverse classi css per ciascun dado:
         // - chat_dice_roll_min se il dado totalizza 1
         // - chat_dice_roll_max se il dado fa il valore massimo
@@ -344,8 +353,8 @@ function gdrcd_chat_dice_format($azione)
         //
         $class = match(true) {
             $roll === 1 => 'chat_dice_roll_min',
-            $roll === $dice['faces'] => 'chat_dice_roll_max',
-            $dice['threshold'] && $roll >= $dice['threshold'] => 'chat_dice_roll_success',
+            $roll === $body['faces'] => 'chat_dice_roll_max',
+            $body['threshold'] && $roll >= $body['threshold'] => 'chat_dice_roll_success',
             default => 'chat_dice_roll'
         };
 
@@ -354,12 +363,13 @@ function gdrcd_chat_dice_format($azione)
             HTML;
     }
 
+    // Assembla il messaggio finale da inserire nell'azione
     $messaggio_dadi = <<<HTML
         <span class="chat_dice_info">{$info}</span>
-        <span class="chat_dice_rolls">Lanci: {$lanci}</span>
+        <span class="chat_dice_rolls">{$lanci}</span>
         HTML;
 
-    // Assemblo la formattazione HTML per la tipologia di messaggio
+    // Assembla la formattazione HTML per la tipologia di messaggio
     return <<<HTML
         <div class="chat_row_{$azione_tipo}">
             {$chat_time}
