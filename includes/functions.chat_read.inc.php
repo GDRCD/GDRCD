@@ -746,8 +746,9 @@ function gdrcd_chat_private_list_format($azione)
 
 /**
  * Ritorna la formattazione html per il corpo dei messaggi in chat.
+ * Se $azione è un array, formatta il campo 'testo'; se è una stringa, la usa direttamente.
  *
- * @param array{
+ * @param string|array{
  *      tipo: string,
  *      mittente: string,
  *      destinatario: string,
@@ -760,7 +761,12 @@ function gdrcd_chat_private_list_format($azione)
  */
 function gdrcd_chat_body_format($azione)
 {
-    $message = gdrcd_filter('out', $azione['testo']);
+    $message = gdrcd_filter(
+        'out',
+        is_array($azione)
+            ? $azione['testo'] // se $azione è un array formatta 'testo'
+            : $azione          // se azione è una stringa la usa com'è
+    );
 
     return <<<HTML
         <span class="chat_msg">{$message}</span>
