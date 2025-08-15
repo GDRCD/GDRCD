@@ -233,13 +233,16 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
                 <?php } #Fine blocco  ?>
             </table>
         </div>
+        
+    <?php
+        }
+        ?>
         <div class="link_back">
             <a href='main.php?page=gestione_segnalazioni&segn=esito_index&op=first'>
                 Apri una nuova serie di esiti
             </a>
         </div>
     <?php
-        }
     }
 } else {
     echo '<div class="warning">Non hai i permessi per visualizzare questa sezione</div>';

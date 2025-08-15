@@ -154,10 +154,12 @@ $totaleresults = gdrcd_query(gdrcd_query($sqlMessages, 'result'), 'num_rows');
                         </td>
                         <td>
                             <div class="elementi_elenco">
-                                <a href="main.php?page=messages_center&op=read&id_messaggio=<?php echo $row['id'] ?>"><?php echo gdrcd_filter('out', substr(nl2br(gdrcd_bbcoder($row['testo'])), 0, 40)); ?>
+                                <a href="main.php?page=messages_center&op=read&id_messaggio=<?php echo $row['id']; ?>">
+                                    <?php echo gdrcd_filter('out', substr(strip_tags(nl2br(gdrcd_bbcoder($row['testo']))), 0, 40)); ?>
                                     ...
                                 </a>
                             </div>
+
                         </td>
                         <td>
                             <div class="controlli_elenco">

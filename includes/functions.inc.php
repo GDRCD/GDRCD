@@ -7,6 +7,11 @@
  */
 
 /**
+ * Funzionalità di dialogo col database
+ * Set di funzioni da core che implementano il dialogo gestito col db
+ */
+
+/**
  * Connettore al database MySql
  */
 function gdrcd_connect()
@@ -20,12 +25,9 @@ function gdrcd_connect()
         $db_host = $GLOBALS['PARAMETERS']['database']['url'];
         $db_error = $GLOBALS['MESSAGE']['error']['db_not_found'];
 
-        #$db = mysql_connect($db_host, $db_user, $db_pass)or die(gdrcd_mysql_error());
-        #mysql_select_db($db_name)or die(gdrcd_mysql_error($db_error));
-
         $db_link = mysqli_connect($db_host, $db_user, $db_pass, $db_name);
 
-        mysqli_set_charset($db_link, "utf8");
+        mysqli_set_charset($db_link, "utf8mb4");
 
         if (mysqli_connect_errno()) {
             gdrcd_mysql_error($db_error);
@@ -36,7 +38,7 @@ function gdrcd_connect()
 
 /**
  * Chiusura della connessione col db MySql
- * @param resource $db : una connessione mysqli
+ * @param mysqli $db : una connessione mysqli
  */
 function gdrcd_close_connection($db)
 {
@@ -58,6 +60,7 @@ function gdrcd_close_connection($db)
  *  last_id: ritorna l'id del record generato dall'ultima query, se non era una INSERT o UPDATE ritorna 0. In questo caso $sql non viene considerato
  *  affected: ritorna il numero di record toccati dall'ultima query (INSERT, UPDATE, DELETE o SELECT). In questo caso $sql non viene considerato
  * @return mixed un booleano in caso di esecuzione di query non SELECT e modalità 'query'. Altrimenti ritorna come specificato nella descrizione di $mode
+ * @throws Exception
  */
 function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
 {
@@ -80,7 +83,6 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
                     mysqli_free_result($result);
 
                     return $row;
-                    break;
                 default:
                     $result = mysqli_query($db_link, $sql);
                     if($result === false){
@@ -92,7 +94,6 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
                         }
                     }
                     return $result;
-                    break;
             }
 
         case 'result':
@@ -107,53 +108,49 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
             }
 
             return $result;
-            break;
 
         case 'num_rows':
             return (int)mysqli_num_rows($sql);
-            break;
 
         case 'fetch':
-            return mysqli_fetch_array($sql, MYSQLI_BOTH);
-            break;
+            return mysqli_fetch_array($sql);
 
         case 'assoc':
             return mysqli_fetch_array($sql, MYSQLI_ASSOC);
-            break;
 
         case 'object':
             return mysqli_fetch_object($sql);
-            break;
 
         case 'free':
-            return mysqli_free_result($sql);
-            break;
+            mysqli_free_result($sql);
+            return true;
 
         case 'last_id':
             return mysqli_insert_id($db_link);
-            break;
 
         case 'affected':
             return (int)mysqli_affected_rows($db_link);
-            break;
+
+        default:
+            throw new Exception("Imposibile determinare l'operazione da eseguire sul database");
     }
 }
 
 
-/*
-    * Prepared Statements
-    * @param string $sql: il codice SQL da inviare al database
-    * @param array $binds: array dei parametri associati alla query
-    *
-    * E' obbligatorio specificare nell'indice zero dell'array binds i tipi delle variabili che si stanno immettendo nella query
-    * Tali tipi sono i seguenti:
-    * i      corrispondente ai valori integer
-    * d     corrispondente ai valori float/double
-    * s     corrispondente alle stringhe
-    * b     corrispondende a valori di tipo blob
-    *
-    * @return mysqli_result
-*/
+/**
+ * Prepared Statements
+ * @param string $sql: il codice SQL da inviare al database
+ * @param array $binds: array dei parametri associati alla query
+ *
+ * E' obbligatorio specificare nell'indice zero dell'array binds i tipi delle variabili che si stanno immettendo nella query
+ * Tali tipi sono i seguenti:
+ * i      corrispondente ai valori integer
+ * d     corrispondente ai valori float/double
+ * s     corrispondente alle stringhe
+ * b     corrispondende a valori di tipo blob
+ *
+ * @return mysqli_result
+ */
 function gdrcd_stmt($sql, $binds = array())
 {
     $db_link = gdrcd_connect();
@@ -199,7 +196,8 @@ function gdrcd_stmt($sql, $binds = array())
  * Funzione di recupero delle colonne e della loro dichiarazione della tabella specificata.
  * Si usa per la verifica dell'aggiornamento db da vecchie versioni di gdrcd5
  * @param string $table : il nome della tabella da controllare
- * @return un oggetto contenente la descrizione della tabella negli attributi
+ * @return array : un oggetto contenente la descrizione della tabella negli attributi
+ * @throws Exception
  */
 function gdrcd_check_tables($table)
 {
@@ -253,11 +251,12 @@ function gdrcd_check_tables($table)
 /**
  * Gestione degli errori tornati dalle query
  * @param string $details : una descrizione dell'errore avvenuto
- * @return una stringa HTML che descrive l'errore riscontrato
+ * @return string: una stringa HTML che descrive l'errore riscontrato
  */
 function gdrcd_mysql_error($details = false)
 {
     $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 50);
+    $history = '';
 
     foreach($backtrace as $v) {
         if($v['function'] == 'gdrcd_query') {
@@ -290,7 +289,7 @@ function gdrcd_mysql_error($details = false)
 /**
  * Funzione di hashing delle password.
  * @param string $str : la password o stringa di cui calcolare l'hash
- * @return l'hash calcolato a partire da $str con l'algoritmo specificato nella configurazione
+ * @return string|null l'hash calcolato a partire da $str con l'algoritmo specificato nella configurazione
  */
 function gdrcd_encript($str)
 {
@@ -300,6 +299,12 @@ function gdrcd_encript($str)
     return $hasher->HashPassword($str);
 }
 
+/**
+ * Funzione di controllo sulla corrispondenza tra password e hash
+ * @param $pass
+ * @param $stored
+ * @return bool
+ */
 function gdrcd_password_check($pass, $stored)
 {
     require_once(dirname(__FILE__) . '/PasswordHash.php');
@@ -526,6 +531,60 @@ function gdrcd_controllo_permessi_forum($tipo, $proprietari = '')
 }
 
 /**
+ * Funzione controllo permessi chat
+ * @param $location
+ * @return bool
+ * @throws Exception
+ */
+function gdrcd_controllo_chat($location) {
+    global $PARAMETERS;
+
+    $location = gdrcd_filter('num', $location);
+
+    $chat_data = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprietario, scadenza FROM mappa WHERE id=".$location." LIMIT 1");
+    $private = gdrcd_filter('num', $chat_data['privata']);
+
+    // Se la stanza è privata
+    if($private) {
+
+        // Controllo permessi utente
+        $spy_room_enabled = $PARAMETERS['mode']['spyprivaterooms'] === 'ON';
+        $isModerator = ($_SESSION['permessi'] >= MODERATOR);
+        if($spy_room_enabled && $isModerator){
+            return true;
+        }
+
+        // Controllo scadenza stanza, se non scaduta
+        $expiring = $chat_data['scadenza'];
+        $actual_time = strftime('%Y-%m-%d %H:%M:%S');
+        if($expiring > $actual_time) {
+
+            // Controllo membri della stanza
+            $owner = gdrcd_filter('out', $chat_data['proprietario']);
+            $me = gdrcd_filter('out',gdrcd_capital_letter($_SESSION['login']));
+            $mineGuild = gdrcd_filter('out', $_SESSION['gilda']);
+            $chat_invited = explode(',', $chat_data['invitati']);
+
+            if ($owner === $me) { // Se l'utente è il proprietario
+                return true;
+            }
+
+            if (strpos($mineGuild, $owner)) {  // Se l'utente è nella gilda del proprietario
+                return true;
+            }
+
+            if (in_array($me, $chat_invited, true)) { // Se l'utente è tra gli invitati
+                return true;
+            }
+        }
+    } else {
+       return true;
+    }
+
+    return false;
+}
+
+/**
  * Controlla se l'utente è loggato da pochi minuti. Utile per l'icona entra/esce
  * @param string $time : data in un formato leggibile da strtotime()
  * @return int
@@ -556,7 +615,7 @@ function gdrcd_check_time($time)
 /**
  * Provvede al caricamento degli elementi nell'interfaccia
  * E' approssimata ma funziona, se qualcuno vuol far di meglio si faccia avanti
- * @param string $path : il percorso filesystem del file da includere
+ * @param string $page : il percorso filesystem del file da includere
  * @param array $params : un array di dati aggiuntivi passabili al modulo
  */
 function gdrcd_load_modules($page, $params = [])
@@ -579,7 +638,7 @@ function gdrcd_load_modules($page, $params = [])
         }
 
         // Includo il modulo
-        include($modulePath);
+        include_once($modulePath);
     }
     catch(Exception $e) {
         echo $e->getMessage();
@@ -656,7 +715,7 @@ function gdrcd_pages_path($page)
 /**
  * Funzione di formattazione per la data nel formato italiano
  * @param string $date_in : la data in un formato leggibile da strtotime()
- * @return la data nel formato dd/mm/yyyy
+ * @return string : la data nel formato dd/mm/yyyy
  */
 function gdrcd_format_date($date_in)
 {
@@ -666,7 +725,7 @@ function gdrcd_format_date($date_in)
 /**
  * Funzione di formattazione del tempo nel formato italiano
  * @param string $time_in : la data-ora in un formato leggibile da strtotime()
- * @return l'ora nel formato hh:mm
+ * @return string : l'ora nel formato hh:mm
  */
 function gdrcd_format_time($time_in)
 {
@@ -676,7 +735,7 @@ function gdrcd_format_time($time_in)
 /**
  * Funzione di formattazione data completa nel formato italiano
  * @param $datetime_in : la data e ora in formato leggibile da strtotime()
- * @return string la data/ora nel formato DD/MM/YYYY hh:mm
+ * @return string : la data/ora nel formato DD/MM/YYYY hh:mm
  */
 function gdrcd_format_datetime($datetime_in)
 {
@@ -696,7 +755,7 @@ function gdrcd_format_datetime_standard($datetime_in)
 /**
  * Funzione di formattazione data completa nel formato ita per nome file da catalogare
  * @param string $datetime_in : la data e ora in formato leggibile da strtotime()
- * @return data ora formattata nel formato YYYYMMDD_hhmm
+ * @return string : data ora formattata nel formato YYYYMMDD_hhmm
  */
 function gdrcd_format_datetime_cat($datetime_in)
 {
@@ -706,7 +765,7 @@ function gdrcd_format_datetime_cat($datetime_in)
 /**
  * Trasforma la prima lettera della parola in maiuscolo
  * @param string $word : la parola da manipolare
- * @return $word con solo la prima lettera maiuscola
+ * @return string : $word con solo la prima lettera maiuscola
  */
 function gdrcd_capital_letter($word)
 {
@@ -720,7 +779,7 @@ function gdrcd_safe_name($word)
 
 /**
  * Genera una password casuale, esclusivamente alfabetica con lettere maiuscole
- * @return una stringa casuale lunga 8 caratteri
+ * @return string : una stringa casuale lunga 8 caratteri
  */
 function gdrcd_genera_pass()
 {
@@ -737,7 +796,7 @@ function gdrcd_genera_pass()
  * Secondo me, questo bbcode presenta non poche vulnerabilità.
  * TODO Andrebbe aggiornata per essere più sicura
  * @param string $str : la stringa con i bbcode da tradurre, dovrebbe già essere stata filtrata per l'output su pagina web
- * @return $str con i tag bbcode tradotti in html
+ * @return array|string|string[]|null $str con i tag bbcode tradotti in html
  * @author Blancks
  */
 function gdrcd_bbcoder($str)
@@ -783,7 +842,7 @@ function gdrcd_bbcoder($str)
  * Aggiunge la chiusura dei tag BBCode per impedire agli utenti di rompere l'HTML del sito
  * @param array|string $tag : il tag da controllare, senza le parentesi quadre, può essere un array di tag
  * @param $body : il testo in cui controllare
- * @return Il testo corretto
+ * @return string : Il testo corretto
  * TODO aggiunge correttamente i tag non chiusi, ma non fa nulla se ci sono troppi tag di chiusura
  */
 function gdrcd_close_tags($tag, $body)
@@ -796,9 +855,7 @@ function gdrcd_close_tags($tag, $body)
         $opentags = preg_match_all('/\[' . $tag . '/i', $body);
         $closed = preg_match_all('/\[\/' . $tag . '\]/i', $body);
         $unclosed = $opentags - $closed;
-        for ($i = 0; $i < $unclosed; $i++) {
-            $body .= '[/' . $tag . ']';
-        }
+        $body .= str_repeat('[/' . $tag . ']', $unclosed);
     }
 
     return $body;
@@ -811,12 +868,12 @@ function gdrcd_close_tags($tag, $body)
  */
 function gdrcd_redirect($url, $tempo = false)
 {
-    if (!headers_sent() && $tempo == false) {
+    if (!headers_sent() && !$tempo) {
         header('Location:' . $url);
-    } elseif (!headers_sent() && $tempo != false) {
+    } elseif (!headers_sent() && $tempo) {
         header('Refresh:' . $tempo . ';' . $url);
     } else {
-        if ($tempo == false) {
+        if (!$tempo) {
             $tempo = 0;
         }
         echo "<meta http-equiv=\"refresh\" content=\"" . $tempo . ";" . $url . "\">";
@@ -846,7 +903,7 @@ function gdrcd_angs($str)
  * Colora in HTML le parti di testo comprese tra parentesi angolari o parentesi quadre
  * Si usa in chat
  * @param string $str : la stringa da controllare
- * @return $str con la parti colorate
+ * @return array|string|string[]|null $str con la parti colorate
  */
 function gdrcd_chatcolor($str)
 {
@@ -866,7 +923,8 @@ function gdrcd_chatcolor($str)
  * Sottolinea in HTML una stringa presente in un testo. Usata per sottolineare il proprio nome in chat
  * @param string $user : la stringa da sottolineare, in genere un nome utente
  * @param string $str : la stringa in cui cercare e sottolineare $user
- * @return $str con tutte le occorrenze di $user sottolineate
+ * @param bool $master : determino se ad inviare l'azione è un master o meno
+ * @return array|string|string[]|null $str con tutte le occorrenze di $user sottolineate
  */
 function gdrcd_chatme($user, $str, $master = false)
 {
@@ -884,21 +942,23 @@ function gdrcd_chatme($user, $str, $master = false)
  * Crea un campo di autocompletamento HTML5 (<datalist>) per vari contenuti
  * @param string $str : specifica il soggetto di cui creare la lista. Attualmente è supportato solo 'personaggi', che crea una lista di tutti gli utenti del gdr
  * @return string il tag html <datalist> già pronto per essere stampato sulla pagina
+ * @throws Exception
  */
 function gdrcd_list($str)
 {
-    switch (strtolower($str)) {
-        case 'personaggi':
-            $list = '<datalist id="personaggi">';
-            $query = "SELECT nome FROM personaggio ORDER BY nome";
-            $characters = gdrcd_query($query, 'result');
+    // Inizializzo la variabile
+    $list = '';
 
-            while ($option = gdrcd_query($characters, 'fetch')) {
-                $list .= '<option value="' . $option['nome'] . '" />';//TODO escape HTMl del nome!
-            }
-            gdrcd_query($characters, 'free');
-            $list .= '</datalist>';
-            break;
+    if (strtolower($str) == 'personaggi') {
+        $list = '<datalist id="personaggi">';
+        $query = "SELECT nome FROM personaggio ORDER BY nome";
+        $characters = gdrcd_query($query, 'result');
+
+        while ($option = gdrcd_query($characters, 'fetch')) {
+            $list .= '<option value="' . $option['nome'] . '" />';//TODO escape HTMl del nome!
+        }
+        gdrcd_query($characters, 'free');
+        $list .= '</datalist>';
     }
 
     return $list;

@@ -31,6 +31,7 @@ if( ! empty($_SESSION['login'])) {
         $_SESSION['luogo'] = $_REQUEST['dir'];
     }
 }
+ 
 
 /* INFORMAZIONI SU GDRCD */
 $PARAMETERS['info']['GDRCD'] = '5.6.0.6'; //versione di GDRCD
@@ -257,6 +258,14 @@ $PARAMETERS['settings']['cars_cap'] = 10;//Punteggio massimo per una caratterist
 $PARAMETERS['settings']['cars_sum'] = 40;//Punteggio totale da distribuire tra le caratteristiche in fase di iscrizione.
 $PARAMETERS['settings']['view_logs'] = 10; //Numero di log visualizzato.
 $PARAMETERS['settings']['auto_salary'] = 'OFF'; //ON per attivare l'accredito automatico dello stipendio al primo login
+
+/**
+ * Attesa di riconnessione
+ * Imposta l'intervallo di attesa per la riconessione, in modo da evitare i doppi login.
+ * Il valore è espresso in secondi (300 = 5 minuti)
+ * Se il valore è impostato a 0, il sistema non effettua alcun controllo
+ */
+$PARAMETERS['settings']['reconnection_cooldown'] = 300;
 
 
 

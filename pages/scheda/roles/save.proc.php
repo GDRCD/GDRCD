@@ -409,14 +409,6 @@ $handleDBConnection = gdrcd_connect();
 
         /* Elimino il file temporaneo */
         unlink($file);
-
-        /* Chiudo la finestra aperta */
-
-    ?>
-        <script language="JavaScript1.2">
-            self.close();
-        </script>
-    <?php
     }
 
 ?>

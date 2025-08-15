@@ -189,13 +189,17 @@
                         </table>
                     </div>
                     <!-- link nuova serie esiti -->
-                    <div class="link_back">
+                    
+                    <?php
+                }
+                ?>
+                <div class="link_back">
                         <a href='main.php?page=servizi_esitinew&op=first'>
                             Apri una nuova serie di esiti
                         </a>
                     </div>
-                    <?php
-                }
+
+            <?php 
             }
         ?>
     </div>

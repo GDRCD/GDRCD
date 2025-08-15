@@ -8,7 +8,7 @@ IMPORTANTE! non cancellate alcuna delle righe, ne modificate quanto scritto tra 
 $MESSAGE['homepage']['main_content']['site_title'] = '<img src="imgs/logo_gdrcd.png" alt="GDRCD"/>';
 $MESSAGE['homepage']['main_content']['site_subtitle'] = 'Il CMS Open Source per i Giochi di Ruolo play-by-chat';
 $MESSAGE['homepage']['main_content']['welcome'] = 'Benvenuto in GDRCD!';
-$MESSAGE['homepage']['main_content']['infos'] = 'Prima di iniziare a realizzare il tuo sito, hai letto la LICENZA D\'USO che accompagna il prodotto? Se non l\'hai ancora fatto premurati gentilmente di leggerla. Troverai le istruzioni su come utilizzare  GDRCD 5.4 nel manuale allegato. Buon diverimento!';
+$MESSAGE['homepage']['main_content']['infos'] = 'Prima di iniziare a realizzare il tuo sito, hai letto la LICENZA D\'USO che accompagna il prodotto? Se non l\'hai ancora fatto premurati gentilmente di leggerla. Troverai le istruzioni su come utilizzare  GDRCD 5.4 nel manuale allegato. Buon divertimento!';
 /*Box informativi*/
 $MESSAGE['homepage']['forms']['access_to'] = 'Accedi';
 $MESSAGE['homepage']['forms']['username'] = 'User';
@@ -380,9 +380,11 @@ $MESSAGE['interface']['pg_list']['select'] = 'Visualizza il personaggio';
 $MESSAGE['interface']['pg_list']['search']['title'] = 'Ricerca Personaggio';
 $MESSAGE['interface']['pg_list']['search']['img'] = 'Avatar Chat';
 $MESSAGE['interface']['pg_list']['search']['personaggio'] = 'Personaggio';
+$MESSAGE['interface']['pg_list']['search']['nome'] = 'Nome';
 $MESSAGE['interface']['pg_list']['search']['sesso'] = 'Sesso';
 $MESSAGE['interface']['pg_list']['search']['razza'] = 'Razza';
-$MESSAGE['interface']['pg_list']['search']['limit'] = 'Limite personaggio estratti. Inserire 0 per ottenerli tutti.';
+$MESSAGE['interface']['pg_list']['search']['limit'] = 'Limite personaggio estratti';
+$MESSAGE['interface']['pg_list']['search']['limit_info'] = 'Inserire 0 per ottenerli tutti.';
 $MESSAGE['interface']['pg_list']['search']['submit'] = 'Cerca';
 /*Elenco abilita*/
 $MESSAGE['interface']['skills']['page_name'] = 'Elenco abilità';
@@ -611,17 +613,18 @@ $MESSAGE['interface']['administration']['plot']['link']['back'] = 'Torna all\'el
 $MESSAGE['interface']['administration']['plot']['link']['new'] = 'Nuovo capitolo';
 /*Manutensione*/
 $MESSAGE['interface']['administration']['maintenance']['page_name'] = 'Manutenzione';
-$MESSAGE['interface']['administration']['maintenance']['link']['back'] = 'Indietro...';
-$MESSAGE['interface']['administration']['maintenance']['old_log'] = 'Elimina log più vecchi di';
-$MESSAGE['interface']['administration']['maintenance']['old_chat'] = 'Elimina log di chat più vecchi di';
-$MESSAGE['interface']['administration']['maintenance']['old_messages'] = 'Elimina messaggi più vecchi di';
-$MESSAGE['interface']['administration']['maintenance']['old_messages_info'] = 'Saranno cancellati anche i backup dei messaggi.';
-$MESSAGE['interface']['administration']['maintenance']['missing'] = 'Elimina i personaggi che non effettuano il login da più di';
-$MESSAGE['interface']['administration']['maintenance']['missing_info'] = 'Non sarà possibile ripristinarli.';
-$MESSAGE['interface']['administration']['maintenance']['deleted'] = 'Elimina i personaggi provvisoriamente cancellati';
-$MESSAGE['interface']['administration']['maintenance']['deleted_info'] = 'Non sarà più possibile ripristinarli.';
-$MESSAGE['interface']['administration']['maintenance']['blacklisted'] = 'Cancella la blacklist';
-$MESSAGE['interface']['administration']['maintenance']['blacklisted_info'] = '';
+$MESSAGE['interface']['administration']['maintenance']['old_log']['title'] = 'Pulisci Log';
+$MESSAGE['interface']['administration']['maintenance']['old_log']['info'] = 'Indica qui di quanto tempo devono essere vecchi i log per essere eliminati.';
+$MESSAGE['interface']['administration']['maintenance']['old_chat']['title'] = 'Pulisci Chat';
+$MESSAGE['interface']['administration']['maintenance']['old_chat']['info'] = 'Indica qui di quanto tempo devono essere vecchi i messaggi delle chat per essere eliminati.';
+$MESSAGE['interface']['administration']['maintenance']['old_messages']['title'] = 'Pulisci Messaggi';
+$MESSAGE['interface']['administration']['maintenance']['old_messages']['info'] = 'Indica qui di quanto tempo devono essere vecchi i messaggi per essere eliminati. Non sarà più possibile ripristinarli.';
+$MESSAGE['interface']['administration']['maintenance']['deleted_users']['title'] = 'Elimina Personaggi Temporaneamente Eliminati';
+$MESSAGE['interface']['administration']['maintenance']['deleted_users']['info'] = 'Non sarà più possibile ripristinarli.';
+$MESSAGE['interface']['administration']['maintenance']['missing_users']['title'] = 'Elimina Personaggi Non Attivi';
+$MESSAGE['interface']['administration']['maintenance']['missing_users']['info'] = 'Indica da quanto tempo un personaggio deve essere inattivo per essere eliminato. Non sarà più possibile ripristinarlo.';
+$MESSAGE['interface']['administration']['maintenance']['blacklisted']['title'] = 'Pulisci Blacklist';
+$MESSAGE['interface']['administration']['maintenance']['blacklisted']['info'] = '';
 $MESSAGE['interface']['administration']['maintenance']['months'] = 'mesi';
 /*Log*/
 $MESSAGE['interface']['administration']['log']['events']['page_name'] = 'Log eventi';
