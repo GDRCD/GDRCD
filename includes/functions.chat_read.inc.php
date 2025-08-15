@@ -394,7 +394,7 @@ function gdrcd_chat_dice_format($azione)
     return <<<HTML
         <div class="chat_row_{$azione_tipo}">
             {$chat_time}
-            <span class="chat_dice">{$messaggio_dadi}</span>
+            <span class="chat_dice_body">{$messaggio_dadi}</span>
         </div>
         HTML;
 }
