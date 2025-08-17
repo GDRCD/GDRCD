@@ -754,200 +754,6 @@ function gdrcd_chat_private_list_format($azione)
 }
 
 /**
- * Ritorna la formattazione html per il corpo dei messaggi in chat.
- * Se $azione è un array, formatta il campo 'testo'; se è una stringa, la usa direttamente.
- *
- * @param string|array{
- *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
- *      url_img_chat: string,
- *      ora: string,
- *      imgs: string,
- *      testo: string,
- * } $azione
- * @param bool $use_filter Default true. Se posto su false esclude l'uso interno di gdrcd_filter 'out'
- * @return string
- */
-function gdrcd_chat_body_component($azione, $use_filter = true)
-{
-    $message = is_array($azione)
-        ? $azione['testo'] // se $azione è un array formatta 'testo'
-        : $azione;         // se azione è una stringa la usa com'è
-
-    if ($use_filter) {
-        $message = gdrcd_filter('out', $message);
-    }
-
-    return <<<HTML
-        <span class="chat_msg">{$message}</span>
-        HTML;
-}
-
-/**
- * Ritorna la formattazione html per il nome del mittente di un messaggio in chat.
- * Se $azione è un array, formatta il campo 'mittente'; se è una stringa, la usa direttamente.
- *
- * @param string|array{
- *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
- *      url_img_chat: string,
- *      ora: string,
- *      imgs: string,
- *      testo: string,
- * } $azione
- * @param bool $use_filter Default true. Se posto su false esclude l'uso interno di gdrcd_filter 'out'
- * @return string HTML contenente il nome formattato del mittente
- */
-function gdrcd_chat_name_component($azione, $use_filter = true)
-{
-    $message = is_array($azione)
-        ? $azione['mittente'] // se $azione è un array formatta 'mittente'
-        : $azione;            // se azione è una stringa la usa com'è
-
-    if ($use_filter) {
-        $message = gdrcd_filter('out', $message);
-    }
-
-    return <<<HTML
-        <span class="chat_name">{$message}</span>
-        HTML;
-}
-
-/**
- * Ritorna la formattazione html per il corpo del messaggio in chat
- * con supporto alla colorazione interna alle parentesi.
- * Se $azione è un array, formatta il campo 'testo'; se è una stringa, la usa direttamente.
- *
- * @param array{
- *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
- *      url_img_chat: string,
- *      ora: string,
- *      imgs: string,
- *      testo: string,
- * } $azione
- * @param null|string $utente Nome utente da evidenziare nel messaggio, se non indicato userà quello in sessione. Si può disattivare indicando esplicitamente null come valore.
- * @return string
- */
-function gdrcd_chat_body_with_colors_component($azione, $utente = '')
-{
-    $message = is_array($azione)
-        ? $azione['testo'] // se $azione è un array formatta 'testo'
-        : $azione;         // se azione è una stringa la usa com'è
-
-    // TODO: refactor gdrcd_chatcolor and gdrcd_chatme and move it to this file
-    $message = gdrcd_chatcolor(gdrcd_filter('out', $message));
-
-    if ($utente === '') {
-        $utente = $_SESSION['login'];
-    }
-
-    if ($utente !== null) {
-        $message = gdrcd_chatme($utente, $message);
-    }
-
-    return gdrcd_chat_body_component($message, false);
-}
-
-/**
- * Ritorna la formattazione html per il tag del messaggio in chat.
- * Se $azione è un array, formatta il campo 'destinatario'; se è una stringa, la usa direttamente.
- *
- * @param array{
- *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
- *      url_img_chat: string,
- *      ora: string,
- *      imgs: string,
- *      testo: string,
- * } $azione
- * @param bool $use_filter Default true. Se posto su false esclude l'uso interno di gdrcd_filter 'out'
- * @return string
- */
-function gdrcd_chat_tag_component($azione, $use_filter = true)
-{
-    $tag = is_array($azione)
-        ? $azione['destinatario'] // se $azione è un array formatta 'destinatario'
-        : $azione;                // se azione è una stringa la usa com'è
-
-    if ($use_filter) {
-        $tag = gdrcd_filter('out', $tag);
-    }
-
-    return <<<HTML
-        <span class="chat_tag">[{$tag}]</span>
-        HTML;
-}
-
-/**
- * Ritorna la formattazione html per il nome del mittente del messaggio in chat.
- * Se $azione è un array, formatta il campo 'mittente'; se è una stringa, la usa direttamente.
- *
- * @param array{
- *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
- *      url_img_chat: string,
- *      ora: string,
- *      imgs: string,
- *      testo: string,
- * } $azione
- * @param bool $use_filter Default true. Se posto su false esclude l'uso interno di gdrcd_filter 'out'
- * @return string
- */
-function gdrcd_chat_sender_component($azione, $use_filter = true)
-{
-    $mittente = is_array($azione)
-        ? $azione['mittente'] // se $azione è un array formatta 'mittente'
-        : $azione;            // se azione è una stringa la usa com'è
-
-    if ($use_filter) {
-        $mittente = gdrcd_filter('out', $mittente);
-    }
-
-    return <<<HTML
-        <a
-            class="chat_sender"
-            href="#"
-            onclick="
-                javascript:document.getElementById('tag').value='{$mittente}';
-                document.getElementById('tipo')[2].selected = '1';
-                document.getElementById('message').focus();"
-        >
-            {$mittente}
-        </a>
-        HTML;
-}
-
-/**
- * Ritorna la formattazione html per l'orario del messaggio in chat.
- * Se $azione è un array, formatta il campo 'ora'; se è una stringa, la usa direttamente.
- *
- * @param array{
- *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
- *      url_img_chat: string,
- *      ora: string,
- *      imgs: string,
- *      testo: string,
- * } $azione
- * @return string
- */
-function gdrcd_chat_time_component($azione)
-{
-    $time = gdrcd_format_time(is_array($azione) ? $azione['ora'] : $azione);
-
-    return <<<HTML
-        <span class="chat_time">{$time}</span>
-        HTML;
-}
-
-/**
  * Ritorna la formattazione html per l'avatar in chat del personaggio.
  *  - Se $PARAMETERS['settings']['chat_avatar']['link']['mode'] è abilitato, l'avatar sarà cliccabile
  *  - Se $PARAMETERS['settings']['chat_avatar']['link']['popup'] è abilitato, il link sarà aperto con modalWindow()
@@ -999,6 +805,30 @@ function gdrcd_chat_avatar_component($azione)
 }
 
 /**
+ * Ritorna la formattazione html per l'orario del messaggio in chat.
+ * Se $azione è un array, formatta il campo 'ora'; se è una stringa, la usa direttamente.
+ *
+ * @param array{
+ *      tipo: string,
+ *      mittente: string,
+ *      destinatario: string,
+ *      url_img_chat: string,
+ *      ora: string,
+ *      imgs: string,
+ *      testo: string,
+ * } $azione
+ * @return string
+ */
+function gdrcd_chat_time_component($azione)
+{
+    $time = gdrcd_format_time(is_array($azione) ? $azione['ora'] : $azione);
+
+    return <<<HTML
+        <span class="chat_time">{$time}</span>
+        HTML;
+}
+
+/**
  * Ritorna la formattazione html per le icone in chat del personaggio.
  * Le icone attualmente formattate da questo metodo sono quelle relative
  * a razza e genere del personaggio.
@@ -1037,6 +867,176 @@ function gdrcd_chat_icons_component($azione)
             <img class="presenti_ico" src="{$icona_genere_url}">
         </span>
         HTML;
+}
+
+/**
+ * Ritorna la formattazione html per il nome del mittente di un messaggio in chat.
+ * Se $azione è un array, formatta il campo 'mittente'; se è una stringa, la usa direttamente.
+ *
+ * @param string|array{
+ *      tipo: string,
+ *      mittente: string,
+ *      destinatario: string,
+ *      url_img_chat: string,
+ *      ora: string,
+ *      imgs: string,
+ *      testo: string,
+ * } $azione
+ * @param bool $use_filter Default true. Se posto su false esclude l'uso interno di gdrcd_filter 'out'
+ * @return string HTML contenente il nome formattato del mittente
+ */
+function gdrcd_chat_name_component($azione, $use_filter = true)
+{
+    $message = is_array($azione)
+        ? $azione['mittente'] // se $azione è un array formatta 'mittente'
+        : $azione;            // se azione è una stringa la usa com'è
+
+    if ($use_filter) {
+        $message = gdrcd_filter('out', $message);
+    }
+
+    return <<<HTML
+        <span class="chat_name">{$message}</span>
+        HTML;
+}
+
+/**
+ * Ritorna la formattazione html per il nome del mittente del messaggio in chat.
+ * Se $azione è un array, formatta il campo 'mittente'; se è una stringa, la usa direttamente.
+ *
+ * @param array{
+ *      tipo: string,
+ *      mittente: string,
+ *      destinatario: string,
+ *      url_img_chat: string,
+ *      ora: string,
+ *      imgs: string,
+ *      testo: string,
+ * } $azione
+ * @param bool $use_filter Default true. Se posto su false esclude l'uso interno di gdrcd_filter 'out'
+ * @return string
+ */
+function gdrcd_chat_sender_component($azione, $use_filter = true)
+{
+    $mittente = is_array($azione)
+        ? $azione['mittente'] // se $azione è un array formatta 'mittente'
+        : $azione;            // se azione è una stringa la usa com'è
+
+    if ($use_filter) {
+        $mittente = gdrcd_filter('out', $mittente);
+    }
+
+    return <<<HTML
+        <a
+            class="chat_sender"
+            href="#"
+            onclick="
+                javascript:document.getElementById('tag').value='{$mittente}';
+                document.getElementById('tipo')[2].selected = '1';
+                document.getElementById('message').focus();"
+        >
+            {$mittente}
+        </a>
+        HTML;
+}
+
+/**
+ * Ritorna la formattazione html per il tag del messaggio in chat.
+ * Se $azione è un array, formatta il campo 'destinatario'; se è una stringa, la usa direttamente.
+ *
+ * @param array{
+ *      tipo: string,
+ *      mittente: string,
+ *      destinatario: string,
+ *      url_img_chat: string,
+ *      ora: string,
+ *      imgs: string,
+ *      testo: string,
+ * } $azione
+ * @param bool $use_filter Default true. Se posto su false esclude l'uso interno di gdrcd_filter 'out'
+ * @return string
+ */
+function gdrcd_chat_tag_component($azione, $use_filter = true)
+{
+    $tag = is_array($azione)
+        ? $azione['destinatario'] // se $azione è un array formatta 'destinatario'
+        : $azione;                // se azione è una stringa la usa com'è
+
+    if ($use_filter) {
+        $tag = gdrcd_filter('out', $tag);
+    }
+
+    return <<<HTML
+        <span class="chat_tag">[{$tag}]</span>
+        HTML;
+}
+
+/**
+ * Ritorna la formattazione html per il corpo dei messaggi in chat.
+ * Se $azione è un array, formatta il campo 'testo'; se è una stringa, la usa direttamente.
+ *
+ * @param string|array{
+ *      tipo: string,
+ *      mittente: string,
+ *      destinatario: string,
+ *      url_img_chat: string,
+ *      ora: string,
+ *      imgs: string,
+ *      testo: string,
+ * } $azione
+ * @param bool $use_filter Default true. Se posto su false esclude l'uso interno di gdrcd_filter 'out'
+ * @return string
+ */
+function gdrcd_chat_body_component($azione, $use_filter = true)
+{
+    $message = is_array($azione)
+        ? $azione['testo'] // se $azione è un array formatta 'testo'
+        : $azione;         // se azione è una stringa la usa com'è
+
+    if ($use_filter) {
+        $message = gdrcd_filter('out', $message);
+    }
+
+    return <<<HTML
+        <span class="chat_msg">{$message}</span>
+        HTML;
+}
+
+/**
+ * Ritorna la formattazione html per il corpo del messaggio in chat
+ * con supporto alla colorazione interna alle parentesi.
+ * Se $azione è un array, formatta il campo 'testo'; se è una stringa, la usa direttamente.
+ *
+ * @param array{
+ *      tipo: string,
+ *      mittente: string,
+ *      destinatario: string,
+ *      url_img_chat: string,
+ *      ora: string,
+ *      imgs: string,
+ *      testo: string,
+ * } $azione
+ * @param null|string $utente Nome utente da evidenziare nel messaggio, se non indicato userà quello in sessione. Si può disattivare indicando esplicitamente null come valore.
+ * @return string
+ */
+function gdrcd_chat_body_with_colors_component($azione, $utente = '')
+{
+    $message = is_array($azione)
+        ? $azione['testo'] // se $azione è un array formatta 'testo'
+        : $azione;         // se azione è una stringa la usa com'è
+
+    // TODO: refactor gdrcd_chatcolor and gdrcd_chatme and move it to this file
+    $message = gdrcd_chatcolor(gdrcd_filter('out', $message));
+
+    if ($utente === '') {
+        $utente = $_SESSION['login'];
+    }
+
+    if ($utente !== null) {
+        $message = gdrcd_chatme($utente, $message);
+    }
+
+    return gdrcd_chat_body_component($message, false);
 }
 
 /**
