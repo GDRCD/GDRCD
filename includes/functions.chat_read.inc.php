@@ -849,9 +849,7 @@ function gdrcd_chat_body_with_colors_format($azione, $utente = '')
         $message = gdrcd_chatme($utente, $message);
     }
 
-    return <<<HTML
-        <span class="chat_msg">{$message}</span>
-        HTML;
+    return gdrcd_chat_body_format($message, false);
 }
 
 /**
