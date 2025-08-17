@@ -150,42 +150,6 @@ function gdrcd_chat_is_room_owner($luogo)
 }
 
 /**
- * Abilita il modulo specificato impostando la costante GDRCD_ENABLED_MODULE.
- * Utilizzato per garantire la legittimità del caricamento dei file inclusi dinamicamente.
- *
- * @see gdrcd_chat_op_require_enable
- *
- * @param string|int $id Identificativo del modulo da abilitare
- * @return void
- */
-function gdrcd_module_enable($id)
-{
-    if ( !defined('GDRCD_ENABLED_MODULE') ) {
-        define('GDRCD_ENABLED_MODULE', $id);
-    }
-}
-
-/**
- * Verifica che le operazioni siano consentite per il modulo specificato.
- * Termina lo script con HTTP 403 se il modulo non è abilitato.
- *
- * @param string|int $id Identificativo del modulo da verificare
- * @return void Terminazione dello script se non consentito
- */
-function gdrcd_chat_module_allowed($id)
-{
-    if ( !defined('GDRCD_ENABLED_MODULE') || GDRCD_ENABLED_MODULE !== $id ) {
-
-        if (!headers_sent()) {
-            http_response_code(403);
-        }
-
-        die($GLOBALS['MESSAGE']['error']['unknown_operation']);
-
-    }
-}
-
-/**
  * Salva in sessione il tag di locazione da associare ai messaggi di chat inviati.
  *
  * Il tag rappresenta una stringa identificativa della posizione o stanza
