@@ -202,13 +202,13 @@ function gdrcd_chat_image_format($azione)
 function gdrcd_chat_png_format($azione)
 {
     // formattazione orario del messaggio
-    $chat_time = gdrcd_chat_time_format($azione);
+    $chat_time = gdrcd_chat_time_component($azione);
 
     // formattazione corpo messaggio
-    $chat_body = gdrcd_chat_body_with_colors_format($azione, null);
+    $chat_body = gdrcd_chat_body_with_colors_component($azione, null);
 
     // formattazione nome del png
-    $chat_png_name = gdrcd_chat_name_format($azione['destinatario']);
+    $chat_png_name = gdrcd_chat_name_component($azione['destinatario']);
 
     // Tipologia di azione. Es: N
     $azione_tipo = $azione['tipo'];
@@ -282,10 +282,10 @@ function gdrcd_chat_item_format($azione)
     $MESSAGE = $GLOBALS['MESSAGE'];
 
     // formattazione orario del messaggio
-    $chat_time = gdrcd_chat_time_format($azione);
+    $chat_time = gdrcd_chat_time_component($azione);
 
     // formattazione mittente del messaggio in chat
-    $chat_mittente = gdrcd_chat_name_format($azione);
+    $chat_mittente = gdrcd_chat_name_component($azione);
 
     // decodifica il messaggio
     $body = json_decode($azione['testo'], true);
@@ -330,10 +330,10 @@ function gdrcd_chat_dice_format($azione)
     $MESSAGE = $GLOBALS['MESSAGE'];
 
     // formattazione orario del messaggio
-    $chat_time = gdrcd_chat_time_format($azione);
+    $chat_time = gdrcd_chat_time_component($azione);
 
     // formattazione mittente del messaggio in chat
-    $chat_mittente = gdrcd_chat_name_format($azione);
+    $chat_mittente = gdrcd_chat_name_component($azione);
 
     // Tipologia di azione. Es: C
     $azione_tipo = $azione['tipo'];
@@ -425,10 +425,10 @@ function gdrcd_chat_skill_format($azione)
     $MESSAGE = $GLOBALS['MESSAGE'];
 
     // formattazione orario del messaggio
-    $chat_time = gdrcd_chat_time_format($azione);
+    $chat_time = gdrcd_chat_time_component($azione);
 
     // formattazione mittente del messaggio in chat
-    $chat_mittente = gdrcd_chat_name_format($azione);
+    $chat_mittente = gdrcd_chat_name_component($azione);
 
     // decodifica il messaggio
     $body = json_decode($azione['testo'], true);
@@ -502,10 +502,10 @@ function gdrcd_chat_stats_format($azione)
     $MESSAGE = $GLOBALS['MESSAGE'];
 
     // formattazione orario del messaggio
-    $chat_time = gdrcd_chat_time_format($azione);
+    $chat_time = gdrcd_chat_time_component($azione);
 
     // formattazione mittente del messaggio in chat
-    $chat_mittente = gdrcd_chat_name_format($azione);
+    $chat_mittente = gdrcd_chat_name_component($azione);
 
     // decodifica il messaggio
     $body = json_decode($azione['testo'], true);
@@ -596,9 +596,9 @@ function gdrcd_chat_whisper_format($azione)
     }
 
     // formattazione mittente del messaggio in chat
-    $chat_mittente = gdrcd_chat_name_format($mittente_o_destinatario);
+    $chat_mittente = gdrcd_chat_name_component($mittente_o_destinatario);
 
-    $chat_body = gdrcd_chat_body_format($azione);
+    $chat_body = gdrcd_chat_body_component($azione);
 
     // Tipologia di azione. Es: S
     $azione_tipo = $azione['tipo'];
@@ -633,30 +633,30 @@ function gdrcd_chat_action_format($azione)
 
     // formattazione avatar di chat
     $chat_avatar = $PARAMETERS['mode']['chat_avatar'] == 'ON' && !empty($azione['url_img_chat'])
-        ? gdrcd_chat_avatar_format($azione)
+        ? gdrcd_chat_avatar_component($azione)
         : '';
 
     // formattazione orario del messaggio
-    $chat_time = gdrcd_chat_time_format($azione);
+    $chat_time = gdrcd_chat_time_component($azione);
 
     // formattazione icone
     $chat_icons = $PARAMETERS['mode']['chaticons'] == 'ON'
-        ? gdrcd_chat_icons_format($azione)
+        ? gdrcd_chat_icons_component($azione)
         : '';
 
     // formattazione nome mittente
-    $chat_sender = gdrcd_chat_sender_format($azione);
+    $chat_sender = gdrcd_chat_sender_component($azione);
 
     // formattazione tag
     $chat_tag = !empty($azione['destinatario'])
-        ? gdrcd_chat_tag_format($azione)
+        ? gdrcd_chat_tag_component($azione)
         : '';
 
     // formattazione mittente del messaggio in chat
-    $chat_mittente_e_tag = gdrcd_chat_name_format($chat_sender . $chat_tag, false);
+    $chat_mittente_e_tag = gdrcd_chat_name_component($chat_sender . $chat_tag, false);
 
     // formattazione corpo messaggio
-    $chat_body = gdrcd_chat_body_with_colors_format($azione);
+    $chat_body = gdrcd_chat_body_with_colors_component($azione);
 
     // Tipologia di azione. Es: A
     $azione_tipo = $azione['tipo'];
@@ -694,30 +694,30 @@ function gdrcd_chat_message_format($azione)
 
     // formattazione avatar di chat
     $chat_avatar = $PARAMETERS['mode']['chat_avatar'] == 'ON' && !empty($azione['url_img_chat'])
-        ? gdrcd_chat_avatar_format($azione)
+        ? gdrcd_chat_avatar_component($azione)
         : '';
 
     // formattazione orario del messaggio
-    $chat_time = gdrcd_chat_time_format($azione);
+    $chat_time = gdrcd_chat_time_component($azione);
 
     // formattazione icone
     $chat_icons = $PARAMETERS['mode']['chaticons'] == 'ON'
-        ? gdrcd_chat_icons_format($azione)
+        ? gdrcd_chat_icons_component($azione)
         : '';
 
     // formattazione nome mittente
-    $chat_sender = gdrcd_chat_sender_format($azione);
+    $chat_sender = gdrcd_chat_sender_component($azione);
 
     // formattazione tag
     $chat_tag = !empty($azione['destinatario'])
-        ? gdrcd_chat_tag_format($azione)
+        ? gdrcd_chat_tag_component($azione)
         : '';
 
     // formattazione mittente del messaggio in chat
-    $chat_mittente_e_tag = gdrcd_chat_name_format($chat_sender . $chat_tag . ':', false);
+    $chat_mittente_e_tag = gdrcd_chat_name_component($chat_sender . $chat_tag . ':', false);
 
     // formattazione corpo messaggio
-    $chat_body = gdrcd_chat_body_with_colors_format($azione);
+    $chat_body = gdrcd_chat_body_with_colors_component($azione);
 
     // Tipologia di azione. Es: P
     $azione_tipo = $azione['tipo'];
@@ -769,7 +769,7 @@ function gdrcd_chat_private_list_format($azione)
  * @param bool $use_filter Default true. Se posto su false esclude l'uso interno di gdrcd_filter 'out'
  * @return string
  */
-function gdrcd_chat_body_format($azione, $use_filter = true)
+function gdrcd_chat_body_component($azione, $use_filter = true)
 {
     $message = is_array($azione)
         ? $azione['testo'] // se $azione è un array formatta 'testo'
@@ -800,7 +800,7 @@ function gdrcd_chat_body_format($azione, $use_filter = true)
  * @param bool $use_filter Default true. Se posto su false esclude l'uso interno di gdrcd_filter 'out'
  * @return string HTML contenente il nome formattato del mittente
  */
-function gdrcd_chat_name_format($azione, $use_filter = true)
+function gdrcd_chat_name_component($azione, $use_filter = true)
 {
     $message = is_array($azione)
         ? $azione['mittente'] // se $azione è un array formatta 'mittente'
@@ -832,7 +832,7 @@ function gdrcd_chat_name_format($azione, $use_filter = true)
  * @param null|string $utente Nome utente da evidenziare nel messaggio, se non indicato userà quello in sessione. Si può disattivare indicando esplicitamente null come valore.
  * @return string
  */
-function gdrcd_chat_body_with_colors_format($azione, $utente = '')
+function gdrcd_chat_body_with_colors_component($azione, $utente = '')
 {
     $message = is_array($azione)
         ? $azione['testo'] // se $azione è un array formatta 'testo'
@@ -849,7 +849,7 @@ function gdrcd_chat_body_with_colors_format($azione, $utente = '')
         $message = gdrcd_chatme($utente, $message);
     }
 
-    return gdrcd_chat_body_format($message, false);
+    return gdrcd_chat_body_component($message, false);
 }
 
 /**
@@ -868,7 +868,7 @@ function gdrcd_chat_body_with_colors_format($azione, $utente = '')
  * @param bool $use_filter Default true. Se posto su false esclude l'uso interno di gdrcd_filter 'out'
  * @return string
  */
-function gdrcd_chat_tag_format($azione, $use_filter = true)
+function gdrcd_chat_tag_component($azione, $use_filter = true)
 {
     $tag = is_array($azione)
         ? $azione['destinatario'] // se $azione è un array formatta 'destinatario'
@@ -899,7 +899,7 @@ function gdrcd_chat_tag_format($azione, $use_filter = true)
  * @param bool $use_filter Default true. Se posto su false esclude l'uso interno di gdrcd_filter 'out'
  * @return string
  */
-function gdrcd_chat_sender_format($azione, $use_filter = true)
+function gdrcd_chat_sender_component($azione, $use_filter = true)
 {
     $mittente = is_array($azione)
         ? $azione['mittente'] // se $azione è un array formatta 'mittente'
@@ -938,7 +938,7 @@ function gdrcd_chat_sender_format($azione, $use_filter = true)
  * } $azione
  * @return string
  */
-function gdrcd_chat_time_format($azione)
+function gdrcd_chat_time_component($azione)
 {
     $time = gdrcd_format_time(is_array($azione) ? $azione['ora'] : $azione);
 
@@ -963,7 +963,7 @@ function gdrcd_chat_time_format($azione)
  * } $azione
  * @return string
  */
-function gdrcd_chat_avatar_format($azione)
+function gdrcd_chat_avatar_component($azione)
 {
     $PARAMETERS = $GLOBALS['PARAMETERS'];
 
@@ -1014,7 +1014,7 @@ function gdrcd_chat_avatar_format($azione)
  * } $azione
  * @return string
  */
-function gdrcd_chat_icons_format($azione)
+function gdrcd_chat_icons_component($azione)
 {
     $PARAMETERS = $GLOBALS['PARAMETERS'];
 
