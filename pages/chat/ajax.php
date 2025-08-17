@@ -26,9 +26,6 @@ if ( !gdrcd_chat_is_accessible($_SESSION['luogo']) ) {
     die();
 }
 
-// "Sblocca" il funzionamento dei files collegati ai vari "op".
-gdrcd_chat_op_set_enable();
-
 // Recupera la "op" passata nella url
 $operation = $_GET['op'];
 
@@ -50,6 +47,9 @@ switch ($operation) {
             http_response_code(501);
             die();
         }
+
+        // "Sblocca" il funzionamento dei files collegati a "chat"
+        gdrcd_module_enable('chat');
 
         // Esegue il file di operazione
         require $operation_file;

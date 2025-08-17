@@ -7,7 +7,7 @@
  */
 
 // Garantisce che che questo file sia utilizzato unicamente da /pages/chat/ajax.php
-gdrcd_chat_op_require_enabled();
+gdrcd_chat_module_allowed('chat');
 
 // Variabili di input
 $map_id = $_SESSION['luogo'];

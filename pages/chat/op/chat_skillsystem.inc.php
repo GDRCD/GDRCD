@@ -10,7 +10,7 @@
  */
 
 // Garantisce che che questo file sia utilizzato unicamente da /pages/chat/ajax.php
-gdrcd_chat_op_require_enabled();
+gdrcd_chat_module_allowed('chat');
 
 // Dati in input inviati dal giocatore
 $id_ab = $_POST['id_ab'] ?? '';

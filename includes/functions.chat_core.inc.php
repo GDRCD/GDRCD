@@ -150,32 +150,38 @@ function gdrcd_chat_is_room_owner($luogo)
 }
 
 /**
- * Definisce la costante GDRCD_ENABLE_CHAT_OP valorizzata a true.
- * Questa funzione, assieme alla sua gemella gdrcd_chat_op_require_enable(),
- * serve ad implementare un controllo di sicurezza per garantire che
- * le operazioni di funzionamento della chat possano essere utilizzate
- * unicamente nei files previsti.
+ * Abilita il modulo specificato impostando la costante GDRCD_ENABLED_MODULE.
+ * Utilizzato per garantire la legittimità del caricamento dei file inclusi dinamicamente.
  *
  * @see gdrcd_chat_op_require_enable
+ *
+ * @param string|int $id Identificativo del modulo da abilitare
  * @return void
  */
-function gdrcd_chat_op_set_enable()
+function gdrcd_module_enable($id)
 {
-    if ( !defined('GDRCD_ENABLE_CHAT_OP') ) {
-        define('GDRCD_ENABLE_CHAT_OP', true);
+    if ( !defined('GDRCD_ENABLED_MODULE') ) {
+        define('GDRCD_ENABLED_MODULE', $id);
     }
 }
 
 /**
- * Garantisce che il funzionamento delle operazioni della chat siano consentite.
+ * Verifica che le operazioni siano consentite per il modulo specificato.
+ * Termina lo script con HTTP 403 se il modulo non è abilitato.
  *
- * @return void|never termina lo script se le operazioni di chat non sono consentite
+ * @param string|int $id Identificativo del modulo da verificare
+ * @return void Terminazione dello script se non consentito
  */
-function gdrcd_chat_op_require_enabled()
+function gdrcd_chat_module_allowed($id)
 {
-    if ( !defined('GDRCD_ENABLE_CHAT_OP') || GDRCD_ENABLE_CHAT_OP !== true ) {
-        http_response_code(403);
-        die();
+    if ( !defined('GDRCD_ENABLED_MODULE') || GDRCD_ENABLED_MODULE !== $id ) {
+
+        if (!headers_sent()) {
+            http_response_code(403);
+        }
+
+        die($GLOBALS['MESSAGE']['error']['unknown_operation']);
+
     }
 }
 
