@@ -80,7 +80,7 @@ function gdrcd_chat_get_type_from_message($message)
  * } $luogo
  * @return bool true se l'utente può accedervi, false altrimenti
  */
-function gdrcd_chat_is_accessible($luogo)
+function gdrcd_chat_room_is_login_allowed($luogo)
 {
     if ($luogo === null) {
         return false;

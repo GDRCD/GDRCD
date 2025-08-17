@@ -21,7 +21,7 @@ if(gdrcd_controllo_esilio($_SESSION['login'])) {
 }
 
 // Controlla che l'utente sia abilitato ad accedere alla chat
-if ( !gdrcd_chat_is_accessible($_SESSION['luogo']) ) {
+if ( !gdrcd_chat_room_is_login_allowed($_SESSION['luogo']) ) {
     http_response_code(403);
     die();
 }

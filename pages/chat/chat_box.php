@@ -11,7 +11,7 @@
 <div class="chat_box">
     <div class="page_title"><?= gdrcd_chat_room_name($chat_info) ?></div>
 
-    <?php if( !gdrcd_chat_is_accessible($chat_info) ) { ?>
+    <?php if( !gdrcd_chat_room_is_login_allowed($chat_info) ) { ?>
 
         <div class="warning">Non sei abilitato a visualizzare questa chat.</div>
 
