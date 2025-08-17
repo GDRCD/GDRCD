@@ -921,7 +921,7 @@ function gdrcd_chat_private_invite_save(
     $MESSAGE = $GLOBALS['MESSAGE'];
 
     // Recupero le informazioni sulla chat corrente
-    $info = gdrcd_chat_info($_SESSION['luogo']);
+    $info = gdrcd_chat_room_info($_SESSION['luogo']);
 
     // Se l'utente connesso non ha i permessi per procedere, usciamo subito
     if (!gdrcd_chat_is_room_owner($info)) {
@@ -1034,7 +1034,7 @@ function gdrcd_chat_private_kick_save(
     $MESSAGE = $GLOBALS['MESSAGE'];
 
     // Recupero le informazioni sulla chat corrente
-    $info = gdrcd_chat_info($_SESSION['luogo']);
+    $info = gdrcd_chat_room_info($_SESSION['luogo']);
 
     // Se l'utente connesso non ha i permessi per procedere, usciamo subito
     if (!gdrcd_chat_is_room_owner($info)) {
@@ -1137,7 +1137,7 @@ function gdrcd_chat_private_list_save(
     $MESSAGE = $GLOBALS['MESSAGE'];
 
     // Recupero le informazioni sulla chat corrente
-    $info = gdrcd_chat_info($_SESSION['luogo']);
+    $info = gdrcd_chat_room_info($_SESSION['luogo']);
 
     // Se l'utente connesso non ha i permessi per procedere, usciamo subito
     if (!gdrcd_chat_is_room_owner($info)) {
@@ -1407,7 +1407,7 @@ function gdrcd_chat_assign_experience($message)
     }
 
     // Recupero le informazioni sulla chat corrente
-    $info = gdrcd_chat_info($_SESSION['luogo']);
+    $info = gdrcd_chat_room_info($_SESSION['luogo']);
     $chat_privata = $info['privata'] == 1;
     $exp_in_chat_privata_disattivata = $PARAMETERS['mode']['exp_in_private'] != 'ON';
 

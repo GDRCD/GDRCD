@@ -87,7 +87,7 @@ function gdrcd_chat_is_accessible($luogo)
     }
 
     $info = is_int($luogo)
-        ? gdrcd_chat_info($luogo) ?? []
+        ? gdrcd_chat_room_info($luogo) ?? []
         : $luogo;
 
     if (($info['privata'] ?? 0) != 1) {
@@ -132,7 +132,7 @@ function gdrcd_chat_is_accessible($luogo)
 function gdrcd_chat_is_room_owner($luogo)
 {
     // Recupero le informazioni sulla chat corrente
-    $info = is_array($luogo) ? $luogo : gdrcd_chat_info($luogo);
+    $info = is_array($luogo) ? $luogo : gdrcd_chat_room_info($luogo);
     $chat_scaduta = time() >= strtotime($info['scadenza']);
 
     // Se la chat non è privata oppure è scaduta nessuno può esserne il proprietario
@@ -225,7 +225,7 @@ function gdrcd_chat_room_name($luogo)
     }
 
     $info = is_int($luogo)
-        ? gdrcd_chat_info($luogo) ?? []
+        ? gdrcd_chat_room_info($luogo) ?? []
         : $luogo;
 
     return $info['nome'] ?? null;
@@ -252,7 +252,7 @@ function gdrcd_chat_room_name($luogo)
  *  scadenza: ?string,
  * }
  */
-function gdrcd_chat_info($luogo)
+function gdrcd_chat_room_info($luogo)
 {
     $stmt = gdrcd_stmt(
         'SELECT

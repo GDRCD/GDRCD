@@ -5,7 +5,7 @@
     gdrcd_chat_set_lastmessage_id(0);
 
     // Recupero le informazioni sulla chat corrente
-    $chat_info = gdrcd_chat_info($_SESSION['luogo']);
+    $chat_info = gdrcd_chat_room_info($_SESSION['luogo']);
 
 ?>
 <div class="chat_box">
