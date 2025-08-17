@@ -178,11 +178,12 @@ function gdrcd_chat_image_format($azione)
     $azione_tipo = $azione['tipo'];
 
     // Assemblo la formattazione HTML per la tipologia di messaggio
-    return <<<HTML
-        <div class="chat_row_{$azione_tipo}">
+    return gdrcd_chat_message_component(
+        $azione_tipo,
+        <<<HTML
             <img class="chat_img" src="{$image_url}" />
-        </div>
-        HTML;
+        HTML
+    );
 }
 
 /**
@@ -214,14 +215,14 @@ function gdrcd_chat_png_format($azione)
     $azione_tipo = $azione['tipo'];
 
     // Assemblo la formattazione HTML per la tipologia di messaggio
-    return <<<HTML
-        <div class="chat_row_{$azione_tipo}">
+    return gdrcd_chat_message_component(
+        $azione_tipo,
+        <<<HTML
             {$chat_time}
             {$chat_png_name}
             {$chat_body}
-            <br style="clear:both;" />
-        </div>
-        HTML;
+        HTML
+    );
 }
 
 /**
@@ -254,13 +255,13 @@ function gdrcd_chat_master_format($azione)
     $azione_tipo = $azione['tipo'];
 
     // Assemblo la formattazione HTML per la tipologia di messaggio
-    return <<<HTML
-        <div class="chat_row_{$azione_tipo}">
+    return gdrcd_chat_message_component(
+        $azione_tipo,
+        <<<HTML
             <div class="ora_ms">{$azione_time} Master Screen</div>
             <span class="chat_master">{$testo}</span>
-            <br style="clear:both;" />
-        </div>
-        HTML;
+        HTML
+    );
 }
 
 /**
@@ -302,13 +303,13 @@ function gdrcd_chat_item_format($azione)
     $azione_tipo = $azione['tipo'];
 
     // Assemblo la formattazione HTML per la tipologia di messaggio
-    return <<<HTML
-        <div class="chat_row_{$azione_tipo}">
+    return gdrcd_chat_message_component(
+        $azione_tipo,
+        <<<HTML
             {$chat_time}
             <span class="chat_items_body">{$messaggio_stats}</span>
-            <br style="clear:both;" />
-        </div>
-        HTML;
+        HTML
+    );
 }
 
 /**
@@ -398,12 +399,13 @@ function gdrcd_chat_dice_format($azione)
         HTML;
 
     // Assembla la formattazione HTML per la tipologia di messaggio
-    return <<<HTML
-        <div class="chat_row_{$azione_tipo}">
+    return gdrcd_chat_message_component(
+        $azione_tipo,
+        <<<HTML
             {$chat_time}
             <span class="chat_dice_body">{$messaggio_dadi}</span>
-        </div>
-        HTML;
+        HTML
+    );
 }
 
 /**
@@ -438,18 +440,16 @@ function gdrcd_chat_skill_format($azione)
     $azione_tipo = $azione['tipo'];
 
     // Assemblo la formattazione HTML per la tipologia di messaggio
-    return <<<HTML
-        <div class="chat_row_{$azione_tipo}">
+    return gdrcd_chat_message_component(
+        $azione_tipo,
+        <<<HTML
             {$chat_time}
-
             <span class="chat_stats_body">
                 {$chat_mittente}
                 {$chat_skill}
             </span>
-
-            <br style="clear:both;" />
-        </div>
-        HTML;
+        HTML
+    );
 }
 
 /**
@@ -484,18 +484,16 @@ function gdrcd_chat_stats_format($azione)
     $azione_tipo = $azione['tipo'];
 
     // Assemblo la formattazione HTML per la tipologia di messaggio
-    return <<<HTML
-        <div class="chat_row_{$azione_tipo}">
+    return gdrcd_chat_message_component(
+        $azione_tipo,
+        <<<HTML
             {$chat_time}
-
             <span class="chat_stats_body">
                 {$chat_mittente}
                 {$chat_stats}
             </span>
-
-            <br style="clear:both;" />
-        </div>
-        HTML;
+        HTML
+    );
 }
 
 /**
@@ -555,13 +553,13 @@ function gdrcd_chat_whisper_format($azione)
     $azione_tipo = $azione['tipo'];
 
     // Assemblo la formattazione HTML per la tipologia di messaggio
-    return <<<HTML
-        <div class="chat_row_{$azione_tipo}">
+    return gdrcd_chat_message_component(
+        $azione_tipo,
+        <<<HTML
             {$chat_mittente}:
             {$chat_body}
-            <br style="clear:both;" />
-        </div>
-        HTML;
+        HTML
+    );
 }
 
 /**
@@ -613,16 +611,16 @@ function gdrcd_chat_action_format($azione)
     $azione_tipo = $azione['tipo'];
 
     // Assemblo la formattazione HTML per la tipologia di messaggio
-    return <<<HTML
-        <div class="chat_row_{$azione_tipo}">
+    return gdrcd_chat_message_component(
+        $azione_tipo,
+        <<<HTML
             {$chat_avatar}
             {$chat_time}
             {$chat_icons}
             {$chat_mittente_e_tag}
             {$chat_body}
-            <br style="clear:both;" />
-        </div>
-        HTML;
+        HTML
+    );
 }
 
 /**
@@ -674,16 +672,16 @@ function gdrcd_chat_message_format($azione)
     $azione_tipo = $azione['tipo'];
 
     // Assemblo la formattazione HTML per la tipologia di messaggio
-    return <<<HTML
-        <div class="chat_row_{$azione_tipo}">
+    return gdrcd_chat_message_component(
+        $azione_tipo,
+        <<<HTML
             {$chat_avatar}
             {$chat_time}
             {$chat_icons}
             {$chat_mittente_e_tag}
             {$chat_body}
-            <br style="clear:both;" />
-        </div>
-        HTML;
+        HTML
+    );
 }
 
 function gdrcd_chat_private_invite_format($azione)
@@ -702,6 +700,24 @@ function gdrcd_chat_private_list_format($azione)
 {
     // FIXME: va rifattorizzata perché adesso questo tipo di azione contiene un json
     return gdrcd_chat_stats_format($azione);
+}
+
+/**
+ * Restituisce la formattazione HTML di base per un messaggio di chat.
+ * Avvolge il contenuto formattato ($azione_html) in un div con classe specifica per il tipo di messaggio.
+ *
+ * @param string $tipo Tipologia del messaggio (es: P, A, S, C, F, D, O, M, N, I, X, Y, Z)
+ * @param string $azione_html HTML già formattato relativo al contenuto del messaggio
+ * @return string HTML completo del messaggio pronto per la visualizzazione in chat
+ */
+function gdrcd_chat_message_component($tipo, $azione_html)
+{
+    return <<<HTML
+        <div class="chat_row_{$tipo}">
+            {$azione_html}
+            <br style="clear:both;" />
+        </div>
+        HTML;
 }
 
 /**
