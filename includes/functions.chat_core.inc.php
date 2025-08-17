@@ -510,6 +510,34 @@ function gdrcd_chat_get_race($raceId)
 }
 
 /**
+ * Recupera le informazioni di base di un personaggio dal database.
+ *
+ * Questa funzione esegue una query per ottenere i dati essenziali
+ * di un personaggio specifico dalla tabella `personaggio`.
+ * Utile per verificare l'esistenza del personaggio e recuperare
+ * informazioni come lo stato di salute per controlli di validazione.
+ *
+ * @param string $nome Il nome del personaggio di cui recuperare le informazioni
+ * @return null|array<string, string|int|float> Null se il personaggio non esiste,
+ * altrimenti ritorna tutti i dati del personaggio
+ */
+function gdrcd_chat_get_character($nome)
+{
+    $stmt = gdrcd_stmt(
+        'SELECT * FROM personaggio WHERE nome = ?',
+        ['s', $nome]
+    );
+
+    if (gdrcd_query($stmt, 'num_rows') === 0) {
+        return null;
+    }
+
+    $record = gdrcd_query($stmt, 'fetch');
+    gdrcd_query($stmt, 'free');
+    return $record;
+}
+
+/**
  * Recupera tutti i dadi disponibili per la chat.
  *
  * @return array<array{nome: string, facce: int}> Array di dadi
@@ -528,34 +556,6 @@ function gdrcd_chat_dice_list()
     }
 
     return $dice;
-}
-
-/**
- * Recupera le informazioni di base di un personaggio dal database.
- *
- * Questa funzione esegue una query per ottenere i dati essenziali
- * di un personaggio specifico dalla tabella `personaggio`.
- * Utile per verificare l'esistenza del personaggio e recuperare
- * informazioni come lo stato di salute per controlli di validazione.
- *
- * @param string $nome Il nome del personaggio di cui recuperare le informazioni
- * @return null|array<string, string|int|float> Null se il personaggio non esiste,
- * altrimenti ritorna tutti i dati del personaggio
- */
-function gdrcd_chat_character_info($nome)
-{
-    $stmt = gdrcd_stmt(
-        'SELECT * FROM personaggio WHERE nome = ?',
-        ['s', $nome]
-    );
-
-    if (gdrcd_query($stmt, 'num_rows') === 0) {
-        return null;
-    }
-
-    $record = gdrcd_query($stmt, 'fetch');
-    gdrcd_query($stmt, 'free');
-    return $record;
 }
 
 /**
