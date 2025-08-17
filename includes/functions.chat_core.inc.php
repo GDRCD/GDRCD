@@ -129,7 +129,7 @@ function gdrcd_chat_is_accessible($luogo)
  * } $luogo ID della chat o un array con le info della stanza corrente
  * @return bool true se l'utente corrente è il proprietario della chat privata, false altrimenti
  */
-function gdrcd_chat_is_room_owner($luogo)
+function gdrcd_chat_room_is_login_owner($luogo)
 {
     // Recupero le informazioni sulla chat corrente
     $info = is_array($luogo) ? $luogo : gdrcd_chat_room_info($luogo);

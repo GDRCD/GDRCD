@@ -924,7 +924,7 @@ function gdrcd_chat_private_invite_save(
     $info = gdrcd_chat_room_info($_SESSION['luogo']);
 
     // Se l'utente connesso non ha i permessi per procedere, usciamo subito
-    if (!gdrcd_chat_is_room_owner($info)) {
+    if (!gdrcd_chat_room_is_login_owner($info)) {
         return gdrcd_chat_status_forbidden($MESSAGE['chat']['error']['permissions']);
     }
 
@@ -1037,7 +1037,7 @@ function gdrcd_chat_private_kick_save(
     $info = gdrcd_chat_room_info($_SESSION['luogo']);
 
     // Se l'utente connesso non ha i permessi per procedere, usciamo subito
-    if (!gdrcd_chat_is_room_owner($info)) {
+    if (!gdrcd_chat_room_is_login_owner($info)) {
         return gdrcd_chat_status_forbidden($MESSAGE['chat']['error']['permissions']);
     }
 
@@ -1140,7 +1140,7 @@ function gdrcd_chat_private_list_save(
     $info = gdrcd_chat_room_info($_SESSION['luogo']);
 
     // Se l'utente connesso non ha i permessi per procedere, usciamo subito
-    if (!gdrcd_chat_is_room_owner($info)) {
+    if (!gdrcd_chat_room_is_login_owner($info)) {
         return gdrcd_chat_status_forbidden($MESSAGE['chat']['error']['permissions']);
     }
 

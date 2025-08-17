@@ -71,7 +71,7 @@
 
                     <?php } ?>
 
-                    <?php if (gdrcd_chat_is_room_owner($_SESSION['luogo'])) { ?>
+                    <?php if (gdrcd_chat_room_is_login_owner($_SESSION['luogo'])) { ?>
 
                         <!-- Invita in chat -->
                         <option value="<?php echo gdrcd_filter('out', GDRCD_CHAT_PRIVATE_INVITE_TYPE); ?>">
