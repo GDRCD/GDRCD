@@ -5,6 +5,31 @@
  */
 
 /**
+ * Salva in sessione il tag di locazione da associare ai messaggi di chat inviati.
+ *
+ * Il tag rappresenta una stringa identificativa della posizione o stanza
+ * e viene utilizzato per associare i messaggi di chat a una determinata area.
+ *
+ * @param string $tag Il tag di locazione da salvare in sessione
+ * @return void
+ */
+function gdrcd_chat_set_tag($tag)
+{
+    $_SESSION['tag'] = $tag;
+}
+
+/**
+ * Recupera il tag di locazione attualmente salvato in sessione.
+ * Il tag rappresenta la posizione del personaggio nell'ambiente definito dalla chat.
+ *
+ * @return string|null Il tag di locazione, oppure null se non impostato
+ */
+function gdrcd_chat_get_tag()
+{
+    return $_SESSION['tag'];
+}
+
+/**
  * Ritorna il codice interno della tipologia di azione determinato
  * in base al primo carattere presente in $message.
  * Se il primo carattere non permette di determinare la tipologia di azione,
@@ -147,31 +172,6 @@ function gdrcd_chat_room_is_login_owner($luogo)
     // Altrimenti si può essere proprietari se la chat è associata allo specifico personaggio
     // oppure se la chat appartiene alla gilda di cui fa parte il personaggio
     return $login_proprietario_chat || $gilda_proprietaria_chat;
-}
-
-/**
- * Salva in sessione il tag di locazione da associare ai messaggi di chat inviati.
- *
- * Il tag rappresenta una stringa identificativa della posizione o stanza
- * e viene utilizzato per associare i messaggi di chat a una determinata area.
- *
- * @param string $tag Il tag di locazione da salvare in sessione
- * @return void
- */
-function gdrcd_chat_set_tag($tag)
-{
-    $_SESSION['tag'] = $tag;
-}
-
-/**
- * Recupera il tag di locazione attualmente salvato in sessione.
- * Il tag rappresenta la posizione del personaggio nell'ambiente definito dalla chat.
- *
- * @return string|null Il tag di locazione, oppure null se non impostato
- */
-function gdrcd_chat_get_tag()
-{
-    return $_SESSION['tag'];
 }
 
 /**
