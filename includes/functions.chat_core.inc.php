@@ -300,7 +300,7 @@ function gdrcd_chat_player_skills($nome)
 }
 
 /**
- * Recupera le informazioni di una specifica abilità dal database.
+ * Recupera le informazioni di un abilità di un personaggio specifico dal database.
  *
  * Questa funzione chiama internamente gdrcd_chat_player_skills e ritorna
  * l'abilità identificata dallo $skillId fornito
@@ -559,7 +559,7 @@ function gdrcd_chat_dice_list()
 }
 
 /**
- * Imposta il codice di risposta HTTP e stampa un messaggio di errore in formato JSON.
+ * Imposta il codice di risposta HTTP e stampa un messaggio di output in formato JSON.
  *
  * @param array{code: int, message: mixed} $status Array associativo proveniente da gdrcd_chat_status()
  * @return void
@@ -613,7 +613,7 @@ function gdrcd_chat_status_ok($message)
  * Restituisce uno stato di risposta HTTP 201 (Created) per le API della chat.
  *
  * @param string $message Facoltativo. Messaggio descrittivo dello stato (default: 'Created')
- * @return array{code: int, message: string} Array associativo con codice e messaggio
+ * @return array{code: int, message: mixed} Array associativo con codice e messaggio
  */
 function gdrcd_chat_status_created($message = 'Created')
 {
@@ -625,7 +625,7 @@ function gdrcd_chat_status_created($message = 'Created')
  * Restituisce uno stato di risposta HTTP 400 (Bad Request) per le API della chat.
  *
  * @param string $message Facoltativo. Messaggio descrittivo dello stato (default: 'Invalid')
- * @return array{code: int, message: string} Array associativo con codice e messaggio
+ * @return array{code: int, message: mixed} Array associativo con codice e messaggio
  */
 function gdrcd_chat_status_invalid($message = 'Invalid')
 {
@@ -637,7 +637,7 @@ function gdrcd_chat_status_invalid($message = 'Invalid')
  * Restituisce uno stato di risposta HTTP 403 (Forbidden) per le API della chat.
  *
  * @param string $message Facoltativo. Messaggio descrittivo dello stato (default: 'Forbidden')
- * @return array{code: int, message: string} Array associativo con codice e messaggio
+ * @return array{code: int, message: mixed} Array associativo con codice e messaggio
  */
 function gdrcd_chat_status_forbidden($message = 'Forbidden')
 {
@@ -645,11 +645,11 @@ function gdrcd_chat_status_forbidden($message = 'Forbidden')
 }
 
 /**
- * Indica un operazione fallita a causa di problemi interni ( come dati inconsistenti nel db).
+ * Indica un operazione fallita a causa di problemi interni (come dati inconsistenti nel db).
  * Restituisce uno stato di risposta HTTP 500 (Internal Error) per le API della chat.
  *
  * @param string $message Facoltativo. Messaggio descrittivo dello stato (default: 'Internal Error')
- * @return array{code: int, message: string} Array associativo con codice e messaggio
+ * @return array{code: int, message: mixed} Array associativo con codice e messaggio
  */
 function gdrcd_chat_status_error($message = 'Internal Error')
 {
