@@ -684,22 +684,138 @@ function gdrcd_chat_message_format($azione)
     );
 }
 
+/**
+ * Ritorna la formattazione HTML per un messaggio di invito (X) in una chat privata.
+ * Mostra l'orario e il nome dell'utente invitato.
+ *
+ * @param array{
+ *      tipo: string,
+ *      mittente: string,
+ *      destinatario: string,
+ *      url_img_chat: string,
+ *      ora: string,
+ *      imgs: string,
+ *      testo: string,
+ * } $azione
+ * @return string
+ */
 function gdrcd_chat_private_invite_format($azione)
 {
-    // FIXME: va rifattorizzata perché adesso questo tipo di azione contiene un json
-    return gdrcd_chat_stats_format($azione);
+    $MESSAGE = $GLOBALS['MESSAGE'];
+
+    // formattazione orario del messaggio
+    $chat_time = gdrcd_chat_time_component($azione);
+
+    // decodifica il messaggio
+    $body = json_decode($azione['testo'], true);
+
+    // nome utente cacciato dalla chat privata
+    $invited = $body['invited'];
+
+    // Tipologia di azione. Es: Z
+    $azione_tipo = $azione['tipo'];
+
+    // Assemblo la formattazione HTML per la tipologia di messaggio
+    return gdrcd_chat_message_component(
+        $azione_tipo,
+        <<<HTML
+            {$chat_time}
+            {$MESSAGE['chat']['warning']['invited']}:
+            {$invited}
+        HTML
+    );
 }
 
+/**
+ * Ritorna la formattazione HTML per un messaggio di espulsione (Y) in una chat privata.
+ * Mostra l'orario e il nome dell'utente espulso.
+ *
+ * @param array{
+ *      tipo: string,
+ *      mittente: string,
+ *      destinatario: string,
+ *      url_img_chat: string,
+ *      ora: string,
+ *      imgs: string,
+ *      testo: string,
+ * } $azione
+ * @return string
+ */
 function gdrcd_chat_private_kick_format($azione)
 {
-    // FIXME: va rifattorizzata perché adesso questo tipo di azione contiene un json
-    return gdrcd_chat_stats_format($azione);
+    $MESSAGE = $GLOBALS['MESSAGE'];
+
+    // formattazione orario del messaggio
+    $chat_time = gdrcd_chat_time_component($azione);
+
+    // decodifica il messaggio
+    $body = json_decode($azione['testo'], true);
+
+    // nome utente cacciato dalla chat privata
+    $kicked = $body['kicked'];
+
+    // Tipologia di azione. Es: Z
+    $azione_tipo = $azione['tipo'];
+
+    // Assemblo la formattazione HTML per la tipologia di messaggio
+    return gdrcd_chat_message_component(
+        $azione_tipo,
+        <<<HTML
+            {$chat_time}
+            {$MESSAGE['chat']['warning']['expelled']}:
+            {$kicked}
+        HTML
+    );
 }
 
+/**
+ * Ritorna la formattazione HTML per un messaggio che mostra l'elenco degli invitati (Z) in una chat privata.
+ * Mostra l'orario e la lista degli utenti invitati, oppure un messaggio se non ci sono invitati.
+ *
+ * @param array{
+ *      tipo: string,
+ *      mittente: string,
+ *      destinatario: string,
+ *      url_img_chat: string,
+ *      ora: string,
+ *      imgs: string,
+ *      testo: string,
+ * } $azione
+ * @return string
+ */
 function gdrcd_chat_private_list_format($azione)
 {
-    // FIXME: va rifattorizzata perché adesso questo tipo di azione contiene un json
-    return gdrcd_chat_stats_format($azione);
+    $MESSAGE = $GLOBALS['MESSAGE'];
+
+    // formattazione orario del messaggio
+    $chat_time = gdrcd_chat_time_component($azione);
+
+    // decodifica il messaggio
+    $body = json_decode($azione['testo'], true);
+
+    // Formatta l'elenco degli invitati in chat
+    $chat_invitati = $MESSAGE['interface']['administration']['locations']['no_invited'];
+
+    if (!empty($body['invited_list'])) {
+        // Ordina alfabeticamente gli invitati
+        sort($body['invited_list']);
+
+        // Unisce gli invitati in una stringa separata da virgola
+        $chat_invitati = implode(', ', $body['invited_list']);
+    }
+
+    // Tipologia di azione. Es: Z
+    $azione_tipo = $azione['tipo'];
+
+    // Assemblo la formattazione HTML per la tipologia di messaggio
+    return gdrcd_chat_message_component(
+        $azione_tipo,
+        <<<HTML
+            {$chat_time}
+            {$MESSAGE['chat']['warning']['invited_list']}:
+            {$chat_invitati}
+        HTML
+    );
 }
 
 /**

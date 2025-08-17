@@ -468,6 +468,7 @@ $MESSAGE['interface']['administration']['locations']['is_privat'] = 'Stanza priv
 $MESSAGE['interface']['administration']['locations']['is_privat_info'] = 'Spuntare per rendere privata la stanza e specificare il proprietario o il gruppo di appartenenza, la scadenza ed il costo di affitto, altrimenti lasciare bianchi i campi seguenti.';
 $MESSAGE['interface']['administration']['locations']['owner'] = 'Proprietario';
 $MESSAGE['interface']['administration']['locations']['owner_default'] = 'Nessuno';
+$MESSAGE['interface']['administration']['locations']['no_invited'] = 'Nessun utente invitato';
 $MESSAGE['interface']['administration']['locations']['owner_err'] = 'Nessun gruppo o utente presente.';
 $MESSAGE['interface']['administration']['locations']['expiration_date'] = 'Scadenza';
 $MESSAGE['interface']['administration']['locations']['rent'] = 'Costo orario di affitto';

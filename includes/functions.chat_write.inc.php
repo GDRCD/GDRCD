@@ -998,6 +998,7 @@ function gdrcd_chat_private_invite_save(
 
     $result = [
         'message' => $testo,
+        'invited' => $destinatario,
         'invited_list' => $invitati,
     ];
 
@@ -1105,6 +1106,7 @@ function gdrcd_chat_private_kick_save(
 
     $result = [
         'message' => $testo,
+        'kicked' => $destinatario,
         'invited_list' => $invitati,
     ];
 
