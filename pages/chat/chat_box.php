@@ -9,7 +9,7 @@
 
 ?>
 <div class="chat_box">
-    <div class="page_title"><?= gdrcd_chat_name($chat_info) ?></div>
+    <div class="page_title"><?= gdrcd_chat_room_name($chat_info) ?></div>
 
     <?php if( !gdrcd_chat_is_accessible($chat_info) ) { ?>
 

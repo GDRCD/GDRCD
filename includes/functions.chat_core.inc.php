@@ -207,10 +207,18 @@ function gdrcd_chat_get_tag()
 /**
  * Ritorna il nome della chat
  *
- * @param null|int|array{nome: ?string} $luogo
+ * @param null|int|array{
+ *  id: int,
+ *  nome: ?string,
+ *  stanza_apparente: ?string,
+ *  invitati: string,
+ *  privata: int,
+ *  proprietario: ?string,
+ *  scadenza: ?string,
+ * } $luogo
  * @return null|string
  */
-function gdrcd_chat_name($luogo)
+function gdrcd_chat_room_name($luogo)
 {
     if ($luogo === null) {
         return false;
@@ -220,7 +228,7 @@ function gdrcd_chat_name($luogo)
         ? gdrcd_chat_info($luogo) ?? []
         : $luogo;
 
-    return $info['nome']?? null;
+    return $info['nome'] ?? null;
 }
 
 /**
