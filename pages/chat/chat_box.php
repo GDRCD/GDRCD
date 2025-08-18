@@ -109,7 +109,16 @@
                 // Aggiunge i nuovi messaggi al contenitore della chat
                 $('#chat_azioni').append(azioni.join(''));
 
-                <?= AudioController::playFunction('chat') ?>
+                // Cerca nei nuovi messaggi almeno un messaggio scritto da un altro utente
+                // in tal caso valorizza canPlayAudio a true. Altrimenti sarà false.
+                const canPlayAudio = data.reduce(
+                    (result, item) => result || item.mittente !== '<?= $_SESSION['login'] ?>',
+                    false
+                );
+
+                if (canPlayAudio) {
+                    <?= AudioController::playFunction('chat') ?>
+                }
 
                 // Timeout per permettere al DOM di aggiornarsi prima dello scroll (aspetta 500ms)
                 setTimeout(function() {
