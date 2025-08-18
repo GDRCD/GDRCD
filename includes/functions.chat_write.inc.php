@@ -439,7 +439,7 @@ function gdrcd_chat_stats_save(
     $carId = 'car' . $statsId;
     $bonusCarId = 'bonus_car' . $statsId;
 
-    $personaggio = gdrcd_chat_get_character($_SESSION['login']);
+    $personaggio = gdrcd_chat_player_info($_SESSION['login']);
     $stats = $personaggio[$carId] ?? null;
 
     if ( $stats === null ) {
@@ -609,7 +609,7 @@ function gdrcd_chat_skill_save(
     $skill_rank = $skill_record['grado'] ?? 0;
 
     // Cerca le informazioni sull'utilizzatore della skill nel database
-    $personaggio = gdrcd_chat_get_character($_SESSION['login']);
+    $personaggio = gdrcd_chat_player_info($_SESSION['login']);
 
     if ($personaggio['salute'] <= 0) {
         // se l'utente non ha salute residua non può compiere l'azione
@@ -847,7 +847,7 @@ function gdrcd_chat_whisper_save(
     $destinatario = gdrcd_capital_letter($destinatario);
 
     // Cerca le informazioni sul destinatario nel database
-    $personaggio = gdrcd_chat_get_character($destinatario);
+    $personaggio = gdrcd_chat_player_info($destinatario);
 
     // se destinatario non esiste nel database, ritorna fallimento
     if ($personaggio === null) {
@@ -1001,7 +1001,7 @@ function gdrcd_chat_private_invite_save(
     $destinatario = gdrcd_capital_letter($destinatario);
 
     // Cerca le informazioni sul destinatario nel database
-    $personaggio = gdrcd_chat_get_character($destinatario);
+    $personaggio = gdrcd_chat_player_info($destinatario);
 
     // se destinatario non esiste nel database, ritorna fallimento
     if ($personaggio === null) {

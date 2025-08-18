@@ -461,7 +461,7 @@ function gdrcd_chat_get_race($raceId)
  * @return null|array<string, string|int|float> Null se il personaggio non esiste,
  * altrimenti ritorna tutti i dati del personaggio
  */
-function gdrcd_chat_get_character($nome)
+function gdrcd_chat_player_info($nome)
 {
     $stmt = gdrcd_stmt(
         'SELECT * FROM personaggio WHERE nome = ?',
