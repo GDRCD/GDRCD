@@ -1,9 +1,6 @@
 <?php
 /**
- * Funzioni di core di gdrcd
- * Il file contiene una revisione del core originario introdotto in GDRCD5
- * @version 5.4
- * @author Breaker
+ * Funzioni di CORE di GDRCD
  */
 
 /**
