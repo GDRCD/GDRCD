@@ -878,6 +878,8 @@ function gdrcd_redirect($url, $tempo = false)
 }
 
 /**
+ * @deprecated use gdrcd_chat_replace_angs
+ *
  * Sostituisce eventuali parentesi angolari in coppia in una stringa con parentesi quadre
  * @param string $str : la stringa da controllare
  * @return string $str con la coppie di parentesi angolari sostituite con parentesi quadre
@@ -897,6 +899,8 @@ function gdrcd_angs($str)
 }
 
 /**
+ * @deprecated use gdrcd_chat_add_colors
+ *
  * Colora in HTML le parti di testo comprese tra parentesi angolari o parentesi quadre
  * Si usa in chat
  * @param string $str : la stringa da controllare
@@ -917,6 +921,8 @@ function gdrcd_chatcolor($str)
 }
 
 /**
+ * @deprecated use gdrcd_chat_highlight_user
+ *
  * Sottolinea in HTML una stringa presente in un testo. Usata per sottolineare il proprio nome in chat
  * @param string $user : la stringa da sottolineare, in genere un nome utente
  * @param string $str : la stringa in cui cercare e sottolineare $user

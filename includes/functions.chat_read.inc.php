@@ -246,7 +246,7 @@ function gdrcd_chat_master_format($azione)
     $azione_time = gdrcd_format_time($azione['ora']);
 
     // Formatta il testo per l'azione master
-    $testo = gdrcd_chatme(
+    $testo = gdrcd_chat_highlight_user(
         $_SESSION['login'],
         gdrcd_bbcoder(gdrcd_filter('out', $azione['testo'])),
         true
@@ -1109,15 +1109,14 @@ function gdrcd_chat_body_with_colors_component($azione, $utente = '')
         ? $azione['testo'] // se $azione è un array formatta 'testo'
         : $azione;         // se azione è una stringa la usa com'è
 
-    // TODO: refactor gdrcd_chatcolor and gdrcd_chatme and move it to this file
-    $message = gdrcd_chatcolor(gdrcd_filter('out', $message));
+    $message = gdrcd_chat_add_colors(gdrcd_filter('out', $message));
 
     if ($utente === '') {
         $utente = $_SESSION['login'];
     }
 
     if ($utente !== null) {
-        $message = gdrcd_chatme($utente, $message);
+        $message = gdrcd_chat_highlight_user($utente, $message);
     }
 
     return gdrcd_chat_body_component($message, false);
@@ -1184,6 +1183,75 @@ function gdrcd_chat_stats_component($stats_or_skill_name, $body)
         {$MESSAGE['chat']['commands']['use_skills']['sum']}
         <span class="chat_skill_total_value">{$body['sum']}</span>.
         HTML;
+}
+
+/**
+ * Sostituisce eventuali parentesi angolari in coppia in una stringa con parentesi quadre
+ * @param string $str : la stringa da controllare
+ * @return string $str con la coppie di parentesi angolari sostituite con parentesi quadre
+ */
+function gdrcd_chat_replace_angs($str)
+{
+    $search = [
+        '#\&lt;(.+?)\&gt;#is',
+        '#\<(.+?)>#is',
+    ];
+
+    $replace = [
+        '[$1]',
+        '[$1]',
+    ];
+
+    return preg_replace($search, $replace, $str);
+}
+
+/**
+ * Colora in HTML le parti di testo comprese tra parentesi angolari o parentesi quadre
+ *
+ * @param string $str : la stringa da controllare
+ * @return string|string[]|null $str con la parti colorate
+ */
+function gdrcd_chat_add_colors($str)
+{
+    if (!$str) {
+        return $str;
+    }
+
+    $search = [
+        '#\&lt;(.+?)\&gt;#is',
+        '#\[(.+?)\]#is',
+    ];
+
+    $replace = [
+        '<span class="color2">&lt;$1&gt;</span>',
+        '<span class="color2">&lt;$1&gt;</span>',
+    ];
+
+    return preg_replace($search, $replace, $str);
+}
+
+/**
+ * Sottolinea in HTML una stringa presente in un testo. Usata per sottolineare il proprio nome in chat
+ * @param string $user : la stringa da sottolineare, in genere un nome utente
+ * @param string $str : la stringa in cui cercare e sottolineare $user
+ * @param bool $master : determino se ad inviare l'azione è un master o meno
+ * @return string|string[]|null $str con tutte le occorrenze di $user sottolineate
+ */
+function gdrcd_chat_highlight_user($user, $str, $master = false)
+{
+    if (!$str) {
+        return $str;
+    }
+
+    $search = "|\\b" . preg_quote($user, "|") . "\\b|si";
+
+    if (!$master) {
+        $replace = '<span class="chat_me">' . gdrcd_filter('out', $user) . '</span>';
+    } else {
+        $replace = '<span class="chat_me_master">' . gdrcd_filter('out', $user) . '</span>';
+    }
+
+    return preg_replace($search, $replace, $str);
 }
 
 /**
