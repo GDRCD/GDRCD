@@ -67,6 +67,7 @@ function gdrcd_chat_read_messages($luogo, $last_id = 0)
 
             $azioni[] = [
                 'id' => $riga_azione['id'],
+                'mittente' => $riga_azione['mittente'],
                 'azione' => $azione,
             ];
 
