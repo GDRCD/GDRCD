@@ -25,6 +25,11 @@
             <?php require dirname(__FILE__) . '/chat_input.php'; ?>
         </div>
 
+        <?php
+            // Costruisco il controllore audio
+            echo AudioController::build('chat');
+        ?>
+
         <script>
 
             /**
@@ -103,6 +108,8 @@
 
                 // Aggiunge i nuovi messaggi al contenitore della chat
                 $('#chat_azioni').append(azioni.join(''));
+
+                <?= AudioController::playFunction('chat') ?>
 
                 // Timeout per permettere al DOM di aggiornarsi prima dello scroll (aspetta 500ms)
                 setTimeout(function() {
