@@ -34,18 +34,41 @@ class AudioController
         }
 
         // Recupero i parametri
-        global $PARAMETERS;
+        $audioFile = $GLOBALS['PARAMETERS']['settings']['audio_new_'.$label];
+        $ext = explode('.', $audioFile);
 
-        // Costruisco il controllore
-        $ext = explode('.', $PARAMETERS['settings']['audio_new_'.$label]);
-        if(isset($PARAMETERS['settings']['audiotype']['.'.strtolower(end($ext))])) {
-            return
-                '<div style="height:0;">
-                    <audio id="audioController_'.$label.'" preload="none" controls style="display:none">
-                        <source src="../../../sounds/'.$PARAMETERS['settings']['audio_new_'.$label].'" type="'.$PARAMETERS['settings']['audiotype']['.'.strtolower(end($ext))].'">
+        $audioType = $GLOBALS['PARAMETERS']['settings']['audiotype']['.' . strtolower(end($ext))] ?? null;
+
+        if($audioType) {
+            $playFunction = self::playFunction($label);
+            $stopFunction = self::stopFunction($label);
+
+            return <<<HTML
+                <div style="height:0;">
+
+                    <audio id="audioController_{$label}" preload="none" controls style="display:none">
+                        <source src="../../../sounds/{$audioFile}" type="{$audioType}">
                         Your browser does not support the audio element.
                     </audio>
-                </div>';
+
+                </div>
+                <script type="text/javascript">
+
+                    function {$playFunction} {
+                        let mediaElementChat = document.getElementById("audioController_{$label}");
+                        mediaElementChat.play();
+                        console.log('playAudio_{$label}');
+                    }
+
+                    function {$stopFunction} {
+                        let mediaElementChat = document.getElementById("audioController_{$label}");
+                        mediaElementChat.pause();
+                        mediaElementChat.currentTime = 0;
+                        console.log('stopAudio_{$label}');
+                    }
+
+                </script>
+                HTML;
         }
 
         return NULL;
@@ -74,5 +97,13 @@ class AudioController
                 let mediaElementChat = '.$document.'.getElementById("audioController_'.$label.'");
                 mediaElementChat.play();
             </script>';
+    }
+
+    public static function playFunction($label) {
+        return 'playAudio_'. $label .'()';
+    }
+
+    public static function stopFunction($label) {
+        return 'stopAudio_'. $label .'()';
     }
 }
