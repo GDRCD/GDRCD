@@ -124,7 +124,7 @@ const GDRCD_CHAT_STATS_SYMBOL = '%';
 /** @var string Symbolo per indicare i messaggi di tipo Tiro su Abilità */
 const GDRCD_CHAT_SKILL_SYMBOL = '^';
 
-/** @var string Symbolo per indicare i messaggi di tipo Tiro Dado. Permette di definire il lancio di un dado con le seguenti espressioni: d6, 3d6, 8d10-7. La sintassi è: (numero-di-dadi)d(facce-del-dado)-(evidenzia-se-risultato-pari-o-maggiore) */
+/** @var string Symbolo per indicare i messaggi di tipo Tiro Dado. Permette di definire il lancio di un dado con le seguenti espressioni: d6, 3d6, 2d6+3, 8d10,7. La sintassi è: [numero]d[facce][modificatore],[soglia] */
 const GDRCD_CHAT_DICE_SYMBOL = '#';
 
 /** @var string Symbolo per indicare i messaggi di tipo Utilizzo Oggetto */
