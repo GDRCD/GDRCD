@@ -666,24 +666,26 @@ function gdrcd_chat_skill_save(
     $die = null;
     $die_name = null;
 
+    $skillDice = $PARAMETERS['settings']['skill_dice'];
+
     // Se i dadi sono abilitati e l'abilità ha un tipo di dado associato
-    if ($PARAMETERS['mode']['dices'] == 'ON' && !empty($skill_record['dice'])) {
+    if ($PARAMETERS['mode']['dices'] == 'ON' && !empty($skillDice)) {
 
         // lancio effettivo del dado associato alla skill
-        $die = random_int(1, (int)$skill_record['dice']);
+        $die = random_int(1, (int) $skillDice);
 
         // recupera il nome del dado filtrando da gdrcd_chat_dice_list
         // il record che ha un valore di "facce" pari al dado configurato per la skill
         $dice = array_filter(
             gdrcd_chat_dice_list(),
-            fn($dice) => $dice['facce'] === (int)$skill_record['dice']
+            fn($dice) => $dice['facce'] === (int) $skillDice
         );
 
         // se ho trovato qualcosa allora assegno il nome rilevato
         // nel caso la definizione non esista assegno al numero di facce il prefisso 'd' come nome di default
         $die_name = !empty($dice)
             ? current($dice)['nome']
-            : 'd'. (int)$skill_record['dice'];
+            : 'd'. (int) $skillDice;
 
     }
 

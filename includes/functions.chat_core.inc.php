@@ -199,7 +199,6 @@ function gdrcd_chat_room_info($luogo)
  *  id_abilita: int,
  *  nome: string,
  *  car: int,
- *  dice: null|int,
  *  grado: null|int
  * }> Array di abilità
  */
@@ -211,7 +210,6 @@ function gdrcd_chat_player_skills($nome)
         'SELECT abilita.id_abilita,
                 abilita.nome,
                 abilita.car,
-                abilita.dice,
                 clgpersonaggioabilita.grado
 
         FROM abilita
@@ -251,7 +249,6 @@ function gdrcd_chat_player_skills($nome)
  *  id_abilita: int,
  *  nome: string,
  *  car: int,
- *  dice: null|int,
  *  grado: null|int
  * } Array associativo con i dati dell'abilità, oppure null se non trovata
  */

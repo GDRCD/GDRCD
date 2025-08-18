@@ -31,7 +31,7 @@ if( ! empty($_SESSION['login'])) {
         $_SESSION['luogo'] = $_REQUEST['dir'];
     }
 }
- 
+
 
 /* INFORMAZIONI SU GDRCD */
 $PARAMETERS['info']['GDRCD'] = '5.6.0.6'; //versione di GDRCD
@@ -316,9 +316,16 @@ $PARAMETERS['mode']['dices'] = 'ON';
 //OFF: Non è attivato il tiro di dado
 
 /**
- * Numero di facce del dado da usare per il "Tiro su Caratteristica" in chat
+ * Numero di facce del dado da usare per il "Tiro su Caratteristica" in chat.
+ * E' possibile configurare NULL per disattivare l'uso del dado nel tiro caratteristica
  */
 $PARAMETERS['settings']['stats_dice'] = 20;
+
+/**
+ * Numero di facce del dado da usare per il "Tiro su Abilità" in chat
+ * E' possibile configurare NULL per disattivare l'uso del dado nel tiro abilità
+ */
+$PARAMETERS['settings']['skill_dice'] = 20;
 
 /* HELP: é possibile aggiungere la possibilità di usare altri tipi di dado implementando questa sezione. E' possibile anche ridurre la scelta dei possibili tipi di dado semplicemente rimuovendo una riga qui.*/
 $PARAMETERS['settings']['skills_dices']['d4'] = 4;
