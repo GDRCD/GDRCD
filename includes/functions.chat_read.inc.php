@@ -55,7 +55,7 @@ function gdrcd_chat_read_messages($luogo, $last_id = 0)
 
     if (gdrcd_query($query_azioni, 'num_rows') > 0) {
 
-        while ($riga_azione = gdrcd_query($query_azioni, 'fetch')) {
+        while ($riga_azione = gdrcd_query($query_azioni, 'assoc')) {
 
             // formatta l'azione da inviare in chat
             $azione = gdrcd_chat_read_message($riga_azione);

@@ -184,7 +184,7 @@ function gdrcd_chat_room_info($luogo)
         return null;
     }
 
-    $record = gdrcd_query($stmt, 'fetch');
+    $record = gdrcd_query($stmt, 'assoc');
     gdrcd_query($stmt, 'free');
     return $record;
 }
@@ -227,7 +227,7 @@ function gdrcd_chat_player_skills($nome)
     );
 
     if (gdrcd_query($stmt, 'num_rows') > 0) {
-        while ($row = gdrcd_query($stmt, 'fetch')) {
+        while ($row = gdrcd_query($stmt, 'assoc')) {
             $skills[] = $row;
         }
 
@@ -354,7 +354,7 @@ function gdrcd_chat_player_items($nome)
     );
 
     if (gdrcd_query($stmt, 'num_rows') > 0) {
-        while ($row = gdrcd_query($stmt, 'fetch')) {
+        while ($row = gdrcd_query($stmt, 'assoc')) {
             $items[] = $row;
         }
 
@@ -439,7 +439,7 @@ function gdrcd_chat_get_race($raceId)
         return null;
     }
 
-    $racial_record = gdrcd_query($racial_stmt, 'fetch');
+    $racial_record = gdrcd_query($racial_stmt, 'assoc');
     gdrcd_query($racial_stmt, 'free');
 
     return $racial_record;
@@ -469,7 +469,7 @@ function gdrcd_chat_player_info($nome)
         return null;
     }
 
-    $record = gdrcd_query($stmt, 'fetch');
+    $record = gdrcd_query($stmt, 'assoc');
     gdrcd_query($stmt, 'free');
     return $record;
 }
