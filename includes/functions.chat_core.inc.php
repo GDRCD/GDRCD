@@ -554,7 +554,7 @@ function gdrcd_chat_status_ok($message)
  */
 function gdrcd_chat_status_created($message = 'Created')
 {
-    return gdrcd_chat_status(201, gdrcd_filter_out($message));
+    return gdrcd_chat_status(201, $message);
 }
 
 /**
@@ -566,7 +566,7 @@ function gdrcd_chat_status_created($message = 'Created')
  */
 function gdrcd_chat_status_invalid($message = 'Invalid')
 {
-    return gdrcd_chat_status(400, gdrcd_filter_out($message));
+    return gdrcd_chat_status(400, $message);
 }
 
 /**
@@ -578,7 +578,7 @@ function gdrcd_chat_status_invalid($message = 'Invalid')
  */
 function gdrcd_chat_status_forbidden($message = 'Forbidden')
 {
-    return gdrcd_chat_status(403, gdrcd_filter_out($message));
+    return gdrcd_chat_status(403, $message);
 }
 
 /**
@@ -590,5 +590,5 @@ function gdrcd_chat_status_forbidden($message = 'Forbidden')
  */
 function gdrcd_chat_status_error($message = 'Internal Error')
 {
-    return gdrcd_chat_status(500, gdrcd_filter_out($message));
+    return gdrcd_chat_status(500, $message);
 }
