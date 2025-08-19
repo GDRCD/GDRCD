@@ -934,8 +934,6 @@ function gdrcd_chat_message_save(
 ) {
     $MESSAGE = $GLOBALS['MESSAGE'];
 
-    // TODO: calcolo esperienza in chat
-
     // Rimuove il primo carattere se il messaggio inizia col simbolo dedicato
     $testo = gdrcd_chat_strip_message_symbol($testo, $symbol);
 

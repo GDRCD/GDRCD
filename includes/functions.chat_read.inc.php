@@ -295,7 +295,6 @@ function gdrcd_chat_item_format($azione)
     // Formatta le informazioni da scrivere in chat
     $messaggio_stats = <<<HTML
         {$chat_mittente}
-
         {$MESSAGE['chat']['commands']['use_items']['uses']}
         <span class="chat_items_name">{$body['name']}</span>
         HTML;
@@ -393,18 +392,15 @@ function gdrcd_chat_dice_format($azione)
             HTML;
     }
 
-    // Assembla il messaggio finale da inserire nell'azione
-    $messaggio_dadi = <<<HTML
-        <span class="chat_dice_info">{$info}</span>
-        <span class="chat_dice_rolls">{$lanci}</span>
-        HTML;
-
     // Assembla la formattazione HTML per la tipologia di messaggio
     return gdrcd_chat_message_component(
         $azione_tipo,
         <<<HTML
             {$chat_time}
-            <span class="chat_dice_body">{$messaggio_dadi}</span>
+            <span class="chat_dice_body">
+                <span class="chat_dice_info">{$info}</span>
+                <span class="chat_dice_rolls">{$lanci}</span>
+            </span>
         HTML
     );
 }

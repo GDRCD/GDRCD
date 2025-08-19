@@ -63,7 +63,7 @@ function gdrcd_chat_room_is_login_allowed($luogo)
     $invitati = explode(',', $info['invitati']);
     $login_moderator_o_superiore = $_SESSION['permessi'] >= MODERATOR;
     $login_proprietario_chat = $info['proprietario'] == $_SESSION['login'];
-    $login_inviato_chat = in_array($_SESSION['login'], $invitati);
+    $login_invitato_chat = in_array($_SESSION['login'], $invitati);
     $chat_scaduta = time() >= strtotime($info['scadenza']);
 
     // chat privata scaduta: se non sei moderator o maggiore, non sei abilitato
@@ -74,7 +74,7 @@ function gdrcd_chat_room_is_login_allowed($luogo)
     // chat privata ancora valida: accessibile solo nei seguenti casi
     return $login_moderator_o_superiore
         || $login_proprietario_chat
-        || $login_inviato_chat;
+        || $login_invitato_chat;
 }
 
 /**
@@ -443,7 +443,6 @@ function gdrcd_chat_get_race($raceId)
     gdrcd_query($racial_stmt, 'free');
 
     return $racial_record;
-
 }
 
 /**
