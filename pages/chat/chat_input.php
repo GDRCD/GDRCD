@@ -242,6 +242,15 @@
                             <?php foreach ($items as $row) { ?>
                                 <option value="<?php echo $row['id_oggetto'];?>">
                                     <?php echo $row['nome']; ?>
+                                    (
+                                        <!-- quantità oggetto -->
+                                        x<?php echo $row['numero']; ?>
+
+                                        <!-- numero cariche oggetto -->
+                                        <?php if ($row['max_cariche'] > 0) { ?>
+                                            - <?php echo $row['cariche']; ?>/<?php echo $row['max_cariche']; ?>
+                                        <?php } ?>
+                                    )
                                 </option>
                             <?php } ?>
 
@@ -326,7 +335,10 @@
     function postSkillsystem(url, data)
     {
         httpPostRequest(url, data)
-            .then(() => {
+            .then(response => {
+                // aggiorna la tendina oggetti
+                updateItemSelect(response.message);
+
                 // reset tendine
                 $('#id_ab').val('nor');
                 $('#id_stats').val('no_stats');
@@ -366,5 +378,36 @@
             notes.document.getElementById('testo').value = document.getElementById('testo').value;
             notes.document.getElementById('tag').value = document.getElementById('tag').value;
         }
+    }
+
+    /**
+     * Aggiorna la tendina di selezione oggetti con i dati ricevuti dal server.
+     * Ricostruisce le opzioni mostrando nome, quantità e cariche (se presenti) per ogni oggetto.
+     *
+     * @param {Array<Object>} items - Array di oggetti equipaggiati, ciascuno con proprietà:
+     *   id_oggetto: number,
+     *   nome: string,
+     *   numero: number,
+     *   cariche: number,
+     *   max_cariche: number|string
+     */
+    function updateItemSelect(items) {
+        const $select = $('#id_item');
+        $select.empty();
+        $select.append('<option value=""></option>');
+
+        items.forEach(item => {
+            let charges = '';
+
+            if (parseInt(item.max_cariche) > 0) {
+                charges = `- ${item.cariche}/${item.max_cariche}`;
+            }
+
+            $select.append(
+                `<option value="${item.id_oggetto}">
+                    ${item.nome} ( x${item.numero} ${charges} )
+                </option>`
+            );
+        });
     }
 </script>
