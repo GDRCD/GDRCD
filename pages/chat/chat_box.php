@@ -76,8 +76,17 @@
                             return;
                         }
 
-                        // inserisce le azioni in chat
-                        chatScreenAppendMessages(data.message);
+                        <?php if ($PARAMETERS['mode']['chat_from_bottom'] === 'OFF') { ?>
+
+                            // Aggiunge azioni in chat: dall'alto verso il basso
+                            chatScreenAppendMessages(data.message);
+
+                        <?php } else { ?>
+
+                            // Aggiunge azioni in chat: dal basso verso l'alto
+                            chatScreenPrependMessages(data.message);
+
+                        <?php } ?>
 
                     })
                     .fail(function(jqXHR, textStatus, errorThrown) {
@@ -93,8 +102,8 @@
              * Aggiunge i nuovi messaggi formattati alla chat e gestisce lo scroll automatico.
              *
              * Riceve un array di oggetti messaggio, estrae l'HTML da ciascun elemento e lo aggiunge
-             * al contenitore della chat. Dopo l'inserimento, esegue lo scroll automatico verso il basso
-             * e avvia la notifica visiva se la finestra non è attiva.
+             * al contenitore della chat. Dopo l'inserimento, riproduce la notifica sonora, esegue
+             * lo scroll automatico verso il basso e avvia la notifica visiva se la finestra non è attiva.
              *
              * @param {Array<{id: number, azione: string}>} data - Array di messaggi da aggiungere, ciascuno con id e HTML formattato
              */
@@ -109,8 +118,53 @@
                 // Aggiunge i nuovi messaggi al contenitore della chat
                 $('#chat_azioni').append(azioni.join(''));
 
-                // Cerca nei nuovi messaggi almeno un messaggio scritto da un altro utente
-                // in tal caso valorizza canPlayAudio a true. Altrimenti sarà false.
+                // Riproduce la notifica sonora per avvisare dei nuovi messaggi in chat
+                chatPlayAudio(data);
+
+                // Timeout per permettere al DOM di aggiornarsi prima dello scroll (aspetta 500ms)
+                setTimeout(function() {
+                    chatScreenAutoScroll('down');
+                    chatBlinkTitleStart();
+                }, 500);
+            }
+
+            /**
+             * Inserisce messaggi all'inizio della chat e gestisce lo scroll automatico.
+             *
+             * Riceve un array di oggetti messaggio (id e HTML formattato), li ordina dal più recente al più vecchio,
+             * e li aggiunge all'inizio del contenitore della chat. Dopo l'inserimento riproduce la notifica sonora,
+             * esegue lo scroll automatico verso l'alto e avvia la notifica visiva se la finestra non è attiva.
+             *
+             * @param {Array<{id: number, azione: string}>} data - Array di messaggi da inserire, ciascuno con id e HTML formattato
+             */
+            function chatScreenPrependMessages(data)
+            {
+                // Le azioni arrivano in un formato che contiene
+                // l'id del messaggio e l'azione formattata in html.
+                // Questa parte di codice crea un array nella variabile azioni
+                // dove ogni elemento è un azione formattata in html.
+                const azioni = data.map(item => item.azione).reverse();
+
+                // Aggiunge i nuovi messaggi in cima alla chat
+                $('#chat_azioni').prepend(azioni.join(''));
+
+                // Riproduce la notifica sonora per avvisare dei nuovi messaggi in chat
+                chatPlayAudio(data);
+
+                // Timeout per permettere al DOM di aggiornarsi prima dello scroll (aspetta 500ms)
+                setTimeout(function() {
+                    chatScreenAutoScroll('up');
+                    chatBlinkTitleStart();
+                }, 500);
+            }
+
+            /**
+             * Riproduce la notifica sonora per nuovi messaggi in chat.
+             * Esegue l'audio solo se almeno uno dei nuovi messaggi è stato inviato da un altro utente.
+             *
+             * @param {Array<{mittente: string, id: number, azione: string}>} data - Array di messaggi ricevuti
+             */
+            function chatPlayAudio(data) {
                 const canPlayAudio = data.reduce(
                     (result, item) => result || item.mittente !== '<?= $_SESSION['login'] ?>',
                     false
@@ -119,22 +173,20 @@
                 if (canPlayAudio) {
                     <?= AudioController::playFunction('chat') ?>
                 }
-
-                // Timeout per permettere al DOM di aggiornarsi prima dello scroll (aspetta 500ms)
-                setTimeout(function() {
-                    chatScreenAutoScroll();
-                    chatBlinkTitleStart();
-                }, 500);
             }
 
             /**
              * Gestisce lo scroll automatico della chat verso il basso
              * @param {number} time - Durata dell'animazione in millisecondi (default: 300)
              */
-            function chatScreenAutoScroll(time = 300)
+            function chatScreenAutoScroll(direction = 'down', time = 300)
             {
                 const $chatAzioniBox = $('#chat_azioni_box');
-                $chatAzioniBox.animate({ scrollTop: $chatAzioniBox.height() }, time);
+                $chatAzioniBox.animate({
+                    scrollTop: direction === 'down'
+                        ? $chatAzioniBox[0].scrollHeight
+                        : 0
+                }, time);
             }
 
             /**
