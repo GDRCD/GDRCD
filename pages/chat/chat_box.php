@@ -18,6 +18,7 @@
     <?php } else { ?>
 
         <div id="chat_azioni_box" class="chat_azioni_box">
+            <div id="chat_loading"></div>
             <div id="chat_azioni" class="chat_azioni"></div>
         </div>
 
@@ -68,8 +69,13 @@
              */
             function httpGetChatRead()
             {
+                const $chat_loading = $('#chat_loading');
+
                 $.get('pages/chat/ajax.php?op=chat_read')
                     .done(function(data) {
+
+                        // nasconde l'icona di caricamento in chat
+                        $chat_loading.css('display', 'none');
 
                         // Se non ci sono nuove azioni usciamo qui
                         if (!data.message || data.message.length === 0) {

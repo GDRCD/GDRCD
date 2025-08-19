@@ -13,6 +13,16 @@ iframe.iframe_chat {
     margin: 0px;
 }
 
+#chat_loading {
+    background-image: url("imgs/chat-loading.gif");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    width: 100px;
+    height: 100px;
+    margin: 50px auto;
+    opacity: 0.35;
+}
+
 div.chat_window {
     text-align: center;
 }
