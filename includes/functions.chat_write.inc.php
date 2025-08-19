@@ -805,7 +805,10 @@ function gdrcd_chat_item_save(
     );
 
     // Tutto a buon fine: status "created" è il modo per indicare che l'operazione ha creato dati nel db
-    return gdrcd_chat_status_created();
+    // In più inviamo nel messaggio in uscita l'elenco aggiornato degli oggetti del giocatore
+    return gdrcd_chat_status_created(
+        gdrcd_chat_player_items($_SESSION['login'])
+    );
 }
 
 /**
