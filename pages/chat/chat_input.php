@@ -359,7 +359,7 @@
         return new Promise((resolve, reject) => {
             $.post(url, data)
                 .done(function(response) {
-                    httpGetChatRead();
+                    chatReadHandler();
                     resolve(response);
                 })
                 .fail(function(jqXHR, textStatus, errorThrown) {
