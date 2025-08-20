@@ -8,13 +8,15 @@ class AudioController
 {
     /**
      * @fn isSoundAllowed
-     * @note Controllo sulla abilitazione dei suoni nelle configurazioni
+     * @note Indica se i suoni sono abilitati in base alle configurazioni della land e del giocatore connesso
      * @return bool
      */
     public static function isSoundAllowed($label)
     {
-        global $PARAMETERS;
-        return $PARAMETERS['mode']['allow_audio'] == 'ON' && !empty($PARAMETERS['settings']['audio_new_'.$label]);
+        return (
+            $GLOBALS['PARAMETERS']['mode']['allow_audio'] == 'ON'
+            && !empty($GLOBALS['PARAMETERS']['settings']['audio_new_'.$label])
+        ) || $_SESSION['blocca_media'] != 1;
     }
 
     /**
@@ -29,7 +31,7 @@ class AudioController
         if(empty($label)) return NULL;
 
         // Esco nel caso in cui siano disattivati i suoni
-        if(!self::isSoundAllowed($label) || $_SESSION['blocca_media'] == 1 ) {
+        if(!self::isSoundAllowed($label)) {
             return NULL;
         }
 
