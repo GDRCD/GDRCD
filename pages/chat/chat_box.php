@@ -65,14 +65,20 @@
             }
 
             /**
-             * Effettua la richiesta AJAX per leggere i nuovi messaggi della chat
+             * Gestisce la lettura dei nuovi messaggi dalla chat tramite richiesta XHR.
+             *
+             * Effettua una chiamata al server per recuperare i nuovi messaggi, nasconde l'icona
+             * di caricamento e aggiunge i messaggi alla chat secondo la modalità configurata
+             * (dall'alto verso il basso o dal basso verso l'alto).
+             *
+             * @returns {void}
              */
-            function httpGetChatRead()
+            function chatReadHandler()
             {
                 const $chat_loading = $('#chat_loading');
 
-                $.get('pages/chat/ajax.php?op=chat_read')
-                    .done(function(data) {
+                httpGetChatRead()
+                    .then(data => {
 
                         // nasconde l'icona di caricamento in chat
                         $chat_loading.css('display', 'none');
@@ -82,6 +88,42 @@
                             return;
                         }
 
+                        // Aggiunge i messaggi letti nella chat
+                        chatAddMessages(data.message);
+
+                    });
+            }
+
+            /**
+             * Effettua la richiesta XHR per leggere i nuovi messaggi della chat.
+             * Ritorna una promise.
+             */
+            function httpGetChatRead()
+            {
+                return new Promise((resolve, reject) => {
+                    $.get('pages/chat/ajax.php?op=chat_read')
+                        .done(function(response) {
+
+                            resolve(response);
+
+                        })
+                        .fail(function(jqXHR, textStatus, errorThrown) {
+
+                            let errorResponse = jqXHR.responseText;
+
+                            try {
+                                errorResponse = JSON.parse(errorResponse);
+                            } catch (e) {
+                                console.error('[GDRCD] Error decoding response:', errorResponse);
+                                errorResponse = {code: jqXHR.status, message: errorResponse};
+                            }
+
+                            // TODO: flusso da testare. Potrebbe essere necessario sospendere il pollig
+                            chatTransientError(errorResponse.code, errorResponse);
+                            reject(jqXHR.status, errorResponse, errorThrown);
+
+                        });
+                });
             }
 
             /**
