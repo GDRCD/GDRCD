@@ -359,14 +359,25 @@
         return new Promise((resolve, reject) => {
             $.post(url, data)
                 .done(function(response) {
+
                     chatReadHandler();
                     resolve(response);
+
                 })
                 .fail(function(jqXHR, textStatus, errorThrown) {
-                    // TODO: scrivere errore in chat
-                    console.error('[GDRCD] HTTP Error Status:', jqXHR.status);
 
-                    reject(jqXHR.status, textStatus, errorThrown);
+                    let errorResponse = jqXHR.responseText;
+
+                    try {
+                        errorResponse = JSON.parse(errorResponse);
+                    } catch (e) {
+                        console.error('[GDRCD] Error decoding response:', errorResponse);
+                        errorResponse = {code: jqXHR.status, message: errorResponse};
+                    }
+
+                    chatTransientError(errorResponse.code, errorResponse);
+                    reject(jqXHR.status, errorResponse, errorThrown);
+
                 });
         });
     }

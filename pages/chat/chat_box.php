@@ -240,6 +240,34 @@
             }
 
             /**
+             * Gestisce la visualizzazione di errori temporanei nella chat.
+             *
+             * Aggiunge un messaggio di errore formattato alla chat utilizzando il sistema di messaggi
+             * standard. L'errore viene mostrato come un messaggio di sistema con stile di avviso.
+             *
+             * @param {number} code - Codice di errore HTTP o dell'applicazione
+             * @param {Object} response - Oggetto risposta contenente i dettagli dell'errore
+             * @param {string} response.message - Messaggio di errore da visualizzare all'utente
+             */
+            function chatTransientError(code, response) {
+                const messageId = crypto.randomUUID();
+
+                chatAddMessages([
+                    {
+                        id: messageId,
+                        azione: `<div id="${messageId}" class="error">${response.message}</div>`,
+                        mittente: 'system'
+                    }
+                ]);
+
+                setTimeout(id => {
+
+                    $(`#${id}`).fadeOut();
+
+                }, 10000, messageId);
+            }
+
+            /**
              * Avvia il lampeggiamento del titolo della pagina se la finestra non è visibile
              * Utilizzato per notificare all'utente la presenza di nuovi messaggi
              */
