@@ -37,11 +37,9 @@
              * Script responsabile del caricamento delle nuove azioni in chat
              */
 
-            // TODO: icona di caricamento di default in chat che viene rimossa appena completata la prima richiesta
-
             $(document).ready(() => {
                 // Avvio lettura azioni chat - inizializza il polling automatico
-                let chatInterval = chatReadStart();
+                let chatInterval = chatReadPollig();
 
                 /**
                  * Event listener per il cambio di visibilità della pagina
@@ -52,16 +50,16 @@
 
             /**
              * Inizializza il sistema di aggiornamento automatico della chat
-             * Esegue subito una lettura e poi imposta un intervallo di 15 secondi
+             * Esegue subito una lettura e poi una successiva 10 secondi
              * @returns {number} ID dell'intervallo per eventuali cancellazioni future
              */
-            function chatReadStart()
+            function chatReadPollig()
             {
                 // Prima esecuzione immediata
-                httpGetChatRead();
+                chatReadHandler();
 
                 // Imposta polling ogni 10 secondi (10000 ms)
-                return setInterval(() => httpGetChatRead(), 10000);
+                return setInterval(() => chatReadHandler(), 10000);
             }
 
             /**
