@@ -226,7 +226,13 @@
             }
 
             /**
-             * Gestisce lo scroll automatico della chat verso il basso
+             * Gestisce lo scroll automatico della chat nella direzione specificata.
+             *
+             * Anima lo scroll del contenitore della chat verso l'alto (inizio) o verso il basso (fine)
+             * in base alla direzione specificata. Utilizzato dopo l'aggiunta di nuovi messaggi per
+             * mantenere la visualizzazione aggiornata.
+             *
+             * @param {string} direction - Direzione dello scroll: 'down' per andare alla fine, 'up' per andare all'inizio (default: 'down')
              * @param {number} time - Durata dell'animazione in millisecondi (default: 300)
              */
             function chatScreenAutoScroll(direction = 'down', time = 300)
