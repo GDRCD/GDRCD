@@ -175,7 +175,7 @@
                 setTimeout(function() {
                     chatScreenAutoScroll('down');
                     chatBlinkTitleStart();
-                }, 500);
+                }, 250);
             }
 
             /**
@@ -205,7 +205,7 @@
                 setTimeout(function() {
                     chatScreenAutoScroll('up');
                     chatBlinkTitleStart();
-                }, 500);
+                }, 250);
             }
 
             /**
