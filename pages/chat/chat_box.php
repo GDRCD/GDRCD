@@ -82,26 +82,30 @@
                             return;
                         }
 
-                        <?php if ($PARAMETERS['mode']['chat_from_bottom'] === 'OFF') { ?>
+            }
 
-                            // Aggiunge azioni in chat: dall'alto verso il basso
-                            chatScreenAppendMessages(data.message);
+            /**
+             * Aggiunge i nuovi messaggi alla chat utilizzando la modalità di visualizzazione configurata.
+             *
+             * Controlla la configurazione del sito per determinare se i messaggi devono essere aggiunti
+             * dall'alto verso il basso (append) o dal basso verso l'alto (prepend) e chiama la funzione
+             * appropriata per gestire l'inserimento e lo scroll.
+             *
+             * @param {Array<{id: number, azione: string, mittente: string}>} messages - Array di messaggi da aggiungere alla chat
+             */
+            function chatAddMessages(messages)
+            {
+                <?php if ($PARAMETERS['mode']['chat_from_bottom'] === 'OFF') { ?>
 
-                        <?php } else { ?>
+                    // Aggiunge azioni in chat: dall'alto verso il basso
+                    chatScreenAppendMessages(messages);
 
-                            // Aggiunge azioni in chat: dal basso verso l'alto
-                            chatScreenPrependMessages(data.message);
+                <?php } else { ?>
 
-                        <?php } ?>
+                    // Aggiunge azioni in chat: dal basso verso l'alto
+                    chatScreenPrependMessages(messages);
 
-                    })
-                    .fail(function(jqXHR, textStatus, errorThrown) {
-
-                        // TODO: scrivere errore in chat e interrompere il pollig in caso di 403
-
-                        console.error('[GDRCD] HTTP Error Status:', jqXHR.status);
-
-                    });
+                <?php } ?>
             }
 
             /**
