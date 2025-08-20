@@ -102,10 +102,18 @@ class AudioController
     }
 
     public static function playFunction($label) {
+        if(!self::isSoundAllowed($label)) {
+            return '';
+        }
+
         return 'playAudio_'. $label .'()';
     }
 
     public static function stopFunction($label) {
+        if(!self::isSoundAllowed($label)) {
+            return '';
+        }
+
         return 'stopAudio_'. $label .'()';
     }
 }
