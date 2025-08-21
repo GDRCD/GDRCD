@@ -73,13 +73,11 @@
              */
             function chatReadHandler()
             {
-                const $chat_loading = $('#chat_loading');
-
                 httpGetChatRead()
                     .then(data => {
 
                         // nasconde l'icona di caricamento in chat
-                        $chat_loading.css('display', 'none');
+                        $('#chat_loading').css('display', 'none');
 
                         // Se non ci sono nuove azioni usciamo qui
                         if (!data.message || data.message.length === 0) {
@@ -116,7 +114,6 @@
                                 errorResponse = {code: jqXHR.status, message: errorResponse};
                             }
 
-                            // TODO: flusso da testare. Potrebbe essere necessario sospendere il pollig
                             chatTransientError(errorResponse.code, errorResponse);
                             reject(jqXHR.status, errorResponse, errorThrown);
 
