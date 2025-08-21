@@ -51,9 +51,9 @@ function gdrcd_chat_room_is_login_allowed($luogo)
         return false;
     }
 
-    $info = is_int($luogo)
-        ? gdrcd_chat_room_info($luogo) ?? []
-        : $luogo;
+    $info = is_array($luogo)
+        ? $luogo
+        : (gdrcd_chat_room_info($luogo) ?? []);
 
     if (($info['privata'] ?? 0) != 1) {
         // chat pubblica: sempre accessibile
