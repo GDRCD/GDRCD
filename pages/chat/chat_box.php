@@ -13,7 +13,7 @@
 
     <?php if( !gdrcd_chat_room_is_login_allowed($chat_info) ) { ?>
 
-        <div class="warning">Non sei abilitato a visualizzare questa chat.</div>
+        <div class="warning"><?php echo $MESSAGE['chat']['whisper']['privat']; ?></div>
 
     <?php } else { ?>
 
