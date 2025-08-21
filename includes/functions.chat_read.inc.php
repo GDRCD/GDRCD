@@ -703,6 +703,9 @@ function gdrcd_chat_private_invite_format($azione)
     // formattazione orario del messaggio
     $chat_time = gdrcd_chat_time_component($azione);
 
+    // formattazione mittente del messaggio in chat
+    $chat_mittente = gdrcd_chat_name_component($azione);
+
     // decodifica il messaggio
     $body = json_decode($azione['testo'], true);
 
@@ -717,6 +720,7 @@ function gdrcd_chat_private_invite_format($azione)
         $azione_tipo,
         <<<HTML
             {$chat_time}
+            {$chat_mittente}
             {$MESSAGE['chat']['warning']['invited']}:
             {$invited}
         HTML
@@ -745,6 +749,9 @@ function gdrcd_chat_private_kick_format($azione)
     // formattazione orario del messaggio
     $chat_time = gdrcd_chat_time_component($azione);
 
+    // formattazione mittente del messaggio in chat
+    $chat_mittente = gdrcd_chat_name_component($azione);
+
     // decodifica il messaggio
     $body = json_decode($azione['testo'], true);
 
@@ -759,6 +766,7 @@ function gdrcd_chat_private_kick_format($azione)
         $azione_tipo,
         <<<HTML
             {$chat_time}
+            {$chat_mittente}
             {$MESSAGE['chat']['warning']['expelled']}:
             {$kicked}
         HTML
