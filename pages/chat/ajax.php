@@ -15,14 +15,19 @@ gdrcd_controllo_sessione();
 gdrcd_connect();
 
 // Controlla che l'utente non sia esiliato
-if(gdrcd_controllo_esilio($_SESSION['login'])) {
+if( ($ban_message = gdrcd_controllo_esilio($_SESSION['login'], true)) ) {
     session_destroy();
+    gdrcd_chat_output(
+        gdrcd_chat_status_forbidden($ban_message)
+    );
     die();
 }
 
 // Controlla che l'utente sia abilitato ad accedere alla chat
 if ( !gdrcd_chat_room_is_login_allowed($_SESSION['luogo']) ) {
-    http_response_code(403);
+    gdrcd_chat_output(
+        gdrcd_chat_status_forbidden($MESSAGE['chat']['whisper']['privat'])
+    );
     die();
 }
 
@@ -44,7 +49,7 @@ switch ($operation) {
 
         // Se il file di operazione non esiste ritorno un 501 al browser (Not Implemented)
         if (!file_exists($operation_file)) {
-            http_response_code(501);
+            gdrcd_chat_output(gdrcd_chat_status_notimplemented());
             die();
         }
 
@@ -58,4 +63,4 @@ switch ($operation) {
 }
 
 // L'operazione non è stata definita nello switch di prima: ritorno un 404 (Not Found)
-http_response_code(404);
+gdrcd_chat_output(gdrcd_chat_status_notfound());
