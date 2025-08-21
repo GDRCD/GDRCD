@@ -9,7 +9,7 @@
  *
  * Esegue una query sul database per ottenere i messaggi della chat relativi alla stanza ($luogo)
  * con ID maggiore di $last_id e solo se inviati entro le ultime quattro ore.
- * Ogni messaggio viene formattato in HTML tramite gdrcd_chat_read_message().
+ * Ogni messaggio viene formattato in HTML tramite gdrcd_chat_message_handler().
  *
  * @param int $luogo L'ID della stanza di chat da cui leggere i messaggi
  * @param int $last_id Facoltativo. L'ID dell'ultimo messaggio già letto (default: 0)
@@ -58,7 +58,7 @@ function gdrcd_chat_read_messages($luogo, $last_id = 0)
         while ($riga_azione = gdrcd_query($query_azioni, 'assoc')) {
 
             // formatta l'azione da inviare in chat
-            $azione = gdrcd_chat_read_message($riga_azione);
+            $azione = gdrcd_chat_message_handler($riga_azione);
 
             // se la formattazione ritorna un $azione vuota, skip alla prossima azione
             if (empty($azione)) {
@@ -109,7 +109,7 @@ function gdrcd_chat_read_messages($luogo, $last_id = 0)
  * @return null|string La formattazione HTML dell'azione. Può ritornare invece `null` se l'azione è
  * di una tipologia non supportata o l'utente non ha i permessi per visionarla (esempio: sussurri)
  */
-function gdrcd_chat_read_message($azione)
+function gdrcd_chat_message_handler($azione)
 {
     switch ($azione['tipo']) {
         case GDRCD_CHAT_MESSAGE_TYPE:
