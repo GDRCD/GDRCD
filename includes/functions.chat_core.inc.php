@@ -581,6 +581,18 @@ function gdrcd_chat_status_forbidden($message = 'Forbidden')
 }
 
 /**
+ * Indica che la risorsa richiesta non è stata trovata.
+ * Restituisce uno stato di risposta HTTP 404 (Not Found) per le API della chat.
+ *
+ * @param string $message Facoltativo. Messaggio descrittivo dello stato (default: 'Not Found')
+ * @return array{code: int, message: mixed} Array associativo con codice e messaggio
+ */
+function gdrcd_chat_status_notfound($message = 'Not Found')
+{
+    return gdrcd_chat_status(403, $message);
+}
+
+/**
  * Indica un operazione fallita a causa di problemi interni (come dati inconsistenti nel db).
  * Restituisce uno stato di risposta HTTP 500 (Internal Error) per le API della chat.
  *
@@ -590,4 +602,16 @@ function gdrcd_chat_status_forbidden($message = 'Forbidden')
 function gdrcd_chat_status_error($message = 'Internal Error')
 {
     return gdrcd_chat_status(500, $message);
+}
+
+/**
+ * Indica che la funzionalità richiesta non è implementata.
+ * Restituisce uno stato di risposta HTTP 501 (Not Implemented) per le API della chat.
+ *
+ * @param string $message Facoltativo. Messaggio descrittivo dello stato (default: 'Not Implemented')
+ * @return array{code: int, message: mixed} Array associativo con codice e messaggio
+ */
+function gdrcd_chat_status_notimplemented($message = 'Not Implemented')
+{
+    return gdrcd_chat_status(501, $message);
 }
