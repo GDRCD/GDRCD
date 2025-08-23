@@ -6,13 +6,6 @@
 - Le dimensioni e la posizione della chat
 - Lo sfondo della chat*/
 
-iframe.iframe_chat {
-    border: none;
-    width: 1px;
-    height: 1px;
-    margin: 0px;
-}
-
 #chat_loading {
     background-image: url("imgs/chat-loading.gif");
     background-size: 100% 100%;
@@ -42,7 +35,7 @@ div.chat_box {
     text-align: left;
 }
 
-div.pagina_frame_chat div.page_body div.panels_box {
+div.page_body div.panels_box {
     position: absolute;
     bottom: 9px;
     left: 5px;
