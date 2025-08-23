@@ -109,43 +109,43 @@ const GDRCD_CHAT_DEFAULT_TYPE = GDRCD_CHAT_MESSAGE_TYPE;
  * per usare una specifica formattazione
  */
 
-/** @var string Symbolo per indicare i messaggi di tipo Parlato */
+/** @var string Simbolo per indicare i messaggi di tipo Parlato */
 const GDRCD_CHAT_MESSAGE_SYMBOL = '.';
 
-/** @var string Symbolo per indicare i messaggi di tipo Azione */
+/** @var string Simbolo per indicare i messaggi di tipo Azione */
 const GDRCD_CHAT_ACTION_SYMBOL = '+';
 
-/** @var string Symbolo per indicare i messaggi di tipo Sussurro. Subito dopo va inserito il nome del destinatario e poi nuovamente lo stesso simbolo affinché abbia effetto */
+/** @var string Simbolo per indicare i messaggi di tipo Sussurro. Subito dopo va inserito il nome del destinatario e poi nuovamente lo stesso simbolo affinché abbia effetto */
 const GDRCD_CHAT_WHISPER_SYMBOL = '@';
 
-/** @var string Symbolo per indicare i messaggi di tipo Tiro su Caratteristica */
+/** @var string Simbolo per indicare i messaggi di tipo Tiro su Caratteristica */
 const GDRCD_CHAT_STATS_SYMBOL = '%';
 
-/** @var string Symbolo per indicare i messaggi di tipo Tiro su Abilità */
+/** @var string Simbolo per indicare i messaggi di tipo Tiro su Abilità */
 const GDRCD_CHAT_SKILL_SYMBOL = '^';
 
-/** @var string Symbolo per indicare i messaggi di tipo Tiro Dado. Permette di definire il lancio di un dado con le seguenti espressioni: d6, 3d6, 2d6+3, 8d10,7. La sintassi è: [numero]d[facce][modificatore],[soglia] */
+/** @var string Simbolo per indicare i messaggi di tipo Tiro Dado. Permette di definire il lancio di un dado con le seguenti espressioni: d6, 3d6, 2d6+3, 8d10,7. La sintassi è: [numero]d[facce][modificatore],[soglia] */
 const GDRCD_CHAT_DICE_SYMBOL = '#';
 
-/** @var string Symbolo per indicare i messaggi di tipo Utilizzo Oggetto */
+/** @var string Simbolo per indicare i messaggi di tipo Utilizzo Oggetto */
 const GDRCD_CHAT_ITEM_SYMBOL = '=';
 
-/** @var string Symbolo per indicare i messaggi di tipo Master */
+/** @var string Simbolo per indicare i messaggi di tipo Master */
 const GDRCD_CHAT_MASTER_SYMBOL = '§';
 
-/** @var string Symbolo per indicare i messaggi di tipo PNG. Funziona come per i sussurri */
+/** @var string Simbolo per indicare i messaggi di tipo PNG. Funziona come per i sussurri */
 const GDRCD_CHAT_PNG_SYMBOL = '$';
 
-/** @var string Symbolo per indicare i messaggi di tipo Immagine. Permette di inserire la url di un immagine subito dopo il carattere */
+/** @var string Simbolo per indicare i messaggi di tipo Immagine. Permette di inserire la url di un immagine subito dopo il carattere */
 const GDRCD_CHAT_IMAGE_SYMBOL = '*';
 
-/** @var string Symbolo per indicare i messaggi di tipo invito in chat. Funziona come per i sussurri */
+/** @var string Simbolo per indicare i messaggi di tipo invito in chat. Funziona come per i sussurri */
 const GDRCD_CHAT_PRIVATE_INVITE_SYMBOL = '!';
 
-/** @var string Symbolo per indicare i messaggi di tipo espelli da chat. Funziona come per i sussurri */
+/** @var string Simbolo per indicare i messaggi di tipo espelli da chat. Funziona come per i sussurri */
 const GDRCD_CHAT_PRIVATE_KICK_SYMBOL = '_';
 
-/** @var string Symbolo per indicare i messaggi di tipo elenco invitati in chat privata */
+/** @var string Simbolo per indicare i messaggi di tipo elenco invitati in chat privata */
 const GDRCD_CHAT_PRIVATE_LIST_SYMBOL = '?';
 
 
