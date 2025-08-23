@@ -31,7 +31,7 @@ $px_totali_pg = gdrcd_filter('int', $personaggio['esperienza']) ;
     </div>
     <?php
     //Incremento skill
-    if((gdrcd_filter('get', $_REQUEST['op']) == 'addskill') && (($_SESSION['login'] == gdrcd_filter('get', $_REQUEST['pg'])) || ($_SESSION['permessi'] >= MODERATOR))) {
+    if((gdrcd_filter('get', $_REQUEST['op']) == 'addskill') && (($_SESSION['login'] == gdrcd_filter('in', $_REQUEST['pg'])) || ($_SESSION['permessi'] >= MODERATOR))) {
         $px_necessari = $PARAMETERS['settings']['px_x_rank'] * ($ranks[$_REQUEST['what']] + 1);
         if(($px_totali_pg - $px_spesi) >= $px_necessari) {
             $px_spesi += $px_necessari;
