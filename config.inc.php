@@ -34,7 +34,7 @@ if( ! empty($_SESSION['login'])) {
 
 
 /* INFORMAZIONI SU GDRCD */
-$PARAMETERS['info']['GDRCD'] = '5.7'; //versione di GDRCD
+$PARAMETERS['info']['GDRCD'] = '5.6.0.6'; //versione di GDRCD
 
 /* PARAMETRI DI CONNESSIONE */
 $PARAMETERS['database']['username'] = 'gdrcd';            //nome utente del database
