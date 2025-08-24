@@ -156,10 +156,49 @@
         <form action="pages/chat/ajax.php?op=chat_skillsystem" method="post" id="skillsystemForm">
             <div class="chat_text chat_row">
 
+                <!-- Tendina selezione tipologia -->
+                <div class="input_container small">
+                    <select name="id_selection" id="id_selection">
+
+                        <option value=""></option>
+
+                        <?php if ($skills) { ?>
+                            <option value="id_ab">
+                                <?php echo gdrcd_filter('out', $MESSAGE['chat']['commands']['skills']); ?>
+                            </option>
+                        <?php } ?>
+
+                        <?php if ($stats) { ?>
+                            <option value="id_stats">
+                                <?php echo gdrcd_filter('out', $MESSAGE['chat']['commands']['stats']); ?>
+                            </option>
+                        <?php } ?>
+
+                        <?php if ($dice) { ?>
+                            <option value="dice">
+                                <?php echo gdrcd_filter('out', $MESSAGE['chat']['commands']['dice']); ?>
+                            </option>
+                        <?php } ?>
+
+                        <?php if ($items) { ?>
+                            <option value="id_item">
+                                <?php echo gdrcd_filter('out', $MESSAGE['chat']['commands']['item']); ?>
+                            </option>
+                        <?php } ?>
+
+                    </select>
+
+                    <br />
+
+                    <span class="casella_info">
+                        Selezione Tiro
+                    </span>
+                </div>
+
                 <?php if ($skills) { ?>
 
                     <!-- Tendina abilità -->
-                    <div class="input_container small">
+                    <div class="input_container small selectable_roll hidden">
                         <select name="id_ab" id="id_ab">
 
                             <option value=""></option>
@@ -184,7 +223,7 @@
                 <?php if ($stats) { ?>
 
                     <!-- Tendina caratteristiche -->
-                    <div class="input_container small">
+                    <div class="input_container small selectable_roll hidden">
                         <select name="id_stats" id="id_stats">
 
                             <option value=""></option>
@@ -209,7 +248,7 @@
                 <?php if ($dice) { ?>
 
                     <!-- Tendina dadi -->
-                    <div class="input_container small">
+                    <div class="input_container small selectable_roll hidden">
                         <select name="dice" id="dice">
 
                             <option value=""></option>
@@ -234,7 +273,7 @@
                 <?php if ($items) { ?>
 
                     <!-- Tendina oggetti -->
-                    <div class="input_container small">
+                    <div class="input_container small selectable_roll hidden">
                         <select name="id_item" id="id_item">
 
                             <option value=""></option>
@@ -307,6 +346,19 @@
         $('#skillsystemForm').submit(function(event) {
             event.preventDefault();
             postSkillsystem($(this).prop('action'), $(this).serialize());
+        });
+
+        // Quando l'utente cambia la selezione nella tendina "Tipologia Prova" (id_selection),
+        // viene eseguita la funzione che mostra/nasconde i campi di input relativi alla scelta
+        // (abilità, caratteristica, dado, oggetto).
+        $('#id_selection').change(function(event) {
+            const enable_id = $(this).val();
+
+            // Prima nasconde tutto
+            $('.selectable_roll').addClass('hidden')
+
+            // Poi mostra solo quello selezionato
+            $('.selectable_roll').has(`#${enable_id}`).removeClass('hidden');
         });
 
     });
