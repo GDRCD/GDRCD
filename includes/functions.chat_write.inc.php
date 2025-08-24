@@ -762,7 +762,7 @@ function gdrcd_chat_skill_save(
  * @param string $testo Il messaggio contenente l'ID dell'oggetto da utilizzare (es: =12)
  * @param string $tipo Facoltativo. La tipologia interna con cui salvare il messaggio nel database
  * @param string $symbol Facoltativo. Il simbolo da rimuovere se presente come primo carattere
- * @return array{code: int, message: string} $status Array associativo proveniente da gdrcd_chat_status()
+ * @return array{code: int, message: string|array} $status Array associativo proveniente da gdrcd_chat_status()
  */
 function gdrcd_chat_item_save(
     $testo,
@@ -807,7 +807,7 @@ function gdrcd_chat_item_save(
     // Tutto a buon fine: status "created" è il modo per indicare che l'operazione ha creato dati nel db
     // In più inviamo nel messaggio in uscita l'elenco aggiornato degli oggetti del giocatore
     return gdrcd_chat_status_created(
-        gdrcd_chat_player_items($_SESSION['login'])
+        ['items' => gdrcd_chat_player_items($_SESSION['login'])]
     );
 }
 
