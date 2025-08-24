@@ -301,6 +301,10 @@ div.chat_row_F{
     margin: 0 1%;
 }
 
+.chat_box .chat_input_box .chat_row .input_container.hidden {
+    display: none;
+}
+
 .chat_box .chat_input_box .chat_row .input_container input,
 .chat_box .chat_input_box .chat_row .input_container select {
     width: 100%;
