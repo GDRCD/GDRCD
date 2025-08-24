@@ -328,18 +328,18 @@
 
         // Conteggio caratteri nell'input di testo
         const $conta = $('#conta');
-        const contaCaratteri = e => $conta.html(e.target.value.length);
+        const contaCaratteri = value => $conta.html(value.length);
 
         // Registra la funzione di conteggio caratteri alla pressione dei tasti nell'input di testo
         $('#testo')
-            .keypress(e => contaCaratteri(e))
-            .keyup(e => contaCaratteri(e));
+            .keypress(e => contaCaratteri(e.target.value))
+            .keyup(e => contaCaratteri(e.target.value));
 
         // Invio form azione
         $('#azioneForm').submit(function(event) {
             event.preventDefault();
-            postChat($(this).prop('action'), $(this).serialize());
-
+            postChat($(this).prop('action'), $(this).serialize())
+                .then(() => contaCaratteri(''));
         });
 
         // Invio form skillsystem
