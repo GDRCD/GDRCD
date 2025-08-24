@@ -8,9 +8,8 @@
     $chat_info = gdrcd_chat_room_info($_SESSION['luogo']);
 
 ?>
+<div class="page_title"><h2><?= gdrcd_chat_room_name($chat_info) ?></h2></div>
 <div class="chat_box">
-    <div class="page_title"><?= gdrcd_chat_room_name($chat_info) ?></div>
-
     <?php if( !gdrcd_chat_room_is_login_allowed($chat_info) ) { ?>
 
         <div class="warning"><?php echo $MESSAGE['chat']['whisper']['privat']; ?></div>
