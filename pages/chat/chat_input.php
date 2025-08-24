@@ -388,8 +388,10 @@
     {
         httpPostRequest(url, data)
             .then(response => {
-                // aggiorna la tendina oggetti
-                updateItemSelect(response.message);
+                // aggiorna la tendina oggetti se arrivano in risposta alla richiesta
+                if (response.message.items) {
+                    updateItemSelect(response.message);
+                }
 
                 // reset tendine
                 $('#id_ab').val('nor');
