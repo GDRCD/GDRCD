@@ -32,7 +32,7 @@ elseif(isset($_REQUEST['dir']) && is_numeric($_REQUEST['dir'])) {
 
     }else
     {
-        $strInnerPage = 'home.inc.php';
+        $strInnerPage = 'mappaclick';
         $_REQUEST['id_map'] = $_SESSION['mappa'];
     }
 
