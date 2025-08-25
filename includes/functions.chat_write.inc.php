@@ -72,44 +72,58 @@ function gdrcd_chat_write_message(
 }
 
 /**
- * Gestisce l'utilizzo del sistema di abilità/caratteristiche/dadi/oggetti tramite chat.
+ * Gestisce l'utilizzo del sistema di abilità tramite chat.
  *
- * Questa funzione consente di inviare automaticamente messaggi in chat per l'utilizzo
- * di diversi elementi del sistema di gioco. Accetta uno solo dei parametri alla volta
- * e genera il messaggio appropriato in chat per la tipologia scelta.
- *
- * Utilizza internamente gdrcd_chat_write_message() per l'effettivo salvataggio del messaggio.
- *
- * @param int|null $id_ab Facoltativo. ID dell'abilità da utilizzare. Se fornito, genera un messaggio di tipo "Tiro su Abilità"
- * @param int|null $id_stats Facoltativo. ID della caratteristica da utilizzare. Se fornito, genera un messaggio di tipo "Tiro Caratteristica"
- * @param int|null $dice Facoltativo. Numero di facce del dado da lanciare. Se fornito, genera un messaggio di tipo "Tiro Dado"
- * @param int|null $id_item Facoltativo. ID dell'oggetto da utilizzare. Se fornito, genera un messaggio di tipo "Utilizzo Oggetto"
- * @return array{code: int, message: string} $status Array associativo proveniente da gdrcd_chat_status()
+ * @param int $id_ab ID dell'abilità da utilizzare.
+ * @return array{code: int, message: string} $status
  */
-function gdrcd_chat_use_skillsystem(
-    $id_ab = null,
-    $id_stats = null,
-    $dice = null,
-    $id_item = null
-) {
-    if ($id_ab != null && $id_ab !== '') {
-        return gdrcd_chat_write_message(GDRCD_CHAT_SKILL_SYMBOL . $id_ab);
+function gdrcd_chat_use_skill($id_ab)
+{
+    return gdrcd_chat_write_message(GDRCD_CHAT_SKILL_SYMBOL . $id_ab);
+}
+
+/**
+ * Gestisce l'utilizzo del sistema di caratteristiche tramite chat.
+ *
+ * @param int $id_stats ID della caratteristica da utilizzare.
+ * @return array{code: int, message: string} $status
+ */
+function gdrcd_chat_use_stats($id_stats)
+{
+    return gdrcd_chat_write_message(GDRCD_CHAT_STATS_SYMBOL . $id_stats);
+}
+
+/**
+ * Gestisce il lancio di dadi tramite chat.
+ *
+ * @param int $dice Numero di facce del dado da lanciare.
+ * @return array{code: int, message: string} $status
+ */
+function gdrcd_chat_use_dice($dice, $number = 1, $modifier = 0, $threshold = 0)
+{
+    $diceNumber = (int)$number > 1 ? $number : '';
+    $diceString = $diceNumber .'d'. $dice;
+
+    if ($modifier) {
+        $diceString .= ($modifier > 0 ? '+' : '') . $modifier;
     }
 
-    if ($id_stats != null && $id_stats !== '') {
-        return gdrcd_chat_write_message(GDRCD_CHAT_STATS_SYMBOL . $id_stats);
+    if ($threshold) {
+        $diceString .= ','. $threshold;
     }
 
-    if ($dice != null && $dice !== '') {
-        return gdrcd_chat_write_message(GDRCD_CHAT_DICE_SYMBOL . "d{$dice}");
-    }
+    return gdrcd_chat_write_message(GDRCD_CHAT_DICE_SYMBOL . $diceString);
+}
 
-    if ($id_item != null && $id_item !== '') {
-        return gdrcd_chat_write_message(GDRCD_CHAT_ITEM_SYMBOL . $id_item);
-    }
-
-    $MESSAGE = $GLOBALS['MESSAGE'];
-    return gdrcd_chat_status_invalid($MESSAGE['chat']['error']['invalid_skillsystem_type']);
+/**
+ * Gestisce l'utilizzo di un oggetto tramite chat.
+ *
+ * @param int $id_item ID dell'oggetto da utilizzare.
+ * @return array{code: int, message: string|array} $status
+ */
+function gdrcd_chat_use_item($id_item)
+{
+    return gdrcd_chat_write_message(GDRCD_CHAT_ITEM_SYMBOL . $id_item);
 }
 
 /**
