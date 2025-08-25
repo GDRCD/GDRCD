@@ -1042,7 +1042,7 @@ function gdrcd_module_enable($id)
  * @param string|int $id Identificativo del modulo da verificare
  * @return void Terminazione dello script se non consentito
  */
-function gdrcd_chat_module_allowed($id)
+function gdrcd_module_allowed($id)
 {
     if ( !defined('GDRCD_ENABLED_MODULE') || GDRCD_ENABLED_MODULE !== $id ) {
 

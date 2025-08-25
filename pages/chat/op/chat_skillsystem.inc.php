@@ -10,7 +10,7 @@
  */
 
 // Garantisce che che questo file sia utilizzato unicamente da /pages/chat/ajax.php
-gdrcd_chat_module_allowed('chat');
+gdrcd_module_allowed('chat');
 
 // Valore tendina "Selezione Tiro"
 $selezione_tiro = $_POST['id_selection'] ?? '';
