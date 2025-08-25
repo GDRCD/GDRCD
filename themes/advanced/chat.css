@@ -35,10 +35,10 @@ div.chat_window {
 */
 div.chat_box {
     position: absolute;
-    top: 50px;
-    bottom: 120px;
-    left: 10px;
-    right: 10px;
+    top: 32px;
+    bottom: 0;
+    left: 0;
+    right: 0;
 
     overflow: auto;
     font-size: 12px;
@@ -180,17 +180,11 @@ input#message {
 /****************************************************************************/
 /*** GENERAL CHAT ***/
 
-div.chat_box {
-    width: 99%;
-    height: 95%;
-    box-sizing: border-box;
-
-}
 
 div.chat_box .chat_azioni_box {
     height: calc(100% - 130px);
-    padding: 0 5px 0 0;
-    margin: 0 5px 0 0;
+    padding: 0 5px 0;
+    margin: 0 5px 0;
     box-sizing: border-box;
     overflow-y: auto;
     scroll-behavior: smooth;
