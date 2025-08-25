@@ -13,7 +13,7 @@
  *
  * @param int $luogo L'ID della stanza di chat da cui leggere i messaggi
  * @param int $last_id Facoltativo. L'ID dell'ultimo messaggio già letto (default: 0)
- * @return array<array{id: int, azione: string}> Elenco dei messaggi formattati in HTML
+ * @return array{code: int, message: array<array{id: int, azione: string}>} Elenco dei messaggi formattati in HTML
  */
 function gdrcd_chat_read_messages($luogo, $last_id = 0)
 {
@@ -77,7 +77,7 @@ function gdrcd_chat_read_messages($luogo, $last_id = 0)
 
     }
 
-    return $azioni;
+    return gdrcd_chat_status_ok($azioni);
 }
 
 /**

@@ -14,13 +14,13 @@ $map_id = $_SESSION['luogo'];
 $chat_last_id = gdrcd_chat_get_lastmessage_id();
 
 // Legge le nuove azioni dal database
-$azioni = gdrcd_chat_read_messages($map_id, $chat_last_id);
+$output = gdrcd_chat_read_messages($map_id, $chat_last_id);
 
-if (count($azioni) > 0) {
+if (count($output['message']) > 0) {
     // Scrive in sessione l'ultimo id letto dal database, in questo modo al
     // prossimo refresh verranno caricati soltanto i messaggi con un id maggiore.
-    gdrcd_chat_set_lastmessage_id(end($azioni)['id']);
+    gdrcd_chat_set_lastmessage_id(end($output['message'])['id']);
 }
 
 // Output delle azioni trovate
-gdrcd_chat_output(gdrcd_chat_status_ok($azioni));
+gdrcd_chat_output($output);
