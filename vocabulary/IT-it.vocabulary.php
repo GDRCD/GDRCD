@@ -827,8 +827,14 @@ $MESSAGE['chat']['error']['permissions'] = 'Non hai i permessi per l\'operazione
 $MESSAGE['chat']['error']['empty_message'] = 'Non puoi inviare messaggi senza testo';
 $MESSAGE['chat']['error']['invalid_recipient'] = 'Non è stato definito il destinatario del messaggio';
 $MESSAGE['chat']['error']['invalid_message_type'] = 'Tipo di messaggio sconosciuto';
-$MESSAGE['chat']['error']['invalid_skillsystem_type'] = 'Nessuna tipologia selezionata per lo skillsystem';
+$MESSAGE['chat']['error']['invalid_skillsystem_type'] = 'Nessuna tipologia di tiro selezionata';
 $MESSAGE['chat']['error']['invalid_dice'] = 'Stringa dadi invalida';
+$MESSAGE['chat']['error']['dice_allowed_values'] = 'Valori ammessi:';
+$MESSAGE['chat']['error']['invalid_dice_faces'] = 'Numero di facce invalido.';
+$MESSAGE['chat']['error']['invalid_dice_number'] = 'Numero di dadi invalido.';
+$MESSAGE['chat']['error']['invalid_dice_modifier'] = 'Modificatore invalido.';
+$MESSAGE['chat']['error']['invalid_dice_threshold'] = 'Modificatore invalido.';
+
 $MESSAGE['chat']['error']['invalid_stats'] = 'Caratteristica invalida';
 $MESSAGE['chat']['error']['invalid_skill'] = 'Abilità invalida';
 $MESSAGE['chat']['error']['invalid_item'] = 'Oggetto invalido';
