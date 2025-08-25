@@ -163,13 +163,13 @@
                         <option value=""></option>
 
                         <?php if ($skills) { ?>
-                            <option value="id_ab">
+                            <option value="skills">
                                 <?php echo gdrcd_filter('out', $MESSAGE['chat']['commands']['skills']); ?>
                             </option>
                         <?php } ?>
 
                         <?php if ($stats) { ?>
-                            <option value="id_stats">
+                            <option value="stats">
                                 <?php echo gdrcd_filter('out', $MESSAGE['chat']['commands']['stats']); ?>
                             </option>
                         <?php } ?>
@@ -181,7 +181,7 @@
                         <?php } ?>
 
                         <?php if ($items) { ?>
-                            <option value="id_item">
+                            <option value="items">
                                 <?php echo gdrcd_filter('out', $MESSAGE['chat']['commands']['item']); ?>
                             </option>
                         <?php } ?>
@@ -198,10 +198,8 @@
                 <?php if ($skills) { ?>
 
                     <!-- Tendina abilità -->
-                    <div class="input_container small selectable_roll hidden">
+                    <div class="input_container small selection_type hidden" rel="skills">
                         <select name="id_ab" id="id_ab">
-
-                            <option value=""></option>
 
                             <?php foreach ($skills as $row) { ?>
                                 <option value="<?php echo $row['id_abilita']; ?>">
@@ -223,10 +221,8 @@
                 <?php if ($stats) { ?>
 
                     <!-- Tendina caratteristiche -->
-                    <div class="input_container small selectable_roll hidden">
+                    <div class="input_container small selection_type hidden" rel="stats">
                         <select name="id_stats" id="id_stats">
-
-                            <option value=""></option>
 
                             <?php foreach($stats as $row) { ?>
                                 <option value="<?php echo $row['id_stats']; ?>">
@@ -248,10 +244,8 @@
                 <?php if ($dice) { ?>
 
                     <!-- Tendina dadi -->
-                    <div class="input_container small selectable_roll hidden">
+                    <div class="input_container small selection_type hidden" rel="dice">
                         <select name="dice" id="dice">
-
-                            <option value=""></option>
 
                             <?php foreach($dice as $row) { ?>
                                 <option value="<?php echo $row['facce']; ?>">
@@ -268,15 +262,70 @@
                         </span>
                     </div>
 
+                    <!-- Numero dadi -->
+                    <div class="input_container small selection_type hidden" rel="dice">
+                        <input
+                            name="dice_number"
+                            id="dice_number"
+                            type="number"
+                            min="1"
+                            step="1"
+                            max="<?= gdrcd_filter_num($PARAMETERS['settings']['skills_dices']['max_number']) ?>"
+                            value="1"
+                        >
+
+                        <br />
+
+                        <span class="casella_info">
+                            Numero Dadi
+                        </span>
+                    </div>
+
+                    <!-- Modificatore Somma -->
+                    <div class="input_container small selection_type hidden" rel="dice">
+                        <input
+                            name="dice_modifier"
+                            id="dice_modifier"
+                            type="number"
+                            min="<?= gdrcd_filter_num($PARAMETERS['settings']['skills_dices']['min_modifier']) ?>"
+                            step="1"
+                            max="<?= gdrcd_filter_num($PARAMETERS['settings']['skills_dices']['max_modifier']) ?>"
+                            value="0"
+                        >
+
+                        <br />
+
+                        <span class="casella_info">
+                            Modificatore
+                        </span>
+                    </div>
+
+                    <!-- Soglia Successi -->
+                    <div class="input_container small selection_type hidden" rel="dice">
+                        <input
+                            name="dice_threshold"
+                            id="dice_threshold"
+                            type="number"
+                            min="0"
+                            step="1"
+                            max="<?= gdrcd_filter_num(max($PARAMETERS['settings']['skills_dices']['faces'])) ?>"
+                            value="0"
+                        >
+
+                        <br />
+
+                        <span class="casella_info">
+                            Soglia Successo
+                        </span>
+                    </div>
+
                 <?php } ?>
 
                 <?php if ($items) { ?>
 
                     <!-- Tendina oggetti -->
-                    <div class="input_container small selectable_roll hidden">
+                    <div class="input_container small selection_type hidden" rel="items">
                         <select name="id_item" id="id_item">
-
-                            <option value=""></option>
 
                             <?php foreach ($items as $row) { ?>
                                 <option value="<?php echo $row['id_oggetto'];?>">
@@ -348,17 +397,33 @@
             postSkillsystem($(this).prop('action'), $(this).serialize());
         });
 
-        // Quando l'utente cambia la selezione nella tendina "Tipologia Prova" (id_selection),
+        // Quando l'utente cambia la selezione nella tendina "Selezione Tiro" (id_selection),
         // viene eseguita la funzione che mostra/nasconde i campi di input relativi alla scelta
         // (abilità, caratteristica, dado, oggetto).
         $('#id_selection').change(function(event) {
-            const enable_id = $(this).val();
 
-            // Prima nasconde tutto
-            $('.selectable_roll').addClass('hidden')
+            // E' il valore della option selezionata nella tendina "Selezione Tiro"
+            const enabled_rel = $(this).val();
+
+            // E' la classe dei contenitori di tutti gli elementi form per i vari "Tiri"
+            const baseClass = '.selection_type';
+
+            // Prima nasconde tutti gli elementi
+            $(`${baseClass}`).addClass('hidden');
+
+            // E disabilita tutti gli input sotto di essi
+            $(`${baseClass}`)
+                .find('input, select, textarea, button')
+                .prop('disabled', true);
 
             // Poi mostra solo quello selezionato
-            $('.selectable_roll').has(`#${enable_id}`).removeClass('hidden');
+            $(`${baseClass}[rel="${enabled_rel}"]`).removeClass('hidden');
+
+            // E riabilita tutti gli input sotto di esso
+            $(`${baseClass}[rel="${enabled_rel}"]`)
+                .find('input, select, textarea, button')
+                .prop('disabled', false);
+
         });
 
     });
@@ -388,16 +453,12 @@
     {
         httpPostRequest(url, data)
             .then(response => {
+
                 // aggiorna la tendina oggetti se arrivano in risposta alla richiesta
                 if (response.message.items) {
                     updateItemSelect(response.message);
                 }
 
-                // reset tendine
-                $('#id_ab').val('nor');
-                $('#id_stats').val('no_stats');
-                $('#dice').val('no_dice');
-                $('#id_item').val('no_item');
             });
     }
 
