@@ -331,6 +331,7 @@ function gdrcd_chat_dice_save(
     $tipo = GDRCD_CHAT_DICE_TYPE,
     $symbol = GDRCD_CHAT_DICE_SYMBOL
 ) {
+    $PARAMETERS = $GLOBALS['PARAMETERS'];
     $MESSAGE = $GLOBALS['MESSAGE'];
 
     // Rimuove il primo carattere se il messaggio inizia col simbolo dedicato
@@ -343,15 +344,15 @@ function gdrcd_chat_dice_save(
 
     // Le seguenti espressioni regolari servono ad individuare le diverse
     // componenti di una stringa di testo così formata: 5d10+6,7
-    // * Il 5 iniziale è il numero di dadi da lanciare. Facoltativo. Valori possibili: 1...100 ($dice_number_regex)
-    // * Il 10 dopo la "d" rappresenta il numero di facce dei dadi da lanciare. Valori possibili: 2, 4, 6, 8, 10, 12, 20, 100 ($dice_faces_regex)
-    // * Il +6 è un modificatore che si somma al totale, può essere anche negativo. Facoltativo. Valori possibili: -100...+100 ($dice_modifier_regexp)
-    // * Il 7 seguito da una virgola permette di evidenziare i dadi che hanno raggiunto o superato quel valore. Facoltativo. Valori possibili: 0...100  ($dice_threshold_regex)
+    // - Il 5 iniziale è il numero di dadi da lanciare. Facoltativo. ($dice_number_regex)
+    // - Il 10 dopo la "d" rappresenta il numero di facce dei dadi da lanciare. ($dice_faces_regex)
+    // - Il +6 è un modificatore che si somma al totale, può essere anche negativo. Facoltativo. ($dice_modifier_regexp)
+    // - Il 7 seguito da una virgola permette di evidenziare i dadi che hanno raggiunto o superato quel valore. Facoltativo. ($dice_threshold_regex)
 
-    $dice_number_regex = '(?:[1-9][0-9]?|100)';
-    $dice_faces_regex = implode('|', array_column(gdrcd_chat_dice_list(), 'facce'));
-    $dice_modifier_regexp = '(?:\+|-)(?:[1-9][0-9]?|100|0)';
-    $dice_threshold_regex = '(?:[1-9][0-9]?|100|0)';
+    $dice_number_regex = '[0-9]+';
+    $dice_faces_regex = '[0-9]+';
+    $dice_modifier_regexp = '(?:\+|-)[0-9]+';
+    $dice_threshold_regex = '[0-9]+';
 
     $dice_regex = "($dice_number_regex)?"
         . "d($dice_faces_regex)"
@@ -369,6 +370,74 @@ function gdrcd_chat_dice_save(
     $dice_faces = (int)$match[2];
     $dice_modifier = empty($match[3])? null : $match[3];
     $dice_threshold = empty($match[4])? null : (int)$match[4];
+
+    // Verifica che il numero di facce selezionato sia consentito
+    $allowed_dice_faces = array_values($PARAMETERS['settings']['skills_dices']['faces']);
+
+    if (!in_array($dice_faces, $allowed_dice_faces)) {
+        return gdrcd_chat_status_invalid(
+            gdrcd_filter_out(
+                $MESSAGE['chat']['error']['invalid_dice_faces']
+                . ' '
+                . $MESSAGE['chat']['error']['dice_allowed_values']
+                . ' '
+                . implode(', ', $allowed_dice_faces)
+            )
+        );
+    }
+
+    // Verifica che il numero di dadi da lanciare sia consentito@return string|int|false
+    if ($dice_number < 1 || $dice_number > $PARAMETERS['settings']['skills_dices']['max_number']) {
+        return gdrcd_chat_status_invalid(
+            gdrcd_filter_out(
+                $MESSAGE['chat']['error']['invalid_dice_number']
+                . ' '
+                . $MESSAGE['chat']['error']['dice_allowed_values']
+                . ' 1 ... '
+                . $PARAMETERS['settings']['skills_dices']['max_number']
+            )
+        );
+    }
+
+    // Verifica che il valore del modificatore sia consentito
+    if (
+        $dice_modifier !== null
+        && (
+            (int)$dice_modifier < $PARAMETERS['settings']['skills_dices']['min_modifier']
+            || (int)$dice_modifier > $PARAMETERS['settings']['skills_dices']['max_modifier']
+        )
+    ) {
+        return gdrcd_chat_status_invalid(
+            gdrcd_filter_out(
+                $MESSAGE['chat']['error']['invalid_dice_modifier']
+                . ' '
+                . $MESSAGE['chat']['error']['dice_allowed_values']
+                . ' '
+                . $PARAMETERS['settings']['skills_dices']['min_modifier']
+                . ' ... '
+                . $PARAMETERS['settings']['skills_dices']['max_modifier']
+            )
+        );
+    }
+
+    // Verifica che il valore della soglia successi sia consentito
+    if (
+        $dice_threshold !== null
+        && (
+            $dice_threshold < 0
+            || $dice_threshold > $dice_faces
+        )
+    ) {
+        return gdrcd_chat_status_invalid(
+            gdrcd_filter_out(
+                $MESSAGE['chat']['error']['invalid_dice_threshold']
+                . ' '
+                . $MESSAGE['chat']['error']['dice_allowed_values']
+                . ' 1 ... '
+                . $dice_faces
+            )
+        );
+    }
 
     $successes = 0;
     $rolls = [];
@@ -390,12 +459,8 @@ function gdrcd_chat_dice_save(
     $sum = array_sum($rolls);
 
     if ($dice_modifier) {
-        // Determina se il modificatore sia positivo o negativo per aggiungerlo correttamente alla somma
-        $modifier_sign = str_starts_with($dice_modifier, '+')? 1 : -1;
-        $modifier_value = $modifier_sign * (int)substr($dice_modifier, 1);
-
         // Aggiunge il modificatore alla somma dei dadi
-        $sum += $modifier_value;
+        $sum += (int)$dice_modifier;
     }
 
     // salva tutti i dati relativi al lancio dei dadi in un array
