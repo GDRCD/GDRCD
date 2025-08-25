@@ -137,7 +137,9 @@
                     </span>
                 <?php  } ?>
 
-	            | <span id="conta">Caratteri: 0</span>
+	            | <span>
+                    Caratteri: <span id="conta">0</span>
+                </span>
             </div>
 
             <!-- Tasto invio azione -->
