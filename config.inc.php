@@ -328,13 +328,23 @@ $PARAMETERS['settings']['stats_dice'] = 20;
 $PARAMETERS['settings']['skill_dice'] = 20;
 
 /* HELP: é possibile aggiungere la possibilità di usare altri tipi di dado implementando questa sezione. E' possibile anche ridurre la scelta dei possibili tipi di dado semplicemente rimuovendo una riga qui.*/
-$PARAMETERS['settings']['skills_dices']['d4'] = 4;
-$PARAMETERS['settings']['skills_dices']['d6'] = 6;
-$PARAMETERS['settings']['skills_dices']['d8'] = 8;
-$PARAMETERS['settings']['skills_dices']['d10'] = 10;
-$PARAMETERS['settings']['skills_dices']['d12'] = 12;
-$PARAMETERS['settings']['skills_dices']['d20'] = 20;
-$PARAMETERS['settings']['skills_dices']['d100'] = 100;
+$PARAMETERS['settings']['skills_dices']['faces']['d4'] = 4;
+$PARAMETERS['settings']['skills_dices']['faces']['d6'] = 6;
+$PARAMETERS['settings']['skills_dices']['faces']['d8'] = 8;
+$PARAMETERS['settings']['skills_dices']['faces']['d10'] = 10;
+$PARAMETERS['settings']['skills_dices']['faces']['d12'] = 12;
+$PARAMETERS['settings']['skills_dices']['faces']['d20'] = 20;
+$PARAMETERS['settings']['skills_dices']['faces']['d100'] = 100;
+
+// Massimo numero di dadi che possono essere lanciati in chat con un singolo tiro
+$PARAMETERS['settings']['skills_dices']['max_number'] = 100;
+
+// Minimo modificatore consentito da applicare alla somma dei dadi lanciati
+$PARAMETERS['settings']['skills_dices']['min_modifier'] = -100;
+
+// Massimo modificatore consentito da applicare alla somma dei dadi lanciati
+$PARAMETERS['settings']['skills_dices']['max_modifier'] = 100;
+
 /**    * Fine dadi */
 
 
