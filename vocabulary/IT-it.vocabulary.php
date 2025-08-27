@@ -832,7 +832,7 @@ $MESSAGE['chat']['error']['dice_allowed_values'] = 'Valori ammessi:';
 $MESSAGE['chat']['error']['invalid_dice_faces'] = 'Numero di facce invalido.';
 $MESSAGE['chat']['error']['invalid_dice_number'] = 'Numero di dadi invalido.';
 $MESSAGE['chat']['error']['invalid_dice_modifier'] = 'Modificatore invalido.';
-$MESSAGE['chat']['error']['invalid_dice_threshold'] = 'Modificatore invalido.';
+$MESSAGE['chat']['error']['invalid_dice_threshold'] = 'Numero soglia successi invalido.';
 
 $MESSAGE['chat']['error']['invalid_stats'] = 'Caratteristica invalida';
 $MESSAGE['chat']['error']['invalid_skill'] = 'Abilità invalida';
