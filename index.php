@@ -8,15 +8,6 @@ require_once('includes/required.php');
 //Eseguo la connessione al database
 $handleDBConnection = gdrcd_connect();
 
-/**
- * Nel caso stessi utilizzando un sistema di protezione per il sito, prevedo il caricamento della pagina
- * @author Breaker
- */
-if ($PARAMETERS['settings']['protection'] == 'ON') {
-    require 'protezione.php';
-}
-
-
 if (DbMigrationEngine::dbNeedsInstallation()) {
     /*
      * Fix per installare il database la prima volta.
