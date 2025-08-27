@@ -435,10 +435,11 @@
      * Dopo l'invio riuscito, ricarica i messaggi della chat per mostrare il nuovo contenuto
      * @param {string} url - URL dell'endpoint per l'invio del messaggio
      * @param {Object} data - Dati del messaggio da inviare al server
+     * @returns {Promise}
      */
     function postChat(url, data)
     {
-        httpPostRequest(url, data)
+        return httpPostRequest(url, data)
             .then(() => {
                 // svuota l'input di testo
                 $('#testo').val('');
@@ -450,10 +451,11 @@
      * Dopo l'invio riuscito, azzera le tendine di selezione e aggiorna la chat
      * @param {string} url - URL dell'endpoint per l'invio dei dati del skillsystem
      * @param {Object} data - Dati delle abilità/caratteristiche/dadi/oggetti da inviare
+     * @returns {Promise}
      */
     function postSkillsystem(url, data)
     {
-        httpPostRequest(url, data)
+        return httpPostRequest(url, data)
             .then(response => {
 
                 // aggiorna la tendina oggetti se arrivano in risposta alla richiesta
