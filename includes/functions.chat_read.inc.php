@@ -771,7 +771,6 @@ function gdrcd_chat_message_component($tipo, $azione_html)
     return <<<HTML
         <div class="chat_row_{$tipo}">
             {$azione_html}
-            <br style="clear:both;" />
         </div>
         HTML;
 }

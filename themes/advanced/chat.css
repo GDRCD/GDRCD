@@ -58,10 +58,9 @@ div.page_body div.panels_box {
 	* @author Blancks
 */
 img.chat_avatar {
-  margin: 8px;
-  display: block;
-  float: left;
-  position: relative;
+    margin: 0;
+    display: inline-block;
+    vertical-align: top;
 }
 
 /***** testo della chat *****/
@@ -69,7 +68,7 @@ img.chat_avatar {
 /* Tipi messaggio: (A azione, N PNG, M Master, I Immagine, S sussurro, D dado, C skill check, O uso oggetto) */
 
 div.chat_row_A {
-  margin-top: 3px;
+    margin-top: 8px;
 }
 
 div.chat_row_A span.color2 {
@@ -79,12 +78,12 @@ div.chat_row_A span.color2 {
 }
 
 div.chat_row_M {
-  margin-top: 3px;
-  border-width: 2px;
-  border-color: green;
-  border-style: solid;
-  text-align: center;
-  color: green;
+    margin-top: 8px;
+    border-width: 2px;
+    border-color: green;
+    border-style: solid;
+    text-align: center;
+    color: green;
 }
 
 div.chat_row_M span.color2 {
@@ -94,7 +93,7 @@ div.chat_row_M span.color2 {
 }
 
 div.chat_row_N {
-  margin-top: 3px;
+    margin-top: 8px;
 }
 
 div.chat_row_N span.color2 {
@@ -103,22 +102,22 @@ div.chat_row_N span.color2 {
 }
 
 div.chat_row_I {
-  margin-top: 3px;
-  text-align: center;
+    margin-top: 8px;
+    text-align: center;
 }
 
 div.chat_row_S {
-  margin-top: 3px;
+    margin-top: 8px;
 }
 
 div.chat_row_D {
-  margin-top: 3px;
-  color: cyan;
+    margin-top: 8px;
+    color: cyan;
 }
 
 div.chat_row_C {
-  margin-top: 3px;
-  color: cyan;
+    margin-top: 8px;
+    color: cyan;
 }
 
 span.chat_time {
@@ -216,15 +215,15 @@ div.chat_box .chat_azioni_box {
 div.chat_row_D,
 div.chat_row_O,
 div.chat_row_C,
-div.chat_row_F {
-  margin-top: 3px;
-  padding: 5px;
-  font-size: 12px;
-  color: white;
-  font-family: "Verdana";
-  text-align: left;
-  background-color: rgb(126, 126, 209);
-  border-radius: 6px;
+div.chat_row_F{
+    margin-top: 8px;
+    padding: 5px;
+    font-size: 12px;
+    color: white;
+    font-family: 'Verdana';
+    text-align: left;
+    background-color: rgb(126, 126, 209);
+    border-radius: 6px;
 }
 
 .chat_dice_rolls {
