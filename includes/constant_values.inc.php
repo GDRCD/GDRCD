@@ -106,9 +106,6 @@ const GDRCD_CHAT_DEFAULT_TYPE = GDRCD_CHAT_ACTION_TYPE;
  * per usare una specifica formattazione
  */
 
-/** @var string Simbolo per indicare i messaggi di tipo Parlato */
-const GDRCD_CHAT_MESSAGE_SYMBOL = '.';
-
 /** @var string Simbolo per indicare i messaggi di tipo Azione */
 const GDRCD_CHAT_ACTION_SYMBOL = '+';
 

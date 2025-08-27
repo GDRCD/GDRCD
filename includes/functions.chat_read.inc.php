@@ -83,7 +83,6 @@ function gdrcd_chat_read_messages($luogo, $last_id = 0)
 /**
  * Ritorna la formattazione HTML più appropriata per l'azione in chat.
  * Sono supportati i seguenti tipi di azione:
- *  - P: parlato
  *  - A: azione
  *  - S: sussurro
  *  - C: tiro su caratteristica

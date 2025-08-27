@@ -8,7 +8,7 @@
 /**
  * Gestisce il salvataggio nel database di un messaggio di chat in base alla tipologia specificata o dedotta.
  * Se il tipo non è specificato, viene determinato automaticamente dal primo carattere del messaggio.
- * Supporta diversi tipi di messaggi: parlato, azione, sussurro, dadi, master, PNG e immagine.
+ * Supporta diversi tipi di messaggi: azione, sussurro, dadi, master, PNG e immagine.
  *
  * @param string $message il messaggio da salvare
  * @param string $tag_o_destinatario Facoltativo. Il tag di locazione o il destinatario appropriato per la tipologia di messaggio
