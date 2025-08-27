@@ -69,11 +69,11 @@
                  * di caricamento e aggiunge i messaggi alla chat secondo la modalità configurata
                  * (dall'alto verso il basso o dal basso verso l'alto).
                  *
-                 * @returns {void}
+                 * @returns {Promise}
                  */
                 function chatReadHandler()
                 {
-                    httpGetChatRead()
+                    return httpGetChatRead()
                         .then(data => {
 
                             // nasconde l'icona di caricamento in chat
@@ -93,6 +93,8 @@
                 /**
                  * Effettua la richiesta XHR per leggere i nuovi messaggi della chat.
                  * Ritorna una promise.
+                 *
+                 * @returns {Promise}
                  */
                 function httpGetChatRead()
                 {
