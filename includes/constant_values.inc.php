@@ -60,9 +60,6 @@ define('HTML_FILTER_HIGH', 1);
  * Codice interno dei messaggi in chat
  */
 
-/** @var string Messaggio di tipo Parlato */
-const GDRCD_CHAT_MESSAGE_TYPE = 'P';
-
 /** @var string Messaggio di tipo Azione */
 const GDRCD_CHAT_ACTION_TYPE = 'A';
 
@@ -100,7 +97,7 @@ const GDRCD_CHAT_PRIVATE_KICK_TYPE = 'Y';
 const GDRCD_CHAT_PRIVATE_LIST_TYPE = 'Z';
 
 /** @var string Tipologia di messaggio di default quando un utente invia un azione senza indicarne esplicitamente il tipo */
-const GDRCD_CHAT_DEFAULT_TYPE = GDRCD_CHAT_MESSAGE_TYPE;
+const GDRCD_CHAT_DEFAULT_TYPE = GDRCD_CHAT_ACTION_TYPE;
 
 /**
  * Codice utente dei messaggi in chat.

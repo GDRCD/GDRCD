@@ -78,16 +78,6 @@ div.chat_row_A span.color2 {
     font-weight: bolder;
 }
 
-div.chat_row_P {
-    margin-top: 3px;
-}
-
-div.chat_row_P span.color2 {
-    margin-top: 3px;
-    color: #000;
-    font-weight: bolder;
-}
-
 div.chat_row_M {
     margin-top: 3px;
     border-width: 2px;

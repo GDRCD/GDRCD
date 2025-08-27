@@ -112,9 +112,6 @@ function gdrcd_chat_read_messages($luogo, $last_id = 0)
 function gdrcd_chat_message_handler($azione)
 {
     switch ($azione['tipo']) {
-        case GDRCD_CHAT_MESSAGE_TYPE:
-            return gdrcd_chat_message_format($azione);
-
         case GDRCD_CHAT_ACTION_TYPE:
             return gdrcd_chat_action_format($azione);
 
@@ -605,67 +602,6 @@ function gdrcd_chat_action_format($azione)
     $chat_body = gdrcd_chat_body_with_colors_component($azione);
 
     // Tipologia di azione. Es: A
-    $azione_tipo = $azione['tipo'];
-
-    // Assemblo la formattazione HTML per la tipologia di messaggio
-    return gdrcd_chat_message_component(
-        $azione_tipo,
-        <<<HTML
-            {$chat_avatar}
-            {$chat_time}
-            {$chat_icons}
-            {$chat_mittente_e_tag}
-            {$chat_body}
-        HTML
-    );
-}
-
-/**
- * Ritorna la formattazione html per un messaggio di tipo "Parlato" ( P ) in chat.
- *
- * @param array{
- *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
- *      url_img_chat: string,
- *      ora: string,
- *      imgs: string,
- *      testo: string,
- * } $azione
- * @return string
- */
-function gdrcd_chat_message_format($azione)
-{
-    $PARAMETERS = $GLOBALS['PARAMETERS'];
-
-    // formattazione avatar di chat
-    $chat_avatar = $PARAMETERS['mode']['chat_avatar'] == 'ON' && !empty($azione['url_img_chat'])
-        ? gdrcd_chat_avatar_component($azione)
-        : '';
-
-    // formattazione orario del messaggio
-    $chat_time = gdrcd_chat_time_component($azione);
-
-    // formattazione icone
-    $chat_icons = $PARAMETERS['mode']['chaticons'] == 'ON'
-        ? gdrcd_chat_icons_component($azione)
-        : '';
-
-    // formattazione nome mittente
-    $chat_sender = gdrcd_chat_sender_component($azione);
-
-    // formattazione tag
-    $chat_tag = !empty($azione['destinatario'])
-        ? gdrcd_chat_tag_component($azione)
-        : '';
-
-    // formattazione mittente del messaggio in chat
-    $chat_mittente_e_tag = gdrcd_chat_name_component($chat_sender . $chat_tag . ':', false);
-
-    // formattazione corpo messaggio
-    $chat_body = gdrcd_chat_body_with_colors_component($azione);
-
-    // Tipologia di azione. Es: P
     $azione_tipo = $azione['tipo'];
 
     // Assemblo la formattazione HTML per la tipologia di messaggio

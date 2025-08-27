@@ -35,16 +35,9 @@
             <!-- Tendina selezione tipo di azione -->
             <div class="input_container small">
                 <select name="type" id="type">
-                    <option value="">Default</option>
-
-                    <!-- Parlato -->
-                    <option value="<?php echo gdrcd_filter('out', GDRCD_CHAT_MESSAGE_TYPE); ?>">
-                        <?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][GDRCD_CHAT_MESSAGE_TYPE]); ?>
-                    </option>
-
-                    <!-- Azione -->
-                    <option value="<?php echo gdrcd_filter('out', GDRCD_CHAT_ACTION_TYPE); ?>">
-                        <?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][GDRCD_CHAT_ACTION_TYPE]); ?>
+                    <!-- Caso default: Azione -->
+                    <option value="">
+                        <?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][GDRCD_CHAT_DEFAULT_TYPE]); ?>
                     </option>
 
                     <!-- Sussurra -->

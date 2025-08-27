@@ -784,7 +784,6 @@ $MESSAGE['status_pg']['invisible'][1] = 'Invisibile';
 
 /********** Chat **********/
 $MESSAGE['chat']['type']['info'] = 'Tipo';
-$MESSAGE['chat']['type'][GDRCD_CHAT_MESSAGE_TYPE] = 'Parlato';
 $MESSAGE['chat']['type'][GDRCD_CHAT_ACTION_TYPE] = 'Azione';
 $MESSAGE['chat']['type'][GDRCD_CHAT_MASTER_TYPE] = 'Master';
 $MESSAGE['chat']['type'][GDRCD_CHAT_PNG_TYPE] = 'PNG';

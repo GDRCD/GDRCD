@@ -26,9 +26,6 @@ function gdrcd_chat_write_message(
     }
 
     switch ($type) {
-        case GDRCD_CHAT_MESSAGE_TYPE:
-            return gdrcd_chat_message_save($tag_o_destinatario, $message);
-
         case GDRCD_CHAT_ACTION_TYPE:
             return gdrcd_chat_action_save($tag_o_destinatario, $message);
 
@@ -140,9 +137,6 @@ function gdrcd_chat_get_type_from_message($message)
     $first_char = substr($message, 0, 1);
 
     switch ($first_char) {
-        case GDRCD_CHAT_MESSAGE_SYMBOL:
-            return GDRCD_CHAT_MESSAGE_TYPE;
-
         case GDRCD_CHAT_ACTION_SYMBOL:
             return GDRCD_CHAT_ACTION_TYPE;
 
@@ -968,48 +962,6 @@ function gdrcd_chat_action_save(
     $testo,
     $tipo = GDRCD_CHAT_ACTION_TYPE,
     $symbol = GDRCD_CHAT_ACTION_SYMBOL
-) {
-    $MESSAGE = $GLOBALS['MESSAGE'];
-
-    // Rimuove il primo carattere se il messaggio inizia col simbolo dedicato
-    $testo = gdrcd_chat_strip_message_symbol($testo, $symbol);
-
-    // Se il testo è vuoto l'inserimento fallisce
-    if (empty($testo)) {
-        return gdrcd_chat_status_invalid($MESSAGE['chat']['error']['empty_message']);
-    }
-
-    // Salva il tag in sessione
-    gdrcd_chat_set_tag($tag);
-
-    // Salva l'azione nel database
-    gdrcd_chat_db_insert_for_login(
-        $tag,
-        $tipo,
-        $testo
-    );
-
-    // Assegna esperienza
-    gdrcd_chat_assign_experience($testo);
-
-    // Tutto a buon fine: status "created" è il modo per indicare che l'operazione ha creato dati nel db
-    return gdrcd_chat_status_created();
-}
-
-/**
- * Inserisce nella tabella `chat` del database un messaggio di tipo "Parlato".
- *
- * @param string $tag il tag di locazione
- * @param string $testo il messaggio da salvare
- * @param string $tipo Facoltativo. La tipologia interna con cui salvare il messaggio nel database
- * @param string $symbol Facoltativo. il simbolo da rimuovere se presente come primo carattere
- * @return array{code: int, message: string} $status Array associativo proveniente da gdrcd_chat_status()
- */
-function gdrcd_chat_message_save(
-    $tag,
-    $testo,
-    $tipo = GDRCD_CHAT_MESSAGE_TYPE,
-    $symbol = GDRCD_CHAT_MESSAGE_SYMBOL
 ) {
     $MESSAGE = $GLOBALS['MESSAGE'];
 
