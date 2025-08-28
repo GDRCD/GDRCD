@@ -45,13 +45,6 @@ div.chat_box {
   text-align: left;
 }
 
-div.page_body div.panels_box {
-  position: absolute;
-  bottom: 9px;
-  left: 5px;
-  right: 5px;
-}
-
 /**	* Fine fix */
 
 /** * Avatar di chat
