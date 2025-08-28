@@ -98,7 +98,7 @@ function gdrcd_api_status_forbidden($message = 'Forbidden')
  */
 function gdrcd_api_status_notfound($message = 'Not Found')
 {
-    return gdrcd_api_status(403, $message);
+    return gdrcd_api_status(404, $message);
 }
 
 /**
