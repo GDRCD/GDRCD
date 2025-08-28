@@ -134,7 +134,7 @@ function gdrcd_chat_use_item($id_item)
  */
 function gdrcd_chat_get_type_from_message($message)
 {
-    $first_char = substr($message, 0, 1);
+    $first_char = mb_substr($message, 0, 1);
 
     switch ($first_char) {
         case GDRCD_CHAT_ACTION_SYMBOL:
@@ -1352,7 +1352,7 @@ function gdrcd_chat_extract_recipient_from_message(&$message, $symbol)
 function gdrcd_chat_strip_message_symbol($message, $symbol)
 {
     if (str_starts_with($message, $symbol)) {
-        return trim(substr($message, 1));
+        return trim(mb_substr($message, 1));
     }
 
     return $message;
