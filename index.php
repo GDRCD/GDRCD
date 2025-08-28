@@ -49,8 +49,8 @@ $content = (!empty($_GET['content'])) ? gdrcd_filter('include', $_GET['content']
         <!-- IE9: mi stai ampiamente rompendo i maroni. -->
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
         <link rel="shortcut icon" href="imgs/favicon.ico" type="image/png"/>
-        <link rel="stylesheet" href="themes/homepage/<?= $PARAMETERS['themes']['homepage']; ?>/homepage.css"
-              type="text/css"/>
+        <link rel="stylesheet" href="themes/<?= $PARAMETERS['themes']['homepage']; ?>/variabili.css" type="text/css"/>
+        <link rel="stylesheet" href="themes/homepage/<?= $PARAMETERS['themes']['homepage']; ?>/homepage.css" type="text/css"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"/>
         <title>
             <?php echo $PARAMETERS['info']['site_name']; ?>

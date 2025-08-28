@@ -10,13 +10,21 @@
 
 /** * Parametri di default nella pagina
 */
+html
+{
+height:100%;
+position:relative;	
+}
+
 body {
-    padding: 0;
-    margin: 0;
-    color: #222;
-    font-family: Verdana, Sans;
-    font-size: 11px;
-    background: url("img/bg.gif") top left repeat;
+	background: var(--main-background);	
+	color: var(--colore-001);
+	font-family: var(--font-family-default);
+	font-size: var(--font-size-default);
+	letter-spacing:var(--letter-spacing-default);
+	line-height:var(--line-height-default);
+	margin: 0;
+	padding: 0;	
 }
 
 body.transparent_body {
@@ -24,7 +32,9 @@ body.transparent_body {
     background-image: none;
 }
 
-div, ul, li {
+div, 
+ul, 
+li {
     margin: 0;
     padding: 0;
 }
@@ -33,15 +43,17 @@ div, ul, li {
     clear: both;
 }
 
-a, a:visited {
-    color: #333;
-    text-decoration: none;
-}
+a {
+	&,
+	&:visited {
+		color: var(--link-color-default);
+		text-decoration: underline;	
+		font-weight:bolder;
+	}
 
-a:hover {
-    color: #222;
-    font-weight: bolder;
-    text-decoration: underline;
+	&:hover {
+		color: var(--link-color-hover-default);
+	}	
 }
 
 div.form_field table {
@@ -50,14 +62,66 @@ div.form_field table {
     width: 100%;
 }
 
-input, textarea, select {
+input, 
+textarea, 
+select {
     width: 80%;
     margin-bottom: 10px;
 }
 
 input[type='submit'] {
     width: auto;
-    margin: 5px 0 15px 0;
+    margin: 10px auto;
+	padding:5px 20px;
+	background: 
+		linear-gradient(
+			to bottom, 
+			rgba(255,255,255,0.4) 0%,
+			rgba(255,255,255,0.4) 50%,
+			rgba(255,255,255,0.2) 50%,
+			rgba(255,255,255,0) 100%
+		),		
+		var(--colore-004);
+	
+	border-top:var(--border-light);
+	border-left:var(--border-light);
+	border-bottom:var(--border-default);
+	border-right:var(--border-default);
+		
+		
+	&:hover{
+		background: 
+			linear-gradient(
+				to bottom, 
+				rgba(255,255,255,0.8) 0%,
+				rgba(255,255,255,0.8) 50%,
+				rgba(255,255,255,0.4) 50%,
+				rgba(255,255,255,0.2) 100%
+			),		
+			var(--colore-004);
+	}
+	
+	&:active{
+		background: 
+			linear-gradient(
+				to bottom, 
+				rgba(255,255,255,0.4) 0%,
+				rgba(255,255,255,0.4) 50%,
+				rgba(255,255,255,0.2) 50%,
+				rgba(255,255,255,0) 100%
+			),			
+			linear-gradient(
+				to bottom, 
+				rgba(0,0,0,0.4) 0%,
+				rgba(0,0,0,0.4) 100%
+			),		
+			var(--colore-004);
+		border-top:var(--border-default);
+		border-left:var(--border-default);
+		border-bottom:var(--border-light);
+		border-right:var(--border-light);
+		color:var(--colore-002);
+	}	
 }
 
 textarea {
@@ -75,13 +139,16 @@ div.form_info {
     margin-bottom: 15px;
 }
 
-select.day, select.month, select.year {
+select.day, 
+select.month, 
+select.year {
     width: 60px;
     display: inline-block;
 }
 
 /** * Stile dei messaggi d'avviso dell'engine */
-div.warning, div.error {
+div.warning, 
+div.error {
     background-color: #cf8888;
     font-size: 12px;
     text-align: center;
@@ -90,23 +157,24 @@ div.warning, div.error {
     padding: 10px;
     border: solid 1px #800;
     color: #970b0b;
-}
-
-div.warning.mysql, 
-div.error.mysql {
-	text-align:left;
-	font-weight:normal;
-}
-
-div.warning.mysql summary, 
-div.error.mysql summary{
-	margin-top:1em;
-	font-weight:bold;
+	
+	&.warning.mysql, 
+	&.error.mysql{
+		text-align:left;
+		font-weight:normal;
+	
+		summary, 
+		summary{
+			margin-top:1em;
+			font-weight:bold;
+		}	
+	
+	}	
 }
 
 div.link_back {
     text-align: center;
-    background-color: #d1d1d1;
+    background-color: var(--colore-03);
     padding: 2px;
 }
 
@@ -117,62 +185,34 @@ h1 {
     margin: 0;
     padding: 30px 0 0 76px;
     font-size: 38px;
-    font-family: Myriad Pro, Myriad Web Pro Regular, Lucida Grande, Geneva, Trebuchet MS, sans-serif;
+    font-family: var(--h-font-family);
+	
+	/** * Stile del link sul titolo */	
+	a{
+		
+		&,
+		&:visited,
+		&:hover{
+			color: var(--link-color-default);
+			text-decoration: none;			
+		}
+		
+		
+	}
+	
+}
+h2{
+    font-family: var(--h-font-family);	
 }
 
-/** * Stile del link sul titolo */
-h1 a, h1 a:visited, h1 a:hover {
-    color: #222;
-    text-decoration: none;
-}
 
-/** * Sottotitolo
-*/
-div.subtitle {
-    margin-left: 78px;
-    color: #666;
-    font-family: Verdana, Sans;
-    font-size: 12px;
-}
 
-/** * Stili del form di login
-*/
-div.login_form{
-	float:right;
-	width:230px;
-	padding:20px 10px;
-	margin-top: 20px;
-}
-
-/** * stile che ingloba i gruppi label/input
-*/
-div.login_form div {
-    margin-bottom: 4px;
-}
-
-/** * Stile per le label dei form
-*/
+/** * Stile per le label dei form */
 span.form_label {
     text-align: left;
     font-weight: bolder;
-}
-
-div.login_form input {
-    width: 145px;
-    margin: 0;
-}
-div.login_form input[type=checkbox]{
-	width: auto;
-	vertical-align: middle;
-}
-
-/** * Stile per il bottone del login
-*/
-div.login_form input[type='submit'] {
-    display: block;
-    float: right;
-    margin-right: 52px;
-    width: 65px;
+	
+	
 }
 
 /** * Contenuti principali della pagina
@@ -184,187 +224,354 @@ h2 {
     font-weight: normal;
     margin: 0;
     padding-bottom: 4px;
-    border-bottom: solid 1px #d9d9d9;
-}
-
-/** * Contenuti testuali */
-div.content_body p {
-    font-size: 13px;
-    padding: 0 10px;
-}
-
-div.content_body a {
-    color: #999;
-    text-decoration: underline;
-}
-
-/** * Men� di navigazione
-*/
-div.sidecontent ul {
-    margin: 20px 0 0 10px;
-    padding: 20px 10px 20px 10px;
-    background-color: #a1a1a1;
-    list-style-type: none;
-    -moz-border-radius: 5px; /* Bordi arrotondati */
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
-}
-
-/** * Contenitore delle voci nel men� **/
-div.sidecontent ul li {
-    margin-bottom: 5px;
-}
-
-/** * Link voce men� al passaggio del mouse **/
-div.sidecontent ul li a, div.sidecontent ul li a:visited {
-    color: #f1f1f1;
-    text-decoration: none;
-    display: block;
-    font-size: 17px;
-    padding: 2px;
-    background-color: transparent;
-}
-
-/** * Link voce men� al passaggio del mouse
-*/
-div.sidecontent ul li a:hover {
-    background-color: #b2b2b2;
-    color: #444;
-}
-
-/** Stile generico contenitore per altri contenuti nella sidebar
-*/
-div.side_modules {
-    margin: 10px 0 0 10px;
-    background-color: #b9b9b9;
-    color: #333;
-    padding: 10px;
-    text-align: center;
-    -moz-border-radius: 5px; /* Bordi arrotondati */
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
-}
-
-div.side_modules .form_label {
-    font-size: 10px;
-    margin-right: 2px;
-}
-
-/** * Tabella statistiche */
-table.statistics {
-    text-align: right;
-    margin-top: 10px;
-    font-size: 10px;
-}
-
-table.statistics td {
-    padding-right: 5px;
-}
-
-/** * Stile di colorazione per definire le righe pari */
-table.statistics tr.pair {
-    background-color: #c9c9c9;
-}
-
-/** * Stile per definire il titolo del parametro statistico */
-table.statistics td.label {
-    font-weight: bolder;
-    text-align: left;
-    padding: 2px;
-}
-
-/** * Recupero password */
-div.pass_rec {
-    margin-top: 10px;
-}
-
-input#passrecovery {
-    width: 126px;
-}
-
-div.pass_rec input[type='submit'] {
-    margin-top: 3px;
-}
-
-/** * Footer info */
-div#footer div {
-    background-color: #d9d9d9;
-    padding: 5px 0 3px 0;
-}
-
-div#footer p {
-    font-size: 10px;
-    margin: 0;
-    padding: 0 15px 2px 15px;
-    text-align: center;
+    border-bottom: solid 1px var(--colore-05);
 }
 
 /** * LAYOUT SITO */
 
-/** * Struttura contenitore di tutto il sito 
-*/
+/** * Struttura contenitore di tutto il sito */
 div#main {
-    height: 100%;
-    width: 100%;
-    background: url("img/bg_header.jpg") repeat-x top left;
-    text-align: center;
-}
+	height: 100vh;
+	width: 100%;
+	background:var(--header-background);
+	text-align: center;
+	
+	/** * Larghezza della struttura del sito */
+	div#site_width {
+		margin: 0 auto;
+		width: 960px;
+		text-align: left;
+	
+		/** * HEADER */
+		div#header {
+			height: var(--header-height);
+			display:flex;
+		
+			& > div {
 
-/** * Larghezza della struttura del sito
-*/
-div#site_width {
-    margin: 0 auto;
-    width: 960px;
-    text-align: left;
-}
+				height: 100%;
+			}		
+		
+			.titlecontent {
+				flex:1 1 auto;
+				margin-left:5px;
+				display:flex;
+				flex-wrap:wrap;
+				align-items:center;
+				align-content:center;
+				
+				h1{
+					padding: 0 0 0 var(--content-padding);
+					
+					a{
+						
+						
+						img
+						{
+							display:block;
+						}
+					}
+				}
+			
+				div.subtitle {
+					flex:0 1 100%;
+					margin-top:1em;
+					margin-left: var(--content-padding);
+					color: var(--colore-001);
+					font-family: var(--font-family-default);
+					font-size: var(--font-size-default);
+				}			
+			
+			}		
+		
 
-/** * Header
-*/
-div#header {
-    height: 180px;
-}
+		
+		}	
+		
+		/** * Corpo contenuti della pagina	*/	
+		div#content {  
+		
+			display:flex;
 
-div#header > div {
-    float: left;
-    height: 100%;
-}
+ 			background-color:var(--colore-005); 
+			border-left:var(--border-default);
+			border-right:var(--border-default);
+			box-shadow: var(--box-shadow-default);			
+			clip-path: inset(0 -20px 0 -20px); 
+			padding: 0 var(--content-padding) 10px var(--content-padding);			
+		
+			/** * AREA LATERALE	*/
+			div.sidecontent {  
+			
+				flex: 0 0 var(--sidecontent-width);
+				
+				/** Stile generico contenitore per altri contenuti nella sidebar */				
+				div.side_modules {
+					margin: 5px;
+					background-color: var(--colore-004);
+					color: var(--colore-001);
+					padding: 10px;
+					text-align: center;
+					border-radius: 5px;
+					overflow:hidden;
+					
+					&.nopad
+					{
 
-div#header .titlecontent {
-    width: calc(100% - 250px);
-}
+						padding:0;
+					}
+					
+					.form_label {
+						font-size: 10px;
+						margin-right: 2px;
+					}
 
-/** * Corpo contenuti della pagina
-*/
-div#content {
-    padding: 0 60px 10px 60px;
-    background: url("img/body.png") repeat-y left top;
-}
+				
+				
+				}
+			
+			
+			}		
+		
+			/** * Struttura corpo contenuti pagina */
+			div.content_body {
+				/* calcola le dimensioni dell'elemento in base alle dimensioni degli altri elementi di content */
+				flex:1 1 auto;
+				padding: 10px;
+				line-height:var(--content-line-height);
+			
+				h2
+				{
+					border-bottom: var(--border-default);
+				}
+				
+			
+			
+			}		
+		
+		
+		
+		}
 
-/** * Struttura colonna di lato
-*/
-div.sidecontent {
-    width: 200px;
-    float: left;
+		/** * pie di pagina 	*/
+		div#footer {
+			border-left:var(--border-default);
+			border-right:var(--border-default);			
+			border-bottom:var(--border-default);			
+			
+			padding: 0px var(--content-padding) 0 var(--content-padding);
+			box-shadow: var(--box-shadow-default);
+			background-color:var(--colore-005);    
+			clip-path: inset(0 -20px -20px -20px); 
+			display:flex;
+		
+			& > div {
+				flex:1 1 auto;
+				padding:10px;
+			}
+			
+			p {
+				font-size: 10px;
+				line-height:1.5em;
+				margin: 0;
+				text-align: center;
+			}			
+		
+		}		
+	
+	}
+	
 }
-
-/** * Struttura corpo contenuti pagina 
-*/
-div.content_body {
-    width: 620px;
-    padding: 10px;
-    float: left;
-}
-
-/** * pie di pagina
-*/
-div#footer {
-    height: 68px;
-    padding: 8px 59px 0 59px;
-    background: url("img/footer.png") no-repeat top left;
-}
-
 
 /** *** Fine stili regolatori del layout *** */
+
+/* INIZIO MODULI */
+
+	/** * modulo per il login */
+	div.logincontent{
+		display:flex;
+		align-items:center;
+		align-content:center;		
+		
+		/** * Stili del form di login */
+		div.login_form{
+
+			
+			padding:10px;
+			/** * stile che ingloba i gruppi label/input */
+			div {
+				margin-bottom: 4px;
+			}
+
+			input {
+				width: 145px;
+				margin: 0;
+				
+				&[type=checkbox]{
+					width: auto;
+					vertical-align: middle;
+					
+				}
+				
+				/** * Stile per il bottone del login */		
+				&[type='submit'] {
+					display: block;
+					margin:10px auto;
+				}		
+			}	
+		}
+
+	}	
+	
+	/** * Menù di navigazione */
+	div.nav
+	{
+		ul {  
+			margin:0;
+			padding: 0px 0;
+			background-color: var(--colore-11);
+			list-style-type: none;
+			text-align:left;
+			
+		
+			/** * Contenitore delle voci nel menù **/
+			li{
+			
+				/** * Link voce menù **/
+				a{	
+
+					/** * Link voce menù normali e visitati */
+					&, 
+					&:visited{
+						color: var(--colore-001);
+						text-decoration: none;
+						display: block;
+						background-color: transparent;
+						text-transform:uppercase;
+						padding-left:10px;
+						padding-top:5px;
+						padding-bottom:5px;
+					}
+					/** * Link voce menù al passaggio del mouse */				
+					&:hover{
+						background-color: var(--colore-003);
+						color: var(--colore-002);
+					}				
+
+				}
+			
+			}	
+		
+		}
+
+	}
+	
+	/** * Recupero password */
+	div.pass_rec {
+		
+		input#passrecovery {
+
+		}
+		
+		input[type='submit'] {
+			margin: 0px;
+		}	
+	}
+
+	/** * Tabella statistiche */
+	div.stats {
+		table.statistics {
+			text-align: right;
+			margin-top: 10px;
+			font-size: 10px;
+			
+			/** * Stile di colorazione per definire le righe pari */
+			tr.pair {
+				background-color: var(--colore-12);
+			}	
+			
+			td {
+				padding-right: 5px;
+			
+				/** * Stile per definire il titolo del parametro statistico */		
+				&.label {
+					font-weight: bolder;
+					text-align: left;
+					padding: 2px;
+				}	
+			}	
+		}
+	}
+	
+	div.user_regolamento, 
+	div.user_ambientazione,
+	div.user_razze{
+		
+		div.casella_titolo{
+			display:flex;
+			gap:1ch;
+			align-items:center;
+			align-content:center;			
+			font-weight:bold;
+			text-transform:uppercase;
+			margin:0.25em 0;
+			
+
+			
+			& > div:nth-child(1) {
+				flex:0 1 auto;
+			}
+			& > div:nth-child(2) {
+				flex:1 0 auto;
+			}
+		
+			.elementi_elenco {
+				margin:0;
+			}			
+		
+		}
+		
+		.elementi_elenco {
+			margin:0;
+			margin-bottom:2em;
+			padding:0;
+		}		
+		
+	
+	
+	}
+	
+	div.user_razze
+	{
+		
+		div.casella_titolo{
+			justify-content:center;
+		
+			& > div:nth-child(2) {
+				flex:0 0 auto;
+			}		
+		}
+		
+		.razza_icon
+		{
+			width: 50px;
+			height: 50px;
+			object-fit: cover;
+			object-position:center;
+			border:var(--border-default);
+			border-radius:50%;
+		}
+		
+		.razza_immagine {
+			float:left;
+			margin:10px;
+			border:var(--border-default);
+			
+		}
+	}
+	
+/* FINE MODULI */	
+
 
 /**
  * TABELLA
@@ -372,19 +579,19 @@ div#footer {
 
 div.elenco_record_gioco {
     padding: 20px;
+	
+	table {
+		width: 100%;
+		background-color: var(--colore-03);
+		border-radius: 5px;
+	}	
 }
 
-div.elenco_record_gioco table {
-    width: 100%;
-    background-color: #d1d1d1;
-    -moz-border-radius: 5px; /* Bordi arrotondati */
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
-}
 
-div.elementi_elenco {
+
+div.elementi_elenco { 
     padding-top: 5px;
-    text-align: center;
+    text-align: left;
 }
 
 div.titoli_elenco,
@@ -406,6 +613,8 @@ div.controlli_elenco {
 div.controllo_elenco {
     width: 20px;
     float: left;
+	
+	
 }
 
 div.controllo_elenco input[type='image'] {
@@ -419,7 +628,7 @@ div.elementi_elenco {
 
 td.casella_elemento, div.elementi_elenco {
     font-size: 12px;
-    background-color: #d9d9d9;
+    background-color: var(--colore-05);
 }
 
 div.controllo_elenco input[type='image'] {
@@ -436,3 +645,4 @@ div.elementi_elenco a {
 div.elementi_elenco a:hover {
     text-decoration: none;
 }
+
