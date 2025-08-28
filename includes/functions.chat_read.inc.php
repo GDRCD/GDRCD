@@ -1084,7 +1084,6 @@ function gdrcd_chat_stats_component($stats_or_skill_name, $body)
 
     if (isset($body['skill'])) {
         $messaggio_skill = <<<HTML
-            {$body['skill']['name']}
             {$MESSAGE['chat']['commands']['use_skills']['rank']}
             <span class="chat_skill_bonus_value">{$body['skill']['value']}</span>,
             HTML;
