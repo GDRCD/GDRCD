@@ -7,44 +7,33 @@
         $result = gdrcd_query($query, 'result'); ?>
         <div class="panels_box">
             <div class="elenco_record_gioco">
-                <table>
-                    <?php while($row = gdrcd_query($result, 'fetch')) { ?>
-                        <tr>
-                            <td colspan="2" class="casella_titolo">
-                                <div class="elementi_elenco">
-                                    <img class="razza_icon"
-                                         src="themes/<?php echo $PARAMETERS['themes']['current_theme'] ?>/imgs/races/<?php echo $row['icon']; ?>" />
-                                    <?php if(empty($row['url_site']) === true) {
-                                        echo $row['nome_razza'].' ('.$row['sing_m'].', '.$row['sing_f'].')';
-                                    } else {
-                                        echo '<a href="http://'.$row['url_site'].'">'.gdrcd_filter('out', $row['nome_razza']).'</a> ('.gdrcd_filter('out', $row['sing_m']).', '.gdrcd_filter('out', $row['sing_f']).')';
-                                    } ?>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="casella_razza_immagine">
-                                <div class="elementi_elenco">
-                                    <?php if(empty($row['immagine']) === true) {
-                                        echo '&nbsp;';
-                                    } else { ?>
-                                        <img class="razza_immagine" src="themes/<?php echo $PARAMETERS['themes']['current_theme'] ?>/imgs/races/<?php echo $row['immagine']; ?>" />
-                                    <?php } ?>
-                                </div>
-                            </td>
-                            <td class="casella_elemento">
-                                <div class="elementi_elenco">
-                                    <?php echo gdrcd_bbcoder(gdrcd_filter('out', $row['descrizione'])); ?>
-                                </div>
-                                <div class="elementi_elenco">
-                                    <?php echo $MESSAGE['interface']['user']['races']['bonus'].': '.$PARAMETERS['names']['stats']['car0'].' '.$row['bonus_car0'].', '.$PARAMETERS['names']['stats']['car1'].' '.$row['bonus_car1'].', '.$PARAMETERS['names']['stats']['car2'].' '.$row['bonus_car2'].', '.$PARAMETERS['names']['stats']['car3'].' '.$row['bonus_car3'].', '.$PARAMETERS['names']['stats']['car4'].' '.$row['bonus_car4'].', '.$PARAMETERS['names']['stats']['car5'].' '.$row['bonus_car5'].'.'; ?>
-                                </div>
-                            </td>
-                        </tr>
-                    <?php }//while
-                    gdrcd_query($result, 'free');
-                    ?>
-                </table>
+				<?php while($row = gdrcd_query($result, 'fetch')) { ?>
+
+					<div class="casella_titolo">
+						<div class="elementi_elenco">
+							<img class="razza_icon"
+								 src="themes/<?php echo $PARAMETERS['themes']['current_theme'] ?>/imgs/races/<?php echo $row['icon']; ?>" />
+						</div>
+						<div class="elementi_elenco">						
+							<?php if(empty($row['url_site']) === true) {
+								echo $row['nome_razza'].' ('.$row['sing_m'].', '.$row['sing_f'].')';
+							} else {
+								echo '<a href="http://'.$row['url_site'].'">'.gdrcd_filter('out', $row['nome_razza']).'</a> ('.gdrcd_filter('out', $row['sing_m']).', '.gdrcd_filter('out', $row['sing_f']).')';
+							} ?>
+						</div>
+					</div>
+					<div class="elementi_elenco">
+						<?php if(trim($row['immagine']) != "") {?>
+							<img class="razza_immagine" src="themes/<?php echo $PARAMETERS['themes']['current_theme'] ?>/imgs/races/<?php echo $row['immagine']; ?>" />
+						<?php } ?>								
+						<?php echo gdrcd_bbcoder(gdrcd_filter('out', $row['descrizione'])); ?>
+					</div>
+					<div class="elementi_elenco">
+						<?php echo $MESSAGE['interface']['user']['races']['bonus'].': '.$PARAMETERS['names']['stats']['car0'].' '.$row['bonus_car0'].', '.$PARAMETERS['names']['stats']['car1'].' '.$row['bonus_car1'].', '.$PARAMETERS['names']['stats']['car2'].' '.$row['bonus_car2'].', '.$PARAMETERS['names']['stats']['car3'].' '.$row['bonus_car3'].', '.$PARAMETERS['names']['stats']['car4'].' '.$row['bonus_car4'].', '.$PARAMETERS['names']['stats']['car5'].' '.$row['bonus_car5'].'.'; ?>
+					</div>
+				<?php }//while
+				gdrcd_query($result, 'free');
+				?>
             </div>
             <!--elenco_record_gioco-->
         </div>

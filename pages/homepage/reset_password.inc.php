@@ -45,9 +45,9 @@ if ( ! empty($_POST['email'])) {
  */
 
 ?>
-<strong><?php echo gdrcd_filter('out', $MESSAGE['homepage']['forms']['forgot']); ?></strong>
     <div class="pass_rec">
-        <form action="index.php" method="post">
+		<strong><?php echo gdrcd_filter('out', $MESSAGE['homepage']['forms']['forgot']); ?></strong>        
+		<form action="index.php" method="post">
             <div>
                 <span class="form_label"><label for="passrecovery"><?php echo $MESSAGE['homepage']['forms']['email']; ?></label></span>
                 <input type="text" id="passrecovery" name="email"/>

@@ -26,10 +26,10 @@ if (gdrcd_configuration_get('registrazione.stato_registrazione') === 'chiuso') {
                 <div class="panels_box">
                     <!-- condizioni d'uso -->
                     <div class="disclaimer_iscrizione">
-                        <?php echo gdrcd_filter('out', $MESSAGE['register']['disclaimer']); ?>
+                        <p><?php echo gdrcd_filter('out', $MESSAGE['register']['disclaimer']); ?></p>
                     </div>
                     <div class="disclaimer_iscrizione">
-                        <?php echo gdrcd_filter('out', $MESSAGE['register']['rules_read']); ?>
+                        <p><?php echo gdrcd_filter('out', $MESSAGE['register']['rules_read']); ?></p>
                     </div>
                     <!-- Accetto le condizioni -->
                     <div class="form_gioco">
