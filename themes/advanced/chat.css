@@ -58,9 +58,8 @@ div.page_body div.panels_box {
 	* @author Blancks
 */
 img.chat_avatar {
-    margin: 0;
-    display: inline-block;
-    vertical-align: top;
+    margin: 5px 10px 5px 5px;
+    float: left;
 }
 
 /***** testo della chat *****/
@@ -69,6 +68,7 @@ img.chat_avatar {
 
 div.chat_row_A {
     margin-top: 8px;
+    display: flow-root;
 }
 
 div.chat_row_A span.color2 {
@@ -79,6 +79,7 @@ div.chat_row_A span.color2 {
 
 div.chat_row_M {
     margin-top: 8px;
+    display: flow-root;
     border-width: 2px;
     border-color: green;
     border-style: solid;
@@ -94,6 +95,7 @@ div.chat_row_M span.color2 {
 
 div.chat_row_N {
     margin-top: 8px;
+    display: flow-root;
 }
 
 div.chat_row_N span.color2 {
@@ -103,20 +105,24 @@ div.chat_row_N span.color2 {
 
 div.chat_row_I {
     margin-top: 8px;
+    display: flow-root;
     text-align: center;
 }
 
 div.chat_row_S {
     margin-top: 8px;
+    display: flow-root;
 }
 
 div.chat_row_D {
     margin-top: 8px;
+    display: flow-root;
     color: cyan;
 }
 
 div.chat_row_C {
     margin-top: 8px;
+    display: flow-root;
     color: cyan;
 }
 
@@ -217,6 +223,7 @@ div.chat_row_O,
 div.chat_row_C,
 div.chat_row_F{
     margin-top: 8px;
+    display: flow-root;
     padding: 5px;
     font-size: 12px;
     color: white;
