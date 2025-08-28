@@ -625,8 +625,9 @@ function gdrcd_check_time($time)
  * E' approssimata ma funziona, se qualcuno vuol far di meglio si faccia avanti
  * @param string $page : il percorso filesystem del file da includere
  * @param array $params : un array di dati aggiuntivi passabili al modulo
+ * @param bool $throwOnError default false.
  */
-function gdrcd_load_modules($page, $params = [])
+function gdrcd_load_modules($page, $params = [], $throwOnError = false)
 {
     global $MESSAGE;
     global $PARAMETERS;
@@ -649,6 +650,10 @@ function gdrcd_load_modules($page, $params = [])
         include_once($modulePath);
     }
     catch(Exception $e) {
+        if ($throwOnError) {
+            throw $e;
+        }
+        
         echo $e->getMessage();
     }
 
