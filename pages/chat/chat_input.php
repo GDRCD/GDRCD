@@ -29,7 +29,7 @@
 <div class="chat_bottom">
 
     <!-- Form per invio messaggi in chat -->
-    <form action="pages/chat/ajax.php?op=chat_write" method="post" id="azioneForm">
+    <form action="ajax.php?page=chat&op=write" method="post" id="azioneForm">
         <div class="chat_text chat_row">
 
             <!-- Tendina selezione tipo di azione -->
@@ -148,7 +148,7 @@
     <?php if ($skills || $stats || $dice || $items) { ?>
 
         <!-- Form per tiro caratteristica/abilità/dadi e utilizzo oggetti in chat -->
-        <form action="pages/chat/ajax.php?op=chat_skillsystem" method="post" id="skillsystemForm">
+        <form action="ajax.php?page=chat&op=skillsystem" method="post" id="skillsystemForm">
             <div class="chat_text chat_row">
 
                 <!-- Tendina selezione tipologia -->

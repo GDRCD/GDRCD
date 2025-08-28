@@ -99,7 +99,7 @@
                 function httpGetChatRead()
                 {
                     return new Promise((resolve, reject) => {
-                        $.get('pages/chat/ajax.php?op=chat_read')
+                        $.get('ajax.php?page=chat&op=read')
                             .done(function(response) {
 
                                 resolve(response);

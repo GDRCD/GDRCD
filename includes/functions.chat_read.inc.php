@@ -77,7 +77,7 @@ function gdrcd_chat_read_messages($luogo, $last_id = 0)
 
     }
 
-    return gdrcd_chat_status_ok($azioni);
+    return gdrcd_api_status_ok($azioni);
 }
 
 /**

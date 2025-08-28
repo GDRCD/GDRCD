@@ -63,9 +63,9 @@ switch ($selezione_tiro) {
 
     // Tipologia sconosciuta o non selezionata
     default:
-        $output = gdrcd_chat_status_invalid($MESSAGE['chat']['error']['invalid_skillsystem_type']);
+        $output = gdrcd_api_status_invalid($MESSAGE['chat']['error']['invalid_skillsystem_type']);
         break;
 }
 
 // Ritorna una risposta al browser formattata in base all'esito dell'operazione eseguita
-gdrcd_chat_output($output);
+gdrcd_api_output($output);

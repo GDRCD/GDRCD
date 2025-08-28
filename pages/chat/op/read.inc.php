@@ -23,4 +23,4 @@ if (count($output['message']) > 0) {
 }
 
 // Output delle azioni trovate
-gdrcd_chat_output($output);
+gdrcd_api_output($output);
