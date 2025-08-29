@@ -34,7 +34,7 @@
 			var(--colore-005)  50%,
 			var(--colore-003) 100%
 		)
-		top left / 100% var(--header-height)  
+		top left / auto var(--header-height)  
 		repeat-x;
 		
 	--header-height:150px;		
