@@ -4,8 +4,8 @@ if ($_SESSION['permessi'] < SUPERUSER){
 } else {
     switch ($_REQUEST['op']) {
         case 'save_config':
-            $id = gdrcd_filter('in', $_POST['id']);
-            $valore = gdrcd_filter('in', $_POST['valore']);
+            $id = $_POST['id'];
+            $valore = $_POST['valore'];
             
             // Validazione input
             if(empty($id) || !is_numeric($id)){
@@ -15,29 +15,23 @@ if ($_SESSION['permessi'] < SUPERUSER){
 HTML;
                 break;
             }
-            
-            // Aggiorna la configurazione
-            $query = "UPDATE configurazioni SET valore = '" . gdrcd_filter('in', $valore) . "' WHERE id = " . intval($id);
-            $result = gdrcd_query($query, 'result');
-            
-            if($result){
+            $stmt = gdrcd_stmt(
+                "UPDATE configurazioni SET valore = ? WHERE id = ?",
+                [
+                    'si',
+                    $valore,
+                    $id
+                ]
+            );
                 $success_message = 'Configurazione aggiornata con successo';
                 echo <<<HTML
 <div class="success">{$success_message}</div>
 HTML;
-            } else {
-                $error_message = 'Errore durante l\'aggiornamento della configurazione';
-                echo <<<HTML
-<div class="error">{$error_message}</div>
-HTML;
-            }
             break;
-            
         default:
             die('Operazione non riconosciuta.');
     }
 }
-
 echo <<<HTML
 <!-- Link a piè di pagina -->
 <div class="link_back">

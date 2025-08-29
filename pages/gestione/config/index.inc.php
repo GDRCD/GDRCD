@@ -2,18 +2,20 @@
 if ($_SESSION['permessi'] < SUPERUSER){
     echo '<div class="error">'.gdrcd_filter('out',$MESSAGE['error']['not_allowed']).'</div>';
 } else {
-            $config_result = gdrcd_query("SELECT * FROM configurazioni ORDER BY categoria, ordinamento, parametro", 'result');
-            echo <<<HTML
-<div class="form_container">
-HTML;
-            // Raggruppa le configurazioni per categoria
+            $config_result = gdrcd_stmt(
+                "SELECT * FROM configurazioni ORDER BY categoria, ordinamento, parametro"
+            );
+             // Raggruppa le configurazioni per categoria
             $configs_by_category = array();
-            while($config = gdrcd_query($config_result, 'fetch')){
+            while($config = gdrcd_query($config_result, 'assoc')){
                 $categoria = gdrcd_filter('out', $config['categoria']);
                 if(empty($categoria)) $categoria = 'Generale';
                 $configs_by_category[$categoria][] = $config;
             }
-            // Genera le sezioni espandibili per categoria
+            echo <<<HTML
+<div class="form_container">
+HTML; 
+// Genera le sezioni espandibili per categoria
             foreach($configs_by_category as $categoria => $configs){
                 echo <<<HTML
     <details class="config-section">
@@ -59,23 +61,14 @@ HTML;
                         echo <<<HTML
                 <input type="checkbox" name="valore" value="1" {$checked} style="margin-right: 5px;">
 HTML;
-                    } elseif($input_type == 'token'){
-                        echo <<<HTML
-                <div class="token-generator">
-                    <input type="text" name="valore" value="{$valore}" id="token_field_{$id}" class="config-form-input">
-                    <button type="button" onclick="generateRandomToken('{$id}')" class="token-generate-btn">Genera Token</button>
-                </div>
-HTML;
-                    } else {
+                    }   else {
                         echo <<<HTML
                 <input type="text" name="valore" value="{$valore}">
 HTML;
                     }
-                
                     echo <<<HTML
             </div>
 HTML;
-                    
                     if(!empty($descrizione)){
                         echo <<<HTML
             <div class="config-form-description">
@@ -83,7 +76,6 @@ HTML;
             </div>
 HTML;
                     }
-                    
                     echo <<<HTML
             <div class="config-form-submit">
                 <input type="hidden" name="id" value="{$id}" />
@@ -105,22 +97,6 @@ HTML;
 <div class="link_back">
     <a href="main.php?page=gestione">Torna indietro</a>
 </div>
-
-<script>
-function generateRandomToken(configId) {
-    // Genera un token alfanumerico di 16 caratteri
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let token = '';
-    for (let i = 0; i < 16; i++) {
-        token += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    
-    // Inserisce il token nel campo corrispondente
-    const tokenField = document.getElementById('token_field_' + configId);
-    if (tokenField) {
-        tokenField.value = token;
-    }
-}
-</script>
+ 
 HTML;
 }

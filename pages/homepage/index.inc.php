@@ -70,9 +70,17 @@ $users = gdrcd_query("SELECT COUNT(nome) AS online FROM personaggio WHERE ora_en
         <div id="content">
             <div class="sidecontent">
                 <ul>
+                    <?php
+                    // Controllo dello stato registrazione
+                    $stato_registrazione_query = gdrcd_query("SELECT valore FROM configurazioni WHERE parametro = 'Stato Registrazione'");
+                     
+                    // Mostra il link di iscrizione solo se lo stato non è "Chiuso"
+                    if ($stato_registrazione_query['valore'] !== 'Chiuso') {
+                    ?>
                     <li>
                         <a href="index.php?page=homepage&content=iscrizione"><?php echo $MESSAGE['homepage']['registration']; ?></a>
                     </li>
+                    <?php } ?>
                     <li>
                         <a href="index.php?page=homepage&content=user_regolamento"><?php echo $MESSAGE['homepage']['rules']; ?></a>
                     </li>

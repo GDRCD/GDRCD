@@ -1,23 +1,21 @@
-<div class="pagina_config">
+<div class="pagina_token">
     <?php /*HELP: */
     /*Controllo permessi utente*/
-    if (($_SESSION['permessi'] < SUPERUSER)  ){
+    if (($_SESSION['permessi'] < SUPERUSER) || ($PARAMETERS['mode']['spymessages'] != 'ON')){
 
         
         echo '<div class="error">'.gdrcd_filter('out',$MESSAGE['error']['not_allowed']).'</div>';
     } else { ?>
-    <div class="page_title">
-        <h2>Configurazioni</h2>
-    </div>
     <div class="page_body">
         <?php
         switch($_REQUEST['op']) {
-            case 'save_config': // Salvataggio modifiche
-                include('gestione/config/save.inc.php');
+            case 'genera_token': // Generazione nuovo token
+            case 'elimina_token': // Eliminazione token
+                include('gestione/token/save.inc.php');
                 break;
 
             default: //Lista pagine
-                include('gestione/config/index.inc.php');
+                include('gestione/token/index.inc.php');
                 break;
         }
     }
