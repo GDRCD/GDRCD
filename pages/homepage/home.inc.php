@@ -26,5 +26,4 @@
     leggendo la <a href="https://github.com/GDRCD/GDRCD/wiki">Wiki su GitHub</a> o iscrivendoti al <a href="https://discord.gg/DJWaXPrQPQ">Server Discord Ufficiale</a>, dedicato al confronto, allo sviluppo e al mantimento di GDRCD.
     <u>Ogni aiuto offerto è sempre prezioso!</u>
 </p>
-
 <p>Buon divertimento!</p>

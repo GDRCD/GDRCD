@@ -300,88 +300,95 @@ if (gdrcd_configuration_get('registrazione.stato_registrazione') === 'chiuso') {
 
 
                         ?>
-                        <div class="elenco_gioco">
+                        <h3><?php echo gdrcd_filter('out', $MESSAGE['register']['summary']) ?></h3>
+						<div class="elenco_gioco">
                             <table>
                                 <tr>
-                                    <td class='casella_titolo'>
-                                        <div class='titoli_elenco'><?php echo gdrcd_filter('out', $MESSAGE['register']['summary']) ?></div>
+									<td>
+                                       <?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['email']); ?>
+                                    </td>									
+									<td>
+										<?php echo gdrcd_filter('out', $_POST['email']) ?>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class='casella_elemento'>
-                                        <div class='elementi_elenco'>
-                                            <?php echo gdrcd_filter('out', $_POST['email']) ?>
-                                        </div>
+									<td>
+										<?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['name']); ?>
+                                    </td>                                    
+									<td>
+										<?php echo gdrcd_filter('out', $_POST['nome']) ?>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class='casella_elemento'>
-                                        <div class='elementi_elenco'>
-                                            <?php echo gdrcd_filter('out', $_POST['nome']) ?>
-                                        </div>
+									<td>
+										<?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['lastname']); ?>
+                                    </td>                                    
+									<td>
+										<?php echo gdrcd_filter('out', $_POST['cognome']) ?>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class='casella_elemento'>
-                                        <div class='elementi_elenco'>
-                                            <?php echo gdrcd_filter('out', $_POST['cognome']) ?>
-                                        </div>
+									<td>
+										<?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['gender']); ?>
+                                    </td>                                    
+									<td>
+										<?php echo gdrcd_filter('out', $genere) ?>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class='casella_elemento'>
-                                        <div class='elementi_elenco'>
-                                            <?php echo gdrcd_filter('out', $genere) ?>
-                                        </div>
+									<td>
+										<?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['race']); ?>
+                                    </td>                                    
+									<td>
+										<?php echo gdrcd_filter('out', $razza['nome_razza']) . '&nbsp;' ?>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class='casella_elemento'>
-                                        <div class='elementi_elenco'>
-                                            <?php echo gdrcd_filter('out', $razza['nome_razza']) . '&nbsp;' ?>
-                                        </div>
+                                    <td>
+										<?php echo gdrcd_filter('out', $PARAMETERS['names']['stats']['car0']) ?>
+                                    </td>                                    
+									<td>
+										<?php echo gdrcd_filter('out', $_POST['car0']) ?>
+                                     </td>
+                                </tr>
+                                <tr>
+                                     <td>
+										<?php echo gdrcd_filter('out', $PARAMETERS['names']['stats']['car1']) ?>
+                                    </td>                                    
+									<td>
+										<?php echo gdrcd_filter('out', $_POST['car1']) ?>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class='casella_elemento'>
-                                        <div class='elementi_elenco'>
-                                            <?php echo gdrcd_filter('out', $PARAMETERS['names']['stats']['car0'] . ' ' . $_POST['car0']) ?>
-                                        </div>
+                                    <td>
+										<?php echo gdrcd_filter('out', $PARAMETERS['names']['stats']['car2']) ?>
+                                    </td>                                    
+									<td>
+										<?php echo gdrcd_filter('out', $_POST['car2']) ?>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class='casella_elemento'>
-                                        <div class='elementi_elenco'>
-                                            <?php echo gdrcd_filter('out', $PARAMETERS['names']['stats']['car1'] . ' ' . $_POST['car1']) ?>
-                                        </div>
+                                    <td>
+										<?php echo gdrcd_filter('out', $PARAMETERS['names']['stats']['car3']) ?>
+                                    </td>                                    
+									<td>
+										<?php echo gdrcd_filter('out', $_POST['car3']) ?>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class='casella_elemento'>
-                                        <div class='elementi_elenco'>
-                                            <?php echo gdrcd_filter('out', $PARAMETERS['names']['stats']['car2'] . ' ' . $_POST['car2']) ?>
-                                        </div>
+                                    <td>
+										<?php echo gdrcd_filter('out', $PARAMETERS['names']['stats']['car4']) ?>
+                                    </td>                                    
+									<td>
+										<?php echo gdrcd_filter('out', $_POST['car4']) ?>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class='casella_elemento'>
-                                        <div class='elementi_elenco'>
-                                            <?php echo gdrcd_filter('out', $PARAMETERS['names']['stats']['car3'] . ' ' . $_POST['car3']) ?>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class='casella_elemento'>
-                                        <div class='elementi_elenco'>
-                                            <?php echo gdrcd_filter('out', $PARAMETERS['names']['stats']['car4'] . ' ' . $_POST['car4']) ?>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class='casella_elemento'>
-                                        <div class='elementi_elenco'>
-                                            <?php echo gdrcd_filter('out', $PARAMETERS['names']['stats']['car5'] . ' ' . $_POST['car5']) ?>
-                                        </div>
+                                    <td>
+										<?php echo gdrcd_filter('out', $PARAMETERS['names']['stats']['car5']) ?>
+                                    </td>                                    
+									<td>
+										<?php echo gdrcd_filter('out', $_POST['car5']) ?>
                                     </td>
                                 </tr>
                               

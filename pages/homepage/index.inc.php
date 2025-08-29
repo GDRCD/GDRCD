@@ -50,7 +50,7 @@ $users = gdrcd_query("SELECT COUNT(nome) AS online FROM personaggio WHERE ora_en
                     ?>
                 </div>
 
-                <div class="side_modules">
+                <div class="side_modules nopad">
                     <?php
                         // Include le statistiche del sito
                         include (__DIR__ . '/user_stats.inc.php');
