@@ -21,7 +21,7 @@ class GDRCD57 extends DbMigration
         // Inserimento dati iniziali configurazioni
         gdrcd_query("INSERT INTO `configurazioni` (`id`, `tipo`, `categoria`, `ordinamento`, `opzioni`, `default`, `parametro`, `valore`, `descrizione`, `input`) VALUES (1, 'string', 'Registrazione', 1, 'Aperto,Chiuso,Su invito', 'Aperto', 'Stato Registrazione', 'Aperto', 'Imposta lo stato delle iscrizioni della land. Se aperto permette l\\iscrizione, se chiuso inibisce le iscrizioni. Su invito permette di generare un token da fornire per l\\iscrizione', 'select')");
         
-        gdrcd_query("INSERT INTO `configurazioni` (`id`, `tipo`, `categoria`, `ordinamento`, `opzioni`, `default`, `parametro`, `valore`, `descrizione`, `input`) VALUES (2, 'string', 'Registrazione', 2, NULL, NULL, 'Messaggio Registrazione', NULL, 'Messaggio che appare nel caso delle iscrizioni chiuse al posto del form di iscrizione', 'textarea')");
+        gdrcd_query("INSERT INTO `configurazioni` (`id`, `tipo`, `categoria`, `ordinamento`, `opzioni`, `default`, `parametro`, `valore`, `descrizione`, `input`) VALUES (2, 'string', 'Registrazione', 2, NULL, 'Le registrazioni sono attualmente chiuse. Riprova più tardi.', 'Messaggio Registrazione', NULL, 'Messaggio che appare nel caso delle iscrizioni chiuse al posto del form di iscrizione', 'textarea')");
 
         // Creazione tabella token_iscrizione
         gdrcd_query("CREATE TABLE `token_iscrizione` (
