@@ -10,7 +10,7 @@ class GDRCD57 extends DbMigration
             `categoria` VARCHAR(50) NULL DEFAULT NULL,
             `ordinamento` INT(10) NULL DEFAULT NULL,
             `opzioni` VARCHAR(50) NULL DEFAULT NULL,
-            `default` VARCHAR(50) NULL DEFAULT NULL,
+            `default` VARCHAR(255) NULL DEFAULT NULL,
             `parametro` VARCHAR(50) NULL DEFAULT NULL,
             `valore` TEXT NULL DEFAULT NULL,
             `descrizione` TEXT NULL DEFAULT NULL,
