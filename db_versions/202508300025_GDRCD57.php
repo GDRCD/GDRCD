@@ -16,7 +16,7 @@ class GDRCD57 extends DbMigration
             `descrizione` TEXT NULL DEFAULT NULL,
             `input` VARCHAR(50) NULL DEFAULT NULL,
             PRIMARY KEY (`id`) USING BTREE
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4_general_ci");
+        ) ENGINE=InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci");
 
         // Inserimento dati iniziali configurazioni
         gdrcd_query("INSERT INTO `configurazioni` (`id`, `tipo`, `categoria`, `ordinamento`, `opzioni`, `default`, `parametro`, `valore`, `descrizione`, `input`) VALUES (1, 'string', 'Registrazione', 1, 'Aperto,Chiuso,Su invito', 'Aperto', 'Stato Registrazione', 'Aperto', 'Imposta lo stato delle iscrizioni della land. Se aperto permette l\\iscrizione, se chiuso inibisce le iscrizioni. Su invito permette di generare un token da fornire per l\\iscrizione', 'select')");
@@ -33,7 +33,7 @@ class GDRCD57 extends DbMigration
             `utilizzato_da` VARCHAR(50) NULL DEFAULT NULL,
             `data_utilizzo` DATE NULL DEFAULT NULL,
             PRIMARY KEY (`id`) USING BTREE
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4_general_ci");
+        ) ENGINE=InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci");
     }
 
     public function down() {
