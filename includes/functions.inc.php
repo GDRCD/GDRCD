@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Funzioni di CORE di GDRCD
  */
@@ -40,7 +41,7 @@ function gdrcd_connect()
 function gdrcd_close_connection($db)
 {
     // Chiudo la connessione al database
-    if(is_resource($db) && get_resource_type($db)==='mysql link') mysqli_close($db);
+    if (is_resource($db) && get_resource_type($db) === 'mysql link') mysqli_close($db);
 }
 
 /**
@@ -68,11 +69,10 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
             switch (strtoupper(substr(trim($sql), 0, 6))) {
                 case 'SELECT':
                     $result = mysqli_query($db_link, $sql);
-                    if($result === false){
-                        if($throwOnError){
+                    if ($result === false) {
+                        if ($throwOnError) {
                             throw new Exception("Query DB Fallita: " . $sql . "\n\n" . mysqli_error($db_link));
-                        }
-                        else{
+                        } else {
                             die(gdrcd_mysql_error($sql));
                         }
                     }
@@ -82,11 +82,10 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
                     return $row;
                 default:
                     $result = mysqli_query($db_link, $sql);
-                    if($result === false){
-                        if($throwOnError){
+                    if ($result === false) {
+                        if ($throwOnError) {
                             throw new Exception("Query DB Fallita: " . $sql . "\n\n" . mysqli_error($db_link));
-                        }
-                        else{
+                        } else {
                             die(gdrcd_mysql_error($sql));
                         }
                     }
@@ -95,11 +94,10 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
 
         case 'result':
             $result = mysqli_query($db_link, $sql);
-            if($result === false){
-                if($throwOnError){
+            if ($result === false) {
+                if ($throwOnError) {
                     throw new Exception("Query DB Fallita: " . $sql . "\n\n" . mysqli_error($db_link));
-                }
-                else{
+                } else {
                     die(gdrcd_mysql_error($sql));
                 }
             }
@@ -135,57 +133,98 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
 
 
 /**
- * Prepared Statements
- * @param string $sql: il codice SQL da inviare al database
- * @param array $binds: array dei parametri associati alla query
+ * Esegue una query SQL utilizzando prepared statements tramite MySQLi.
  *
- * E' obbligatorio specificare nell'indice zero dell'array binds i tipi delle variabili che si stanno immettendo nella query
- * Tali tipi sono i seguenti:
- * i      corrispondente ai valori integer
- * d     corrispondente ai valori float/double
- * s     corrispondente alle stringhe
- * b     corrispondende a valori di tipo blob
+ * Questa funzione permette di eseguire in modo sicuro query SQL, prevenendo SQL injection,
+ * tramite l'utilizzo di prepared statements. I parametri della query vengono passati tramite
+ * un array, dove il primo elemento specifica i tipi dei parametri secondo la sintassi MySQLi:
+ *  - 'i' per integer
+ *  - 'd' per double/float
+ *  - 's' per string
+ *  - 'b' per blob
  *
- * @return mysqli_result
+ * @param string $sql   La query SQL da eseguire, con i segnaposto (?) per i parametri.
+ * @param array  $binds Array dei parametri da associare alla query. L'indice 0 deve contenere
+ *                      una stringa con i tipi dei parametri, gli indici successivi i valori.
+ *                      Esempio: ['si', 'nome', 42]
+ *
+ * @return mysqli_result|false Restituisce il risultato della query (mysqli_result) in caso di SELECT,
+ *                             true per query di modifica (INSERT/UPDATE/DELETE), oppure false in caso di errore.
  */
-function gdrcd_stmt($sql, $binds = array())
+function gdrcd_stmt($sql, $binds = array(), $throwOnError = false)
 {
     $db_link = gdrcd_connect();
+    $resultArr = array(
+        'data' => null,
+        'num_rows' => null,
+        'affected_rows' => null,
+        'last_id' => null,
+    );
 
-    if ($stmt = mysqli_prepare($db_link, $sql)) {
+    $stmt = mysqli_prepare($db_link, $sql);
 
-        if (!empty($binds)) {
-
-            #> E' necessario referenziare ogni parametro da passare alla query
-            #> MySqli è suscettibile in proposito.
-            $ref = array();
-
-            foreach ($binds as $k => $v) {
-                if ($k > 0) {
-                    $ref[$k] = &$binds[$k];
-                } else {
-                    $ref[$k] = $v;
-                }
-            }
-
-            array_unshift($ref, $stmt);
-            call_user_func_array('mysqli_stmt_bind_param', $ref);
+    if ($stmt === false) {
+        $errorMsg = gdrcd_mysql_error('Failed when creating the statement.');
+        if ($throwOnError) {
+            throw new Exception($errorMsg);
+        } else {
+            die($errorMsg);
         }
-
-        mysqli_stmt_execute($stmt);
-        $result = mysqli_stmt_get_result($stmt);
-        $stmtError = mysqli_stmt_error($stmt);
-
-        if (!empty($stmtError))
-            die(gdrcd_mysql_error($stmtError));
-
-        mysqli_stmt_close($stmt);
-
-        return $result;
-
-    } else {
-        die(gdrcd_mysql_error('Failed when creating the statement.'));
     }
+
+    if (!empty($binds)) {
+        // MySQLi requires references for bind_param
+        $refs = array();
+        foreach ($binds as $k => $v) {
+            $refs[$k] = &$binds[$k];
+        }
+        array_unshift($refs, $stmt);
+        call_user_func_array('mysqli_stmt_bind_param', $refs);
+    }
+
+    if (!mysqli_stmt_execute($stmt)) {
+        $stmtError = mysqli_stmt_error($stmt);
+        $errorMsg = gdrcd_mysql_error($stmtError);
+        mysqli_stmt_close($stmt);
+        if ($throwOnError) {
+            throw new Exception($errorMsg);
+        } else {
+            die($errorMsg);
+        }
+    }
+
+    $meta = mysqli_stmt_result_metadata($stmt);
+    if ($meta) {
+        // SELECT-like query
+        $result = mysqli_stmt_get_result($stmt);
+        if ($result === false) {
+            $stmtError = mysqli_stmt_error($stmt);
+            $errorMsg = gdrcd_mysql_error($stmtError);
+            mysqli_stmt_close($stmt);
+            if ($throwOnError) {
+                throw new Exception($errorMsg);
+            } else {
+                die($errorMsg);
+            }
+        }
+        $rows = array();
+        while ($row = mysqli_fetch_array($result, MYSQLI_BOTH)) {
+            $rows[] = $row;
+        }
+        $resultArr['data'] = $rows;
+        $resultArr['num_rows'] = mysqli_num_rows($result);
+        mysqli_free_result($result);
+    } else {
+        // Non-SELECT query
+        $resultArr['affected_rows'] = mysqli_stmt_affected_rows($stmt);
+        // Check if it's an INSERT
+        if (preg_match('/^\s*INSERT\s/i', $sql)) {
+            $resultArr['last_id'] = mysqli_stmt_insert_id($stmt);
+        }
+    }
+
+    mysqli_stmt_close($stmt);
+    return $resultArr;
 }
 
 
@@ -255,8 +294,8 @@ function gdrcd_mysql_error($details = false)
     $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 50);
     $history = '';
 
-    foreach($backtrace as $v) {
-        if($v['function'] == 'gdrcd_query') {
+    foreach ($backtrace as $v) {
+        if ($v['function'] == 'gdrcd_query') {
             $base = $v;
         }
         $history .= '<strong>FILE: </strong>: ' . $v['file'] . ' - ';
@@ -267,7 +306,7 @@ function gdrcd_mysql_error($details = false)
     if ($details !== false) {
         $error_msg .= '<strong>QUERY: </strong>: ' . $details . '</br>';
     }
-    $error_msg .= '<strong>ERROR [' . mysqli_errno(gdrcd_connect()) . ']</strong>: ' . mysqli_error(gdrcd_connect()) .'<br />';
+    $error_msg .= '<strong>ERROR [' . mysqli_errno(gdrcd_connect()) . ']</strong>: ' . mysqli_error(gdrcd_connect()) . '<br />';
     $error_msg .= '<strong>FILE: </strong>: ' . $base['file'] . ' - ';
     $error_msg .= '<strong>LINE: </strong>: ' . $base['line'] . '<br />';
     $error_msg .= '<details>';
@@ -533,32 +572,33 @@ function gdrcd_controllo_permessi_forum($tipo, $proprietari = '')
  * @return bool
  * @throws Exception
  */
-function gdrcd_controllo_chat($location) {
+function gdrcd_controllo_chat($location)
+{
     global $PARAMETERS;
 
     $location = gdrcd_filter('num', $location);
 
-    $chat_data = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprietario, scadenza FROM mappa WHERE id=".$location." LIMIT 1");
+    $chat_data = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprietario, scadenza FROM mappa WHERE id=" . $location . " LIMIT 1");
     $private = gdrcd_filter('num', $chat_data['privata']);
 
     // Se la stanza è privata
-    if($private) {
+    if ($private) {
 
         // Controllo permessi utente
         $spy_room_enabled = $PARAMETERS['mode']['spyprivaterooms'] === 'ON';
         $isModerator = ($_SESSION['permessi'] >= MODERATOR);
-        if($spy_room_enabled && $isModerator){
+        if ($spy_room_enabled && $isModerator) {
             return true;
         }
 
         // Controllo scadenza stanza, se non scaduta
         $expiring = $chat_data['scadenza'];
         $actual_time = strftime('%Y-%m-%d %H:%M:%S');
-        if($expiring > $actual_time) {
+        if ($expiring > $actual_time) {
 
             // Controllo membri della stanza
             $owner = gdrcd_filter('out', $chat_data['proprietario']);
-            $me = gdrcd_filter('out',gdrcd_capital_letter($_SESSION['login']));
+            $me = gdrcd_filter('out', gdrcd_capital_letter($_SESSION['login']));
             $mineGuild = gdrcd_filter('out', $_SESSION['gilda']);
             $chat_invited = explode(',', $chat_data['invitati']);
 
@@ -575,7 +615,7 @@ function gdrcd_controllo_chat($location) {
             }
         }
     } else {
-       return true;
+        return true;
     }
 
     return false;
@@ -630,17 +670,15 @@ function gdrcd_load_modules($page, $params = [])
         // Controllo la tipologia di informazione passata (file o page) e poi determino il percorso del modulo
         $modulePath = is_file($page) ? $page : gdrcd_pages_path($page);
 
-        if(!file_exists($modulePath)) {
+        if (!file_exists($modulePath)) {
             throw new Exception($MESSAGE['interface']['layout_not_found']);
         }
 
         // Includo il modulo
         include_once($modulePath);
-    }
-    catch(Exception $e) {
+    } catch (Exception $e) {
         echo $e->getMessage();
     }
-
 }
 
 /**
@@ -650,9 +688,9 @@ function gdrcd_load_modules($page, $params = [])
  */
 function gdrcd_pages_format($page)
 {
-    $page = str_replace('\\',DIRECTORY_SEPARATOR, $page);
+    $page = str_replace('\\', DIRECTORY_SEPARATOR, $page);
     //converte la combinaizone di caratteri __ nel separatore di directory
-    $page = str_replace('__',DIRECTORY_SEPARATOR, $page);
+    $page = str_replace('__', DIRECTORY_SEPARATOR, $page);
     //
     return gdrcd_filter('include', $page);
 }
@@ -669,39 +707,39 @@ function gdrcd_pages_path($page)
     global $MESSAGE;
 
     // Controllo che sia stato attribuito un valore a page
-    if(empty($page)) {
+    if (empty($page)) {
         throw new Exception($MESSAGE['interface']['page_missing']);
     }
 
     // Inizializzo le variabili del metodo
-    $pagesPath = dirname(__FILE__) . DIRECTORY_SEPARATOR. '..'.DIRECTORY_SEPARATOR.'pages';
+    $pagesPath = dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'pages';
     $pageFormatted = gdrcd_pages_format($page);
 
     // Imposto i possibili percorsi che posso caricare
     $routes = [
         '.inc.php',
-        DIRECTORY_SEPARATOR.'index.inc.php'
+        DIRECTORY_SEPARATOR . 'index.inc.php'
     ];
 
     // Inizializzo la variabile contenitore dei moduli
     $modules = [];
 
     // Scorro i percorsi impostati per individuare corrispondenze
-    foreach ($routes AS $route) {
-        $file = implode(DIRECTORY_SEPARATOR, [$pagesPath, $pageFormatted.$route]);
+    foreach ($routes as $route) {
+        $file = implode(DIRECTORY_SEPARATOR, [$pagesPath, $pageFormatted . $route]);
         // Se esiste la corrispondenza, allora inserisco
-        if(file_exists($file)) {
+        if (file_exists($file)) {
             $modules[] = $file;
         }
     }
 
     // Controllo che sia stata trovata almeno una corrispondenza
-    if(empty($modules)) {
+    if (empty($modules)) {
         throw new Exception($MESSAGE['interface']['page_not_found']);
     }
 
     // Se sono state trovate piu corrispondenze, blocco il caricamento
-    if(count($modules) > 1) {
+    if (count($modules) > 1) {
         throw new Exception($MESSAGE['interface']['multiple_page_found']);
     }
 
@@ -952,7 +990,7 @@ function gdrcd_list($str)
         $characters = gdrcd_query($query, 'result');
 
         while ($option = gdrcd_query($characters, 'fetch')) {
-            $list .= '<option value="' . $option['nome'] . '" />';//TODO escape HTMl del nome!
+            $list .= '<option value="' . $option['nome'] . '" />'; //TODO escape HTMl del nome!
         }
         gdrcd_query($characters, 'free');
         $list .= '</datalist>';
