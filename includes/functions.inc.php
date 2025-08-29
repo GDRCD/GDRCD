@@ -154,6 +154,7 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
 function gdrcd_stmt($sql, $binds = array(), $throwOnError = false)
 {
     $db_link = gdrcd_connect();
+    //Oggetto che sarà restituito dalla funzione
     $resultArr = array(
         'data' => null,
         'num_rows' => null,
@@ -241,7 +242,7 @@ function gdrcd_check_tables($table)
     $describe = gdrcd_query("SHOW COLUMNS FROM $table", 'result');
 
     $i = 0;
-    $output = [];
+    $output = array();
 
     while ($field = gdrcd_query($describe, 'object')) {
         $defInfo = mysqli_fetch_field_direct($result, $i);
@@ -463,20 +464,20 @@ function gdrcd_filter_url($str)
  */
 function gdrcd_html_filter($str)
 {
-    $notAllowed = [
+    $notAllowed = array(
         "#<script(.*?)>(.*?)</script>#is" => "Script non consentiti",
         "#(<iframe.*?\/?>.*?(<\/iframe>)?)#is" => "Frame non consentiti",
         "#(<object.*?>.*?(<\/object>)?)#is" => "Contenuti multimediali non consentiti",
         "#(<embed.*?\/?>.*?(<\/embed>)?)#is" => "Contenuti multimediali non consentiti",
         "#\bon([a-z]*?)=(['|\"])(.*?)\\2#mi" => " ",
         "#(javascript:[^\s\"']+)#is" => ""
-    ];
+    );
 
     if ($GLOBALS['PARAMETERS']['settings']['html'] == HTML_FILTER_HIGH) {
-        $notAllowed = array_merge($notAllowed, [
+        $notAllowed = array_merge($notAllowed, array(
             "#(<img.*?\/?>)#is" => "Immagini non consentite",
             "#(url\(.*?\))#is" => "none",
-        ]);
+        ));
     }
 
     return preg_replace(array_keys($notAllowed), array_values($notAllowed), $str);
@@ -655,7 +656,7 @@ function gdrcd_check_time($time)
  * @param string $page : il percorso filesystem del file da includere
  * @param array $params : un array di dati aggiuntivi passabili al modulo
  */
-function gdrcd_load_modules($page, $params = [])
+function gdrcd_load_modules($page, $params = array())
 {
     global $MESSAGE;
     global $PARAMETERS;
@@ -716,17 +717,17 @@ function gdrcd_pages_path($page)
     $pageFormatted = gdrcd_pages_format($page);
 
     // Imposto i possibili percorsi che posso caricare
-    $routes = [
+    $routes = array(
         '.inc.php',
         DIRECTORY_SEPARATOR . 'index.inc.php'
-    ];
+    );
 
     // Inizializzo la variabile contenitore dei moduli
-    $modules = [];
+    $modules = array();
 
     // Scorro i percorsi impostati per individuare corrispondenze
     foreach ($routes as $route) {
-        $file = implode(DIRECTORY_SEPARATOR, [$pagesPath, $pageFormatted . $route]);
+        $file = implode(DIRECTORY_SEPARATOR, array($pagesPath, $pageFormatted . $route));
         // Se esiste la corrispondenza, allora inserisco
         if (file_exists($file)) {
             $modules[] = $file;
@@ -839,7 +840,7 @@ function gdrcd_bbcoder($str)
     global $MESSAGE;
     $str = gdrcd_close_tags('quote', $str);
 
-    $search = [
+    $search = array(
         '#\n#',
         '#\[BR\]#is',
         '#\[B\](.+?)\[\/B\]#is',
@@ -853,8 +854,8 @@ function gdrcd_bbcoder($str)
         '#\[quote(?::\w+)?\]#i',
         '#\[quote=(?:&quot;|"|\')?(.*?)["\']?(?:&quot;|"|\')?\]#i',
         '#\[/quote(?::\w+)?\]#si'
-    ];
-    $replace = [
+    );
+    $replace = array(
         '<br />',
         '<br />',
         '<span style="font-weight: bold;">$1</span>',
@@ -868,7 +869,7 @@ function gdrcd_bbcoder($str)
         '<div class="bb-quote">' . $MESSAGE['interface']['forums']['link']['quote'] . ':<blockquote class="bb-quote-body">',
         '<div class="bb-quote"><div class="bb-quote-name">$1 ha scritto:</div><blockquote class="bb-quote-body">',
         '</blockquote></div>'
-    ];
+    );
 
     return preg_replace($search, $replace, $str);
 }
@@ -922,14 +923,14 @@ function gdrcd_redirect($url, $tempo = false)
  */
 function gdrcd_angs($str)
 {
-    $search = [
+    $search = array(
         '#\&lt;(.+?)\&gt;#is',
         '#\<(.+?)>#is',
-    ];
-    $replace = [
+    );
+    $replace = array(
         '[$1]',
         '[$1]',
-    ];
+    );
 
     return preg_replace($search, $replace, $str);
 }
@@ -942,14 +943,14 @@ function gdrcd_angs($str)
  */
 function gdrcd_chatcolor($str)
 {
-    $search = [
+    $search = array(
         '#\&lt;(.+?)\&gt;#is',
         '#\[(.+?)\]#is',
-    ];
-    $replace = [
+    );
+    $replace = array(
         '<span class="color2">&lt;$1&gt;</span>',
         '<span class="color2">&lt;$1&gt;</span>',
-    ];
+    );
 
     return preg_replace($search, $replace, $str);
 }
