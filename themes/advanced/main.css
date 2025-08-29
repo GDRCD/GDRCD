@@ -594,3 +594,83 @@ div.innertube {
     margin:5px 0;
     text-align: left;
 }
+
+/* Stili per sezioni espandibili configurazioni */
+.config-section {
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fafafa;
+    transition: all 0.3s ease;
+}
+
+.config-section[open] {
+    border-color: #272727;
+    box-shadow: 0 2px 8px rgba(0, 124, 186, 0.1);
+}
+
+.config-section-summary {
+    padding: 10px 12px;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    font-weight: bold;
+    color: #333;
+    border-bottom: 1px solid #ddd;
+    transition: background-color 0.2s ease;
+    outline: none;
+}
+
+.config-section-summary:hover {
+    background-color: #e8e8e8;
+}
+
+.config-section[open] .config-section-summary {
+    background-color: #272727;
+    color: white;
+    border-bottom-color: #272727;
+}
+
+.config-section-content {
+    padding: 10px;
+}
+
+.config-form {
+    border: 1px solid #ccc;
+    margin: 6px 0;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+}
+
+.config-form-title {
+    margin-top: 0;
+    color: #666;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+    font-size: 16px;
+}
+
+.config-form-field {
+    margin-bottom: 6px;
+}
+ 
+
+.config-form-description {
+    color: #666;
+    font-style: italic;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.config-form-submit {
+    margin-top: 8px;
+}
+ 
+
+/* Stili per il generatore di token */
+.token-generator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+ 
