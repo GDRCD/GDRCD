@@ -135,9 +135,6 @@ div.form_label {
 
 span.form_label {
     text-align: left;
-    font-weight: bolder;
-	
-	
 }
 
 div.form_info {
@@ -291,7 +288,7 @@ div#main {
 		
 			display:flex;
 			flex-wrap:wrap;
- 			background-color:var(--colore-005); 
+ 			background-color:var(--colore-002); 
 			border-left:var(--border-default);
 			border-right:var(--border-default);
 			box-shadow: var(--box-shadow-default);			
@@ -361,7 +358,7 @@ div#main {
 			
 			padding: 0px var(--content-padding) 0 var(--content-padding);
 			box-shadow: var(--box-shadow-default);
-			background-color:var(--colore-005);    
+			background-color:var(--colore-004);    
 			clip-path: inset(0 -20px -20px -20px); 
 			display:flex;
 		
@@ -482,6 +479,7 @@ div#main {
 	/** * Tabella statistiche */
 	div.stats {
 		display:flex;
+		padding:10px 0;
 		flex-wrap:wrap;	
 		justify-content:center;
 		table.statistics {
@@ -674,6 +672,10 @@ div#main {
 			
 			input{
 				width:100px;
+				&[type="submit"]{
+					margin:0;
+					
+				}
 			}
 			
 			form{
@@ -682,12 +684,9 @@ div#main {
 				align-items:center;
 				gap:1ch;
 				& > div {
-					flex:1 1 40%;
+					flex:1 1 45%;
 					text-align:left;
-					&:last-of-type{
-						/*flex:1 0 100%;*/
-						
-					}
+					margin-bottom:0;
 				
 				}
 				
