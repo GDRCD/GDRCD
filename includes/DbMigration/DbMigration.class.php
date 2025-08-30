@@ -10,7 +10,7 @@ abstract class DbMigration
      * migrazione nel formato YYYYMMDDHH (esempio: 2021103018)
      */
     protected $migration_id = 0;
-    
+
     public function __construct()
     {
         if($this->migration_id <= 0){
@@ -23,20 +23,20 @@ abstract class DbMigration
             }
         }
     }
-    
+
     public function getMigrationId(){
         if($this->migration_id <= 0){
             throw new Exception("Migration ID non configurato per " . get_called_class());
         }
-        
+
         return $this->migration_id;
     }
-    
+
     /**
      * Implementazione delle modifiche che questa migration deve eseguire sul DB quando viene applicata
      */
     abstract public function up();
-    
+
     /**
      * Implementazione delle modifiche che questa migration deve eseguire sul DB quando viene rimossa
      */
