@@ -1,6 +1,6 @@
 <?php
 
-class GDRCD57 extends DbMigration
+class GDRCD57_Convert_Chat_To_Utf8mb4 extends DbMigration
 {
     /**
      * @inheritDoc
