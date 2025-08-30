@@ -109,7 +109,7 @@ class DbMigrationEngine
                 continue;
             }
             $filename = basename($fileInfo->getRealPath(), '.php');
-            $parts = explode("_", $filename);
+            $parts = explode("_", $filename, 2);
             $className = $filename;
             if(count($parts) > 1){
                 $className = $parts[1];
@@ -176,7 +176,9 @@ class DbMigrationEngine
                     break;
                 }
             }
-            $migrationsToApply = array_slice($migrations, $firstToApply);
+            $migrationsToApply = $firstToApply !== 0
+                ? array_slice($migrations, $firstToApply)
+                : [];
         }
         else{//migration verso una versione specifica
             $lastAppliedIdx = 0;

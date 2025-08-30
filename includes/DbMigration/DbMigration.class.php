@@ -17,7 +17,7 @@ abstract class DbMigration
             $myReflection = new ReflectionClass($this);
             $definitionFile = $myReflection->getFileName();
             $filen = basename($definitionFile, '.php');
-            $parts = explode('_', $filen);
+            $parts = explode('_', $filen, 2);
             if(count($parts) > 1) {//Salviamoci in caso di nomenclatura errata
                 $this->migration_id = (int)$parts[0];//l'id migrazione deve essere il primo componente del nome file
             }
