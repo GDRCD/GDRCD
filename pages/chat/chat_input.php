@@ -453,7 +453,7 @@
 
                 // aggiorna la tendina oggetti se arrivano in risposta alla richiesta
                 if (response.message.items) {
-                    updateItemSelect(response.message);
+                    updateItemSelect(response.message.items);
                 }
 
             });
