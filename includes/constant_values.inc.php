@@ -57,10 +57,97 @@ define('HTML_FILTER_BASE', 0);
 define('HTML_FILTER_HIGH', 1);
 
 /**
+ * Codice interno dei messaggi in chat
+ */
+
+/** @var string Messaggio di tipo Azione */
+const GDRCD_CHAT_ACTION_TYPE = 'A';
+
+/** @var string Messaggio di tipo Sussurro */
+const GDRCD_CHAT_WHISPER_TYPE = 'S';
+
+/** @var string Messaggio di tipo Tiro su Caratteristica */
+const GDRCD_CHAT_STATS_TYPE = 'C';
+
+/** @var string Messaggio di tipo Tiro su Abilità */
+const GDRCD_CHAT_SKILL_TYPE = 'F';
+
+/** @var string Messaggio di tipo Tiro di Dado */
+const GDRCD_CHAT_DICE_TYPE = 'D';
+
+/** @var string Messaggio di tipo Utilizzo Oggetto */
+const GDRCD_CHAT_ITEM_TYPE = 'O';
+
+/** @var string Messaggio di tipo Master Fato */
+const GDRCD_CHAT_MASTER_TYPE = 'M';
+
+/** @var string Messaggio di tipo Azione PNG */
+const GDRCD_CHAT_PNG_TYPE = 'N';
+
+/** @var string Messaggio di tipo Immagine */
+const GDRCD_CHAT_IMAGE_TYPE = 'I';
+
+/** @var string Messaggio di tipo invito in chat privata */
+const GDRCD_CHAT_PRIVATE_INVITE_TYPE = 'X';
+
+/** @var string Messaggio di tipo caccia da chat privata */
+const GDRCD_CHAT_PRIVATE_KICK_TYPE = 'Y';
+
+/** @var string Messaggio di tipo elenca invitati chat privata */
+const GDRCD_CHAT_PRIVATE_LIST_TYPE = 'Z';
+
+/** @var string Tipologia di messaggio di default quando un utente invia un azione senza indicarne esplicitamente il tipo */
+const GDRCD_CHAT_DEFAULT_TYPE = GDRCD_CHAT_ACTION_TYPE;
+
+/**
+ * Codice utente dei messaggi in chat.
+ * Rappresentano il primo carattere che gli utenti
+ * possono anteporre alla propria azione in chat
+ * per usare una specifica formattazione
+ */
+
+/** @var string Simbolo per indicare i messaggi di tipo Azione */
+const GDRCD_CHAT_ACTION_SYMBOL = '+';
+
+/** @var string Simbolo per indicare i messaggi di tipo Sussurro. Subito dopo va inserito il nome del destinatario e poi nuovamente lo stesso simbolo affinché abbia effetto */
+const GDRCD_CHAT_WHISPER_SYMBOL = '@';
+
+/** @var string Simbolo per indicare i messaggi di tipo Tiro su Caratteristica */
+const GDRCD_CHAT_STATS_SYMBOL = '%';
+
+/** @var string Simbolo per indicare i messaggi di tipo Tiro su Abilità */
+const GDRCD_CHAT_SKILL_SYMBOL = '^';
+
+/** @var string Simbolo per indicare i messaggi di tipo Tiro Dado. Permette di definire il lancio di un dado con le seguenti espressioni: d6, 3d6, 2d6+3, 8d10,7. La sintassi è: [numero]d[facce][modificatore],[soglia] */
+const GDRCD_CHAT_DICE_SYMBOL = '#';
+
+/** @var string Simbolo per indicare i messaggi di tipo Utilizzo Oggetto */
+const GDRCD_CHAT_ITEM_SYMBOL = '=';
+
+/** @var string Simbolo per indicare i messaggi di tipo Master */
+const GDRCD_CHAT_MASTER_SYMBOL = '§';
+
+/** @var string Simbolo per indicare i messaggi di tipo PNG. Funziona come per i sussurri */
+const GDRCD_CHAT_PNG_SYMBOL = '$';
+
+/** @var string Simbolo per indicare i messaggi di tipo Immagine. Permette di inserire la url di un immagine subito dopo il carattere */
+const GDRCD_CHAT_IMAGE_SYMBOL = '*';
+
+/** @var string Simbolo per indicare i messaggi di tipo invito in chat. Funziona come per i sussurri */
+const GDRCD_CHAT_PRIVATE_INVITE_SYMBOL = '!';
+
+/** @var string Simbolo per indicare i messaggi di tipo espelli da chat. Funziona come per i sussurri */
+const GDRCD_CHAT_PRIVATE_KICK_SYMBOL = '_';
+
+/** @var string Simbolo per indicare i messaggi di tipo elenco invitati in chat privata */
+const GDRCD_CHAT_PRIVATE_LIST_SYMBOL = '?';
+
+
+/**
  * Impostazioni registrazioni giocate
  */
 //Azioni minime per poter registrare una giocata
-CONST REG_MIN_AZIONI = 4;
+CONST REG_MIN_AZIONI = 1;
 
 //Attiva o disattiva il pacchetto intero (default: true)
 const REG_ROLE = true;
@@ -104,7 +191,7 @@ const MOON = true;
 const ESITI = true;
 
 //Attiva o disattiva l'invio degli esiti in chat (default: false) -- Funzionalità in sviluppo
-const ESITI_CHAT = false;
+const ESITI_CHAT = true;
 
 //Attiva o disattiva i tiri via esito (default: true)
 const TIRI_ESITO = true;

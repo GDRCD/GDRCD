@@ -56,7 +56,7 @@ function gdrcd_close_connection($db)
  *  free: libera la memoria occupata dalla risorsa mysqli passata in $sql
  *  last_id: ritorna l'id del record generato dall'ultima query, se non era una INSERT o UPDATE ritorna 0. In questo caso $sql non viene considerato
  *  affected: ritorna il numero di record toccati dall'ultima query (INSERT, UPDATE, DELETE o SELECT). In questo caso $sql non viene considerato
- * @return mixed boolean : un booleano in caso di esecuzione di query non SELECT e modalità 'query'. Altrimenti ritorna come specificato nella descrizione di $mode
+ * @return mixed un booleano in caso di esecuzione di query non SELECT e modalità 'query'. Altrimenti ritorna come specificato nella descrizione di $mode
  * @throws Exception
  */
 function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
@@ -330,7 +330,7 @@ function gdrcd_check_pass($str)
  * Funzione di filtraggio di codici malevoli negli input utente
  * @param string $what : modalità da utilizzare per controllare la stringa. Sono opzioni valide: in o get, num, out, addslashes, email, includes
  * @param string $str : la stringa da controllare
- * @return string: una versione filtrata di $str
+ * @return string|int|false una versione filtrata di $str
  */
 function gdrcd_filter($what, $str)
 {
@@ -462,14 +462,25 @@ function gdrcd_controllo_sessione()
 /**
  * Controlla se l'utente è esiliato o meno
  * @param string $pg : il nome del pg da ricercare
- * @return true se il pg è esiliato, false altrimenti
+ * @param bool $return default false. Se posto su true la funzione ritorna il messaggio d'esilio come stringa
+ * @return bool|string false se il pg non è stato esiliato. True se return è stato impostato a false, altrimenti una stringa con la motivazione dell'esilio
  */
-function gdrcd_controllo_esilio($pg)
+function gdrcd_controllo_esilio($pg, $return = false)
 {
     $exiled = gdrcd_query("SELECT autore_esilio, esilio, motivo_esilio FROM personaggio WHERE nome='" . gdrcd_filter('in', $pg) . "' LIMIT 1");
 
     if (strtotime($exiled['esilio']) > time()) {
-        echo '<div class="error">', gdrcd_filter_out($pg), ' ', gdrcd_filter_out($GLOBALS['MESSAGE']['warning']['character_exiled']), ' ', gdrcd_format_date($exiled['esilio']), ' (', $exiled['motivo_esilio'], ' - ', $exiled['autore_esilio'], ')</div>';
+
+        $message = gdrcd_filter_out($pg)
+            . ' '. gdrcd_filter_out($GLOBALS['MESSAGE']['warning']['character_exiled'])
+            . ' '. gdrcd_format_date($exiled['esilio'])
+            . ' ('. $exiled['motivo_esilio']. ' - '. $exiled['autore_esilio']. ')';
+
+        if ($return) {
+            return $message;
+        }
+
+        echo '<div class="error">', $message, '</div>';
 
         return true;
     }
@@ -614,8 +625,9 @@ function gdrcd_check_time($time)
  * E' approssimata ma funziona, se qualcuno vuol far di meglio si faccia avanti
  * @param string $page : il percorso filesystem del file da includere
  * @param array $params : un array di dati aggiuntivi passabili al modulo
+ * @param bool $throwOnError default false.
  */
-function gdrcd_load_modules($page, $params = [])
+function gdrcd_load_modules($page, $params = [], $throwOnError = false)
 {
     global $MESSAGE;
     global $PARAMETERS;
@@ -638,6 +650,10 @@ function gdrcd_load_modules($page, $params = [])
         include_once($modulePath);
     }
     catch(Exception $e) {
+        if ($throwOnError) {
+            throw $e;
+        }
+        
         echo $e->getMessage();
     }
 
@@ -878,6 +894,8 @@ function gdrcd_redirect($url, $tempo = false)
 }
 
 /**
+ * @deprecated use gdrcd_chat_replace_angs
+ *
  * Sostituisce eventuali parentesi angolari in coppia in una stringa con parentesi quadre
  * @param string $str : la stringa da controllare
  * @return string $str con la coppie di parentesi angolari sostituite con parentesi quadre
@@ -897,6 +915,8 @@ function gdrcd_angs($str)
 }
 
 /**
+ * @deprecated use gdrcd_chat_add_colors
+ *
  * Colora in HTML le parti di testo comprese tra parentesi angolari o parentesi quadre
  * Si usa in chat
  * @param string $str : la stringa da controllare
@@ -917,6 +937,8 @@ function gdrcd_chatcolor($str)
 }
 
 /**
+ * @deprecated use gdrcd_chat_highlight_user
+ *
  * Sottolinea in HTML una stringa presente in un testo. Usata per sottolineare il proprio nome in chat
  * @param string $user : la stringa da sottolineare, in genere un nome utente
  * @param string $str : la stringa in cui cercare e sottolineare $user
@@ -1000,4 +1022,40 @@ function gdrcd_brute_debug($args)
         gdrcd_dump($arg);
     }
     die('FINE');
+}
+
+/**
+ * Abilita il modulo specificato impostando la costante GDRCD_ENABLED_MODULE.
+ * Utilizzato per garantire la legittimità del caricamento dei file inclusi dinamicamente.
+ *
+ * @see gdrcd_chat_op_require_enable
+ *
+ * @param string|int $id Identificativo del modulo da abilitare
+ * @return void
+ */
+function gdrcd_module_enable($id)
+{
+    if ( !defined('GDRCD_ENABLED_MODULE') ) {
+        define('GDRCD_ENABLED_MODULE', $id);
+    }
+}
+
+/**
+ * Verifica che le operazioni siano consentite per il modulo specificato.
+ * Termina lo script con HTTP 403 se il modulo non è abilitato.
+ *
+ * @param string|int $id Identificativo del modulo da verificare
+ * @return void Terminazione dello script se non consentito
+ */
+function gdrcd_module_allowed($id)
+{
+    if ( !defined('GDRCD_ENABLED_MODULE') || GDRCD_ENABLED_MODULE !== $id ) {
+
+        if (!headers_sent()) {
+            http_response_code(403);
+        }
+
+        die($GLOBALS['MESSAGE']['error']['unknown_operation']);
+
+    }
 }
