@@ -41,85 +41,128 @@
             case 1: ?>
                 <div class="panels_box">
                     <div class="form_gioco">
-                        <form action="<?php echo $_SERVER['SCRIPT_NAME'] . '?' . $_SERVER['QUERY_STRING']; ?>"
-                              method="post">
+						<?php
+						//cicla le caratteristiche sia per calcolare quando va posizionato il divisore delle caratteristiche
+						//sia per generare la formula per calcolare l'output
+						$num_car = 0;
+						$formula = '';
+						$output = '';
+						foreach ($PARAMETERS['names']['stats'] as $key => $value) {
+							// Se non inizia con 'car' non è una caratteristica
+							if (substr($key, 0, 3) != 'car') {
+								continue;
+							}
+							++$num_car;
+							$formula .= 'parseInt(' . $key . '.value)+';
+							$output .= $key . ' '; 						
+						}
+						$formula = trim($formula,'+');
+						$half = ceil($num_car / 2);
+						?>
+						<form action="<?php echo $_SERVER['SCRIPT_NAME'] . '?' . $_SERVER['QUERY_STRING']; ?>"
+                              method="post" oninput="sum.value=40-(<?php echo gdrcd_filter_out($formula); ?>)">
                             <!-- EMail -->
-                            <div class="form_label">
-                                <?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['email']); ?>
-                            </div>
-                            <div class="form_field">
-                                <input name="email" value="<?php echo gdrcd_filter('email', $_POST['email']); ?>" required/>
-                            </div>
-                            <div class="form_info">
-                                <?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['email_info']); ?>
-                            </div>
-                            <!-- Nome PG -->
-                            <div class="form_label">
-                                <?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['name']); ?>
-                            </div>
-                            <div class="form_field">
-                                <input name="nome" value="<?php echo gdrcd_filter('out', $_POST['nome']); ?>" required/>
-                            </div>
-                            <div class="form_info">
-                                <?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['name_info']); ?>
-                            </div>
-                            <!-- Cognome PG -->
-                            <div class="form_label">
-                                <?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['lastname']); ?>
-                            </div>
-                            <div class="form_field">
-                                <input name="cognome" value="<?php echo gdrcd_filter('out', $_POST['cognome']); ?>"/>
-                            </div>
-                            <div class="form_info">
-                                <?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['name_info']); ?>
-                            </div>
-                            <!-- Genere -->
-                            <div class="form_label">
-                                <?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['gender']); ?>
-                            </div>
-                            <div class="form_field">
-                                <select name="genere">
-                                    <option value="m" <?php if (gdrcd_filter('get', $_POST['genere']) == 'm') {
-                                        echo 'SELECTED';
-                                    } ?> >
-                                        <?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['gender_m']); ?>
-                                    </option>
-                                    <option value="f" <?php if (gdrcd_filter('get', $_POST['genere']) == 'f') {
-                                        echo 'SELECTED';
-                                    } ?> >
-                                        <?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['gender_f']); ?>
-                                    </option>
-                                </select>
-                            </div>
-                            <!-- Razza -->
-                            <div class="form_label">
-                                <?php echo gdrcd_filter('out', $PARAMETERS['names']['race']['sing'] . ' ' . $MESSAGE['register']['fields']['race']); ?>
-                            </div>
-                            <?php $result = gdrcd_query("SELECT id_razza, nome_razza FROM razza WHERE iscrizione=1 ORDER BY nome_razza", 'result'); ?>
-                            <div class="form_field">
-                                <select name="razza">
-                                    <?php while ($row = gdrcd_query($result, 'fetch')) { ?>
-                                        <option value="<?php echo $row['id_razza']; ?>" <?php if (gdrcd_filter('get', $_POST['razza']) == $row['id_razza']) {
-                                            echo 'SELECTED';
-                                        } ?>>
-                                            <?php echo gdrcd_filter('out', $row['nome_razza']); ?>
-                                        </option>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                            <?php if ($PARAMETERS['mode']['racialinfo'] == 'ON') { ?>
-                                <div class="form_info">
-                                    <a href="index.php?page=user_razze" target="_new">
-                                        <?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['race_info']); ?>
-                                    </a>
-                                </div>
-                            <?php } ?>
-                            <!-- Caratteristiche -->
-                            <div class="form_label">
+                            <fieldset>
+								<legend>
+									Dati registrazione
+								</legend>                            
+								<label>
+									<?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['email']); ?>
+								</label>
+								<div class="form_field">
+									<input name="email" value="<?php echo gdrcd_filter('email', $_POST['email']); ?>" required/>
+								</div>
+								<div class="form_info">
+									<?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['email_info']); ?>
+								</div>
+								<?php 
+								// Se le registrazioni sono "Su invito", mostra il campo token
+								//if ($stato_registrazione_query['valore'] === 'Su invito') {
+								?>
+								<!-- Token di invito -->
+								<label>
+									Token di invito
+								</label>
+								<div class="form_field">
+									<input name="token_invito" value="<?php echo gdrcd_filter('out', $_POST['token_invito']); ?>" required/>
+								</div>
+								<div class="form_info">
+									Inserisci il token di invito fornito dall'amministrazione per completare la registrazione.
+								</div>
+								<?php //} ?>
+							</fieldset>
+                            <fieldset>
+								<legend>
+									Dati del personaggio
+								</legend> 								
+								<!-- Nome PG -->
+								<label>
+									<?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['name']); ?>
+								</label>
+								<div class="form_field">
+									<input name="nome" value="<?php echo gdrcd_filter('out', $_POST['nome']); ?>" required/>
+								</div>
+								<div class="form_info">
+									<?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['name_info']); ?>
+								</div>
+								<!-- Cognome PG -->
+								<label>
+									<?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['lastname']); ?>
+								</label>
+								<div class="form_field">
+									<input name="cognome" value="<?php echo gdrcd_filter('out', $_POST['cognome']); ?>"/>
+								</div>
+								<div class="form_info">
+									<?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['name_info']); ?>
+								</div>
+								<!-- Genere -->
+								<label>
+									<?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['gender']); ?>
+								</label>
+								<div class="form_field">
+									<select name="genere">
+										<option value="m" <?php if (gdrcd_filter('get', $_POST['genere']) == 'm') {
+											echo 'SELECTED';
+										} ?> >
+											<?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['gender_m']); ?>
+										</option>
+										<option value="f" <?php if (gdrcd_filter('get', $_POST['genere']) == 'f') {
+											echo 'SELECTED';
+										} ?> >
+											<?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['gender_f']); ?>
+										</option>
+									</select>
+								</div>
+								<!-- Razza -->
+								<label>
+									<?php echo gdrcd_filter('out', $PARAMETERS['names']['race']['sing'] . ' ' . $MESSAGE['register']['fields']['race']); ?>
+								</label>
+								<?php $result = gdrcd_query("SELECT id_razza, nome_razza FROM razza WHERE iscrizione=1 ORDER BY nome_razza", 'result'); ?>
+								<div class="form_field">
+									<select name="razza">
+										<?php while ($row = gdrcd_query($result, 'fetch')) { ?>
+											<option value="<?php echo $row['id_razza']; ?>" <?php if (gdrcd_filter('get', $_POST['razza']) == $row['id_razza']) {
+												echo 'SELECTED';
+											} ?>>
+												<?php echo gdrcd_filter('out', $row['nome_razza']); ?>
+											</option>
+										<?php } ?>
+									</select>
+								</div>
+								<?php if ($PARAMETERS['mode']['racialinfo'] == 'ON') { ?>
+									<div class="form_info">
+										<a href="index.php?page=user_razze" target="_new">
+											<?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['race_info']); ?>
+										</a>
+									</div>
+								<?php } ?>
+                            </fieldset>
+							<!-- Caratteristiche -->
+                            <fieldset>
+						    <legend>
                                 <?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['stats']); ?>
-                            </div>
-                            <div class="form_field">
-                                <table >
+                            </legend>
+                            <div class="form_field car">
                                     <?php
                                         // In base al numero di caratteristiche impostate nel pannello di controllo
                                         // vengono visualizzate le tabelle con le caratteristiche
@@ -128,44 +171,45 @@
                                         if (is_array($PARAMETERS['names']['stats']) && count($PARAMETERS['names']['stats']) > 0) {
                                             // Costruisco le intestazioni
                                             $intestazioni = '';
-                                            foreach ($PARAMETERS['names']['stats'] as $key => $value) {
+                                            $output_list = '';
+											$count = 0;
+											foreach ($PARAMETERS['names']['stats'] as $key => $value) {
                                                 // Se non inizia con 'car' non è una caratteristica
                                                 if (substr($key, 0, 3) != 'car') {
                                                     continue;
                                                 }
-
-                                                $intestazioni .= '<th>' . gdrcd_filter('out', $value) . '</th>';
-                                            }
-                                            // Stampo le intestazioni
-                                            $intestazioni = '<tr>' . $intestazioni . '</tr>';
-
-                                            // Costruisco le righe
-                                            $righe = '<tr>';
-                                            foreach ($PARAMETERS['names']['stats'] as $key => $value) {
-                                                // Se non inizia con 'car' non è una caratteristica
-                                                if (substr($key, 0, 3) != 'car') {
-                                                    continue;
-                                                }
-
+												++$count;
+												$intestazioni = '<label>' . gdrcd_filter('out', $value) . '</label>';
                                                 // Indico i valori da poter scegliere per ogni caratteristica
                                                 $valori = '';
                                                 for ($j = 1; $j <= $PARAMETERS['settings']['initial_cars_cap']; $j++) {
                                                     $valori .= '<option value="' . $j . '" ' . (gdrcd_filter('num', $_POST[$key]) == $j ? 'SELECTED' : '') . '>' . $j . '</option>';
                                                 }
-                                                $righe .= '<td><select name="' . $key .'">' . $valori . '</select></td>';
-                                            }
-                                            $righe .= '</tr>';
+                                                $righe = '<select name="' . $key .'" id="' . $key . '">' . $valori . '</select>';
+												$output_list .= $key . ' '; 
+                                            
+											
+												// Stampo la tabella
+												echo '<div>' . $intestazioni . $righe . '</div>';
+												if($count == $half) {
+													echo '<div class="flex_breaker"></div>';
+												}
+											
+											}
 
-                                            // Stampo la tabella
-                                            echo $intestazioni . $righe;
+
                                         }
 
                                     ?>
-                                </table>
                             </div>
                             <div class="form_info">
-                                <?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['stats_info'] . ' ' . $PARAMETERS['settings']['cars_sum']); ?>
+                                <?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['stats_info']); ?>: 
+								<b><?php echo gdrcd_filter_num($PARAMETERS['settings']['cars_sum']); ?></b><br> 
+								Punti rimasti: <b><output name="sum" for="<?php echo gdrcd_filter_out($output); ?>">
+								<?php echo gdrcd_filter_num($PARAMETERS['settings']['cars_sum'] - $num_car); ?>
+								</output></b>
                             </div>
+							</fieldset>
                             <!-- Invio -->
                             <div class="form_submit">
                                 <input type="hidden" name="fase" value="2"/>

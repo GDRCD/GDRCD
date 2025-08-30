@@ -1,4 +1,4 @@
-	<div class="nav">
+	<nav>
 		<ul>
 			<li>
 				<a href="index.php?page=homepage&content=iscrizione"><?php echo $MESSAGE['homepage']['registration']; ?></a>
@@ -13,4 +13,4 @@
 				<a href="index.php?page=homepage&content=user_razze"><?php echo $MESSAGE['homepage']['races']; ?></a>
 			</li>
 		</ul>
-	</div>
+	</nav>

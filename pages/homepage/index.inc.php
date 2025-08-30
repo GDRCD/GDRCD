@@ -17,10 +17,10 @@ $users = gdrcd_query("SELECT COUNT(nome) AS online FROM personaggio WHERE ora_en
 
 
 ?>
-<div id="main">
-    <div id="site_width">
+<div id="wrapper">
+    <div id="layout">
 
-        <div id="header">
+        <header>
             <div class="titlecontent">
                 <h1><a href="index.php"><?php echo $MESSAGE['homepage']['main_content']['site_title']; ?></a></h1>
                 <div class="subtitle"><?php echo $MESSAGE['homepage']['main_content']['site_subtitle']; ?></div>
@@ -29,10 +29,10 @@ $users = gdrcd_query("SELECT COUNT(nome) AS online FROM personaggio WHERE ora_en
 				// Include il modulo per il login
 				include (__DIR__ . '/login.inc.php');
 			?>
-        </div>
+        </header>
 
         <div id="content">
-            <div class="sidecontent">
+            <aside>
                 <div class="side_modules nopad">
                     <?php
                         // Include il modulo con il menù di navigaizone
@@ -57,21 +57,21 @@ $users = gdrcd_query("SELECT COUNT(nome) AS online FROM personaggio WHERE ora_en
                         include (__DIR__ . '/user_stats.inc.php');
                     ?>
                 </div>
-            </div>
+            </aside>
 
-            <div class="content_body">
+            <main>
                 <?php
                     gdrcd_load_modules('homepage__'.$MODULE['content']);
 				?>
-            </div>
+            </main>
 
         </div>
 
-        <div id="footer">
+        <footer>
             <div>
                 <p><?=$REFERENCES?></p>
                 <p><?=$CREDITS,' ',$LICENCE?></p>
             </div>
-        </div>
+        </footer>
     </div>
 </div>
