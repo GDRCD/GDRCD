@@ -1,6 +1,6 @@
 <?php
 
-class GDRCD57 extends DbMigration
+class GDRCD57_Create_Configurazioni_Table extends DbMigration
 {
     public function up() {
         // Creazione tabella configurazioni
@@ -23,22 +23,10 @@ class GDRCD57 extends DbMigration
         
         gdrcd_query("INSERT INTO `configurazioni` (`id`, `tipo`, `categoria`, `ordinamento`, `opzioni`, `default`, `parametro`, `valore`, `descrizione`, `input`) VALUES (2, 'string', 'Registrazione', 2, NULL, 'Le registrazioni sono attualmente chiuse. Riprova più tardi.', 'Messaggio Registrazione', NULL, 'Messaggio che appare nel caso delle iscrizioni chiuse al posto del form di iscrizione', 'textarea')");
 
-        // Creazione tabella token_iscrizione
-        gdrcd_query("CREATE TABLE `token_iscrizione` (
-            `id` INT(10) NOT NULL AUTO_INCREMENT,
-            `valore` VARCHAR(50) NULL DEFAULT NULL,
-            `creato_il` DATE NULL DEFAULT NULL,
-            `scadenza` DATE NULL DEFAULT NULL,
-            `utilizzato` INT(10) NULL DEFAULT NULL,
-            `utilizzato_da` VARCHAR(50) NULL DEFAULT NULL,
-            `data_utilizzo` DATE NULL DEFAULT NULL,
-            PRIMARY KEY (`id`) USING BTREE
-        ) ENGINE=InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci");
     }
 
     public function down() {
         // Rimozione tabelle create in up()
-        gdrcd_query("DROP TABLE IF EXISTS `token_iscrizione`");
         gdrcd_query("DROP TABLE IF EXISTS `configurazioni`");
     }
 }
