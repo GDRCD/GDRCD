@@ -175,3 +175,7 @@ includes/config-overrides.php
 .directory
 .user.ini
 core/db_overrides.php
+/nbproject/private/
+nbproject/project.xml
+nbproject/project.properties
+nbproject/configs/GDRCD.properties
