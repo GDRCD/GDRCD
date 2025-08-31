@@ -1,5 +1,24 @@
 <?php
 
+/**
+ * Classe StmtResultData
+ *
+ * Una classe contenitore che incapsula un array di dati e fornisce
+ * le interfacce ArrayAccess, Countable e Iterator per un accesso
+ * e una manipolazione comodi.
+ *
+ * Caratteristiche:
+ * - Permette l'accesso ai dati come un array tramite ArrayAccess.
+ * - Supporta il conteggio degli elementi tramite Countable.
+ * - Consente l'iterazione sui dati tramite Iterator.
+ *
+ * Utilizzo:
+ * $result = new StmtResultData($data);
+ * foreach ($result as $item) { ... }
+ * $count = count($result);
+ * $value = $result[0];
+ *
+ */
 class StmtResultData implements ArrayAccess, Countable, Iterator
 {
     public $data;
@@ -73,6 +92,25 @@ class StmtResultData implements ArrayAccess, Countable, Iterator
     }
 }
 
+/**
+ * Classe StmtResult
+ *
+ * Questa classe rappresenta il risultato di una query eseguita su un database.
+ * Incapsula i dati restituiti dalla query, il numero di righe coinvolte, il numero di righe affette
+ * e l'eventuale ultimo ID inserito (ad esempio in caso di INSERT).
+ *
+ * Proprietà:
+ * @property StmtResultData $data           Oggetto che contiene i dati restituiti dalla query.
+ * @property int|null       $num_rows       Numero di righe restituite dalla query (per SELECT) o coinvolte (per UPDATE/DELETE).
+ * @property int|null       $affected_rows  Numero di righe effettivamente modificate dalla query (per UPDATE/DELETE).
+ * @property int|null       $last_id        Ultimo ID inserito nel database (per INSERT), se applicabile.
+ *
+ * Costruttore:
+ * @param array     $rows           Array associativo contenente i dati delle righe restituite dalla query.
+ * @param int|null  $num_rows       Numero di righe restituite o coinvolte dalla query.
+ * @param int|null  $affected_rows  Numero di righe modificate dalla query.
+ * @param int|null  $last_id        Ultimo ID inserito, se disponibile.
+ */
 class StmtResult
 {
     public $data;

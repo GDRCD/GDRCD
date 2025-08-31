@@ -205,7 +205,7 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
 function gdrcd_stmt($sql, $binds = array(), $throwOnError = false)
 {
     $db_link = gdrcd_connect();
-    //Oggetto che sarà restituito dalla funzione
+    //Oggetto temporaneo che raccoglie i dati delle esecuzioni.
     $resultArr = array(
         'data' => null,
         'num_rows' => null,
@@ -263,6 +263,7 @@ function gdrcd_stmt($sql, $binds = array(), $throwOnError = false)
         while ($row = mysqli_fetch_array($result, MYSQLI_BOTH)) {
             $rows[] = $row;
         }
+        //popolo l'array di risultato e poi segno il numero di righe
         $resultArr['data'] = $rows;
         $resultArr['num_rows'] = mysqli_num_rows($result);
         mysqli_free_result($result);
