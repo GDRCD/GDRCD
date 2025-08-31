@@ -148,7 +148,7 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
  *                      una stringa con i tipi dei parametri, gli indici successivi i valori.
  *                      Esempio: ['si', 'nome', 42]
  *
- * @return mysqli_result|false Restituisce il risultato della query (mysqli_result) in caso di SELECT,
+ * @return array|false Restituisce il risultato della query (mysqli_result) in caso di SELECT,
  *                             true per query di modifica (INSERT/UPDATE/DELETE), oppure false in caso di errore.
  */
 function gdrcd_stmt($sql, $binds = array(), $throwOnError = false)
