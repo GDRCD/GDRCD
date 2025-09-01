@@ -1,13 +1,12 @@
 <?php
 // Controllo dello stato registrazione
-$stato_registrazione_query = gdrcd_query("SELECT valore FROM configurazioni WHERE parametro = 'Stato Registrazione'");
+$stato_registrazione = gdrcd_registration_state();
  
 // Se le registrazioni sono chiuse, mostra un messaggio e blocca l'accesso
-if ($stato_registrazione_query['valore'] === 'Chiuso') {
+if ($stato_registrazione === 'Chiuso') {
     // Recupera il messaggio personalizzato dalla configurazione
     $messaggio_query = gdrcd_query("SELECT * FROM configurazioni WHERE parametro = 'Messaggio Registrazione' LIMIT 1");
-    $messaggio_chiusura = $messaggio_query['valore'] ? $messaggio_query['valore'] : $messaggio_query['default'];
-    
+    $messaggio_chiusura = $messaggio_query['valore'] ? $messaggio_query['valore'] : $messaggio_query['default']; 
     echo '<div class="error">' . gdrcd_filter('out', $messaggio_chiusura) . '</div>';
     return;
 }
@@ -413,11 +412,6 @@ if ($stato_registrazione_query['valore'] === 'Chiuso') {
                                            value="<?php echo gdrcd_filter('num', $_POST['car4']) ?>"/>
                                     <input type="hidden" name="car5"
                                            value="<?php echo gdrcd_filter('num', $_POST['car5']) ?>"/>
-                                       <?php if ($stato_registrazione_query['valore'] === 'Su invito') { ?>
-                                        <strong>Token di invito:</strong>
-                                            <input name="token_invito" value="<?php echo gdrcd_filter('out', $_POST['token_invito']); ?>" placeholder="Inserisci il token di invito" required/>
-                                        <?php } ?>
-
                                     <input type="submit"
                                            value="<?php echo gdrcd_filter('out', $MESSAGE['register']['forms']['ok']); ?>"/>
                                 </div>
@@ -448,10 +442,6 @@ if ($stato_registrazione_query['valore'] === 'Chiuso') {
                                            value="<?php echo gdrcd_filter('num', $_POST['car4']) ?>"/>
                                     <input type="hidden" name="car5"
                                            value="<?php echo gdrcd_filter('num', $_POST['car5']) ?>"/>
-                                    <?php if ($stato_registrazione_query['valore'] === 'Su invito') { ?>
-                                    <input type="hidden" name="token_invito"
-                                           value="<?php echo gdrcd_filter('out', $_POST['token_invito']) ?>"/>
-                                    <?php } ?>
                                     <input type="submit"
                                            value="<?php echo gdrcd_filter('out', $MESSAGE['register']['forms']['back']); ?>"/>
                                 </div>
@@ -527,7 +517,7 @@ if ($stato_registrazione_query['valore'] === 'Chiuso') {
                     }
                     
                     // Controllo token se le registrazioni sono "Su invito"
-                    if ($stato_registrazione_query['valore'] === 'Su invito') {
+                    if ($stato_registrazione === 'Su invito') {
                         $token_invito = gdrcd_filter('out', $_POST['token_invito']);
                         if (empty($token_invito)) {
                             $ok = false;
@@ -537,25 +527,25 @@ if ($stato_registrazione_query['valore'] === 'Chiuso') {
                                 "SELECT                          
                                     id, 
                                     utilizzato 
-                            FROM token_iscrizione 
-                            WHERE valore = ? 
-                            AND scadenza >= CURDATE() LIMIT 1",
-                            [
-                                's', 
-                                $token_invito
-                            ],
-                            
-                        );
-                        $token_check=gdrcd_query($token_check_stmt, 'assoc');
-                            // Verifica se il token esiste nella tabella token_iscrizione ed è valido
-                              if (!$token_check) {
-                                $ok = false;
-                                echo '<div class="error">Token di invito non valido o scaduto.</div>';
-                            } elseif ($token_check['utilizzato'] == 1) {
-                                $ok = false;
-                                echo '<div class="error">Token di invito già utilizzato.</div>';
+                                FROM token_iscrizione 
+                                WHERE valore = ? 
+                                AND scadenza >= CURDATE() LIMIT 1",
+                                [
+                                    's', 
+                                    $token_invito
+                                ],
+                                
+                            );
+                            $token_check=gdrcd_query($token_check_stmt, 'assoc');
+                                // Verifica se il token esiste nella tabella token_iscrizione ed è valido
+                                if (!$token_check) {
+                                    $ok = false;
+                                    echo '<div class="error">Token di invito non valido o scaduto.</div>';
+                                } elseif ($token_check['utilizzato'] == 1) {
+                                    $ok = false;
+                                    echo '<div class="error">Token di invito già utilizzato.</div>';
+                                }
                             }
-                        }
                     }
 
                     if (preg_match('#[^\p{L}\s]#u', $_POST['nome'])) {
@@ -569,7 +559,7 @@ if ($stato_registrazione_query['valore'] === 'Chiuso') {
                             VALUES ('" . gdrcd_safe_name($_POST['nome']) . "', '" . gdrcd_safe_name($_POST['cognome']) . "', '" . gdrcd_encript($pass) . "', NOW(), '" . gdrcd_encript($email) . "', '" . gdrcd_filter('in', $_POST['genere']) . "', " . gdrcd_filter('num', $_POST['razza']) . ", " . gdrcd_filter('num', $_POST['car0']) . ", " . gdrcd_filter('num', $_POST['car1']) . ", " . gdrcd_filter('num', $_POST['car2']) . ", " . gdrcd_filter('num', $_POST['car3']) . ", " . gdrcd_filter('num', $_POST['car4']) . ", " . gdrcd_filter('num', $_POST['car5']) . ", " . gdrcd_filter('num', $PARAMETERS['settings']['max_hp']) . ", " . gdrcd_filter('num', $PARAMETERS['settings']['max_hp']) . ", " . gdrcd_filter('num', $PARAMETERS['settings']['first_money']) . ", " . gdrcd_filter('num', $PARAMETERS['settings']['first_px']) . " $lastpasschange_value)");
                             
                             // Se è stata usata la registrazione "Su invito", marca il token come utilizzato
-                            if ($stato_registrazione_query['valore'] === 'Su invito' && !empty($_POST['token_invito'])) {
+                            if ($stato_registrazione === 'Su invito') {
                                 $token_invito = gdrcd_filter('out', $_POST['token_invito']);
                                 $nome_personaggio = gdrcd_safe_name($_POST['nome']);
                                 

@@ -1001,3 +1001,15 @@ function gdrcd_brute_debug($args)
     }
     die('FINE');
 }
+
+/**
+ * Restituisce lo stato attuale della registrazione
+ * @return string lo stato attuale della registrazione
+ */
+function gdrcd_registration_state()
+{
+    $query = "SELECT valore FROM configurazioni WHERE parametro = 'Stato Registrazione'";
+    $result = gdrcd_query($query, 'result');
+    $state = gdrcd_query($result, 'fetch');
+    return $state['valore'];
+}

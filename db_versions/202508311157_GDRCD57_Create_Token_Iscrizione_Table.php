@@ -13,7 +13,8 @@ class GDRCD57_Create_Token_Iscrizione_Table extends DbMigration
             `utilizzato` INT(10) NULL DEFAULT NULL,
             `utilizzato_da` VARCHAR(50) NULL DEFAULT NULL,
             `data_utilizzo` DATE NULL DEFAULT NULL,
-            PRIMARY KEY (`id`) USING BTREE
+            PRIMARY KEY (`id`) USING BTREE,
+            UNIQUE INDEX `valore` (`valore`) USING BTREE
         ) ENGINE=InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci");
     }
 
