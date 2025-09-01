@@ -127,7 +127,9 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
         //lo stato del "puntatore" all'interno dell'array
         case 'fetch':
             if ($isStmtResult) {
-                return array_shift($sql->data);
+                $current = $sql->data->current();
+                $sql->data->next();
+                return $current;
             }
             if ($isResultObject) {
                 return mysqli_fetch_array($sql);
