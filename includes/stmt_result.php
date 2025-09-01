@@ -19,7 +19,7 @@
  * $value = $result[0];
  *
  */
-class StmtResultData implements Iterator
+class StmtResultData implements Iterator, ArrayAccess, Countable
 {
     private array $data;
     private int $position = 0;
@@ -54,7 +54,32 @@ class StmtResultData implements Iterator
     {
         return isset($this->data[$this->position]);
     }
+
+    // Countable
+    public function count(): int
+    {
+        return count($this->data);
+    }
+
+    // ArrayAccess methods
+    public function offsetExists($offset): bool
+    {
+        return isset($this->data[$offset]);
+    }
+    public function offsetGet($offset): mixed
+    {
+        return $this->data[$offset] ?? null;
+    }
+    public function offsetSet($offset, $value): void
+    {
+        $this->data[$offset] = $value;
+    }
+    public function offsetUnset($offset): void
+    {
+        unset($this->data[$offset]);
+    }
 }
+
 
 /**
  * Classe StmtResult
@@ -64,18 +89,18 @@ class StmtResultData implements Iterator
  * e l'eventuale ultimo ID inserito (ad esempio in caso di INSERT).
  *
  * Proprietà:
- * @property StmtResultData $data           Oggetto che contiene i dati restituiti dalla query.
- * @property int|null       $num_rows       Numero di righe restituite dalla query (per SELECT) o coinvolte (per UPDATE/DELETE).
- * @property int|null       $affected_rows  Numero di righe effettivamente modificate dalla query (per UPDATE/DELETE).
- * @property int|null       $last_id        Ultimo ID inserito nel database (per INSERT), se applicabile.
+ * @property StmtResultData $data          Oggetto che contiene i dati restituiti dalla query.
+ * @property int|null       $num_rows      Numero di righe restituite dalla query (per SELECT) o coinvolte (per UPDATE/DELETE).
+ * @property int|null       $affected_rows Numero di righe effettivamente modificate dalla query (per UPDATE/DELETE).
+ * @property int|null       $last_id       Ultimo ID inserito nel database (per INSERT), se applicabile.
  *
  * Costruttore:
- * @param array     $rows           Array associativo contenente i dati delle righe restituite dalla query.
- * @param int|null  $num_rows       Numero di righe restituite o coinvolte dalla query.
- * @param int|null  $affected_rows  Numero di righe modificate dalla query.
- * @param int|null  $last_id        Ultimo ID inserito, se disponibile.
+ * @param array      $rows          Array associativo contenente i dati delle righe restituite dalla query.
+ * @param int|null   $num_rows      Numero di righe restituite o coinvolte dalla query.
+ * @param int|null   $affected_rows Numero di righe modificate dalla query.
+ * @param int|null   $last_id       Ultimo ID inserito, se disponibile.
  */
-class StmtResult implements Iterator
+class StmtResult implements Iterator, ArrayAccess
 {
     public StmtResultData $data;
     public ?int $num_rows;
@@ -114,5 +139,46 @@ class StmtResult implements Iterator
     public function valid(): bool
     {
         return $this->data->valid();
+    }
+
+    // ArrayAccess methods
+    public function offsetExists($offset): bool
+    {
+        // Gestisci le proprietà della classe StmtResult
+        if (in_array($offset, ['num_rows', 'affected_rows', 'last_id'])) {
+            return isset($this->$offset);
+        }
+        // Delega alla classe StmtResultData per gli altri offset
+        return $this->data->offsetExists($offset);
+    }
+
+    public function offsetGet($offset): mixed
+    {
+        // Gestisci le proprietà della classe StmtResult
+        if (in_array($offset, ['num_rows', 'affected_rows', 'last_id'])) {
+            return $this->$offset;
+        }
+        // Delega alla classe StmtResultData per gli altri offset
+        return $this->data->offsetGet($offset);
+    }
+
+    public function offsetSet($offset, $value): void
+    {
+        // Se l'offset è una delle proprietà, assegna il valore
+        if (in_array($offset, ['num_rows', 'affected_rows', 'last_id'])) {
+            $this->$offset = $value;
+        } else {
+            // Delega alla classe StmtResultData per gli altri offset
+            $this->data->offsetSet($offset, $value);
+        }
+    }
+
+    public function offsetUnset($offset): void
+    {
+        // Non permettiamo di "dissettare" le proprietà pubbliche
+        if (!in_array($offset, ['num_rows', 'affected_rows', 'last_id'])) {
+            // Delega alla classe StmtResultData per gli altri offset
+            $this->data->offsetUnset($offset);
+        }
     }
 }
