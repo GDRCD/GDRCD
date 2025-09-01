@@ -26,7 +26,8 @@ HTML;
                     $id = gdrcd_filter('out', $config['id']);
                     $tipo = gdrcd_filter('out', $config['tipo']);
                     $ordinamento = gdrcd_filter('out', $config['ordinamento']);
-                    $parametro = gdrcd_filter('out', $config['parametro']);
+                    $parametro =ucwords(strtr(gdrcd_filter('out', $config['parametro']), ['_' => ' ']));   
+                    $parametro_save =gdrcd_filter('in', $config['categoria']) . ".". gdrcd_filter('in', $config['parametro']);
                     $valore = gdrcd_filter('out', $config['valore']);
                     $descrizione = gdrcd_filter('out', $config['descrizione']);
                     $input_type = gdrcd_filter('out', $config['input']);
@@ -79,6 +80,8 @@ HTML;
                     echo <<<HTML
             <div class="config-form-submit">
                 <input type="hidden" name="id" value="{$id}" />
+                 <input type="hidden" name="parametro" value="{$parametro_save}" />
+
                 <input type="hidden" name="op" value="save_config" />
                 <input type="submit" value="Salva"  />
             </div>

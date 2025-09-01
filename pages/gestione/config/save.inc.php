@@ -6,7 +6,8 @@ if ($_SESSION['permessi'] < SUPERUSER){
         case 'save_config':
             $id = $_POST['id'];
             $valore = $_POST['valore'];
-            
+            //lowcase $parametro
+            $parametro =   strtolower($_POST['parametro']);
             // Validazione input
             if(empty($id) || !is_numeric($id)){
                 $error_message = 'ID configurazione non valido';
@@ -15,14 +16,7 @@ if ($_SESSION['permessi'] < SUPERUSER){
 HTML;
                 break;
             }
-            $stmt = gdrcd_stmt(
-                "UPDATE configurazioni SET valore = ? WHERE id = ?",
-                [
-                    'si',
-                    $valore,
-                    $id
-                ]
-            );
+                gdrcd_configuration_set($parametro, $valore);
                 $success_message = 'Configurazione aggiornata con successo';
                 echo <<<HTML
 <div class="success">{$success_message}</div>

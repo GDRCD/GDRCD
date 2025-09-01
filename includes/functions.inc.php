@@ -1002,14 +1002,47 @@ function gdrcd_brute_debug($args)
     die('FINE');
 }
 
+
 /**
- * Restituisce lo stato attuale della registrazione
- * @return string lo stato attuale della registrazione
+ * Recupera un valore di configurazione dal database
+ * 
+ * @param string $parametro Il parametro nel formato "categoria.parametro"
+ * @return string|null Il valore della configurazione o null se non trovato
  */
-function gdrcd_registration_state()
+function gdrcd_configuration_get($parametro)
 {
-    $query = "SELECT valore FROM configurazioni WHERE parametro = 'Stato Registrazione'";
-    $result = gdrcd_query($query, 'result');
-    $state = gdrcd_query($result, 'fetch');
-    return $state['valore'];
+    // Recupera il valore tramite query
+    // Se il valore nel db non esiste, ritorna esplicitamente null
+    [$categoria, $parametro] = explode('.', $parametro, 2);
+    $result =  gdrcd_stmt(
+        "SELECT valore FROM configurazioni WHERE categoria = ? AND parametro = ?",
+        [
+            'ss',
+            $categoria,
+            $parametro
+        ]
+    );
+    $value = gdrcd_query($result, 'assoc');
+    return $value['valore'] ?? null;
 }
+
+/**
+ * Imposta un valore di configurazione nel database
+ * 
+ * @param string $parametro Il parametro nel formato "categoria.parametro"
+ * @param string $value Il valore da salvare
+ * @return void
+ */
+function gdrcd_configuration_set($parametro, $value)
+{
+     [$categoria, $parametro] = explode('.', $parametro, 2);
+    // Query di salvataggio del $valore nel db per $parametro
+            gdrcd_query(
+                "UPDATE configurazioni  
+                    SET valore =  '{$value}'
+                WHERE categoria = '{$categoria}'
+                AND parametro = '{$parametro}'" 
+            );
+}
+
+ 

@@ -19,9 +19,9 @@ class GDRCD57_Create_Configurazioni_Table extends DbMigration
         ) ENGINE=InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci");
 
         // Inserimento dati iniziali configurazioni
-        gdrcd_query("INSERT INTO `configurazioni` (`id`, `tipo`, `categoria`, `ordinamento`, `opzioni`, `default`, `parametro`, `valore`, `descrizione`, `input`) VALUES (1, 'string', 'Registrazione', 1, 'Aperto,Chiuso,Su invito', 'Aperto', 'Stato Registrazione', 'Aperto', 'Imposta lo stato delle iscrizioni della land. Se aperto permette l\\iscrizione, se chiuso inibisce le iscrizioni. Su invito permette di generare un token da fornire per l\\iscrizione', 'select')");
+        gdrcd_query("INSERT INTO `configurazioni` (`id`, `tipo`, `categoria`, `ordinamento`, `opzioni`, `default`, `parametro`, `valore`, `descrizione`, `input`) VALUES (1, 'string', 'Registrazione', 1, 'Aperto,Chiuso,Su invito', 'Aperto', 'stato_registrazione', 'Aperto', 'Imposta lo stato delle iscrizioni della land. Se aperto permette l\\iscrizione, se chiuso inibisce le iscrizioni. Su invito permette di generare un token da fornire per l\\iscrizione', 'select')");
         
-        gdrcd_query("INSERT INTO `configurazioni` (`id`, `tipo`, `categoria`, `ordinamento`, `opzioni`, `default`, `parametro`, `valore`, `descrizione`, `input`) VALUES (2, 'string', 'Registrazione', 2, NULL, 'Le registrazioni sono attualmente chiuse. Riprova più tardi.', 'Messaggio Registrazione', NULL, 'Messaggio che appare nel caso delle iscrizioni chiuse al posto del form di iscrizione', 'textarea')");
+        gdrcd_query("INSERT INTO `configurazioni` (`id`, `tipo`, `categoria`, `ordinamento`, `opzioni`, `default`, `parametro`, `valore`, `descrizione`, `input`) VALUES (2, 'string', 'Registrazione', 2, NULL, 'Le registrazioni sono attualmente chiuse. Riprova più tardi.', 'messaggio_registrazione', NULL, 'Messaggio che appare nel caso delle iscrizioni chiuse al posto del form di iscrizione', 'textarea')");
 
     }
 
