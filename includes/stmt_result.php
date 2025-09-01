@@ -19,59 +19,23 @@
  * $value = $result[0];
  *
  */
-class StmtResultData implements ArrayAccess, Countable, Iterator
+class StmtResultData implements Iterator
 {
-    public $data;
-    private $position = 0;
+    private array $data;
+    private int $position = 0;
 
-    public function __construct($data)
+    public function __construct(array $data)
     {
-        if ($data === null) {
-            $this->data = [];
-        } else {
-            $this->data = array_values($data);
-        }
+        $this->data = array_values($data);
         $this->position = 0;
     }
 
-    // ArrayAccess
-    public function offsetExists($offset): bool
-    {
-        return isset($this->data[$offset]);
-    }
-
-    public function offsetGet($offset): mixed
-    {
-        return $this->data[$offset];
-    }
-
-    public function offsetSet($offset, $value): void
-    {
-        if ($offset === null) {
-            $this->data[] = $value;
-        } else {
-            $this->data[$offset] = $value;
-        }
-    }
-
-    public function offsetUnset($offset): void
-    {
-        unset($this->data[$offset]);
-    }
-
-    // Countable
-    public function count(): int
-    {
-        return count($this->data);
-    }
-
-    // Iterator
     public function current(): mixed
     {
-        return $this->data[$this->position];
+        return $this->data[$this->position] ?? null;
     }
 
-    public function key(): mixed
+    public function key(): int
     {
         return $this->position;
     }
@@ -111,18 +75,44 @@ class StmtResultData implements ArrayAccess, Countable, Iterator
  * @param int|null  $affected_rows  Numero di righe modificate dalla query.
  * @param int|null  $last_id        Ultimo ID inserito, se disponibile.
  */
-class StmtResult
+class StmtResult implements Iterator
 {
-    public $data;
-    public $num_rows;
-    public $affected_rows;
-    public $last_id;
+    public StmtResultData $data;
+    public ?int $num_rows;
+    public ?int $affected_rows;
+    public ?int $last_id;
 
-    public function __construct($rows = [], $num_rows = null, $affected_rows = null, $last_id = null)
+    public function __construct($rows, $num_rows = null, $affected_rows = null, $last_id = null)
     {
-        $this->data = new StmtResultData($rows);
+        $this->data = new StmtResultData($rows ?? []);
         $this->num_rows = $num_rows;
         $this->affected_rows = $affected_rows;
         $this->last_id = $last_id;
+    }
+
+    // Iterator methods: delega a $this->data
+    public function current(): mixed
+    {
+        return $this->data->current();
+    }
+
+    public function key(): mixed
+    {
+        return $this->data->key();
+    }
+
+    public function next(): void
+    {
+        $this->data->next();
+    }
+
+    public function rewind(): void
+    {
+        $this->data->rewind();
+    }
+
+    public function valid(): bool
+    {
+        return $this->data->valid();
     }
 }
