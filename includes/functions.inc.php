@@ -63,12 +63,12 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
 
     // Rileva se l'input è già un risultato (object o array) o una query string
     $isResultObject = is_object($sql) && ($sql instanceof mysqli_result);
-    $isResultArray = is_object($sql) && ($sql instanceof StmtResult);
+    $isStmtResult = is_object($sql) && ($sql instanceof StmtResult);
 
     //veccio metodo non modificato, mantiene la retrocompatibilità e gestisce le query normali
     switch (strtolower(trim($mode))) {
         case 'query':
-            if ($isResultArray) {
+            if ($isStmtResult) {
                 // Se è un array risultato da gdrcd_stmt, restituisci il primo elemento
                 return isset($sql->data[0]) ? $sql->data[0] : null;
             }
@@ -101,7 +101,7 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
 
 
         case 'result':
-            if ($isResultArray) {
+            if ($isStmtResult) {
                 // Restituisce l'intero array di dati per i prepared statements
                 return $sql->data;
             }
@@ -117,7 +117,7 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
             break;
 
         case 'num_rows':
-            if ($isResultArray) {
+            if ($isStmtResult) {
                 return $sql->num_rows;
             }
             return (int)mysqli_num_rows($sql);
@@ -126,7 +126,7 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
         //aggiunto il supporto per i risultati di gdrcd_stmt per queste casistiche è necessario mantenere 
         //lo stato del "puntatore" all'interno dell'array
         case 'fetch':
-            if ($isResultArray) {
+            if ($isStmtResult) {
                 return array_shift($sql->data);
             }
             if ($isResultObject) {
@@ -134,7 +134,7 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
             }
             break;
         case 'assoc':
-            if ($isResultArray) {
+            if ($isStmtResult) {
                 $current = $sql->data->current();
                 $sql->data->next();
                 return $current;
@@ -144,7 +144,7 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
             }
             break;
         case 'object':
-            if ($isResultArray) {
+            if ($isStmtResult) {
                 $row = array_shift($sql->data);
                 return is_array($row) ? (object)$row : null;
             }
@@ -155,7 +155,7 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
             break;
 
         case 'free':
-            if ($isResultArray) {
+            if ($isStmtResult) {
                 // Per i risultati di gdrcd_stmt, non c'è nulla da liberare
                 return true;
             }
@@ -164,14 +164,14 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
             break;
 
         case 'last_id':
-            if ($isResultArray) {
+            if ($isStmtResult) {
                 return $sql->last_id;
             }
             return mysqli_insert_id($db_link);
             break;
 
         case 'affected':
-            if ($isResultArray) {
+            if ($isStmtResult) {
                 return $sql->affected_rows;
             }
             return (int)mysqli_affected_rows($db_link);
@@ -199,7 +199,7 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
  *                      una stringa con i tipi dei parametri, gli indici successivi i valori.
  *                      Esempio: ['si', 'nome', 42]
  *
- * @return array|false Restituisce il risultato della query (mysqli_result) in caso di SELECT,
+ * @return StmtResult|false Restituisce il risultato della query (mysqli_result) in caso di SELECT,
  *                             true per query di modifica (INSERT/UPDATE/DELETE), oppure false in caso di errore.
  */
 function gdrcd_stmt($sql, $binds = array(), $throwOnError = false)
