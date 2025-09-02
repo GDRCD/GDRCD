@@ -30,6 +30,16 @@ local.properties
 .buildpath
 
 
+#############
+## Netbeans
+#############
+
+/nbproject/private/
+nbproject/project.xml
+nbproject/project.properties
+nbproject/configs/GDRCD.properties
+
+
 #################
 ## Visual Studio
 #################
@@ -118,7 +128,6 @@ Backup*/
 UpgradeLog*.XML
 
 
-
 ############
 ## Windows
 ############
@@ -177,7 +186,3 @@ includes/config-overrides.php
 .directory
 .user.ini
 core/db_overrides.php
-/nbproject/private/
-nbproject/project.xml
-nbproject/project.properties
-nbproject/configs/GDRCD.properties
