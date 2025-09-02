@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/stmt_result.php';
+require_once __DIR__ . '/StmtResultData.class.php';
 
 /**
  * Funzioni di CORE di GDRCD
@@ -123,7 +123,7 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
             return (int)mysqli_num_rows($sql);
             break;
 
-        //aggiunto il supporto per i risultati di gdrcd_stmt per queste casistiche è necessario mantenere 
+        //aggiunto il supporto per i risultati di gdrcd_stmt per queste casistiche è necessario mantenere
         //lo stato del "puntatore" all'interno dell'array
         case 'fetch':
             if ($isStmtResult) {
