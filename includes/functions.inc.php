@@ -306,7 +306,7 @@ function gdrcd_check_tables($table)
     $describe = gdrcd_query("SHOW COLUMNS FROM $table", 'result');
 
     $i = 0;
-    $output = array();
+    $output = [];
 
     while ($field = gdrcd_query($describe, 'object')) {
         $defInfo = mysqli_fetch_field_direct($result, $i);
@@ -359,8 +359,8 @@ function gdrcd_mysql_error($details = false)
     $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 50);
     $history = '';
 
-    foreach ($backtrace as $v) {
-        if ($v['function'] == 'gdrcd_query') {
+    foreach($backtrace as $v) {
+        if($v['function'] == 'gdrcd_query') {
             $base = $v;
         }
         $history .= '<strong>FILE: </strong>: ' . $v['file'] . ' - ';
@@ -371,7 +371,7 @@ function gdrcd_mysql_error($details = false)
     if ($details !== false) {
         $error_msg .= '<strong>QUERY: </strong>: ' . $details . '</br>';
     }
-    $error_msg .= '<strong>ERROR [' . mysqli_errno(gdrcd_connect()) . ']</strong>: ' . mysqli_error(gdrcd_connect()) . '<br />';
+    $error_msg .= '<strong>ERROR [' . mysqli_errno(gdrcd_connect()) . ']</strong>: ' . mysqli_error(gdrcd_connect()) .'<br />';
     $error_msg .= '<strong>FILE: </strong>: ' . $base['file'] . ' - ';
     $error_msg .= '<strong>LINE: </strong>: ' . $base['line'] . '<br />';
     $error_msg .= '<details>';
@@ -528,20 +528,20 @@ function gdrcd_filter_url($str)
  */
 function gdrcd_html_filter($str)
 {
-    $notAllowed = array(
+    $notAllowed = [
         "#<script(.*?)>(.*?)</script>#is" => "Script non consentiti",
         "#(<iframe.*?\/?>.*?(<\/iframe>)?)#is" => "Frame non consentiti",
         "#(<object.*?>.*?(<\/object>)?)#is" => "Contenuti multimediali non consentiti",
         "#(<embed.*?\/?>.*?(<\/embed>)?)#is" => "Contenuti multimediali non consentiti",
         "#\bon([a-z]*?)=(['|\"])(.*?)\\2#mi" => " ",
         "#(javascript:[^\s\"']+)#is" => ""
-    );
+    ];
 
     if ($GLOBALS['PARAMETERS']['settings']['html'] == HTML_FILTER_HIGH) {
-        $notAllowed = array_merge($notAllowed, array(
+        $notAllowed = array_merge($notAllowed, [
             "#(<img.*?\/?>)#is" => "Immagini non consentite",
             "#(url\(.*?\))#is" => "none",
-        ));
+        ]);
     }
 
     return preg_replace(array_keys($notAllowed), array_values($notAllowed), $str);
@@ -576,9 +576,9 @@ function gdrcd_controllo_esilio($pg, $return = false)
     if (strtotime($exiled['esilio']) > time()) {
 
         $message = gdrcd_filter_out($pg)
-            . ' ' . gdrcd_filter_out($GLOBALS['MESSAGE']['warning']['character_exiled'])
-            . ' ' . gdrcd_format_date($exiled['esilio'])
-            . ' (' . $exiled['motivo_esilio'] . ' - ' . $exiled['autore_esilio'] . ')';
+            . ' '. gdrcd_filter_out($GLOBALS['MESSAGE']['warning']['character_exiled'])
+            . ' '. gdrcd_format_date($exiled['esilio'])
+            . ' ('. $exiled['motivo_esilio']. ' - '. $exiled['autore_esilio']. ')';
 
         if ($return) {
             return $message;
@@ -648,33 +648,32 @@ function gdrcd_controllo_permessi_forum($tipo, $proprietari = '')
  * @return bool
  * @throws Exception
  */
-function gdrcd_controllo_chat($location)
-{
+function gdrcd_controllo_chat($location) {
     global $PARAMETERS;
 
     $location = gdrcd_filter('num', $location);
 
-    $chat_data = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprietario, scadenza FROM mappa WHERE id=" . $location . " LIMIT 1");
+    $chat_data = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprietario, scadenza FROM mappa WHERE id=".$location." LIMIT 1");
     $private = gdrcd_filter('num', $chat_data['privata']);
 
     // Se la stanza è privata
-    if ($private) {
+    if($private) {
 
         // Controllo permessi utente
         $spy_room_enabled = $PARAMETERS['mode']['spyprivaterooms'] === 'ON';
         $isModerator = ($_SESSION['permessi'] >= MODERATOR);
-        if ($spy_room_enabled && $isModerator) {
+        if($spy_room_enabled && $isModerator){
             return true;
         }
 
         // Controllo scadenza stanza, se non scaduta
         $expiring = $chat_data['scadenza'];
         $actual_time = strftime('%Y-%m-%d %H:%M:%S');
-        if ($expiring > $actual_time) {
+        if($expiring > $actual_time) {
 
             // Controllo membri della stanza
             $owner = gdrcd_filter('out', $chat_data['proprietario']);
-            $me = gdrcd_filter('out', gdrcd_capital_letter($_SESSION['login']));
+            $me = gdrcd_filter('out',gdrcd_capital_letter($_SESSION['login']));
             $mineGuild = gdrcd_filter('out', $_SESSION['gilda']);
             $chat_invited = explode(',', $chat_data['invitati']);
 
@@ -691,7 +690,7 @@ function gdrcd_controllo_chat($location)
             }
         }
     } else {
-        return true;
+       return true;
     }
 
     return false;
@@ -732,7 +731,7 @@ function gdrcd_check_time($time)
  * @param array $params : un array di dati aggiuntivi passabili al modulo
  * @param bool $throwOnError default false.
  */
-function gdrcd_load_modules($page, $params = array(), $throwOnError = false)
+function gdrcd_load_modules($page, $params = [], $throwOnError = false)
 {
     global $MESSAGE;
     global $PARAMETERS;
@@ -747,19 +746,21 @@ function gdrcd_load_modules($page, $params = array(), $throwOnError = false)
         // Controllo la tipologia di informazione passata (file o page) e poi determino il percorso del modulo
         $modulePath = is_file($page) ? $page : gdrcd_pages_path($page);
 
-        if (!file_exists($modulePath)) {
+        if(!file_exists($modulePath)) {
             throw new Exception($MESSAGE['interface']['layout_not_found']);
         }
 
         // Includo il modulo
         include_once($modulePath);
-    } catch (Exception $e) {
+    }
+    catch(Exception $e) {
         if ($throwOnError) {
             throw $e;
         }
 
         echo $e->getMessage();
     }
+
 }
 
 /**
@@ -769,9 +770,9 @@ function gdrcd_load_modules($page, $params = array(), $throwOnError = false)
  */
 function gdrcd_pages_format($page)
 {
-    $page = str_replace('\\', DIRECTORY_SEPARATOR, $page);
+    $page = str_replace('\\',DIRECTORY_SEPARATOR, $page);
     //converte la combinaizone di caratteri __ nel separatore di directory
-    $page = str_replace('__', DIRECTORY_SEPARATOR, $page);
+    $page = str_replace('__',DIRECTORY_SEPARATOR, $page);
     //
     return gdrcd_filter('include', $page);
 }
@@ -788,39 +789,39 @@ function gdrcd_pages_path($page)
     global $MESSAGE;
 
     // Controllo che sia stato attribuito un valore a page
-    if (empty($page)) {
+    if(empty($page)) {
         throw new Exception($MESSAGE['interface']['page_missing']);
     }
 
     // Inizializzo le variabili del metodo
-    $pagesPath = dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'pages';
+    $pagesPath = dirname(__FILE__) . DIRECTORY_SEPARATOR. '..'.DIRECTORY_SEPARATOR.'pages';
     $pageFormatted = gdrcd_pages_format($page);
 
     // Imposto i possibili percorsi che posso caricare
-    $routes = array(
+    $routes = [
         '.inc.php',
-        DIRECTORY_SEPARATOR . 'index.inc.php'
-    );
+        DIRECTORY_SEPARATOR.'index.inc.php'
+    ];
 
     // Inizializzo la variabile contenitore dei moduli
-    $modules = array();
+    $modules = [];
 
     // Scorro i percorsi impostati per individuare corrispondenze
-    foreach ($routes as $route) {
-        $file = implode(DIRECTORY_SEPARATOR, array($pagesPath, $pageFormatted . $route));
+    foreach ($routes AS $route) {
+        $file = implode(DIRECTORY_SEPARATOR, [$pagesPath, $pageFormatted.$route]);
         // Se esiste la corrispondenza, allora inserisco
-        if (file_exists($file)) {
+        if(file_exists($file)) {
             $modules[] = $file;
         }
     }
 
     // Controllo che sia stata trovata almeno una corrispondenza
-    if (empty($modules)) {
+    if(empty($modules)) {
         throw new Exception($MESSAGE['interface']['page_not_found']);
     }
 
     // Se sono state trovate piu corrispondenze, blocco il caricamento
-    if (count($modules) > 1) {
+    if(count($modules) > 1) {
         throw new Exception($MESSAGE['interface']['multiple_page_found']);
     }
 
@@ -920,7 +921,7 @@ function gdrcd_bbcoder($str)
     global $MESSAGE;
     $str = gdrcd_close_tags('quote', $str);
 
-    $search = array(
+    $search = [
         '#\n#',
         '#\[BR\]#is',
         '#\[B\](.+?)\[\/B\]#is',
@@ -934,8 +935,8 @@ function gdrcd_bbcoder($str)
         '#\[quote(?::\w+)?\]#i',
         '#\[quote=(?:&quot;|"|\')?(.*?)["\']?(?:&quot;|"|\')?\]#i',
         '#\[/quote(?::\w+)?\]#si'
-    );
-    $replace = array(
+    ];
+    $replace = [
         '<br />',
         '<br />',
         '<span style="font-weight: bold;">$1</span>',
@@ -949,7 +950,7 @@ function gdrcd_bbcoder($str)
         '<div class="bb-quote">' . $MESSAGE['interface']['forums']['link']['quote'] . ':<blockquote class="bb-quote-body">',
         '<div class="bb-quote"><div class="bb-quote-name">$1 ha scritto:</div><blockquote class="bb-quote-body">',
         '</blockquote></div>'
-    );
+    ];
 
     return preg_replace($search, $replace, $str);
 }
@@ -1005,14 +1006,14 @@ function gdrcd_redirect($url, $tempo = false)
  */
 function gdrcd_angs($str)
 {
-    $search = array(
+    $search = [
         '#\&lt;(.+?)\&gt;#is',
         '#\<(.+?)>#is',
-    );
-    $replace = array(
+    ];
+    $replace = [
         '[$1]',
         '[$1]',
-    );
+    ];
 
     return preg_replace($search, $replace, $str);
 }
@@ -1027,14 +1028,14 @@ function gdrcd_angs($str)
  */
 function gdrcd_chatcolor($str)
 {
-    $search = array(
+    $search = [
         '#\&lt;(.+?)\&gt;#is',
         '#\[(.+?)\]#is',
-    );
-    $replace = array(
+    ];
+    $replace = [
         '<span class="color2">&lt;$1&gt;</span>',
         '<span class="color2">&lt;$1&gt;</span>',
-    );
+    ];
 
     return preg_replace($search, $replace, $str);
 }
@@ -1077,7 +1078,7 @@ function gdrcd_list($str)
         $characters = gdrcd_query($query, 'result');
 
         while ($option = gdrcd_query($characters, 'fetch')) {
-            $list .= '<option value="' . $option['nome'] . '" />'; //TODO escape HTMl del nome!
+            $list .= '<option value="' . $option['nome'] . '" />';//TODO escape HTMl del nome!
         }
         gdrcd_query($characters, 'free');
         $list .= '</datalist>';
@@ -1138,7 +1139,7 @@ function gdrcd_brute_debug($args)
  */
 function gdrcd_module_enable($id)
 {
-    if (!defined('GDRCD_ENABLED_MODULE')) {
+    if ( !defined('GDRCD_ENABLED_MODULE') ) {
         define('GDRCD_ENABLED_MODULE', $id);
     }
 }
@@ -1152,12 +1153,13 @@ function gdrcd_module_enable($id)
  */
 function gdrcd_module_allowed($id)
 {
-    if (!defined('GDRCD_ENABLED_MODULE') || GDRCD_ENABLED_MODULE !== $id) {
+    if ( !defined('GDRCD_ENABLED_MODULE') || GDRCD_ENABLED_MODULE !== $id ) {
 
         if (!headers_sent()) {
             http_response_code(403);
         }
 
         die($GLOBALS['MESSAGE']['error']['unknown_operation']);
+
     }
 }
