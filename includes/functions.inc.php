@@ -63,14 +63,14 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
 
     // Rileva se l'input è già un risultato (object o array) o una query string
     $isResultObject = is_object($sql) && ($sql instanceof mysqli_result);
-    $isStmtResult = is_object($sql) && ($sql instanceof StmtResult);
+    $isStmtResult = is_array($sql) && ($sql['data'] instanceof StmtResultData);
 
     //veccio metodo non modificato, mantiene la retrocompatibilità e gestisce le query normali
     switch (strtolower(trim($mode))) {
         case 'query':
             if ($isStmtResult) {
                 // Se è un array risultato da gdrcd_stmt, restituisci il primo elemento
-                return isset($sql->data[0]) ? $sql->data[0] : null;
+                return isset($sql['data'][0]) ? $sql['data'][0] : null;
             }
             switch (strtoupper(substr(trim($sql), 0, 6))) {
                 case 'SELECT':
@@ -103,7 +103,7 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
         case 'result':
             if ($isStmtResult) {
                 // Restituisce l'intero array di dati per i prepared statements
-                return $sql->data;
+                return $sql['data'];
             }
             $result = mysqli_query($db_link, $sql);
             if ($result === false) {
@@ -118,7 +118,7 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
 
         case 'num_rows':
             if ($isStmtResult) {
-                return $sql->num_rows;
+                return $sql['num_rows'];
             }
             return (int)mysqli_num_rows($sql);
             break;
@@ -127,8 +127,8 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
         //lo stato del "puntatore" all'interno dell'array
         case 'fetch':
             if ($isStmtResult) {
-                $current = $sql->data->current();
-                $sql->data->next();
+                $current = $sql['data']->current();
+                $sql['data']->next();
                 return $current;
             }
             if ($isResultObject) {
@@ -137,8 +137,8 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
             break;
         case 'assoc':
             if ($isStmtResult) {
-                $current = $sql->data->current();
-                $sql->data->next();
+                $current = $sql['data']->current();
+                $sql['data']->next();
                 return $current;
             }
             if ($isResultObject) {
@@ -147,7 +147,7 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
             break;
         case 'object':
             if ($isStmtResult) {
-                $row = array_shift($sql->data);
+                $row = array_shift($sql['data']);
                 return is_array($row) ? (object)$row : null;
             }
             // Logica per i risultati mysqli_result standard, stessa logica di prima
@@ -167,14 +167,14 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
 
         case 'last_id':
             if ($isStmtResult) {
-                return $sql->last_id;
+                return $sql['last_id'];
             }
             return mysqli_insert_id($db_link);
             break;
 
         case 'affected':
             if ($isStmtResult) {
-                return $sql->affected_rows;
+                return $sql['affected_rows'];
             }
             return (int)mysqli_affected_rows($db_link);
             break;
@@ -266,7 +266,7 @@ function gdrcd_stmt($sql, $binds = array(), $throwOnError = false)
             $rows[] = $row;
         }
         //popolo l'array di risultato e poi segno il numero di righe
-        $resultArr['data'] = $rows;
+        $resultArr['data'] = new StmtResultData($rows);
         $resultArr['num_rows'] = mysqli_num_rows($result);
         mysqli_free_result($result);
     } else {
@@ -280,7 +280,8 @@ function gdrcd_stmt($sql, $binds = array(), $throwOnError = false)
 
     mysqli_stmt_close($stmt);
 
-    return new StmtResult($resultArr['data'], $resultArr['num_rows'], $resultArr['affected_rows'], $resultArr['last_id']);
+    //return new StmtResult($resultArr['data'], $resultArr['num_rows'], $resultArr['affected_rows'], $resultArr['last_id']);
+    return $resultArr;
 }
 
 
