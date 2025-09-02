@@ -26,9 +26,12 @@ if(isset($_REQUEST['page'])) {
 }
 //se e' impostato dir allora cambio stanza.
 elseif(isset($_REQUEST['dir']) && is_numeric($_REQUEST['dir'])) {
-    if($_REQUEST['dir'] >= 0) {
-        $strInnerPage = 'frame_chat';
-    } else {
+    if ($_REQUEST['dir'] >= 0)
+    {
+        $strInnerPage = 'pages/chat/chat_box.php';
+
+    }else
+    {
         $strInnerPage = 'mappaclick';
         $_REQUEST['id_map'] = $_SESSION['mappa'];
     }
