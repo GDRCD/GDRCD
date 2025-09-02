@@ -50,8 +50,18 @@ function gdrcd_close_connection($db)
  * Mantiene la retrocompatibilità con i risultati di mysqli_query e aggiunge il supporto
  * per la gestione dei risultati restituiti da gdrcd_stmt.
  *
- * @param mixed $sql La query SQL (stringa) o il risultato (mysqli_result o array) da gestire.
- * @param string $mode La modalità di operazione ('query', 'result', 'num_rows', 'fetch', 'assoc', 'object', 'free', 'last_id', 'affected').
+ * @param mysqli_result|array|string $sql La query SQL (stringa) o il risultato (mysqli_result o gdrcd_stmt) da gestire.
+ * @param string $mode La modalità di operazione.
+ * Modalità accettate:
+ *  query: esegue la query e ritorna come risultato la prima riga del resultset
+ *  result: esegue la query e ritorna la risorsa mysqli_result associata al risultato
+ *  num_rows: accetta come parametro una risorsa mysqli_result o il risultato di gdrcd_stmt e ritorna il numero di righe
+ *  fetch: accetta come parametro una risorsa mysqli_result o il risultato di gdrcd_stmt e ritorna il successivo risultato dal resultset come array
+ *  object: uguale a fetch, eccetto che ritorna un oggetto al posto di un array
+ *  free: libera la memoria occupata dalla risorsa mysqli_result o del risultato di gdrcd_stmt passato in $sql
+ *  last_id: ritorna l'id del record generato dall'ultima query di INSERT
+ *  affected: ritorna il numero di record toccati dall'ultima query (INSERT, UPDATE, DELETE o SELECT)
+ * @return mixed un booleano in caso di esecuzione di query non SELECT e modalità 'query'. Altrimenti ritorna come specificato nella descrizione di $mode
  * @param bool $throwOnError Se true, solleva un'eccezione in caso di errore. Altrimenti, termina lo script.
  * @return mixed Il risultato dell'operazione.
  */
