@@ -8,7 +8,7 @@ if ($_SESSION['permessi'] < SUPERUSER){
              // Raggruppa le configurazioni per categoria
             $configs_by_category = array();
             while($config = gdrcd_query($config_result, 'assoc')){
-                $categoria = ucwords(gdrcd_filter('out', $config['categoria']));
+                $categoria = gdrcd_configuration_label($config['categoria']);
                 if(empty($categoria)) $categoria = 'Generale';
                 $configs_by_category[$categoria][] = $config;
             }
@@ -26,7 +26,7 @@ HTML;
                     $id = gdrcd_filter('out', $config['id']);
                     $tipo = gdrcd_filter('out', $config['tipo']);
                     $ordinamento = gdrcd_filter('out', $config['ordinamento']);
-                    $parametro =ucwords(strtr(gdrcd_filter('out', $config['parametro']), ['_' => ' ']));   
+                    $parametro = gdrcd_configuration_label($config['parametro']);
                     $parametro_save =gdrcd_filter('in', $config['categoria']) . ".". gdrcd_filter('in', $config['parametro']);
                     $valore = gdrcd_filter('out', $config['valore']);
                     $descrizione = gdrcd_filter('out', $config['descrizione']);
@@ -45,9 +45,10 @@ HTML;
 HTML;
                         foreach($options_array as $option){
                             $option = trim($option);
+                            $label = gdrcd_configuration_label($option);
                             $selected = ($option == $valore) ? 'selected' : '';
                             echo <<<HTML
-                    <option value="{$option}" {$selected}>{$option}</option>
+                    <option value="{$option}" {$selected}>{$label}</option>
 HTML;
                         }
                         echo <<<HTML

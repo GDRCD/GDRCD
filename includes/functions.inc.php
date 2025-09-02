@@ -1020,6 +1020,18 @@ function gdrcd_brute_debug($args)
     die('FINE');
 }
 
+/**
+ * Restituisce una versione leggibile di un parametro o valore di configurazione.
+ *
+ * Converte il dato passato sostituendo gli underscore con spazi,
+ * capitalizzando ogni parola e filtrando l'output per la visualizzazione.
+ *
+ * @param string $parametro il parametro o il valore di configurazione da formattare
+ * @return string
+ */
+function gdrcd_configuration_label($parametro) {
+    return gdrcd_filter('out', ucwords(strtr($parametro, ['_' => ' '])));
+}
 
 /**
  * Recupera un valore di configurazione dal database
