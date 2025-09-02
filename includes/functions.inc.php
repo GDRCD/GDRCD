@@ -1015,15 +1015,22 @@ function gdrcd_configuration_get($parametro)
     // Se il valore nel db non esiste, ritorna esplicitamente null
     [$categoria, $parametro] = explode('.', $parametro, 2);
     $result =  gdrcd_stmt(
-        "SELECT valore FROM configurazioni WHERE categoria = ? AND parametro = ?",
+        "SELECT valore, `default` FROM configurazioni WHERE categoria = ? AND parametro = ?",
         [
             'ss',
             $categoria,
             $parametro
         ]
     );
+    
+    if (gdrcd_query($result, 'num_rows') === 0) {
+        return null;
+    }
+    
     $value = gdrcd_query($result, 'assoc');
-    return $value['valore'] ?? null;
+    return !is_null($value['valore']) && $value['valore'] !== '' 
+        ? $value['valore'] 
+        : $value['default'];
 }
 
 /**
@@ -1037,11 +1044,17 @@ function gdrcd_configuration_set($parametro, $value)
 {
      [$categoria, $parametro] = explode('.', $parametro, 2);
     // Query di salvataggio del $valore nel db per $parametro
-            gdrcd_query(
+            gdrcd_stmt(
                 "UPDATE configurazioni  
-                    SET valore =  '{$value}'
-                WHERE categoria = '{$categoria}'
-                AND parametro = '{$parametro}'" 
+                    SET valore = ?
+                WHERE categoria = ?
+                    AND parametro = ?",
+                [
+                    'sss',
+                    $value,
+                    $categoria,
+                    $parametro
+                ]
             );
 }
 

@@ -8,7 +8,7 @@ if ($_SESSION['permessi'] < SUPERUSER){
              // Raggruppa le configurazioni per categoria
             $configs_by_category = array();
             while($config = gdrcd_query($config_result, 'assoc')){
-                $categoria = gdrcd_filter('out', $config['categoria']);
+                $categoria = ucwords(gdrcd_filter('out', $config['categoria']));
                 if(empty($categoria)) $categoria = 'Generale';
                 $configs_by_category[$categoria][] = $config;
             }
