@@ -179,10 +179,7 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
         case 'free':
             if ($isStmtResult) {
                 // Per i risultati di gdrcd_stmt, non c'è nulla da liberare
-                unset($sql['data']);
-                unset($sql['num_rows']);
-                unset($sql['affected_rows']);
-                unset($sql['last_id']);
+                $sql['data']->free();
                 return true;
             }
             mysqli_free_result($sql);
@@ -198,7 +195,7 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
 
         case 'affected':
             if ($isStmtResult) {
-                return $sql['affected_rows'];
+                return $sql['affected'];
             }
             return (int)mysqli_affected_rows($db_link);
             break;
@@ -235,7 +232,7 @@ function gdrcd_stmt($sql, $binds = array(), $throwOnError = false)
     $resultArr = array(
         'data' => null,
         'num_rows' => null,
-        'affected_rows' => null,
+        'affected' => null,
         'last_id' => null,
     );
 
@@ -295,7 +292,7 @@ function gdrcd_stmt($sql, $binds = array(), $throwOnError = false)
         mysqli_free_result($result);
     } else {
         // Non-SELECT query
-        $resultArr['affected_rows'] = mysqli_stmt_affected_rows($stmt);
+        $resultArr['affected'] = mysqli_stmt_affected_rows($stmt);
         // Check if it's an INSERT
         if (preg_match('/^\s*INSERT\s/i', $sql)) {
             $resultArr['last_id'] = mysqli_stmt_insert_id($stmt);

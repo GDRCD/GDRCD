@@ -78,4 +78,10 @@ class StmtResultData implements Iterator, ArrayAccess, Countable
     {
         unset($this->data[$offset]);
     }
+
+    public function free(): void
+    {
+        unset($this->data);
+        $this->position = 0;
+    }
 }
