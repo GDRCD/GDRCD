@@ -166,7 +166,8 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
             break;
         case 'object':
             if ($isStmtResult) {
-                $row = array_shift($sql['data']);
+                $row = $sql['data']->current();
+                $sql['data']->next();
                 return is_array($row) ? (object)$row : null;
             }
             // Logica per i risultati mysqli_result standard, stessa logica di prima
