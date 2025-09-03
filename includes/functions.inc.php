@@ -767,10 +767,6 @@ function gdrcd_load_modules($page, $params = [], $throwOnError = false)
         // Includo il modulo
         include_once($modulePath);
     } catch (Exception $e) {
-        if ($throwOnError) {
-            throw $e;
-        }
-
         echo $e->getMessage();
     }
 }
@@ -1141,36 +1137,70 @@ function gdrcd_brute_debug($args)
 }
 
 /**
- * Abilita il modulo specificato impostando la costante GDRCD_ENABLED_MODULE.
- * Utilizzato per garantire la legittimità del caricamento dei file inclusi dinamicamente.
+ * Restituisce una versione leggibile di un parametro o valore di configurazione.
  *
- * @see gdrcd_chat_op_require_enable
+ * Converte il dato passato sostituendo gli underscore con spazi,
+ * capitalizzando ogni parola e filtrando l'output per la visualizzazione.
  *
- * @param string|int $id Identificativo del modulo da abilitare
- * @return void
+ * @param string $parametro il parametro o il valore di configurazione da formattare
+ * @return string
  */
-function gdrcd_module_enable($id)
+function gdrcd_configuration_label($parametro)
 {
-    if (!defined('GDRCD_ENABLED_MODULE')) {
-        define('GDRCD_ENABLED_MODULE', $id);
-    }
+    return gdrcd_filter('out', ucwords(strtr($parametro, ['_' => ' '])));
 }
 
 /**
- * Verifica che le operazioni siano consentite per il modulo specificato.
- * Termina lo script con HTTP 403 se il modulo non è abilitato.
+ * Recupera un valore di configurazione dal database
  *
- * @param string|int $id Identificativo del modulo da verificare
- * @return void Terminazione dello script se non consentito
+ * @param string $parametro Il parametro nel formato "categoria.parametro"
+ * @return string|null Il valore della configurazione o null se non trovato
  */
-function gdrcd_module_allowed($id)
+function gdrcd_configuration_get($parametro)
 {
-    if (!defined('GDRCD_ENABLED_MODULE') || GDRCD_ENABLED_MODULE !== $id) {
+    // Recupera il valore tramite query
+    // Se il valore nel db non esiste, ritorna esplicitamente null
+    [$categoria, $parametro] = explode('.', $parametro, 2);
+    $result =  gdrcd_stmt(
+        "SELECT valore, `default` FROM configurazioni WHERE categoria = ? AND parametro = ?",
+        [
+            'ss',
+            $categoria,
+            $parametro
+        ]
+    );
 
-        if (!headers_sent()) {
-            http_response_code(403);
-        }
-
-        die($GLOBALS['MESSAGE']['error']['unknown_operation']);
+    if (gdrcd_query($result, 'num_rows') === 0) {
+        return null;
     }
+
+    $value = gdrcd_query($result, 'assoc');
+    return !is_null($value['valore']) && $value['valore'] !== ''
+        ? $value['valore']
+        : $value['default'];
+}
+
+/**
+ * Imposta un valore di configurazione nel database
+ *
+ * @param string $parametro Il parametro nel formato "categoria.parametro"
+ * @param string $value Il valore da salvare
+ * @return void
+ */
+function gdrcd_configuration_set($parametro, $value)
+{
+    [$categoria, $parametro] = explode('.', $parametro, 2);
+    // Query di salvataggio del $valore nel db per $parametro
+    gdrcd_stmt(
+        "UPDATE configurazioni
+                    SET valore = ?
+                WHERE categoria = ?
+                    AND parametro = ?",
+        [
+            'sss',
+            $value,
+            $categoria,
+            $parametro
+        ]
+    );
 }

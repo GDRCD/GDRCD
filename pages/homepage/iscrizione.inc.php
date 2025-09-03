@@ -1,3 +1,18 @@
+<?php
+// Controllo dello stato registrazione
+
+ 
+// Se le registrazioni sono chiuse, mostra un messaggio e blocca l'accesso
+if (gdrcd_configuration_get('registrazione.stato_registrazione') === 'chiuso') {
+    // Recupera il messaggio personalizzato dalla configurazione
+    $messaggio_chiusura = gdrcd_configuration_get('registrazione.messaggio_registrazione');
+    if (empty($messaggio_chiusura)) {
+        $messaggio_chiusura = 'Le registrazioni sono attualmente chiuse. Riprova più tardi.';
+    }
+    echo '<div class="error">' . gdrcd_filter('out', $messaggio_chiusura) . '</div>';
+    return;
+}
+?>
 <div class="pagina_iscrizione">
     <div class="page_title">
         <h2>
@@ -166,6 +181,9 @@
                             <div class="form_info">
                                 <?php echo gdrcd_filter('out', $MESSAGE['register']['fields']['stats_info'] . ' ' . $PARAMETERS['settings']['cars_sum']); ?>
                             </div>
+                            
+
+                            
                             <!-- Invio -->
                             <div class="form_submit">
                                 <input type="hidden" name="fase" value="2"/>
@@ -234,6 +252,8 @@
                         $ok = false;
                         echo '<div class="error">Razza non disponibile all\'iscrizione.</div>';
                     }
+                    
+
 
                     if ($ok == false) { ?>
                         <div class="form_gioco">
@@ -263,6 +283,7 @@
                                            value="<?php echo gdrcd_filter('num', $_POST['car4']) ?>"/>
                                     <input type="hidden" name="car5"
                                            value="<?php echo gdrcd_filter('num', $_POST['car5']) ?>"/>
+
                                     <input type="submit"
                                            value="<?php echo gdrcd_filter('out', $MESSAGE['register']['forms']['try_again']); ?>"/>
                                 </div>
@@ -363,6 +384,7 @@
                                         </div>
                                     </td>
                                 </tr>
+                              
                             </table>
                         </div>
                         <div class="form_gioco">
@@ -392,6 +414,11 @@
                                            value="<?php echo gdrcd_filter('num', $_POST['car4']) ?>"/>
                                     <input type="hidden" name="car5"
                                            value="<?php echo gdrcd_filter('num', $_POST['car5']) ?>"/>
+                                    <?php if (gdrcd_configuration_get('registrazione.stato_registrazione') === 'su_invito') { ?>
+
+                                <strong>Token di invito:</strong>
+                                    <input name="token_invito" value="" placeholder="Inserisci il token di invito" required/>
+                                <?php } ?>
                                     <input type="submit"
                                            value="<?php echo gdrcd_filter('out', $MESSAGE['register']['forms']['ok']); ?>"/>
                                 </div>
@@ -437,7 +464,6 @@
                 } else {
 
                     $ok = true;
-
                     /** * Se deve scattare l'avviso di cambio password fin dall'iscrizione non segno cambiamenti
                      * @author Blancks
                      */
@@ -496,6 +522,39 @@
                         $ok = false;
                         echo '<div class="error">Razza non disponibile all\'iscrizione.</div>';
                     }
+                    
+                    // Controllo token se le registrazioni sono "Su invito"
+                    
+                    if (gdrcd_configuration_get('registrazione.stato_registrazione') === 'su_invito') {
+                        $token_invito = gdrcd_filter('out', $_POST['token_invito']);
+                        if (empty($token_invito)) {
+                            $ok = false;
+                            echo '<div class="error">Token di invito richiesto per la registrazione.</div>';
+                        } else {
+                             $token_check_stmt = gdrcd_stmt(
+                                "SELECT                          
+                                    id, 
+                                    utilizzato 
+                                FROM token_iscrizione 
+                                WHERE valore = ? 
+                                AND scadenza >= CURDATE() LIMIT 1",
+                                [
+                                    's', 
+                                    $token_invito
+                                ],
+                                
+                            );
+                            $token_check=gdrcd_query($token_check_stmt, 'assoc');
+                                // Verifica se il token esiste nella tabella token_iscrizione ed è valido
+                                if (!$token_check) {
+                                    $ok = false;
+                                    echo '<div class="error">Token di invito non valido o scaduto.</div>';
+                                } elseif ($token_check['utilizzato'] == 1) {
+                                    $ok = false;
+                                    echo '<div class="error">Token di invito già utilizzato.</div>';
+                                }
+                            }
+                    }
 
                     if (preg_match('#[^\p{L}\s]#u', $_POST['nome'])) {
                         $ok = false;
@@ -506,6 +565,28 @@
                             $pass = gdrcd_genera_pass();
                             gdrcd_query("INSERT INTO personaggio (nome, cognome, pass, data_iscrizione, email, sesso, id_razza, car0, car1, car2, car3, car4, car5, salute, salute_max, soldi, esperienza $lastpasschange_field) 
                             VALUES ('" . gdrcd_safe_name($_POST['nome']) . "', '" . gdrcd_safe_name($_POST['cognome']) . "', '" . gdrcd_encript($pass) . "', NOW(), '" . gdrcd_encript($email) . "', '" . gdrcd_filter('in', $_POST['genere']) . "', " . gdrcd_filter('num', $_POST['razza']) . ", " . gdrcd_filter('num', $_POST['car0']) . ", " . gdrcd_filter('num', $_POST['car1']) . ", " . gdrcd_filter('num', $_POST['car2']) . ", " . gdrcd_filter('num', $_POST['car3']) . ", " . gdrcd_filter('num', $_POST['car4']) . ", " . gdrcd_filter('num', $_POST['car5']) . ", " . gdrcd_filter('num', $PARAMETERS['settings']['max_hp']) . ", " . gdrcd_filter('num', $PARAMETERS['settings']['max_hp']) . ", " . gdrcd_filter('num', $PARAMETERS['settings']['first_money']) . ", " . gdrcd_filter('num', $PARAMETERS['settings']['first_px']) . " $lastpasschange_value)");
+                            
+                            // Se è stata usata la registrazione "Su invito", marca il token come utilizzato
+                            if (gdrcd_configuration_get('registrazione.stato_registrazione') === 'su_invito') {
+                                $token_invito = gdrcd_filter('out', $_POST['token_invito']);
+                                $nome_personaggio = gdrcd_safe_name($_POST['nome']);
+                                
+                                 gdrcd_stmt(
+                                    "UPDATE token_iscrizione
+                                        SET utilizzato = ?,
+                                        data_utilizzo = CURDATE(),
+                                        utilizzato_da = ? 
+                                    WHERE valore = ?
+                                    LIMIT 1",
+                                    [
+                                        'iss',
+                                        1,
+                                       $nome_personaggio,
+                                       $token_invito 
+                                    ]
+                                );
+                                
+                            }
 
                             if ($PARAMETERS['mode']['emailconfirmation'] == 'ON') {
                                 echo '<div class="page_title"><h2>' . gdrcd_filter('out', $MESSAGE['register']['welcome']['message']['ok']) . '</h2></div>';
