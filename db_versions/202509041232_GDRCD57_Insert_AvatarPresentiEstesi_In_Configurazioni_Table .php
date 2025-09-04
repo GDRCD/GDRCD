@@ -1,6 +1,6 @@
 <?php
 
-class GDRCD57_Insert_AvatarPresenti_Estesi_In_Table extends DbMigration
+class Insert_AvatarPresentiEstesi_In_Configurazioni_Table  extends DbMigration
 {
     public function up() {
         // Inserimento parametro su tabella configurazioni
