@@ -69,10 +69,19 @@
              * @author Blancks
              */
             $online_state = '';
-            if ($PARAMETERS['mode']['user_online_state'] == 'ON' && ! empty($record['online_status']) && $record['online_status'] != null) {
-                $record['online_status'] = trim(nl2br(gdrcd_filter('in', $record['online_status'])));
-                $record['online_status'] = strtr($record['online_status'], ["\n\r" => '', "\n" => '', "\r" => '', '"' => '&quot;']);
-                $online_state = 'onmouseover="show_desc(event, \''.$record['online_status'].'\');" onmouseout="hide_desc();""';
+            if ($PARAMETERS['mode']['user_online_state'] == 'ON' && ! empty($record['online_status']) && $record['online_status'] != null) {                 
+                    if($PARAMETERS['mode']['online_message_bbcode'] == 'ON') {
+                        if($PARAMETERS['settings']['online_message_bbcode']['type'] == 'bbd' && $PARAMETERS['settings']['bbd']['free_html'] == 'ON') {
+                            $online_state = bbdecoder(gdrcd_html_filter($record['online_status']), true);
+                        } elseif($PARAMETERS['settings']['online_message_bbcode']['type'] == 'bbd') {
+                            $online_state = bbdecoder(gdrcd_filter('out', $record['online_status']), true);
+                        } else {
+                            $online_state = gdrcd_bbcoder(gdrcd_filter('out', $record['online_status']));
+                        }
+                    } else {
+                        $online_state = gdrcd_html_filter($record['online_status']);
+                    }  
+                     $online_state = 'onmouseover="show_desc(event, \''.$online_state.'\');" onmouseout="hide_desc();""'; 
             }
             //Stampo il PG
             echo '<li class="presente"'.$online_state.'>';
