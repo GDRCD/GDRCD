@@ -72,8 +72,7 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
 
     // Rileva se l'input è già un risultato (object o array) o una query string
     $isResultObject = is_object($sql) && ($sql instanceof mysqli_result);
-    $isStmtResult = (is_array($sql) && $sql['data'] instanceof StmtResultData) || (is_array($sql) && isset($sql['affected_rows']));
-
+    $isStmtResult = (is_array($sql) && $sql['data'] instanceof StmtResultData) || (is_array($sql) && isset($sql['affected']));
     //veccio metodo non modificato, mantiene la retrocompatibilità e gestisce le query normali
     switch (strtolower(trim($mode))) {
         case 'query':
