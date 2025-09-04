@@ -414,6 +414,14 @@ $PARAMETERS['settings']['user_bbcode']['type'] = 'bbd';
 // bbd : viene abilitato l'uso del plugin "BBDecoder" per la funzionalità del bbcode
 // native : viene usato la scarna formattazione bbcode di base del gdrcd
 
+$PARAMETERS['mode']['online_message_bbcode'] = 'ON';
+//ON:abilita l'uso del bbcode obbligatorio per la formattazione della frase nei presenti estesi
+//OFF:consente di usare html, filtrato delle sue componenti nocive, per la modifica dei campi
+
+$PARAMETERS['settings']['online_message_bbcode']['type'] = 'bbd';
+// bbd : viene abilitato l'uso del plugin "BBDecoder" per la funzionalità del bbcode
+// native : viene usato la scarna formattazione bbcode di base del gdrcd
+
 /** * I seguenti parametri di configurazione sono validi se viene selezionato il modulo 'bbd' e il bbcode è attivo
  * @author Blancks
  */
