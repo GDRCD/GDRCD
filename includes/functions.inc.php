@@ -79,7 +79,9 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
         case 'query':
             if ($isStmtResult) {
                 // Se è un array risultato da gdrcd_stmt, restituisci il primo elemento
-                return isset($sql['data'][0]) ? $sql['data'][0] : null;
+                $row = isset($sql['data'][0]) ? $sql['data'][0] : null;
+                $sql['data']->free();
+                return $row;
             }
             switch (strtoupper(substr(trim($sql), 0, 6))) {
                 case 'SELECT':
