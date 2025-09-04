@@ -110,6 +110,7 @@ div.pagina_presenti_estesa .presenti_avatar{
     width: 50px;
     height: 50px;
     border: none;
-    vertical-align: bottom;
+    vertical-align: middle;
+    display: inline-block;
 
 }
