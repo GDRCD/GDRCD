@@ -220,7 +220,7 @@ class DbMigrationEngine
 
     /**
      * @fn filterUnappliedMigrations
-     * @note Dato un array di istante di classi di migrazione, ritorna solo quelle che non sono applicate
+     * @note Dato un array di istanze di classi di migrazione, ritorna solo quelle che non sono applicate
      * @param DbMigration[] $migrations
      * @return DbMigration[]
      */
