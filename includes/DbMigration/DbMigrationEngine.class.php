@@ -76,6 +76,7 @@ class DbMigrationEngine
             return true;
         }
 
+        self::createVersioningTable();
         $migrations = self::loadMigrationClasses();
         $migrationsToApply = self::filterUnappliedMigrations($migrations);
 
