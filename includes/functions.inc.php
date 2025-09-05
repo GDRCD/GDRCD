@@ -702,8 +702,11 @@ function gdrcd_module_allowed($id)
  */
 function gdrcd_pages_format($page)
 {
+    // Rimuove i puntini di ritorno
+    $page = str_replace('..', '', $page);
+    // Rimuove i backslash (\)
     $page = str_replace('\\',DIRECTORY_SEPARATOR, $page);
-    //converte la combinaizone di caratteri __ nel separatore di directory
+    // Converte la combinazione di caratteri __ nel separatore di directory
     $page = str_replace('__',DIRECTORY_SEPARATOR, $page);
     //
     return gdrcd_filter('include', $page);
