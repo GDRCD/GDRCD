@@ -2,9 +2,11 @@
 session_start();
 
 require_once(dirname(__FILE__) . '/constant_values.inc.php');
-require_once(dirname(__FILE__) . '/../config.inc.php');
-if(file_exists(dirname(__FILE__).'/config-overrides.php')){
-    include_once dirname(__FILE__).'/config-overrides.php';
+
+// carica le configurazioni di default e quelle personali se esistono
+require_once(dirname(__FILE__) . '/../configs/config.core.inc.php');
+if(file_exists(dirname(__FILE__).'/../config.inc.php')){
+    include_once dirname(__FILE__).'/../config.inc.php';
 }
 
 require_once dirname(__FILE__) . '/DbMigration/DbMigrationEngine.class.php';
