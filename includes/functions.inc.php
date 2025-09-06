@@ -538,7 +538,9 @@ function gdrcd_controllo_permessi_forum($tipo, $proprietari = '')
     }
 }
 
+// TODO: Eliminare questa funzione
 /**
+ * @deprecated
  * Funzione controllo permessi chat
  * @param $location
  * @return bool
