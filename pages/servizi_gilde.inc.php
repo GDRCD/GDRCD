@@ -120,7 +120,7 @@
                             <td>
                                 <div class="icone_elenco">
                                     <?php if($row['capo'] == 1) { ?><img
-                                            src="imgs/icons/crown1.gif" /><?php } else { ?>&nbsp;<?php } ?>
+                                            src="assets/imgs/icons/crown1.gif" /><?php } else { ?>&nbsp;<?php } ?>
                                 </div>
                             </td>
                             <td>
@@ -183,7 +183,7 @@
                             <td>
                                 <div class="icone_elenco">
                                     <?php if($row['capo'] == 1) { ?><img
-                                            src="imgs/icons/crown1.gif" /><?php } else { ?>&nbsp;<?php } ?>
+                                            src="assets/imgs/icons/crown1.gif" /><?php } else { ?>&nbsp;<?php } ?>
                                 </div>
                             </td>
                             <td>

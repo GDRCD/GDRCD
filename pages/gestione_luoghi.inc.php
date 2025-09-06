@@ -19,7 +19,7 @@
 
                 $immagine = ($_POST['immagine'] == "") ? "standard_luogo.png" : gdrcd_filter('in', $_POST['immagine']);
                 /*Eseguo l'inserimento*/
-                gdrcd_query("INSERT INTO mappa (nome, descrizione, stato, pagina, chat, immagine, stanza_apparente, id_mappa, link_immagine, link_immagine_hover, id_mappa_collegata, x_cord, y_cord, privata, proprietario, scadenza, costo, invitati) 
+                gdrcd_query("INSERT INTO mappa (nome, descrizione, stato, pagina, chat, immagine, stanza_apparente, id_mappa, link_immagine, link_immagine_hover, id_mappa_collegata, x_cord, y_cord, privata, proprietario, scadenza, costo, invitati)
                     VALUES ('".gdrcd_filter('in', $_POST['nome'])."', '".gdrcd_filter('in', $_POST['descrizione'])."', '".gdrcd_filter('in', $_POST['stato'])."', '".gdrcd_filter('in', $_POST['pagina'])."', ".$is_chat.", '".$immagine."', '".gdrcd_filter('in', $_POST['stanza_apparente'])."', ".gdrcd_filter('in', $_POST['mappa']).", '".gdrcd_filter('in', $_POST['image_button'])."', '".gdrcd_filter('in', $_POST['image_button_hover'])."', ".gdrcd_filter('in', $_POST['mappa_linked']).", ".gdrcd_filter('num', $_POST['x_cord']).", ".gdrcd_filter('num', $_POST['y_cord']).", ".$is_privat.", '".gdrcd_filter('in', $_POST['proprietario'])."', '".gdrcd_filter('num', $_POST['year'])."-".gdrcd_filter('num', $_POST['month'])."-".gdrcd_filter('num', $_POST['day'])." 00:00:00'".", ".gdrcd_filter('num', $_POST['costo']).", '')");
                 ?>
                 <div class="warning">
@@ -399,7 +399,7 @@
                                                            value="<?php echo $row['id'] ?>" />
                                                     <input type="hidden" name="op" value="edit" />
                                                     <input type="image"
-                                                           src="imgs/icons/edit.png"
+                                                           src="assets/imgs/icons/edit.png"
                                                            alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['edit']); ?>"
                                                            title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['edit']); ?>" />
                                                 </form>
@@ -411,7 +411,7 @@
                                                            value="<?php echo $row['id'] ?>" />
                                                     <input type="hidden" name="op" value="erase" />
                                                     <input type="image"
-                                                           src="imgs/icons/erase.png"
+                                                           src="assets/imgs/icons/erase.png"
                                                            alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['erase']); ?>"
                                                            title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['erase']
                                                            ); ?>" />

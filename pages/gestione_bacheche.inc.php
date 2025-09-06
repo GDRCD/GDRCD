@@ -220,7 +220,7 @@
                                                 <form action="main.php?page=gestione_bacheche" method="post">
                                                     <input type="hidden" name="id_record" value="<?php echo $row['id_araldo'] ?>" />
                                                     <input type="hidden" name="op" value="edit" />
-                                                    <input type="image" src="imgs/icons/edit.png" alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['edit']); ?>" title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['edit']); ?>" />
+                                                    <input type="image" src="assets/imgs/icons/edit.png" alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['edit']); ?>" title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['edit']); ?>" />
                                                 </form>
                                             </div>
                                             <!-- Elimina -->
@@ -228,7 +228,7 @@
                                                 <form action="main.php?page=gestione_bacheche" method="post">
                                                     <input type="hidden" name="id_record" value="<?php echo $row['id_araldo'] ?>" />
                                                     <input type="hidden" name="op" value="erase" />
-                                                    <input type="image" src="imgs/icons/erase.png" alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['erase']); ?>" title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['erase']); ?>" />
+                                                    <input type="image" src="assets/imgs/icons/erase.png" alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['erase']); ?>" title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['erase']); ?>" />
                                                 </form>
                                             </div>
                                         </div>

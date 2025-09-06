@@ -130,7 +130,7 @@
                     </div>
                 </td>
                 <td>
-                    <img class="omino_bianco_img" src="imgs/avatars/inventory_<?php echo $sesso; ?>.png" />
+                    <img class="omino_bianco_img" src="assets/imgs/avatars/inventory_<?php echo $sesso; ?>.png" />
                 </td>
                 <td>
                     <div class="omino_bianco_chest">

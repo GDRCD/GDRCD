@@ -37,10 +37,10 @@ if( ! empty($_SESSION['login'])) {
 $PARAMETERS['info']['GDRCD'] = '5.6.0.6'; //versione di GDRCD
 
 /* PARAMETRI DI CONNESSIONE */
-$PARAMETERS['database']['username'] = 'gdrcd';            //nome utente del database
-$PARAMETERS['database']['password'] = 'gdrcd';            //password del database
+$PARAMETERS['database']['username'] = 'gdrcd_user';            //nome utente del database
+$PARAMETERS['database']['password'] = 'gdrcd_password';            //password del database
 $PARAMETERS['database']['database_name'] = 'gdrcd';    //nome del database
-$PARAMETERS['database']['url'] = 'localhost';        //indirizzo ip del database
+$PARAMETERS['database']['url'] = 'database';        //indirizzo ip del database
 
 
 /* HELP: Sostituire le diciture inserite tra le virgolette con i parametri di connessione al Database del proprio dominio. Essi sono forniti al momento della registrazione. Se non si e' in possesso di tali parametri consultare le FAQ della homepage dell'host che fornisce il dominio. Se non le si trovano li contattare lo staff dell'host. */

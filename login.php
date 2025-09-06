@@ -84,7 +84,7 @@ if( ! empty($record) and gdrcd_password_check($pass1, $record['pass']) && ($reco
     $_SESSION['luogo'] = (empty($record['ultimo_luogo']) === true) ? -1 :  $_SESSION['luogo'] = $record['ultimo_luogo'];
     $_SESSION['tag'] = "";
     $_SESSION['last_message'] = 0;
-     
+
     $res = gdrcd_query("SELECT ruolo.gilda, ruolo.immagine FROM ruolo JOIN clgpersonaggioruolo ON clgpersonaggioruolo.id_ruolo = ruolo.id_ruolo WHERE clgpersonaggioruolo.personaggio = '".gdrcd_filter('in', $record['nome'])."'", 'result');
 
     while($row = gdrcd_query($res, 'fetch')) {
@@ -181,7 +181,7 @@ if($_SESSION['login'] != '') {
         <link rel='stylesheet' href='themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/main.css' TYPE='text/css'>
         <link rel='stylesheet' href='themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/homepage.css'
               TYPE='text/css'>
-        <link rel='shortcut icon' href='imgs/favicon.ico' />
+        <link rel='shortcut icon' href='assets/imgs/favicon.ico' />
     </head>
     <body>
         <div class="error_box">

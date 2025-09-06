@@ -202,7 +202,7 @@
                                                 <form class="opzioni_elenco_record_gestione" action="main.php?page=gestione_abilita" method="post">
                                                     <input type="hidden" name="id_record" value="<?php echo $row['id_abilita'] ?>" />
                                                     <input type="hidden" name="op" value="edit" />
-                                                    <input type="image" alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['edit']); ?>" title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['edit']); ?>" src="imgs/icons/edit.png" />
+                                                    <input type="image" alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['edit']); ?>" title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['edit']); ?>" src="assets/imgs/icons/edit.png" />
                                                 </form>
                                             </div>
                                             <!-- Elimina -->
@@ -210,7 +210,7 @@
                                                 <form class="opzioni_elenco_record_gestione" action="main.php?page=gestione_abilita" method="post">
                                                     <input type="hidden" name="id_record" value="<?php echo $row['id_abilita'] ?>" />
                                                     <input type="hidden" name="op" value="erase" />
-                                                    <input type="image" src="imgs/icons/erase.png" alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['erase']); ?>" title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['erase']); ?>" />
+                                                    <input type="image" src="assets/imgs/icons/erase.png" alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['erase']); ?>" title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['erase']); ?>" />
                                                 </form>
                                             </div>
                                         </div>

@@ -1,4 +1,4 @@
-/*M!999999\- enable the sandbox mode */ 
+/*M!999999\- enable the sandbox mode */
 -- MariaDB dump 10.19  Distrib 10.11.11-MariaDB, for Linux (x86_64)
 --
 -- Host: localhost    Database: gdrcd
@@ -756,8 +756,8 @@ CREATE TABLE `personaggio` (
 LOCK TABLES `personaggio` WRITE;
 /*!40000 ALTER TABLE `personaggio` DISABLE KEYS */;
 INSERT INTO `personaggio` VALUES
-('Super','User','$P$B326uMxMwK4jQepdYQbpXfKXKO/PBD1',NULL,'2025-07-07 23:13:27','$P$BwJo98FwWiQfNSpSPAQfaM8SkJbVuy.',4,1,-1,'2009-07-01','2009-07-01','','','m',1000,'','','Nella norma','',1,'imgs/avatars/empty.png','','','0',1000.00000,7,8,6,5,6,5,100,100,'2009-07-01 00:00:00',300,50000,'2009-07-01','127.0.0.1',0,'2009-07-01 00:00:00','2009-07-01 00:00:00','2009-07-01 00:00:00',1,0),
-('Test','Di Funzionalià','$P$Ba0Q5iR.i2y1yrK856QSiYpgfeths41',NULL,'2025-07-07 23:13:27','$P$B4TcA6FTIF4b7Z8wCiOyoUAufpsEsM/',0,1,-1,'2009-07-01','2009-07-01','','','m',1000,'','','Nella norma','',1,'imgs/avatars/empty.png','','','0',1000.00000,7,8,6,5,6,5,100,100,'2009-07-01 00:00:00',50,50,'2009-07-01','127.0.0.1',0,'2009-07-01 00:00:00','2009-07-01 00:00:00','2009-07-01 00:00:00',1,0);
+('Super','User','$P$B326uMxMwK4jQepdYQbpXfKXKO/PBD1',NULL,'2025-07-07 23:13:27','$P$BwJo98FwWiQfNSpSPAQfaM8SkJbVuy.',4,1,-1,'2009-07-01','2009-07-01','','','m',1000,'','','Nella norma','',1,'assets/imgs/avatars/empty.png','','','0',1000.00000,7,8,6,5,6,5,100,100,'2009-07-01 00:00:00',300,50000,'2009-07-01','127.0.0.1',0,'2009-07-01 00:00:00','2009-07-01 00:00:00','2009-07-01 00:00:00',1,0),
+('Test','Di Funzionalià','$P$Ba0Q5iR.i2y1yrK856QSiYpgfeths41',NULL,'2025-07-07 23:13:27','$P$B4TcA6FTIF4b7Z8wCiOyoUAufpsEsM/',0,1,-1,'2009-07-01','2009-07-01','','','m',1000,'','','Nella norma','',1,'assets/imgs/avatars/empty.png','','','0',1000.00000,7,8,6,5,6,5,100,100,'2009-07-01 00:00:00',50,50,'2009-07-01','127.0.0.1',0,'2009-07-01 00:00:00','2009-07-01 00:00:00','2009-07-01 00:00:00',1,0);
 /*!40000 ALTER TABLE `personaggio` ENABLE KEYS */;
 UNLOCK TABLES;
 

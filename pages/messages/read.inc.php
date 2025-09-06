@@ -58,7 +58,7 @@ if(gdrcd_query($result, 'num_rows') == 0) { ?>
                     <input type="hidden" name="reply_tipo" value="<?php echo $record['tipo']; ?>" />
                     <input type="hidden" name="testo" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['attachment'].$record['testo']); ?>" />
                     <input type="hidden" name="op" value="attach" />
-                    <input type="image" src="imgs/icons/attach.png" value="submit" alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['attach']); ?>"
+                    <input type="image" src="assets/imgs/icons/attach.png" value="submit" alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['attach']); ?>"
                            title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['attach']); ?>" />
                 </form>
             </div>
@@ -69,7 +69,7 @@ if(gdrcd_query($result, 'num_rows') == 0) { ?>
                     <input type="hidden" name="reply_subject" value="Re: <?php echo $record['oggetto']; ?>" />
                     <input type="hidden" name="reply_tipo" value="<?php echo $record['tipo']; ?>" />
                     <input type="hidden" name="op" value="reply" />
-                    <input type="image" src="imgs/icons/reply.png" value="submit" alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']); ?>"
+                    <input type="image" src="assets/imgs/icons/reply.png" value="submit" alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']); ?>"
                            title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']); ?>" />
                 </form>
             </div>

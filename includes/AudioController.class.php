@@ -49,7 +49,7 @@ class AudioController
                 <div style="height:0;">
 
                     <audio id="audioController_{$label}" preload="none" controls style="display:none">
-                        <source src="../../../sounds/{$audioFile}" type="{$audioType}">
+                        <source src="../../../assets/sounds/{$audioFile}" type="{$audioType}">
                         Your browser does not support the audio element.
                     </audio>
 

@@ -12,10 +12,10 @@ $delType = $msgType.'_del';
 
 // Costruisco la query per i messaggi
 $sqlMessages = "
-    SELECT * 
-    FROM messaggi 
-    WHERE   ".$msgType." = '".$_SESSION['login']."' 
-        AND ".$delType." = 0 
+    SELECT *
+    FROM messaggi
+    WHERE   ".$msgType." = '".$_SESSION['login']."'
+        AND ".$delType." = 0
     ORDER BY spedito DESC";
 $result = gdrcd_query($sqlMessages." LIMIT ".$pagebegin.", ".$pageend, 'result');
 $numresults = gdrcd_query($result, 'num_rows');
@@ -117,10 +117,10 @@ $totaleresults = gdrcd_query(gdrcd_query($sqlMessages, 'result'), 'num_rows');
                             <div class="elementi_elenco">
                                 <?php
                                 if($row['letto'] == 0) { ?>
-                                    <img src="imgs/icons/mail_new.png" class="colonna_elenco_messaggi_icon">
+                                    <img src="assets/imgs/icons/mail_new.png" class="colonna_elenco_messaggi_icon">
                                     <?php
                                 } else { ?>
-                                    <img src="imgs/icons/mail_read.png" class="colonna_elenco_messaggi_icon">
+                                    <img src="assets/imgs/icons/mail_read.png" class="colonna_elenco_messaggi_icon">
                                     <?php
                                 } ?>
                             </div>
@@ -170,7 +170,7 @@ $totaleresults = gdrcd_query(gdrcd_query($sqlMessages, 'result'), 'num_rows');
                                         <input type="hidden" name="reply_subject" value="Re: <?php echo $row['oggetto']; ?>" />
                                         <input type="hidden" name="reply_tipo" value="<?php echo $row['tipo']; ?>" />
                                         <input type="hidden" name="op" value="reply" />
-                                        <input type="image" src="imgs/icons/reply.png" value="submit" alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']); ?>"
+                                        <input type="image" src="assets/imgs/icons/reply.png" value="submit" alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']); ?>"
                                                title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']); ?>" />
                                     </form>
                                 </div>
@@ -180,7 +180,7 @@ $totaleresults = gdrcd_query(gdrcd_query($sqlMessages, 'result'), 'num_rows');
                                         <input type="hidden" name="id_messaggio" value="<?php echo $row['id']; ?>" />
                                         <input type="hidden" name="type" value="<?php echo $delType; ?>" />
                                         <input type="hidden" name="op" value="erase" />
-                                        <input type="image" src="imgs/icons/erase.png" value="submit" alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['erase']); ?>"
+                                        <input type="image" src="assets/imgs/icons/erase.png" value="submit" alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['erase']); ?>"
                                                title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['erase']); ?>" />
                                     </form>
                                 </div>
