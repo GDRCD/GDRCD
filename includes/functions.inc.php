@@ -461,17 +461,17 @@ function gdrcd_controllo_sessione()
 
 /**
  * Controlla se l'utente è esiliato o meno
- * @param string $pg : il nome del pg da ricercare
+ * @param int $id_personaggio
  * @param bool $return default false. Se posto su true la funzione ritorna il messaggio d'esilio come stringa
  * @return bool|string false se il pg non è stato esiliato. True se return è stato impostato a false, altrimenti una stringa con la motivazione dell'esilio
  */
-function gdrcd_controllo_esilio($pg, $return = false)
+function gdrcd_controllo_esilio($id_personaggio, $return = false)
 {
-    $exiled = gdrcd_query("SELECT autore_esilio, esilio, motivo_esilio FROM personaggio WHERE nome='" . gdrcd_filter('in', $pg) . "' LIMIT 1");
+    $exiled = gdrcd_query("SELECT nome, autore_esilio, esilio, motivo_esilio FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $id_personaggio) . "' LIMIT 1");
 
     if (strtotime($exiled['esilio']) > time()) {
 
-        $message = gdrcd_filter_out($pg)
+        $message = gdrcd_filter_out($exiled['nome'])
             . ' '. gdrcd_filter_out($GLOBALS['MESSAGE']['warning']['character_exiled'])
             . ' '. gdrcd_format_date($exiled['esilio'])
             . ' ('. $exiled['motivo_esilio']. ' - '. $exiled['autore_esilio']. ')';
@@ -653,7 +653,7 @@ function gdrcd_load_modules($page, $params = [], $throwOnError = false)
         if ($throwOnError) {
             throw $e;
         }
-        
+
         echo $e->getMessage();
     }
 
