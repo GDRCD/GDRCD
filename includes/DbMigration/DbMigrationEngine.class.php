@@ -76,11 +76,11 @@ class DbMigrationEngine
             return true;
         }
 
+        self::createVersioningTable();
         $migrations = self::loadMigrationClasses();
-        self::createVersioningTable();//Per sicurezza cerchiamo di crearla sempre
-        $lastApplied = self::getLastAppliedMigration();
+        $migrationsToApply = self::filterUnappliedMigrations($migrations);
 
-        return empty($lastApplied) or $migrations[count($migrations) -1]->getMigrationId() != (int)$lastApplied['migration_id'];
+        return count($migrationsToApply) > 0;
     }
 
     /**
@@ -169,16 +169,9 @@ class DbMigrationEngine
     private static function getMigrationsToApply($migrations, $lastApplied, $targetMigrationId, &$directionUp) {
         $directionUp = true;
         if(empty($targetMigrationId)) {//Auto migration
-            $firstToApply = 0;
-            foreach ($migrations as $k => $m) {
-                if ((int)$m->getMigrationId() > (int)$lastApplied['migration_id']) {
-                    $firstToApply = $k;
-                    break;
-                }
-            }
-            $migrationsToApply = $firstToApply !== 0
-                ? array_slice($migrations, $firstToApply)
-                : [];
+
+            $migrationsToApply = self::filterUnappliedMigrations($migrations);
+
         }
         else{//migration verso una versione specifica
             $lastAppliedIdx = 0;
@@ -223,6 +216,25 @@ class DbMigrationEngine
                                     .$PARAMETERS['database']['database_name']."'");
 
         return (int)$count['number'];
+    }
+
+    /**
+     * @fn filterUnappliedMigrations
+     * @note Dato un array di istanze di classi di migrazione, ritorna solo quelle che non sono applicate
+     * @param DbMigration[] $migrations
+     * @return DbMigration[]
+     */
+    private static function filterUnappliedMigrations($migrations) {
+        if (count($migrations) === 0) {
+            return [];
+        }
+
+        $appliedMigrationsIds = array_column(self::getAllAppliedMigrations(), 'migration_id');
+
+        return array_filter(
+            $migrations,
+            fn($migration) => !in_array($migration->getMigrationId(), $appliedMigrationsIds)
+        );
     }
 
     /**
