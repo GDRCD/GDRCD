@@ -149,6 +149,7 @@ if (gdrcd_configuration_get('registrazione.stato_registrazione') === 'chiuso') {
 									</select>
 								</div>
 								<!-- Razza -->
+								<div class="form_info"></div>
 								<label>
 									<?php echo gdrcd_filter('out', $PARAMETERS['names']['race']['sing'] . ' ' . $MESSAGE['register']['fields']['race']); ?>
 								</label>

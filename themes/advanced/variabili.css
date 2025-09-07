@@ -1,31 +1,62 @@
-:root
-{
-	--colore-001:rgba(0,0,0,1); 			/* NERO */   
-	--colore-002:rgba(255,255,255,1);		/* BIANCO */
-	--colore-003:rgba(153,153,153,1);		/* GRIGIO SCURO */
-	--colore-004:rgba(196,196,196,1);		/* GRIGIO DI MEZZO */
-	--colore-005:rgba(238,238,238,1);		/* GRIGIO DI CHIARO */
-	--colore-006:#0367c8;
-	--colore-007:#3498db;
-	--colore-008:rgba(128,128,128,1);		/* GRIGIO DI CHIARO */
-	
-	
+:root {
+	--colore-001: rgba(0,0,0,1); 			/* NERO */   
+	--colore-002: rgba(255,255,255,1);		/* BIANCO */
+	--colore-003: rgba(153,153,153,1);		/* GRIGIO SCURO */
+	--colore-004: rgba(196,196,196,1);		/* GRIGIO DI MEZZO */
+	--colore-005: rgba(238,238,238,1);		/* GRIGIO DI CHIARO */
+	--colore-006: #0367c8;
+	--colore-007: #3498db;
+	--colore-008: rgba(128,128,128,1);		/* GRIGIO DI CHIARO */
 	
 	/* VALORI DI DEFAULT PER GLI ATTRIBUTI */
-	--border-default:1px solid var(--colore-008);
-	--border-light:1px solid var(--colore-005);
+	--border-default: 1px solid var(--colore-008);
+	--border-light: 1px solid var(--colore-005);
 	
-	--box-shadow-default:0 0 7px 7px rgba(0,0,0,0.3);
-	--font-family-default:Verdana, Sans;
-	--font-size-default:12px;
-	--letter-spacing-default:1px;
-	--line-height-default:initial;
-	--padding-default:10px;
+	--box-shadow-default: 0 0 7px 7px rgba(0,0,0,0.3);
+	--font-family-default: Verdana, Sans;
+	--font-size-default: 12px;
+	--letter-spacing-default: 1px;
+	--line-height-default: initial;
+	--padding-default: 10px;
 	
+	/** ELEMENTI COMUNI */
+	--button-background:		
+		linear-gradient(
+			to bottom, 
+			rgba(255,255,255,0.4) 0%,
+			rgba(255,255,255,0.4) 50%,
+			rgba(255,255,255,0.2) 50%,
+			rgba(255,255,255,0) 100%
+		),		
+		var(--colore-004);
+	--button-background-hover:
+		linear-gradient(
+			to bottom, 
+			rgba(255,255,255,0.8) 0%,
+			rgba(255,255,255,0.8) 50%,
+			rgba(255,255,255,0.4) 50%,
+			rgba(255,255,255,0.2) 100%
+		),		
+		var(--colore-004);
+	--button-background-active:
+		linear-gradient(
+			to bottom, 
+			rgba(255,255,255,0.4) 0%,
+			rgba(255,255,255,0.4) 50%,
+			rgba(255,255,255,0.2) 50%,
+			rgba(255,255,255,0) 100%
+		),			
+		linear-gradient(
+			to bottom, 
+			rgba(0,0,0,0.4) 0%,
+			rgba(0,0,0,0.4) 100%
+		),		
+		var(--colore-004);
 	
-	--link-color-default:var(--colore-006);
-	--link-color-hover-default:var(--colore-007);
-	--h-font-family: Myriad Pro, Myriad Web Pro Regular, Lucida Grande, Geneva, Trebuchet MS, sans-serif;
+	--link-color-default: var(--colore-006);
+	--link-color-hover-default: var(--colore-007);
+	
+	--header-font-family: Myriad Pro, Myriad Web Pro Regular, Lucida Grande, Geneva, Trebuchet MS, sans-serif;
 	--header-background: 
 		linear-gradient(
 			to bottom, 
@@ -36,17 +67,14 @@
 		)
 		top left / auto var(--header-height)  
 		repeat-x;
-		
 	--header-height:150px;		
-
 	--main-background: 
 		repeating-linear-gradient(
 			45deg,
-			var(--colore-005) 0 1px,   /* banda diagonale di 2px */
-			transparent 2px 8px       /* spazio vuoto fino a 8px */
-		  );
-
-	--sidecontent-width:200px;
-	--content-padding:30px;
-	--content-line-height:1.5em;
+			var(--colore-005) 0 1px,
+			transparent 2px 8px
+		);
+	--sidecontent-width: 200px;
+	--content-padding: 30px;
+	--content-line-height: 1.5em;
 }
