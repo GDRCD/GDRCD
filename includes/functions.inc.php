@@ -147,19 +147,7 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
             break;
         case 'assoc':
             if ($isStmtResult) {
-                $current = $sql['data']->current();
-                if (is_array($current)) {
-                    $associativeData = [];
-                    foreach ($current as $key => $value) {
-                        if (!is_numeric($key)) {
-                            $associativeData[$key] = $value;
-                        }
-                    }
-                    $sql['data']->next(); // Avanza il puntatore dopo l'elaborazione
-                    return $associativeData;
-                }
-                $sql['data']->next(); // Avanza il puntatore anche se non è un array
-                return null;
+                return $sql['data']->fetchAssoc();
             }
             if ($isResultObject) {
                 return mysqli_fetch_array($sql, MYSQLI_ASSOC);
