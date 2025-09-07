@@ -79,9 +79,33 @@ class StmtResultData implements Iterator, ArrayAccess, Countable
         unset($this->data[$offset]);
     }
 
+    /**
+     * Libera le risorse occupate dai dati.
+     */
     public function free(): void
     {
         unset($this->data);
         $this->position = 0;
+    }
+
+    /**
+     * Recupera la riga corrente come array associativo e avanza l'iteratore.
+     *
+     * @return array|null La riga corrente come array associativo o null se non esiste.
+     */
+    public function fetchAssoc(): ?array
+    {
+        $row = $this->current();
+        $this->next();
+
+        if (!is_array($row) || empty($row)) {
+            return null;
+        }
+
+        $treshold = (count($row) / 2) - 1;
+
+        return array_filter($row, function ($key) use ($treshold) {
+            return !is_int($key) || ($key > $treshold);
+        }, ARRAY_FILTER_USE_KEY);
     }
 }
