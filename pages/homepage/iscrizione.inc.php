@@ -77,7 +77,7 @@
 								</div>
 								<?php 
 								// Se le registrazioni sono "Su invito", mostra il campo token
-								//if ($stato_registrazione_query['valore'] === 'Su invito') {
+								if ($stato_registrazione_query['valore'] === 'Su invito') {
 								?>
 								<!-- Token di invito -->
 								<label>
@@ -89,7 +89,7 @@
 								<div class="form_info">
 									Inserisci il token di invito fornito dall'amministrazione per completare la registrazione.
 								</div>
-								<?php //} ?>
+								<?php } ?>
 							</fieldset>
                             <fieldset>
 								<legend>
@@ -134,6 +134,7 @@
 									</select>
 								</div>
 								<!-- Razza -->
+								<div class="form_info"></div>
 								<label>
 									<?php echo gdrcd_filter('out', $PARAMETERS['names']['race']['sing'] . ' ' . $MESSAGE['register']['fields']['race']); ?>
 								</label>
