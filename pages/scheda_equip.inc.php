@@ -7,7 +7,7 @@
     }
     /*Visualizzo la pagina*/
     /*Rilevo il genere del PG*/
-    $query = "SELECT sesso FROM personaggio WHERE personaggio.nome = '".gdrcd_filter('get', $_REQUEST['pg'])."'";
+    $query = "SELECT sesso,nome FROM personaggio WHERE personaggio.id_personaggio = '".gdrcd_filter('get', $_REQUEST['pg'])."'";
     $result = gdrcd_query($query, 'result');
     //Se non esiste il pg
     if(gdrcd_query($result, 'num_rows') == 0) {
@@ -15,43 +15,46 @@
         exit();
     }
 
-    if(($_SESSION['login'] == $_REQUEST['pg']) || ($_SESSION['permessi'] >= GAMEMASTER)) {
+    if(($_SESSION['id_personaggio'] == $_REQUEST['pg']) || ($_SESSION['permessi'] >= GAMEMASTER)) {
         switch(gdrcd_filter('get', $_POST['op'])) {
             case 'abbandona': /*Rimuovo un oggetto dall'inventario o dallo zaino*/
                 /*Se ne possiedo più di uno ne rimuovo uno solo*/
                 if($_POST['numero'] <= 1) {
-                    $query = "DELETE FROM clgpersonaggiooggetto WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND nome = '".gdrcd_filter('in', $_REQUEST['pg'])."' LIMIT 1 ";
+                    $query = "DELETE FROM clgpersonaggiooggetto WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND id_personaggio = '".gdrcd_filter('in', $_REQUEST['pg'])."' LIMIT 1 ";
                 } else {
-                    $query = "UPDATE clgpersonaggiooggetto SET numero = numero - 1 WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND nome = '".gdrcd_filter('in', $_REQUEST['pg'])."' LIMIT 1 ";
+                    $query = "UPDATE clgpersonaggiooggetto SET numero = numero - 1 WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND id_personaggio = '".gdrcd_filter('in', $_REQUEST['pg'])."' LIMIT 1 ";
                 }
                 gdrcd_query($query);
                 /*Registro l'evento*/
-                gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES ('".gdrcd_filter('in', $_REQUEST['pg'])."', '".$_SESSION['login']."', NOW(), ".BONIFICO.", ' -".gdrcd_filter('in', $_POST['checosa'])."')");
+                $nome = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_REQUEST['pg']) . "'");
+                gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES ('".gdrcd_filter('in', $_REQUEST['pg'])."', '".gdrcd_filter('out', $nome)."' ,'".$_SESSION['login']."', NOW(), ".BONIFICO.", ' -".gdrcd_filter('in', $_POST['checosa'])."')");
                 echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['warning']['done']).'</div>';
                 break;
             case 'cedi': /*Cessione di un oggetto ad un'altro PG*/
                 $result_min = gdrcd_query("SELECT id_oggetto FROM clgpersonaggiooggetto WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])."", 'result');
                 if($_POST['numero'] <= 1) {
-                    $query = "DELETE FROM clgpersonaggiooggetto WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND nome = '".gdrcd_filter('in', $_REQUEST['pg'])."' LIMIT 1 ";
+                    $query = "DELETE FROM clgpersonaggiooggetto WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND id_personaggio = '".gdrcd_filter('in', $_REQUEST['pg'])."' LIMIT 1 ";
                 } else {
-                    $query = "UPDATE clgpersonaggiooggetto SET numero = numero - 1 WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND nome = '".gdrcd_filter('in', $_REQUEST['pg'])."' LIMIT 1 ";
+                    $query = "UPDATE clgpersonaggiooggetto SET numero = numero - 1 WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND id_personaggio = '".gdrcd_filter('in', $_REQUEST['pg'])."' LIMIT 1 ";
                 }
                 /*Se non ci sono stati barecci*/
                 gdrcd_query($query);
 
                 if(gdrcd_query($result_min, 'num_rows') > 0) {
                     gdrcd_query($result_min, 'free');
-                    $result_loc = gdrcd_query("SELECT id_oggetto FROM clgpersonaggiooggetto WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND nome = '".gdrcd_filter('in', $_POST['give_item'])."'", 'result');
+                    $result_loc = gdrcd_query("SELECT id_oggetto FROM clgpersonaggiooggetto WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND id_personaggio = '".gdrcd_filter('in', $_POST['give_item'])."'", 'result');
                     if(gdrcd_query($result_loc, 'num_rows') > 0) {
                         gdrcd_query($result_loc, 'free');
-                        $query = "UPDATE clgpersonaggiooggetto SET numero = numero + 1 WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND nome = '".gdrcd_filter('in', $_POST['give_item'])."'";
+                        $query = "UPDATE clgpersonaggiooggetto SET numero = numero + 1 WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND id_personaggio = '".gdrcd_filter('in', $_POST['give_item'])."'";
                     } else {
-                        $query = "INSERT INTO clgpersonaggiooggetto (nome, id_oggetto, cariche, numero) VALUES ('".gdrcd_filter('in', $_POST['give_item'])."',".gdrcd_filter('num', $_POST['id_oggetto']
+                        $query = "INSERT INTO clgpersonaggiooggetto (id_personaggio, id_oggetto, cariche, numero) VALUES ('".gdrcd_filter('in', $_POST['give_item'])."',".gdrcd_filter('num', $_POST['id_oggetto']
                             ).", ".gdrcd_filter('num', $_POST['cariche']).", 1)";
                     }
                     gdrcd_query($query);
                     /*Registro l'evento*/
-                    gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES ('".$_POST['give_item']."', '".$_SESSION['login']."', NOW(), ".BONIFICO.", '".gdrcd_filter('in', $_POST['checosa'])."')");
+                    
+                    $nome = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_POST['give_item']) . "'");
+                    gdrcd_query("INSERT INTO log (id_personaggio,nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES ('".$_POST['give_item']."', '".gdrcd_filter('in', $nome['nome'])."' , '".$_SESSION['login']."', NOW(), ".BONIFICO.", '".gdrcd_filter('in', $_POST['checosa'])."')");
 
                     echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['warning']['done']).'</div>';
                 } else {
@@ -59,11 +62,11 @@
                 }
                 break;
             case 'indossa':    /*Indossatura un oggetto*/
-                gdrcd_query("UPDATE clgpersonaggiooggetto SET posizione = ".gdrcd_filter('num', $_POST['posizione'])." WHERE id_oggetto = ".$_POST['id_oggetto']." AND nome = '".gdrcd_filter('get', $_REQUEST['pg'])."' LIMIT 1 ");
+                gdrcd_query("UPDATE clgpersonaggiooggetto SET posizione = ".gdrcd_filter('num', $_POST['posizione'])." WHERE id_oggetto = ".$_POST['id_oggetto']." AND id_personaggio = '".gdrcd_filter('get', $_REQUEST['pg'])."' LIMIT 1 ");
                 echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['warning']['done']).'</div>';
                 break;
             case 'in_zaino':    /* Spostamento di un oggetto dall'inventario nello zaino */
-                gdrcd_query("UPDATE clgpersonaggiooggetto SET posizione = 1 WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND nome = '".gdrcd_filter('in', $_REQUEST['pg'])."' LIMIT 1 ");
+                gdrcd_query("UPDATE clgpersonaggiooggetto SET posizione = 1 WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND id_personaggio = '".gdrcd_filter('in', $_REQUEST['pg'])."' LIMIT 1 ");
                 echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['warning']['done']).'</div>';
                 break;
         }
@@ -75,7 +78,7 @@
 
     $sesso = $record['sesso'];
 
-    $result = gdrcd_query("SELECT oggetto.id_oggetto, oggetto.nome, oggetto.urlimg AS immagine, clgpersonaggiooggetto.posizione FROM clgpersonaggiooggetto JOIN oggetto ON clgpersonaggiooggetto.id_oggetto = oggetto.id_oggetto WHERE clgpersonaggiooggetto.posizione > 1 AND clgpersonaggiooggetto.nome='".gdrcd_filter('get', $_REQUEST['pg'])."'", 'result');
+    $result = gdrcd_query("SELECT oggetto.id_oggetto, oggetto.nome, oggetto.urlimg AS immagine, clgpersonaggiooggetto.posizione FROM clgpersonaggiooggetto JOIN oggetto ON clgpersonaggiooggetto.id_oggetto = oggetto.id_oggetto WHERE clgpersonaggiooggetto.posizione > 1 AND clgpersonaggiooggetto.id_personaggio='".gdrcd_filter('get', $_REQUEST['pg'])."'", 'result');
 
     while($record = gdrcd_query($result, 'fetch')) {
         $oggetti[$record['posizione']]['nome'] = $record['nome'];
@@ -165,7 +168,7 @@
     <div class="page_body">
         <div class="panels_box">
             <?php /*Oggetti nello zaino*/
-            $result = gdrcd_query("SELECT oggetto.id_oggetto, oggetto.nome AS nome_oggetto, oggetto.descrizione, oggetto.urlimg, oggetto.ubicabile, oggetto.difesa, oggetto.attacco, oggetto.bonus_car0, oggetto.bonus_car1, oggetto.bonus_car2, oggetto.bonus_car3, oggetto.bonus_car4, oggetto.bonus_car5, clgpersonaggiooggetto.* FROM clgpersonaggiooggetto LEFT JOIN oggetto ON clgpersonaggiooggetto.id_oggetto=oggetto.id_oggetto WHERE clgpersonaggiooggetto.nome = '".gdrcd_filter('in', $_REQUEST['pg'])."' AND clgpersonaggiooggetto.posizione > 0 ORDER BY oggetto.nome DESC", 'result'); ?>
+            $result = gdrcd_query("SELECT oggetto.id_oggetto, oggetto.nome AS nome_oggetto, oggetto.descrizione, oggetto.urlimg, oggetto.ubicabile, oggetto.difesa, oggetto.attacco, oggetto.bonus_car0, oggetto.bonus_car1, oggetto.bonus_car2, oggetto.bonus_car3, oggetto.bonus_car4, oggetto.bonus_car5, clgpersonaggiooggetto.* FROM clgpersonaggiooggetto LEFT JOIN oggetto ON clgpersonaggiooggetto.id_oggetto=oggetto.id_oggetto WHERE clgpersonaggiooggetto.id_personaggio = '".gdrcd_filter('in', $_REQUEST['pg'])."' AND clgpersonaggiooggetto.posizione > 0 ORDER BY oggetto.nome DESC", 'result'); ?>
             <div class="elenco_record_gioco">
                 <!-- Intestazione tabella elenco -->
                 <table>
@@ -354,9 +357,9 @@
                                         }//if
                                         /*Personaggi nella stessa location*/
                                         if($PARAMETERS['mode']['give_only_if_online'] == 'ON') {
-                                            $query = "SELECT nome FROM personaggio WHERE ultimo_luogo = ".$_SESSION['luogo']." AND ultimo_luogo  <> -1 AND nome <> '".$_SESSION['login']."' AND DATE_ADD(ultimo_refresh, INTERVAL 2 MINUTE) > NOW() ORDER BY nome";
+                                            $query = "SELECT id_personaggio, nome FROM personaggio WHERE ultimo_luogo = ".$_SESSION['luogo']." AND ultimo_luogo  <> -1 AND id_personaggio <> '".$_SESSION['id_personaggio']."' AND DATE_ADD(ultimo_refresh, INTERVAL 2 MINUTE) > NOW() ORDER BY nome";
                                         } else {
-                                            $query = "SELECT nome FROM personaggio ORDER BY nome";
+                                            $query = "SELECT id_personaggio, nome FROM personaggio WHERE id_personaggio <> '".$_SESSION['id_personaggio']."'  ORDER BY nome";
                                         }
 
                                         $characters = gdrcd_query($query, 'result');
@@ -371,7 +374,7 @@
                                                 <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['items']['list']['give']); ?>" />
                                                 <select name="give_item">
                                                     <?php while($option = gdrcd_query($characters, 'fetch')) { ?>
-                                                        <option value="<?php echo $option['nome']; ?>">
+                                                        <option value="<?php echo $option['id_personaggio']; ?>">
                                                             <?php echo gdrcd_filter('out', $option['nome']); ?>
                                                         </option>
                                                     <?php }
