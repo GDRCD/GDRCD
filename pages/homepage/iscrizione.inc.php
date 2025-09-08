@@ -92,7 +92,7 @@ if (gdrcd_configuration_get('registrazione.stato_registrazione') === 'chiuso') {
 								</div>
 								<?php 
 								// Se le registrazioni sono "Su invito", mostra il campo token
-								if ($stato_registrazione_query['valore'] === 'Su invito') {
+								if (gdrcd_configuration_get('registrazione.stato_registrazione') === 'su_invito') {
 								?>
 								<!-- Token di invito -->
 								<label>
@@ -464,9 +464,7 @@ if (gdrcd_configuration_get('registrazione.stato_registrazione') === 'chiuso') {
                                     <input type="hidden" name="car5"
                                            value="<?php echo gdrcd_filter('num', $_POST['car5']) ?>"/>
                                     <?php if (gdrcd_configuration_get('registrazione.stato_registrazione') === 'su_invito') { ?>
-
-                                <strong>Token di invito:</strong>
-                                    <input name="token_invito" value="" placeholder="Inserisci il token di invito" required/>
+                                    <input type="hidden" name="token_invito" value="<?php echo gdrcd_filter('out', $_POST['token_invito']) ?>" />
                                 <?php } ?>
                                     <input type="submit"
                                            value="<?php echo gdrcd_filter('out', $MESSAGE['register']['forms']['ok']); ?>"/>
