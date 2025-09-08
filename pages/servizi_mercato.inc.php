@@ -1,7 +1,7 @@
 <div class="pagina_servizi_mercato">
     <?php /*HELP: */
     /*Verifico la liquidita' del PG*/
-    $row = gdrcd_query("SELECT soldi FROM personaggio WHERE nome='".$_SESSION['login']."'");
+    $row = gdrcd_query("SELECT soldi FROM personaggio WHERE id_personaggio='".$_SESSION['id_personaggio']."'");
     $money = $row['soldi'];
     ?>
     <!-- Titolo della pagina -->
@@ -17,17 +17,17 @@
 
             if($money >= $costo['costo']) {
                 /*Controllo se possiede gia' oggetti analoghi*/
-                $query = "SELECT id_oggetto FROM clgpersonaggiooggetto WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND nome = '".$_SESSION['login']."'";
+                $query = "SELECT id_oggetto FROM clgpersonaggiooggetto WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND id_personaggio = '".$_SESSION['id_personaggio']."'";
                 $result = gdrcd_query($query, 'result');
                 if(gdrcd_query($result, 'num_rows') > 0) {
-                    $query = "UPDATE clgpersonaggiooggetto SET numero = numero + 1 WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND nome = '".$_SESSION['login']."'";
+                    $query = "UPDATE clgpersonaggiooggetto SET numero = numero + 1 WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND id_personaggio = '".$_SESSION['id_personaggio']."'";
                 } else {
-                    $query = "INSERT INTO clgpersonaggiooggetto (nome, id_oggetto, cariche, numero, posizione) VALUES ('".$_SESSION['login']."',".gdrcd_filter('num', $_POST['id_oggetto']).", ".$costo['cariche'].", 1, 0)";
+                    $query = "INSERT INTO clgpersonaggiooggetto (id_personaggio, id_oggetto, cariche, numero, posizione) VALUES ('".$_SESSION['id_personaggio']."',".gdrcd_filter('num', $_POST['id_oggetto']).", ".$costo['cariche'].", 1, 0)";
                 }
                 /*Eseguo l'acquisto*/
                 gdrcd_query($query);
                 /*Esigo il quattrino*/
-                gdrcd_query("UPDATE personaggio SET soldi = soldi - ".$costo['costo']." WHERE nome = '".$_SESSION['login']."' LIMIT 1");
+                gdrcd_query("UPDATE personaggio SET soldi = soldi - ".$costo['costo']." WHERE id_personaggio = '".$_SESSION['id_personaggio']."' LIMIT 1");
                 /*Riduco il mercato*/
                 //$query="SELECT numero FROM mercato WHERE id_oggetto = '".gdrcd_filter('num',$_POST['id_oggetto'])."' LIMIT 1";
                 //$result=mysql_query($query);
@@ -56,7 +56,7 @@
         /*Vendita*/
         if(gdrcd_filter('get', $_POST['op']) == 'sell') {
             /*controllo che il PG abbia l'oggetto*/
-            $query = "SELECT clgpersonaggiooggetto.numero, oggetto.costo FROM clgpersonaggiooggetto LEFT JOIN oggetto ON clgpersonaggiooggetto.id_oggetto = oggetto.id_oggetto WHERE clgpersonaggiooggetto.id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND clgpersonaggiooggetto.nome = '".$_SESSION['login']."'";
+            $query = "SELECT clgpersonaggiooggetto.numero, oggetto.costo FROM clgpersonaggiooggetto LEFT JOIN oggetto ON clgpersonaggiooggetto.id_oggetto = oggetto.id_oggetto WHERE clgpersonaggiooggetto.id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND clgpersonaggiooggetto.id_personaggio = '".$_SESSION['id_personaggio']."'";
             $result = gdrcd_query($query, 'result');
 
             if(gdrcd_query($result, 'num_rows') > 0) {
@@ -65,9 +65,9 @@
                 $costo_vendita = floor(($row['costo'] / 100) * (100 - $PARAMETERS['settings']['resell_price']));
 
                 if($row['numero'] > 1) {
-                    $query = "UPDATE clgpersonaggiooggetto SET numero = numero - 1 WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND nome = '".$_SESSION['login']."' LIMIT 1";
+                    $query = "UPDATE clgpersonaggiooggetto SET numero = numero - 1 WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND id_personaggio = '".$_SESSION['id_personaggio']."' LIMIT 1";
                 } else {
-                    $query = "DELETE FROM clgpersonaggiooggetto WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND nome = '".$_SESSION['login']."' LIMIT 1";
+                    $query = "DELETE FROM clgpersonaggiooggetto WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND id_personaggio = '".$_SESSION['id_personaggio']."' LIMIT 1";
                 }
                 gdrcd_query($query); ?>
                 <div class="warning">
@@ -75,7 +75,7 @@
                 </div>
                 <?php
                 gdrcd_query("UPDATE mercato SET numero = numero + 1 WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." LIMIT 1");
-                gdrcd_query("UPDATE personaggio SET soldi = soldi + ".gdrcd_filter('num', $costo_vendita)." WHERE nome = '".$_SESSION['login']."' LIMIT 1");
+                gdrcd_query("UPDATE personaggio SET soldi = soldi + ".gdrcd_filter('num', $costo_vendita)." WHERE id_personaggio = '".$_SESSION['id_personaggio']."' LIMIT 1");
             } else { ?>
                 <div class="error">
                     <?php echo gdrcd_filter('out', $MESSAGE['warning']['cant_do']); ?>
