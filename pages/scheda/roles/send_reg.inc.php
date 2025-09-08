@@ -1,5 +1,5 @@
 <?php
-if ($_REQUEST['pg'] == $_SESSION['login']) {
+if ($_REQUEST['pg'] == $_SESSION['id_personaggio']) {
 #Date
     $date_b = gdrcd_filter('num', $_POST['anno']) . '-'
         . sprintf('%02s', gdrcd_filter('num', $_POST['month_b'])) . '-'
@@ -17,14 +17,14 @@ if ($_REQUEST['pg'] == $_SESSION['login']) {
 
 #recupero azioni nell'intervallo
 
-    $query = gdrcd_query("	SELECT chat.id, chat.mittente
+    $query = gdrcd_query("	SELECT chat.id, chat.id_personaggio_mittente
 						FROM chat
 						INNER JOIN mappa ON mappa.id = chat.stanza
-						LEFT JOIN personaggio ON personaggio.nome = chat.mittente 
+						LEFT JOIN personaggio ON personaggio.id_personaggio = chat.id_personaggio_mittente 
 						WHERE stanza = " . $_POST['luogo'] . " AND ora >= '" . gdrcd_filter('in', $date_a) . "' 
 						AND ora <= '" . gdrcd_filter('in', $date_b) . "' 
 						AND (chat.tipo = 'A' || chat.tipo = 'P' || chat.tipo = 'M' || chat.tipo = 'N') 
-						GROUP BY mittente ORDER BY ora", 'result');
+						GROUP BY id_personaggio_mittente ORDER BY ora", 'result');
 
     $tot= gdrcd_query($query, 'num_rows');
     echo $tot;
@@ -37,7 +37,7 @@ if ($_REQUEST['pg'] == $_SESSION['login']) {
         default:
             $i = 0;
             while ($prow = gdrcd_query($query, 'fetch')) {
-                $part[$i] = $prow['mittente'];
+                $part[$i] = $prow['id_personaggio_mittente'];
                 $i++;
             }
             $listapart = implode(',', $part);
@@ -45,23 +45,23 @@ if ($_REQUEST['pg'] == $_SESSION['login']) {
             $singolo = substr_count($listapart, $_REQUEST['pg']); #conta le volte in cui il partecipante è presente in questa stringa
 
             #azioni del pg dalla partenza registrazione
-            $start = gdrcd_query("SELECT chat.id, chat.mittente, chat.destinatario, chat.tipo, chat.ora
+            $start = gdrcd_query("SELECT chat.id, chat.id_personaggio_mittente, chat.id_personaggio_destinatario, chat.tipo, chat.ora
                             FROM chat
                             INNER JOIN mappa ON mappa.id = chat.stanza
-                            LEFT JOIN personaggio ON personaggio.nome = chat.mittente 
+                            LEFT JOIN personaggio ON personaggio.id_personaggio = chat.id_personaggio_mittente 
                             WHERE stanza = " . $_POST['luogo'] . " AND ora >= '" . gdrcd_filter('in', $date_a) . "' 
                             AND ora <= '" . gdrcd_filter('in', $date_b) . "' 
-                            AND mittente = '" . gdrcd_filter('in', $_REQUEST['pg']) . "'  
+                            AND id_personaggio_mittente = '" . gdrcd_filter('in', $_REQUEST['pg']) . "'  
                             AND (chat.tipo = 'A' || chat.tipo = 'P' || chat.tipo = 'M' || chat.tipo = 'N') ORDER BY ora ", 'result');
             $record = gdrcd_query($start, 'fetch');
             $num_az = gdrcd_query($start, 'num_rows');
             $time_end = gdrcd_query("SELECT chat.id, chat.ora
 						FROM chat
 						INNER JOIN mappa ON mappa.id = chat.stanza
-						LEFT JOIN personaggio ON personaggio.nome = chat.mittente 
+						LEFT JOIN personaggio ON personaggio.id_personaggio = chat.id_personaggio_mittente 
 						WHERE stanza = " . $_POST['luogo'] . " AND ora >= '" . gdrcd_filter('in', $date_a) . "' 
 						AND ora <= '" . gdrcd_filter('in', $date_b) . "' 
-						AND mittente = '" . gdrcd_filter('in', $_REQUEST['pg']) . "' 
+						AND id_personaggio_mittente = '" . gdrcd_filter('in', $_REQUEST['pg']) . "' 
 						AND (chat.tipo = 'A' || chat.tipo = 'P' || chat.tipo = 'M' || chat.tipo = 'N') ORDER BY ora DESC LIMIT 1 ", 'result');
             $rte = gdrcd_query($time_end, 'fetch');
             $end_time = date("Y-m-d H:i:s", strtotime("+1 hours", strtotime($rte['ora'])));
@@ -69,10 +69,10 @@ if ($_REQUEST['pg'] == $_SESSION['login']) {
             $time_start = gdrcd_query("SELECT chat.id, chat.ora
 						FROM chat
 						INNER JOIN mappa ON mappa.id = chat.stanza
-						LEFT JOIN personaggio ON personaggio.nome = chat.mittente 
+						LEFT JOIN personaggio ON personaggio.id_personaggio = chat.id_personaggio_mittente 
 						WHERE stanza = " . $_POST['luogo'] . " AND ora >= '" . gdrcd_filter('in', $date_a) . "' 
 						AND ora <= '" . gdrcd_filter('in', $date_b) . "' 
-						AND mittente = '" . gdrcd_filter('in', $_REQUEST['pg']) . "' 
+						AND id_personaggio_mittente = '" . gdrcd_filter('in', $_REQUEST['pg']) . "' 
 						AND (chat.tipo = 'A' || chat.tipo = 'P' || chat.tipo = 'M' || chat.tipo = 'N') ORDER BY ora ASC LIMIT 1 ", 'result');
             $rts = gdrcd_query($time_start, 'fetch');
             $start_time = date("Y-m-d H:i:s", strtotime("-1 hours", strtotime($rts['ora'])));
@@ -82,7 +82,7 @@ if ($_REQUEST['pg'] == $_SESSION['login']) {
 
 #Verifico l'assenza di altre segnalazioni in questo orario
             $segnal = gdrcd_query("SELECT id FROM segnalazione_role WHERE data_inizio >= '" . gdrcd_filter('in', $date_a) . "' 
-    AND data_fine <= '" . gdrcd_filter('in', $date_b) . "' AND mittente = '" . gdrcd_filter('in', $_REQUEST['pg']) . "' 
+    AND data_fine <= '" . gdrcd_filter('in', $date_b) . "' AND id_personaggio = '" . gdrcd_filter('in', $_REQUEST['pg']) . "' 
     AND (conclusa = 1 || conclusa = 0) ORDER BY data_inizio ASC ", 'result');
             $r_seg = gdrcd_query($segnal, 'num_rows');
 
@@ -108,7 +108,7 @@ if ($_REQUEST['pg'] == $_SESSION['login']) {
             }
             else if (($date_b > $end_time) && ($date_a < $start_time)) {
                 /*Invio la segnalazione giocata */
-                gdrcd_query("INSERT INTO segnalazione_role (data_inizio, data_fine, mittente, partecipanti, stanza, conclusa, tags, quest ) 
+                gdrcd_query("INSERT INTO segnalazione_role (data_inizio, data_fine, id_personaggio, partecipanti, stanza, conclusa, tags, quest ) 
 						VALUES ( '" . gdrcd_filter('in', $rts['ora']) . "', '" . gdrcd_filter('in', $rte['ora']) . "', 
 						'" . gdrcd_filter('in', $_REQUEST['pg']) . "','" . gdrcd_filter('in', $listapart) . "', 
 						" . gdrcd_filter('num', $_POST['luogo']) . ", 1, '" . gdrcd_filter('in', $_POST['ab']) . "', 
@@ -120,7 +120,7 @@ if ($_REQUEST['pg'] == $_SESSION['login']) {
             } #Segnalazione valida entro due ore dall'ultima azione
             else if ($date_b > $end_time) {
                 /*Invio la segnalazione giocata */
-                gdrcd_query("INSERT INTO segnalazione_role (data_inizio, data_fine, mittente, partecipanti, stanza, conclusa, tags, quest ) 
+                gdrcd_query("INSERT INTO segnalazione_role (data_inizio, data_fine, id_personaggio, partecipanti, stanza, conclusa, tags, quest ) 
 					    VALUES ( '" . gdrcd_filter('in', $date_a) . "', '" . gdrcd_filter('in', $rte['ora']) . "', 
 					    '" . gdrcd_filter('in', $_REQUEST['pg']) . "','" . gdrcd_filter('in', $listapart) . "', 
 					    " . gdrcd_filter('num', $_POST['luogo']) . ", 1, '" . gdrcd_filter('in', $_POST['ab']) . "', 
@@ -132,7 +132,7 @@ if ($_REQUEST['pg'] == $_SESSION['login']) {
             } #Segnalazione in caso di margine di inizio troppo largo
             else if ($date_a < $start_time) {
                 /*Invio la segnalazione giocata */
-                gdrcd_query("INSERT INTO segnalazione_role (data_inizio, data_fine, mittente, partecipanti, stanza, conclusa, tags, quest ) 
+                gdrcd_query("INSERT INTO segnalazione_role (data_inizio, data_fine, id_personaggio, partecipanti, stanza, conclusa, tags, quest ) 
 					    VALUES ( '" . gdrcd_filter('in', $rts['ora']) . "', '" . gdrcd_filter('in', $date_b) . "', 
 					    '" . gdrcd_filter('in', $_REQUEST['pg']) . "','" . gdrcd_filter('in', $listapart) . "', 
 					    " . gdrcd_filter('num', $_POST['luogo']) . ", 1, '" . gdrcd_filter('in', $_POST['ab']) . "', 
@@ -145,7 +145,7 @@ if ($_REQUEST['pg'] == $_SESSION['login']) {
             else if ($total > 1) {
 
                 /*Invio la segnalazione giocata */
-                gdrcd_query("INSERT INTO segnalazione_role (data_inizio, data_fine, mittente, partecipanti, stanza, conclusa, tags, quest ) 
+                gdrcd_query("INSERT INTO segnalazione_role (data_inizio, data_fine, id_personaggio, partecipanti, stanza, conclusa, tags, quest ) 
 						VALUES ( '" . gdrcd_filter('in', $date_a) . "', '" . gdrcd_filter('in', $date_b) . "', 
 						'" . gdrcd_filter('in', $_REQUEST['pg']) . "','" . gdrcd_filter('in', $listapart) . "', 
 						" . gdrcd_filter('num', $_POST['luogo']) . ", 1, '" . gdrcd_filter('in', $_POST['ab']) . "', 

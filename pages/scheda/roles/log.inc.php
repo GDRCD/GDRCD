@@ -2,12 +2,12 @@
 if($_SESSION['permessi'] >= LOG_PERM) {
     $pg = $_REQUEST['pg'];
 } else {
-    $pg = $_SESSION['login'];
+    $pg = $_SESSION['id_personaggio'];
 }
 $typeOrder = ($PARAMETERS['mode']['chat_from_bottom'] == 'ON') ? 'DESC' : 'ASC';
 
 $check = gdrcd_query("SELECT * FROM segnalazione_role WHERE id = " . gdrcd_filter('num', $_POST['id']) . " 
-    AND mittente = '" .gdrcd_filter('in', $pg ). "' AND conclusa = 1", 'result');
+    AND id_personaggio = '" .gdrcd_filter('in', $pg ). "' AND conclusa = 1", 'result');
 $num_check = gdrcd_query($check, 'num_rows');
 $check_f= gdrcd_query($check, 'fetch');
 if ($num_check == 0) {
@@ -24,15 +24,27 @@ if ($num_check == 0) {
         $name = gdrcd_query(" SELECT nome FROM mappa WHERE id = " . $check_f['stanza'] . "", 'result');
         $r_nam = gdrcd_query($name, 'fetch');
 
-        $query = gdrcd_query("	SELECT chat.id, chat.imgs, chat.mittente, chat.destinatario, chat.tipo, chat.ora, 
-	                        chat.testo, personaggio.url_img_chat
-							FROM chat
-							INNER JOIN mappa ON mappa.id = chat.stanza
-							LEFT JOIN personaggio ON personaggio.nome = chat.mittente 
+        $query = gdrcd_query("SELECT 
+                                c.id,
+                                c.imgs,
+                                c.id_personaggio_mittente,
+                                pm.nome AS nome_mittente,
+                                c.id_personaggio_destinatario,
+                                pd.nome AS nome_destinatario,
+                                c.tipo,
+                                c.ora,
+                                c.testo,
+                                c.tag_posizione,
+                                pm.url_img_chat AS url_img_chat
+                            FROM chat c
+                            LEFT JOIN personaggio pm 
+                                ON pm.id_personaggio = c.id_personaggio_mittente
+                            LEFT JOIN personaggio pd 
+                                ON pd.id_personaggio = c.id_personaggio_destinatario
 							WHERE stanza = " . $check_f['stanza'] . " AND ora >= '" . gdrcd_filter('in', $check_f['data_inizio']) . "' 
 							AND ora <= '" . gdrcd_filter('in', $check_f['data_fine']) . "' 
 							ORDER BY ora " . $typeOrder, 'result');
-
+                            
 
         $num = gdrcd_query($query, 'num_rows');
 
@@ -40,7 +52,7 @@ if ($num_check == 0) {
         /* Se esistono record */
         if ($num > 0) {
 
-            echo '<div style="text-align:center;">' . gdrcd_format_date($_POST['inizio']) . '</div>';
+            echo '<div style="text-align:center;">' . gdrcd_format_date($check_f['data_inizio']) . '</div>';
             //Titolo del log
             echo '<div class="titolo_box">' . $r_nam['nome'] . '</div>';
             /* Eseguo la query e le formattazioni */
@@ -71,12 +83,12 @@ if ($num_check == 0) {
                         }
 
                         $add_chat .= '<span class="chat_name">
-                            <a href="#" onclick="Javascript: document.getElementById(\'tag\').value=\'' . $row['mittente'] . '\'; document.getElementById(\'type\')[2].selected = \'1\'; document.getElementById(\'message\').focus();">
-                                ' . $row['mittente'] . '
+                            <a href="#" onclick="Javascript: document.getElementById(\'tag\').value=\'' . $row['id_personaggio_mittente'] . '\'; document.getElementById(\'type\')[2].selected = \'1\'; document.getElementById(\'message\').focus();">
+                                ' . $row['nome_mittente'] . '
                             </a>';
 
-                        if (empty ($row['destinatario']) === FALSE) {
-                            $add_chat .= '<span class="chat_tag"> [' . gdrcd_filter('out', $row['destinatario']) . ']</span>';
+                        if (empty ($row['tag_posizione']) === FALSE) {
+                            $add_chat .= '<span class="chat_tag"> [' . gdrcd_filter('out', $row['tag_posizione']) . ']</span>';
                         }
 
                         $add_chat .= ': </span> ';
@@ -115,10 +127,10 @@ if ($num_check == 0) {
                             $add_chat .= $add_icon;
                         }
 
-                        $add_chat .= '<span class="chat_name"><a href="#" onclick="Javascript: document.getElementById(\'tag\').value=\'' . $row['mittente'] . '\';  document.getElementById(\'type\')[2].selected = \'1\'; document.getElementById(\'message\').focus();">' . $row['mittente'] . '</a>';
+                        $add_chat .= '<span class="chat_name"><a href="#" onclick="Javascript: document.getElementById(\'tag\').value=\'' . $row['nome_mittente'] . '\';  document.getElementById(\'type\')[2].selected = \'1\'; document.getElementById(\'message\').focus();">' . $row['nome_mittente'] . '</a>';
 
-                        if (empty ($row['destinatario']) === FALSE) {
-                            $add_chat .= '<span class="chat_tag"> [' . gdrcd_filter('out', $row['destinatario']) . ']</span>';
+                        if (empty ($row['tag_posizione']) === FALSE) {
+                            $add_chat .= '<span class="chat_tag"> [' . gdrcd_filter('out', $row['tag_posizione']) . ']</span>';
                         }
                         $add_chat .= '</span> ';
                         $add_chat .= '<span class="chat_msg">' . gdrcd_chatcolor(gdrcd_filter('out', $row['testo'])) . '</span>';
@@ -133,13 +145,13 @@ if ($num_check == 0) {
 
                         break;
                     case 'S':
-                        if ($_SESSION['login'] == $row['destinatario']) {
+                        if ($_SESSION['id_personaggio'] == $row['id_personaggio_destinatario']) {
                             /**    * Fix problema visualizzazione spazi vuoti con i sussurri
                              * @author eLDiabolo
                              */
                             $add_chat .= '<div class="chat_row_' . $row['tipo'] . '">';
 
-                            $add_chat .= '<span class="chat_name">' . $row['mittente'] . ' ' . $MESSAGE['chat']['whisper']['by'] . ': </span> ';
+                            $add_chat .= '<span class="chat_name">' . $row['nome_mittente'] . ' ' . $MESSAGE['chat']['whisper']['by'] . ': </span> ';
                             $add_chat .= '<span class="chat_msg">' . gdrcd_filter('out', $row['testo']) . '</span>';
 
                             /**    * Fix problema visualizzazione spazi vuoti con i sussurri
@@ -147,13 +159,13 @@ if ($num_check == 0) {
                              */
                             $add_chat .= '</div>';
 
-                        } else if ($_SESSION['login'] == $row['mittente']) {
+                        } else if ($_SESSION['id_personaggio'] == $row['id_personaggio_mittente']) {
                             /**    * Fix problema visualizzazione spazi vuoti con i sussurri
                              * @author eLDiabolo
                              */
                             $add_chat .= '<div class="chat_row_' . $row['tipo'] . '">';
 
-                            $add_chat .= '<span class="chat_msg">' . $MESSAGE['chat']['whisper']['to'] . ' ' . gdrcd_filter('out', $row['destinatario']) . ': </span>';
+                            $add_chat .= '<span class="chat_msg">' . $MESSAGE['chat']['whisper']['to'] . ' ' . gdrcd_filter('out', $row['nome_destinatario']) . ': </span>';
                             $add_chat .= '<span class="chat_msg">' . gdrcd_filter('out', $row['testo']) . '</span>';
 
                             /**    * Fix problema visualizzazione spazi vuoti con i sussurri
@@ -167,7 +179,7 @@ if ($num_check == 0) {
                              */
                             $add_chat .= '<div class="chat_row_' . $row['tipo'] . '">';
 
-                            $add_chat .= '<span class="chat_msg">' . $row['mittente'] . ' ' . $MESSAGE['chat']['whisper']['from_to'] . ' ' . gdrcd_filter('out', $row['destinatario']) . ' </span>';
+                            $add_chat .= '<span class="chat_msg">' . $row['nome_mittente'] . ' ' . $MESSAGE['chat']['whisper']['from_to'] . ' ' . gdrcd_filter('out', $row['nome_destinatario']) . ' </span>';
                             $add_chat .= '<span class="chat_msg">' . gdrcd_filter('out', $row['testo']) . '</span>';
 
                             /**    * Fix problema visualizzazione spazi vuoti con i sussurri
@@ -184,7 +196,7 @@ if ($num_check == 0) {
                         $add_chat .= '<div class="chat_row_' . $row['tipo'] . '">';
 
                         $add_chat .= '<span class="chat_time">' . gdrcd_format_time($row['ora']) . '</span>';
-                        $add_chat .= '<span class="chat_name">' . $row['destinatario'] . '</span> ';
+                        $add_chat .= '<span class="chat_name">' . $row['nome_destinatario'] . '</span> ';
                         $add_chat .= '<span class="chat_msg">' . gdrcd_chatcolor(gdrcd_filter('out', $row['testo'])) . '</span>';
 
                         /**    * Fix problema visualizzazione spazi vuoti con i sussurri

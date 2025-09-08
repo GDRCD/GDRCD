@@ -21,11 +21,11 @@ $handleDBConnection = gdrcd_connect();
 
 
     # Recupero la giocata dall'id, dopo aver verificato che appartenga al pg
-    $check = gdrcd_query("SELECT mittente, stanza, data_inizio, data_fine FROM segnalazione_role WHERE id = " . gdrcd_filter('num', $_GET['id']) . " 
-        AND mittente = '" .gdrcd_filter('in', $_SESSION['login'] ). "'AND conclusa = 1 ", 'result');
+    $check = gdrcd_query("SELECT id_personaggio, stanza, data_inizio, data_fine FROM segnalazione_role WHERE id = " . gdrcd_filter('num', $_GET['id']) . " 
+        AND id_personaggio = '" .gdrcd_filter('in', $_SESSION['id_personaggio'] ). "'AND conclusa = 1 ", 'result');
     $num_check = gdrcd_query($check, 'num_rows');
     $check_f= gdrcd_query($check, 'fetch');
-    if ($num_check == 0 || $check_f['mittente'] != $_SESSION['login'] || SAVE_ROLE === FALSE) {
+    if ($num_check == 0 || $check_f['id_personaggio'] != $_SESSION['id_personaggio'] || SAVE_ROLE === FALSE) {
         echo 'Non hai accesso a questo log chat';
     } else {
 
@@ -34,11 +34,23 @@ $handleDBConnection = gdrcd_connect();
     /*Query per caricamento dati dalla chat corrente, carica le azioni degli ultimi 240 min - 4 ore !! NON SALVA LE CHAT PRIVATE !!*/
 
 
-        $query = gdrcd_query("	SELECT chat.id, chat.imgs, chat.mittente, chat.destinatario, chat.tipo, chat.ora, 
-                                chat.testo, personaggio.url_img_chat
-                                FROM chat
-                                INNER JOIN mappa ON mappa.id = chat.stanza
-                                LEFT JOIN personaggio ON personaggio.nome = chat.mittente 
+        $query = gdrcd_query("SELECT 
+                                c.id,
+                                c.imgs,
+                                c.id_personaggio_mittente,
+                                pm.nome AS nome_mittente,
+                                c.id_personaggio_destinatario,
+                                pd.nome AS nome_destinatario,
+                                c.tipo,
+                                c.ora,
+                                c.testo,
+                                c.tag_posizione,
+                                pm.url_img_chat AS url_img_chat
+                            FROM chat c
+                            LEFT JOIN personaggio pm 
+                                ON pm.id_personaggio = c.id_personaggio_mittente
+                            LEFT JOIN personaggio pd 
+                                ON pd.id_personaggio = c.id_personaggio_destinatario
                                 WHERE stanza = " . $check_f['stanza'] . " AND ora >= '" . gdrcd_filter('in', $check_f['data_inizio']) . "' 
                                 AND ora <= '" . gdrcd_filter('in', $check_f['data_fine']) . "' 
                                 ORDER BY ora ". $typeOrder, 'result');
@@ -99,7 +111,7 @@ $handleDBConnection = gdrcd_connect();
                 }
                 if ($PARAMETERS['settings']['chat']['guilds'] == 'ON') {
 
-                    $query_ruoli = "SELECT 	clgpersonaggioruolo.id_ruolo,	ruolo.nome_ruolo,	ruolo.immagine FROM clgpersonaggioruolo INNER JOIN ruolo ON ruolo.id_ruolo = clgpersonaggioruolo.id_ruolo WHERE clgpersonaggioruolo.personaggio='" . $row['mittente'] . "'";
+                    $query_ruoli = "SELECT 	clgpersonaggioruolo.id_ruolo,	ruolo.nome_ruolo,	ruolo.immagine FROM clgpersonaggioruolo INNER JOIN ruolo ON ruolo.id_ruolo = clgpersonaggioruolo.id_ruolo WHERE clgpersonaggioruolo.id_personaggio='" . $row['id_personaggio_mittente'] . "'";
                     $result_ruoli = gdrcd_query($query_ruoli, 'result');
                     $gilde = 0;
 
@@ -141,127 +153,127 @@ $handleDBConnection = gdrcd_connect();
 
         switch ($row['tipo']) {
             case 'P':
-
-                /**    * Fix problema visualizzazione spazi vuoti con i sussurri
-                 * @author eLDiabolo
-                 */
-                $add_chat .= '<div class="chat_row_' . $row['tipo'] . '">';
-
-                /** * Avatar di chat
-                 * @author Blancks
-                 */
-                if ($PARAMETERS['mode']['chat_avatar'] == 'ON' && !empty($row['url_img_chat'])) {
-                    $add_chat .= '<img src="' . $row['url_img_chat'] . '" class="chat_avatar" style="width:' . $PARAMETERS['settings']['chat_avatar']['width'] . 'px; height:' . $PARAMETERS['settings']['chat_avatar']['height'] . 'px;" />';
-                }
-
-
-                $add_chat .= '<span class="chat_time">' . gdrcd_format_time($row['ora']) . '</span>';
-
-                if ($PARAMETERS['mode']['chaticons'] == 'ON') {
-                    $add_chat .= $add_icon;
-                }
-
-                $add_chat .= '<span class="chat_name"><a href="#" onclick="Javascript: document.getElementById(\'tag\').value=\'' . $row['mittente'] . '\'; document.getElementById(\'type\')[2].selected = \'1\'; document.getElementById(\'message\').focus();">' . $row['mittente'] . '</a>';
-
-                if (empty ($row['destinatario']) === false) {
-                    $add_chat .= '<span class="chat_tag"> [' . gdrcd_filter('out', $row['destinatario']) . ']</span>';
-                }
-
-                $add_chat .= ': </span> ';
-                $add_chat .= '<span class="chat_msg">' . gdrcd_chatcolor(gdrcd_filter('out', $row['testo'])) . '</span>';
-
-                /**    * Fix problema visualizzazione spazi vuoti con i sussurri
-                 * @author eLDiabolo
-                 */
-                if ($PARAMETERS['mode']['chat_avatar'] == 'ON') {
-                    $add_chat .= '<br style="clear:both;" />';
-                }
-
-                $add_chat .= '</div>';
-
-                break;
-
-
-            case 'A':
-                /**    * Fix problema visualizzazione spazi vuoti con i sussurri
-                 * @author eLDiabolo
-                 */
-                $add_chat .= '<div class="chat_row_' . $row['tipo'] . '">';
-
-                /** * Avatar di chat
-                 * @author Blancks
-                 */
-                if ($PARAMETERS['mode']['chat_avatar'] == 'ON' && !empty($row['url_img_chat'])) {
-                    $add_chat .= '<img src="' . $row['url_img_chat'] . '" class="chat_avatar" style="width:' . $PARAMETERS['settings']['chat_avatar']['width'] . 'px; height:' . $PARAMETERS['settings']['chat_avatar']['height'] . 'px;" />';
-                }
-
-
-                $add_chat .= '<span class="chat_time">' . gdrcd_format_time($row['ora']) . '</span>';
-
-                if ($PARAMETERS['mode']['chaticons'] == 'ON') {
-                    $add_chat .= $add_icon;
-                }
-
-                $add_chat .= '<span class="chat_name"><a href="#" onclick="Javascript: document.getElementById(\'tag\').value=\'' . $row['mittente'] . '\';  document.getElementById(\'type\')[2].selected = \'1\'; document.getElementById(\'message\').focus();">' . $row['mittente'] . '</a>';
-
-                if (empty ($row['destinatario']) === false) {
-                    $add_chat .= '<span class="chat_tag"> [' . gdrcd_filter('out', $row['destinatario']) . ']</span>';
-                }
-                $add_chat .= '</span> ';
-                $add_chat .= '<span class="chat_msg">' . gdrcd_chatcolor(gdrcd_filter('out', $row['testo'])) . '</span>';
-
-                /**    * Fix problema visualizzazione spazi vuoti con i sussurri
-                 * @author eLDiabolo
-                 */
-                if ($PARAMETERS['mode']['chat_avatar'] == 'ON') {
-                    $add_chat .= '<br style="clear:both;" />';
-                }
-
-                $add_chat .= '</div>';
-
-                break;
-
-
-            case 'S':
-                if ($_SESSION['login'] == $row['destinatario']) {
-                    /**    * Fix problema visualizzazione spazi vuoti con i sussurri
-                     * @author eLDiabolo
-                     */
-                    $add_chat .= '<div class="chat_row_' . $row['tipo'] . '">';
-
-                    $add_chat .= '<span class="chat_name">' . $row['mittente'] . ' ' . $MESSAGE['chat']['whisper']['by'] . ': </span> ';
-                    $add_chat .= '<span class="chat_msg">' . gdrcd_filter('out', $row['testo']) . '</span>';
-
-                    /**    * Fix problema visualizzazione spazi vuoti con i sussurri
-                     * @author eLDiabolo
-                     */
-                    $add_chat .= '</div>';
-
-                } else {
-                    if ($_SESSION['login'] == $row['mittente']) {
                         /**    * Fix problema visualizzazione spazi vuoti con i sussurri
                          * @author eLDiabolo
                          */
                         $add_chat .= '<div class="chat_row_' . $row['tipo'] . '">';
 
-                        $add_chat .= '<span class="chat_msg">' . $MESSAGE['chat']['whisper']['to'] . ' ' . gdrcd_filter('out',
-                                $row['destinatario']) . ': </span>';
-                        $add_chat .= '<span class="chat_msg">' . gdrcd_filter('out', $row['testo']) . '</span>';
+                        /** * Avatar di chat
+                         * @author Blancks
+                         */
+                        if ($PARAMETERS['mode']['chat_avatar'] == 'ON' && !empty($row['url_img_chat'])) {
+                            $add_chat .= '<img src="' . $row['url_img_chat'] . '" class="chat_avatar" 
+                            style="width:' . $PARAMETERS['settings']['chat_avatar']['width'] . 'px; 
+                            height:' . $PARAMETERS['settings']['chat_avatar']['height'] . 'px;" />';
+                        }
+
+
+                        $add_chat .= '<span class="chat_time">' . gdrcd_format_time($row['ora']) . '</span>';
+
+                        if ($PARAMETERS['mode']['chaticons'] == 'ON') {
+                            $add_chat .= $add_icon;
+                        }
+
+                        $add_chat .= '<span class="chat_name">
+                            <a href="#" onclick="Javascript: document.getElementById(\'tag\').value=\'' . $row['id_personaggio_mittente'] . '\'; document.getElementById(\'type\')[2].selected = \'1\'; document.getElementById(\'message\').focus();">
+                                ' . $row['nome_mittente'] . '
+                            </a>';
+
+                        if (empty ($row['tag_posizione']) === FALSE) {
+                            $add_chat .= '<span class="chat_tag"> [' . gdrcd_filter('out', $row['tag_posizione']) . ']</span>';
+                        }
+
+                        $add_chat .= ': </span> ';
+                        $add_chat .= '<span class="chat_msg">' . gdrcd_chatcolor(gdrcd_filter('out', $row['testo'])) . '</span>';
 
                         /**    * Fix problema visualizzazione spazi vuoti con i sussurri
                          * @author eLDiabolo
                          */
+                        if ($PARAMETERS['mode']['chat_avatar'] == 'ON')
+                            $add_chat .= '<br style="clear:both;" />';
+
                         $add_chat .= '</div>';
 
-                    } else {
-                        if (($_SESSION['permessi'] >= MODERATOR) && ($PARAMETERS['mode']['spyprivaterooms'] == 'ON')) {
+                        break;
+
+
+            case 'A':
+                /**    * Fix problema visualizzazione spazi vuoti con i sussurri
+                         * @author eLDiabolo
+                         */
+                        $add_chat .= '<div class="chat_row_' . $row['tipo'] . '">';
+
+                        /** * Avatar di chat
+                         * @author Blancks
+                         */
+                        if ($PARAMETERS['mode']['chat_avatar'] == 'ON' && !empty($row['url_img_chat'])) {
+                            $add_chat .= '<img src="' . $row['url_img_chat'] . '" class="chat_avatar" 
+                            style="width:' . $PARAMETERS['settings']['chat_avatar']['width'] . 'px; 
+                            height:' . $PARAMETERS['settings']['chat_avatar']['height'] . 'px;" />';
+                        }
+
+
+                        $add_chat .= '<span class="chat_time">' . gdrcd_format_time($row['ora']) . '</span>';
+
+                        if ($PARAMETERS['mode']['chaticons'] == 'ON') {
+                            $add_chat .= $add_icon;
+                        }
+
+                        $add_chat .= '<span class="chat_name"><a href="#" onclick="Javascript: document.getElementById(\'tag\').value=\'' . $row['nome_mittente'] . '\';  document.getElementById(\'type\')[2].selected = \'1\'; document.getElementById(\'message\').focus();">' . $row['nome_mittente'] . '</a>';
+
+                        if (empty ($row['tag_posizione']) === FALSE) {
+                            $add_chat .= '<span class="chat_tag"> [' . gdrcd_filter('out', $row['tag_posizione']) . ']</span>';
+                        }
+                        $add_chat .= '</span> ';
+                        $add_chat .= '<span class="chat_msg">' . gdrcd_chatcolor(gdrcd_filter('out', $row['testo'])) . '</span>';
+
+                        /**    * Fix problema visualizzazione spazi vuoti con i sussurri
+                         * @author eLDiabolo
+                         */
+                        if ($PARAMETERS['mode']['chat_avatar'] == 'ON')
+                            $add_chat .= '<br style="clear:both;" />';
+
+                        $add_chat .= '</div>';
+
+                        break;
+
+
+            case 'S':
+               if ($_SESSION['id_personaggio'] == $row['id_personaggio_destinatario']) {
                             /**    * Fix problema visualizzazione spazi vuoti con i sussurri
                              * @author eLDiabolo
                              */
                             $add_chat .= '<div class="chat_row_' . $row['tipo'] . '">';
 
-                            $add_chat .= '<span class="chat_msg">' . $row['mittente'] . ' ' . $MESSAGE['chat']['whisper']['from_to'] . ' ' . gdrcd_filter('out',
-                                    $row['destinatario']) . ' </span>';
+                            $add_chat .= '<span class="chat_name">' . $row['nome_mittente'] . ' ' . $MESSAGE['chat']['whisper']['by'] . ': </span> ';
+                            $add_chat .= '<span class="chat_msg">' . gdrcd_filter('out', $row['testo']) . '</span>';
+
+                            /**    * Fix problema visualizzazione spazi vuoti con i sussurri
+                             * @author eLDiabolo
+                             */
+                            $add_chat .= '</div>';
+
+                        } else if ($_SESSION['id_personaggio'] == $row['id_personaggio_mittente']) {
+                            /**    * Fix problema visualizzazione spazi vuoti con i sussurri
+                             * @author eLDiabolo
+                             */
+                            $add_chat .= '<div class="chat_row_' . $row['tipo'] . '">';
+
+                            $add_chat .= '<span class="chat_msg">' . $MESSAGE['chat']['whisper']['to'] . ' ' . gdrcd_filter('out', $row['nome_destinatario']) . ': </span>';
+                            $add_chat .= '<span class="chat_msg">' . gdrcd_filter('out', $row['testo']) . '</span>';
+
+                            /**    * Fix problema visualizzazione spazi vuoti con i sussurri
+                             * @author eLDiabolo
+                             */
+                            $add_chat .= '</div>';
+
+                        } else if (($_SESSION['permessi'] >= MODERATOR) && ($PARAMETERS['mode']['spyprivaterooms'] == 'ON')) {
+                            /**    * Fix problema visualizzazione spazi vuoti con i sussurri
+                             * @author eLDiabolo
+                             */
+                            $add_chat .= '<div class="chat_row_' . $row['tipo'] . '">';
+
+                            $add_chat .= '<span class="chat_msg">' . $row['nome_mittente'] . ' ' . $MESSAGE['chat']['whisper']['from_to'] . ' ' . gdrcd_filter('out', $row['nome_destinatario']) . ' </span>';
                             $add_chat .= '<span class="chat_msg">' . gdrcd_filter('out', $row['testo']) . '</span>';
 
                             /**    * Fix problema visualizzazione spazi vuoti con i sussurri
@@ -270,26 +282,24 @@ $handleDBConnection = gdrcd_connect();
                             $add_chat .= '</div>';
 
                         }
-                    }
-                }
-                break;
+                        break;
 
 
             case 'N':
                 /**    * Fix problema visualizzazione spazi vuoti con i sussurri
-                 * @author eLDiabolo
-                 */
-                $add_chat .= '<div class="chat_row_' . $row['tipo'] . '">';
+                         * @author eLDiabolo
+                         */
+                        $add_chat .= '<div class="chat_row_' . $row['tipo'] . '">';
 
-                $add_chat .= '<span class="chat_time">' . gdrcd_format_time($row['ora']) . '</span>';
-                $add_chat .= '<span class="chat_name">' . $row['destinatario'] . '</span> ';
-                $add_chat .= '<span class="chat_msg">' . gdrcd_chatcolor(gdrcd_filter('out', $row['testo'])) . '</span>';
+                        $add_chat .= '<span class="chat_time">' . gdrcd_format_time($row['ora']) . '</span>';
+                        $add_chat .= '<span class="chat_name">' . $row['nome_destinatario'] . '</span> ';
+                        $add_chat .= '<span class="chat_msg">' . gdrcd_chatcolor(gdrcd_filter('out', $row['testo'])) . '</span>';
 
-                /**    * Fix problema visualizzazione spazi vuoti con i sussurri
-                 * @author eLDiabolo
-                 */
-                $add_chat .= '</div>';
-                break;
+                        /**    * Fix problema visualizzazione spazi vuoti con i sussurri
+                         * @author eLDiabolo
+                         */
+                        $add_chat .= '</div>';
+                        break;
 
 
             case 'M':
@@ -380,7 +390,7 @@ $handleDBConnection = gdrcd_connect();
     $start = gdrcd_format_datetime_cat($start_time);
     $end = gdrcd_format_datetime_cat($end_time);
     /* Scrivo tutto in un file di testo */
-    $file = $start . "-" . $end . "-" . $_SESSION['login'];
+    $file = $start . "-" . $end . "-" . $_SESSION['id_personaggio'];
     $rand = rand(1, 10000);
     $file = md5($file . $rand);
     $file = $file . ".html";
