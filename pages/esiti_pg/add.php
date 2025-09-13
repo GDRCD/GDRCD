@@ -2,8 +2,8 @@
 /*Inserimento di un nuovo record*/
 if ($_POST['op']=='add') {
 
-    $load_blocco=gdrcd_query("SELECT id, pg, master, titolo, closed FROM blocco_esiti 
-        WHERE id='".gdrcd_filter('num',$_POST['id'])."' AND pg = '".gdrcd_filter('in',$_SESSION['login'])."' LIMIT 1 ");
+    $load_blocco=gdrcd_query("SELECT id, id_personaggio_destinatario, id_personaggio_master, titolo, closed FROM blocco_esiti 
+        WHERE id='".gdrcd_filter('num',$_POST['id'])."' AND id_personaggio_destinatario = '".$_SESSION['id_personaggio']."' LIMIT 1 ");
 
     if ( gdrcd_filter('num',$load_blocco['id'])>0) {
         if ($load_blocco['closed']==1) { ?>
@@ -29,9 +29,9 @@ if ($_POST['op']=='add') {
 
 
             /*Eseguo l'inserimento del singolo esito*/
-            gdrcd_query("INSERT INTO esiti (titolo, pg, autore, contenuto, noteoff, id_blocco, dice_face, dice_num, dice_results,letto_pg) 
-                  VALUES ('".gdrcd_filter('in',$_POST['titolo'])."', '".gdrcd_filter('in', $_SESSION['login'])."',
-                  '".gdrcd_filter('in', $_SESSION['login'])."', '".gdrcd_filter('in', $_POST['contenuto'])."','".$note."', 
+            gdrcd_query("INSERT INTO esiti (titolo, id_personaggio_destinatario, id_personaggio_autore, contenuto, noteoff, id_blocco, dice_face, dice_num, dice_results,letto_pg) 
+                  VALUES ('".gdrcd_filter('in',$_POST['titolo'])."', '".$_SESSION['id_personaggio']."',
+                  '".$_SESSION['id_personaggio']."', '".gdrcd_filter('in', $_POST['contenuto'])."','".$note."', 
                   ".$_POST['id'].", ".gdrcd_filter('num', $facce).", ".gdrcd_filter('num', $num).", 
                   '".gdrcd_filter('in', $dice_res)."', 1 )");
             ?>
