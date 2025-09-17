@@ -1,6 +1,7 @@
 <?php /*HELP: */
-$row = gdrcd_query("SELECT email FROM personaggio WHERE nome = '".$_SESSION['login']."'");
+$row = gdrcd_query("SELECT email, pass FROM personaggio WHERE id_personaggio = '".$_SESSION['id_personaggio']."'");
 $email = $row['email'];
+$pass = $row['pass'];
 ?>
 <div class="pagina_user_cancella_pg">
     <!-- Titolo della pagina -->
@@ -11,9 +12,10 @@ $email = $row['email'];
     <div class="page_body">
         <?php /*Cancella il tuo account*/
         if($_POST['op'] == 'delete') {
-            if(($email == gdrcd_filter_email($_POST['email'])) && (gdrcd_check_pass($_POST['new_pass']) === true)) {
-                gdrcd_query("UPDATE personaggio SET permessi = -1 WHERE nome = '".$_SESSION['login']."' AND pass = '".gdrcd_encript($_POST['new_pass'])."'");
-                gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".$_SESSION['login']."','".$_SESSION['login']."', NOW(), ".DELETEPG." ,'".gdrcd_filter('in', $MESSAGE['interface']['user']['delete']['undeleted'])."')");
+                  
+            if((gdrcd_password_check(gdrcd_filter_email($_POST['email']),$email))  && (gdrcd_password_check($_POST['new_pass'], $pass))) {
+                gdrcd_query("UPDATE personaggio SET permessi = -1 WHERE id_personaggio = '".$_SESSION['id_personaggio']."' ");
+                gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".$_SESSION['id_personaggio']."','".$_SESSION['login']."', '".$_SESSION['login']."',NOW(), ".DELETEPG." ,'".gdrcd_filter('in', $MESSAGE['interface']['user']['delete']['undeleted'])."')");
                 ?>
                 <div class="warning">
                     <?php echo gdrcd_filter('out', $MESSAGE['warning']['modified']); ?>
@@ -39,8 +41,8 @@ $email = $row['email'];
         <?php }
         /*Cancella altri - MODERATORE (Disabilita account)*/
         if((gdrcd_filter('get', $_POST['op']) == 'force') && ($_SESSION['permessi'] == MODERATOR)) {
-            gdrcd_query("UPDATE personaggio SET permessi = -1 WHERE nome = '".gdrcd_filter('in', $_POST['account'])."' AND permessi < ".SUPERUSER."");
-            gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".gdrcd_filter('in', $_POST['account'])."','".$_SESSION['login']."', NOW(), ".DELETEPG." ,'".gdrcd_filter('in', $MESSAGE['interface']['user']['delete']['deleted'])."')");
+            gdrcd_query("UPDATE personaggio SET permessi = -1 WHERE id_personaggio = '".gdrcd_filter('in', $_POST['account'])."' AND permessi < ".SUPERUSER."");
+            gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".$_SESSION['id_personaggio']."','".gdrcd_filter('in', $_POST['account'])."','".$_SESSION['login']."', NOW(), ".DELETEPG." ,'".gdrcd_filter('in', $MESSAGE['interface']['user']['delete']['deleted'])."')");
             ?>
             <div class="warning">
                 <?php echo gdrcd_filter('out', $MESSAGE['warning']['modified']); ?>
@@ -53,8 +55,8 @@ $email = $row['email'];
         <?php }
         /*Cancella altri - SUPERUSER (Disabilita account) */
         if((gdrcd_filter('get', $_POST['op']) == 'force') && ($_SESSION['permessi'] == SUPERUSER)) {
-            gdrcd_query("UPDATE personaggio SET permessi = -1 WHERE nome = '".gdrcd_filter('in', $_POST['account'])."'");
-            gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".gdrcd_filter('in', $_POST['account'])."','".$_SESSION['login']."', NOW(), ".DELETEPG." ,'->')");
+            gdrcd_query("UPDATE personaggio SET permessi = -1 WHERE id_personaggio = '".gdrcd_filter('in', $_POST['account'])."'");
+            gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".$_SESSION['id_personaggio']."','".gdrcd_filter('in', $_POST['account'])."','".$_SESSION['login']."', NOW(), ".DELETEPG." ,'->')");
             ?>
             <div class="warning">
                 <?php echo gdrcd_filter('out', $MESSAGE['warning']['modified']); ?>
@@ -67,8 +69,8 @@ $email = $row['email'];
         <?php }
         /*Ripristina account*/
         if((gdrcd_filter('get', $_POST['op']) == 'get_back') && ($_SESSION['permessi'] >= MODERATOR)) {
-            gdrcd_query("UPDATE personaggio SET permessi = 0 WHERE nome = '".gdrcd_filter('in', $_POST['account'])."'");
-            gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".gdrcd_filter('in', $_POST['account'])."','".$_SESSION['login']."', NOW(), ".DELETEPG." ,'<-')");
+            gdrcd_query("UPDATE personaggio SET permessi = 0 WHERE id_personaggio = '".gdrcd_filter('in', $_POST['account'])."'");
+            gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".$_SESSION['id_personaggio']."','".gdrcd_filter('in', $_POST['account'])."','".$_SESSION['login']."', NOW(), ".DELETEPG." ,'<-')");
             ?>
             <div class="warning">
                 <?php echo gdrcd_filter('out', $MESSAGE['warning']['modified']); ?>
@@ -105,7 +107,7 @@ $email = $row['email'];
             </div>
             <?php
             if($_SESSION['permessi'] >= MODERATOR) {
-                $query = ($_SESSION['permessi'] == SUPERUSER) ? "SELECT nome FROM personaggio ORDER BY nome" : "SELECT nome FROM personaggio WHERE permessi < ".SUPERUSER." ORDER BY nome";
+                $query = ($_SESSION['permessi'] == SUPERUSER) ? "SELECT id_personaggio, nome FROM personaggio ORDER BY nome" : "SELECT id_personaggio, nome FROM personaggio WHERE permessi < ".SUPERUSER." ORDER BY nome";
                 $result = gdrcd_query($query, 'result'); ?>
                 <div class="panels_box">
                     <div class="form_gioco">
@@ -117,7 +119,7 @@ $email = $row['email'];
                                 <select name="account">
                                     <option disabled selected><?php echo gdrcd_filter('out', $MESSAGE['interface']['user']['delete']['who']); ?></option>
                                     <?php while($row = gdrcd_query($result, 'fetch')) { ?>
-                                        <option value="<?php echo $row['nome']; ?>"><?php echo $row['nome']; ?></option>
+                                        <option value="<?php echo $row['id_personaggio']; ?>"><?php echo $row['nome']; ?></option>
                                     <?php }//while
                                     gdrcd_query($result, 'free');
                                     ?>
@@ -131,7 +133,7 @@ $email = $row['email'];
                     </div>
                 </div>
                 <?php
-                $query = "SELECT nome FROM personaggio WHERE permessi < 0 ORDER BY nome";
+                $query = "SELECT id_personaggio, nome FROM personaggio WHERE permessi < 0 ORDER BY nome";
                 $result = gdrcd_query($query, 'result'); ?>
 
                 <div class="panels_box">
@@ -144,7 +146,7 @@ $email = $row['email'];
                                 <select name="account">
                                     <option disabled selected><?php echo gdrcd_filter('out', $MESSAGE['interface']['user']['get_back']['who']); ?></option>
                                     <?php while($row = gdrcd_query($result, 'fetch')) { ?>
-                                        <option value="<?php echo $row['nome']; ?>"><?php echo $row['nome']; ?></option>
+                                        <option value="<?php echo $row['id_personaggio']; ?>"><?php echo $row['nome']; ?></option>
                                     <?php }//while
                                     gdrcd_query($result, 'free');
                                     ?>
