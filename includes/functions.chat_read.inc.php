@@ -243,7 +243,7 @@ function gdrcd_chat_master_format($azione)
 
     // Formatta il testo per l'azione master
     $testo = gdrcd_chat_highlight_user(
-        $_SESSION['login'],
+        $_SESSION['id_personaggio'],
         gdrcd_bbcoder(gdrcd_filter('out', $azione['testo'])),
         true
     );
@@ -512,12 +512,12 @@ function gdrcd_chat_whisper_format($azione)
     $MESSAGE = $GLOBALS['MESSAGE'];
     $PARAMETERS = $GLOBALS['PARAMETERS'];
 
-    if ($_SESSION['login'] == $azione['id_personaggio_destinatario']) {
+    if ($_SESSION['id_personaggio'] == $azione['id_personaggio_destinatario']) {
 
         // l'utente connesso riceve il sussurro
         $mittente_o_destinatario = $azione['mittente'] .' '. $MESSAGE['chat']['whisper']['by'];
 
-    } elseif ($_SESSION['login'] == $azione['id_personaggio_mittente']) {
+    } elseif ($_SESSION['id_personaggio'] == $azione['id_personaggio_mittente']) {
 
         // l'utente connesso ha inviato il sussurro
         $mittente_o_destinatario = $MESSAGE['chat']['whisper']['to'] .' '. $azione['id_personaggio_destinatario'];

@@ -512,7 +512,7 @@ function gdrcd_chat_stats_save(
     $carId = 'car' . $statsId;
     $bonusCarId = 'bonus_car' . $statsId;
 
-    $personaggio = gdrcd_chat_player_info($_SESSION['login']);
+    $personaggio = gdrcd_chat_player_info($_SESSION['id_personaggio']);
     $stats = $personaggio[$carId] ?? null;
 
     if ( $stats === null ) {
@@ -529,7 +529,7 @@ function gdrcd_chat_stats_save(
     $items_bonus = 0;
 
     // Recupero eventuali bonus dati da oggetti equipaggiati
-    $player_items = gdrcd_chat_player_items($_SESSION['login']);
+    $player_items = gdrcd_chat_player_items($_SESSION['id_personaggio']);
 
     foreach ($player_items as $row) {
         $bonus = $row[$bonusCarId];
@@ -682,7 +682,7 @@ function gdrcd_chat_skill_save(
     $skill_rank = $skill_record['grado'] ?? 0;
 
     // Cerca le informazioni sull'utilizzatore della skill nel database
-    $personaggio = gdrcd_chat_player_info($_SESSION['login']);
+    $personaggio = gdrcd_chat_player_info($_SESSION['id_personaggio']);
 
     if ($personaggio['salute'] <= 0) {
         // se l'utente non ha salute residua non può compiere l'azione
@@ -705,7 +705,7 @@ function gdrcd_chat_skill_save(
     $items_bonus = 0;
 
     // Recupero eventuali bonus dati da oggetti equipaggiati
-    $player_items = gdrcd_chat_player_items($_SESSION['login']);
+    $player_items = gdrcd_chat_player_items($_SESSION['id_personaggio']);
 
     foreach ($player_items as $row) {
         $bonus = $row[$bonusCarId];
@@ -852,14 +852,14 @@ function gdrcd_chat_item_save(
         return gdrcd_api_status_invalid($MESSAGE['chat']['error']['empty_message']);
     }
 
-    $item = gdrcd_chat_player_item($_SESSION['login'], $id_oggetto);
+    $item = gdrcd_chat_player_item($_SESSION['id_personaggio'], $id_oggetto);
 
     // Se l'oggetto non esiste l'operazione fallisce
     if (empty($item)) {
         return gdrcd_api_status_invalid($MESSAGE['chat']['error']['invalid_item'] .': '. $id_oggetto);
     }
 
-    $item = gdrcd_chat_player_item_consume($_SESSION['login'], $item);
+    $item = gdrcd_chat_player_item_consume($_SESSION['id_personaggio'], $item);
 
     // Informazioni dell'oggetto usato
     $result = [
@@ -1075,13 +1075,13 @@ function gdrcd_chat_private_invite_save(
 
     // Invia un messaggio di posta al personaggio invitato
     gdrcd_stmt(
-        'INSERT INTO messaggi ( mittente, destinatario, spedito, letto, testo )
+        'INSERT INTO messaggi ( id_personaggio_mittente, id_personaggio_destinatario, spedito, letto, testo )
         VALUES (?, ?, NOW(), 0, ?)',
         [
             'sss',
             'System message',
             $destinatario,
-            $_SESSION['login']
+            $_SESSION['id_personaggio']
                 .' '. $MESSAGE['chat']['warning']['invited_message']
                 .' '. $info['nome']
                 ."\n" . $testo
@@ -1183,13 +1183,13 @@ function gdrcd_chat_private_kick_save(
 
     // Invia un messaggio di posta al personaggio cacciato
     gdrcd_stmt(
-        'INSERT INTO messaggi ( mittente, destinatario, spedito, letto, testo )
+        'INSERT INTO messaggi ( id_personaggio_mittente, id_personaggio_destinatario, spedito, letto, testo )
         VALUES (?, ?, NOW(), 0, ?)',
         [
             'sss',
             'System message',
             $destinatario,
-            $_SESSION['login']
+            $_SESSION['id_personaggio']
                 .' '. $MESSAGE['chat']['warning']['expelled_message']
                 .' '. $info['nome']
                 ."\n" . $testo
@@ -1273,7 +1273,7 @@ function gdrcd_chat_db_insert_for_login(
     gdrcd_chat_db_insert(
         $_SESSION['luogo'],
         [$_SESSION['sesso'], $_SESSION['img_razza']],
-        $_SESSION['login'],
+        $_SESSION['id_personaggio'],
         $tag_o_destinatario,
         $tipo,
         $testo
@@ -1285,8 +1285,8 @@ function gdrcd_chat_db_insert_for_login(
  *
  * @param int $stanza Id della stanza della chat
  * @param string[] $imgs array di iconcine da utilizzare
- * @param string $mittente
- * @param string $tag_o_destinatario il tag o il destinatario appropriati per la tipologia di messaggio
+ * @param int $mittente
+ * @param int $tag_o_destinatario il tag o il destinatario appropriati per la tipologia di messaggio
  * @param string $tipo il tipo interno dei messaggi di chat (es: A, M, P etc.)
  * @param string $testo il messaggio da salvare
  * @return void
@@ -1300,10 +1300,10 @@ function gdrcd_chat_db_insert(
     $testo
 ) {
     gdrcd_stmt(
-        'INSERT INTO chat (stanza, imgs, mittente, destinatario, ora, tipo, testo)
+        'INSERT INTO chat (stanza, imgs, id_personaggio_mittente, id_personaggio_destinatario, ora, tipo, testo)
         VALUES (?, ?, ?, ?, NOW(), ?, ?)',
         [
-            'isssss',
+            'isiiss',
             $stanza,
             implode(';', $imgs),
             $mittente,
@@ -1397,7 +1397,7 @@ function gdrcd_chat_strip_message_symbol($message, $symbol)
  *  max_cariche: int
  * }
  */
-function gdrcd_chat_player_item_consume($nome, $item)
+function gdrcd_chat_player_item_consume($id_personaggio, $item)
 {
     // Decremento cariche oggetto
     if ($item['cariche'] > 1) {
@@ -1405,13 +1405,13 @@ function gdrcd_chat_player_item_consume($nome, $item)
             'UPDATE clgpersonaggiooggetto
                 SET cariche = cariche -1
 
-            WHERE nome = ?
+            WHERE id_personaggio = ?
                 AND id_oggetto = ?
 
             LIMIT 1',
             [
-                'si',
-                $nome,
+                'ii',
+                $id_personaggio,
                 $item['id_oggetto']
             ]
         );
@@ -1428,14 +1428,14 @@ function gdrcd_chat_player_item_consume($nome, $item)
                 SET cariche = ?,
                     numero = numero - 1
 
-            WHERE nome = ?
+            WHERE id_personaggio = ?
                 AND id_oggetto = ?
 
             LIMIT 1',
             [
-                'isi',
+                'iii',
                 $item['max_cariche'],
-                $nome,
+                $id_personaggio,
                 $item['id_oggetto']
             ]
         );
@@ -1448,10 +1448,10 @@ function gdrcd_chat_player_item_consume($nome, $item)
 
     // Elimino la riga
     gdrcd_stmt(
-        'DELETE FROM clgpersonaggiooggetto WHERE nome = ? AND id_oggetto = ? LIMIT 1',
+        'DELETE FROM clgpersonaggiooggetto WHERE id_personaggio = ? AND id_oggetto = ? LIMIT 1',
         [
-            'si',
-            $nome,
+            'ii',
+            $id_personaggio,
             $item['id_oggetto']
         ]
     );
@@ -1512,11 +1512,11 @@ function gdrcd_chat_assign_experience($message)
 
     // Salva a database l'esperienza assegnata
     gdrcd_stmt(
-        'UPDATE personaggio SET esperienza = esperienza + ? WHERE nome = ? LIMIT 1',
+        'UPDATE personaggio SET esperienza = esperienza + ? WHERE id_personaggio = ? LIMIT 1',
         [
-            'ds',
+            'di',
             $exp_bonus,
-            $_SESSION['login'],
+            $_SESSION['id_personaggio'],
         ]
     );
 }

@@ -62,7 +62,7 @@ function gdrcd_chat_room_is_login_allowed($luogo)
 
     $invitati = explode(',', $info['invitati']);
     $login_moderator_o_superiore = $_SESSION['permessi'] >= MODERATOR;
-    $login_proprietario_chat = $info['proprietario'] == $_SESSION['login'];
+    $login_proprietario_chat = $info['proprietario'] == $_SESSION['id_personaggio'];
     $login_invitato_chat = in_array($_SESSION['id_personaggio'], $invitati);
     $chat_scaduta = time() >= strtotime($info['scadenza']);
 
