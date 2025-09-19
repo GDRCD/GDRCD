@@ -7,7 +7,7 @@
 
     // Elenco abilità del personaggio connesso
     $skills = $skillsystem_attivo
-        ? gdrcd_chat_player_skills($_SESSION['login'])
+        ? gdrcd_chat_player_skills($_SESSION['id_personaggio'])
         : null;
 
     // Elenco caratteristiche
@@ -22,7 +22,7 @@
 
     // Elenco oggetti equipaggiati del personaggio connesso
     $items = $skillsystem_attivo
-        ? gdrcd_chat_player_items($_SESSION['login'])
+        ? gdrcd_chat_player_items($_SESSION['id_personaggio'])
         : null;
 
 ?>
