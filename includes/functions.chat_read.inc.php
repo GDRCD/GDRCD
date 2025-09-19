@@ -31,7 +31,7 @@ function gdrcd_chat_read_messages($luogo, $last_id = 0)
 
         FROM chat
             INNER JOIN mappa ON mappa.id = chat.stanza
-            LEFT JOIN personaggio ON personaggio.nome = chat.mittente
+            LEFT JOIN personaggio ON personaggio.id_personaggio = chat.id_personaggio_mittente
 
         WHERE chat.id > ?
             AND chat.stanza = ?
@@ -67,7 +67,7 @@ function gdrcd_chat_read_messages($luogo, $last_id = 0)
 
             $azioni[] = [
                 'id' => $riga_azione['id'],
-                'mittente' => $riga_azione['mittente'],
+                'mittente' => $riga_azione['id_personaggio_mittente'],
                 'azione' => $azione,
             ];
 
@@ -206,7 +206,7 @@ function gdrcd_chat_png_format($azione)
     $chat_body = gdrcd_chat_body_with_colors_component($azione, null);
 
     // formattazione nome del png
-    $chat_png_name = gdrcd_chat_name_component($azione['destinatario']);
+    $chat_png_name = gdrcd_chat_name_component($azione['id_personaggio_destinatario']);
 
     // Tipologia di azione. Es: N
     $azione_tipo = $azione['tipo'];
@@ -512,23 +512,23 @@ function gdrcd_chat_whisper_format($azione)
     $MESSAGE = $GLOBALS['MESSAGE'];
     $PARAMETERS = $GLOBALS['PARAMETERS'];
 
-    if ($_SESSION['login'] == $azione['destinatario']) {
+    if ($_SESSION['login'] == $azione['id_personaggio_destinatario']) {
 
         // l'utente connesso riceve il sussurro
         $mittente_o_destinatario = $azione['mittente'] .' '. $MESSAGE['chat']['whisper']['by'];
 
-    } elseif ($_SESSION['login'] == $azione['mittente']) {
+    } elseif ($_SESSION['login'] == $azione['id_personaggio_mittente']) {
 
         // l'utente connesso ha inviato il sussurro
-        $mittente_o_destinatario = $MESSAGE['chat']['whisper']['to'] .' '. $azione['destinatario'];
+        $mittente_o_destinatario = $MESSAGE['chat']['whisper']['to'] .' '. $azione['id_personaggio_destinatario'];
 
     } elseif ($_SESSION['permessi'] >= MODERATOR && $PARAMETERS['mode']['spyprivaterooms'] == 'ON') {
 
         // l'utente connesso può leggere i sussurri di altri giocatori
         // se è almeno MODERATOR e spyprivaterooms è abilitato
-        $mittente_o_destinatario = $azione['mittente']
+        $mittente_o_destinatario = $azione['id_personaggio_mittente']
             .' '. $MESSAGE['chat']['whisper']['from_to']
-            .' '. $azione['destinatario'];
+            .' '. $azione['id_personaggio_destinatario'];
 
     } else {
 
@@ -590,7 +590,7 @@ function gdrcd_chat_action_format($azione)
     $chat_sender = gdrcd_chat_sender_component($azione);
 
     // formattazione tag
-    $chat_tag = !empty($azione['destinatario'])
+    $chat_tag = !empty($azione['id_personaggio_destinatario'])
         ? gdrcd_chat_tag_component($azione)
         : '';
 
@@ -815,8 +815,8 @@ function gdrcd_chat_avatar_component($azione)
             && $PARAMETERS['settings']['chat_avatar']['link']['popup'] == 'ON';
 
         $chat_avatar_url = $isChatAvatarPoupLink
-            ? "javascript:modalWindow('scheda', 'Scheda di ". addslashes($azione['mittente']) ."', 'popup.php?page=scheda&pg=". urlencode($azione['mittente']) ."');"
-            : "main.php?page=scheda&pg=". urlencode($azione['mittente']);
+            ? "javascript:modalWindow('scheda', 'Scheda di ". addslashes($azione['id_personaggio_mittente']) ."', 'popup.php?page=scheda&pg=". urlencode($azione['id_personaggio_mittente']) ."');"
+            : "main.php?page=scheda&pg=". urlencode($azione['id_personaggio_mittente']);
 
         $chat_avatar = <<<HTML
             <a href="{$chat_avatar_url}">{$chat_avatar}</a>
@@ -910,7 +910,7 @@ function gdrcd_chat_icons_component($azione)
 function gdrcd_chat_name_component($azione, $use_filter = true)
 {
     $message = is_array($azione)
-        ? $azione['mittente'] // se $azione è un array formatta 'mittente'
+        ? $azione['id_personaggio_mittente'] // se $azione è un array formatta 'id_personaggio_mittente'
         : $azione;            // se azione è una stringa la usa com'è
 
     if ($use_filter) {
@@ -941,7 +941,7 @@ function gdrcd_chat_name_component($azione, $use_filter = true)
 function gdrcd_chat_sender_component($azione, $use_filter = true)
 {
     $mittente = is_array($azione)
-        ? $azione['mittente'] // se $azione è un array formatta 'mittente'
+        ? $azione['id_personaggio_mittente'] // se $azione è un array formatta 'id_personaggio_mittente'
         : $azione;            // se azione è una stringa la usa com'è
 
     if ($use_filter) {
@@ -981,7 +981,7 @@ function gdrcd_chat_sender_component($azione, $use_filter = true)
 function gdrcd_chat_tag_component($azione, $use_filter = true)
 {
     $tag = is_array($azione)
-        ? $azione['destinatario'] // se $azione è un array formatta 'destinatario'
+        ? $azione['id_personaggio_destinatario'] // se $azione è un array formatta 'id_personaggio_destinatario'
         : $azione;                // se azione è una stringa la usa com'è
 
     if ($use_filter) {
@@ -1050,7 +1050,7 @@ function gdrcd_chat_body_with_colors_component($azione, $utente = '')
     $message = gdrcd_chat_add_colors(gdrcd_filter('out', $message));
 
     if ($utente === '') {
-        $utente = $_SESSION['login'];
+        $utente = $_SESSION['id_personaggio'];
     }
 
     if ($utente !== null) {
