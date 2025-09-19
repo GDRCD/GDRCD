@@ -63,7 +63,7 @@ function gdrcd_chat_room_is_login_allowed($luogo)
     $invitati = explode(',', $info['invitati']);
     $login_moderator_o_superiore = $_SESSION['permessi'] >= MODERATOR;
     $login_proprietario_chat = $info['proprietario'] == $_SESSION['login'];
-    $login_invitato_chat = in_array($_SESSION['login'], $invitati);
+    $login_invitato_chat = in_array($_SESSION['id_personaggio'], $invitati);
     $chat_scaduta = time() >= strtotime($info['scadenza']);
 
     // chat privata scaduta: se non sei moderator o maggiore, non sei abilitato
@@ -105,7 +105,7 @@ function gdrcd_chat_room_is_login_owner($luogo)
         return false;
     }
 
-    $login_proprietario_chat = $info['proprietario'] == $_SESSION['login'];
+    $login_proprietario_chat = $info['proprietario'] == $_SESSION['id_personaggio'];
     $gilda_proprietaria_chat = is_numeric($info['proprietario'])
         && str_contains($_SESSION['gilda'], (string)$info['proprietario']);
 
@@ -202,7 +202,7 @@ function gdrcd_chat_room_info($luogo)
  *  grado: null|int
  * }> Array di abilità
  */
-function gdrcd_chat_player_skills($nome)
+function gdrcd_chat_player_skills($id_personaggio)
 {
     $skills = [];
 
@@ -216,14 +216,14 @@ function gdrcd_chat_player_skills($nome)
             LEFT JOIN clgpersonaggioabilita
                 ON (
                     clgpersonaggioabilita.id_abilita = abilita.id_abilita
-                    AND clgpersonaggioabilita.nome = ?
+                    AND clgpersonaggioabilita.id_personaggio = ?
                 )
 
         WHERE abilita.id_razza = -1
-            OR abilita.id_razza = (SELECT id_razza FROM personaggio WHERE nome = ?)
+            OR abilita.id_razza = (SELECT id_razza FROM personaggio WHERE id_personaggio = ?)
 
         ORDER BY abilita.nome',
-        ['ss', $nome, $nome]
+        ['ii', $id_personaggio, $id_personaggio]
     );
 
     if (gdrcd_query($stmt, 'num_rows') > 0) {
@@ -252,9 +252,9 @@ function gdrcd_chat_player_skills($nome)
  *  grado: null|int
  * } Array associativo con i dati dell'abilità, oppure null se non trovata
  */
-function gdrcd_chat_player_skill($nome, $skillId)
+function gdrcd_chat_player_skill($id_personaggio, $skillId)
 {
-    $skills = gdrcd_chat_player_skills($nome);
+    $skills = gdrcd_chat_player_skills($id_personaggio);
 
     foreach ($skills as $skill) {
         if ($skill['id_abilita'] == $skillId) {
@@ -325,7 +325,7 @@ function gdrcd_chat_player_stats()
  *      - cariche: Numero di cariche disponibili per l'oggetto
  *      - max_cariche: Numero massimo di cariche per l'oggetto
  */
-function gdrcd_chat_player_items($nome)
+function gdrcd_chat_player_items($id_personaggio)
 {
     $items = [];
 
@@ -346,11 +346,11 @@ function gdrcd_chat_player_items($nome)
         FROM clgpersonaggiooggetto
             JOIN oggetto USING(id_oggetto)
 
-        WHERE clgpersonaggiooggetto.nome = ?
+        WHERE clgpersonaggiooggetto.id_personaggio = ?
             AND clgpersonaggiooggetto.posizione > 1
 
         ORDER BY clgpersonaggiooggetto.posizione',
-        ['s', $nome]
+        ['i', $id_personaggio]
     );
 
     if (gdrcd_query($stmt, 'num_rows') > 0) {
@@ -387,9 +387,9 @@ function gdrcd_chat_player_items($nome)
  *  max_cariche: int
  * } Array associativo con i dati dell'oggetto, oppure null se non trovato
  */
-function gdrcd_chat_player_item($nome, $itemId)
+function gdrcd_chat_player_item($id_personaggio, $itemId)
 {
-    $items = gdrcd_chat_player_items($nome);
+    $items = gdrcd_chat_player_items($id_personaggio);
 
     foreach ($items as $item) {
         if ($item['id_oggetto'] == $itemId) {
@@ -457,11 +457,11 @@ function gdrcd_chat_get_race($raceId)
  * @return null|array<string, string|int|float> Null se il personaggio non esiste,
  * altrimenti ritorna tutti i dati del personaggio
  */
-function gdrcd_chat_player_info($nome)
+function gdrcd_chat_player_info($id_personaggio)
 {
     $stmt = gdrcd_stmt(
-        'SELECT * FROM personaggio WHERE nome = ?',
-        ['s', $nome]
+        'SELECT * FROM personaggio WHERE id_personaggio = ?',
+        ['i', $id_personaggio]
     );
 
     if (gdrcd_query($stmt, 'num_rows') === 0) {
