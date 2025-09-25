@@ -9,6 +9,9 @@ if( ! empty($row)) {
     if(!gdrcd_controllo_permessi_forum($row['tipo'],$row['proprietari'])){
         echo '<div class="error">'.gdrcd_filter('out', $MESSAGE['error']['not_allowed']).'</div>';
     } else {
+        // Aumentiamo di uno il campo "visite" (by Baboomba)
+        $add_views = "UPDATE messaggioaraldo SET visite = visite + 1 WHERE messaggioaraldo.id_messaggio_padre = ".gdrcd_filter('num',$_REQUEST['what'])." OR messaggioaraldo.id_messaggio = ".gdrcd_filter('num',$_REQUEST['what'])."";
+        gdrcd_query($add_views);
         //Inserimento il record al pg come thread letto
         $check_letto = gdrcd_query("SELECT * FROM araldo_letto WHERE nome = '".$_SESSION['login']."' AND thread_id = ".gdrcd_filter('num', $_REQUEST['what']));
         if($check_letto['id'] <= 0) {
