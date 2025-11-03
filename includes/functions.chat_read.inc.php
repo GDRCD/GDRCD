@@ -225,7 +225,7 @@ function gdrcd_chat_png_format($azione)
     $chat_body = gdrcd_chat_body_with_colors_component($azione, null);
 
     // formattazione nome del png
-    $chat_png_name = gdrcd_chat_name_component($azione['id_personaggio_destinatario']);
+    $chat_png_name = gdrcd_chat_name_component($azione['tag_posizione']);
 
     // Tipologia di azione. Es: N
     $azione_tipo = $azione['tipo'];
@@ -630,7 +630,7 @@ function gdrcd_chat_action_format($azione)
     $chat_sender = gdrcd_chat_sender_component($azione);
 
     // formattazione tag
-    $chat_tag = !empty($azione['id_personaggio_destinatario'])
+    $chat_tag = !empty($azione['tag_posizione'])
         ? gdrcd_chat_tag_component($azione)
         : '';
 
@@ -1050,8 +1050,8 @@ function gdrcd_chat_sender_component($azione, $use_filter = true)
 function gdrcd_chat_tag_component($azione, $use_filter = true)
 {
     $tag = is_array($azione)
-        ? $azione['id_personaggio_destinatario'] // se $azione è un array formatta 'id_personaggio_destinatario'
-        : $azione;                // se azione è una stringa la usa com'è
+        ? $azione['tag_posizione']  // se $azione è un array formatta 'tag_posizione'
+        : $azione;                  // se azione è una stringa la usa com'è
 
     if ($use_filter) {
         $tag = gdrcd_filter('out', $tag);
