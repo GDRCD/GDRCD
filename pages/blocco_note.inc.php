@@ -8,7 +8,7 @@ $info = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprieta
   <meta charset="utf-8">
   <meta name="generator" content="AlterVista - Editor HTML"/>
   <link rel="stylesheet" href="/themes/advanced/main.css" type="text/css">
-  <title>Blocco Notes Dusk</title>
+  <title>Blocco Notes</title>
     <style>
 
         .blocconote {
