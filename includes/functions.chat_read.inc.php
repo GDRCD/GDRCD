@@ -737,7 +737,7 @@ function gdrcd_chat_private_kick_format($azione)
     $body = json_decode($azione['testo'], true);
 
     // nome utente cacciato dalla chat privata
-    $kicked = $body['kicked'];
+    $kicked = $body['kicked_name'];
 
     // Tipologia di azione. Es: Z
     $azione_tipo = $azione['tipo'];
