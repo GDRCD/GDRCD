@@ -5,11 +5,11 @@
 <?php
 
 
-if (isset($_SESSION['login'])) {
+if (isset($_SESSION['id_personaggio'])) {
 
 //Condizione per cui seleziona la facciata "principale" del pannello
 
-$log = gdrcd_query("SELECT * FROM segnalazione_role WHERE mittente='" . gdrcd_filter('in', $_SESSION['login']) . "'
+$log = gdrcd_query("SELECT * FROM segnalazione_role WHERE id_personaggio='" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "'
 	 AND conclusa = 0 ", "result");
 $row = gdrcd_query($log, 'fetch');
 $num_log = gdrcd_query($log, 'num_rows');
@@ -130,19 +130,19 @@ if ($num_log > 0 && ($row['stanza'] !== $_SESSION['luogo']) && (isset($_POST['op
     $name = gdrcd_query(" SELECT nome FROM mappa WHERE id = " . gdrcd_filter('num', $chat) . "", 'result');
     $r_nam = gdrcd_query($name, 'fetch');
 
-    $query = gdrcd_query("	SELECT chat.id, chat.mittente, chat.destinatario, chat.tipo, chat.ora
+    $query = gdrcd_query("	SELECT chat.id, chat.id_personaggio_mittente, chat.id_personaggio_destinatario, chat.tipo, chat.ora
     	FROM chat
     	INNER JOIN mappa ON mappa.id = chat.stanza
-    	LEFT JOIN personaggio ON personaggio.nome = chat.mittente 
+    	LEFT JOIN personaggio ON personaggio.id_personaggio = chat.id_personaggio_mittente 
     	WHERE stanza = " . gdrcd_filter('num', $chat) . " AND ora >= '" . $row['data_inizio'] . "' AND ora <= NOW() 
-    	AND (chat.tipo = 'A' || chat.tipo = 'P' || chat.tipo = 'M' || chat.tipo = 'N') GROUP BY mittente ORDER BY ora", 'result');
+    	AND (chat.tipo = 'A' || chat.tipo = 'P' || chat.tipo = 'M' || chat.tipo = 'N') GROUP BY id_personaggio_mittente ORDER BY ora", 'result');
 
     $start = gdrcd_query("	SELECT chat.id
     	FROM chat
     	INNER JOIN mappa ON mappa.id = chat.stanza
-    	LEFT JOIN personaggio ON personaggio.nome = chat.mittente 
+    	LEFT JOIN personaggio ON personaggio.id_personaggio = chat.id_personaggio_mittente 
     	WHERE stanza = " . gdrcd_filter('num', $chat) . " AND ora >= '" . $row['data_inizio'] . "' AND ora <= NOW() 
-    	AND (chat.tipo = 'A' || chat.tipo = 'P' || chat.tipo = 'M' || chat.tipo = 'N') AND mittente = '" . gdrcd_filter('in', $_SESSION['login']) . "' 
+    	AND (chat.tipo = 'A' || chat.tipo = 'P' || chat.tipo = 'M' || chat.tipo = 'N') AND id_personaggio_mittente = '" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "' 
     	ORDER BY ora ", 'result');
     $num_az = gdrcd_query($start, 'num_rows');
 
@@ -226,9 +226,9 @@ if ($_POST['op'] == 'leave') {
 #Apertura nuova segnalazione
 if ($_POST['op'] == 'start_segn') {
     /*Invio la segnalazione giocata */
-    gdrcd_query("INSERT INTO segnalazione_role (data_inizio, mittente, stanza, conclusa ) 
+    gdrcd_query("INSERT INTO segnalazione_role (data_inizio, id_personaggio, stanza, conclusa ) 
 	VALUES 
-	( NOW(), '" . gdrcd_filter('in', $_SESSION['login']) . "', " . gdrcd_filter('num', $_SESSION['luogo']) . ", 0)");
+	( NOW(), '" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "', " . gdrcd_filter('num', $_SESSION['luogo']) . ", 0)");
 
     /*Confermo l'operazione*/
     echo '<div class="warning" style="width: auto;">La registrazione è stata aperta </div>
@@ -242,11 +242,11 @@ else if ($_POST['op'] == 'start_ret') {
     $date = gdrcd_filter('num', $_POST['year']) . '-' . sprintf('%02s', gdrcd_filter('num', $_POST['month'])) . '-' . sprintf('%02s', gdrcd_filter('num', $_POST['day'])) . ' ' . sprintf('%02s', gdrcd_filter('num', $_POST['hour'])) . ':' . sprintf('%02s', gdrcd_filter('num', $_POST['minut'])) . ':00';
     $start_time = date("Y-m-d H:i:s", strtotime("-6 hours", strtotime($mydate)));
 
-    $query = gdrcd_query("SELECT chat.id, chat.mittente, chat.destinatario, chat.tipo, chat.ora
+    $query = gdrcd_query("SELECT chat.id, chat.id_personaggio_mittente, chat.id_personaggio_destinatario, chat.tipo, chat.ora
 		FROM chat
 		INNER JOIN mappa ON mappa.id = chat.stanza
-		LEFT JOIN personaggio ON personaggio.nome = chat.mittente 
-		WHERE stanza = " . gdrcd_filter('num', $_SESSION['luogo']) . " AND ora >= '" . $date . "' AND ora <= NOW() AND mittente = '" . gdrcd_filter('in', $_SESSION['login']) . "'  AND (chat.tipo = 'A' || chat.tipo = 'P' || chat.tipo = 'M' || chat.tipo = 'N') ORDER BY ora ", 'result');
+		LEFT JOIN personaggio ON personaggio.id_personaggio = chat.id_personaggio_mittente 
+		WHERE stanza = " . gdrcd_filter('num', $_SESSION['luogo']) . " AND ora >= '" . $date . "' AND ora <= NOW() AND id_personaggio_mittente = '" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "'  AND (chat.tipo = 'A' || chat.tipo = 'P' || chat.tipo = 'M' || chat.tipo = 'N') ORDER BY ora ", 'result');
     $record = gdrcd_query($query, 'fetch');
     $num_az = gdrcd_query($query, 'num_rows');
 
@@ -255,7 +255,7 @@ else if ($_POST['op'] == 'start_ret') {
 		INNER JOIN mappa ON mappa.id = chat.stanza
 		LEFT JOIN personaggio ON personaggio.nome = chat.mittente 
 		WHERE stanza = " . gdrcd_filter('num', $_SESSION['luogo']) . " AND ora >= '" . $date . "' AND ora <= NOW() 
-		AND mittente = '" . gdrcd_filter('in', $_SESSION['login']) . "'  
+		AND id_personaggio_mittente = '" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "'  
 		AND (chat.tipo = 'A' || chat.tipo = 'P' || chat.tipo = 'M' || chat.tipo = 'N') ORDER BY ora LIMIT 1 ", 'result');
     $rts = gdrcd_query($time_start, 'fetch');
 
@@ -268,9 +268,9 @@ else if ($_POST['op'] == 'start_ret') {
         $message = 'Non hai inviato alcuna azione a partire dall\'orario segnalato';
     } else {
         /*Invio la segnalazione giocata */
-        gdrcd_query("INSERT INTO segnalazione_role (data_inizio, mittente, stanza, conclusa ) 
+        gdrcd_query("INSERT INTO segnalazione_role (data_inizio, id_personaggio, stanza, conclusa ) 
 			VALUES 
-			( '" . $rts['ora'] . "', '" . gdrcd_filter('in', $_SESSION['login']) . "', 
+			( '" . $rts['ora'] . "', '" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "', 
 			" . gdrcd_filter('num', $_SESSION['luogo']) . ", 0)");
 
         /*Imposto il messaggio*/
@@ -286,14 +286,14 @@ else if ($_POST['op'] == 'start_ret') {
 
     $listapart = join(',', $_POST['parte']);
     $total = count($_POST['parte']);
-    $singolo = substr_count($listapart, $_SESSION['login']); #conta le volte in cui il partecipante è presente in questa stringa
+    $singolo = substr_count($listapart, $_SESSION['id_personaggio']); #conta le volte in cui il partecipante è presente in questa stringa
 
-    $query = gdrcd_query("SELECT chat.id, chat.mittente, chat.destinatario, chat.tipo, chat.ora
+    $query = gdrcd_query("SELECT chat.id, chat.id_personaggio_mittente, chat.id_personaggio_destinatario, chat.tipo, chat.ora
         FROM chat
         INNER JOIN mappa ON mappa.id = chat.stanza
-        LEFT JOIN personaggio ON personaggio.nome = chat.mittente 
+        LEFT JOIN personaggio ON personaggio.id_personaggio = chat.id_personaggio_mittente 
         WHERE stanza = " . gdrcd_filter('num', $_SESSION['luogo']) . " AND ora >= '" . gdrcd_filter('in', $row['data_inizio']) . "' 
-        AND ora <= NOW() AND mittente = '" . gdrcd_filter('in', $_SESSION['login']) . "' 
+        AND ora <= NOW() AND id_personaggio_mittente = '" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "' 
         AND (chat.tipo = 'A' || chat.tipo = 'P' || chat.tipo = 'M' || chat.tipo = 'N') ORDER BY ora ", 'result');
     $record = gdrcd_query($query, 'fetch');
     $num_az = gdrcd_query($query, 'num_rows');
@@ -301,9 +301,9 @@ else if ($_POST['op'] == 'start_ret') {
     $time_end = gdrcd_query("SELECT chat.id, chat.ora
         FROM chat
         INNER JOIN mappa ON mappa.id = chat.stanza
-        LEFT JOIN personaggio ON personaggio.nome = chat.mittente 
+        LEFT JOIN personaggio ON personaggio.id_personaggio = chat.id_personaggio_mittente 
         WHERE stanza = " . gdrcd_filter('num', $_SESSION['luogo']) . " AND ora >= '" . gdrcd_filter('in', $row['data_inizio']) . "' 
-        AND ora <= NOW() AND mittente = '" . gdrcd_filter('in', $_SESSION['login']) . "' 
+        AND ora <= NOW() AND id_personaggio_mittente = '" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "' 
         AND (chat.tipo = 'A' || chat.tipo = 'P' || chat.tipo = 'M' || chat.tipo = 'N') ORDER BY ora DESC LIMIT 1 ", 'result');
     $rte = gdrcd_query($time_end, 'fetch');
     $end_time = date("Y-m-d H:i:s", strtotime("+1 hours", strtotime($rte['ora'])));

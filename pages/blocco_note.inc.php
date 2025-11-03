@@ -8,7 +8,7 @@ $info = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprieta
   <meta charset="utf-8">
   <meta name="generator" content="AlterVista - Editor HTML"/>
   <link rel="stylesheet" href="/themes/advanced/main.css" type="text/css">
-  <title>Blocco Notes Dusk</title>
+  <title>Blocco Notes</title>
     <style>
 
         .blocconote {
@@ -37,7 +37,7 @@ $info = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprieta
                     <option value="2"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][2]);//master?></option>
                     <option value="3"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][3]);//png?></option>
                 <?php } ?>
-                <?php if(($info['privata'] == 1) && (($info['proprietario'] == $_SESSION['login']) || ((is_numeric($info['proprietario']) === true) && (strpos($_SESSION['gilda'], ''.$info['proprietario']))))) { ?>
+                <?php if(($info['privata'] == 1) && (($info['proprietario'] == $_SESSION['id_personaggio']) || ((is_numeric($info['proprietario']) === true) && (strpos($_SESSION['gilda'], ''.$info['proprietario']))))) { ?>
                     <option value="5"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][5]);//invita?></option>
                     <option value="6"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][6]);//caccia?></option>
                     <option value="7"><?php echo gdrcd_filter('out', $MESSAGE['chat']['type'][7]);//elenco?></option>

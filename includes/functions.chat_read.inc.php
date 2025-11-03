@@ -22,16 +22,25 @@ function gdrcd_chat_read_messages($luogo, $last_id = 0)
         "SELECT
             chat.id,
             chat.imgs,
-            chat.mittente,
-            chat.destinatario,
+            chat.id_personaggio_mittente,
+            IFNULL(mittente.nome, ?) AS nome_mittente,
+            chat.id_personaggio_destinatario,
+            destinatario.nome AS nome_destinatario,
+            chat.tag_posizione,
             chat.tipo,
             chat.ora,
             chat.testo,
-            personaggio.url_img_chat
+            mittente.url_img_chat
 
         FROM chat
-            INNER JOIN mappa ON mappa.id = chat.stanza
-            LEFT JOIN personaggio ON personaggio.nome = chat.mittente
+            INNER JOIN mappa
+                ON mappa.id = chat.stanza
+
+            LEFT JOIN personaggio AS mittente
+                ON mittente.id_personaggio = chat.id_personaggio_mittente
+
+            LEFT JOIN personaggio AS destinatario
+                ON destinatario.id_personaggio = chat.id_personaggio_destinatario
 
         WHERE chat.id > ?
             AND chat.stanza = ?
@@ -44,7 +53,8 @@ function gdrcd_chat_read_messages($luogo, $last_id = 0)
 
         ORDER BY id ASC",
         [
-            'ii',
+            'sii',
+            'Personaggio Cancellato (Mittente)',
             $last_id,
             $luogo,
         ]
@@ -67,7 +77,7 @@ function gdrcd_chat_read_messages($luogo, $last_id = 0)
 
             $azioni[] = [
                 'id' => $riga_azione['id'],
-                'mittente' => $riga_azione['mittente'],
+                'mittente' => $riga_azione['id_personaggio_mittente'],
                 'azione' => $azione,
             ];
 
@@ -98,8 +108,11 @@ function gdrcd_chat_read_messages($luogo, $last_id = 0)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: null|int,
+ *      nome_destinatario: null|string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -157,8 +170,11 @@ function gdrcd_chat_message_handler($azione)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -188,8 +204,11 @@ function gdrcd_chat_image_format($azione)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -206,7 +225,7 @@ function gdrcd_chat_png_format($azione)
     $chat_body = gdrcd_chat_body_with_colors_component($azione, null);
 
     // formattazione nome del png
-    $chat_png_name = gdrcd_chat_name_component($azione['destinatario']);
+    $chat_png_name = gdrcd_chat_name_component($azione['tag_posizione']);
 
     // Tipologia di azione. Es: N
     $azione_tipo = $azione['tipo'];
@@ -227,8 +246,11 @@ function gdrcd_chat_png_format($azione)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -266,8 +288,11 @@ function gdrcd_chat_master_format($azione)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -313,8 +338,11 @@ function gdrcd_chat_item_format($azione)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -406,8 +434,11 @@ function gdrcd_chat_dice_format($azione)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -450,8 +481,11 @@ function gdrcd_chat_skill_format($azione)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -498,8 +532,11 @@ function gdrcd_chat_stats_format($azione)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -512,23 +549,23 @@ function gdrcd_chat_whisper_format($azione)
     $MESSAGE = $GLOBALS['MESSAGE'];
     $PARAMETERS = $GLOBALS['PARAMETERS'];
 
-    if ($_SESSION['login'] == $azione['destinatario']) {
+    if ($_SESSION['id_personaggio'] == $azione['id_personaggio_destinatario']) {
 
         // l'utente connesso riceve il sussurro
-        $mittente_o_destinatario = $azione['mittente'] .' '. $MESSAGE['chat']['whisper']['by'];
+        $mittente_o_destinatario = $azione['nome_mittente'] .' '. $MESSAGE['chat']['whisper']['by'];
 
-    } elseif ($_SESSION['login'] == $azione['mittente']) {
+    } elseif ($_SESSION['id_personaggio'] == $azione['id_personaggio_mittente']) {
 
         // l'utente connesso ha inviato il sussurro
-        $mittente_o_destinatario = $MESSAGE['chat']['whisper']['to'] .' '. $azione['destinatario'];
+        $mittente_o_destinatario = $MESSAGE['chat']['whisper']['to'] .' '. $azione['nome_destinatario'];
 
     } elseif ($_SESSION['permessi'] >= MODERATOR && $PARAMETERS['mode']['spyprivaterooms'] == 'ON') {
 
         // l'utente connesso può leggere i sussurri di altri giocatori
         // se è almeno MODERATOR e spyprivaterooms è abilitato
-        $mittente_o_destinatario = $azione['mittente']
+        $mittente_o_destinatario = $azione['nome_mittente']
             .' '. $MESSAGE['chat']['whisper']['from_to']
-            .' '. $azione['destinatario'];
+            .' '. $azione['nome_destinatario'];
 
     } else {
 
@@ -560,8 +597,11 @@ function gdrcd_chat_whisper_format($azione)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -590,7 +630,7 @@ function gdrcd_chat_action_format($azione)
     $chat_sender = gdrcd_chat_sender_component($azione);
 
     // formattazione tag
-    $chat_tag = !empty($azione['destinatario'])
+    $chat_tag = !empty($azione['tag_posizione'])
         ? gdrcd_chat_tag_component($azione)
         : '';
 
@@ -622,8 +662,11 @@ function gdrcd_chat_action_format($azione)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -644,8 +687,8 @@ function gdrcd_chat_private_invite_format($azione)
     // decodifica il messaggio
     $body = json_decode($azione['testo'], true);
 
-    // nome utente cacciato dalla chat privata
-    $invited = $body['invited'];
+    // nome utente invitato nella chat privata
+    $invited = $body['invited_name'];
 
     // Tipologia di azione. Es: Z
     $azione_tipo = $azione['tipo'];
@@ -668,8 +711,11 @@ function gdrcd_chat_private_invite_format($azione)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -691,7 +737,7 @@ function gdrcd_chat_private_kick_format($azione)
     $body = json_decode($azione['testo'], true);
 
     // nome utente cacciato dalla chat privata
-    $kicked = $body['kicked'];
+    $kicked = $body['kicked_name'];
 
     // Tipologia di azione. Es: Z
     $azione_tipo = $azione['tipo'];
@@ -714,8 +760,11 @@ function gdrcd_chat_private_kick_format($azione)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -727,6 +776,10 @@ function gdrcd_chat_private_list_format($azione)
 {
     $MESSAGE = $GLOBALS['MESSAGE'];
 
+    if ($azione['id_personaggio_mittente'] != $_SESSION['id_personaggio']) {
+        return null;
+    }
+
     // formattazione orario del messaggio
     $chat_time = gdrcd_chat_time_component($azione);
 
@@ -736,12 +789,12 @@ function gdrcd_chat_private_list_format($azione)
     // Formatta l'elenco degli invitati in chat
     $chat_invitati = $MESSAGE['interface']['administration']['locations']['no_invited'];
 
-    if (!empty($body['invited_list'])) {
+    if (!empty($body['invited_names'])) {
         // Ordina alfabeticamente gli invitati
-        sort($body['invited_list']);
+        sort($body['invited_names']);
 
         // Unisce gli invitati in una stringa separata da virgola
-        $chat_invitati = implode(', ', $body['invited_list']);
+        $chat_invitati = implode(', ', $body['invited_names']);
     }
 
     // Tipologia di azione. Es: Z
@@ -752,7 +805,7 @@ function gdrcd_chat_private_list_format($azione)
         $azione_tipo,
         <<<HTML
             {$chat_time}
-            {$MESSAGE['chat']['warning']['invited_list']}:
+            {$MESSAGE['chat']['warning']['invited_names']}:
             {$chat_invitati}
         HTML
     );
@@ -782,8 +835,11 @@ function gdrcd_chat_message_component($tipo, $azione_html)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -815,8 +871,8 @@ function gdrcd_chat_avatar_component($azione)
             && $PARAMETERS['settings']['chat_avatar']['link']['popup'] == 'ON';
 
         $chat_avatar_url = $isChatAvatarPoupLink
-            ? "javascript:modalWindow('scheda', 'Scheda di ". addslashes($azione['mittente']) ."', 'popup.php?page=scheda&pg=". urlencode($azione['mittente']) ."');"
-            : "main.php?page=scheda&pg=". urlencode($azione['mittente']);
+            ? "javascript:modalWindow('scheda', 'Scheda di ". addslashes($azione['id_personaggio_mittente']) ."', 'popup.php?page=scheda&pg=". urlencode($azione['id_personaggio_mittente']) ."');"
+            : "main.php?page=scheda&pg=". urlencode($azione['id_personaggio_mittente']);
 
         $chat_avatar = <<<HTML
             <a href="{$chat_avatar_url}">{$chat_avatar}</a>
@@ -832,8 +888,11 @@ function gdrcd_chat_avatar_component($azione)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -857,8 +916,11 @@ function gdrcd_chat_time_component($azione)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -892,13 +954,16 @@ function gdrcd_chat_icons_component($azione)
 }
 
 /**
- * Ritorna la formattazione html per il nome del mittente di un messaggio in chat.
+ * Ritorna la formattazione html per il nome del personaggio di un messaggio in chat.
  * Se $azione è un array, formatta il campo 'mittente'; se è una stringa, la usa direttamente.
  *
  * @param string|array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -910,8 +975,8 @@ function gdrcd_chat_icons_component($azione)
 function gdrcd_chat_name_component($azione, $use_filter = true)
 {
     $message = is_array($azione)
-        ? $azione['mittente'] // se $azione è un array formatta 'mittente'
-        : $azione;            // se azione è una stringa la usa com'è
+        ? $azione['nome_mittente']  // se $azione è un array formatta 'nome_mittente'
+        : $azione;                  // se azione è una stringa la usa com'è
 
     if ($use_filter) {
         $message = gdrcd_filter('out', $message);
@@ -923,13 +988,18 @@ function gdrcd_chat_name_component($azione, $use_filter = true)
 }
 
 /**
- * Ritorna la formattazione html per il nome del mittente del messaggio in chat.
+ * Ritorna la formattazione html per il nome del personaggio del messaggio in chat.
+ * Questo componente applica un un link al nome che permette di configuare un sussurro nel
+ * form di invio in chat.
  * Se $azione è un array, formatta il campo 'mittente'; se è una stringa, la usa direttamente.
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -941,8 +1011,8 @@ function gdrcd_chat_name_component($azione, $use_filter = true)
 function gdrcd_chat_sender_component($azione, $use_filter = true)
 {
     $mittente = is_array($azione)
-        ? $azione['mittente'] // se $azione è un array formatta 'mittente'
-        : $azione;            // se azione è una stringa la usa com'è
+        ? $azione['nome_mittente']  // se $azione è un array formatta 'nome_mittente'
+        : $azione;                  // se azione è una stringa la usa com'è
 
     if ($use_filter) {
         $mittente = gdrcd_filter('out', $mittente);
@@ -968,8 +1038,11 @@ function gdrcd_chat_sender_component($azione, $use_filter = true)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -981,8 +1054,8 @@ function gdrcd_chat_sender_component($azione, $use_filter = true)
 function gdrcd_chat_tag_component($azione, $use_filter = true)
 {
     $tag = is_array($azione)
-        ? $azione['destinatario'] // se $azione è un array formatta 'destinatario'
-        : $azione;                // se azione è una stringa la usa com'è
+        ? $azione['tag_posizione']  // se $azione è un array formatta 'tag_posizione'
+        : $azione;                  // se azione è una stringa la usa com'è
 
     if ($use_filter) {
         $tag = gdrcd_filter('out', $tag);
@@ -999,8 +1072,11 @@ function gdrcd_chat_tag_component($azione, $use_filter = true)
  *
  * @param string|array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -1031,8 +1107,11 @@ function gdrcd_chat_body_component($azione, $use_filter = true)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
