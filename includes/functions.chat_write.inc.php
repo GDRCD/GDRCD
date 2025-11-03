@@ -378,7 +378,7 @@ function gdrcd_chat_dice_save(
         );
     }
 
-    // Verifica che il numero di dadi da lanciare sia consentito@return string|int|false
+    // Verifica che il numero di dadi da lanciare sia consentito
     if ($dice_number < 1 || $dice_number > $PARAMETERS['settings']['skills_dices']['max_number']) {
         return gdrcd_api_status_invalid(
             gdrcd_filter_out(
@@ -416,7 +416,7 @@ function gdrcd_chat_dice_save(
     if (
         $dice_threshold !== null
         && (
-            $dice_threshold < 0
+            $dice_threshold < 1
             || $dice_threshold > $dice_faces
         )
     ) {
