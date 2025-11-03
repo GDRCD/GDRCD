@@ -552,20 +552,20 @@ function gdrcd_chat_whisper_format($azione)
     if ($_SESSION['id_personaggio'] == $azione['id_personaggio_destinatario']) {
 
         // l'utente connesso riceve il sussurro
-        $mittente_o_destinatario = $azione['mittente'] .' '. $MESSAGE['chat']['whisper']['by'];
+        $mittente_o_destinatario = $azione['nome_mittente'] .' '. $MESSAGE['chat']['whisper']['by'];
 
     } elseif ($_SESSION['id_personaggio'] == $azione['id_personaggio_mittente']) {
 
         // l'utente connesso ha inviato il sussurro
-        $mittente_o_destinatario = $MESSAGE['chat']['whisper']['to'] .' '. $azione['id_personaggio_destinatario'];
+        $mittente_o_destinatario = $MESSAGE['chat']['whisper']['to'] .' '. $azione['nome_destinatario'];
 
     } elseif ($_SESSION['permessi'] >= MODERATOR && $PARAMETERS['mode']['spyprivaterooms'] == 'ON') {
 
         // l'utente connesso può leggere i sussurri di altri giocatori
         // se è almeno MODERATOR e spyprivaterooms è abilitato
-        $mittente_o_destinatario = $azione['id_personaggio_mittente']
+        $mittente_o_destinatario = $azione['nome_mittente']
             .' '. $MESSAGE['chat']['whisper']['from_to']
-            .' '. $azione['id_personaggio_destinatario'];
+            .' '. $azione['nome_destinatario'];
 
     } else {
 
@@ -971,8 +971,8 @@ function gdrcd_chat_icons_component($azione)
 function gdrcd_chat_name_component($azione, $use_filter = true)
 {
     $message = is_array($azione)
-        ? $azione['id_personaggio_mittente'] // se $azione è un array formatta 'id_personaggio_mittente'
-        : $azione;            // se azione è una stringa la usa com'è
+        ? $azione['nome_mittente']  // se $azione è un array formatta 'nome_mittente'
+        : $azione;                  // se azione è una stringa la usa com'è
 
     if ($use_filter) {
         $message = gdrcd_filter('out', $message);
@@ -1007,8 +1007,8 @@ function gdrcd_chat_name_component($azione, $use_filter = true)
 function gdrcd_chat_sender_component($azione, $use_filter = true)
 {
     $mittente = is_array($azione)
-        ? $azione['id_personaggio_mittente'] // se $azione è un array formatta 'id_personaggio_mittente'
-        : $azione;            // se azione è una stringa la usa com'è
+        ? $azione['nome_mittente']  // se $azione è un array formatta 'nome_mittente'
+        : $azione;                  // se azione è una stringa la usa com'è
 
     if ($use_filter) {
         $mittente = gdrcd_filter('out', $mittente);
