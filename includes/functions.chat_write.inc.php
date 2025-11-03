@@ -1159,7 +1159,7 @@ function gdrcd_chat_private_kick_save(
         : [];
 
     // Se il personaggio non è in elenco, esce con un errore
-    if (!in_array($destinatario, $invitati)) {
+    if (!in_array($personaggio['id_personaggio'], $invitati)) {
         return gdrcd_api_status_invalid($MESSAGE['chat']['error']['already_kicked'] .': '. $destinatario);
     }
 
@@ -1167,10 +1167,10 @@ function gdrcd_chat_private_kick_save(
     //  - verificato che login abbia i permessi per gestire la chat privata
     //  - verificato che il destinatario risulti invitato in chat
 
-    // Rimuove il nome del personaggio dalla lista invitati
+    // Rimuove l'id del personaggio dalla lista invitati
     $invitati = array_filter(
         $invitati,
-        fn($invitato) => $invitato !== $destinatario
+        fn($invitato) => $invitato != $personaggio['id_personaggio']
     );
 
     // Aggiorna la lista invitati sul database
@@ -1186,32 +1186,34 @@ function gdrcd_chat_private_kick_save(
         ]
     );
 
+    $result = [
+        'message' => $testo,
+        'kicked_id' => $personaggio['id_personaggio'],
+        'kicked_name' => $personaggio['nome'],
+        'invited_list' => $invitati,
+    ];
+
     // Invia un messaggio di posta al personaggio cacciato
     gdrcd_stmt(
         'INSERT INTO messaggi ( id_personaggio_mittente, id_personaggio_destinatario, spedito, letto, testo )
         VALUES (?, ?, NOW(), 0, ?)',
         [
             'sss',
-            'System message',
-            $destinatario,
-            $_SESSION['id_personaggio']
+            0,
+            $personaggio['id_personaggio'],
+            $_SESSION['login']
                 .' '. $MESSAGE['chat']['warning']['expelled_message']
                 .' '. $info['nome']
                 ."\n" . $testo
         ]
     );
 
-    $result = [
-        'message' => $testo,
-        'kicked' => $destinatario,
-        'invited_list' => $invitati,
-    ];
-
     // inserisco il messaggio in chat
     gdrcd_chat_db_insert_for_login(
-        $destinatario,
         $tipo,
-        json_encode($result)
+        json_encode($result),
+        null,
+        $personaggio['id_personaggio']
     );
 
     return gdrcd_api_status_created();
