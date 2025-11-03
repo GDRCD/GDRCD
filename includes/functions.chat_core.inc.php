@@ -194,7 +194,7 @@ function gdrcd_chat_room_info($luogo)
  * Include le abilità universali (id_razza = -1) e quelle specifiche
  * della razza del personaggio.
  *
- * @param string $nome Nome del personaggio per cui recuperare le abilità
+ * @param int $id_personaggio ID del personaggio per cui recuperare le abilità
  * @return array<array{
  *  id_abilita: int,
  *  nome: string,
@@ -243,7 +243,7 @@ function gdrcd_chat_player_skills($id_personaggio)
  * Questa funzione chiama internamente gdrcd_chat_player_skills e ritorna
  * l'abilità identificata dallo $skillId fornito
  *
- * @param string $nome Nome del personaggio per cui recuperare le abilità
+ * @param int $id_personaggio ID del personaggio per cui recuperare le abilità
  * @param int $skillId L'ID dell'abilità da recuperare
  * @return null|array{
  *  id_abilita: int,
@@ -297,7 +297,7 @@ function gdrcd_chat_player_stats()
  * Recupera tutti gli oggetti utilizzabili in chat posseduti da un giocatore specifico.
  * Include solo gli oggetti in posizioni > 0 (equipaggiati o nell'inventario).
  *
- * @param string $nome Nome del personaggio per cui recuperare gli oggetti
+ * @param int $id_personaggio ID del personaggio per cui recuperare gli oggetti
  * @return array<array{
  *  id_oggetto: int,
  *  nome: string,
@@ -370,7 +370,7 @@ function gdrcd_chat_player_items($id_personaggio)
  * Questa funzione chiama internamente gdrcd_chat_player_items e ritorna
  * l'oggetto identificato da $itemId tra quelli posseduti dal personaggio $nome.
  *
- * @param string $nome Nome del personaggio per cui recuperare l'oggetto
+ * @param int $id_personaggio Nome del personaggio per cui recuperare l'oggetto
  * @param int $itemId L'ID dell'oggetto da recuperare
  * @return null|array{
  *  id_oggetto: int,
