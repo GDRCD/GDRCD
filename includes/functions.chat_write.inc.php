@@ -1043,7 +1043,7 @@ function gdrcd_chat_private_invite_save(
         : [];
 
     // Se il personaggio è già invitato, esce con un errore
-    if (in_array($destinatario, $invitati)) {
+    if (in_array($personaggio['id_personaggio'], $invitati)) {
         return gdrcd_api_status_invalid($MESSAGE['chat']['error']['already_invited'] .': '. $destinatario);
     }
 
@@ -1052,8 +1052,8 @@ function gdrcd_chat_private_invite_save(
     //  - verificato che il destinatario sia un nome utente valido e realmente esistente
     //  - verificato che il destinatario non risulti già invitato in chat
 
-    // Aggiunge il nome del personaggio all'array degli invitati
-    $invitati[] = $destinatario;
+    // Aggiunge l'id del personaggio invitato all'array degli invitati
+    $invitati[] = $personaggio['id_personaggio'];
 
     // Aggiorna la lista invitati sul database
     gdrcd_stmt(
@@ -1074,9 +1074,9 @@ function gdrcd_chat_private_invite_save(
         VALUES (?, ?, NOW(), 0, ?)',
         [
             'sss',
-            'System message',
-            $destinatario,
-            $_SESSION['id_personaggio']
+            0,
+            $personaggio['id_personaggio'],
+            $_SESSION['login']
                 .' '. $MESSAGE['chat']['warning']['invited_message']
                 .' '. $info['nome']
                 ."\n" . $testo
@@ -1085,7 +1085,8 @@ function gdrcd_chat_private_invite_save(
 
     $result = [
         'message' => $testo,
-        'invited' => $destinatario,
+        'invited_id' => $personaggio['id_personaggio'],
+        'invited_name' => $personaggio['nome'],
         'invited_list' => $invitati,
     ];
 
