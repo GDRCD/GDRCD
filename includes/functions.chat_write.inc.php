@@ -207,7 +207,6 @@ function gdrcd_chat_image_save(
     }
 
     gdrcd_chat_db_insert_for_login(
-        '',
         $tipo,
         $testo
     );
@@ -260,9 +259,9 @@ function gdrcd_chat_png_save(
 
     // inserisco il sussurro in chat
     gdrcd_chat_db_insert_for_login(
-        $nomepng,
         $tipo,
-        $testo
+        $testo,
+        $nomepng
     );
 
     // Tutto a buon fine: status "created" è il modo per indicare che l'operazione ha creato dati nel db
@@ -298,7 +297,6 @@ function gdrcd_chat_master_save(
     }
 
     gdrcd_chat_db_insert_for_login(
-        '',
         $tipo,
         $testo
     );
@@ -471,7 +469,6 @@ function gdrcd_chat_dice_save(
 
     // inserisce nel database l'array convertito in json con tutti i dati sul risultato dei lanci
     gdrcd_chat_db_insert_for_login(
-        '',
         $tipo,
         json_encode($result)
     );
@@ -631,7 +628,6 @@ function gdrcd_chat_stats_save(
 
     // inserisce nel database l'array convertito in json con tutti i dati sul tiro abilità
     gdrcd_chat_db_insert_for_login(
-        '',
         $tipo,
         json_encode($result)
     );
@@ -815,7 +811,6 @@ function gdrcd_chat_skill_save(
 
     // inserisce nel database l'array convertito in json con tutti i dati sul tiro abilità
     gdrcd_chat_db_insert_for_login(
-        '',
         $tipo,
         json_encode($result)
     );
@@ -872,7 +867,6 @@ function gdrcd_chat_item_save(
 
     // inserisce nel database l'array convertito in json con tutti i dati sul tiro abilità
     gdrcd_chat_db_insert_for_login(
-        '',
         $tipo,
         json_encode($result)
     );
@@ -939,9 +933,10 @@ function gdrcd_chat_whisper_save(
 
     // inserisco il sussurro in chat
     gdrcd_chat_db_insert_for_login(
-        $destinatario,
         $tipo,
-        $testo
+        $testo,
+        null,
+        $personaggio['id_personaggio']
     );
 
     // Tutto a buon fine: status "created" è il modo per indicare che l'operazione ha creato dati nel db
@@ -978,9 +973,9 @@ function gdrcd_chat_action_save(
 
     // Salva l'azione nel database
     gdrcd_chat_db_insert_for_login(
-        $tag,
         $tipo,
-        $testo
+        $testo,
+        $tag
     );
 
     // Assegna esperienza
@@ -1096,9 +1091,10 @@ function gdrcd_chat_private_invite_save(
 
     // inserisco il messaggio in chat
     gdrcd_chat_db_insert_for_login(
-        $destinatario,
         $tipo,
-        json_encode($result)
+        json_encode($result),
+        null,
+        $personaggio['id_personaggio']
     );
 
     return gdrcd_api_status_created();
@@ -1249,7 +1245,6 @@ function gdrcd_chat_private_list_save(
 
     // inserisco il messaggio in chat
     gdrcd_chat_db_insert_for_login(
-        '',
         $tipo,
         json_encode($result)
     );
@@ -1260,21 +1255,24 @@ function gdrcd_chat_private_list_save(
 /**
  * Inserisce nel database una riga nella tabella `chat` da parte dell'utente connesso al sito.
  *
- * @param string $tag_o_destinatario il tag o il destinatario appropriati per la tipologia di messaggio
  * @param string $tipo il tipo interno dei messaggi di chat (es: A, M, P etc.)
  * @param string $testo il messaggio da salvare
+ * @param null|string $tag il tag
+ * @param null|int $id_destinatario id del destinatario del messaggio (usato tipicamente per i sussurri)
  * @return void
  */
 function gdrcd_chat_db_insert_for_login(
-    $tag_o_destinatario,
     $tipo,
-    $testo
+    $testo,
+    $tag = null,
+    $id_destinatario = null
 ) {
     gdrcd_chat_db_insert(
         $_SESSION['luogo'],
         [$_SESSION['sesso'], $_SESSION['img_razza']],
         $_SESSION['id_personaggio'],
-        $tag_o_destinatario,
+        $tag,
+        $id_destinatario,
         $tipo,
         $testo
     );
@@ -1285,8 +1283,9 @@ function gdrcd_chat_db_insert_for_login(
  *
  * @param int $stanza Id della stanza della chat
  * @param string[] $imgs array di iconcine da utilizzare
- * @param int $mittente
- * @param int $tag_o_destinatario il tag o il destinatario appropriati per la tipologia di messaggio
+ * @param int $id_mittente
+ * @param null|string $tag il tag
+ * @param null|int $id_destinatario il destinatario appropriati per la tipologia di messaggio
  * @param string $tipo il tipo interno dei messaggi di chat (es: A, M, P etc.)
  * @param string $testo il messaggio da salvare
  * @return void
@@ -1294,20 +1293,22 @@ function gdrcd_chat_db_insert_for_login(
 function gdrcd_chat_db_insert(
     $stanza,
     $imgs,
-    $mittente,
-    $tag_o_destinatario,
+    $id_mittente,
+    $tag,
+    $id_destinatario,
     $tipo,
     $testo
 ) {
     gdrcd_stmt(
-        'INSERT INTO chat (stanza, imgs, id_personaggio_mittente, id_personaggio_destinatario, ora, tipo, testo)
-        VALUES (?, ?, ?, ?, NOW(), ?, ?)',
+        'INSERT INTO chat (stanza, imgs, id_personaggio_mittente, id_personaggio_destinatario, tag_posizione, ora, tipo, testo)
+        VALUES (?, ?, ?, ?, ?, NOW(), ?, ?)',
         [
-            'isiiss',
+            'isiisss',
             $stanza,
             implode(';', $imgs),
-            $mittente,
-            $tag_o_destinatario,
+            $id_mittente,
+            $id_destinatario,
+            $tag,
             $tipo,
             $testo
         ]
