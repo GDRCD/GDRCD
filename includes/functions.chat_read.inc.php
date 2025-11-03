@@ -776,6 +776,10 @@ function gdrcd_chat_private_list_format($azione)
 {
     $MESSAGE = $GLOBALS['MESSAGE'];
 
+    if ($azione['id_personaggio_mittente'] != $_SESSION['id_personaggio']) {
+        return null;
+    }
+
     // formattazione orario del messaggio
     $chat_time = gdrcd_chat_time_component($azione);
 
@@ -785,12 +789,12 @@ function gdrcd_chat_private_list_format($azione)
     // Formatta l'elenco degli invitati in chat
     $chat_invitati = $MESSAGE['interface']['administration']['locations']['no_invited'];
 
-    if (!empty($body['invited_list'])) {
+    if (!empty($body['invited_names'])) {
         // Ordina alfabeticamente gli invitati
-        sort($body['invited_list']);
+        sort($body['invited_names']);
 
         // Unisce gli invitati in una stringa separata da virgola
-        $chat_invitati = implode(', ', $body['invited_list']);
+        $chat_invitati = implode(', ', $body['invited_names']);
     }
 
     // Tipologia di azione. Es: Z
@@ -801,7 +805,7 @@ function gdrcd_chat_private_list_format($azione)
         $azione_tipo,
         <<<HTML
             {$chat_time}
-            {$MESSAGE['chat']['warning']['invited_list']}:
+            {$MESSAGE['chat']['warning']['invited_names']}:
             {$chat_invitati}
         HTML
     );
