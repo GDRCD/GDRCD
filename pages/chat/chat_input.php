@@ -1,6 +1,6 @@
 <?php
 
-    // Diamo un nome a determinati controlli per semplificare la leggibilità di eventuali condizioni
+    // Diamo un nome a determinati controlli per semplificare la leggibilità di alcune condizioni
     $skillsystem_attivo = $PARAMETERS['mode']['skillsystem'] == 'ON';
     $dadi_attivi = $PARAMETERS['mode']['dices'] == 'ON';
     $login_gamemaster = $_SESSION['permessi'] >= GAMEMASTER;
