@@ -1246,12 +1246,41 @@ function gdrcd_chat_private_list_save(
     }
 
     // Converte la stringa invitati in un array
-    $invitati = !empty($info['invitati'])
+    $invitatiIds = !empty($info['invitati'])
         ? explode(',', $info['invitati'])
         : [];
 
+    $invitatiNomi = [];
+
+    $invitatiLength = count($invitatiIds);
+
+    if ($invitatiLength) {
+        $stmt = gdrcd_stmt(
+            'SELECT id_personaggio, nome FROM personaggio WHERE id_personaggio IN(?'. str_repeat(',?', $invitatiLength-1) .')',
+            [
+                str_repeat('i', $invitatiLength),
+                ...$invitatiIds
+            ]
+        );
+
+        $map = [];
+
+        if (gdrcd_query($stmt, 'num_rows') > 0) {
+            while ($row = gdrcd_query($stmt, 'assoc')) {
+                $map[$row['id_personaggio']] = $row['nome'];
+            }
+
+            gdrcd_query($stmt, 'free');
+        }
+
+        foreach ($invitatiIds as $invitatoId) {
+            $invitatiNomi[] = $map[$invitatoId] ?? 'Utente Cancellato #'. $invitatoId;
+        }
+    }
+
     $result = [
-        'invited_list' => $invitati,
+        'invited_list' => $invitatiIds,
+        'invited_names' => $invitatiNomi,
     ];
 
     // inserisco il messaggio in chat
