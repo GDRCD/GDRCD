@@ -23,7 +23,7 @@ if (gdrcd_filter('get', $_POST['action']) == "bookRoom") {
     // Se la stanza è affittabile, allora procedo con la prenotazione
     if ($bookableRoom) {
         // Controllo i soldi in possesso del personaggio
-        $checkPG = gdrcd_query("SELECT soldi FROM personaggio WHERE nome ='".$_SESSION['id_personaggio']."' LIMIT 1");
+        $checkPG = gdrcd_query("SELECT soldi FROM personaggio WHERE id_personaggio ='".$_SESSION['id_personaggio']."' LIMIT 1");
 
         // Imposto il valore minimo delle ore a 1
         $timeRoom = $timeRoom >= 0 ? $timeRoom : 1;
