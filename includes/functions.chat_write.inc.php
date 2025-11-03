@@ -1408,7 +1408,7 @@ function gdrcd_chat_strip_message_symbol($message, $symbol)
  *
  * La funzione ritorna i dati dello stesso oggetto con i valori di numero e cariche aggiornati.
  *
- * @param string $nome Nome del personaggio che consuma l'oggetto
+ * @param int $id_personaggio ID del personaggio che consuma l'oggetto
  * @param array{
  *  id_oggetto: int,
  *  nome: string,
