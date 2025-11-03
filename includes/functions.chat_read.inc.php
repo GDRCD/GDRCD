@@ -265,7 +265,7 @@ function gdrcd_chat_master_format($azione)
 
     // Formatta il testo per l'azione master
     $testo = gdrcd_chat_highlight_user(
-        $_SESSION['id_personaggio'],
+        $_SESSION['login'],
         gdrcd_bbcoder(gdrcd_filter('out', $azione['testo'])),
         true
     );
@@ -1125,7 +1125,7 @@ function gdrcd_chat_body_with_colors_component($azione, $utente = '')
     $message = gdrcd_chat_add_colors(gdrcd_filter('out', $message));
 
     if ($utente === '') {
-        $utente = $_SESSION['id_personaggio'];
+        $utente = $_SESSION['login'];
     }
 
     if ($utente !== null) {
