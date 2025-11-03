@@ -22,16 +22,25 @@ function gdrcd_chat_read_messages($luogo, $last_id = 0)
         "SELECT
             chat.id,
             chat.imgs,
-            chat.mittente,
-            chat.destinatario,
+            chat.id_personaggio_mittente,
+            IFNULL(mittente.nome, ?) AS nome_mittente,
+            chat.id_personaggio_destinatario,
+            destinatario.nome AS nome_destinatario,
+            chat.tag_posizione,
             chat.tipo,
             chat.ora,
             chat.testo,
-            personaggio.url_img_chat
+            mittente.url_img_chat
 
         FROM chat
-            INNER JOIN mappa ON mappa.id = chat.stanza
-            LEFT JOIN personaggio ON personaggio.id_personaggio = chat.id_personaggio_mittente
+            INNER JOIN mappa
+                ON mappa.id = chat.stanza
+
+            LEFT JOIN personaggio AS mittente
+                ON mittente.id_personaggio = chat.id_personaggio_mittente
+
+            LEFT JOIN personaggio AS destinatario
+                ON destinatario.id_personaggio = chat.id_personaggio_destinatario
 
         WHERE chat.id > ?
             AND chat.stanza = ?
@@ -44,7 +53,8 @@ function gdrcd_chat_read_messages($luogo, $last_id = 0)
 
         ORDER BY id ASC",
         [
-            'ii',
+            'sii',
+            'Personaggio Cancellato (Mittente)',
             $last_id,
             $luogo,
         ]
@@ -98,8 +108,11 @@ function gdrcd_chat_read_messages($luogo, $last_id = 0)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: null|int,
+ *      nome_destinatario: null|string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -157,8 +170,11 @@ function gdrcd_chat_message_handler($azione)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -188,8 +204,11 @@ function gdrcd_chat_image_format($azione)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -227,8 +246,11 @@ function gdrcd_chat_png_format($azione)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -266,8 +288,11 @@ function gdrcd_chat_master_format($azione)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -313,8 +338,11 @@ function gdrcd_chat_item_format($azione)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -406,8 +434,11 @@ function gdrcd_chat_dice_format($azione)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -450,8 +481,11 @@ function gdrcd_chat_skill_format($azione)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -498,8 +532,11 @@ function gdrcd_chat_stats_format($azione)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -560,8 +597,11 @@ function gdrcd_chat_whisper_format($azione)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -622,8 +662,11 @@ function gdrcd_chat_action_format($azione)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -668,8 +711,11 @@ function gdrcd_chat_private_invite_format($azione)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -714,8 +760,11 @@ function gdrcd_chat_private_kick_format($azione)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -782,8 +831,11 @@ function gdrcd_chat_message_component($tipo, $azione_html)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -832,8 +884,11 @@ function gdrcd_chat_avatar_component($azione)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -857,8 +912,11 @@ function gdrcd_chat_time_component($azione)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -892,13 +950,16 @@ function gdrcd_chat_icons_component($azione)
 }
 
 /**
- * Ritorna la formattazione html per il nome del mittente di un messaggio in chat.
+ * Ritorna la formattazione html per il nome del personaggio di un messaggio in chat.
  * Se $azione è un array, formatta il campo 'mittente'; se è una stringa, la usa direttamente.
  *
  * @param string|array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -923,13 +984,18 @@ function gdrcd_chat_name_component($azione, $use_filter = true)
 }
 
 /**
- * Ritorna la formattazione html per il nome del mittente del messaggio in chat.
+ * Ritorna la formattazione html per il nome del personaggio del messaggio in chat.
+ * Questo componente applica un un link al nome che permette di configuare un sussurro nel
+ * form di invio in chat.
  * Se $azione è un array, formatta il campo 'mittente'; se è una stringa, la usa direttamente.
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -968,8 +1034,11 @@ function gdrcd_chat_sender_component($azione, $use_filter = true)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -999,8 +1068,11 @@ function gdrcd_chat_tag_component($azione, $use_filter = true)
  *
  * @param string|array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
@@ -1031,8 +1103,11 @@ function gdrcd_chat_body_component($azione, $use_filter = true)
  *
  * @param array{
  *      tipo: string,
- *      mittente: string,
- *      destinatario: string,
+ *      id_personaggio_mittente: int,
+ *      nome_mittente: string,
+ *      id_personaggio_destinatario: int,
+ *      nome_destinatario: string,
+ *      tag_posizione: null|string,
  *      url_img_chat: string,
  *      ora: string,
  *      imgs: string,
