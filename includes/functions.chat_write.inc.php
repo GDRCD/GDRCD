@@ -919,7 +919,7 @@ function gdrcd_chat_whisper_save(
     $destinatario = gdrcd_capital_letter($destinatario);
 
     // Cerca le informazioni sul destinatario nel database
-    $personaggio = gdrcd_chat_player_info($destinatario);
+    $personaggio = gdrcd_chat_player_info_by_name($destinatario);
 
     // se destinatario non esiste nel database, ritorna fallimento
     if ($personaggio === null) {
@@ -1030,7 +1030,7 @@ function gdrcd_chat_private_invite_save(
     $destinatario = gdrcd_capital_letter($destinatario);
 
     // Cerca le informazioni sul destinatario nel database
-    $personaggio = gdrcd_chat_player_info($destinatario);
+    $personaggio = gdrcd_chat_player_info_by_name($destinatario);
 
     // se destinatario non esiste nel database, ritorna fallimento
     if ($personaggio === null) {
@@ -1143,6 +1143,14 @@ function gdrcd_chat_private_kick_save(
 
     // formatta il nome del destinatario.
     $destinatario = gdrcd_capital_letter($destinatario);
+
+    // Cerca le informazioni sul destinatario nel database
+    $personaggio = gdrcd_chat_player_info_by_name($destinatario);
+
+    // se destinatario non esiste nel database, ritorna fallimento
+    if ($personaggio === null) {
+        return gdrcd_api_status_invalid($MESSAGE['chat']['error']['unknown_recipient'] .': '. $destinatario);
+    }
 
     // Converte la stringa invitati in un array
     $invitati = !empty($info['invitati'])
