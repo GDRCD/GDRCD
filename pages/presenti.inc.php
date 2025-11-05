@@ -91,7 +91,7 @@ include('../ref_header.inc.php'); /*Header comune*/
         /** * Fix della query per includere l'uso dell'orario di uscita per capire istantaneamente quando un pg fa logout
          * @author Blancks
          */
-        $query = "SELECT personaggio.id_personaggio, personaggio.nome, personaggio.cognome, personaggio.permessi, personaggio.sesso, personaggio.id_razza, razza.sing_m, razza.sing_f, razza.icon, personaggio.disponibile, personaggio.is_invisible FROM personaggio LEFT JOIN razza ON personaggio.id_razza = razza.id_razza WHERE (personaggio.ora_uscita > personaggio.ora_entrata AND DATE_ADD(personaggio.ora_uscita, INTERVAL 1 MINUTE) > NOW()) OR (personaggio.ora_uscita < personaggio.ora_entrata AND DATE_ADD(personaggio.ultimo_refresh, INTERVAL 4 MINUTE) > NOW() AND DATE_ADD(personaggio.ultimo_refresh, INTERVAL 3 MINUTE) < NOW()) ORDER BY personaggio.ultimo_refresh, personaggio.id_personaggio";
+        $query = "SELECT personaggio.id_personaggio, personaggio.nome, personaggio.cognome, personaggio.permessi, personaggio.sesso, personaggio.id_razza, razza.sing_m, razza.sing_f, razza.icon, personaggio.disponibile, personaggio.is_invisible FROM personaggio LEFT JOIN razza ON personaggio.id_razza = razza.id_razza WHERE (personaggio.ora_uscita > personaggio.ora_entrata AND DATE_ADD(personaggio.ora_uscita, INTERVAL 1 MINUTE) > NOW()) OR (personaggio.ora_uscita < personaggio.ora_entrata AND DATE_ADD(personaggio.ultimo_refresh, INTERVAL 4 MINUTE) > NOW() AND DATE_ADD(personaggio.ultimo_refresh, INTERVAL 3 MINUTE) < NOW()) ORDER BY personaggio.ultimo_refresh, personaggio.nome";
         $result = gdrcd_query($query, 'result');
 
         echo '<div class="luogo">'.$MESSAGE['interface']['logged_users']['logged_out'].'</div>';
@@ -158,7 +158,7 @@ include('../ref_header.inc.php'); /*Header comune*/
         /** * Fix della query per includere l'uso dell'orario di uscita per capire istantaneamente quando il pg non è più connesso
          * @author Blancks
          */
-        $query = "SELECT personaggio.id_personaggio, personaggio.nome, personaggio.cognome, personaggio.permessi, personaggio.sesso, personaggio.id_razza, razza.sing_m, razza.sing_f, razza.icon, personaggio.disponibile, personaggio.is_invisible, mappa.stanza_apparente, mappa.nome as luogo FROM personaggio LEFT JOIN mappa ON personaggio.ultimo_luogo = mappa.id LEFT JOIN razza ON personaggio.id_razza = razza.id_razza WHERE (personaggio.ora_entrata > personaggio.ora_uscita AND DATE_ADD(personaggio.ultimo_refresh, INTERVAL 4 MINUTE) > NOW()) AND personaggio.ultimo_luogo = ".$_SESSION['luogo']." AND personaggio.ultima_mappa= ".$_SESSION['mappa']." ORDER BY personaggio.is_invisible, personaggio.ultimo_luogo, personaggio.id_personaggio";
+        $query = "SELECT personaggio.id_personaggio, personaggio.nome, personaggio.cognome, personaggio.permessi, personaggio.sesso, personaggio.id_razza, razza.sing_m, razza.sing_f, razza.icon, personaggio.disponibile, personaggio.is_invisible, mappa.stanza_apparente, mappa.nome as luogo FROM personaggio LEFT JOIN mappa ON personaggio.ultimo_luogo = mappa.id LEFT JOIN razza ON personaggio.id_razza = razza.id_razza WHERE (personaggio.ora_entrata > personaggio.ora_uscita AND DATE_ADD(personaggio.ultimo_refresh, INTERVAL 4 MINUTE) > NOW()) AND personaggio.ultimo_luogo = ".$_SESSION['luogo']." AND personaggio.ultima_mappa= ".$_SESSION['mappa']." ORDER BY personaggio.is_invisible, personaggio.ultimo_luogo, personaggio.nome";
         $result = gdrcd_query($query, 'result');
 
         $ultimo_luogo_corrente = '';
