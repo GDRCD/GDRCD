@@ -72,7 +72,7 @@ include('../ref_header.inc.php'); /*Header comune*/
             //Icona del genere del pg
             echo '<img class="presenti_ico" src="../imgs/icons/testamini'.$record['sesso'].'.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]).'" />';
             //Nome pg e link alla sua scheda
-            echo ' <a href="../main.php?page=scheda&id_personaggio='.gdrcd_filter('url', $record['id_personaggio']).'" class="link_sheet" target="_top">'.gdrcd_filter('out', $record['nome']);
+            echo ' <a href="../main.php?page=scheda&pg='.gdrcd_filter('url', $record['id_personaggio']).'" class="link_sheet" target="_top">'.gdrcd_filter('out', $record['nome']);
             if(empty($record['cognome']) === false and 0) {
                 echo ' '.gdrcd_filter('out', $record['cognome']);
             }
@@ -222,7 +222,7 @@ include('../ref_header.inc.php'); /*Header comune*/
                 echo '<img class="presenti_ico" src="../imgs/icons/testamini'.$record['sesso'].'.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]).'" />';
 
                 //Nome pg e link alla sua scheda
-                echo ' <a href="../main.php?page=scheda&id_personaggio='.$record['id_personaggio'].'" class="link_sheet" target="_top">'.gdrcd_filter('out', $record['nome']);
+                echo ' <a href="../main.php?page=scheda&pg='.$record['id_personaggio'].'" class="link_sheet" target="_top">'.gdrcd_filter('out', $record['nome']);
                 if(empty($record['cognome']) === false and 0) {
                     echo ' '.gdrcd_filter('out', $record['cognome']);
                 }
