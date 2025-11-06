@@ -296,7 +296,7 @@
                                 <?php if(($_SESSION['id_personaggio'] == $_REQUEST['pg']) || ($_SESSION['permessi'] >= GAMEMASTER)) { ?>
                                     <div class="form_gioco">
                                         <!-- Abbandona -->
-                                        <form action="main.php?page=scheda_equip" method="post">
+                                        <form action="main.php?page=scheda_equip&pg=<?php echo gdrcd_filter('num', $_REQUEST['pg']); ?>" method="post">
                                             <input type="hidden" value="<?php echo gdrcd_filter('out', $_REQUEST['pg']); ?>" name="pg" />
                                             <input type="hidden" value="<?php echo gdrcd_filter('out', $record['nome_oggetto']); ?>" name="checosa" />
                                             <input type="hidden" value="abbandona" name="op" />
@@ -305,7 +305,7 @@
                                             <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['items']['list']['drop']); ?>" />
                                         </form>
                                         <!-- Riponi -->
-                                        <form action="main.php?page=scheda_oggetti" method="post">
+                                        <form action="main.php?page=scheda_oggetti&pg=<?php echo gdrcd_filter('num', $_REQUEST['pg']); ?>" method="post">
                                             <input type="hidden" value="<?php echo gdrcd_filter('out', $_REQUEST['pg']); ?>" name="pg" />
                                             <input type="hidden" value="togli" name="op" />
                                             <input type="hidden" value="<?php echo $record['id_oggetto']; ?>" name="id_oggetto" />
@@ -317,7 +317,7 @@
                                                 /*Se la locazione è libera*/
                                                 if(isset($oggetti[$record['ubicabile']]) === false) { ?>
                                                     <!-- Indossa (se indossabile) -->
-                                                    <form action="main.php?page=scheda_equip" method="post">
+                                                    <form action="main.php?page=scheda_equip&pg=<?php echo gdrcd_filter('num', $_REQUEST['pg']); ?>" method="post">
                                                         <input type="hidden" value="<?php echo gdrcd_filter('out', $_REQUEST['pg']); ?>" name="pg" />
                                                         <input type="hidden" value="indossa" name="op" />
                                                         <input type="hidden" value="<?php echo $record['ubicabile']; ?>" name="posizione" />
@@ -327,7 +327,7 @@
                                                 <?php } //if
                                                 if(isset($oggetti[2]) === false) { ?>
                                                     <!-- Impugna DX -->
-                                                    <form action="main.php?page=scheda_equip" method="post">
+                                                    <form action="main.php?page=scheda_equip&pg=<?php echo gdrcd_filter('num', $_REQUEST['pg']); ?>" method="post">
                                                         <input type="hidden" value="<?php echo gdrcd_filter('out', $_REQUEST['pg']); ?>" name="pg" />
                                                         <input type="hidden" value="indossa" name="op" />
                                                         <input type="hidden" value="2" name="posizione" />
@@ -337,7 +337,7 @@
                                                 <?php } //if
                                                 if(isset($oggetti[3]) === false) { ?>
                                                     <!-- Impugna SX-->
-                                                    <form action="main.php?page=scheda_equip" method="post">
+                                                    <form action="main.php?page=scheda_equip&pg=<?php echo gdrcd_filter('num', $_REQUEST['pg']); ?>" method="post">
                                                         <input type="hidden" value="<?php echo gdrcd_filter('out', $_REQUEST['pg']); ?>" name="pg" />
                                                         <input type="hidden" value="indossa" name="op" />
                                                         <input type="hidden" value="3" name="posizione" />
@@ -346,7 +346,7 @@
                                                     </form>
                                                 <?php } //if
                                             } else { ?>
-                                                <form action="main.php?page=scheda_equip" method="post">
+                                                <form action="main.php?page=scheda_equip&pg=<?php echo gdrcd_filter('num', $_REQUEST['pg']); ?>" method="post">
                                                     <input type="hidden" value="<?php echo gdrcd_filter('out', $_REQUEST['pg']); ?>" name="pg" />
                                                     <input type="hidden" value="indossa" name="op" />
                                                     <input type="hidden" value="1" name="posizione" />
@@ -364,7 +364,7 @@
 
                                         $characters = gdrcd_query($query, 'result');
                                         if(gdrcd_query($characters, 'num_rows') > 0) { ?>
-                                            <form action="main.php?page=scheda_equip" method="post">
+                                            <form action="main.php?page=scheda_equip&pg=<?php echo gdrcd_filter('num', $_REQUEST['pg']); ?>" method="post">
                                                 <input type="hidden" value="<?php echo gdrcd_filter('out', $_REQUEST['pg']); ?>" name="pg" />
                                                 <input type="hidden" value="<?php echo $record['id_oggetto']; ?>" name="id_oggetto" />
                                                 <input type="hidden" value="<?php echo $record['cariche']; ?>" name="cariche" />
