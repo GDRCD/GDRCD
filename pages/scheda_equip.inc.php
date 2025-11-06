@@ -26,8 +26,8 @@
                 }
                 gdrcd_query($query);
                 /*Registro l'evento*/
-                $nome = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_REQUEST['pg']) . "'");
-                gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES ('".gdrcd_filter('in', $_REQUEST['pg'])."', '".gdrcd_filter('out', $nome)."' ,'".$_SESSION['login']."', NOW(), ".BONIFICO.", ' -".gdrcd_filter('in', $_POST['checosa'])."')");
+                $personaggio = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_REQUEST['pg']) . "'");
+                gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES ('".gdrcd_filter('in', $_REQUEST['pg'])."', '".gdrcd_filter('out', $personaggio['nome'])."' ,'".$_SESSION['login']."', NOW(), ".BONIFICO.", ' -".gdrcd_filter('in', $_POST['checosa'])."')");
                 echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['warning']['done']).'</div>';
                 break;
             case 'cedi': /*Cessione di un oggetto ad un'altro PG*/
@@ -52,9 +52,9 @@
                     }
                     gdrcd_query($query);
                     /*Registro l'evento*/
-                    
-                    $nome = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_POST['give_item']) . "'");
-                    gdrcd_query("INSERT INTO log (id_personaggio,nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES ('".$_POST['give_item']."', '".gdrcd_filter('in', $nome['nome'])."' , '".$_SESSION['login']."', NOW(), ".BONIFICO.", '".gdrcd_filter('in', $_POST['checosa'])."')");
+
+                    $personaggio = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_POST['give_item']) . "'");
+                    gdrcd_query("INSERT INTO log (id_personaggio,nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES ('".$_POST['give_item']."', '".gdrcd_filter('in', $personaggio['nome'])."' , '".$_SESSION['login']."', NOW(), ".BONIFICO.", '".gdrcd_filter('in', $_POST['checosa'])."')");
 
                     echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['warning']['done']).'</div>';
                 } else {
