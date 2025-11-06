@@ -293,7 +293,7 @@
                             </td>
                             <!-- Comandi elenco -->
                             <td class="casella_controlli">
-                                <?php if(($_SESSION['login'] == $_REQUEST['pg']) || ($_SESSION['permessi'] >= GAMEMASTER)) { ?>
+                                <?php if(($_SESSION['id_personaggio'] == $_REQUEST['pg']) || ($_SESSION['permessi'] >= GAMEMASTER)) { ?>
                                     <div class="form_gioco">
                                         <!-- Abbandona -->
                                         <form action="main.php?page=scheda_equip" method="post">
