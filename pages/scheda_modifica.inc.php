@@ -45,14 +45,14 @@
              */
             $blocca_media = (strtolower($_POST['blocca_media']) == 'on') ? 1 : 0;
 
-            if ($_SESSION['login'] == $_REQUEST['pg'])
+            if ($_SESSION['id_personaggio'] == $_REQUEST['pg'])
             {
                 $_SESSION['blocca_media'] = $blocca_media;
             }
 
 
             /*Se l'utente ha richiesto di modificare la propria scheda*/
-            if ((gdrcd_filter('get', $_REQUEST['pg']) == $_SESSION['login']) && (gdrcd_filter('get',
+            if ((gdrcd_filter('get', $_REQUEST['pg']) == $_SESSION['id_personaggio']) && (gdrcd_filter('get',
                         $_POST['op']) == 'modify')
             )
             {
@@ -89,7 +89,7 @@
                         gdrcd_filter('fullurl',
                             $_POST['modifica_url_img'])) . "', url_img_chat = '" . gdrcd_filter('in',
                         gdrcd_filter('fullurl',
-                            $_POST['modifica_url_img_chat'])) . "', online_status = '" . $online_state . "' WHERE nome = '" . gdrcd_filter('in',
+                            $_POST['modifica_url_img_chat'])) . "', online_status = '" . $online_state . "' WHERE id_personaggio = '" . gdrcd_filter('in',
                         $_REQUEST['pg']) . "'");
 
                 echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['warning']['modified']) . '</div>';
@@ -102,7 +102,7 @@
             {
                 gdrcd_query("UPDATE personaggio SET stato = '" . gdrcd_filter('in',
                         $_POST['modifica_status']) . "', salute = " . gdrcd_filter('num',
-                        $_POST['modifica_salute']) . " WHERE nome = '" . gdrcd_filter('in', $_REQUEST['pg']) . "'");
+                        $_POST['modifica_salute']) . " WHERE id_personaggio = '" . gdrcd_filter('in', $_REQUEST['pg']) . "'");
 
                 echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['warning']['modified']) . '</div>';
 
@@ -118,7 +118,7 @@
                 gdrcd_query("UPDATE personaggio SET esilio = '" . gdrcd_filter('num',
                         $_POST['year']) . '-' . gdrcd_filter('num', $_POST['month']) . '-' . gdrcd_filter('num',
                         $_POST['day']) . "', data_esilio=NOW(), autore_esilio = '" . $_SESSION['login'] . "', motivo_esilio = '" . gdrcd_filter('in',
-                        $_POST['causale']) . "' WHERE nome = '" . gdrcd_filter('in',
+                        $_POST['causale']) . "' WHERE id_personaggio = '" . gdrcd_filter('in',
                         $_REQUEST['pg']) . "' AND permessi <=" . $_SESSION['permessi'] . "");
 
                 echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['warning']['done']) . '</div>';
@@ -132,7 +132,7 @@
         } else
         {
             /*Carico le informazioni del PG*/
-            $record = gdrcd_query("SELECT descrizione, storia, affetti, cognome, online_status, url_img, url_img_chat, url_media, blocca_media, stato, salute FROM personaggio WHERE nome='" . gdrcd_filter('get',
+            $record = gdrcd_query("SELECT descrizione, storia, affetti, cognome, online_status, url_img, url_img_chat, url_media, blocca_media, stato, salute FROM personaggio WHERE id_personaggio='" . gdrcd_filter('get',
                     $_REQUEST['pg']) . "'");
         }
 
@@ -148,7 +148,7 @@
         { ?>
             <div class="panels_box">
                 <?php
-                if ($_SESSION['login'] == $_REQUEST['pg'])
+                if ($_SESSION['id_personaggio'] == $_REQUEST['pg'])
                 {
                     ?>
                     <div class="form_gioco">
