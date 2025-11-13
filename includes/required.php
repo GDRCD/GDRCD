@@ -9,6 +9,7 @@ if(file_exists(dirname(__FILE__).'/config-overrides.php')){
 
 require_once dirname(__FILE__) . '/DbMigration/DbMigrationEngine.class.php';
 require_once dirname(__FILE__) . '/DbMigration/DbMigration.class.php';
+require_once dirname(__FILE__) . '/StmtResultData.class.php';
 
 require_once(dirname(__FILE__) . '/../vocabulary/' . $PARAMETERS['languages']['set'] . '.vocabulary.php');
 require_once(dirname(__FILE__) . '/functions.inc.php');

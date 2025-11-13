@@ -30,6 +30,16 @@ local.properties
 .buildpath
 
 
+#############
+## Netbeans
+#############
+
+/nbproject/private/
+nbproject/project.xml
+nbproject/project.properties
+nbproject/configs/GDRCD.properties
+
+
 #################
 ## Visual Studio
 #################
@@ -116,7 +126,6 @@ Generated_Code #added for RIA/Silverlight projects
 _UpgradeReport_Files/
 Backup*/
 UpgradeLog*.XML
-
 
 
 ############
