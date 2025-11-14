@@ -9,14 +9,13 @@ require_once('includes/required.php');
 $handleDBConnection = gdrcd_connect();
 
 # Controllo del login
-if(!empty($_SESSION['login'])){
-    $me = gdrcd_filter('in',$_SESSION['login']);
+if(!empty($_SESSION['id_personaggio'])){
 
     $table_check = gdrcd_query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{$PARAMETERS['database']['database_name']}' AND TABLE_NAME = 'personaggio';");
 
     if(!empty($table_check)) {
 
-        $check = gdrcd_query("SELECT count(nome) as TOT FROM personaggio WHERE ora_entrata > ora_uscita AND nome='{$me}' LIMIT 1");
+        $check = gdrcd_query("SELECT count(id_personaggio) as TOT FROM personaggio WHERE ora_entrata > ora_uscita AND id_personaggio = '" . gdrcd_filter('in',$_SESSION['id_personaggio']) . "' LIMIT 1");
 
         if ($check['TOT'] == 0) {
             session_destroy();

@@ -15,7 +15,7 @@ $strInnerPage = "";
  */
 if( ! empty($_GET['map_id'])) {
     $_SESSION['mappa'] = (int) $_GET['map_id'];
-    gdrcd_query("UPDATE personaggio SET ultima_mappa=".gdrcd_filter('num', $_SESSION['mappa']).", ultimo_luogo=-1 WHERE nome = '".gdrcd_filter('in', $_SESSION['login'])."'");
+    gdrcd_query("UPDATE personaggio SET ultima_mappa=".gdrcd_filter('num', $_SESSION['mappa']).", ultimo_luogo=-1 WHERE id_personaggio = '".gdrcd_filter('in', $_SESSION['id_personaggio'])."'");
 }
 
 /** * Ottengo la pagina da visualizzare nel blocco principale
@@ -36,7 +36,7 @@ elseif(isset($_REQUEST['dir']) && is_numeric($_REQUEST['dir'])) {
         $_REQUEST['id_map'] = $_SESSION['mappa'];
     }
 
-    gdrcd_query("UPDATE personaggio SET ultimo_luogo=".gdrcd_filter('num', $_REQUEST['dir'])." WHERE nome='".gdrcd_filter('in', $_SESSION['login'])."'");
+    gdrcd_query("UPDATE personaggio SET ultimo_luogo=".gdrcd_filter('num', $_REQUEST['dir'])." WHERE id_personaggio = '".gdrcd_filter('in', $_SESSION['id_personaggio'])."'");
 }
 /** * Caso di fix
  * se non ci sono variabili via url, si ripristinano dei valori di default
@@ -48,7 +48,7 @@ else {
 }
 /**    * Fine caso di Fix */
 
-if(gdrcd_controllo_esilio($_SESSION['login']) === true) {
+if(gdrcd_controllo_esilio($_SESSION['id_personaggio']) === true) {
     session_destroy();
 } else {
     require('layouts/'.$PARAMETERS['themes']['kind_of_layout'].'_frames.php');
