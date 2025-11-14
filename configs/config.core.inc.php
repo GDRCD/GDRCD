@@ -1,27 +1,41 @@
 <?php
-/**
- * CONFIGURAZIONE DI GDRCD 5.5
- * @author MrFaber
- * @author Blancks
- * @author Breaker
- */
 
 /**
- * HELP [-- IMPORTANTE!!! --]: Il corrente file contiene un elenco di parametri essenziali alla configurazione ed al funzionamento di GDRCD. E' richiesto che vengano configurati i parametri alla voce "parametri di connessione" per eseguire una corretta connessione al database, altrimenti GDRCD non è in grado di operare. I parametri alle voci successive hanno la funzione di personalizzare il sito in funzione delle esigenze del proprio gioco. In particolare è possibile selezionare il tema dell'interfaccia del sito, personalizzare alcuni nomi chiave all'interno del gioco, e selezionare quali funzioni attivare o disattivare tra le opzioni di gioco disponibile. Per ogni voce è presente un help esaustivo. Nel dubbio, leggerlo con attenzione.
+ * CONFIGURAZIONI CORE DI GDRCD
+ *
+ * ATTENZIONE - LEGGERE PRIMA DI MODIFICARE:
+ *
+ * Questo file contiene le configurazioni di base di GDRCD.
+ * NON VIENE ASSOLUTAMENTE SUGGERITA LA MODIFICA DI QUESTO FILE,
+ * tranne in situazioni particolari e solo da utenti esperti.
+ *
+ * PROCEDURA DI CONFIGURAZIONE:
+ *
+ * 1. Copia il file "config.sample.inc.php" dalla directory principale
+ * 2. Rinominalo in "config.inc.php"
+ * 3. Modifica solo i parametri che ti servono nel nuovo file
+ *
+ * PARAMETRI INDISPENSABILI:
+ * - Connessione database (username, password, nome database, host)
+ * - Informazioni sito (nome, URL, email webmaster)
+ * - Tema e layout
+ *
+ * Il sistema carica dapprima questo file con tutti i valori di default,
+ * poi legge il file config.inc.php e sovrascrive solo con ciò che è lì specificato.
+ * Se non è presente un file config.inc.php, il sistema userà i valori di default.
+ *
+ * Ogni opzione è spiegata nei commenti HELP che trovi più avanti.
  */
 
 error_reporting(E_ERROR | E_PARSE);
 
-/** * Se il personaggio è connesso avvio la gestione dei suoi spostamenti nella land
+/**
+ * Se il personaggio è connesso avvio la gestione dei suoi spostamenti nella land
  * Il controllo va messo qui e non in main poichè in main risulterebbe trovarsi dopo l'inclusione del config
  * dando vita ad un bug sul tastino di aggiornamento della pagina corrente.
- * @author Blancks
  */
-
 if( ! empty($_SESSION['login'])) {
-    /** * Aggiornamento della posizione nella mappa del pg
-     * @author Blancks
-     */
+    // Aggiornamento della posizione nella mappa del pg
     if(isset($_REQUEST['map_id']) && is_numeric($_REQUEST['map_id'])) {
         $_SESSION['luogo'] = -1;
         $_SESSION['mappa'] = $_REQUEST['map_id'];
@@ -36,135 +50,152 @@ if( ! empty($_SESSION['login'])) {
 /* INFORMAZIONI SU GDRCD */
 $PARAMETERS['info']['GDRCD'] = '5.6.0.6'; //versione di GDRCD
 
+
 /* PARAMETRI DI CONNESSIONE */
+/**
+ * HELP:
+ * Sostituire le diciture inserite tra le virgolette con i parametri di connessione al Database del proprio dominio.
+ * Essi sono forniti al momento della registrazione. Se non si e' in possesso di tali parametri consultare le FAQ
+ * della homepage dell'host che fornisce il dominio. Se non le si trovano li contattare lo staff dell'host.
+ */
 $PARAMETERS['database']['username'] = 'gdrcd';            //nome utente del database
 $PARAMETERS['database']['password'] = 'gdrcd';            //password del database
 $PARAMETERS['database']['database_name'] = 'gdrcd';    //nome del database
 $PARAMETERS['database']['url'] = 'localhost';        //indirizzo ip del database
 
 
-/* HELP: Sostituire le diciture inserite tra le virgolette con i parametri di connessione al Database del proprio dominio. Essi sono forniti al momento della registrazione. Se non si e' in possesso di tali parametri consultare le FAQ della homepage dell'host che fornisce il dominio. Se non le si trovano li contattare lo staff dell'host. */
-
 /* INFORMAZIONI SUL SITO */
+/**
+ * HELP: I parametri di questa voce compaiono come informazioni sulla homepage.
+ */
 $PARAMETERS['info']['site_name'] = 'GDRCD 5.6.0.6'; //nome del gioco
 $PARAMETERS['info']['site_url'] = 'http://gdrcd.test/'; //indirizzo URL del gioco
 $PARAMETERS['info']['webmaster_name'] = 'Webmaster'; //nome e cognome del responsabile del sito
 $PARAMETERS['info']['webmaster_email'] = 'webmaster@gdrhost.it'; //email ufficiale del webmaster (è visibile in homepage)
 $PARAMETERS['info']['homepage_name'] = 'Homepage'; //nome con il quale si indica la prima pagina visualizzata
 $PARAMETERS['info']['dbadmin_name'] = 'Admin DB'; //nome del responsabile del database
-/* HELP: I parametri di questa voce compaiono come informazioni sulla homepage. */
 
 
 /* SCELTA DELLA LINGUA */
+/**
+ * HELP: Per definire un diverso vocabolario creare una copia del file /vocabulary/IT-it.vocabulary.php nella cartella vocabulary.
+ * Il nome del file deve essere [nome].vocabulary.php, dove la stringa [nome] può essere scelta e deve essere il valore specificato
+ * in $PARAMETER['languages']['set'].
+ */
 $PARAMETERS['languages']['set'] = 'IT-it'; //lingua italiana
-/* HELP: Per definire un diverso vocabolario creare una copia del file /vocabulary/IT-it.vocabulary.php nella cartella vocabulary. Il nome del file deve essere [nome].vocabulary.php, dove la stringa [nome] può essere scelta e deve essere il valore specificato in $PARAMETER['languages']['set']. */
-
 
 /* SCELTA DEL TEMA */
 // HOMEPAGE
 $PARAMETERS['themes']['homepage'] = 'advanced'; //tema in uso
 // MAINPAGE
 $PARAMETERS['themes']['current_theme'] = 'advanced'; //tema in uso
-//$PARAMETERS['themes']['current_theme'] = 'medieval';
 
 /**
- * Inserendo i nomi dei temi in questo elenco è possibile rendere disponibili agli utenti temi alternativi
- * rispetto a quello di default
- * Il primo elemento di ogni riga deve corrispondere al nome della cartella in cui è contenuto il tema
- * in themes/<nome tema>
+ * Inserendo i nomi dei temi in questo elenco è possibile rendere disponibili agli utenti temi alternativi rispetto a quello di default
+ * Il primo elemento di ogni riga deve corrispondere al nome della cartella in cui è contenuto il tema in themes/<nome tema>
  * Il secondo elemento è il nome che verrà presentato agli utenti durante la scelta
  *
- * Se non si vuole dare gli utenti la possibilità di scegliere temi alternativi, è sufficiente non impostare
- * alcun tema in questa variabile
+ * Se non si vuole dare gli utenti la possibilità di scegliere temi alternativi, è sufficiente non impostare alcun tema in questa variabile
  *
- * NOTA: le pagine esterne del sito, cioè quelle visualizzate prima del login saranno sempre visualizzate con
- * il tema di default
+ * NOTA: le pagine esterne del sito, cioè quelle visualizzate prima del login saranno sempre visualizzate con il tema di default
  */
 $PARAMETERS['themes']['available'] = array(
     'advanced' => 'Tema "Advanced" GDRCD',
     //'il_mio_tema_preferito' => 'Il mio tema troppo figo'
 );
 
-/* Attiva nel frame l'avviso in caso di nuovi messaggi privati e/o bacheche */
+
+/* NUOVI MESSAGGI E ATTIVITA' NEL FORUM */
+/**
+ * HELP:
+ * ON: attiva il controllo di nuovi messaggi e nuove attività nel forum
+ * OFF: disattiva il controllo di nuovi messaggi e nuove attività nel forum
+ */
 $PARAMETERS['mode']['check_forum'] = 'ON';
-$PARAMETERS['text']['check_forum']['new'] = '(Nuovo)'; // Mettendo FALSE o lasciandolo vuoto, non si vedrà il messaggio
 $PARAMETERS['mode']['check_messages'] = 'ON';
 
 /**
+ * HELP:
+ * Testo che apparirà accanto al link del forum se sono presenti nuove attività
+ * Mettendo FALSE o lasciandolo vuoto, non si vedrà il messaggio
+ */
+$PARAMETERS['text']['check_forum']['new'] = '(Nuovo)'; // Mettendo FALSE o lasciandolo vuoto, non si vedrà il messaggio
+
+
+/**
  * SCELTA DEL TIPO DI LAYOUT
- * Tutti i layout sono cross-browser, compatibili cioè con tutti i browser.
- * Il css di ogni singolo layout è disponibile nel file del layout nella cartella "layouts"
- * se avete intenzione di editarli fatelo con cura
- * @author Blancks
- **** Descrizione dei tipi di frames_layout selezionabili:
- * left-right: [ LAYOUT DI DEFAULT ] layout a frames con colonne fisse a destra e sinistra
- * * Questo layout consente di abilitare e di usare left_column e right_column per decidere quali moduli caricare e
- *     dove
- * left-top: Layout a frames con colonna fissa a sinistra e riga fissa in alto, contenuti in basso adattabili
- * * Questo layout consente di abilitare e di usare left_column e top_column per decidere quali moduli caricare e dove
- * left-bottom: Layout a frames con colonna fissa a sinistra e riga fissa in basso, contenuti in alto adattabili
- * * Questo layout consente di abilitare e di usare left_column e bottom_column per decidere quali moduli caricare e
- *     dove top-bottom: Layout a frames con riga fissa in alto e riga fissa in basso, contenuti al centro
- * * Questo layout consente di abilitare e di usare top_column e bottom_column per decidere quali moduli caricare e
- *     dove
  *
- * * AVVERTENZA: ricordare di ordinare il css dei moduli di modo che sostino bene, su di una riga, altrimenti è normale
- * * avere problemi di visualizzazione
- * left-top-right: Layout a frames con colonna fissa a sinistra e a destra e riga fissa in alto, contenuti in basso al
- *     centro adattabili
- * * Questo layout consente di abilitare e di usare left_column, top_column e right_column per decidere quali moduli
- *     caricare e dove
+ * Tutti i layout sono cross-browser e compatibili con tutti i browser.
+ * Il CSS di ogni singolo layout è disponibile nel file corrispondente nella cartella "layouts".
+ * Se avete intenzione di modificarli, fatelo con cura.
  *
- * * AVVERTENZA: ricordare di ordinare il css dei moduli di modo che sostino bene sulla riga superiore, altrimenti è
- *     normale
- * * avere problemi di visualizzazione
- * left-right-bottom: Layout a frames con colonna fissa a sinistra e a destra e riga fissa in basso, contenuti in alto
- *     al centro adattabili
- * * Questo layout consente di abilitare e di usare left_column, bottom_column e right_column per decidere quali moduli
- *     caricare e dove
+ * DESCRIZIONE DEI TIPI DI LAYOUT DISPONIBILI:
  *
- * * AVVERTENZA: ricordare di ordinare il css dei moduli di modo che sostino bene sulla riga superiore, altrimenti è
- *     normale
- * * avere problemi di visualizzazione
- * left-top-bottom: Layout a frames con colonna fissa a sinistra e riga fissa in basso e in alto, contenuti al centro
- *     adattabili
- * * Questo layout consente di abilitare e di usare left_column, bottom_column e top_column per decidere quali moduli
- *     caricare e dove
+ * left-right (LAYOUT DI DEFAULT)
+ *   Layout a frames con colonne fisse a sinistra e destra
+ *   Consente di usare left_column e right_column per decidere quali moduli caricare e dove
  *
- * * AVVERTENZA: ricordare di ordinare il css dei moduli di modo che sostino bene sulla riga superiore, altrimenti è
- *     normale
- * * avere problemi di visualizzazione
- * left-top-right-bottom: Layout a frames con colonna fissa a sinistra e a destra e riga fissa in basso e in alto,
- *     contenuti al centro adattabili
- * * Questo layout consente di abilitare e di usare left_column, bottom_column, top_column e right_column per decidere
- *     quali moduli caricare e dove
+ * left-top
+ *   Layout a frames con colonna fissa a sinistra e riga fissa in alto, contenuti in basso adattabili
+ *   Consente di usare left_column e top_column per decidere quali moduli caricare e dove
  *
- * * AVVERTENZA: ricordare di ordinare il css dei moduli di modo che sostino bene sulla riga superiore e inferiore,
- *     altrimenti è normale
- * * avere problemi di visualizzazione
- * left: layout a frames con una colonna di sinistra fissa e contenuti adattabili
- * * Questo layout consente di abilitare e di usare solo left_column per caricare i moduli (menu, messaggi, presenti
- *     etc) right: Layout a frames con una colonna di destra fissa e contenuto adattablile
- * * Questo layout consente di abilitare e di usare solo right_column per caricare i moduli
- * top: Layout a frames con una riga in alto e contenuti adattabili in basso
- * * Questo layout consente di abilitare e di usare solo top_column per caricare i moduli
+ * left-bottom
+ *   Layout a frames con colonna fissa a sinistra e riga fissa in basso, contenuti in alto adattabili
+ *   Consente di usare left_column e bottom_column per decidere quali moduli caricare e dove
  *
- * * AVVERTENZA: ricordare di ordinare il css dei moduli di modo che sostino bene, su di una riga, altrimenti è normale
- * * avere problemi di visualizzazione
- * bottom: Layout a frames con una riga in basso e contenuti adattabili in alto
- * * Questo layout consente di abilitare e di usare solo bottom_column per caricare i moduli
+ * top-bottom
+ *   Layout a frames con riga fissa in alto e riga fissa in basso, contenuti al centro
+ *   Consente di usare top_column e bottom_column per decidere quali moduli caricare e dove
+ *   AVVERTENZA: ordinare il CSS dei moduli in modo che si adattino bene su una riga
  *
- * * AVVERTENZA: ricordare di ordinare il css dei moduli di modo che sostino bene, su di una riga, altrimenti è normale
- * * avere problemi di visualizzazione
+ * left-top-right
+ *   Layout a frames con colonna fissa a sinistra e destra e riga fissa in alto, contenuti in basso al centro
+ *   Consente di usare left_column, top_column e right_column per decidere quali moduli caricare e dove
+ *   AVVERTENZA: ordinare il CSS dei moduli in modo che si adattino bene sulla riga superiore
  *
+ * left-right-bottom
+ *   Layout a frames con colonna fissa a sinistra e destra e riga fissa in basso, contenuti in alto al centro
+ *   Consente di usare left_column, bottom_column e right_column per decidere quali moduli caricare e dove
+ *   AVVERTENZA: ordinare il CSS dei moduli in modo che si adattino bene sulla riga inferiore
+ *
+ * left-top-bottom
+ *   Layout a frames con colonna fissa a sinistra e righe fisse in alto e in basso, contenuti al centro
+ *   Consente di usare left_column, bottom_column e top_column per decidere quali moduli caricare e dove
+ *   AVVERTENZA: ordinare il CSS dei moduli in modo che si adattino bene sulle righe superiore e inferiore
+ *
+ * left-top-right-bottom
+ *   Layout completo con colonne fisse a sinistra e destra e righe fisse in alto e in basso, contenuti al centro
+ *   Consente di usare left_column, bottom_column, top_column e right_column per decidere quali moduli caricare e dove
+ *   AVVERTENZA: ordinare il CSS dei moduli in modo che si adattino bene su tutte le righe
+ *
+ * left
+ *   Layout semplice con una colonna di sinistra fissa e contenuti adattabili
+ *   Consente di usare solo left_column per caricare i moduli (menu, messaggi, presenti, etc.)
+ *
+ * right
+ *   Layout semplice con una colonna di destra fissa e contenuti adattabili
+ *   Consente di usare solo right_column per caricare i moduli
+ *
+ * top
+ *   Layout semplice con una riga in alto fissa e contenuti adattabili in basso
+ *   Consente di usare solo top_column per caricare i moduli
+ *   AVVERTENZA: ordinare il CSS dei moduli in modo che si adattino bene su una riga
+ *
+ * bottom
+ *   Layout semplice con una riga in basso fissa e contenuti adattabili in alto
+ *   Consente di usare solo bottom_column per caricare i moduli
+ *   AVVERTENZA: ordinare il CSS dei moduli in modo che si adattino bene su una riga
  */
 $PARAMETERS['themes']['kind_of_layout'] = 'left-right';
 
 
 /*CONFIGURAZIONE DELLE COLONNE*/
-
-// ON: è attiva la colonna/riga specificata
-// OFF: è disattiva
+/**
+ * HELP:
+ * Ogni colonna o riga può essere attivata o disattivata a seconda del layout scelto.
+ * ON: la colonna/riga è attiva
+ * OFF: la colonna/riga è disattivata
+ */
 $PARAMETERS['top_column']['activate'] = 'OFF';
 $PARAMETERS['bottom_column']['activate'] = 'OFF';
 $PARAMETERS['left_column']['activate'] = 'ON';
@@ -186,6 +217,10 @@ $PARAMETERS['right_column']['box']['frame_presenti']['page'] = 'frame_presenti';
 
 
 /* NOMI CHIAVE DEL GIOCO */
+/**
+ * HELP:
+ * I nomi chiave sono i termini con i quali ci si riferisce, all'interno del gioco, ad alcune figure ricorrenti, come il forum interno o lo staff del sito.
+ */
 $PARAMETERS['names']['users_name']['sing'] = 'Utente'; //nome singolare degli utenti
 $PARAMETERS['names']['users_name']['plur'] = 'Utenti'; //nome plurale degli utenti
 $PARAMETERS['names']['currency']['sing'] = 'Moneta'; //nome singolare della valuta nel gioco
@@ -227,14 +262,17 @@ $PARAMETERS['names']['stats']['car4'] = 'Saggezza';
 $PARAMETERS['names']['stats']['car5'] = 'Percezioni';
 $PARAMETERS['names']['stats']['hitpoints'] = 'Punti ferita';
 
-/* HELP: I nomi chiave sono i termini con i quali ci si riferisce, all'interno del gioco, ad alcune figure ricorrenti, come il forum interno o lo staff del sito.*/
-
 
 /* DATA DELL'AMBIENTAZIONE */
+/**
+ * HELP:
+ * L'offset della data viene sommato all'anno corrente per ottenere l'anno desiderato per il gioco.
+ * Es: Se il gioco si svolge nel 1290 e l'anno corrente e' il 2010 allora l'offset necessario è 1290-2010= -720, nel caso del 2120 l'offset e' +110.
+ *
+ * Il sistema potrebbe risultare incoerente per gli anni bisestili, e' consiglibile che lo sfasamento tenga conto della posizione dell'anno corrente nel corrente quadriennio.
+ */
 $PARAMETERS['date']['offset'] = 0;
 $PARAMETERS['date']['base_temperature'] = -4;//temperatura minima assoluta in gradi.
-
-/* HELP: L'offset della data viene sommato all'anno corrente per ottenere l'anno desiderato per il gioco. Es: Se il gioco si svolge nel 1290 e l'anno corrente e' il 2010 allora l'offset necessario è 1290-2010= -720, nel caso del 2120 l'offset e' +110. Il sistema potrebbe risultare incoerente per gli anni bisestili, e' consiglibile che lo sfasamento tenga conto della posizione dell'anno corrente nel corrente quadriennio.*/
 
 
 /* OPZIONI DEL GIOCO */
@@ -257,8 +295,10 @@ $PARAMETERS['settings']['cars_sum'] = 40;//Punteggio totale da distribuire tra l
 $PARAMETERS['settings']['view_logs'] = 10; //Numero di log visualizzato.
 $PARAMETERS['settings']['auto_salary'] = 'OFF'; //ON per attivare l'accredito automatico dello stipendio al primo login
 
+
+/* ATTESA DI RICONNESSIONE */
 /**
- * Attesa di riconnessione
+ * HELP:
  * Imposta l'intervallo di attesa per la riconessione, in modo da evitare i doppi login.
  * Il valore è espresso in secondi (300 = 5 minuti)
  * Se il valore è impostato a 0, il sistema non effettua alcun controllo
@@ -266,66 +306,69 @@ $PARAMETERS['settings']['auto_salary'] = 'OFF'; //ON per attivare l'accredito au
 $PARAMETERS['settings']['reconnection_cooldown'] = 300;
 
 
-
-/** * Abilitazione dell'audio in land
- * @author Blancks
+/* ABILITAZIONE AUDIO IN LAND */
+/**
+ * HELP:
+ * L'abilitazione dell'audio in land consente di riprodurre suoni in determinate occasioni, come l'arrivo di un nuovo messaggio privato o di un nuovo messaggio in chat.
+ * ON: abilita l'uso dell'audio
+ * OFF: disabilita l'uso dell'audio
  */
 $PARAMETERS['mode']['allow_audio'] = 'ON';
-//ON:abilita l'audio per le missive e nella scheda dei personaggi
-//OFF: disabilita l'uso dell'audio
 
-/** * Abilitazione dell'audio in land
- * @author jan90
- */
-$PARAMETERS['mode']['allow_new_chat_audio'] = 'ON';
-//ON: abilita l'audio per i nuovi messaggi in chat
-//OFF: disabilita l'uso dell'audio
-
-/** * Tipi di file audio concessi in land, la lista è semplice: [estensione_file] = mimetype
+/**
+ * HELP:
+ * Tipi di file audio concessi in land, la lista è semplice: [estensione_file] = mimetype
  * Per disabilitare i suoni sugli utenti mettere su OFF la voce relativa nei gruppi di abilitazione poco più sotto
- * @author Blancks
  */
 $PARAMETERS['settings']['audiotype']['.mp3'] = 'audio/mpeg';
 $PARAMETERS['settings']['audiotype']['.mid'] = 'audio/x-mid';
 $PARAMETERS['settings']['audiotype']['.midi'] = 'audio/x-mid';
 $PARAMETERS['settings']['audiotype']['.wav'] = 'audio/x-wav';
 
-
-/** * nome del file audio usato per il suono dei nuovi messaggi in arrivo
- * il file DEVE trovarsi nella cartella sounds
- * il file DEVE essere in uno dei formati concessi per l'uso
- * per non usare file audio per le nuove missive, semplicemente lasciare vuoto il campo
+/**
+ * HELP:
+ * nome del file audio usato per il suono dei nuovi messaggi in arrivo
+ * - il file DEVE trovarsi nella cartella sounds
+ * - il file DEVE essere in uno dei formati concessi per l'uso
+ * - per non usare file audio per le nuove missive, semplicemente lasciare vuoto il campo
  *
  * AudioController
  * è possibile inserire suoni diversi per le varie tipologia di notifica
  * nel caso si volesse introdurre una nuova tipologia di notifica, è sufficiente aggiungere un nuovo parametro in coda
  * e impostargli come nome 'audio_new_LABELNOTIFICA', dove LABELNOTIFICA corrisponde a quello passato in AudioController
- * @author Blancks
  */
 $PARAMETERS['settings']['audio_new_messages'] = 'beep.wav';
 $PARAMETERS['settings']['audio_new_chat'] = 'beep.wav';
 
 
-/**    * Dadi che compaiono nella tendina, solo se i dadi sono abilitati!
- * @author Blancks
+/* ABILITAZIONE DADI IN CHAT */
+/**
+ * HELP:
+ * Abilita o disabilita l'uso dei dadi in chat
+ * ON: abilita l'uso dei dadi in chat
+ * OFF: disabilita l'uso dei dadi in chat
  */
 $PARAMETERS['mode']['dices'] = 'ON';
-//ON: E' attivato il tiro di dado.
-//OFF: Non è attivato il tiro di dado
 
 /**
+ * HELP:
  * Numero di facce del dado da usare per il "Tiro su Caratteristica" in chat.
  * E' possibile configurare NULL per disattivare l'uso del dado nel tiro caratteristica
  */
 $PARAMETERS['settings']['stats_dice'] = 20;
 
 /**
+ * HELP:
  * Numero di facce del dado da usare per il "Tiro su Abilità" in chat
  * E' possibile configurare NULL per disattivare l'uso del dado nel tiro abilità
  */
 $PARAMETERS['settings']['skill_dice'] = 20;
 
-/* HELP: é possibile aggiungere la possibilità di usare altri tipi di dado implementando questa sezione. E' possibile anche ridurre la scelta dei possibili tipi di dado semplicemente rimuovendo una riga qui.*/
+/**
+ * HELP:
+ * E' possibile aggiungere la possibilità di usare altri tipi di dado implementando questa sezione.
+ * E' possibile anche ridurre la scelta dei possibili tipi di dado semplicemente rimuovendo una riga qui.
+ */
 $PARAMETERS['settings']['skills_dices']['faces']['d4'] = 4;
 $PARAMETERS['settings']['skills_dices']['faces']['d6'] = 6;
 $PARAMETERS['settings']['skills_dices']['faces']['d8'] = 8;
@@ -343,208 +386,326 @@ $PARAMETERS['settings']['skills_dices']['min_modifier'] = -100;
 // Massimo modificatore consentito da applicare alla somma dei dadi lanciati
 $PARAMETERS['settings']['skills_dices']['max_modifier'] = 100;
 
-/**    * Fine dadi */
 
-
-/**    * Configurazione avatar da chat
- * @author Blancks
+/* CONFIGURAZIONE AVATAR CHAT */
+/**
+ * HELP:
+ * Abilita o disabilita l'uso degli avatar in chat
+ * ON: abilita l'uso degli avatar in chat
+ * OFF: disabilita l'uso degli avatar in chat
  */
 $PARAMETERS['mode']['chat_avatar'] = 'ON';
-//ON:abilita gli avatar da chat e la possibilità di specificarli in scheda
-//OFF disabilita
 
 $PARAMETERS['settings']['chat_avatar']['width'] = 50;    # Dimensione in pixel della larghezza dell'immagine consentita
 $PARAMETERS['settings']['chat_avatar']['height'] = 50;    # Dimensione in pixel dell'altezza dell'imagine consentita
 
+/**
+ * HELP:
+ * Permette di rendere cliccabile l'avatar da chat ed aprire così la scheda del personaggio in questione (!! non funziona nel chat_save)
+ * ON: abilita l'apertura della scheda del personaggio tramite click dell'avatar da chat
+ * OFF: disabilita l'apertura della scheda del personaggio tramite click dell'avatar da chat
+ */
 $PARAMETERS['settings']['chat_avatar']['link']['mode'] = 'ON';
-// Permette di rendere cliccabile l'avatar da chat ed aprire così la scheda del personaggio in questione (!! non funziona nel chat_save)
-//ON: abilita l'apertura della scheda del personaggio tramite click dell'avatar da chat
-//OFF disabilita
 
+/**
+ * HELP:
+ * Se è abilitata l'apertura della scheda del personaggio dall'avatar da chat, permette di scegliere se aprire la pagina in un pop up o sulla pagina corrente
+ * ON: la scheda del personaggio viene aperta in una modale
+ * OFF: la scheda del personaggio viene aperta sulla pagina corrente
+ */
 $PARAMETERS['settings']['chat_avatar']['link']['popup'] = 'OFF';
-// Se è abilitata l'apertura della scheda del personaggio dall'avatar da chat, permette di aprire la pagina in un pop
-//ON: la scheda del personaggio viene aperta in una modale
-//OFF la scheda del personaggio viene aperta sulla pagina corrente
 
 
-/** * uso di una tooltip di preview per le descrizioni sulla mappa
- * @author Blancks
+/* CONFIGURAZIONE TOOLTIP MAPPA */
+/**
+ * HELP:
+ * Uso di una tooltip di preview per le descrizioni sulla mappa
+ * ON: abilita delle tooltip sui link in mappa che mostrano la descrizione del luogo in anteprima
+ * OFF: non abilita le tooltip
  */
 $PARAMETERS['mode']['map_tooltip'] = 'ON';
-//ON:abilita delle tooltip sui link in mappa che mostrano la descrizione del luogo in anteprima
-//OFF:non abilita le tooltip
 
 $PARAMETERS['settings']['map_tooltip']['offset_y'] = 20;    # offset verticale della tip dalla posizione del cursore
 $PARAMETERS['settings']['map_tooltip']['offset_x'] = 20;    # offset orizzontale della tip dalla posizione del cursore
 
 
-/** * Parametri per l'incremento dell'esperienza tramite caratteri scritti
+/* PARAMETRI PER L'INCREMENTO DELL'ESPERIENZA TRAMITE CARATTERI SCRITTI */
+/**
+ * HELP:
+ * ON: abilita l'incremento dei punti esperienza tramite i caratteri scritti in chat.
+ * OFF: disabilita l'incremento dei punti esperienza tramite i caratteri scritti in chat.
  */
 $PARAMETERS['mode']['exp_by_chat'] = 'OFF';
-//ON: abilita l'incremento dei punti esperienza tramite i caratteri scritti in chat.
-//OFF: disabilita l'incremento dei punti esperienza tramite i caratteri scritti in chat.
 
+/**
+ * HELP:
+ * Numero di caratteri necessari al fine di aggiungere punti esperienza.
+ * Se l'incremento dell'esperienza è abilitato e il numero caratteri è 0 allora si aggiungono punti esperienza ogni volta che si scrive un carattere.
+ */
 $PARAMETERS['settings']['exp_by_chat']['number'] = '1000';
-// Numero di caratteri necessari al fine di aggiungere punti esperienza.
-// Se l'incremento dell'esperienza è abilitato e il numero caratteri è 0 allora si aggiungono punti esperienza ogni volta che si scrive un carattere.
+
+/**
+ * HELP:
+ * Numero di punti da assegnare quando si superano i caratteri necessari.
+ * Impostare 0 nel caso si vuole dare 1 punto ogni volta che si raggiungono i caratteri dichiarati prima.
+ */
 $PARAMETERS['settings']['exp_by_chat']['value'] = '0';
-//Numero di punti da assegnare quando si superano i caratteri necessari.
-//Impostare 0 nel caso si vuole dare 1 punto ogni volta che si raggiungono i caratteri dichiarati prima.
 
+/**
+ * HELP:
+ * ON: abilita l'incremento dei punti esperienza tramite i caratteri scritti in chat pubblica.
+ * OFF: disabilita l'incremento dei punti esperienza tramite i caratteri scritti in chat pubblica.
+ */
 $PARAMETERS['mode']['exp_in_private'] = 'ON';
-//ON: abilita l'incremento dei punti esperienza tramite i caratteri scritti in chat privata.
-//OFF: disabilita l'incremento dei punti esperienza tramite i caratteri scritti in chat privata.
 
-/** * Parametri per il BBCode
+
+/* CONFIGURAZIONE BBCode */
+/**
+ * HELP:
+ * ON: abilita l'uso del bbcode obbligatorio per la formattazione delle aree del forum
+ * OFF: consente di usare html, filtrato delle sue componenti nocive, per la modifica dei campi del forum
  */
+$PARAMETERS['mode']['forum_bbcode'] = 'ON';
 $PARAMETERS['mode']['user_bbcode'] = 'ON';
-//ON:abilita l'uso del bbcode obbligatorio per la formattazione delle area affetti e background della scheda
-//OFF:consente di usare html, filtrato delle sue componenti nocive, per la modifica dei campi
 
-$PARAMETERS['settings']['forum_bbcode']['type'] = 'bbd';
-// bbd : viene abilitato l'uso del plugin "BBDecoder" per la funzionalità del bbcode
-// native : viene usato la scarna formattazione bbcode di base del gdrcd
-# NOTA: nel forum o si sceglie il bbd o la funzione nativa di GDRCD5.1. Non è possibile includere html filtrato.
-
-
-/** * Le seguenti impostazioni sono valide solo se il bbcode viene abilitato.
- * @author Blancks
+/**
+ * HELP:
+ * Le seguenti impostazioni sono valide solo se il bbcode viene abilitato.
+ * bbd : viene abilitato l'uso del plugin "BBDecoder" per la funzionalità del bbcode
+ * native : viene usato la scarna formattazione bbcode di base del gdrcd
+ *
+ * NOTA: nel forum o si sceglie il bbd o la funzione nativa di GDRCD5.1. Non è possibile includere html filtrato
  */
+$PARAMETERS['settings']['forum_bbcode']['type'] = 'bbd';
 $PARAMETERS['settings']['user_bbcode']['type'] = 'bbd';
-// bbd : viene abilitato l'uso del plugin "BBDecoder" per la funzionalità del bbcode
-// native : viene usato la scarna formattazione bbcode di base del gdrcd
 
-/** * I seguenti parametri di configurazione sono validi se viene selezionato il modulo 'bbd' e il bbcode è attivo
- * @author Blancks
+/**
+ * HELP:
+ * ON: abilita l'uso del plugin "BBDecoder" per la funzionalità del bbcode
+ * OFF: disabilita l'uso del plugin "BBDecoder"
  */
 $PARAMETERS['settings']['bbd']['free_html'] = 'ON';
-//ON: consente di usare assieme al bbcode anche la formattazione html di base.
-//OFF: si possono usare solo le tag del bbcode a parentesi quadre
 
+/**
+ * HELP:
+ * ON: accetta SOLO i link per le immagini derivanti da imageshack
+ * OFF: accetta link per le immagini da tutti gli indirizzi
+ */
 $PARAMETERS['settings']['bbd']['imageshack'] = 'OFF';
-//ON: accetta SOLO i link per le immagini derivanti da imageshack
-//OFF: accetta link per le immagini da tutti gli indirizzi
 
-/** * HELP: NON TUTTI I SERVIZI DI HOSTING SUPPORTANO IL RIDIMENSIONAMENTO DELLE IMMAGINI.
+/**
+ * HELP:
+ * Rimodimensionamento automatico delle immagini caricate tramite bbcode.
+ * Le immagini che superano i limiti di altezza o larghezza vengono ridimensionate automaticamente.
+ *
+ * NON TUTTI I SERVIZI DI HOSTING SUPPORTANO IL RIDIMENSIONAMENTO DELLE IMMAGINI.
  * IN QUESTO CASO IL RIDIMENSIONAMENTO NON SARA' APPLICATO.
  */
-$PARAMETERS['settings']['bbd']['image_max_width'] = 400;
-// Il parametro definisce le dimensioni massime in LARGHEZZA che un immagine può assumere, se sono superate l'immagine viene ridimensionata
+$PARAMETERS['settings']['bbd']['image_max_width'] = 400; // Larghezza massima
+$PARAMETERS['settings']['bbd']['image_max_height'] = 600; // Altezza massima
 
-$PARAMETERS['settings']['bbd']['image_max_height'] = 600;
-// Il parametro definisce le dimensioni massime in ALTEZZA che un immagine può assumere, se sono superate l'immagine viene ridimensionata
-
+/**
+ * HELP:
+ * ON: consente l'uso del bbtag [youtube][/youtube] per l'inclusione di video da youtube.
+ * OFF: non consente l'uso
+ */
 $PARAMETERS['settings']['bbd']['youtube'] = 'ON';
-//ON: cconsente l'abilitazione del bbtag [youtube][/youtube] per l'inclusione di video da youtube.
-//OFF: non consente l'uso
 
-
-/** * Tipi di estensioni consentiti per le immagini che i giocatori possono caricare in scheda o nel forum tramite il bbd.
- * @author Blancks
+/**
+ * HELP:
+ * Tipi di estensioni consentiti per le immagini che i giocatori possono caricare in scheda o nel forum tramite il bbd.
  */
 $PARAMETERS['settings']['bbd']['images_ext'][] = 'jpg';
 $PARAMETERS['settings']['bbd']['images_ext'][] = 'jpeg';
 $PARAMETERS['settings']['bbd']['images_ext'][] = 'png';
 $PARAMETERS['settings']['bbd']['images_ext'][] = 'gif';
 
-
+/* PARAMETRI PER HTML FILTRATO */
 /**
- * Parametri per tutti i casi in cui viene usato HTML filtrato
+ * HELP:
  * Controlla quanto pesantemente filtrare il codice HTML per ragioni di sicurezza. Ci sono 2 livelli:
  * HTML_FILTER_BASE: filtra solo le cose più pericolose, come gli iframe, gli object e javascript
  * HTML_FILTER_HIGH: filtra anche tutte le immagini
  */
 $PARAMETERS['settings']['html'] = HTML_FILTER_BASE;
 
-/** * Avviso periodico di cambio pass, funzione pel ready (H)
- * @author Blancks
+/* AVVISO PERIODO DI CAMBIO PASSWORD */
+/**
+ * HELP:
+ * ON: abilita l'avviso di cambio password ogni tot periodo
+ * OFF: disabilita l'avviso di cambio password ogni tot periodo
  */
 $PARAMETERS['mode']['alert_password_change'] = 'ON';
-//ON: ogni sei mesi l'utente è avvisato mediante un messaggio nel suo profilo personale a cambiare password
-//OFF: nessuna segnalazione di avviso di cambio password ogni tot periodo
 
-/** * Solo se 'alert_password_change' è impostato su ON:
+/**
+ * HELP:
+ * Solo se 'alert_password_change' è impostato su ON:
+ * ON: fa comparire l'avviso di cambio password anche se appena iscritti, così da invitare a modificare la password generata autonomamente per l'iscrizione
+ * OFF: non avverte l'utente appena iscritto di cambiare la password di default assegnatagli
  */
 $PARAMETERS['settings']['alert_password_change']['alert_from_signup'] = 'OFF';
-//ON: fa comparire l'avviso di cambio password anche se appena iscritti, così da invitare a modificare la password generata autonomamente per l'iscrizione
-//OFF: non avverte l'utente appena iscritto di cambiare la password di default assegnatagli
 
 
-/* HELP: Le opzioni del gioco presentano alcune scelte di tipo tecnico per la funzionalità del gioco, come la quantità iniziale di monete di un personaggio oppure il numero di messaggi visualizzati in una sola pagina nel servizio di messaggistica interna. */
-/* ABILITA/DISABILITA funzioni */
+/* OPZIONI TECNICHE DEL GIOCO */
+
+/**
+ * HELP:
+ * ON: i messaggi nuovi della chat compaiono dal basso verso l'alto
+ * OFF: i messaggi nuovi della chat compaiono dall'alto verso il basso
+ */
 $PARAMETERS['mode']['chat_from_bottom'] = 'OFF';
-//ON: i messaggi nuovi della chat compaiono dal basso verso l'alto
-//OFF: i messaggi nuovi della chat compaiono dall'alto verso il basso
+
+/**
+ * HELP:
+ * ON: gli oggetti dei personaggi possono essere ceduti fra loro solo se entrambi online e nella stessa locazione
+ * OFF: gli oggetti dei personaggi possono essere ceduti fra loro anche se uno dei due non è online e indipendentemente dalla locazione
+ */
 $PARAMETERS['mode']['give_only_if_online'] = 'ON';
-//ON: gli oggetti dei personaggi possono essere ceduti fra loro solo se entrambi online e nella stessa locazione
-//OFF: gli oggetti dei personaggi possono essere ceduti fra loro anche se uno dei due non è online e indipendentemente dalla locazione
+
+/**
+ * HELP:
+ * ON: nel modulo di login nella land mostra un checkbox che consente a scelta dell'utente di aprire il gdr in una pagina popup
+ * OFF: il gdr si apre nella pagina completa del browser
+ */
 $PARAMETERS['mode']['popup_choise'] = 'ON';
-//ON:nel modulo di login nella land mostra un checkbox che consente a scelta dell'utente di aprire il gdr in una pagina popup
-//OFF:il gdr si apre nella pagina completa del browser
+
+/**
+ * HELP:
+ * ON: il titolo della pagina annuncerà l'arrivo di nuovi messaggi privati
+ * OFF: il titolo della pagina non subirà alcun cambiamento
+ */
 $PARAMETERS['mode']['alert_pm_via_pagetitle'] = 'ON';
-//ON:il titolo della pagina annuncerà l'arrivo di nuovi messaggi privati
-//OFF:il titolo della pagina non subirà alcun cambiamento
+
+/**
+ * HELP:
+ * ON: abilita la modifica per gli utenti di un campo che sarà poi visualizzato nell'elenco dei presenti mediante tooltip, se abilitato si applicano i parametri di configurazione dell'offset usati per il tooltip della mappa
+ * OFF: nega tale possibilità
+ */
 $PARAMETERS['mode']['user_online_state'] = 'ON';
-//ON:abilita la modifica per gli utenti di un campo che sarà poi visualizzato nell'elenco dei presenti mediante tooltip, se abilitato si applicano i parametri di configurazione dell'offset usati per il tooltip della mappa.
-//OFF: nega tale possibilità
+
+/**
+ * HELP:
+ * ON: abilita un menù a tendina che trasporta velocemente fra mappe o locazioni
+ * OFF: lo disabilita
+ */
 $PARAMETERS['mode']['gotomap_list'] = 'ON';
-//ON:abilita un menù a tendina che trasporta velocemente fra mappe o locazioni
-//OFF:lo disabilita
+
+/**
+ * HELP:
+ * ON: Il personaggio viene automaticamente loggato nel luogo dove si trovava al momento del logout
+ * OFF: Il personaggio non viene loggato nel luogo dove si trovava al momento del logout
+ */
 $PARAMETERS['mode']['log_back_location'] = 'OFF';
-//ON: Il personaggio viene automaticamente loggato nel luogo dove si trovava al momento del logout.
+
+/**
+ * HELP:
+ * ON: I link dell'elenco presenti non permettono al personaggio di saltare da una mappa all'altra
+ * OFF: I link dell'elenco presenti permettono al personaggio di saltare da una mappa all'altra
+ */
 $PARAMETERS['mode']['mapwise_links'] = 'OFF';
-//ON: I link dell'elenco presenti non permettono al personaggio di saltare da una mappa all'altra.
-//OFF: I link dell'elenco presenti permettono al personaggio di saltare da una mappa all'altra
+
+/**
+ * HELP:
+ * ON: Il meteo è generato automaticamente
+ * OFF: Il meteo è inserito manualmente, mappa per mappa. Se le mappe sono significativamente distanti, geograficamente, questa opzione dovrebbe essere impostata ad OFF
+ */
 $PARAMETERS['mode']['auto_meteo'] = 'ON';
-//ON: Il meteo è generato automaticamente.
-//OFF: Il meteo è inserito manualmente, mappa per mappa. Se le mappe sono significativamente distanti, geograficamente, questa opzione dovrebbe essere impostata ad OFF.
+
+/**
+ * HELP:
+ * ON: È attivato il sistema di gioco con punteggi, abilità e tiri di dado
+ * OFF: È attivato il sistema di gioco solo interpretativo
+ */
 $PARAMETERS['mode']['skillsystem'] = 'ON';
-//ON: E' attivato il sistema di gioco con punteggi, abilità e tiri di dado.
-//OFF: E' attivato il sistema di gioco solo interpretativo
+
+/**
+ * HELP:
+ * ON: Non è permesso l'uso di codici html nella documentazione del gioco
+ * OFF: È permesso l'uso di codici html nella documentazione del gioco (questa opzione potrebbe compromettere la sicurezza del sito)
+ */
 $PARAMETERS['mode']['filterdocuments'] = 'OFF';
-//ON: Non e' permesso l'uso di codici html nella documentazione del gioco.
-//OFF: E' permesso l'uso di codici html nella documentazione del gioco (questa opzione potrebbe compromettere la sicurezza del sito).
+
+/**
+ * HELP:
+ * ON: In fase di registrazione la password viene inviata per email
+ * OFF: In fase di registrazione la password viene visualizzata nella pagina di conferma
+ */
 $PARAMETERS['mode']['emailconfirmation'] = 'ON';
-//ON: In fase di registrazione la password viene inviata per email.
-//OFF:  In fase di registrazione la password viene visualizzata nella pagina di conferma.
+
+/**
+ * HELP:
+ * ON: In fase di iscrizione è presente un link alla descrizione della razza
+ * OFF: In fase di iscrizione non è presente un link alla descrizione della razza (Se il gioco non prevede razze e la funzione razza è utilizzata in altro modo, come professione, nazionalità o altro scegliere OFF)
+ */
 $PARAMETERS['mode']['racialinfo'] = 'ON';
-//ON: In fase di iscrizione e' presente un link alla descrizione della razza.
-//OFF: In fase di iscrizione non è presente un link alla descrizione della razza (Se il gioco non prevede razze e la funzione razza è utilizzata in altro modo, come professione, nazionalità o altro scegliere OFF).
+
+/**
+ * HELP:
+ * ON: In chat sono visualizzate le icone relative a sesso e razza del pg
+ * OFF: In chat non sono visualizzate le icone relative a sesso, razza e gilda del pg
+ */
 $PARAMETERS['mode']['chaticons'] = 'ON';
-//ON: In chat sono visualizzate le icone relative a sesso e razza del pg.
-//OFF: In chat non sono visualizzate le icone relative a sesso, razza e gilda del pg.
+
+/**
+ * HELP:
+ * ON: I messaggi istantanei tra giocatori appaiono nei log della scheda
+ * OFF: I messaggi istantanei tra giocatori non appaiono nei log della scheda
+ */
 $PARAMETERS['mode']['spymessages'] = 'ON';
-//ON: I messaggi istantanei tra giocatori appaiono nei log della scheda
-//OFF: I messaggi istantanei tra giocatori non appaiono nei log della scheda
+
+/**
+ * HELP:
+ * ON: Il gioco prevede stanze private temporanee prenotabili dai giocatori
+ * OFF: Il gioco non prevede stanze private prenotabili dai giocatori
+ */
 $PARAMETERS['mode']['privaterooms'] = 'ON';
-//ON: Il gioco prevede stanze private temporanee prenotabili dai giocatori.
-//ON: Il gioco non prevede stanze private prenotabili dai giocatori.
+
+/**
+ * HELP:
+ * ON: Gli amministratori possono leggere e scrivere nelle stanze private altrui
+ * OFF: Gli amministratori non possono leggere e scrivere nelle stanze private altrui
+ */
 $PARAMETERS['mode']['spyprivaterooms'] = 'OFF';
-//ON: Gli amministratori possono leggere e scrivere nelle stanze private altrui.
-//OFF:  Gli amministratori non possono leggere e scrivere nelle stanze private altrui.
+
+/**
+ * HELP:
+ * ON: È abilitato il pulsante Salva chat
+ * OFF: È disabilitato il pulsante Salva chat
+ */
 $PARAMETERS['mode']['chatsave'] = 'ON';
-//ON: E' abilitato il pulsante Salva chat.
-//OFF: E' disabilitato il pulsante Salva chat.
+
+/**
+ * HELP:
+ * ON: È abilitato il pulsante Salva chat per le chat private, SCONSIGLIATO
+ * OFF: È disabilitato il pulsante Salva chat per le chat private
+ */
 $PARAMETERS['mode']['chatsavepvt'] = 'OFF';
-//ON: E' abilitato il pulsante Salva chat per le chat private, SCONSIGLIATO.
-//OFF: E' disabilitato il pulsante Salva chat per le chat private.
+
+/**
+ * HELP:
+ * ON: Salva le chat automaticamente sulla land e fornisce il link per visualizzarla
+ * OFF: Non salva le chat in land
+ */
 $PARAMETERS['mode']['chatsave_link'] = 'ON';
-//ON: Salva le chat automaticamente sulla land e fornisce il link per visualizzarla.
-//OFF: Non salva le chat in land.
+
+/**
+ * HELP:
+ * ON: Crea un file html e lo fa scaricare dall'utente
+ * OFF: Non crea nessun file html che viene scaricato
+ */
 $PARAMETERS['mode']['chatsave_download'] = 'OFF';
-//ON: Crea un file html e lo fa scaricare dall'utente.
-//OFF: Non crea nessun file html che viene scaricato.
 
 /* HELP: Le voci di questa categoria abilitano o disabilitano funzioni presenti nel gioco. Ad esempio, se non si desidera che il personaggio si riconnetta nello stesso luogo di gioco in cui si è disconnesso, bensi' nella mappa, occorre impostare in OFF la relativa voce */
 
 
 /* CLASSIFICAZIONE PEGI */
-/* HELP:
-        Per visualizzare le icone stile pegi in homepage rimuovere i commenti davanti alle voci ( il  // )
-        Il PEGI non è una risorsa gratuita, le icone sono disabilitate di base perchè per adoperarle è necessaria una licenza che si ACQUISTA.
-
-        La funzionalità rimane pertanto per consentire il facile inserimento delle vostre iconcine personalizzate.
-*/
+/**
+ * HELP:
+ * Per visualizzare le icone stile pegi in homepage rimuovere i commenti davanti alle voci ( il  // )
+ * Il PEGI non è una risorsa gratuita, le icone sono disabilitate di base perchè per adoperarle è necessaria una licenza che si ACQUISTA.
+ *
+ * La funzionalità rimane pertanto per consentire il facile inserimento delle vostre iconcine personalizzate.
+ */
 //$PARAMETERS['pegi']['violenza']['image_file']='117.gif';
 //$PARAMETERS['pegi']['violenza']['text']='Gioco che contiene scene di violenza';
 //$PARAMETERS['pegi']['droghe']['image_file']='112.gif';
@@ -572,9 +733,8 @@ $PARAMETERS['mode']['chatsave_download'] = 'OFF';
 //$PARAMETERS['pegi']['18+']['image_file']='156.gif';
 //$PARAMETERS['pegi']['18+']['text']='Per un pubblico adulto';
 
-/* HELP: Decommentare (rimuovere //) una coppia immagine-testo, fra quelle elencate sopra, fa apparire il corrispondente simbolo PEGI in homepage. E' necessario decommentare sia la riga corrispondente all'immagine che quella corrispondente al testo */
 
-
+/* COSTRUZIONE OPZIONI MENU */
 /**
  * HELP [-- IMPORTANTE!!! --]:
  * Le seguenti voci configurano i menu' opzioni interni al gioco. Specificare un diverso testo visualizzato (text)
@@ -629,6 +789,14 @@ $PARAMETERS['mode']['chatsave_download'] = 'OFF';
  * $PARAMETERS['secondo_menu']['map']['class'] = 'custom_class'; //Aggiunge una classe
  */
 
+/**
+ * HELP:
+ * Queste voci compariranno nel menu di gioco. E' possibile scegliere se farle comparire come immagini o semplice testo. Se, per ciascuna voce, è specificato il campo image_file allora la voce di menu compare come immagine e text viene interpretato come testo alternativo all'immagine.
+ * text - Testo visualizzato come voce di menu o testo alternativo dell'immagine
+ * url - Destinazione del link. E' sconsigliato modificare questa voce.
+ * image_file - File dell'immagine che appare come voce di menu. L'immagine deve trovarsi nella cartella themes/[nome tema]/img/menu (per il template preimpostato themes/extreme/img/menu)
+ */
+
 /* VOCI DEL MENU */
 $PARAMETERS['menu']['refresh']['text'] = 'Aggiorna';
 $PARAMETERS['menu']['refresh']['url'] = 'main.php?dir=' . $_SESSION['luogo'];
@@ -642,9 +810,11 @@ $PARAMETERS['menu']['map']['image_file_onclick'] = '';
 
 $PARAMETERS['menu']['profile']['text'] = 'Scheda';
 $PARAMETERS['menu']['profile']['url'] = 'main.php?page=scheda&pg=' . $_SESSION['login'];
-/*Esempio di link nel caso si volesse aprire come scheda modale
-$PARAMETERS['menu']['profile']['url']="javascript:modalWindow('scheda', 'Scheda di ". $_SESSION['login'] ."', 'popup.php?page=scheda&pg=". $_SESSION['login'] ."');";
-*/
+/**
+ * HELP:
+ * Esempio di link nel caso si volesse aprire come scheda modale:
+ * $PARAMETERS['menu']['profile']['url']="javascript:modalWindow('scheda', 'Scheda di ". $_SESSION['login'] ."', 'popup.php?page=scheda&pg=". $_SESSION['login'] ."');";
+ */
 $PARAMETERS['menu']['profile']['image_file'] = '';
 $PARAMETERS['menu']['profile']['image_file_onclick'] = '';
 
@@ -670,13 +840,6 @@ $PARAMETERS['menu']['quit']['text'] = 'Esci';
 $PARAMETERS['menu']['quit']['url'] = 'logout.php';
 $PARAMETERS['menu']['quit']['image_file'] = '';
 $PARAMETERS['menu']['quit']['image_file_onclick'] = '';
-
-
-/* HELP: Queste voci compariranno nel menu di gioco. E' possibile scegliere se farle comparire come immagini o semplice testo. Se, per ciascuna voce, è specificato il campo image_file allora la voce di menu compare come immagine e text viene interpretato come testo alternativo all'immagine.
-* text - Testo visualizzato come voce di menu o testo alternativo dell'immagine
-* url - Destinazione del link. E' sconsigliato modificare questa voce.
-* image_file - File dell'immagine che appare come voce di menu. L'immagine deve trovarsi nella cartella themes/[nome tema]/img/menu (per il template preimpostato themes/extreme/img/menu)*/
-
 
 /* PANNELLO SERVIZI */
 $PARAMETERS['office_page_name'] = 'Servizi';
@@ -711,6 +874,7 @@ if ($PARAMETERS['mode']['privaterooms'] == 'ON')
 $PARAMETERS['office']['bank']['text'] = 'Servizi bancari';
 $PARAMETERS['office']['bank']['url'] = 'main.php?page=servizi_banca';
 $PARAMETERS['office']['bank']['access_level'] = USER;
+
 /* PANNELLO UTENTE */
 $PARAMETERS['user_page_name'] = 'Menù utente';
 if ($PARAMETERS['mode']['skillsystem'] == 'ON')
@@ -740,7 +904,17 @@ $PARAMETERS['user']['rules']['access_level'] = USER;
 $PARAMETERS['user']['stats']['text'] = 'Statistiche del sito';
 $PARAMETERS['user']['stats']['url'] = 'main.php?page=user_stats&links=yes';
 $PARAMETERS['user']['stats']['access_level'] = USER;
+
 /* PANNELLO GESTIONE */
+/**
+ * HELP: Elenco delle voci dei menu' dei servizi e di gestione. E' sconsigliato operare modifiche. Le opzioni sono disponibili solo agli account con il livello d'accesso specificato o superiore.
+ * Livelli di accesso utente:
+ * USER: Utente normale.
+ * SUPERUSER: Amministratore.
+ * MODERATOR: Admin.
+ * GAMEMASTER: Master.
+ * GUILDMODERATOR: Master di gilda.
+ */
 $PARAMETERS['administration_page_name'] = 'Gestione';
 $PARAMETERS['administration']['image_file'] = '';
 $PARAMETERS['administration']['log_chat']['text'] = 'Log chat';
@@ -749,6 +923,7 @@ $PARAMETERS['administration']['log_chat']['access_level'] = MODERATOR;
 $PARAMETERS['administration']['log_eventi']['text'] = 'Log eventi';
 $PARAMETERS['administration']['log_eventi']['url'] = 'main.php?page=log_eventi';
 $PARAMETERS['administration']['log_eventi']['access_level'] = MODERATOR;
+
 if ($PARAMETERS['mode']['spymessages'] == 'ON')
 {
     $PARAMETERS['administration']['log_messaggi']['text'] = 'Log messaggi';
@@ -810,10 +985,3 @@ $PARAMETERS['administration']['config']['access_level'] = SUPERUSER;
 $PARAMETERS['administration']['token']['text'] = 'Token iscrizione';
 $PARAMETERS['administration']['token']['url'] = 'main.php?page=gestione_token';
 $PARAMETERS['administration']['token']['access_level'] = SUPERUSER;
-/* HELP: Elenco delle voci dei menu' dei servizi e di gestione. E' sconsigliato operare modifiche. Le opzioni sono disponibili solo agli account con il livello d'accesso specificato o superiore.
-Livelli di accesso utente:
-USER: Utente normale.
-SUPERUSER: Amministratore.
-MODERATOR: Admin.
-GAMEMASTER: Master.
-GUILDMODERATOR: Master di gilda.*/

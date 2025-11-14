@@ -1,30 +1,48 @@
 <?php
 session_start();
 
-require_once(dirname(__FILE__) . '/constant_values.inc.php');
-require_once(dirname(__FILE__) . '/../config.inc.php');
-if(file_exists(dirname(__FILE__).'/config-overrides.php')){
-    include_once dirname(__FILE__).'/config-overrides.php';
+/**
+ * Definizioni globali
+ */
+
+/** @var string Percorso della cartella principale */
+const GDRCD_PATH = __DIR__ . '/../';
+
+/**
+ * Caricamento dei file necessari al funzionamento del sito
+ */
+// carica le costanti globali
+require_once(GDRCD_PATH . '/includes/constant_values.inc.php');
+
+// carica le configurazioni di default e quelle personali se esistono
+require_once(GDRCD_PATH . '/configs/config.core.inc.php');
+if(file_exists(GDRCD_PATH . '/config.inc.php')){
+    include_once GDRCD_PATH . '/config.inc.php';
 }
 
-require_once dirname(__FILE__) . '/DbMigration/DbMigrationEngine.class.php';
-require_once dirname(__FILE__) . '/DbMigration/DbMigration.class.php';
-require_once dirname(__FILE__) . '/StmtResultData.class.php';
+// carica le funzioni di gestione delle migrazioni
+require_once(GDRCD_PATH . '/includes/DbMigration/DbMigrationEngine.class.php');
+require_once(GDRCD_PATH . '/includes/DbMigration/DbMigration.class.php');
+require_once(GDRCD_PATH . '/StmtResultData.class.php');
 
-require_once(dirname(__FILE__) . '/../vocabulary/' . $PARAMETERS['languages']['set'] . '.vocabulary.php');
-require_once(dirname(__FILE__) . '/functions.inc.php');
+// carica il vocabolario nella lingua selezionata
+require_once(GDRCD_PATH . '/vocabulary/' . $PARAMETERS['languages']['set'] . '.vocabulary.php');
+
+// include le funzioni generiche
+require_once(GDRCD_PATH . '/includes/functions.inc.php');
 
 // include le funzioni per le api ajax/xhr
-require_once(dirname(__FILE__) . '/functions.api.inc.php');
+require_once(GDRCD_PATH . '/includes/functions.api.inc.php');
 
 // include le funzioni per le chat
-require_once(dirname(__FILE__) . '/functions.chat_core.inc.php');
-require_once(dirname(__FILE__) . '/functions.chat_read.inc.php');
-require_once(dirname(__FILE__) . '/functions.chat_write.inc.php');
+require_once(GDRCD_PATH . '/includes/functions.chat_core.inc.php');
+require_once(GDRCD_PATH . '/includes/functions.chat_read.inc.php');
+require_once(GDRCD_PATH . '/includes/functions.chat_write.inc.php');
 
-/** Gestione dei Suoni */
-require_once(dirname(__FILE__) . '/AudioController.class.php');
+// carica la gestione dei suoni
+require_once(GDRCD_PATH . '/includes/AudioController.class.php');
 
+// carica il tema definito
 if(!empty($_SESSION['theme']) and array_key_exists($_SESSION['theme'], $PARAMETERS['themes']['available'])){
     $PARAMETERS['themes']['current_theme'] = $_SESSION['theme'];
 }
