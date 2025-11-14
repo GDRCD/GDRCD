@@ -40,39 +40,54 @@ function gdrcd_connect()
 function gdrcd_close_connection($db)
 {
     // Chiudo la connessione al database
-    if(is_resource($db) && get_resource_type($db)==='mysql link') mysqli_close($db);
+    if (is_resource($db) && get_resource_type($db) === 'mysql link') mysqli_close($db);
 }
 
 /**
- * Gestore delle query, offre una basilare astrazione del database per la maggior parte delle funzionalità del database più usate.
- * @param string|mysqli_result $sql : il codice SQL da inviare al database o una risorsa risultato di MySqli
- * @param string $mode : La modalità con cui eseguire la query. Default "query"
+ * Esegue una query SQL o gestisce un risultato esistente.
+ *
+ * Questa funzione serve come un'interfaccia di astrazione per le operazioni sul database.
+ * Mantiene la retrocompatibilità con i risultati di mysqli_query e aggiunge il supporto
+ * per la gestione dei risultati restituiti da gdrcd_stmt.
+ *
+ * @param mysqli_result|array|string $sql La query SQL (stringa) o il risultato (mysqli_result o gdrcd_stmt) da gestire.
+ * @param string $mode La modalità di operazione.
  * Modalità accettate:
- *  query: esegue la query e ritorna come risultato la prima riga del resultset
- *  result: esegue la query e ritorna la risorsa MySql associata al risultato
- *  num_rows: accetta come parametro una risorsa mysqli e ritorna il numero di righe nel resultset
- *  fetch: accetta come parametro una risorsa mysqli e ritorna il successivo risultato dal resultset come array
- *  object: uguale a fetch, eccetto che ritorna un oggetto al posto di un array
- *  free: libera la memoria occupata dalla risorsa mysqli passata in $sql
- *  last_id: ritorna l'id del record generato dall'ultima query, se non era una INSERT o UPDATE ritorna 0. In questo caso $sql non viene considerato
- *  affected: ritorna il numero di record toccati dall'ultima query (INSERT, UPDATE, DELETE o SELECT). In questo caso $sql non viene considerato
+ *  - query: esegue la query e ritorna come risultato la prima riga del resultset
+ *  - result: esegue la query e ritorna la risorsa mysqli_result associata al risultato
+ *  - num_rows: accetta come parametro una risorsa mysqli_result o il risultato di gdrcd_stmt e ritorna il numero di righe
+ *  - fetch: accetta come parametro una risorsa mysqli_result o il risultato di gdrcd_stmt e ritorna il successivo risultato dal resultset come array
+ *  - object: uguale a fetch, eccetto che ritorna un oggetto al posto di un array
+ *  - free: libera la memoria occupata dalla risorsa mysqli_result o del risultato di gdrcd_stmt passato in $sql
+ *  - last_id: ritorna l'id del record generato dall'ultima query di INSERT
+ *  - affected: ritorna il numero di record toccati dall'ultima query (INSERT, UPDATE, DELETE o SELECT)
  * @return mixed un booleano in caso di esecuzione di query non SELECT e modalità 'query'. Altrimenti ritorna come specificato nella descrizione di $mode
- * @throws Exception
+ * @param bool $throwOnError Se true, solleva un'eccezione in caso di errore. Altrimenti, termina lo script.
+ * @return mixed Il risultato dell'operazione.
  */
 function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
 {
     $db_link = gdrcd_connect();
 
+    // Rileva se l'input è già un risultato (object o array) o una query string
+    $isResultObject = is_object($sql) && ($sql instanceof mysqli_result);
+    $isStmtResult = (is_array($sql) && $sql['data'] instanceof StmtResultData) || (is_array($sql) && isset($sql['affected']));
+    //veccio metodo non modificato, mantiene la retrocompatibilità e gestisce le query normali
     switch (strtolower(trim($mode))) {
         case 'query':
+            if ($isStmtResult) {
+                // Se è un array risultato da gdrcd_stmt, restituisci il primo elemento
+                $row = isset($sql['data'][0]) ? $sql['data'][0] : null;
+                $sql['data']->free();
+                return $row;
+            }
             switch (strtoupper(substr(trim($sql), 0, 6))) {
                 case 'SELECT':
                     $result = mysqli_query($db_link, $sql);
-                    if($result === false){
-                        if($throwOnError){
+                    if ($result === false) {
+                        if ($throwOnError) {
                             throw new Exception("Query DB Fallita: " . $sql . "\n\n" . mysqli_error($db_link));
-                        }
-                        else{
+                        } else {
                             die(gdrcd_mysql_error($sql));
                         }
                     }
@@ -82,110 +97,200 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
                     return $row;
                 default:
                     $result = mysqli_query($db_link, $sql);
-                    if($result === false){
-                        if($throwOnError){
+                    if ($result === false) {
+                        if ($throwOnError) {
                             throw new Exception("Query DB Fallita: " . $sql . "\n\n" . mysqli_error($db_link));
-                        }
-                        else{
+                        } else {
                             die(gdrcd_mysql_error($sql));
                         }
                     }
                     return $result;
             }
+            break;
+
 
         case 'result':
+            if ($isStmtResult) {
+                // Restituisce l'intero array di dati per i prepared statements
+                return $sql['data'];
+            }
             $result = mysqli_query($db_link, $sql);
-            if($result === false){
-                if($throwOnError){
+            if ($result === false) {
+                if ($throwOnError) {
                     throw new Exception("Query DB Fallita: " . $sql . "\n\n" . mysqli_error($db_link));
-                }
-                else{
+                } else {
                     die(gdrcd_mysql_error($sql));
                 }
             }
-
             return $result;
+            break;
 
         case 'num_rows':
+            if ($isStmtResult) {
+                return $sql['num_rows'];
+            }
             return (int)mysqli_num_rows($sql);
+            break;
 
+        //aggiunto il supporto per i risultati di gdrcd_stmt per queste casistiche è necessario mantenere
+        //lo stato del "puntatore" all'interno dell'array
         case 'fetch':
-            return mysqli_fetch_array($sql);
-
+            if ($isStmtResult) {
+                $current = $sql['data']->current();
+                $sql['data']->next();
+                return $current;
+            }
+            if ($isResultObject) {
+                return mysqli_fetch_array($sql);
+            }
+            break;
         case 'assoc':
-            return mysqli_fetch_array($sql, MYSQLI_ASSOC);
-
+            if ($isStmtResult) {
+                return $sql['data']->fetchAssoc();
+            }
+            if ($isResultObject) {
+                return mysqli_fetch_array($sql, MYSQLI_ASSOC);
+            }
+            break;
         case 'object':
-            return mysqli_fetch_object($sql);
+            if ($isStmtResult) {
+                $row = $sql['data']->current();
+                $sql['data']->next();
+                return is_array($row) ? (object)$row : null;
+            }
+            // Logica per i risultati mysqli_result standard, stessa logica di prima
+            if ($isResultObject) {
+                return mysqli_fetch_object($sql);
+            }
+            break;
 
         case 'free':
+            if ($isStmtResult) {
+                // Per i risultati di gdrcd_stmt, non c'è nulla da liberare
+                $sql['data']->free();
+                return true;
+            }
             mysqli_free_result($sql);
             return true;
+            break;
 
         case 'last_id':
+            if ($isStmtResult) {
+                return $sql['last_id'];
+            }
             return mysqli_insert_id($db_link);
+            break;
 
         case 'affected':
+            if ($isStmtResult) {
+                return $sql['affected'];
+            }
             return (int)mysqli_affected_rows($db_link);
+            break;
 
         default:
-            throw new Exception("Imposibile determinare l'operazione da eseguire sul database");
+            throw new Exception("Impossibile determinare l'operazione da eseguire sul database.");
     }
 }
 
 
 /**
- * Prepared Statements
- * @param string $sql: il codice SQL da inviare al database
- * @param array $binds: array dei parametri associati alla query
+ * Esegue una query SQL utilizzando prepared statements tramite MySQLi.
  *
- * E' obbligatorio specificare nell'indice zero dell'array binds i tipi delle variabili che si stanno immettendo nella query
- * Tali tipi sono i seguenti:
- * i      corrispondente ai valori integer
- * d     corrispondente ai valori float/double
- * s     corrispondente alle stringhe
- * b     corrispondende a valori di tipo blob
+ * Questa funzione permette di eseguire in modo sicuro query SQL, prevenendo SQL injection,
+ * tramite l'utilizzo di prepared statements. I parametri della query vengono passati tramite
+ * un array, dove il primo elemento specifica i tipi dei parametri secondo la sintassi MySQLi:
+ *  - 'i' per integer
+ *  - 'd' per double/float
+ *  - 's' per string
+ *  - 'b' per blob
  *
- * @return mysqli_result
+ * @param string $sql   La query SQL da eseguire, con i segnaposto (?) per i parametri.
+ * @param array  $binds Array dei parametri da associare alla query. L'indice 0 deve contenere
+ *                      una stringa con i tipi dei parametri, gli indici successivi i valori.
+ *                      Esempio: ['si', 'nome', 42]
+ *
+ * @return StmtResult|false Restituisce il risultato della query (mysqli_result) in caso di SELECT,
+ *                             true per query di modifica (INSERT/UPDATE/DELETE), oppure false in caso di errore.
  */
-function gdrcd_stmt($sql, $binds = array())
+function gdrcd_stmt($sql, $binds = array(), $throwOnError = false)
 {
     $db_link = gdrcd_connect();
+    //Oggetto temporaneo che raccoglie i dati delle esecuzioni.
+    $resultArr = array(
+        'data' => null,
+        'num_rows' => null,
+        'affected' => null,
+        'last_id' => null,
+    );
 
-    if ($stmt = mysqli_prepare($db_link, $sql)) {
+    $stmt = mysqli_prepare($db_link, $sql);
 
-        if (!empty($binds)) {
-
-            #> E' necessario referenziare ogni parametro da passare alla query
-            #> MySqli è suscettibile in proposito.
-            $ref = array();
-
-            foreach ($binds as $k => $v) {
-                if ($k > 0) {
-                    $ref[$k] = &$binds[$k];
-                } else {
-                    $ref[$k] = $v;
-                }
-            }
-
-            array_unshift($ref, $stmt);
-            call_user_func_array('mysqli_stmt_bind_param', $ref);
+    if ($stmt === false) {
+        $errorMsg = gdrcd_mysql_error('Failed when creating the statement.');
+        if ($throwOnError) {
+            throw new Exception($errorMsg);
+        } else {
+            die($errorMsg);
         }
-
-        mysqli_stmt_execute($stmt);
-        $result = mysqli_stmt_get_result($stmt);
-        $stmtError = mysqli_stmt_error($stmt);
-
-        if (!empty($stmtError))
-            die(gdrcd_mysql_error($stmtError));
-
-        mysqli_stmt_close($stmt);
-
-        return $result;
-
-    } else {
-        die(gdrcd_mysql_error('Failed when creating the statement.'));
     }
+
+    if (!empty($binds)) {
+        // MySQLi requires references for bind_param
+        $refs = array();
+        foreach ($binds as $k => $v) {
+            $refs[$k] = &$binds[$k];
+        }
+        array_unshift($refs, $stmt);
+        call_user_func_array('mysqli_stmt_bind_param', $refs);
+    }
+
+    if (!mysqli_stmt_execute($stmt)) {
+        $stmtError = mysqli_stmt_error($stmt);
+        $errorMsg = gdrcd_mysql_error($stmtError);
+        mysqli_stmt_close($stmt);
+        if ($throwOnError) {
+            throw new Exception($errorMsg);
+        } else {
+            die($errorMsg);
+        }
+    }
+
+    $meta = mysqli_stmt_result_metadata($stmt);
+    if ($meta) {
+        // SELECT-like query
+        $result = mysqli_stmt_get_result($stmt);
+        if ($result === false) {
+            $stmtError = mysqli_stmt_error($stmt);
+            $errorMsg = gdrcd_mysql_error($stmtError);
+            mysqli_stmt_close($stmt);
+            if ($throwOnError) {
+                throw new Exception($errorMsg);
+            } else {
+                die($errorMsg);
+            }
+        }
+        $rows = array();
+        while ($row = mysqli_fetch_array($result, MYSQLI_BOTH)) {
+            $rows[] = $row;
+        }
+        //popolo l'array di risultato e poi segno il numero di righe
+        $resultArr['data'] = new StmtResultData($rows);
+        $resultArr['num_rows'] = mysqli_num_rows($result);
+        mysqli_free_result($result);
+    } else {
+        // Non-SELECT query
+        $resultArr['affected'] = mysqli_stmt_affected_rows($stmt);
+        // Check if it's an INSERT
+        if (preg_match('/^\s*INSERT\s/i', $sql)) {
+            $resultArr['last_id'] = mysqli_stmt_insert_id($stmt);
+        }
+    }
+
+    mysqli_stmt_close($stmt);
+
+    //return new StmtResult($resultArr['data'], $resultArr['num_rows'], $resultArr['affected_rows'], $resultArr['last_id']);
+    return $resultArr;
 }
 
 
@@ -702,8 +807,11 @@ function gdrcd_module_allowed($id)
  */
 function gdrcd_pages_format($page)
 {
+    // Rimuove i puntini di ritorno
+    $page = str_replace('..', '', $page);
+    // Rimuove i backslash (\)
     $page = str_replace('\\',DIRECTORY_SEPARATOR, $page);
-    //converte la combinaizone di caratteri __ nel separatore di directory
+    // Converte la combinazione di caratteri __ nel separatore di directory
     $page = str_replace('__',DIRECTORY_SEPARATOR, $page);
     //
     return gdrcd_filter('include', $page);
