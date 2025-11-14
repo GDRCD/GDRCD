@@ -48,7 +48,7 @@ if(!gdrcd_controllo_permessi_forum($araldo['tipo'],$araldo['proprietari'])){
     $totaleresults = $record_globale['COUNT(*)'];
 
     /*Carico l'elenco dei forum*/
-    $result = gdrcd_query("SELECT MA.id_messaggio, MA.titolo, MA.autore, MA.data_messaggio, MA.data_ultimo_messaggio, MA.importante, MA.chiuso, AL.id AS new_msg FROM messaggioaraldo AS MA LEFT JOIN araldo_letto AS AL ON MA.id_messaggio=AL.thread_id AND AL.nome='".$_SESSION['login']."' WHERE MA.id_messaggio_padre = -1 AND MA.id_araldo = ".gdrcd_filter('num', $_REQUEST['what'])." ORDER BY MA.importante DESC, MA.data_ultimo_messaggio DESC LIMIT ".$pagebegin.", ".$PARAMETERS['settings']['posts_per_page']."", 'result');
+    $result = gdrcd_query("SELECT MA.id_messaggio, MA.titolo, MA.autore, MA.data_messaggio, MA.data_ultimo_messaggio, MA.importante, MA.chiuso, Ma.visite, AL.id AS new_msg FROM messaggioaraldo AS MA LEFT JOIN araldo_letto AS AL ON MA.id_messaggio=AL.thread_id AND AL.nome='".$_SESSION['login']."' WHERE MA.id_messaggio_padre = -1 AND MA.id_araldo = ".gdrcd_filter('num', $_REQUEST['what'])." ORDER BY MA.importante DESC, MA.data_ultimo_messaggio DESC LIMIT ".$pagebegin.", ".$PARAMETERS['settings']['posts_per_page']."", 'result');
 
     if(gdrcd_query($result, 'num_rows') == 0) {
         echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['interface']['forums']['warning']['no_topic']).'</div>';
@@ -61,9 +61,9 @@ if(!gdrcd_controllo_permessi_forum($araldo['tipo'],$araldo['proprietari'])){
                     <tr><!-- Intestazione tabella -->
                         <?php if($_SESSION['permessi'] >= MODERATOR) {
                         ?>
-                        <td colspan="4">
+                        <td colspan="5">
                         <?php } else  { ?>
-                        <td colspan="3">
+                        <td colspan="4">
                         <?php } ?>
                             <div class="capitolo_elenco">
                                 <?php echo gdrcd_filter('get', $araldo['nome']); ?>
@@ -84,6 +84,11 @@ if(!gdrcd_controllo_permessi_forum($araldo['tipo'],$araldo['proprietari'])){
                         <td class="casella_titolo">
                             <div class="capitolo_elenco">
                                 <?php echo gdrcd_filter('out', $MESSAGE['interface']['forums']['topic']['posts']); ?>
+                            </div>
+                        </td>
+                        <td class="casella_titolo"> <!-- table data cell delle visite, intestazione (baboomba) -->
+                            <div class="capitolo_elenco">
+                                <?php echo gdrcd_filter('out', $MESSAGE['interface']['forums']['topic']['views']); ?>
                             </div>
                         </td>
                         <?php
@@ -150,7 +155,12 @@ if(!gdrcd_controllo_permessi_forum($araldo['tipo'],$araldo['proprietari'])){
                                         } ?>
                                     </div>
                                 </div>
-                            </td>
+                            </td>            
+                            <td class="casella_elemento"><!-- Table data cell delle visite, contenuto (baboomba) -->
+                                <div class="elementi_elenco"><!-- Visite -->
+                                    <?php echo gdrcd_filter('out', $row['visite']) .' '. gdrcd_filter('out', $MESSAGE['interface']['forums']['topic']['views']); ?>
+                                </div>
+                            </td>                            
                             <?php
                             if($_SESSION['permessi'] >= MODERATOR) {
                                 /**    * Topic importanti/chiusi

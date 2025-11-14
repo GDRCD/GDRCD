@@ -285,6 +285,7 @@ class GDRCD551 extends DbMigration
             data_ultimo_messaggio datetime default NULL,
             importante binary(1) NOT NULL DEFAULT '0',
             chiuso binary(1) NOT NULL DEFAULT '0',
+            visite bigint(20) NOT NULL DEFAULT '0',
             PRIMARY KEY  (id_messaggio),
             KEY id_araldo (id_araldo),
             KEY id_messaggio_padre (id_messaggio_padre),

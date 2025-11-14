@@ -263,6 +263,7 @@ $MESSAGE['interface']['forums']['topic']['new_posts_forum'] = $MESSAGE['interfac
 $MESSAGE['interface']['forums']['topic']['author'] = 'Autore';
 $MESSAGE['interface']['forums']['topic']['last'] = 'Ultima';
 $MESSAGE['interface']['forums']['topic']['posts'] = 'Risposte';
+$MESSAGE['interface']['forums']['topic']['views'] = 'Visite';
 $MESSAGE['interface']['forums']['warning']['no_topic'] = 'Nessun topic in questa sezione.';
 $MESSAGE['interface']['forums']['warning']['topic_not_exists'] = 'Questo topic non esiste.';
 $MESSAGE['interface']['forums']['topic']['last_post'] = 'Ultima';
