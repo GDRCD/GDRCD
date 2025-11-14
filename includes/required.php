@@ -23,6 +23,7 @@ if(file_exists(GDRCD_PATH . '/config.inc.php')){
 // carica le funzioni di gestione delle migrazioni
 require_once(GDRCD_PATH . '/includes/DbMigration/DbMigrationEngine.class.php');
 require_once(GDRCD_PATH . '/includes/DbMigration/DbMigration.class.php');
+require_once(GDRCD_PATH . '/StmtResultData.class.php');
 
 // carica il vocabolario nella lingua selezionata
 require_once(GDRCD_PATH . '/vocabulary/' . $PARAMETERS['languages']['set'] . '.vocabulary.php');
