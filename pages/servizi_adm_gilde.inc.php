@@ -176,7 +176,7 @@
 
                     $contr = false;
 
-                    foreach ($ruoli_capi as $ruolo_capo){
+                    while ($ruolo_capo = gdrcd_query($ruoli_capi, 'assoc')){
 
                         $jobs = gdrcd_query("SELECT COUNT(*) AS tot FROM clgpersonaggioruolo WHERE id_personaggio = '" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "' AND  id_ruolo='{$ruolo_capo['id_ruolo']}'");
 
@@ -222,9 +222,9 @@
 
                 $contr = false;
 
-                foreach ($ruoli_capi as $ruolo_capo){
+                while ($ruolo_capo = gdrcd_query($ruoli_capi, 'assoc')) {
 
-                    $jobs = gdrcd_query("SELECT COUNT(*) AS tot FROM clgpersonaggioruolo WHERE id_personaggio = '" . gdrcd_filter('in', $_POST['nome']) . "' AND  id_ruolo='{$ruolo_capo['id_ruolo']}'");
+                    $jobs = gdrcd_query("SELECT COUNT(*) AS tot FROM clgpersonaggioruolo WHERE id_personaggio = '" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "' AND  id_ruolo='{$ruolo_capo['id_ruolo']}'");
 
                     if($jobs['tot'] > 0){
                         $contr = true;
