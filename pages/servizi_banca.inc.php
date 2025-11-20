@@ -29,7 +29,7 @@ gdrcd_query($result, 'free');
                 } else {
                     echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['interface']['bank']['done']).'</div>';
                     /*Eseguo la transazione*/
-                    gdrcd_query("UPDATE personaggio SET soldi = soldi + ".$_POST['ammontare'].", banca = banca - ".$_POST['ammontare']." WHERE id_personaggio = '".$_SESSION['id_personaggio']."' LIMIT 1");
+                    gdrcd_query("UPDATE personaggio SET soldi = soldi + ". gdrcd_filter_num($_POST['ammontare']) .", banca = banca - ". gdrcd_filter_num($_POST['ammontare']) ." WHERE id_personaggio = '".$_SESSION['id_personaggio']."' LIMIT 1");
                 }
             } ?>
             <div class="link_back">
@@ -47,7 +47,7 @@ gdrcd_query($result, 'free');
                 } else {
                     echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['interface']['bank']['done']).'</div>';
                     /*Eseguo la transazione*/
-                    gdrcd_query("UPDATE personaggio SET soldi = soldi - ".gdrcd_filter('num', $_POST['ammontare']).", banca = banca + ".$_POST['ammontare']." WHERE id_personaggio = '".$_SESSION['id_personaggio']."' LIMIT 1");
+                    gdrcd_query("UPDATE personaggio SET soldi = soldi - ".gdrcd_filter('num', $_POST['ammontare']).", banca = banca + ".gdrcd_filter_num($_POST['ammontare'])." WHERE id_personaggio = '".$_SESSION['id_personaggio']."' LIMIT 1");
                 }
             } ?>
             <div class="link_back">
@@ -57,8 +57,10 @@ gdrcd_query($result, 'free');
         }
         /*Bonifico*/
         if((isset($_POST['op']) === true) && ($_POST['op'] == 'bonifico')) {
-            $query = gdrcd_query("SELECT nome FROM personaggio WHERE nome = '".$_POST['beneficiario']."' LIMIT 1");
-            if(empty($_POST['beneficiario'])) {
+            $query = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '".gdrcd_filter_num($_POST['beneficiario'])."' LIMIT 1");
+
+
+            if(empty($query)) {
                 echo '<div class="warning">Il beneficiario che hai inserito non esiste o non &egrave; valido!</div>';
             } else {
                 if(($_POST['ammontare'] <= 0) || (is_numeric($_POST['ammontare']) === false)) {
@@ -70,12 +72,12 @@ gdrcd_query($result, 'free');
                         echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['interface']['bank']['done']).'</div>';
                         /*Eseguo la transazione*/
                         gdrcd_query("UPDATE personaggio SET banca = banca - ".gdrcd_filter('num', $_POST['ammontare'])." WHERE id_personaggio = '".$_SESSION['id_personaggio']."' LIMIT 1");
-                        gdrcd_query("UPDATE personaggio SET banca = banca + ".gdrcd_filter('num', $_POST['ammontare'])." WHERE id_personaggio = '".$_POST['beneficiario']."' LIMIT 1");
+                        gdrcd_query("UPDATE personaggio SET banca = banca + ".gdrcd_filter('num', $_POST['ammontare'])." WHERE id_personaggio = '".gdrcd_filter_num($_POST['beneficiario'])."' LIMIT 1");
 
                         /*Registro l'evento (Passaggio di danaro)*/
-                        $nome = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_POST['beneficiario']) . "'");
+                        $personaggio = $query;
 
-                        gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES ( '" . gdrcd_filter('in',$_POST['beneficiario']) . "', '" . gdrcd_filter('in', $nome['nome']) . "', '".$_SESSION['login']."', NOW(), ".BONIFICO.", '".'('.gdrcd_filter('num', $_POST['ammontare']).' '.$PARAMETERS['names']['currency']['plur'].') '.gdrcd_filter('in', $_POST['causale'])."')");
+                        gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES ( '" . gdrcd_filter('in',$_POST['beneficiario']) . "', '" . gdrcd_filter('in', $personaggio['nome']) . "', '".$_SESSION['login']."', NOW(), ".BONIFICO.", '".'('.gdrcd_filter('num', $_POST['ammontare']).' '.$PARAMETERS['names']['currency']['plur'].') '.gdrcd_filter('in', $_POST['causale'])."')");
                         gdrcd_query("INSERT INTO messaggi (id_personaggio_mittente, id_personaggio_destinatario, spedito, testo) VALUES ('".$_SESSION['id_personaggio']."','".gdrcd_filter('in', $_POST['beneficiario'])."', NOW(), '".gdrcd_filter('in', $_SESSION['login'].' '.$MESSAGE['interface']['bank']['notice'].' '.gdrcd_filter('num', $_POST['ammontare']).' '.$PARAMETERS['names']['currency']['plur']).'. \n\n'.gdrcd_filter('in', $_POST['causale'])."')");
                     }
                 }
