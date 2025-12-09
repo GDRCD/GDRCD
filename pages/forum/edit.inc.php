@@ -1,10 +1,10 @@
 <?php
-$row = gdrcd_query("SELECT autore, titolo, messaggio, id_messaggio_padre FROM messaggioaraldo WHERE id_messaggio=".gdrcd_filter('num', $_POST['id_messaggio']));
+$row = gdrcd_query("SELECT id_personaggio, titolo, messaggio, id_messaggio_padre FROM messaggioaraldo WHERE id_messaggio = ".gdrcd_filter('num', $_POST['id_messaggio']));
 
-if($row['autore'] == $_SESSION['login'] || ($row['autore'] != $_SESSION['login'] && $_SESSION['permessi'] >= MODERATOR)) {
+if($row['id_personaggio'] == $_SESSION['id_personaggio'] || ($row['id_personaggio'] != $_SESSION['id_personaggio'] && $_SESSION['permessi'] >= MODERATOR)) {
     $time = strftime('%d/%m/%Y %H:%M');
 
-    gdrcd_query("UPDATE messaggioaraldo SET messaggio = '".gdrcd_filter('in', $_POST['messaggio']).'\n\n\n\nEdit ('.$_SESSION['login'].'): '.$time."', titolo = '".gdrcd_filter('in', $_POST['titolo'])."' WHERE id_messaggio = ".gdrcd_filter('num', $_POST['id_messaggio'])." LIMIT 1");
+    gdrcd_query("UPDATE messaggioaraldo SET messaggio = '".gdrcd_filter('in', $_POST['messaggio']).'\n\n\n\nEdit ('.gdrcd_filter('in', $_SESSION['login']).'): '.$time."', titolo = '".gdrcd_filter('in', $_POST['titolo'])."' WHERE id_messaggio = ".gdrcd_filter('num', $_POST['id_messaggio'])." LIMIT 1");
     ?>
     <div class="warning">
         <?php echo gdrcd_filter('out', $MESSAGE['warning']['modified']); ?>
