@@ -1,7 +1,9 @@
 <?php
-$blocco = gdrcd_query("SELECT id_personaggio_destinatario, id_personaggio_master, titolo FROM blocco_esiti WHERE id='".gdrcd_filter('num',$_GET['blocco'])."' 
+$blocco = gdrcd_query("SELECT id_personaggio_destinatario, id_personaggio_master, titolo FROM blocco_esiti WHERE id='".gdrcd_filter('num',$_GET['blocco'])."'
     LIMIT 1 ");
-if ($_SESSION['permessi']>=ESITI_PERM && ESITI_CHAT && $blocco['id_personaggio_destinatario']!=$_SESSION['id_personaggio']){
+
+
+if ($_SESSION['permessi']>=SUPERUSER || ($_SESSION['permessi']>=ESITI_PERM && ESITI_CHAT && $blocco['id_personaggio_destinatario']!=$_SESSION['id_personaggio'])){
     if ($_GET['op']=='newchat') { ?>
 
         <div class="page_title">
