@@ -6,7 +6,7 @@ $email = $row['email'];
 $pass = $row['pass'];
 $iscriz = explode(' ', $row['data']);
 $iscriz = $iscriz['0'];
- 
+
 ?>
 <div class="pagina_user_cambio_nome">
     <!-- Titolo della pagina -->
@@ -17,7 +17,7 @@ $iscriz = $iscriz['0'];
     <div class="page_body">
         <?php /*Cambio pass utenti*/
         if($_POST['op'] == 'new') {
-            if(($email == gdrcd_filter_email($_POST['email'])) && (gdrcd_password_check($_POST['new_pass'], $pass)) && ($iscriz >= strftime('%Y-%m-%d')) && (empty($_POST['new_name']) === false)) {
+            if((gdrcd_password_check($_POST['email'], $email)) && (gdrcd_password_check($_POST['new_pass'], $pass)) && ($iscriz >= strftime('%Y-%m-%d')) && (empty($_POST['new_name']) === false)) {
                 $query = "SELECT nome FROM personaggio WHERE nome ='".gdrcd_filter('in', $_POST['new_name'])."'";
                 $result = gdrcd_query($query, 'result');
                 if(gdrcd_query($result, 'num_rows') > 0) { ?>
@@ -30,20 +30,7 @@ $iscriz = $iscriz['0'];
                     $nome = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "'");
                     gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".gdrcd_filter('in', $_SESSION['id_personaggio'])."','".gdrcd_filter('in', $_POST['new_name'])."','".$_SESSION['login']."', NOW(), ".CHANGEDNAME." ,'".$_SESSION['login'].' -> '.gdrcd_filter('in', $_POST['new_name'])."')");
                     gdrcd_query("UPDATE log SET nome_interessato = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE id_personaggio = '".$_SESSION['id_personaggio']."'");
-                    
-                    /*
-                    Ho commentato questi Update perchè tecnicamente l'id_personaggio non cambia quindi tecnicamente non dovremmo modificare nulla su quelle tabelle.
 
-                    gdrcd_query("UPDATE log SET autore = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE autore = '".$_SESSION['login']."'");
-                    gdrcd_query("UPDATE messaggi SET mittente = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE mittente = '".$_SESSION['login']."'");
-                    gdrcd_query("UPDATE messaggi SET destinatario = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE destinatario = '".$_SESSION['login']."'");
-                    gdrcd_query("UPDATE backmessaggi SET mittente = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE mittente = '".$_SESSION['login']."'");
-                    gdrcd_query("UPDATE backmessaggi SET destinatario = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE destinatario = '".$_SESSION['login']."'");
-                    gdrcd_query("UPDATE clgpersonaggioabilita SET nome = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE nome = '".$_SESSION['login']."'");
-                    gdrcd_query("UPDATE clgpersonaggiomostrine SET nome = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE nome = '".$_SESSION['login']."'");
-                    gdrcd_query("UPDATE clgpersonaggiooggetto SET nome = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE nome = '".$_SESSION['login']."'");
-                    gdrcd_query("UPDATE clgpersonaggioruolo SET personaggio = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE personaggio = '".$_SESSION['login']."'");
-                    */
                     $_SESSION['login'] = gdrcd_filter('get', $_POST['new_name']);
                     ?>
                     <div class="warning">
@@ -52,6 +39,7 @@ $iscriz = $iscriz['0'];
                     <?php
                 }
             } else { ?>
+
                 <div class="error">
                     <?php echo gdrcd_filter('out', $MESSAGE['warning']['cant_do']); ?>
                 </div>
@@ -78,37 +66,17 @@ $iscriz = $iscriz['0'];
                     if($_SESSION['permessi'] == SUPERUSER) {
 
                         gdrcd_query("UPDATE log SET nome_interessato = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE id_personaggio = '".gdrcd_filter('in', $_POST['account'])."'");
-                        /*
-                        gdrcd_query("UPDATE log SET autore = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE autore = '".gdrcd_filter('in', $_POST['account'])."'");
-                        gdrcd_query("UPDATE messaggi SET mittente = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE mittente = '".gdrcd_filter('in', $_POST['account'])."'");
-                        gdrcd_query("UPDATE messaggi SET destinatario = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE destinatario = '".gdrcd_filter('in', $_POST['account'])."'");
-                        gdrcd_query("UPDATE backmessaggi SET mittente = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE mittente = '".gdrcd_filter('in', $_POST['account'])."'");
-                        gdrcd_query("UPDATE backmessaggi SET destinatario = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE destinatario = '".gdrcd_filter('in', $_POST['account'])."'");
-                        gdrcd_query("UPDATE clgpersonaggioabilita SET nome = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE nome = '".gdrcd_filter('in', $_POST['account'])."'");
-                        gdrcd_query("UPDATE clgpersonaggiomostrine SET nome = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE nome = '".gdrcd_filter('in', $_POST['account'])."'");
-                        gdrcd_query("UPDATE clgpersonaggiooggetto SET nome = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE nome = '".gdrcd_filter('in', $_POST['account'])."'");
-                        gdrcd_query("UPDATE clgpersonaggioruolo SET personaggio = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE personaggio = '".gdrcd_filter('in', $_POST['account'])."'");
-                        */
+
                         gdrcd_query("UPDATE personaggio SET nome = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE id_personaggio = '".gdrcd_filter('in', $_POST['account'])."'");
                     } else {
                         gdrcd_query("UPDATE log SET nome_interessato = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE id_personaggio = '".$_POST['account']."'");
-                        /*
-                        gdrcd_query("UPDATE log SET autore = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE autore = '".$_POST['account']."'");
-                        gdrcd_query("UPDATE messaggi SET mittente = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE mittente = '".$_POST['account']."' AND permessi < ".SUPERUSER."");
-                        gdrcd_query("UPDATE messaggi SET destinatario = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE destinatario = '".$_POST['account']."' AND permessi < ".SUPERUSER."");
-                        gdrcd_query("UPDATE backmessaggi SET mittente = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE mittente = '".$_POST['account']."' AND permessi < ".SUPERUSER."");
-                        gdrcd_query("UPDATE backmessaggi SET destinatario = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE destinatario = '".$_POST['account']."' AND permessi < ".SUPERUSER."");
-                        gdrcd_query("UPDATE clgpersonaggioabilita SET nome = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE nome = '".$_POST['account']."' AND permessi < ".SUPERUSER."");
-                        gdrcd_query("UPDATE clgpersonaggiomostrine SET nome = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE nome = '".$_POST['account']."' AND permessi < ".SUPERUSER."");
-                        gdrcd_query("UPDATE clgpersonaggiooggetto SET nome = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE nome = '".$_POST['account']."' AND permessi < ".SUPERUSER."");
-                        gdrcd_query("UPDATE clgpersonaggioruolo SET personaggio = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE personaggio = '".$_POST['account']."' AND permessi < ".SUPERUSER."");
-                       */
+
                        gdrcd_query("UPDATE personaggio SET nome = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE id_personaggio = '".gdrcd_filter('in', $_POST['account'])."' AND permessi < ".SUPERUSER."");
                     }
 
                     /*Registro l'evento */
                      $nome = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "'");
-                  
+
                     gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ( '".gdrcd_filter('in', $_SESSION['id_personaggio'])."' , '".gdrcd_filter('in', $_POST['account'])."','".$_SESSION['login']."', NOW(), ".CHANGEDNAME." ,'".gdrcd_filter('in', $_POST['account']).' -> '.gdrcd_filter('in', $_POST['new_name'])."')");
                     ?>
                     <div class="warning">
@@ -197,4 +165,3 @@ $iscriz = $iscriz['0'];
         ?>
     </div>
 </div><!-- Box principale -->
-
