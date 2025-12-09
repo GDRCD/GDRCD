@@ -12,7 +12,7 @@ $pass = $row['pass'];
     <div class="page_body">
         <?php /*Cancella il tuo account*/
         if($_POST['op'] == 'delete') {
-                  
+
             if((gdrcd_password_check(gdrcd_filter_email($_POST['email']),$email))  && (gdrcd_password_check($_POST['new_pass'], $pass))) {
                 gdrcd_query("UPDATE personaggio SET permessi = -1 WHERE id_personaggio = '".$_SESSION['id_personaggio']."' ");
                 gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".$_SESSION['id_personaggio']."','".$_SESSION['login']."', '".$_SESSION['login']."',NOW(), ".DELETEPG." ,'".gdrcd_filter('in', $MESSAGE['interface']['user']['delete']['undeleted'])."')");
@@ -107,7 +107,7 @@ $pass = $row['pass'];
             </div>
             <?php
             if($_SESSION['permessi'] >= MODERATOR) {
-                $query = ($_SESSION['permessi'] == SUPERUSER) ? "SELECT id_personaggio, nome FROM personaggio ORDER BY nome" : "SELECT id_personaggio, nome FROM personaggio WHERE permessi < ".SUPERUSER." ORDER BY nome";
+                $query = ($_SESSION['permessi'] == SUPERUSER) ? "SELECT id_personaggio, nome FROM personaggio WHERE permessi != -1 ORDER BY nome" : "SELECT id_personaggio, nome FROM personaggio WHERE permessi != -1 AND permessi < ".SUPERUSER." ORDER BY nome";
                 $result = gdrcd_query($query, 'result'); ?>
                 <div class="panels_box">
                     <div class="form_gioco">
@@ -164,4 +164,3 @@ $pass = $row['pass'];
         }//if ?>
     </div>
 </div><!-- Box principale -->
-
