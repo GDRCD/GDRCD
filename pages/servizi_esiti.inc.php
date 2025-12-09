@@ -15,8 +15,8 @@
             if ($_POST['op']=='listpg') {
                     $id = gdrcd_filter('num', $_POST['id']);
 
-                    $query=gdrcd_query("SELECT * FROM blocco_esiti WHERE id = ".$id." 
-                        AND pg = '".gdrcd_filter('in',$_SESSION['login'])."' ORDER BY id ", 'result');
+                    $query=gdrcd_query("SELECT * FROM blocco_esiti WHERE id = ".$id."
+                        AND id_personaggio_destinatario = '".gdrcd_filter('in',$_SESSION['id_personaggio'])."' ORDER BY id ", 'result');
                     $result=gdrcd_query($query, 'fetch');
 
 
@@ -35,8 +35,8 @@
                     </div>
 
                     <?php
-                    $quer="SELECT * FROM esiti WHERE id_blocco = ".$id." AND chat = 0 
-                        AND pg = '".gdrcd_filter('in',$_SESSION['login'])."' ORDER BY data DESC";
+                    $quer="SELECT * FROM esiti WHERE id_blocco = ".$id." AND chat = 0
+                        AND id_personaggio_destinatario = '".gdrcd_filter('in',$_SESSION['id_personaggio'])."' ORDER BY data DESC";
 
 
                     $res=gdrcd_query($quer, 'result');
@@ -45,7 +45,7 @@
                     while  ($row=gdrcd_query($res, 'fetch')) {
                         $chat=gdrcd_query("SELECT nome FROM mappa WHERE id = ".$row['chat']." ");	?>
 
-                        <div class="title_esi">Autore:<b><?php echo $row['autore'].'</b> | 
+                        <div class="title_esi">Autore:<b><?php echo $row['autore'].'</b> |
                             Creato il: '.gdrcd_format_date($row['data']).' alle '.gdrcd_format_time($row['data']);?></div>
 
                         <div class="fate_title">Titolo: <b><?php echo $row['titolo'];?></b>
@@ -82,10 +82,10 @@
                 $pageend = $pagebegin + $PARAMETERS['settings']['posts_per_page'];
 
                 //Conteggio record totali
-                $record_globale = gdrcd_query("SELECT COUNT(*) FROM blocco_esiti WHERE pg = '".$_SESSION['login']."' ");
+                $record_globale = gdrcd_query("SELECT COUNT(*) FROM blocco_esiti WHERE id_personaggio_destinatario = '".$_SESSION['id_personaggio']."' ");
                 $totaleresults = $record_globale['COUNT(*)'];
 
-                $query="SELECT * FROM blocco_esiti WHERE pg = '".$_SESSION['login']."' 
+                $query="SELECT * FROM blocco_esiti WHERE id_personaggio_destinatario = '".$_SESSION['id_personaggio']."'
                     ORDER BY id DESC LIMIT ".$pagebegin.", ".$PARAMETERS['settings']['posts_per_page']."";
                 $result=gdrcd_query($query, 'result');
 
@@ -141,11 +141,11 @@
                                 </td>
                             </tr>
                             <?php while($rec=gdrcd_query($result, 'fetch')) {
-                                $num=gdrcd_query(gdrcd_query("SELECT * FROM esiti 
-                                    WHERE id_blocco = ".gdrcd_filter('num',$rec['id'])." AND autore != '".$_SESSION['login']."' 
+                                $num=gdrcd_query(gdrcd_query("SELECT * FROM esiti
+                                    WHERE id_blocco = ".gdrcd_filter('num',$rec['id'])." AND id_personaggio_autore != '".$_SESSION['id_personaggio_autore']."'
                                     ORDER BY data DESC", 'result'), 'num_rows');
-                                $new=gdrcd_query(gdrcd_query("SELECT * FROM esiti 
-                                    WHERE id_blocco = ".gdrcd_filter('num',$rec['id'])." AND autore != '".$_SESSION['login']."' 
+                                $new=gdrcd_query(gdrcd_query("SELECT * FROM esiti
+                                    WHERE id_blocco = ".gdrcd_filter('num',$rec['id'])." AND id_personaggio_autore != '".$_SESSION['id_personaggio_autore']."'
                                     AND letto_pg = 0 ORDER BY data DESC", 'result'), 'num_rows');
                                 ?>
 
@@ -189,7 +189,7 @@
                         </table>
                     </div>
                     <!-- link nuova serie esiti -->
-                    
+
                     <?php
                 }
                 ?>
@@ -199,7 +199,7 @@
                         </a>
                     </div>
 
-            <?php 
+            <?php
             }
         ?>
     </div>
