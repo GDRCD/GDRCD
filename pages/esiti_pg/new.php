@@ -1,5 +1,5 @@
 <?php
-$blocco = gdrcd_query("SELECT id, pg, titolo FROM blocco_esiti WHERE pg = '".gdrcd_filter('in',$_SESSION['login'])."'
+$blocco = gdrcd_query("SELECT id, id_personaggio_destinatario, titolo FROM blocco_esiti WHERE id_personaggio_destinatario = '".$_SESSION['id_personaggio']."'
         AND id= ".gdrcd_filter('num',$_GET['blocco'])." LIMIT 1 ");
 
 if (gdrcd_filter('num',$blocco['id'])>0) {

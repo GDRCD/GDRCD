@@ -207,7 +207,6 @@ function gdrcd_chat_image_save(
     }
 
     gdrcd_chat_db_insert_for_login(
-        '',
         $tipo,
         $testo
     );
@@ -260,9 +259,9 @@ function gdrcd_chat_png_save(
 
     // inserisco il sussurro in chat
     gdrcd_chat_db_insert_for_login(
-        $nomepng,
         $tipo,
-        $testo
+        $testo,
+        $nomepng
     );
 
     // Tutto a buon fine: status "created" è il modo per indicare che l'operazione ha creato dati nel db
@@ -298,7 +297,6 @@ function gdrcd_chat_master_save(
     }
 
     gdrcd_chat_db_insert_for_login(
-        '',
         $tipo,
         $testo
     );
@@ -380,7 +378,7 @@ function gdrcd_chat_dice_save(
         );
     }
 
-    // Verifica che il numero di dadi da lanciare sia consentito@return string|int|false
+    // Verifica che il numero di dadi da lanciare sia consentito
     if ($dice_number < 1 || $dice_number > $PARAMETERS['settings']['skills_dices']['max_number']) {
         return gdrcd_api_status_invalid(
             gdrcd_filter_out(
@@ -418,7 +416,7 @@ function gdrcd_chat_dice_save(
     if (
         $dice_threshold !== null
         && (
-            $dice_threshold < 0
+            $dice_threshold < 1
             || $dice_threshold > $dice_faces
         )
     ) {
@@ -471,7 +469,6 @@ function gdrcd_chat_dice_save(
 
     // inserisce nel database l'array convertito in json con tutti i dati sul risultato dei lanci
     gdrcd_chat_db_insert_for_login(
-        '',
         $tipo,
         json_encode($result)
     );
@@ -512,7 +509,7 @@ function gdrcd_chat_stats_save(
     $carId = 'car' . $statsId;
     $bonusCarId = 'bonus_car' . $statsId;
 
-    $personaggio = gdrcd_chat_player_info($_SESSION['login']);
+    $personaggio = gdrcd_chat_player_info($_SESSION['id_personaggio']);
     $stats = $personaggio[$carId] ?? null;
 
     if ( $stats === null ) {
@@ -529,7 +526,7 @@ function gdrcd_chat_stats_save(
     $items_bonus = 0;
 
     // Recupero eventuali bonus dati da oggetti equipaggiati
-    $player_items = gdrcd_chat_player_items($_SESSION['login']);
+    $player_items = gdrcd_chat_player_items($_SESSION['id_personaggio']);
 
     foreach ($player_items as $row) {
         $bonus = $row[$bonusCarId];
@@ -631,7 +628,6 @@ function gdrcd_chat_stats_save(
 
     // inserisce nel database l'array convertito in json con tutti i dati sul tiro abilità
     gdrcd_chat_db_insert_for_login(
-        '',
         $tipo,
         json_encode($result)
     );
@@ -682,7 +678,7 @@ function gdrcd_chat_skill_save(
     $skill_rank = $skill_record['grado'] ?? 0;
 
     // Cerca le informazioni sull'utilizzatore della skill nel database
-    $personaggio = gdrcd_chat_player_info($_SESSION['login']);
+    $personaggio = gdrcd_chat_player_info($_SESSION['id_personaggio']);
 
     if ($personaggio['salute'] <= 0) {
         // se l'utente non ha salute residua non può compiere l'azione
@@ -705,7 +701,7 @@ function gdrcd_chat_skill_save(
     $items_bonus = 0;
 
     // Recupero eventuali bonus dati da oggetti equipaggiati
-    $player_items = gdrcd_chat_player_items($_SESSION['login']);
+    $player_items = gdrcd_chat_player_items($_SESSION['id_personaggio']);
 
     foreach ($player_items as $row) {
         $bonus = $row[$bonusCarId];
@@ -815,7 +811,6 @@ function gdrcd_chat_skill_save(
 
     // inserisce nel database l'array convertito in json con tutti i dati sul tiro abilità
     gdrcd_chat_db_insert_for_login(
-        '',
         $tipo,
         json_encode($result)
     );
@@ -852,14 +847,14 @@ function gdrcd_chat_item_save(
         return gdrcd_api_status_invalid($MESSAGE['chat']['error']['empty_message']);
     }
 
-    $item = gdrcd_chat_player_item($_SESSION['login'], $id_oggetto);
+    $item = gdrcd_chat_player_item($_SESSION['id_personaggio'], $id_oggetto);
 
     // Se l'oggetto non esiste l'operazione fallisce
     if (empty($item)) {
         return gdrcd_api_status_invalid($MESSAGE['chat']['error']['invalid_item'] .': '. $id_oggetto);
     }
 
-    $item = gdrcd_chat_player_item_consume($_SESSION['login'], $item);
+    $item = gdrcd_chat_player_item_consume($_SESSION['id_personaggio'], $item);
 
     // Informazioni dell'oggetto usato
     $result = [
@@ -872,7 +867,6 @@ function gdrcd_chat_item_save(
 
     // inserisce nel database l'array convertito in json con tutti i dati sul tiro abilità
     gdrcd_chat_db_insert_for_login(
-        '',
         $tipo,
         json_encode($result)
     );
@@ -880,7 +874,7 @@ function gdrcd_chat_item_save(
     // Tutto a buon fine: status "created" è il modo per indicare che l'operazione ha creato dati nel db
     // In più inviamo nel messaggio in uscita l'elenco aggiornato degli oggetti del giocatore
     return gdrcd_api_status_created(
-        ['items' => gdrcd_chat_player_items($_SESSION['login'])]
+        ['items' => gdrcd_chat_player_items($_SESSION['id_personaggio'])]
     );
 }
 
@@ -925,7 +919,7 @@ function gdrcd_chat_whisper_save(
     $destinatario = gdrcd_capital_letter($destinatario);
 
     // Cerca le informazioni sul destinatario nel database
-    $personaggio = gdrcd_chat_player_info($destinatario);
+    $personaggio = gdrcd_chat_player_info_by_name($destinatario);
 
     // se destinatario non esiste nel database, ritorna fallimento
     if ($personaggio === null) {
@@ -939,9 +933,10 @@ function gdrcd_chat_whisper_save(
 
     // inserisco il sussurro in chat
     gdrcd_chat_db_insert_for_login(
-        $destinatario,
         $tipo,
-        $testo
+        $testo,
+        null,
+        $personaggio['id_personaggio']
     );
 
     // Tutto a buon fine: status "created" è il modo per indicare che l'operazione ha creato dati nel db
@@ -978,9 +973,9 @@ function gdrcd_chat_action_save(
 
     // Salva l'azione nel database
     gdrcd_chat_db_insert_for_login(
-        $tag,
         $tipo,
-        $testo
+        $testo,
+        $tag
     );
 
     // Assegna esperienza
@@ -1035,7 +1030,7 @@ function gdrcd_chat_private_invite_save(
     $destinatario = gdrcd_capital_letter($destinatario);
 
     // Cerca le informazioni sul destinatario nel database
-    $personaggio = gdrcd_chat_player_info($destinatario);
+    $personaggio = gdrcd_chat_player_info_by_name($destinatario);
 
     // se destinatario non esiste nel database, ritorna fallimento
     if ($personaggio === null) {
@@ -1048,7 +1043,7 @@ function gdrcd_chat_private_invite_save(
         : [];
 
     // Se il personaggio è già invitato, esce con un errore
-    if (in_array($destinatario, $invitati)) {
+    if (in_array($personaggio['id_personaggio'], $invitati)) {
         return gdrcd_api_status_invalid($MESSAGE['chat']['error']['already_invited'] .': '. $destinatario);
     }
 
@@ -1057,8 +1052,8 @@ function gdrcd_chat_private_invite_save(
     //  - verificato che il destinatario sia un nome utente valido e realmente esistente
     //  - verificato che il destinatario non risulti già invitato in chat
 
-    // Aggiunge il nome del personaggio all'array degli invitati
-    $invitati[] = $destinatario;
+    // Aggiunge l'id del personaggio invitato all'array degli invitati
+    $invitati[] = $personaggio['id_personaggio'];
 
     // Aggiorna la lista invitati sul database
     gdrcd_stmt(
@@ -1075,12 +1070,12 @@ function gdrcd_chat_private_invite_save(
 
     // Invia un messaggio di posta al personaggio invitato
     gdrcd_stmt(
-        'INSERT INTO messaggi ( mittente, destinatario, spedito, letto, testo )
+        'INSERT INTO messaggi ( id_personaggio_mittente, id_personaggio_destinatario, spedito, letto, testo )
         VALUES (?, ?, NOW(), 0, ?)',
         [
             'sss',
-            'System message',
-            $destinatario,
+            0,
+            $personaggio['id_personaggio'],
             $_SESSION['login']
                 .' '. $MESSAGE['chat']['warning']['invited_message']
                 .' '. $info['nome']
@@ -1090,15 +1085,17 @@ function gdrcd_chat_private_invite_save(
 
     $result = [
         'message' => $testo,
-        'invited' => $destinatario,
+        'invited_id' => $personaggio['id_personaggio'],
+        'invited_name' => $personaggio['nome'],
         'invited_list' => $invitati,
     ];
 
     // inserisco il messaggio in chat
     gdrcd_chat_db_insert_for_login(
-        $destinatario,
         $tipo,
-        json_encode($result)
+        json_encode($result),
+        null,
+        $personaggio['id_personaggio']
     );
 
     return gdrcd_api_status_created();
@@ -1148,13 +1145,21 @@ function gdrcd_chat_private_kick_save(
     // formatta il nome del destinatario.
     $destinatario = gdrcd_capital_letter($destinatario);
 
+    // Cerca le informazioni sul destinatario nel database
+    $personaggio = gdrcd_chat_player_info_by_name($destinatario);
+
+    // se destinatario non esiste nel database, ritorna fallimento
+    if ($personaggio === null) {
+        return gdrcd_api_status_invalid($MESSAGE['chat']['error']['unknown_recipient'] .': '. $destinatario);
+    }
+
     // Converte la stringa invitati in un array
     $invitati = !empty($info['invitati'])
         ? explode(',', $info['invitati'])
         : [];
 
     // Se il personaggio non è in elenco, esce con un errore
-    if (!in_array($destinatario, $invitati)) {
+    if (!in_array($personaggio['id_personaggio'], $invitati)) {
         return gdrcd_api_status_invalid($MESSAGE['chat']['error']['already_kicked'] .': '. $destinatario);
     }
 
@@ -1162,10 +1167,10 @@ function gdrcd_chat_private_kick_save(
     //  - verificato che login abbia i permessi per gestire la chat privata
     //  - verificato che il destinatario risulti invitato in chat
 
-    // Rimuove il nome del personaggio dalla lista invitati
+    // Rimuove l'id del personaggio dalla lista invitati
     $invitati = array_filter(
         $invitati,
-        fn($invitato) => $invitato !== $destinatario
+        fn($invitato) => $invitato != $personaggio['id_personaggio']
     );
 
     // Aggiorna la lista invitati sul database
@@ -1181,14 +1186,21 @@ function gdrcd_chat_private_kick_save(
         ]
     );
 
+    $result = [
+        'message' => $testo,
+        'kicked_id' => $personaggio['id_personaggio'],
+        'kicked_name' => $personaggio['nome'],
+        'invited_list' => $invitati,
+    ];
+
     // Invia un messaggio di posta al personaggio cacciato
     gdrcd_stmt(
-        'INSERT INTO messaggi ( mittente, destinatario, spedito, letto, testo )
+        'INSERT INTO messaggi ( id_personaggio_mittente, id_personaggio_destinatario, spedito, letto, testo )
         VALUES (?, ?, NOW(), 0, ?)',
         [
             'sss',
-            'System message',
-            $destinatario,
+            0,
+            $personaggio['id_personaggio'],
             $_SESSION['login']
                 .' '. $MESSAGE['chat']['warning']['expelled_message']
                 .' '. $info['nome']
@@ -1196,17 +1208,12 @@ function gdrcd_chat_private_kick_save(
         ]
     );
 
-    $result = [
-        'message' => $testo,
-        'kicked' => $destinatario,
-        'invited_list' => $invitati,
-    ];
-
     // inserisco il messaggio in chat
     gdrcd_chat_db_insert_for_login(
-        $destinatario,
         $tipo,
-        json_encode($result)
+        json_encode($result),
+        null,
+        $personaggio['id_personaggio']
     );
 
     return gdrcd_api_status_created();
@@ -1239,17 +1246,45 @@ function gdrcd_chat_private_list_save(
     }
 
     // Converte la stringa invitati in un array
-    $invitati = !empty($info['invitati'])
+    $invitatiIds = !empty($info['invitati'])
         ? explode(',', $info['invitati'])
         : [];
 
+    $invitatiNomi = [];
+
+    $invitatiLength = count($invitatiIds);
+
+    if ($invitatiLength) {
+        $stmt = gdrcd_stmt(
+            'SELECT id_personaggio, nome FROM personaggio WHERE id_personaggio IN(?'. str_repeat(',?', $invitatiLength-1) .')',
+            [
+                str_repeat('i', $invitatiLength),
+                ...$invitatiIds
+            ]
+        );
+
+        $map = [];
+
+        if (gdrcd_query($stmt, 'num_rows') > 0) {
+            while ($row = gdrcd_query($stmt, 'assoc')) {
+                $map[$row['id_personaggio']] = $row['nome'];
+            }
+
+            gdrcd_query($stmt, 'free');
+        }
+
+        foreach ($invitatiIds as $invitatoId) {
+            $invitatiNomi[] = $map[$invitatoId] ?? 'Utente Cancellato #'. $invitatoId;
+        }
+    }
+
     $result = [
-        'invited_list' => $invitati,
+        'invited_list' => $invitatiIds,
+        'invited_names' => $invitatiNomi,
     ];
 
     // inserisco il messaggio in chat
     gdrcd_chat_db_insert_for_login(
-        '',
         $tipo,
         json_encode($result)
     );
@@ -1260,21 +1295,24 @@ function gdrcd_chat_private_list_save(
 /**
  * Inserisce nel database una riga nella tabella `chat` da parte dell'utente connesso al sito.
  *
- * @param string $tag_o_destinatario il tag o il destinatario appropriati per la tipologia di messaggio
  * @param string $tipo il tipo interno dei messaggi di chat (es: A, M, P etc.)
  * @param string $testo il messaggio da salvare
+ * @param null|string $tag il tag
+ * @param null|int $id_destinatario id del destinatario del messaggio (usato tipicamente per i sussurri)
  * @return void
  */
 function gdrcd_chat_db_insert_for_login(
-    $tag_o_destinatario,
     $tipo,
-    $testo
+    $testo,
+    $tag = null,
+    $id_destinatario = null
 ) {
     gdrcd_chat_db_insert(
         $_SESSION['luogo'],
         [$_SESSION['sesso'], $_SESSION['img_razza']],
-        $_SESSION['login'],
-        $tag_o_destinatario,
+        $_SESSION['id_personaggio'],
+        $tag,
+        $id_destinatario,
         $tipo,
         $testo
     );
@@ -1285,8 +1323,9 @@ function gdrcd_chat_db_insert_for_login(
  *
  * @param int $stanza Id della stanza della chat
  * @param string[] $imgs array di iconcine da utilizzare
- * @param string $mittente
- * @param string $tag_o_destinatario il tag o il destinatario appropriati per la tipologia di messaggio
+ * @param int $id_mittente
+ * @param null|string $tag il tag
+ * @param null|int $id_destinatario il destinatario appropriati per la tipologia di messaggio
  * @param string $tipo il tipo interno dei messaggi di chat (es: A, M, P etc.)
  * @param string $testo il messaggio da salvare
  * @return void
@@ -1294,20 +1333,22 @@ function gdrcd_chat_db_insert_for_login(
 function gdrcd_chat_db_insert(
     $stanza,
     $imgs,
-    $mittente,
-    $tag_o_destinatario,
+    $id_mittente,
+    $tag,
+    $id_destinatario,
     $tipo,
     $testo
 ) {
     gdrcd_stmt(
-        'INSERT INTO chat (stanza, imgs, mittente, destinatario, ora, tipo, testo)
-        VALUES (?, ?, ?, ?, NOW(), ?, ?)',
+        'INSERT INTO chat (stanza, imgs, id_personaggio_mittente, id_personaggio_destinatario, tag_posizione, ora, tipo, testo)
+        VALUES (?, ?, ?, ?, ?, NOW(), ?, ?)',
         [
-            'isssss',
+            'isiisss',
             $stanza,
             implode(';', $imgs),
-            $mittente,
-            $tag_o_destinatario,
+            $id_mittente,
+            $id_destinatario,
+            $tag,
             $tipo,
             $testo
         ]
@@ -1367,7 +1408,7 @@ function gdrcd_chat_strip_message_symbol($message, $symbol)
  *
  * La funzione ritorna i dati dello stesso oggetto con i valori di numero e cariche aggiornati.
  *
- * @param string $nome Nome del personaggio che consuma l'oggetto
+ * @param int $id_personaggio ID del personaggio che consuma l'oggetto
  * @param array{
  *  id_oggetto: int,
  *  nome: string,
@@ -1397,7 +1438,7 @@ function gdrcd_chat_strip_message_symbol($message, $symbol)
  *  max_cariche: int
  * }
  */
-function gdrcd_chat_player_item_consume($nome, $item)
+function gdrcd_chat_player_item_consume($id_personaggio, $item)
 {
     // Decremento cariche oggetto
     if ($item['cariche'] > 1) {
@@ -1405,13 +1446,13 @@ function gdrcd_chat_player_item_consume($nome, $item)
             'UPDATE clgpersonaggiooggetto
                 SET cariche = cariche -1
 
-            WHERE nome = ?
+            WHERE id_personaggio = ?
                 AND id_oggetto = ?
 
             LIMIT 1',
             [
-                'si',
-                $nome,
+                'ii',
+                $id_personaggio,
                 $item['id_oggetto']
             ]
         );
@@ -1428,14 +1469,14 @@ function gdrcd_chat_player_item_consume($nome, $item)
                 SET cariche = ?,
                     numero = numero - 1
 
-            WHERE nome = ?
+            WHERE id_personaggio = ?
                 AND id_oggetto = ?
 
             LIMIT 1',
             [
-                'isi',
+                'iii',
                 $item['max_cariche'],
-                $nome,
+                $id_personaggio,
                 $item['id_oggetto']
             ]
         );
@@ -1448,10 +1489,10 @@ function gdrcd_chat_player_item_consume($nome, $item)
 
     // Elimino la riga
     gdrcd_stmt(
-        'DELETE FROM clgpersonaggiooggetto WHERE nome = ? AND id_oggetto = ? LIMIT 1',
+        'DELETE FROM clgpersonaggiooggetto WHERE id_personaggio = ? AND id_oggetto = ? LIMIT 1',
         [
-            'si',
-            $nome,
+            'ii',
+            $id_personaggio,
             $item['id_oggetto']
         ]
     );
@@ -1512,11 +1553,11 @@ function gdrcd_chat_assign_experience($message)
 
     // Salva a database l'esperienza assegnata
     gdrcd_stmt(
-        'UPDATE personaggio SET esperienza = esperienza + ? WHERE nome = ? LIMIT 1',
+        'UPDATE personaggio SET esperienza = esperienza + ? WHERE id_personaggio = ? LIMIT 1',
         [
-            'ds',
+            'di',
             $exp_bonus,
-            $_SESSION['login'],
+            $_SESSION['id_personaggio'],
         ]
     );
 }

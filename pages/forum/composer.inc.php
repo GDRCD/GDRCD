@@ -8,8 +8,8 @@ $join = '';
 $cond = '';
 if($padre != -1) {
     //Se sto inserendo in un thread, verifico che esista
-    $join = ' INNER JOIN messaggioaraldo AS MA ON araldo.id_araldo=MA.id_araldo ';
-    $cond = ' AND id_messaggio='.$padre." AND id_messaggio_padre=-1";
+    $join = ' INNER JOIN messaggioaraldo ON araldo.id_araldo = messaggioaraldo.id_araldo ';
+    $cond = ' AND id_messaggio = '.$padre." AND id_messaggio_padre = -1";
 }
 
 $araldoData = gdrcd_query("SELECT count(*) AS N FROM araldo".$join." WHERE araldo.id_araldo = ".$araldo.$cond);
@@ -36,15 +36,13 @@ if($araldoData['N'] > 0) {
                     <?php echo gdrcd_filter('out', $MESSAGE['interface']['forums']['insert']['message']); ?>
                 </div>
                 <div class="form_field">
-    <textarea name="messaggio">
-<?php
+    <textarea name="messaggio" required ><?php
 if($quote) {
-    $query = "SELECT messaggio, autore FROM messaggioaraldo WHERE id_messaggio=".$quote;
+    $query = "SELECT messaggioaraldo.messaggio, personaggio.nome as autore FROM messaggioaraldo INNER JOIN personaggio ON personaggio.id_personaggio = messaggioaraldo.id_personaggio WHERE messaggioaraldo.id_messaggio=".$quote;
     $result = gdrcd_query($query);
     echo gdrcd_filter('out', "[quote=".$result['autore']."]".$result['messaggio']."[/quote]");
 }
-?>
-</textarea>
+?></textarea>
                 </div>
                 <div class="form_info">
                     <?php echo gdrcd_filter('out', $MESSAGE['interface']['help']['bbcode']); ?>

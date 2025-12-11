@@ -1,13 +1,13 @@
 <?php
 
-    // Diamo un nome a determinati controlli per semplificare la leggibilità di eventuali condizioni
+    // Diamo un nome a determinati controlli per semplificare la leggibilità di alcune condizioni
     $skillsystem_attivo = $PARAMETERS['mode']['skillsystem'] == 'ON';
     $dadi_attivi = $PARAMETERS['mode']['dices'] == 'ON';
     $login_gamemaster = $_SESSION['permessi'] >= GAMEMASTER;
 
     // Elenco abilità del personaggio connesso
     $skills = $skillsystem_attivo
-        ? gdrcd_chat_player_skills($_SESSION['login'])
+        ? gdrcd_chat_player_skills($_SESSION['id_personaggio'])
         : null;
 
     // Elenco caratteristiche
@@ -22,7 +22,7 @@
 
     // Elenco oggetti equipaggiati del personaggio connesso
     $items = $skillsystem_attivo
-        ? gdrcd_chat_player_items($_SESSION['login'])
+        ? gdrcd_chat_player_items($_SESSION['id_personaggio'])
         : null;
 
 ?>

@@ -2,9 +2,9 @@
 
 /**
  * Tutte le richieste ajax/xhr passano da questo file.
- * 
+ *
  * Questo file accetta un parametro "page" analogamente al main,
- * ma la differenza è che accetta unicamente valori che risolvono 
+ * ma la differenza è che accetta unicamente valori che risolvono
  * ad una cartella, all'interno della quale ci si aspetta l'esistenza
  * di un file "ajax.php" che si occupi di gestire la richiesta.
  */
@@ -19,7 +19,7 @@ gdrcd_controllo_sessione();
 gdrcd_connect();
 
 // Controlla che l'utente non sia esiliato
-if( ($ban_message = gdrcd_controllo_esilio($_SESSION['login'], true)) ) {
+if( ($ban_message = gdrcd_controllo_esilio($_SESSION['id_personaggio'], true)) ) {
     session_destroy();
     gdrcd_api_output(
         gdrcd_api_status_forbidden($ban_message)

@@ -13,7 +13,7 @@
             <?php /*Modifica di un record*/
             if((gdrcd_filter('', $_POST['op']) == $MESSAGE['interface']['administration']['roles']['submit']['edit']) || (gdrcd_filter('', $_POST['op']) == $MESSAGE['interface']['administration']['roles']['submit']['new'])) {
                 /*Eseguo l'aggiornamento*/
-                gdrcd_query("UPDATE personaggio SET permessi = ".gdrcd_filter('num', $_POST['permessi'])." WHERE nome = '".gdrcd_filter('in', $_POST['nome'])."' LIMIT 1");
+                gdrcd_query("UPDATE personaggio SET permessi = ".gdrcd_filter('num', $_POST['permessi'])." WHERE id_personaggio = ".gdrcd_filter('num', $_POST['id_personaggio'])." LIMIT 1");
 
                 switch(gdrcd_filter('num', $_POST['permessi'])) {
                     case USER:
@@ -32,11 +32,20 @@
                         $newrole = gdrcd_filter('out', $PARAMETERS['names']['administrator']['sing']);
                         break;
                 }
+                /*Recupero i nomi dei personaggi per il log*/
+                $char_data = gdrcd_query("SELECT 
+                    target.nome as nome_interessato, 
+                    autore.nome as nome_autore 
+                    FROM personaggio target 
+                    JOIN personaggio autore ON autore.id_personaggio = ".gdrcd_filter('num', $_SESSION['id_personaggio'])."
+                    WHERE target.id_personaggio = ".gdrcd_filter('num', $_POST['id_personaggio'])." 
+                    LIMIT 1");
+
                 /*Registro l'operazione*/
-                gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".gdrcd_filter('in', $_POST['nome'])."','".$_SESSION['login']."', NOW(), '".CHANGEDROLE."', '->".$newrole."')");
+                gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES (".gdrcd_filter('num', $_POST['id_personaggio']).", '".gdrcd_filter('in', $char_data['nome_interessato'])."', '".gdrcd_filter('in', $char_data['nome_autore'])."', NOW(), '".CHANGEDROLE."', '->".$newrole."')");
 
                 /*Avviso l'utente*/
-                gdrcd_query("INSERT INTO messaggi (mittente, destinatario, spedito, testo) VALUES ('".$_SESSION['login']."', '".gdrcd_filter('in', $_POST['nome'])."', NOW(), '".gdrcd_filter('in', $MESSAGE['interface']['administration']['roles']['message_body'][0].$newrole.$MESSAGE['interface']['administration']['roles']['message_body'][1])."')");
+                gdrcd_query("INSERT INTO messaggi (id_personaggio_mittente, id_personaggio_destinatario, spedito, testo) VALUES (".gdrcd_filter('num', $_SESSION['id_personaggio']).", ".gdrcd_filter('num', $_POST['id_personaggio']).", NOW(), '".gdrcd_filter('in', $MESSAGE['interface']['administration']['roles']['message_body'][0].$newrole.$MESSAGE['interface']['administration']['roles']['message_body'][1])."')");
 
                 ?>
                 <!-- Conferma -->
@@ -53,7 +62,7 @@
             }
             /*Form di inserimento/modifica*/
             if(isset($_POST['op']) === false) {
-                $result = gdrcd_query("SELECT nome, permessi FROM personaggio WHERE permessi > ".USER." ORDER BY permessi DESC", 'result'); ?>
+                $result = gdrcd_query("SELECT id_personaggio, nome, permessi FROM personaggio WHERE permessi > ".USER." ORDER BY permessi DESC", 'result'); ?>
                 <!-- Form di abilitazione -->
                 <div class="panels_box">
                     <?php while($row = gdrcd_query($result, 'fetch')) { ?>
@@ -96,20 +105,20 @@
                             </div>
                             <!-- bottoni -->
                             <div class='form_submit'>
-                                <input type="hidden" name="nome" value="<?php echo $row['nome']; ?>">
+                                <input type="hidden" name="id_personaggio" value="<?php echo $row['id_personaggio']; ?>">
                                 <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['roles']['submit']['edit']); ?>" name="op" />
                             </div>
                         </form>
                     <?php }//while
                     gdrcd_query($result, 'free');
                     //Nominativi utente
-                    $result = gdrcd_query("SELECT nome FROM personaggio WHERE permessi > ".DELETED, 'result');
+                    $result = gdrcd_query("SELECT id_personaggio, nome FROM personaggio WHERE permessi > ".DELETED, 'result');
                     ?>
                     <form action="main.php?page=gestione_permessi" method="post" class="form_gestione">
                         <div class='form_field'>
-                            <select name="nome">
+                            <select name="id_personaggio">
                                 <?php while($row = gdrcd_query($result, 'fetch')) { ?>
-                                    <option value="<?php echo gdrcd_filter('out', $row['nome']); ?>">
+                                    <option value="<?php echo $row['id_personaggio']; ?>">
                                         <?php echo gdrcd_filter('out', $row['nome']); ?>
                                     </option>
                                 <?php }//while
