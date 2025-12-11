@@ -19,9 +19,9 @@ if( !empty($_POST['ids']) ) {
 
     // In base alla tipologia di visualizzazione, disabilito i relativi messaggi
     if(gdrcd_filter_in($_POST['type']) === 'destinatario_del') {
-        $query = "UPDATE messaggi SET destinatario_del = 1 WHERE destinatario='".gdrcd_filter('in', $_SESSION['login'])."' AND id IN (".$msgs.")";
+        $query = "UPDATE messaggi SET destinatario_del = 1 WHERE id_personaggio_destinatario='".gdrcd_filter('in', $_SESSION['id_personaggio'])."' AND id IN (".$msgs.")";
     } elseif(gdrcd_filter_in($_POST['type']) === 'mittente_del') {
-        $query = "UPDATE messaggi SET mittente_del = 1 WHERE mittente='".gdrcd_filter('in', $_SESSION['login'])."' AND id IN (".$msgs.")";
+        $query = "UPDATE messaggi SET mittente_del = 1 WHERE id_personaggio_mittente='".gdrcd_filter('in', $_SESSION['id_personaggio'])."' AND id IN (".$msgs.")";
     }
 
     // Avvio l'operazione

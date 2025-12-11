@@ -32,13 +32,13 @@ switch($opRequest) {
          */
         //
         $destinatariCheck = "'".implode("','", $destinatari)."'";
-        $result = gdrcd_query("SELECT nome FROM personaggio WHERE nome IN (" . $destinatariCheck . ") AND nome IS NOT NULL GROUP BY nome ", 'result');
+        $result = gdrcd_query("SELECT nome, id_personaggio FROM personaggio WHERE nome IN (" . $destinatariCheck . ") AND nome IS NOT NULL GROUP BY nome ", 'result');
         $sended = gdrcd_query($result,'num_rows');
         $num_dest = count($destinatari);
 
         $not_all_sended = ($num_dest > $sended);
 
-        // Se sono stati individuati record,procedo
+        // Se sono stati individuati record, procedo
         if(gdrcd_query($result, 'num_rows') > 0){
             // In caso di segnalazione
             if (gdrcd_filter('get', $_POST['url']) != "") {
@@ -48,13 +48,13 @@ switch($opRequest) {
             // Scorro tutti i personaggi
             while ($record = gdrcd_query($result, 'fetch')) {
                 // Creo l'inserimento
-                $queryInsert[] = "('" . $_SESSION['login'] . "', '" . $record['nome'] . "', NOW(), '" . gdrcd_filter('in', $_POST['tipo']) . "', '" . gdrcd_filter('in', $_POST['oggetto']) . "', '" . gdrcd_filter('in', $_POST['testo']) . "')";
+                $queryInsert[] = "('" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "', '" . $record['id_personaggio'] . "', NOW(), '" . gdrcd_filter('in', $_POST['tipo']) . "', '" . gdrcd_filter('in', $_POST['oggetto']) . "', '" . gdrcd_filter('in', $_POST['testo']) . "')";
             }
 
             // Se ho costruito delle query di inserimento, prevedo la query
             if(isset($queryInsert)){
-                $query = gdrcd_query("INSERT INTO messaggi (mittente, destinatario, spedito, tipo, oggetto, testo) VALUES ".implode(",", $queryInsert));
-                $query = gdrcd_query("INSERT INTO backmessaggi (mittente, destinatario, spedito, tipo, oggetto, testo) VALUES ".implode(",", $queryInsert));
+                $query = gdrcd_query("INSERT INTO messaggi (id_personaggio_mittente, id_personaggio_destinatario, spedito, tipo, oggetto, testo) VALUES ".implode(",", $queryInsert));
+                $query = gdrcd_query("INSERT INTO backmessaggi (id_personaggio_mittente, id_personaggio_destinatario, spedito, tipo, oggetto, testo) VALUES ".implode(",", $queryInsert));
             }
 
 
@@ -75,16 +75,16 @@ switch($opRequest) {
      */
     case 'presenti':
         // Ottengo i presenti correnti
-        $query = "SELECT personaggio.nome 
-                    FROM personaggio 
-                    WHERE personaggio.ora_entrata > personaggio.ora_uscita 
+        $query = "SELECT personaggio.nome
+                    FROM personaggio
+                    WHERE personaggio.ora_entrata > personaggio.ora_uscita
                       AND DATE_ADD(personaggio.ultimo_refresh, INTERVAL 4 MINUTE) > NOW()";
         $result = gdrcd_query($query, 'result');
 
         // Scorro tutti i presenti individuati
         while ($record = gdrcd_query($result, 'fetch')) {
-            gdrcd_query("INSERT INTO messaggi (mittente, destinatario, spedito, tipo, oggetto, testo) 
-                                VALUES ('" . $_SESSION['login'] . "', '" . $record['nome'] . "', NOW(), '" . gdrcd_filter('in', $_POST['tipo']) . "', '" . gdrcd_filter('in', $_POST['oggetto']) . "', '" . gdrcd_filter('in', $_POST['testo']) . "')");
+            gdrcd_query("INSERT INTO messaggi (mittente, destinatario, spedito, tipo, oggetto, testo)
+                                VALUES ('" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "', '" . $record['id_personaggio'] . "', NOW(), '" . gdrcd_filter('in', $_POST['tipo']) . "', '" . gdrcd_filter('in', $_POST['oggetto']) . "', '" . gdrcd_filter('in', $_POST['testo']) . "')");
         }
 
         echo '<div class="warning">'.$PARAMETERS['names']['private_message']['sing'] . $MESSAGE['interface']['messages']['sent'].'</div>';
@@ -101,8 +101,8 @@ switch($opRequest) {
             $query = gdrcd_query("SELECT nome FROM personaggio", 'result');
             while ($row = gdrcd_query($query, 'fetch')) {
                 // Creo l'inserimento
-                gdrcd_query("INSERT INTO messaggi (mittente, destinatario, spedito, tipo, oggetto, testo) 
-                                    VALUES ('" . $_SESSION['login'] . "', '" . $row['nome'] . "' , NOW(), '" . gdrcd_filter('in', $_POST['tipo']) . "', '" . gdrcd_filter('in', $_POST['oggetto']) . "', '" . gdrcd_filter('in', $_POST['testo']) . "')");
+                gdrcd_query("INSERT INTO messaggi (mittente, destinatario, spedito, tipo, oggetto, testo)
+                                    VALUES ('" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "', '" . $row['id_personaggio'] . "' , NOW(), '" . gdrcd_filter('in', $_POST['tipo']) . "', '" . gdrcd_filter('in', $_POST['oggetto']) . "', '" . gdrcd_filter('in', $_POST['testo']) . "')");
             }
 
             echo '<div class="warning">'.$PARAMETERS['names']['private_message']['sing'] . $MESSAGE['interface']['messages']['sent'].'</div>';
