@@ -9,7 +9,8 @@ $handleDBConnection = gdrcd_connect();
 /** * Aggiorno l'ora di uscita del pg
 * @author Blancks
 */
-gdrcd_query("UPDATE personaggio SET ora_uscita = NOW() WHERE nome='" . gdrcd_filter('in', $_SESSION['login']) . "'");
+gdrcd_query("UPDATE personaggio SET ora_uscita = NOW() WHERE id_personaggio = '" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "'");
+
 ?>
 <html>
 <head>

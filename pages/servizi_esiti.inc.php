@@ -15,7 +15,7 @@
             if ($_POST['op']=='listpg') {
                     $id = gdrcd_filter('num', $_POST['id']);
 
-                    $query=gdrcd_query("SELECT * FROM blocco_esiti WHERE id = ".$id." 
+                    $query=gdrcd_query("SELECT * FROM blocco_esiti WHERE id = ".$id."
                         AND id_personaggio_autore = '".gdrcd_filter('in',$_SESSION['id_personaggio'])."' ORDER BY id ", 'result');
                     $result=gdrcd_query($query, 'fetch');
 
@@ -92,7 +92,7 @@
                 $record_globale = gdrcd_query("SELECT COUNT(*) FROM blocco_esiti WHERE id_personaggio_autore = '".$_SESSION['id_personaggio']."' ");
                 $totaleresults = $record_globale['COUNT(*)'];
 
-                $query="SELECT * FROM blocco_esiti WHERE id_personaggio_autore = '".$_SESSION['id_personaggio']."' 
+                $query="SELECT * FROM blocco_esiti WHERE id_personaggio_autore = '".$_SESSION['id_personaggio']."'
                     ORDER BY id DESC LIMIT ".$pagebegin.", ".$PARAMETERS['settings']['posts_per_page']."";
                 $result=gdrcd_query($query, 'result');
 
@@ -148,11 +148,11 @@
                                 </td>
                             </tr>
                             <?php while($rec=gdrcd_query($result, 'fetch')) {
-                                $num=gdrcd_query(gdrcd_query("SELECT * FROM esiti 
-                                    WHERE id_blocco = ".gdrcd_filter('num',$rec['id'])." AND id_personaggio_autore != '".$_SESSION['id_personaggio_autore']."' 
+                                $num=gdrcd_query(gdrcd_query("SELECT * FROM esiti
+                                    WHERE id_blocco = ".gdrcd_filter('num',$rec['id'])." AND id_personaggio_autore != '".$_SESSION['id_personaggio_autore']."'
                                     ORDER BY data DESC", 'result'), 'num_rows');
-                                $new=gdrcd_query(gdrcd_query("SELECT * FROM esiti 
-                                    WHERE id_blocco = ".gdrcd_filter('num',$rec['id'])." AND id_personaggio_autore != '".$_SESSION['id_personaggio_autore']."' 
+                                $new=gdrcd_query(gdrcd_query("SELECT * FROM esiti
+                                    WHERE id_blocco = ".gdrcd_filter('num',$rec['id'])." AND id_personaggio_autore != '".$_SESSION['id_personaggio_autore']."'
                                     AND letto_pg = 0 ORDER BY data DESC", 'result'), 'num_rows');
                                 ?>
 
@@ -196,7 +196,7 @@
                         </table>
                     </div>
                     <!-- link nuova serie esiti -->
-                    
+
                     <?php
                 }
                 ?>
@@ -206,7 +206,7 @@
                         </a>
                     </div>
 
-            <?php 
+            <?php
             }
         ?>
     </div>

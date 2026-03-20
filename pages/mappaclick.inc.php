@@ -49,7 +49,7 @@ else {
     $mobile = 0;
     while($row = gdrcd_query($result, 'fetch')) {
         // Se il personaggio si trovava in una mappa inesistente o cancellata aggiorno la sua posizione
-        gdrcd_query("UPDATE personaggio SET ultima_mappa=".gdrcd_filter('get', $row['id_click'])." WHERE nome = '".gdrcd_filter('in', $_SESSION['login'])."'");
+        gdrcd_query("UPDATE personaggio SET ultima_mappa=".gdrcd_filter('get', $row['id_click'])." WHERE id_personaggio = ".gdrcd_filter('num', $_SESSION['id_personaggio']));
 
         /*Stampo il titolo, se non l'ho gia' fatto*/
         if($echoed_title === false) {
