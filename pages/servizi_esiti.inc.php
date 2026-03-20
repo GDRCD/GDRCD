@@ -35,8 +35,15 @@
                     </div>
 
                     <?php
-                    $quer="SELECT * FROM esiti WHERE id_blocco = ".$id." AND chat = 0 
-                        AND id_personaggio_autore = '".gdrcd_filter('in',$_SESSION['id_personaggio'])."' ORDER BY data DESC";
+                    $quer = "
+                        SELECT *, personaggio.nome
+                        FROM esiti
+                            INNER JOIN personaggio ON personaggio.id_personaggio = esiti.id_personaggio_autore
+                        WHERE id_blocco = {$id}
+                            AND chat = 0
+                            AND id_personaggio_autore = '". gdrcd_filter('in',$_SESSION['id_personaggio']) ."'
+                        ORDER BY data DESC
+                    ";
 
 
                     $res=gdrcd_query($quer, 'result');
@@ -45,7 +52,7 @@
                     while  ($row=gdrcd_query($res, 'fetch')) {
                         $chat=gdrcd_query("SELECT nome FROM mappa WHERE id = ".$row['chat']." ");	?>
 
-                        <div class="title_esi">Autore:<b><?php echo $row['id_personaggio_autore'].'</b> | 
+                        <div class="title_esi">Autore:<b><?php echo $row['nome'].'</b> |
                             Creato il: '.gdrcd_format_date($row['data']).' alle '.gdrcd_format_time($row['data']);?></div>
 
                         <div class="fate_title">Titolo: <b><?php echo $row['titolo'];?></b>
