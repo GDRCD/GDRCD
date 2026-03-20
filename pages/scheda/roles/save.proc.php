@@ -399,11 +399,7 @@ $handleDBConnection = gdrcd_connect();
     $file = md5($file . $rand);
     $file = $file . ".html";
 
-
-        $fp = fopen($file, "wb");
-        $message = str_replace("#stop#", "\r\n", $add_chat);
-        fwrite($fp, $message, 65536);
-        fclose($fp);
+    $byteLength = strlen($add_chat);
 
         /* Do le informazioni di download */
         header("Content-Disposition: attachment; filename=" . urlencode($file));
@@ -411,19 +407,12 @@ $handleDBConnection = gdrcd_connect();
         header("Content-Type: application/octet-stream");
         header("Content-Type: application/download");
         header("Content-Description: File Transfer");
-        header("Content-Length: " . filesize($file));
+        header("Content-Length: " . strlen($add_chat));
 
-        /* Passo le info del file al browser */
-        $fp = fopen($file, "r");
-        while (!feof($fp)) {
-            print fread($fp, 65536);
-            flush();
+        $chunkSize = 4096;
+
+        for ($bufferIndex = 0; $bufferIndex <= $byteLength; $bufferIndex += $chunkSize) {
+            echo substr($add_chat, $bufferIndex, $chunkSize);
         }
-        fclose($fp);
-
-        /* Elimino il file temporaneo */
-        unlink($file);
     }
-
-?>
 
