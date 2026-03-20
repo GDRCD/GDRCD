@@ -17,14 +17,16 @@ if ($_REQUEST['pg'] == $_SESSION['id_personaggio']) {
 
 #recupero azioni nell'intervallo
 
-    $query = gdrcd_query("	SELECT chat.id, chat.id_personaggio_mittente
+    $query = gdrcd_query("	SELECT chat.id_personaggio_mittente
 						FROM chat
-						INNER JOIN mappa ON mappa.id = chat.stanza
-						LEFT JOIN personaggio ON personaggio.id_personaggio = chat.id_personaggio_mittente 
-						WHERE stanza = " . $_POST['luogo'] . " AND ora >= '" . gdrcd_filter('in', $date_a) . "' 
-						AND ora <= '" . gdrcd_filter('in', $date_b) . "' 
-						AND (chat.tipo = 'A' || chat.tipo = 'P' || chat.tipo = 'M' || chat.tipo = 'N') 
-						GROUP BY id_personaggio_mittente ORDER BY ora", 'result');
+                            INNER JOIN mappa ON mappa.id = chat.stanza
+                            LEFT JOIN personaggio ON personaggio.id_personaggio = chat.id_personaggio_mittente
+						WHERE stanza = " . $_POST['luogo'] . "
+                            AND ora >= '" . gdrcd_filter('in', $date_a) . "'
+                            AND ora <= '" . gdrcd_filter('in', $date_b) . "'
+                            AND (chat.tipo = 'A' || chat.tipo = 'P' || chat.tipo = 'M' || chat.tipo = 'N')
+						GROUP BY id_personaggio_mittente
+                        ORDER BY id_personaggio_mittente", 'result');
 
     $tot= gdrcd_query($query, 'num_rows');
     echo $tot;
