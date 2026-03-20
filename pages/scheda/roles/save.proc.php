@@ -16,6 +16,10 @@ include('../../../config.inc.php');
 include('../../../vocabulary/' . $PARAMETERS['languages']['set'] . '.vocabulary.php');
 include('../../../includes/functions.inc.php');
 
+if(file_exists("../../../includes/config-overrides.php")){
+    include_once "../../../includes/config-overrides.php";
+}
+
 /* Eseguo la connessione al database */
 $handleDBConnection = gdrcd_connect();
 
