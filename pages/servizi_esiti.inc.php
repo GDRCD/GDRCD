@@ -16,13 +16,13 @@
                     $id = gdrcd_filter('num', $_POST['id']);
 
                     $query=gdrcd_query("SELECT * FROM blocco_esiti WHERE id = ".$id."
-                        AND id_personaggio_destinatario = '".gdrcd_filter('in',$_SESSION['id_personaggio'])."' ORDER BY id ", 'result');
+                        AND id_personaggio_autore = '".gdrcd_filter('in',$_SESSION['id_personaggio'])."' ORDER BY id ", 'result');
                     $result=gdrcd_query($query, 'fetch');
 
 
                     $tit = gdrcd_filter('out', $result['titolo']);
 
-                    $pg = gdrcd_filter('out', $result['pg']);
+                    $pg = gdrcd_filter('out', $result['id_personaggio_autore']);
 
                     gdrcd_query("UPDATE esiti SET letto_pg = 1 WHERE id_blocco = ".$id." ");
 
@@ -35,8 +35,15 @@
                     </div>
 
                     <?php
-                    $quer="SELECT * FROM esiti WHERE id_blocco = ".$id." AND chat = 0
-                        AND id_personaggio_destinatario = '".gdrcd_filter('in',$_SESSION['id_personaggio'])."' ORDER BY data DESC";
+                    $quer = "
+                        SELECT *, personaggio.nome
+                        FROM esiti
+                            INNER JOIN personaggio ON personaggio.id_personaggio = esiti.id_personaggio_autore
+                        WHERE id_blocco = {$id}
+                            AND chat = 0
+                            AND id_personaggio_autore = '". gdrcd_filter('in',$_SESSION['id_personaggio']) ."'
+                        ORDER BY data DESC
+                    ";
 
 
                     $res=gdrcd_query($quer, 'result');
@@ -45,7 +52,7 @@
                     while  ($row=gdrcd_query($res, 'fetch')) {
                         $chat=gdrcd_query("SELECT nome FROM mappa WHERE id = ".$row['chat']." ");	?>
 
-                        <div class="title_esi">Autore:<b><?php echo $row['autore'].'</b> |
+                        <div class="title_esi">Autore:<b><?php echo $row['nome'].'</b> |
                             Creato il: '.gdrcd_format_date($row['data']).' alle '.gdrcd_format_time($row['data']);?></div>
 
                         <div class="fate_title">Titolo: <b><?php echo $row['titolo'];?></b>
@@ -82,10 +89,10 @@
                 $pageend = $pagebegin + $PARAMETERS['settings']['posts_per_page'];
 
                 //Conteggio record totali
-                $record_globale = gdrcd_query("SELECT COUNT(*) FROM blocco_esiti WHERE id_personaggio_destinatario = '".$_SESSION['id_personaggio']."' ");
+                $record_globale = gdrcd_query("SELECT COUNT(*) FROM blocco_esiti WHERE id_personaggio_autore = '".$_SESSION['id_personaggio']."' ");
                 $totaleresults = $record_globale['COUNT(*)'];
 
-                $query="SELECT * FROM blocco_esiti WHERE id_personaggio_destinatario = '".$_SESSION['id_personaggio']."'
+                $query="SELECT * FROM blocco_esiti WHERE id_personaggio_autore = '".$_SESSION['id_personaggio']."'
                     ORDER BY id DESC LIMIT ".$pagebegin.", ".$PARAMETERS['settings']['posts_per_page']."";
                 $result=gdrcd_query($query, 'result');
 
