@@ -1,10 +1,13 @@
 <?php
 $pg = $_REQUEST['pg'];
+$search_id =gdrcd_query("SELECT id_personaggio FROM personaggio WHERE  nome = '" . gdrcd_filter('in', $_POST['search']) . "' ");
+
+
 
 #Numero di risultati
 if ($_POST['type'] == 0) {
     $total = gdrcd_query("SELECT * FROM segnalazione_role WHERE  id_personaggio = '" . gdrcd_filter('in', $pg) . "' 
-        AND partecipanti LIKE '%" . gdrcd_filter('in', $_POST['search']) . "%' AND conclusa = 1 ", "result");
+        AND FIND_IN_SET('" . gdrcd_filter('in', $search_id['id_personaggio']) . "', partecipanti) AND conclusa = 1 ", "result");
     $type = 'personaggio';
 } else if ($_POST['type'] == 1) {
     $total = gdrcd_query("SELECT * FROM segnalazione_role WHERE  id_personaggio = '" . gdrcd_filter('in', $pg) . "' 
@@ -67,13 +70,14 @@ while ($ry = gdrcd_query($year, 'fetch')) {
                 WHERE YEAR(data_inizio) = '" . gdrcd_filter('num', $ry['year']) . "' 
                 AND MONTH(data_inizio) = '" . gdrcd_filter('num', $rm['month']) . "' 
                 AND id_personaggio = '" . gdrcd_filter('in', $pg) . "' 
-                AND partecipanti LIKE '%" . gdrcd_filter('in', $_POST['search']) . "%' 
-                AND conclusa < 2 ORDER BY data_inizio, data_fine ", "result");
+                AND FIND_IN_SET('" . gdrcd_filter('in', $search_id['id_personaggio']) . "', partecipanti) 
+                AND conclusa = 1 ORDER BY data_inizio, data_fine ", "result");
+
             $numbers = gdrcd_query("SELECT * FROM segnalazione_role 
                 WHERE YEAR(data_inizio) = '" . gdrcd_filter('num', $ry['year']) . "' 
                 AND MONTH(data_inizio) = '" . gdrcd_filter('num', $rm['month']) . "' 
                 AND id_personaggio = '" . gdrcd_filter('in', $pg) . "' 
-                AND partecipanti LIKE '%" . gdrcd_filter('in', $_POST['search']) . "%' 
+                AND FIND_IN_SET('" . gdrcd_filter('in', $search_id['id_personaggio']) . "', partecipanti) 
                 AND conclusa = 1 ORDER BY data_inizio , data_fine ", "result");
         } # [1] Ricerca per abilita
         else if ($_POST['type'] == 1) {
