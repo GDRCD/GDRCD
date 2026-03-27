@@ -101,7 +101,7 @@ switch($opRequest) {
             $query = gdrcd_query("SELECT id_personaggio FROM personaggio", 'result');
             while ($row = gdrcd_query($query, 'fetch')) {
                 // Creo l'inserimento
-                gdrcd_query("INSERT INTO messaggi (mittente, destinatario, spedito, tipo, oggetto, testo)
+                gdrcd_query("INSERT INTO messaggi (id_personaggio_mittente, id_personaggio_destinatario, spedito, tipo, oggetto, testo)
                                     VALUES ('" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "', '" . $row['id_personaggio'] . "' , NOW(), '" . gdrcd_filter('in', $_POST['tipo']) . "', '" . gdrcd_filter('in', $_POST['oggetto']) . "', '" . gdrcd_filter('in', $_POST['testo']) . "')");
             }
 
