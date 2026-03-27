@@ -17,7 +17,7 @@ if($PARAMETERS['mode']['check_messages'] === 'ON') {
     /**
      * Controllo se rispetto all'ultimo messaggio visualizzato dall'utente ne sono stati inviati altri
      */
-    $messaggi_non_letti = gdrcd_query("SELECT id FROM messaggi WHERE destinatario = '".gdrcd_filter('in', $_SESSION['login'])."' AND destinatario_del = 0 AND letto = 0", 'result');
+    $messaggi_non_letti = gdrcd_query("SELECT id FROM messaggi WHERE id_personaggio_destinatario = '".gdrcd_filter('in', $_SESSION['id_personaggio'])."' AND destinatario_del = 0 AND letto = 0", 'result');
     $cntNewMessage = gdrcd_query($messaggi_non_letti, 'num_rows');
     $hasNewMessage = ($cntNewMessage > 0);
     gdrcd_query($messaggi_non_letti, 'free');
@@ -38,23 +38,23 @@ if($PARAMETERS['mode']['check_messages'] === 'ON') {
 
             // Inserisco lo script per il click dell'immagine
             $textMessages = '
-                <script type="text/javascript"> 
-                    if (document.images) { 
-                        var msg_button1_up = new Image(); 
-                        msg_button1_up.src = "../../../themes/'.$PARAMETERS['themes']['current_theme'].'/imgs/menu/'.$img_up.'"; 
-                        
-                        var msg_button1_over = new Image(); 
+                <script type="text/javascript">
+                    if (document.images) {
+                        var msg_button1_up = new Image();
+                        msg_button1_up.src = "../../../themes/'.$PARAMETERS['themes']['current_theme'].'/imgs/menu/'.$img_up.'";
+
+                        var msg_button1_over = new Image();
                         msg_button1_over.src = "../../../themes/'.$PARAMETERS['themes']['current_theme'].'/imgs/menu/'.$img_down.'";
-                    } 
-                    
-                    function msg_over_button() { 
-                        if (document.images) { 
+                    }
+
+                    function msg_over_button() {
+                        if (document.images) {
                             document["msg_buttonOne"].src = msg_button1_over.src;
                         }
-                    } 
-                    
-                    function msg_up_button() { 
-                        if (document.images) { 
+                    }
+
+                    function msg_up_button() {
+                        if (document.images) {
                             document["msg_buttonOne"].src = msg_button1_up.src
                         }
                     }
