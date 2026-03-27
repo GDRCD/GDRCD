@@ -98,7 +98,7 @@ switch($opRequest) {
         // Controllo sui permessi dell'utente
         if($_SESSION['permessi'] >= MODERATOR) {
             // Ottengo tutti i personaggi e li scorro per l'invio del messaggio
-            $query = gdrcd_query("SELECT nome FROM personaggio", 'result');
+            $query = gdrcd_query("SELECT id_personaggio FROM personaggio", 'result');
             while ($row = gdrcd_query($query, 'fetch')) {
                 // Creo l'inserimento
                 gdrcd_query("INSERT INTO messaggi (mittente, destinatario, spedito, tipo, oggetto, testo)
