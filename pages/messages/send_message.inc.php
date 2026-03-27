@@ -20,6 +20,10 @@ switch($opRequest) {
         $destinatari = explode(',', $_POST['destinatario']);
         // Rimuovo eventuale sporcizia nella scrittura dei nomi dei Personaggi
         $destinatari = array_map('trim', $destinatari);
+        // Sanitizzo i destinatari per evitare possibili problemi di sicurezza
+        $destinatari = array_map(function($destinatario){
+            return gdrcd_filter_in('in', $destinatario);
+        }, $destinatari);
 
         /**
          * Controllo che i destinatari siano effettivamente dei personaggi
@@ -30,9 +34,17 @@ switch($opRequest) {
          * in modo che poi possano essere inseriti nel controllo IN.
          * Aggiungo che il campo personaggio.nome non sia NULL, per evitare possibili errori.
          */
-        //
-        $destinatariCheck = "'".implode("','", $destinatari)."'";
-        $result = gdrcd_query("SELECT nome, id_personaggio FROM personaggio WHERE nome IN (" . $destinatariCheck . ") AND nome IS NOT NULL GROUP BY nome ", 'result');
+        $destinatariCheck_stmt = gdrcd_stmt(
+            'SELECT nome,
+                    id_personaggio
+            FROM personaggio
+            WHERE nome IN (?)
+            AND nome IS NOT NULL
+            GROUP BY nome
+            ',
+            ['i' => implode(',', $destinatari)]
+        );
+        $result = gdrcd_query($destinatariCheck_stmt, 'result');
         $sended = gdrcd_query($result,'num_rows');
         $num_dest = count($destinatari);
 
@@ -75,15 +87,15 @@ switch($opRequest) {
      */
     case 'presenti':
         // Ottengo i presenti correnti
-        $query = "SELECT personaggio.nome
+        $query = "SELECT id_personaggio
                     FROM personaggio
-                    WHERE personaggio.ora_entrata > personaggio.ora_uscita
-                      AND DATE_ADD(personaggio.ultimo_refresh, INTERVAL 4 MINUTE) > NOW()";
+                    WHERE ora_entrata > ora_uscita
+                      AND DATE_ADD(ultimo_refresh, INTERVAL 4 MINUTE) > NOW()";
         $result = gdrcd_query($query, 'result');
 
         // Scorro tutti i presenti individuati
         while ($record = gdrcd_query($result, 'fetch')) {
-            gdrcd_query("INSERT INTO messaggi (mittente, destinatario, spedito, tipo, oggetto, testo)
+            gdrcd_query("INSERT INTO messaggi (id_personaggio_mittente, id_personaggio_destinatario, spedito, tipo, oggetto, testo)
                                 VALUES ('" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "', '" . $record['id_personaggio'] . "', NOW(), '" . gdrcd_filter('in', $_POST['tipo']) . "', '" . gdrcd_filter('in', $_POST['oggetto']) . "', '" . gdrcd_filter('in', $_POST['testo']) . "')");
         }
 
