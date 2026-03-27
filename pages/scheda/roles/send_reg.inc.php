@@ -29,8 +29,6 @@ if ($_REQUEST['pg'] == $_SESSION['id_personaggio']) {
                         ORDER BY id_personaggio_mittente", 'result');
 
     $tot= gdrcd_query($query, 'num_rows');
-    echo $tot;
-
 
     switch ($tot){
         case '0':
