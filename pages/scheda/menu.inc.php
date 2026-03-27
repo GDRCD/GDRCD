@@ -1,7 +1,7 @@
 <?php
 
 $pg = gdrcd_filter('out', $_REQUEST['pg']);
-$me = gdrcd_filter('out',$_SESSION['login']);
+$me = gdrcd_filter('out',$_SESSION['id_personaggio']);
 $permessi  = gdrcd_filter('out',$_SESSION['permessi']);
 
 # Modifica
