@@ -22,7 +22,7 @@ switch($opRequest) {
         $destinatari = array_map('trim', $destinatari);
         // Sanitizzo i destinatari per evitare possibili problemi di sicurezza
         $destinatari = array_map(function($destinatario){
-            return gdrcd_filter_in('in', $destinatario);
+            return gdrcd_filter_in($destinatario);
         }, $destinatari);
 
         /**
@@ -38,27 +38,29 @@ switch($opRequest) {
             'SELECT nome,
                     id_personaggio
             FROM personaggio
-            WHERE nome IN (?)
+            WHERE nome IN (?' . str_repeat(',?', count($destinatari) - 1) . ')
             AND nome IS NOT NULL
             GROUP BY nome
             ',
-            ['i' => implode(',', $destinatari)]
+            array_merge(
+                ['s'.str_repeat('s', count($destinatari) - 1)],
+                $destinatari
+            )
         );
-        $result = gdrcd_query($destinatariCheck_stmt, 'result');
-        $sended = gdrcd_query($result,'num_rows');
+        $sended = gdrcd_query($destinatariCheck_stmt,'num_rows');
         $num_dest = count($destinatari);
 
         $not_all_sended = ($num_dest > $sended);
 
         // Se sono stati individuati record, procedo
-        if(gdrcd_query($result, 'num_rows') > 0){
+        if($sended > 0){
             // In caso di segnalazione
             if (gdrcd_filter('get', $_POST['url']) != "") {
                 $_POST['testo'] = $_SESSION['login'] . ' ti ha segnalato questo [url=' . $_POST['url'] . ']link[/url].';
             }
 
             // Scorro tutti i personaggi
-            while ($record = gdrcd_query($result, 'fetch')) {
+            while ($record = gdrcd_query($destinatariCheck_stmt, 'assoc')) {
                 // Creo l'inserimento
                 $queryInsert[] = "('" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "', '" . $record['id_personaggio'] . "', NOW(), '" . gdrcd_filter('in', $_POST['tipo']) . "', '" . gdrcd_filter('in', $_POST['oggetto']) . "', '" . gdrcd_filter('in', $_POST['testo']) . "')";
             }
@@ -68,7 +70,6 @@ switch($opRequest) {
                 $query = gdrcd_query("INSERT INTO messaggi (id_personaggio_mittente, id_personaggio_destinatario, spedito, tipo, oggetto, testo) VALUES ".implode(",", $queryInsert));
                 $query = gdrcd_query("INSERT INTO backmessaggi (id_personaggio_mittente, id_personaggio_destinatario, spedito, tipo, oggetto, testo) VALUES ".implode(",", $queryInsert));
             }
-
 
             echo '<div class="warning">'.$PARAMETERS['names']['private_message']['sing'] . $MESSAGE['interface']['messages']['sent'].'</div>';
         }
