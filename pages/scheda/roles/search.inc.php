@@ -1,14 +1,32 @@
 <?php
 $pg = $_REQUEST['pg'];
-$search_id =gdrcd_query("SELECT id_personaggio FROM personaggio WHERE  nome = '" . gdrcd_filter('in', $_POST['search']) . "' ");
 
+$search_id = gdrcd_query("SELECT id_personaggio FROM personaggio WHERE nome LIKE '%" . gdrcd_filter('in', $_POST['search']) . "%' ", "result");
 
+$search_ids = [];
+while ($row = gdrcd_query($search_id, 'fetch')) {
+    $search_ids[] = intval($row['id_personaggio']);
+}
+$find_in_set_clause = '';
 
+if (empty($search_ids)) {
+    $find_in_set_clause = '0';
+} else {
+    foreach ($search_ids as $id) {
+        if ($find_in_set_clause != '') {
+            $find_in_set_clause .= ' OR ';
+        }
+        $find_in_set_clause .= "FIND_IN_SET(" . intval($id) . ", partecipanti)";
+    }
+}
 #Numero di risultati
 if ($_POST['type'] == 0) {
-    $total = gdrcd_query("SELECT * FROM segnalazione_role WHERE  id_personaggio = '" . gdrcd_filter('in', $pg) . "' 
-        AND FIND_IN_SET('" . gdrcd_filter('in', $search_id['id_personaggio']) . "', partecipanti) AND conclusa = 1 ", "result");
+   $total = gdrcd_query("SELECT * FROM segnalazione_role 
+                    WHERE id_personaggio = '" . gdrcd_filter('in', $pg) . "' 
+                    AND (" . $find_in_set_clause . ") 
+                    AND conclusa = 1", "result"); 
     $type = 'personaggio';
+    
 } else if ($_POST['type'] == 1) {
     $total = gdrcd_query("SELECT * FROM segnalazione_role WHERE  id_personaggio = '" . gdrcd_filter('in', $pg) . "' 
         AND tags LIKE '%" . gdrcd_filter('in', $_POST['search']) . "%' AND conclusa = 1 ", "result");
@@ -70,14 +88,14 @@ while ($ry = gdrcd_query($year, 'fetch')) {
                 WHERE YEAR(data_inizio) = '" . gdrcd_filter('num', $ry['year']) . "' 
                 AND MONTH(data_inizio) = '" . gdrcd_filter('num', $rm['month']) . "' 
                 AND id_personaggio = '" . gdrcd_filter('in', $pg) . "' 
-                AND FIND_IN_SET('" . gdrcd_filter('in', $search_id['id_personaggio']) . "', partecipanti) 
+                  AND (" . $find_in_set_clause . ") 
                 AND conclusa = 1 ORDER BY data_inizio, data_fine ", "result");
 
             $numbers = gdrcd_query("SELECT * FROM segnalazione_role 
                 WHERE YEAR(data_inizio) = '" . gdrcd_filter('num', $ry['year']) . "' 
                 AND MONTH(data_inizio) = '" . gdrcd_filter('num', $rm['month']) . "' 
                 AND id_personaggio = '" . gdrcd_filter('in', $pg) . "' 
-                AND FIND_IN_SET('" . gdrcd_filter('in', $search_id['id_personaggio']) . "', partecipanti) 
+                  AND (" . $find_in_set_clause . ") 
                 AND conclusa = 1 ORDER BY data_inizio , data_fine ", "result");
         } # [1] Ricerca per abilita
         else if ($_POST['type'] == 1) {
