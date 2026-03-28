@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Questo file contiene tutte le funzioni della chat
  * comuni a lettura e scrittura
@@ -62,7 +63,7 @@ function gdrcd_chat_room_is_login_allowed($luogo)
 
     $invitati = explode(',', $info['invitati']);
     $login_moderator_o_superiore = $_SESSION['permessi'] >= MODERATOR;
-    $login_proprietario_chat = $info['proprietario'] == $_SESSION['id_personaggio'];
+    $login_proprietario_chat = gdrcd_chat_room_is_login_owner($info);
     $login_invitato_chat = in_array($_SESSION['id_personaggio'], $invitati);
     $chat_scaduta = time() >= strtotime($info['scadenza']);
 
@@ -98,20 +99,39 @@ function gdrcd_chat_room_is_login_owner($luogo)
 {
     // Recupero le informazioni sulla chat corrente
     $info = is_array($luogo) ? $luogo : gdrcd_chat_room_info($luogo);
-    $chat_scaduta = time() >= strtotime($info['scadenza']);
 
-    // Se la chat non è privata oppure è scaduta nessuno può esserne il proprietario
-    if ($info['privata'] != 1 || $chat_scaduta) {
+    if (empty($info) || ($info['privata'] ?? 0) != 1) {
         return false;
     }
 
-    $login_proprietario_chat = $info['proprietario'] == $_SESSION['id_personaggio'];
-    $gilda_proprietaria_chat = is_numeric($info['proprietario'])
-        && str_contains($_SESSION['gilda'], (string)$info['proprietario']);
+    $chat_scaduta = time() >= strtotime($info['scadenza']);
+    if ($chat_scaduta) {
+        return false;
+    }
 
-    // Altrimenti si può essere proprietari se la chat è associata allo specifico personaggio
-    // oppure se la chat appartiene alla gilda di cui fa parte il personaggio
-    return $login_proprietario_chat || $gilda_proprietaria_chat;
+    //controllo aggiuntivo, non dovrebbe essere possibile che non sia numerico.
+    $proprietario = $info['proprietario'];
+    if (!is_numeric($proprietario)) {
+        return false;
+    }
+
+    $proprietario = (int) $proprietario;
+
+    // Se il proprietario è una gilda valida, valuto la membership in gilda
+    $is_gilda = gdrcd_query("SELECT id_gilda FROM gilda WHERE id_gilda = " . $proprietario . " LIMIT 1", 'result');
+    if (gdrcd_query($is_gilda, 'num_rows') === 1) {
+        return strpos($_SESSION['gilda'] ?? '', '*' . $proprietario . '*') !== false;
+    }
+
+    // Se il proprietario è un personaggio valido, id corrispondente a utente loggato
+    $is_personaggio = gdrcd_query("SELECT id_personaggio FROM personaggio WHERE id_personaggio = " . $proprietario . " LIMIT 1", 'result');
+    if (gdrcd_query($is_personaggio, 'num_rows') === 1) {
+        if ($is_personaggio) {
+            return (int) $_SESSION['id_personaggio'] === $proprietario;
+        }
+    }
+
+    return false;
 }
 
 /**
@@ -277,10 +297,10 @@ function gdrcd_chat_player_stats()
 
     $stats = [];
 
-    foreach($PARAMETERS['names']['stats'] as $id_stats => $name_stats) {
+    foreach ($PARAMETERS['names']['stats'] as $id_stats => $name_stats) {
         $id_stats = substr($id_stats, 3);
 
-        if(!is_numeric($id_stats)) {
+        if (!is_numeric($id_stats)) {
             continue;
         }
 
@@ -512,7 +532,7 @@ function gdrcd_chat_dice_list()
 
     $dice = [];
 
-    foreach($PARAMETERS['settings']['skills_dices']['faces'] as $dice_name => $dice_value) {
+    foreach ($PARAMETERS['settings']['skills_dices']['faces'] as $dice_name => $dice_value) {
         $dice[] = [
             'nome' => $dice_name,
             'facce' => (int) $dice_value,
