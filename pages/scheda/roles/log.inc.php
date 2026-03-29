@@ -1,15 +1,22 @@
 <?php
+
+
 if($_SESSION['permessi'] >= LOG_PERM) {
     $pg = $_REQUEST['pg'];
+    $query = "SELECT * FROM segnalazione_role WHERE id = " . gdrcd_filter('num', $_POST['id']) . " 
+     AND conclusa = 1" ;
 } else {
     $pg = $_SESSION['id_personaggio'];
+    $query="SELECT * FROM segnalazione_role WHERE id = " . gdrcd_filter('num', $_POST['id']) . " 
+    AND id_personaggio = '" .gdrcd_filter('in', $pg ). "' AND conclusa = 1";    
 }
-$typeOrder = ($PARAMETERS['mode']['chat_from_bottom'] == 'ON') ? 'DESC' : 'ASC';
 
-$check = gdrcd_query("SELECT * FROM segnalazione_role WHERE id = " . gdrcd_filter('num', $_POST['id']) . " 
-    AND id_personaggio = '" .gdrcd_filter('in', $pg ). "' AND conclusa = 1", 'result');
+$check=gdrcd_query($query, 'result'); 
 $num_check = gdrcd_query($check, 'num_rows');
 $check_f= gdrcd_query($check, 'fetch');
+
+$typeOrder = ($PARAMETERS['mode']['chat_from_bottom'] == 'ON') ? 'DESC' : 'ASC'; 
+
 if ($num_check == 0) {
     echo 'Non hai accesso a questo log chat';
 } else {
