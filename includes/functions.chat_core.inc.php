@@ -118,17 +118,17 @@ function gdrcd_chat_room_is_login_owner($luogo)
     $proprietario = (int) $proprietario;
 
     // Se il proprietario è una gilda valida, valuto la membership in gilda
-    $is_gilda = gdrcd_query("SELECT id_gilda FROM gilda WHERE id_gilda = " . $proprietario . " LIMIT 1", 'result');
-    if (gdrcd_query($is_gilda, 'num_rows') === 1) {
-        return strpos($_SESSION['gilda'] ?? '', '*' . $proprietario . '*') !== false;
+    $stmt = gdrcd_stmt("SELECT id_gilda FROM gilda WHERE id_gilda = ? LIMIT 1", ['i', $proprietario]);
+    if (gdrcd_query($stmt, 'num_rows') === 1) {
+        gdrcd_query($stmt, 'free');
+        return strpos($_SESSION['gilda'] ?? '','*'. $proprietario .'*') !== false;
     }
 
     // Se il proprietario è un personaggio valido, id corrispondente a utente loggato
-    $is_personaggio = gdrcd_query("SELECT id_personaggio FROM personaggio WHERE id_personaggio = " . $proprietario . " LIMIT 1", 'result');
-    if (gdrcd_query($is_personaggio, 'num_rows') === 1) {
-        if ($is_personaggio) {
-            return (int) $_SESSION['id_personaggio'] === $proprietario;
-        }
+    $stmt = gdrcd_stmt("SELECT id_personaggio FROM personaggio WHERE id_personaggio = ? LIMIT 1", ['i', $proprietario]);
+    if (gdrcd_query($stmt, 'num_rows') === 1) {
+        gdrcd_query($stmt, 'free');
+        return (int) $_SESSION['id_personaggio'] === $proprietario;
     }
 
     return false;
