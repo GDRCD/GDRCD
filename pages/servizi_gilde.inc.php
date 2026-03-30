@@ -201,7 +201,7 @@
                             </td>
                         </tr>
                     <?php }
-                            gdrcd_query($result, 'free');
+                        gdrcd_query($result, 'free');
                     ?>
                     </table>
                 </div>
