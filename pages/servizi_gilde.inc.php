@@ -77,7 +77,7 @@
                     </table>
                 </div>
             </div><!--elenco_breve-->
-        <?php /*Visualizzazione estesa gilda*/
+            <?php /*Visualizzazione estesa gilda*/
         } else {
             /*elenco ruoli*/
             $query = "SELECT nome_ruolo, immagine, stipendio, capo FROM ruolo WHERE gilda = ".gdrcd_filter('num', $_REQUEST['id_gilda'])." ORDER BY capo DESC, stipendio DESC";
@@ -178,7 +178,7 @@
                         <tr>
                             <td>
                                 <div class="icone_elenco">
-                                    <?php if ($row['capo'] == 1) { ?><img
+                                    <?php if($row['capo'] == 1) { ?><img
                                             src="imgs/icons/crown1.gif" /><?php } else { ?>&nbsp;<?php } ?>
                                 </div>
                             </td>

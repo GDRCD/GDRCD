@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Questo file contiene tutte le funzioni della chat
  * comuni a lettura e scrittura
@@ -297,10 +296,10 @@ function gdrcd_chat_player_stats()
 
     $stats = [];
 
-    foreach ($PARAMETERS['names']['stats'] as $id_stats => $name_stats) {
+    foreach($PARAMETERS['names']['stats'] as $id_stats => $name_stats) {
         $id_stats = substr($id_stats, 3);
 
-        if (!is_numeric($id_stats)) {
+        if(!is_numeric($id_stats)) {
             continue;
         }
 
@@ -512,7 +511,7 @@ function gdrcd_chat_player_info($id_personaggio)
         ['i', $id_personaggio]
     );
 
-    if (gdrcd_query($stmt, 'num_rows') === 0) {
+    if(gdrcd_query($stmt, 'num_rows') === 0) {
         return null;
     }
 
@@ -532,7 +531,7 @@ function gdrcd_chat_dice_list()
 
     $dice = [];
 
-    foreach ($PARAMETERS['settings']['skills_dices']['faces'] as $dice_name => $dice_value) {
+    foreach($PARAMETERS['settings']['skills_dices']['faces'] as $dice_name => $dice_value) {
         $dice[] = [
             'nome' => $dice_name,
             'facce' => (int) $dice_value,
