@@ -134,7 +134,7 @@
                         <td class="casella_controlli"><!-- Iconcine dei controlli -->
                             <!-- Vai a -->
                             <div class="controllo_elenco">
-                                <form action="popup.php?page=scheda_roles&pg=<?php echo gdrcd_filter('in', $row['id_personaggio']); ?>" target="_blank"
+                                 <form action="main.php?page=gestione_segnalazioni&segn=log&pg=<?php echo gdrcd_filter('in', $row['id_personaggio']); ?>"  
                                       method="post">
                                     <input type="hidden"
                                            name="op"
