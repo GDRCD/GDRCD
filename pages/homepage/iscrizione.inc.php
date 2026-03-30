@@ -569,19 +569,20 @@ if (gdrcd_configuration_get('registrazione.stato_registrazione') === 'chiuso') {
                             // Se è stata usata la registrazione "Su invito", marca il token come utilizzato
                             if (gdrcd_configuration_get('registrazione.stato_registrazione') === 'su_invito') {
                                 $token_invito = gdrcd_filter('out', $_POST['token_invito']);
-                                $nome_personaggio = gdrcd_safe_name($_POST['nome']);
+                                $personaggio=gdrcd_query("SELECT id_personaggio FROM personaggio WHERE nome='" . gdrcd_safe_name($_POST['nome']) . "' LIMIT 1");
+                                $id_personaggio=$personaggio['id_personaggio']; 
                                 
                                  gdrcd_stmt(
                                     "UPDATE token_iscrizione
                                         SET utilizzato = ?,
                                         data_utilizzo = CURDATE(),
-                                        utilizzato_da = ? 
+                                        id_personaggio = ? 
                                     WHERE valore = ?
                                     LIMIT 1",
                                     [
                                         'iss',
                                         1,
-                                       $nome_personaggio,
+                                       $id_personaggio,
                                        $token_invito 
                                     ]
                                 );
