@@ -53,7 +53,7 @@
             /*Se e' stato richiesto di assegnare un oggetto al mercato o ad un PG*/
             if((gdrcd_filter('get', $_POST['op']) == 'assign') && (gdrcd_filter('num', $_POST['num_oggetti']) > 0)) {
                 if($_POST['give_item'] == 'mercato') {
-                    $result = gdrcd_query("SELECT id_oggetto FROM mercato WHERE id_oggetto = ".$_POST['id_oggetto']."", 'result');
+                    $result = gdrcd_query("SELECT id_oggetto FROM mercato WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])."", 'result');
 
                     if(gdrcd_query($result, 'num_rows') > 0) {
                         gdrcd_query($result, 'free');
