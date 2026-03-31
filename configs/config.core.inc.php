@@ -61,7 +61,7 @@ $PARAMETERS['info']['GDRCD'] = '5.6.0.6'; //versione di GDRCD
  */
 $PARAMETERS['database']['username'] = 'gdrcd';            //nome utente del database
 $PARAMETERS['database']['password'] = 'gdrcd';            //password del database
-$PARAMETERS['database']['database_name'] = 'gdrcd';    //nome del database
+$PARAMETERS['database']['database_name'] = 'gdrcd57';    //nome del database
 $PARAMETERS['database']['url'] = 'localhost';        //indirizzo ip del database
 
 
@@ -87,9 +87,9 @@ $PARAMETERS['languages']['set'] = 'IT-it'; //lingua italiana
 
 /* SCELTA DEL TEMA */
 // HOMEPAGE
-$PARAMETERS['themes']['homepage'] = 'advanced'; //tema in uso
+$PARAMETERS['themes']['homepage'] = 'night'; //tema in uso
 // MAINPAGE
-$PARAMETERS['themes']['current_theme'] = 'advanced'; //tema in uso
+$PARAMETERS['themes']['current_theme'] = 'night'; //tema in uso
 
 /**
  * Inserendo i nomi dei temi in questo elenco è possibile rendere disponibili agli utenti temi alternativi rispetto a quello di default
