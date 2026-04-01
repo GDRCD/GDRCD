@@ -2,8 +2,8 @@
 name: Bug report
 about: Rendi noto un bug o una problematica del progetto
 title: "[BUG] - {title}"
-labels: bug, wontfix
-assignees: GDRCD/supervisor
+labels: bug
+assignees: ''
 
 ---
 
