@@ -92,7 +92,7 @@ HTML;
         </div>
 
         <div class="link_back">
-            <a href="main.php?page=opzioni">Torna indietro</a>
+            <a href="main.php?page=gestione">Torna indietro</a>
         </div>
 HTML;
 
