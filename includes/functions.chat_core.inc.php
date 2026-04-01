@@ -108,25 +108,21 @@ function gdrcd_chat_room_is_login_owner($luogo)
         return false;
     }
 
-    //controllo aggiuntivo, non dovrebbe essere possibile che non sia numerico.
-    $proprietario = $info['proprietario'];
+    //controllo aggiuntivo, non dovrebbe essere possibile che non sia numerico. il valore è nella forma "g123" per le gilde e "p123" per i personaggi, ma controllo solo il numero per sicurezza
+    $proprietario = substr($info['proprietario'], 1);
     if (!is_numeric($proprietario)) {
         return false;
     }
 
     $proprietario = (int) $proprietario;
 
-    // Se il proprietario è una gilda valida, valuto la membership in gilda
-    $stmt = gdrcd_stmt("SELECT id_gilda FROM gilda WHERE id_gilda = ? LIMIT 1", ['i', $proprietario]);
-    if (gdrcd_query($stmt, 'num_rows') === 1) {
-        gdrcd_query($stmt, 'free');
-        return strpos($_SESSION['gilda'] ?? '','*'. $proprietario .'*') !== false;
+    // Se il proprietario è una gilda, verifico che l'utente loggato sia membro della gilda proprietaria
+    if (str_starts_with($info['proprietario'], 'g')) {
+        return str_contains($_SESSION['gilda'] ?? '','*'.$proprietario .'*');
     }
 
-    // Se il proprietario è un personaggio valido, id corrispondente a utente loggato
-    $stmt = gdrcd_stmt("SELECT id_personaggio FROM personaggio WHERE id_personaggio = ? LIMIT 1", ['i', $proprietario]);
-    if (gdrcd_query($stmt, 'num_rows') === 1) {
-        gdrcd_query($stmt, 'free');
+    //Se il proprietario è un personaggio, verifico che l'utente loggato sia il proprietario stesso
+    if (str_starts_with($info['proprietario'], 'p')) {
         return (int) $_SESSION['id_personaggio'] === $proprietario;
     }
 
