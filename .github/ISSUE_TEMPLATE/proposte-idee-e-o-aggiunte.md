@@ -2,7 +2,7 @@
 name: Proposte idee e/o aggiunte
 about: Proponi un'idea per il progetto
 title: "[FEATURE] - {title}"
-labels: enhancement, wait-for-reply
+labels: ''
 assignees: gianni10049, Kasui92
 
 ---
