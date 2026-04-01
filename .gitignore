@@ -192,3 +192,4 @@ core/db_overrides.php
 .directory
 .user.ini
 configs/config.core.inc.php
+configs/config.core.inc.php
