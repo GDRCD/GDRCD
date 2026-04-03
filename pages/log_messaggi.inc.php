@@ -52,13 +52,13 @@
                 $totaleresults = $record_globale['COUNT(*)'];
                 //Lettura record
                 $result = gdrcd_stmt(
-                    "SELECT personaggio.nome AS destinatario,
+                    "SELECT IFNULL(personaggio.nome, ?) AS destinatario,
                             backmessaggi.spedito,
                             backmessaggi.testo
                     FROM backmessaggi
-                    INNER JOIN personaggio ON backmessaggi.id_personaggio_destinatario = personaggio.id_personaggio
+                    LEFT JOIN personaggio ON backmessaggi.id_personaggio_destinatario = personaggio.id_personaggio
                     WHERE backmessaggi.id_personaggio_mittente = ? ORDER BY backmessaggi.spedito DESC LIMIT ?, ?",
-                    ['iii', gdrcd_filter('in', $_REQUEST['pg']), $pagebegin, $pageend]);
+                    ['siii', $GLOBALS['MESSAGE']['interface']['user']['cancelled'], $_REQUEST['pg'], $pagebegin, $pageend]);
                 $numresults = gdrcd_query($result, 'num_rows');
 
                 /* Se esistono record */
