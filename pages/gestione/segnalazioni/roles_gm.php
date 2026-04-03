@@ -23,9 +23,9 @@
 
         $query = "SELECT * , 
                     personaggio.nome
-                    FROM send_gm 
+                    FROM send_GM
                     LEFT JOIN personaggio 
-                    ON personaggio.id_personaggio =send_gm.id_personaggio
+                    ON personaggio.id_personaggio = send_GM.id_personaggio
                     ORDER BY data DESC LIMIT " . $pagebegin . ", " . $PARAMETERS['settings']['posts_per_page'] . "";
         $result = gdrcd_query($query, 'result');
 
