@@ -1177,7 +1177,8 @@ CREATE TABLE IF NOT EXISTS `personaggio` (
     `online_last_refresh` DATETIME DEFAULT NULL,
     `data_iscrizione` datetime DEFAULT NULL,
     `last_ip` varchar(255) DEFAULT NULL,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    INDEX `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -1376,6 +1377,23 @@ CREATE TABLE IF NOT EXISTS `razze` (
   `iscrizione` tinyint(1) NOT NULL DEFAULT '1',
   `visibile` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `recupero_password`
+--
+
+CREATE TABLE `personaggio_tokens` (
+  `personaggio` INT NOT NULL,
+  `token` CHAR(36) NOT NULL,
+  `tipo` ENUM('recupero-password','cambio-email') NOT NULL,
+  `scadenza` TIMESTAMP NOT NULL,
+  `dati` TEXT NULL DEFAULT NULL,
+  UNIQUE INDEX `token` (`token`),
+  INDEX `scadenza` (`scadenza`),
+  INDEX `personaggio` (`personaggio`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
