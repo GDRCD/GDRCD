@@ -1,6 +1,4 @@
 <?php
-
-
 if($_SESSION['permessi'] >= LOG_PERM) {
     $pg = $_REQUEST['pg'];
     $query = "SELECT * FROM segnalazione_role WHERE id = " . gdrcd_filter('num', $_POST['id']) . " 
@@ -73,7 +71,7 @@ if ($num_check == 0) {
     </div>
 
     <div class="link_back">
-        <a href="main.php?page=scheda_roles&pg=<?php echo gdrcd_filter('in', $_REQUEST['pg']); ?>">
+        <a href="main.php?page=gestione_segnalazioni&segn=roles_gm">
             <?php echo gdrcd_filter('out',
                 $MESSAGE['interface']['sheet']['link']['back_roles']); ?>
         </a>
