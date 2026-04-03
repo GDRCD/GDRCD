@@ -1,9 +1,10 @@
 ---
 name: Proposte idee e/o aggiunte
 about: Proponi un'idea per il progetto
-title: "[FEATURE] - {title}"
-labels: ''
+title: ''
+labels: feature
 assignees: ''
+type: Feedback
 
 ---
 
