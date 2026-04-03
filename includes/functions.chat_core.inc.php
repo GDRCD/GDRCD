@@ -108,7 +108,7 @@ function gdrcd_chat_room_is_login_owner($luogo)
         return false;
     }
 
-    //controllo aggiuntivo, non dovrebbe essere possibile che non sia numerico. il valore è nella forma "g123" per le gilde e "p123" per i personaggi, ma controllo solo il numero per sicurezza
+    // il valore è nella forma "g123" per le gilde e "p123" per i personaggi, ma controllo solo il numero per sicurezza
     $proprietario = substr($info['proprietario'], 1);
     if (!is_numeric($proprietario)) {
         return false;
