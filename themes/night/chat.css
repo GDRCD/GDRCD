@@ -68,17 +68,19 @@ div.chat_row_A span.color2 {
 
 div.chat_row_M {
   margin-top: 8px;
+  padding: 5px;
   display: flow-root;
-  border-width: 2px;
-  border-color: green;
-  border-style: solid;
+  background-color: #3e5677;
   text-align: center;
-  color: green;
+   
 }
 
 div.chat_row_M span.color2 {
   margin-top: 3px;
   color: #000;
+  font-weight: bolder;
+}
+div.chat_row_M .ora_ms {
   font-weight: bolder;
 }
 
@@ -124,11 +126,11 @@ span.chat_time {
 span.chat_name {
   font-weight: bolder;
   font-size: 12px;
-  color: #000;
+  color: #9ca3af;
 }
 
 span.chat_msg {
-  color: #333;
+  color: #d1d5db;
   font-size: 12px;
 }
 
