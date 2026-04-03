@@ -853,15 +853,18 @@ function gdrcd_chat_avatar_component($azione)
 
     $larghezza = $PARAMETERS['settings']['chat_avatar']['width'];
     $altezza = $PARAMETERS['settings']['chat_avatar']['height'];
-    $avatar_url = $azione['url_img_chat'];
+    $avatar_url = trim($azione['url_img_chat']);
+    $chat_avatar = '';
 
-    $chat_avatar = <<<HTML
-        <img
-            src="{$avatar_url}"
-            class="chat_avatar"
-            style="width:{$larghezza}px; height:{$altezza}px;"
-        />
-        HTML;
+    if (!empty($avatar_url)) {
+        $chat_avatar = <<<HTML
+            <img
+                src="{$avatar_url}"
+                class="chat_avatar"
+                style="width:{$larghezza}px; height:{$altezza}px;"
+            />
+            HTML;
+    }
 
     if(
         isset($PARAMETERS['settings']['chat_avatar']['link']['mode'])
