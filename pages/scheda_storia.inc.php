@@ -18,7 +18,7 @@
     <div class="page_body">
         <div class="panels_box">
             <?php /*Oggetti nello zaino*/
-            $personaggio = gdrcd_query("SELECT storia FROM personaggio WHERE nome = '".gdrcd_filter('in', $_REQUEST['pg'])."'");
+            $personaggio = gdrcd_query("SELECT storia FROM personaggio WHERE id_personaggio = '".gdrcd_filter('in', $_REQUEST['pg'])."'");
              ?>
             <div class="body_box">
                     <?php
