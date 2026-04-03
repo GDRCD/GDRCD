@@ -34,7 +34,8 @@ error_reporting(E_ERROR | E_PARSE);
  * Il controllo va messo qui e non in main poichè in main risulterebbe trovarsi dopo l'inclusione del config
  * dando vita ad un bug sul tastino di aggiornamento della pagina corrente.
  */
-if( ! empty($_SESSION['login'])) {
+
+if( ! empty($_SESSION['id_personaggio'])) {
     // Aggiornamento della posizione nella mappa del pg
     if(isset($_REQUEST['map_id']) && is_numeric($_REQUEST['map_id'])) {
         $_SESSION['luogo'] = -1;
@@ -478,11 +479,19 @@ $PARAMETERS['mode']['user_bbcode'] = 'ON';
  */
 $PARAMETERS['settings']['forum_bbcode']['type'] = 'bbd';
 $PARAMETERS['settings']['user_bbcode']['type'] = 'bbd';
+// bbd : viene abilitato l'uso del plugin "BBDecoder" per la funzionalità del bbcode
+// native : viene usato la scarna formattazione bbcode di base del gdrcd
 
-/**
- * HELP:
- * ON: abilita l'uso del plugin "BBDecoder" per la funzionalità del bbcode
- * OFF: disabilita l'uso del plugin "BBDecoder"
+$PARAMETERS['mode']['online_message_bbcode'] = 'ON';
+//ON:abilita l'uso del bbcode obbligatorio per la formattazione della frase nei presenti estesi
+//OFF:consente di usare html, filtrato delle sue componenti nocive, per la modifica dei campi
+
+$PARAMETERS['settings']['online_message_bbcode']['type'] = 'bbd';
+// bbd : viene abilitato l'uso del plugin "BBDecoder" per la funzionalità del bbcode
+// native : viene usato la scarna formattazione bbcode di base del gdrcd
+
+/** * I seguenti parametri di configurazione sono validi se viene selezionato il modulo 'bbd' e il bbcode è attivo
+ * @author Blancks
  */
 $PARAMETERS['settings']['bbd']['free_html'] = 'ON';
 
@@ -809,12 +818,13 @@ $PARAMETERS['menu']['map']['image_file'] = '';
 $PARAMETERS['menu']['map']['image_file_onclick'] = '';
 
 $PARAMETERS['menu']['profile']['text'] = 'Scheda';
-$PARAMETERS['menu']['profile']['url'] = 'main.php?page=scheda&pg=' . $_SESSION['login'];
+$PARAMETERS['menu']['profile']['url'] = 'main.php?page=scheda&pg=' . $_SESSION['id_personaggio'];
 /**
  * HELP:
  * Esempio di link nel caso si volesse aprire come scheda modale:
- * $PARAMETERS['menu']['profile']['url']="javascript:modalWindow('scheda', 'Scheda di ". $_SESSION['login'] ."', 'popup.php?page=scheda&pg=". $_SESSION['login'] ."');";
+ *$PARAMETERS['menu']['profile']['url']="javascript:modalWindow('scheda', 'Scheda di ". $_SESSION['login'] ."', 'popup.php?page=scheda&pg=". $_SESSION['id_personaggio'] ."');";
  */
+
 $PARAMETERS['menu']['profile']['image_file'] = '';
 $PARAMETERS['menu']['profile']['image_file_onclick'] = '';
 

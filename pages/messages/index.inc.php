@@ -12,11 +12,15 @@ $delType = $msgType.'_del';
 
 // Costruisco la query per i messaggi
 $sqlMessages = "
-    SELECT * 
-    FROM messaggi 
-    WHERE   ".$msgType." = '".$_SESSION['login']."' 
-        AND ".$delType." = 0 
-    ORDER BY spedito DESC";
+    SELECT messaggi.*,
+        personaggio_mittente.nome AS mittente,
+        personaggio_destinatario.nome AS destinatario
+    FROM messaggi
+    LEFT JOIN personaggio AS personaggio_mittente ON messaggi.id_personaggio_mittente = personaggio_mittente.id_personaggio
+    LEFT JOIN personaggio AS personaggio_destinatario ON messaggi.id_personaggio_destinatario = personaggio_destinatario.id_personaggio
+    WHERE   messaggi.id_personaggio_".$msgType." = '".$_SESSION['id_personaggio']."'
+        AND messaggi.".$delType." = 0
+    ORDER BY messaggi.spedito DESC";
 $result = gdrcd_query($sqlMessages." LIMIT ".$pagebegin.", ".$pageend, 'result');
 $numresults = gdrcd_query($result, 'num_rows');
 
@@ -129,11 +133,13 @@ $totaleresults = gdrcd_query(gdrcd_query($sqlMessages, 'result'), 'num_rows');
                             <div class="elementi_elenco">
                                 <?php
                                 if($isSentMessage) {
-                                    echo '<a href="main.php?page=scheda&pg='.$row['destinatario'].'">'.$row['destinatario'].'</a>';
+                                    echo '<a href="main.php?page=scheda&pg='.$row['id_personaggio_destinatario'].'">'.$row['destinatario'].'</a>';
                                 } elseif(is_numeric($row['mittente']) == true) {
                                     echo gdrcd_filter('out', $MESSAGE['interface']['messages']['to_guild']);
                                 } else {
-                                    echo '<a href="main.php?page=scheda&pg='.$row['mittente'].'">'.$row['mittente'].'</a>';
+                                    echo $row['id_personaggio_mittente'] == WEBMASTER_ID
+                                        ? '<a href="javascript:void(0);">'. gdrcd_filter('out', $PARAMETERS['info']['webmaster_name']) .'</a>'
+                                        : '<a href="main.php?page=scheda&pg='.$row['id_personaggio_mittente'].'">'. gdrcd_filter('out', $row['mittente']) .'</a>';
                                 } ?>
                             </div>
                         </td>

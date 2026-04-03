@@ -1,7 +1,7 @@
 <?php
 
 //carico le sole abilità del pg
-$abilita = gdrcd_query("SELECT id_abilita, grado FROM clgpersonaggioabilita WHERE nome='".gdrcd_filter('in', $_REQUEST['pg'])."'", 'result');
+$abilita = gdrcd_query("SELECT id_abilita, grado FROM clgpersonaggioabilita WHERE id_personaggio='".gdrcd_filter('in', $_REQUEST['pg'])."'", 'result');
 
 $px_spesi = 0;
 while($row = gdrcd_query($abilita, 'fetch')) {
@@ -15,7 +15,7 @@ while($row = gdrcd_query($abilita, 'fetch')) {
 // In caso non siano state estratte in precedenza informazioni sul personaggio, le riottengo
 if(!isset($personaggio['id_razza']) || !isset($personaggio['esperienza']) ) {
     // Eseguo la query
-    $personaggioInfo = gdrcd_query("SELECT id_razza, esperienza FROM personaggio WHERE nome='".gdrcd_filter('in', $_REQUEST['pg'])."'", 'query');
+    $personaggioInfo = gdrcd_query("SELECT id_razza, esperienza FROM personaggio WHERE id_personaggio='".gdrcd_filter('in', $_REQUEST['pg'])."'", 'query');
     // Salvo i dati
     $personaggio['id_razza'] = $personaggioInfo['id_razza'];
     $personaggio['esperienza'] = $personaggioInfo['esperienza'];
@@ -31,16 +31,16 @@ $px_totali_pg = gdrcd_filter('int', $personaggio['esperienza']) ;
     </div>
     <?php
     //Incremento skill
-    if((gdrcd_filter('get', $_REQUEST['op']) == 'addskill') && (($_SESSION['login'] == gdrcd_filter('in', $_REQUEST['pg'])) || ($_SESSION['permessi'] >= MODERATOR))) {
+    if((gdrcd_filter('get', $_REQUEST['op']) == 'addskill') && (($_SESSION['id_personaggio'] == gdrcd_filter('in', $_REQUEST['pg'])) || ($_SESSION['permessi'] >= MODERATOR))) {
         $px_necessari = $PARAMETERS['settings']['px_x_rank'] * ($ranks[$_REQUEST['what']] + 1);
         if(($px_totali_pg - $px_spesi) >= $px_necessari) {
             $px_spesi += $px_necessari;
             if($px_necessari == $PARAMETERS['settings']['px_x_rank']) {
-                $query = "INSERT INTO clgpersonaggioabilita (id_abilita, nome, grado) VALUES (".gdrcd_filter('num', $_REQUEST['what']).", '".gdrcd_filter('in', $_REQUEST['pg'])."', 1)";
+                $query = "INSERT INTO clgpersonaggioabilita (id_abilita, id_personaggio, grado) VALUES (".gdrcd_filter('num', $_REQUEST['what']).", '".gdrcd_filter('in', $_REQUEST['pg'])."', 1)";
                 $ranks[$_REQUEST['what']] = 1;
             } else {
                 $ranks[$_REQUEST['what']]++;
-                $query = "UPDATE clgpersonaggioabilita SET grado = ".$ranks[$_REQUEST['what']]." WHERE id_abilita = ".gdrcd_filter('num', $_REQUEST['what'])." AND nome = '".gdrcd_filter('in', $_REQUEST['pg'])."'";
+                $query = "UPDATE clgpersonaggioabilita SET grado = ".$ranks[$_REQUEST['what']]." WHERE id_abilita = ".gdrcd_filter('num', $_REQUEST['what'])." AND id_personaggio = '".gdrcd_filter('in', $_REQUEST['pg'])."'";
             }//else
             gdrcd_query($query);
             echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['warning']['modified']).'</div>';
@@ -49,11 +49,11 @@ $px_totali_pg = gdrcd_filter('int', $personaggio['esperienza']) ;
     //Decremento skill
     if((gdrcd_filter('get', $_REQUEST['op']) == 'subskill') && ($_SESSION['permessi'] >= MODERATOR)) {
         if($ranks[$_REQUEST['what']] == 1) {
-            $query = "DELETE FROM clgpersonaggioabilita WHERE id_abilita = ".$_REQUEST['what']." AND nome = '".gdrcd_filter('in', $_REQUEST['pg'])."' LIMIT 1";
+            $query = "DELETE FROM clgpersonaggioabilita WHERE id_abilita = ".$_REQUEST['what']." AND id_personaggio = '".gdrcd_filter('in', $_REQUEST['pg'])."' LIMIT 1";
             $ranks[$_REQUEST['what']] = 0;
         } else {
             $ranks[$_REQUEST['what']]--;
-            $query = "UPDATE clgpersonaggioabilita SET grado = ".$ranks[$_REQUEST['what']]." WHERE id_abilita = ".$_REQUEST['what']." AND nome = '".gdrcd_filter('in', $_REQUEST['pg'])."'";
+            $query = "UPDATE clgpersonaggioabilita SET grado = ".$ranks[$_REQUEST['what']]." WHERE id_abilita = ".$_REQUEST['what']." AND id_personaggio = '".gdrcd_filter('in', $_REQUEST['pg'])."'";
         }//else
         gdrcd_query($query);
         echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['warning']['modified']).'</div>';
@@ -96,7 +96,7 @@ $px_totali_pg = gdrcd_filter('int', $personaggio['esperienza']) ;
                         <td>
                             <div class="abilita_scheda_sub">
                                 <?php /*Stampo il form di incremento se il pg ha abbastanza px*/
-                                if((((($ranks[$row['id_abilita']] + 1) * $PARAMETERS['settings']['px_x_rank']) <= ($px_totali_pg - $px_spesi)) && (gdrcd_filter('get', $_REQUEST['pg']) == $_SESSION['login']) && ($ranks[$row['id_abilita']] < $PARAMETERS['settings']['skills_cap'])) || ($_SESSION['permessi'] >= MODERATOR)) { ?>
+                                if((((($ranks[$row['id_abilita']] + 1) * $PARAMETERS['settings']['px_x_rank']) <= ($px_totali_pg - $px_spesi)) && (gdrcd_filter('get', $_REQUEST['pg']) == $_SESSION['id_personaggio']) && ($ranks[$row['id_abilita']] < $PARAMETERS['settings']['skills_cap'])) || ($_SESSION['permessi'] >= MODERATOR)) { ?>
                                     [<a href="main.php?page=scheda&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']
                                     ) ?>&op=addskill&what=<?php echo $row['id_abilita'] ?>">+</a>]
                                     <?php if(($_SESSION['permessi'] >= MODERATOR) && ($ranks[$row['id_abilita']] > 0)) { ?>

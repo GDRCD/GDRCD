@@ -61,9 +61,7 @@
         </div>
         <div class='form_field'>
  	  	    <textarea type="textbox" name="testo" required><?php
-                /**    * Fix per evitare le parentesi quadre vuote quando si compone un nuovo messaggio
-                 * @author Blancks
-                 */
+                // Fix per evitare le parentesi quadre vuote quando si compone un nuovo messaggio
                 if(isset($_POST['testo'])) {
                     echo "\n\n\n[".gdrcd_filter('out', trim($_POST['testo']))."]";
                 }

@@ -25,7 +25,7 @@ if(isset($_REQUEST['op'])) {
             } while($token_exists);
             
             $insert_stmt = gdrcd_stmt(
-                "INSERT INTO token_iscrizione (valore, creato_il, scadenza, utilizzato, utilizzato_da, data_utilizzo) VALUES (?, CURDATE(), DATE_ADD(CURDATE(), INTERVAL ? DAY), 0, NULL, NULL)",
+                "INSERT INTO token_iscrizione (valore, creato_il, scadenza, utilizzato, id_personaggio, data_utilizzo) VALUES (?, CURDATE(), DATE_ADD(CURDATE(), INTERVAL ? DAY), 0, NULL, NULL)",
                 ['si', $token, $giorni_scadenza]
             );
              

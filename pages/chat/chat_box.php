@@ -215,7 +215,7 @@
                  */
                 function chatPlayAudio(data) {
                     const canPlayAudio = data.reduce(
-                        (result, item) => result || item.mittente !== '<?= $_SESSION['login'] ?>',
+                        (result, item) => result || item.mittente !== '<?= $_SESSION['id_personaggio'] ?>',
                         false
                     );
 
