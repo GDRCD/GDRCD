@@ -62,7 +62,7 @@ function gdrcd_chat_room_is_login_allowed($luogo)
 
     $invitati = explode(',', $info['invitati']);
     $login_moderator_o_superiore = $_SESSION['permessi'] >= MODERATOR;
-    $login_proprietario_chat = $info['proprietario'] == $_SESSION['id_personaggio'];
+    $login_proprietario_chat = gdrcd_chat_room_is_login_owner($info);
     $login_invitato_chat = in_array($_SESSION['id_personaggio'], $invitati);
     $chat_scaduta = time() >= strtotime($info['scadenza']);
 
@@ -98,20 +98,35 @@ function gdrcd_chat_room_is_login_owner($luogo)
 {
     // Recupero le informazioni sulla chat corrente
     $info = is_array($luogo) ? $luogo : gdrcd_chat_room_info($luogo);
-    $chat_scaduta = time() >= strtotime($info['scadenza']);
 
-    // Se la chat non è privata oppure è scaduta nessuno può esserne il proprietario
-    if ($info['privata'] != 1 || $chat_scaduta) {
+    if (empty($info) || ($info['privata'] ?? 0) != 1) {
         return false;
     }
 
-    $login_proprietario_chat = $info['proprietario'] == $_SESSION['id_personaggio'];
-    $gilda_proprietaria_chat = is_numeric($info['proprietario'])
-        && str_contains($_SESSION['gilda'], (string)$info['proprietario']);
+    $chat_scaduta = time() >= strtotime($info['scadenza']);
+    if ($chat_scaduta) {
+        return false;
+    }
 
-    // Altrimenti si può essere proprietari se la chat è associata allo specifico personaggio
-    // oppure se la chat appartiene alla gilda di cui fa parte il personaggio
-    return $login_proprietario_chat || $gilda_proprietaria_chat;
+    // il valore è nella forma "g123" per le gilde e "p123" per i personaggi, ma controllo solo il numero per sicurezza
+    $proprietario = substr($info['proprietario'], 1);
+    if (!is_numeric($proprietario)) {
+        return false;
+    }
+
+    $proprietario = (int) $proprietario;
+
+    // Se il proprietario è una gilda, verifico che l'utente loggato sia membro della gilda proprietaria
+    if (str_starts_with($info['proprietario'], 'g')) {
+        return str_contains($_SESSION['gilda'] ?? '','*'.$proprietario .'*');
+    }
+
+    //Se il proprietario è un personaggio, verifico che l'utente loggato sia il proprietario stesso
+    if (str_starts_with($info['proprietario'], 'p')) {
+        return (int) $_SESSION['id_personaggio'] === $proprietario;
+    }
+
+    return false;
 }
 
 /**
@@ -492,7 +507,7 @@ function gdrcd_chat_player_info($id_personaggio)
         ['i', $id_personaggio]
     );
 
-    if (gdrcd_query($stmt, 'num_rows') === 0) {
+    if(gdrcd_query($stmt, 'num_rows') === 0) {
         return null;
     }
 

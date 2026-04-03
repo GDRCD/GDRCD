@@ -24,10 +24,10 @@
                         /*Risarcisco gli eventuali possessori */
                         $rec = gdrcd_query("SELECT costo FROM oggetto WHERE id_oggetto=".gdrcd_filter('num', $_POST['id_oggetto'])." LIMIT 1");
 
-                        $refound = gdrcd_query("SELECT nome FROM clgpersonaggiooggetto WHERE id_oggetto=".gdrcd_filter('num', $_POST['id_oggetto'])."", 'result');
+                        $refound = gdrcd_query("SELECT id_personaggio FROM clgpersonaggiooggetto WHERE id_oggetto=".gdrcd_filter('num', $_POST['id_oggetto'])."", 'result');
 
                         while($do_refound = gdrcd_query($refound, 'fetch')) {
-                            gdrcd_query("UPDATE personaggio SET soldi = soldi + ".gdrcd_filter('num', $rec['costo'])." WHERE nome = '".gdrcd_filter_in($do_refound['nome'])."'");
+                            gdrcd_query("UPDATE personaggio SET soldi = soldi + ".gdrcd_filter('num', $rec['costo'])." WHERE id_personaggio = '".gdrcd_filter_in($do_refound['id_personaggio'])."'");
                         }
                         gdrcd_query($refound, 'free');
                         /*Elimino l'oggetto*/
@@ -53,7 +53,7 @@
             /*Se e' stato richiesto di assegnare un oggetto al mercato o ad un PG*/
             if((gdrcd_filter('get', $_POST['op']) == 'assign') && (gdrcd_filter('num', $_POST['num_oggetti']) > 0)) {
                 if($_POST['give_item'] == 'mercato') {
-                    $result = gdrcd_query("SELECT id_oggetto FROM mercato WHERE id_oggetto = ".$_POST['id_oggetto']."", 'result');
+                    $result = gdrcd_query("SELECT id_oggetto FROM mercato WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])."", 'result');
 
                     if(gdrcd_query($result, 'num_rows') > 0) {
                         gdrcd_query($result, 'free');

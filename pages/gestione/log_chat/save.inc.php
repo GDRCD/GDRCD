@@ -10,14 +10,24 @@ if (($_SESSION['permessi'] < MODERATOR) || ($PARAMETERS['mode']['spymessages'] !
             $pagebegin = (int) $_REQUEST['offset'] * $PARAMETERS['settings']['records_per_page'];
             $pageend = $PARAMETERS['settings']['records_per_page'];
             //Conteggio record totali
-            $record_globale = gdrcd_query("SELECT COUNT(*) FROM chat WHERE mittente = '" . gdrcd_filter('get',
+            $record_globale = gdrcd_query("SELECT COUNT(*) FROM chat WHERE id_personaggio_mittente = '" . gdrcd_filter('get',
                     $_REQUEST['pg']) . "'");
             $totaleresults = $record_globale['COUNT(*)'];
-             //Lettura record
-            $result = gdrcd_query("SELECT chat.destinatario, chat.tipo, chat.ora, chat.testo, mappa.nome FROM chat JOIN mappa on chat.stanza=mappa.id WHERE chat.mittente = '" . $_REQUEST['pg'] . "' ORDER BY ora DESC LIMIT " . $pagebegin . ", " . $pageend . "",
-                'result');
+            //Lettura record
+            $result = gdrcd_query(
+                "SELECT
+                    mittente.nome AS nome_mittente,
+                    destinatario.nome AS nome_destinatario,
+                    chat.tipo,
+                    chat.ora,
+                    chat.testo
+                    FROM chat
+                    LEFT JOIN mappa ON chat.stanza = mappa.id
+                    LEFT JOIN personaggio AS mittente ON chat.id_personaggio_mittente = mittente.id_personaggio
+                    LEFT JOIN personaggio AS destinatario ON chat.id_personaggio_destinatario = destinatario.id_personaggio
+                    WHERE chat.id_personaggio_mittente = '" . gdrcd_filter('get', $_REQUEST['pg']) . "'
+                    ORDER BY ora DESC LIMIT " . $pagebegin . ", " . $pageend . "", 'result');
             $numresults = gdrcd_query($result, 'num_rows');
-
             /* Se esistono record */
             if ($numresults > 0) {
                 $sender=gdrcd_filter('out', $MESSAGE['interface']['administration']['log']['chat']['sender']);
@@ -48,10 +58,11 @@ if (($_SESSION['permessi'] < MODERATOR) || ($PARAMETERS['mode']['spymessages'] !
         <!-- Record -->
 HTML;
                 while ($row = gdrcd_query($result, 'fetch')) {
-                    $nome=gdrcd_filter('out', $row['nome']);
+                    $destinatario = '';
+                    $nome=gdrcd_filter('out', $row['nome_mittente']);
                     $ora= gdrcd_format_datetime($row['ora']);
-                    if (empty($row['destinatario']) === false) {
-                        $destinatario= '(-> ' . gdrcd_filter('out', $row['destinatario']) . ') ';
+                    if (empty($row['nome_destinatario']) === false) {
+                        $destinatario= '(-> ' . gdrcd_filter('out', $row['nome_destinatario']) . ') ';
                     }
                     $testo= gdrcd_filter('out', $row['testo']);
                     echo <<<HTML
@@ -135,14 +146,15 @@ HTML;
             // RQuery per il recupero della pagina di azioni richiesta
             $query = <<<SQL
                 SELECT
-                    chat.mittente,
-                    chat.destinatario,
+                    mittente.nome AS nome_mittente,
+                    destinatario.nome AS nome_destinatario,
                     chat.tipo,
                     chat.ora,
                     chat.testo
 
                 FROM chat
-
+                LEFT JOIN personaggio AS mittente ON chat.id_personaggio_mittente = mittente.id_personaggio
+                LEFT JOIN personaggio AS destinatario ON chat.id_personaggio_destinatario = destinatario.id_personaggio
                 WHERE
                     chat.stanza = ?
                     AND ora >= ?
@@ -159,7 +171,7 @@ HTML;
             /* Se esistono record */
             if ($numresults > 0) {
 
-                 $sender=gdrcd_filter('out', $MESSAGE['interface']['administration']['log']['chat']['sender']);
+                $sender=gdrcd_filter('out', $MESSAGE['interface']['administration']['log']['chat']['sender']);
                 $date=gdrcd_filter('out', $MESSAGE['interface']['administration']['log']['chat']['date']);
                 $text=gdrcd_filter('out', $MESSAGE['interface']['administration']['log']['chat']['text']);
                 echo <<<HTML
@@ -188,10 +200,11 @@ HTML;
         <!-- Record -->
 HTML;
                 while ($row = gdrcd_query($result, 'fetch')) {
-                    $mittente=gdrcd_filter('out', $row['mittente']);
+                    $destinatario = '';
+                    $mittente=gdrcd_filter('out', $row['nome_mittente']);
                     $ora= gdrcd_format_datetime($row['ora']);
-                    if (empty($row['destinatario']) === false) {
-                        $destinatario= '(-> ' . gdrcd_filter('out', $row['destinatario']) . ') ';
+                    if (empty($row['nome_destinatario']) === false) {
+                        $destinatario= '(-> ' . gdrcd_filter('out', $row['nome_destinatario']) . ') ';
                     }
                     $testo= gdrcd_filter('out', $row['testo']);
                     echo <<<HTML

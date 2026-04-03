@@ -130,12 +130,21 @@ if ($num_log > 0 && ($row['stanza'] !== $_SESSION['luogo']) && (isset($_POST['op
     $name = gdrcd_query(" SELECT nome FROM mappa WHERE id = " . gdrcd_filter('num', $chat) . "", 'result');
     $r_nam = gdrcd_query($name, 'fetch');
 
-    $query = gdrcd_query("	SELECT chat.id, chat.id_personaggio_mittente, chat.id_personaggio_destinatario, chat.tipo, chat.ora
-    	FROM chat
-    	INNER JOIN mappa ON mappa.id = chat.stanza
-    	LEFT JOIN personaggio ON personaggio.id_personaggio = chat.id_personaggio_mittente 
-    	WHERE stanza = " . gdrcd_filter('num', $chat) . " AND ora >= '" . $row['data_inizio'] . "' AND ora <= NOW() 
-    	AND (chat.tipo = 'A' || chat.tipo = 'P' || chat.tipo = 'M' || chat.tipo = 'N') GROUP BY id_personaggio_mittente ORDER BY ora", 'result');
+    $query = gdrcd_query("SELECT chat.id, chat.id_personaggio_mittente, chat.id_personaggio_destinatario, chat.tipo, chat.ora, personaggio.nome
+    FROM chat
+    INNER JOIN mappa ON mappa.id = chat.stanza
+    LEFT JOIN personaggio ON personaggio.id_personaggio = chat.id_personaggio_mittente
+    WHERE chat.stanza = " . gdrcd_filter('num', $chat) . "
+      AND chat.ora >= '" . $row['data_inizio'] . "'
+      AND chat.ora <= NOW()
+      AND (chat.tipo = 'A' OR chat.tipo = 'P' OR chat.tipo = 'M' OR chat.tipo = 'N')
+      AND chat.id IN (
+          SELECT MAX(id)
+          FROM chat
+          WHERE stanza = " . gdrcd_filter('num', $chat) . "
+          GROUP BY id_personaggio_mittente
+      )
+    ORDER BY chat.ora", 'result');
 
     $start = gdrcd_query("	SELECT chat.id
     	FROM chat
@@ -164,10 +173,10 @@ if ($num_log > 0 && ($row['stanza'] !== $_SESSION['luogo']) && (isset($_POST['op
                     <?php
                     while ($prow = gdrcd_query($query, 'fetch')) {
                         ?>
-                        &nbsp; &nbsp; &raquo; <?php echo gdrcd_filter('out', $prow['mittente']); ?>
+                        &nbsp; &nbsp; &raquo; <?php echo gdrcd_filter('out', $prow['nome']); ?>
                         <input checked type="checkbox"
                                name="parte[]"
-                               value="<?php echo gdrcd_filter('out', $prow['mittente']); ?>"
+                               value="<?php echo gdrcd_filter('out', $prow['id_personaggio_mittente']); ?>"
                                style="width:10px;margin: 0;"/>
                     <?php } ?>
                 </div>
@@ -284,8 +293,10 @@ else if ($_POST['op'] == 'start_ret') {
 
 } else if ($_POST['op'] == 'send_segn') {
 
-    $listapart = join(',', $_POST['parte']);
-    $total = count($_POST['parte']);
+    $parte = $_POST['parte'] ?? [];
+
+    $listapart = join(',', $parte);
+    $total = count($parte);
     $singolo = substr_count($listapart, $_SESSION['id_personaggio']); #conta le volte in cui il partecipante è presente in questa stringa
 
     $query = gdrcd_query("SELECT chat.id, chat.id_personaggio_mittente, chat.id_personaggio_destinatario, chat.tipo, chat.ora
