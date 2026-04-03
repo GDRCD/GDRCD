@@ -205,3 +205,6 @@ const FULL_PERM = MODERATOR;
 /*Vettori globali dei parametri*/
 $PARAMETER = array();
 $MESSAGES = array();
+
+// Id del personaggio di "sistema" per la messaggistica interna
+const WEBMASTER_ID = 0;

@@ -563,14 +563,14 @@ if (gdrcd_configuration_get('registrazione.stato_registrazione') === 'chiuso') {
 
                     if ($ok) {
                             $pass = gdrcd_genera_pass();
-                            gdrcd_query("INSERT INTO personaggio (nome, cognome, pass, data_iscrizione, email, sesso, id_razza, car0, car1, car2, car3, car4, car5, salute, salute_max, soldi, esperienza $lastpasschange_field) 
+                            $insert = gdrcd_query("INSERT INTO personaggio (nome, cognome, pass, data_iscrizione, email, sesso, id_razza, car0, car1, car2, car3, car4, car5, salute, salute_max, soldi, esperienza $lastpasschange_field) 
                             VALUES ('" . gdrcd_safe_name($_POST['nome']) . "', '" . gdrcd_safe_name($_POST['cognome']) . "', '" . gdrcd_encript($pass) . "', NOW(), '" . gdrcd_encript($email) . "', '" . gdrcd_filter('in', $_POST['genere']) . "', " . gdrcd_filter('num', $_POST['razza']) . ", " . gdrcd_filter('num', $_POST['car0']) . ", " . gdrcd_filter('num', $_POST['car1']) . ", " . gdrcd_filter('num', $_POST['car2']) . ", " . gdrcd_filter('num', $_POST['car3']) . ", " . gdrcd_filter('num', $_POST['car4']) . ", " . gdrcd_filter('num', $_POST['car5']) . ", " . gdrcd_filter('num', $PARAMETERS['settings']['max_hp']) . ", " . gdrcd_filter('num', $PARAMETERS['settings']['max_hp']) . ", " . gdrcd_filter('num', $PARAMETERS['settings']['first_money']) . ", " . gdrcd_filter('num', $PARAMETERS['settings']['first_px']) . " $lastpasschange_value)");
                             
+                            $id_personaggio = gdrcd_query($insert, 'last_id');
+
                             // Se è stata usata la registrazione "Su invito", marca il token come utilizzato
                             if (gdrcd_configuration_get('registrazione.stato_registrazione') === 'su_invito') {
                                 $token_invito = gdrcd_filter('out', $_POST['token_invito']);
-                                $personaggio=gdrcd_query("SELECT id_personaggio FROM personaggio WHERE nome='" . gdrcd_safe_name($_POST['nome']) . "' LIMIT 1");
-                                $id_personaggio=$personaggio['id_personaggio']; 
                                 
                                  gdrcd_stmt(
                                     "UPDATE token_iscrizione
@@ -604,7 +604,7 @@ if (gdrcd_configuration_get('registrazione.stato_registrazione') === 'chiuso') {
                                 echo '<div class="panels_box"><div class="welcome_message">' . gdrcd_filter('out', $MESSAGE['register']['welcome']['message'][0]) . ' <b>' . gdrcd_filter('out', $PARAMETERS['info']['site_name']) . '</b> ' . gdrcd_filter('out', $MESSAGE['register']['welcome']['message'][1]) . '</div><div class="welcome_message">' . gdrcd_filter('out', $MESSAGE['register']['welcome']['message'][2]) . '</div><div class="username">' . gdrcd_filter('out', $MESSAGE['register']['welcome']['message']['user']) . ' <b>' . gdrcd_safe_name($_POST['nome']) . '</b></div><div class="username">' . gdrcd_filter('out', $MESSAGE['register']['welcome']['message']['pass']) . ' <b>' . $pass . '</b></div></div>';
                             }
 
-                            gdrcd_query("INSERT INTO messaggi (mittente, destinatario, spedito, testo) VALUES ('" . gdrcd_filter('out', $PARAMETERS['info']['webmaster_name']) . "', '" . gdrcd_safe_name($_POST['nome']) . "', NOW(), '" . gdrcd_filter('in', $MESSAGE['register']['welcome']['message'][4]) . "')");
+                            gdrcd_query("INSERT INTO messaggi (id_personaggio_mittente, id_personaggio_destinatario, spedito, testo) VALUES (" . WEBMASTER_ID . ", " . $id_personaggio . ", NOW(), '" . gdrcd_filter('in', $MESSAGE['register']['welcome']['message'][4]) . "')");
                     }
                 }
                 echo '</div>

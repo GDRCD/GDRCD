@@ -45,7 +45,13 @@ if(gdrcd_query($result, 'num_rows') == 0) { ?>
         </div>
         <div class="infos">
  		    <span class="title"><?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['sender']).": "; ?></span>
-            <span class="body"><?php echo gdrcd_filter('out', $record['mittente']); ?></span>
+            <span class="body">
+                <?php 
+                    echo $record['id_personaggio_mittente'] == WEBMASTER_ID
+                        ? gdrcd_filter('out', $PARAMETERS['info']['webmaster_name'])
+                        : gdrcd_filter('out', $record['mittente']); 
+                ?>
+            </span>
         </div>
         <div class="infos">
             <span class="title"><?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['type']['title']).": "; ?></span>

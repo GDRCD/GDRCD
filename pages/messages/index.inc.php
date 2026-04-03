@@ -137,7 +137,9 @@ $totaleresults = gdrcd_query(gdrcd_query($sqlMessages, 'result'), 'num_rows');
                                 } elseif(is_numeric($row['mittente']) == true) {
                                     echo gdrcd_filter('out', $MESSAGE['interface']['messages']['to_guild']);
                                 } else {
-                                    echo '<a href="main.php?page=scheda&pg='.$row['id_personaggio_mittente'].'">'.$row['mittente'].'</a>';
+                                    echo $row['id_personaggio_mittente'] == WEBMASTER_ID
+                                        ? '<a href="javascript:void(0);">'. gdrcd_filter('out', $PARAMETERS['info']['webmaster_name']) .'</a>'
+                                        : '<a href="main.php?page=scheda&pg='.$row['id_personaggio_mittente'].'">'. gdrcd_filter('out', $row['mittente']) .'</a>';
                                 } ?>
                             </div>
                         </td>
