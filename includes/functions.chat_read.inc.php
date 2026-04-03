@@ -54,7 +54,7 @@ function gdrcd_chat_read_messages($luogo, $last_id = 0)
         ORDER BY id ASC",
         [
             'sii',
-            'Personaggio Cancellato (Mittente)',
+            $GLOBALS['MESSAGE']['interface']['user']['cancelled'] .' ('. $GLOBALS['MESSAGE']['interface']['messages']['sender'] .')',
             $last_id,
             $luogo,
         ]

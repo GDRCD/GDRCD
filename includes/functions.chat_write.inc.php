@@ -1274,7 +1274,7 @@ function gdrcd_chat_private_list_save(
         }
 
         foreach ($invitatiIds as $invitatoId) {
-            $invitatiNomi[] = $map[$invitatoId] ?? 'Utente Cancellato #'. $invitatoId;
+            $invitatiNomi[] = $map[$invitatoId] ?? $GLOBALS['MESSAGE']['interface']['user']['cancelled'] . ' #'. $invitatoId;
         }
     }
 
