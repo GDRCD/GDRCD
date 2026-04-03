@@ -1,38 +1,39 @@
 ---
 name: Bug report
 about: Rendi noto un bug o una problematica del progetto
-title: "[BUG] - {title}"
+title: ''
 labels: bug
 assignees: ''
+type: Feedback
 
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+**Descrizione del problema**
+Una descrizione chiara e concisa del problema.
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+**Step per riprodurre il problema**
+Per riprodurre il problema
+1. Vai su '...'
+2. Clicca su '....'
+3. Scrolla fino a '....'
+4. Ecco l'errore
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+**Comportamento previsto**
+Una descrizione chiara del funzionamento previsto
 
 **Screenshots**
-If applicable, add screenshots to help explain your problem.
+Se utile, fornire screenshot a corredo
 
-**Desktop (please complete the following information):**
+**Desktop (completa le seguenti informazioni se possibile):**
  - OS: [e.g. iOS]
  - Browser [e.g. chrome, safari]
  - Version [e.g. 22]
 
-**Smartphone (please complete the following information):**
+**Smartphone (completa le seguenti informazioni se possibile):**
  - Device: [e.g. iPhone6]
  - OS: [e.g. iOS8.1]
  - Browser [e.g. stock browser, safari]
  - Version [e.g. 22]
 
-**Additional context**
-Add any other context about the problem here.
+**Altre informazioni**
+Se c'è altro da sapere, aggiungilo qui.
