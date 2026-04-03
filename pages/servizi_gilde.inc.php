@@ -143,7 +143,7 @@
                     ?>
                     </table>
                     <?php /*Elenco affiliati*/
-                    $query = "SELECT clgpersonaggioruolo.id_personaggio, personaggio.cognome, ruolo.immagine, ruolo.capo, ruolo.nome_ruolo FROM ruolo JOIN clgpersonaggioruolo ON clgpersonaggioruolo.id_ruolo = ruolo.id_ruolo JOIN personaggio ON personaggio.id_personaggio = clgpersonaggioruolo.id_personaggio WHERE ruolo.gilda = ".gdrcd_filter('num', $_REQUEST['id_gilda'])." ORDER BY ruolo.capo DESC, ruolo.stipendio DESC";
+                    $query = "SELECT clgpersonaggioruolo.id_personaggio, personaggio.nome, personaggio.cognome, ruolo.immagine, ruolo.capo, ruolo.nome_ruolo FROM ruolo JOIN clgpersonaggioruolo ON clgpersonaggioruolo.id_ruolo = ruolo.id_ruolo JOIN personaggio ON personaggio.id_personaggio = clgpersonaggioruolo.id_personaggio WHERE ruolo.gilda = ".gdrcd_filter('num', $_REQUEST['id_gilda'])." ORDER BY ruolo.capo DESC, ruolo.stipendio DESC";
                     $result = gdrcd_query($query, 'result'); ?>
                     <table>
                         <tr>
@@ -189,8 +189,8 @@
                             </td>
                             <td>
                                 <div class="elementi_elenco">
-                                    <a href="main.php?page=scheda&pg=<?php echo gdrcd_filter('out', $row['personaggio']); ?>">
-                                        <?php echo gdrcd_filter('out', $row['personaggio'].' '.$row['cognome']); ?>
+                                    <a href="main.php?page=scheda&pg=<?php echo gdrcd_filter('out', $row['id_personaggio']); ?>">
+                                        <?php echo gdrcd_filter('out', $row['nome'].' '.$row['cognome']); ?>
                                     </a>
                                 </div>
                             </td>
