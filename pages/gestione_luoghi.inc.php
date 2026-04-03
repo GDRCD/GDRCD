@@ -259,7 +259,7 @@
                             </div>
                             <div class='form_field'>
                                 <?php /* Carico l'elenco delle gilde e dei personaggi */
-                                $nomi = gdrcd_query("SELECT nome, cognome FROM personaggio", 'result');
+                                $nomi = gdrcd_query("SELECT id_personaggio,nome, cognome FROM personaggio", 'result');
 
                                 $gilde = gdrcd_query("SELECT id_gilda, nome FROM gilda", 'result');
                                 /* Controllo che esistano gilde o personaggi */
@@ -273,8 +273,8 @@
                                         <!-- Gilde -->
                                         <optgroup label="<?php echo gdrcd_filter('out', $PARAMETERS['names']['guild_name']['plur']); ?>"></optgroup>
                                         <?php while($option = gdrcd_query($gilde, 'fetch')) { ?>
-                                            <option value="<?php echo gdrcd_filter('out', $option['id_gilda']); ?>"
-                                                <?php if($option['id_gilda'] == $loaded_location['proprietario']) {echo " selected";} ?>>
+                                            <option value="<?php echo 'g'.gdrcd_filter('out', $option['id_gilda']); ?>"
+                                                <?php if(str_starts_with($loaded_location['proprietario'], 'g') && $option['id_gilda'] == (int) substr($loaded_location['proprietario'],1)) {echo " selected";} ?>>
                                                 <?php echo gdrcd_filter('out', $option['nome']); ?>
                                             </option>
                                         <?php }//while
@@ -283,8 +283,8 @@
                                         <!-- PG -->
                                         <optgroup label="<?php echo gdrcd_filter('out', $PARAMETERS['names']['users_name']['plur']); ?>">
                                             <?php while($option = gdrcd_query($nomi, 'fetch')) { ?>
-                                                <option value="<?php echo gdrcd_filter('out', $option['nome']); ?>"
-                                                    <?php if($option['nome'] == $loaded_location['proprietario']) {echo " selected";} ?>>
+                                                <option value="<?php echo 'p'.gdrcd_filter('out', $option['id_personaggio']); ?>"
+                                                    <?php if(str_starts_with($loaded_location['proprietario'], 'p') &&$option['id_personaggio'] == (int) substr($loaded_location['proprietario'],1)) {echo " selected";} ?>>
                                                     <?php echo gdrcd_filter('out', $option['nome'])." ".gdrcd_filter('out', $option['cognome']); ?>
                                                 </option>
                                             <?php }//while
