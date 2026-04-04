@@ -6,7 +6,7 @@ gdrcd_controllo_sessione();
 
 $last_message = isset($_SESSION['last_message']) ? $_SESSION['last_message'] : 0;
 
-if(!empty($_SESSION['theme']) and array_key_exists($_SESSION['theme'], $PARAMETERS['themes']['available'])){
+if(!empty($_SESSION['theme']) && array_key_exists($_SESSION['theme'], $PARAMETERS['themes']['available'])){
     $PARAMETERS['themes']['current_theme'] = $_SESSION['theme'];
 }
 

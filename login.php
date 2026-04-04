@@ -47,7 +47,7 @@ $record = gdrcd_query("SELECT personaggio.id_personaggio, personaggio.pass, pers
  * Controllo gli orari di connessione e disconnessione per impedire i doppi login con gli stessi account
  * Se si esce non correttamente dal gioco, sarà possibile entrare dopo 5 minuti dall'ultimo refresh registrato
  */
-if( ! empty($record) and gdrcd_password_check($pass1, $record['pass']) && ($record['permessi'] > -1) && (strtotime($record['ora_entrata']) < strtotime($record['ora_uscita']) || (strtotime($record['ultimo_refresh']) + $PARAMETERS['settings']['reconnection_cooldown']) < time())) {
+if( ! empty($record) && gdrcd_password_check($pass1, $record['pass']) && ($record['permessi'] > -1) && (strtotime($record['ora_entrata']) < strtotime($record['ora_uscita']) || (strtotime($record['ultimo_refresh']) + $PARAMETERS['settings']['reconnection_cooldown']) < time())) {
     $_SESSION['id_personaggio'] = $record['id_personaggio'];
     $_SESSION['login'] = gdrcd_filter_in($record['nome']);
     $_SESSION['cognome'] = $record['cognome'];
@@ -58,7 +58,7 @@ if( ! empty($record) and gdrcd_password_check($pass1, $record['pass']) && ($reco
     $_SESSION['blocca_media'] = $record['blocca_media'];
 
     /* Se è stato scelto un tema valido, lo imposto */
-    if(!empty($theme) and array_key_exists($theme, $PARAMETERS['themes']['available'])) {
+    if(!empty($theme) && array_key_exists($theme, $PARAMETERS['themes']['available'])) {
         $_SESSION['theme'] = $theme;
     }
 

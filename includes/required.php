@@ -43,6 +43,6 @@ require_once(GDRCD_PATH . '/includes/functions.chat_write.inc.php');
 require_once(GDRCD_PATH . '/includes/AudioController.class.php');
 
 // carica il tema definito
-if(!empty($_SESSION['theme']) and array_key_exists($_SESSION['theme'], $PARAMETERS['themes']['available'])){
+if(!empty($_SESSION['theme']) && array_key_exists($_SESSION['theme'], $PARAMETERS['themes']['available'])){
     $PARAMETERS['themes']['current_theme'] = $_SESSION['theme'];
 }

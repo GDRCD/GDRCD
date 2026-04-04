@@ -38,7 +38,7 @@ $users = gdrcd_query("SELECT COUNT(nome) AS online FROM personaggio WHERE ora_en
                             <span class="form_label"><label for="password"><?php echo $MESSAGE['homepage']['forms']['password']; ?></label></span>
                             <input type="password" id="password" name="pass1"/>
                         </div>
-                        <?php if (!empty($PARAMETERS['themes']['available']) and count($PARAMETERS['themes']['available']) > 1): ?>
+                        <?php if (!empty($PARAMETERS['themes']['available']) && count($PARAMETERS['themes']['available']) > 1): ?>
                             <div>
                                 <span class="form_label"><label for="theme"><?= gdrcd_filter('out', $MESSAGE['homepage']['forms']['theme_choice']) ?></label></span>
                                 <select name="theme" id="theme">
