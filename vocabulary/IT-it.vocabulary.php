@@ -702,6 +702,7 @@ $MESSAGE['interface']['user']['stats']['date_end'] = "Esiliato fino al";
 $MESSAGE['interface']['user']['stats']['why'] = "Motivo";
 $MESSAGE['interface']['user']['stats']['link']['back'] = "Torna alle statistiche...";
 
+$MESSAGE['interface']['user']['cancelled'] = 'Personaggio Cancellato';
 
 /*Installer*/
 $MESSAGE['installer']['install'] = "Esegui l\'installazione automatica";

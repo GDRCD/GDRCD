@@ -62,8 +62,8 @@ function gdrcd_chat_room_is_login_allowed($luogo)
 
     $invitati = explode(',', $info['invitati']);
     $login_moderator_o_superiore = $_SESSION['permessi'] >= MODERATOR;
-    $login_proprietario_chat = $info['proprietario'] == $_SESSION['login'];
-    $login_invitato_chat = in_array($_SESSION['login'], $invitati);
+    $login_proprietario_chat = gdrcd_chat_room_is_login_owner($info);
+    $login_invitato_chat = in_array($_SESSION['id_personaggio'], $invitati);
     $chat_scaduta = time() >= strtotime($info['scadenza']);
 
     // chat privata scaduta: se non sei moderator o maggiore, non sei abilitato
@@ -98,20 +98,35 @@ function gdrcd_chat_room_is_login_owner($luogo)
 {
     // Recupero le informazioni sulla chat corrente
     $info = is_array($luogo) ? $luogo : gdrcd_chat_room_info($luogo);
-    $chat_scaduta = time() >= strtotime($info['scadenza']);
 
-    // Se la chat non è privata oppure è scaduta nessuno può esserne il proprietario
-    if ($info['privata'] != 1 || $chat_scaduta) {
+    if (empty($info) || ($info['privata'] ?? 0) != 1) {
         return false;
     }
 
-    $login_proprietario_chat = $info['proprietario'] == $_SESSION['login'];
-    $gilda_proprietaria_chat = is_numeric($info['proprietario'])
-        && str_contains($_SESSION['gilda'], (string)$info['proprietario']);
+    $chat_scaduta = time() >= strtotime($info['scadenza']);
+    if ($chat_scaduta) {
+        return false;
+    }
 
-    // Altrimenti si può essere proprietari se la chat è associata allo specifico personaggio
-    // oppure se la chat appartiene alla gilda di cui fa parte il personaggio
-    return $login_proprietario_chat || $gilda_proprietaria_chat;
+    // il valore è nella forma "g123" per le gilde e "p123" per i personaggi, ma controllo solo il numero per sicurezza
+    $proprietario = substr($info['proprietario'], 1);
+    if (!is_numeric($proprietario)) {
+        return false;
+    }
+
+    $proprietario = (int) $proprietario;
+
+    // Se il proprietario è una gilda, verifico che l'utente loggato sia membro della gilda proprietaria
+    if (str_starts_with($info['proprietario'], 'g')) {
+        return str_contains($_SESSION['gilda'] ?? '','*'.$proprietario .'*');
+    }
+
+    //Se il proprietario è un personaggio, verifico che l'utente loggato sia il proprietario stesso
+    if (str_starts_with($info['proprietario'], 'p')) {
+        return (int) $_SESSION['id_personaggio'] === $proprietario;
+    }
+
+    return false;
 }
 
 /**
@@ -194,7 +209,7 @@ function gdrcd_chat_room_info($luogo)
  * Include le abilità universali (id_razza = -1) e quelle specifiche
  * della razza del personaggio.
  *
- * @param string $nome Nome del personaggio per cui recuperare le abilità
+ * @param int $id_personaggio ID del personaggio per cui recuperare le abilità
  * @return array<array{
  *  id_abilita: int,
  *  nome: string,
@@ -202,7 +217,7 @@ function gdrcd_chat_room_info($luogo)
  *  grado: null|int
  * }> Array di abilità
  */
-function gdrcd_chat_player_skills($nome)
+function gdrcd_chat_player_skills($id_personaggio)
 {
     $skills = [];
 
@@ -216,14 +231,14 @@ function gdrcd_chat_player_skills($nome)
             LEFT JOIN clgpersonaggioabilita
                 ON (
                     clgpersonaggioabilita.id_abilita = abilita.id_abilita
-                    AND clgpersonaggioabilita.nome = ?
+                    AND clgpersonaggioabilita.id_personaggio = ?
                 )
 
         WHERE abilita.id_razza = -1
-            OR abilita.id_razza = (SELECT id_razza FROM personaggio WHERE nome = ?)
+            OR abilita.id_razza = (SELECT id_razza FROM personaggio WHERE id_personaggio = ?)
 
         ORDER BY abilita.nome',
-        ['ss', $nome, $nome]
+        ['ii', $id_personaggio, $id_personaggio]
     );
 
     if (gdrcd_query($stmt, 'num_rows') > 0) {
@@ -243,7 +258,7 @@ function gdrcd_chat_player_skills($nome)
  * Questa funzione chiama internamente gdrcd_chat_player_skills e ritorna
  * l'abilità identificata dallo $skillId fornito
  *
- * @param string $nome Nome del personaggio per cui recuperare le abilità
+ * @param int $id_personaggio ID del personaggio per cui recuperare le abilità
  * @param int $skillId L'ID dell'abilità da recuperare
  * @return null|array{
  *  id_abilita: int,
@@ -252,9 +267,9 @@ function gdrcd_chat_player_skills($nome)
  *  grado: null|int
  * } Array associativo con i dati dell'abilità, oppure null se non trovata
  */
-function gdrcd_chat_player_skill($nome, $skillId)
+function gdrcd_chat_player_skill($id_personaggio, $skillId)
 {
-    $skills = gdrcd_chat_player_skills($nome);
+    $skills = gdrcd_chat_player_skills($id_personaggio);
 
     foreach ($skills as $skill) {
         if ($skill['id_abilita'] == $skillId) {
@@ -297,7 +312,7 @@ function gdrcd_chat_player_stats()
  * Recupera tutti gli oggetti utilizzabili in chat posseduti da un giocatore specifico.
  * Include solo gli oggetti in posizioni > 0 (equipaggiati o nell'inventario).
  *
- * @param string $nome Nome del personaggio per cui recuperare gli oggetti
+ * @param int $id_personaggio ID del personaggio per cui recuperare gli oggetti
  * @return array<array{
  *  id_oggetto: int,
  *  nome: string,
@@ -325,7 +340,7 @@ function gdrcd_chat_player_stats()
  *      - cariche: Numero di cariche disponibili per l'oggetto
  *      - max_cariche: Numero massimo di cariche per l'oggetto
  */
-function gdrcd_chat_player_items($nome)
+function gdrcd_chat_player_items($id_personaggio)
 {
     $items = [];
 
@@ -346,11 +361,11 @@ function gdrcd_chat_player_items($nome)
         FROM clgpersonaggiooggetto
             JOIN oggetto USING(id_oggetto)
 
-        WHERE clgpersonaggiooggetto.nome = ?
+        WHERE clgpersonaggiooggetto.id_personaggio = ?
             AND clgpersonaggiooggetto.posizione > 1
 
         ORDER BY clgpersonaggiooggetto.posizione',
-        ['s', $nome]
+        ['i', $id_personaggio]
     );
 
     if (gdrcd_query($stmt, 'num_rows') > 0) {
@@ -370,7 +385,7 @@ function gdrcd_chat_player_items($nome)
  * Questa funzione chiama internamente gdrcd_chat_player_items e ritorna
  * l'oggetto identificato da $itemId tra quelli posseduti dal personaggio $nome.
  *
- * @param string $nome Nome del personaggio per cui recuperare l'oggetto
+ * @param int $id_personaggio Nome del personaggio per cui recuperare l'oggetto
  * @param int $itemId L'ID dell'oggetto da recuperare
  * @return null|array{
  *  id_oggetto: int,
@@ -387,9 +402,9 @@ function gdrcd_chat_player_items($nome)
  *  max_cariche: int
  * } Array associativo con i dati dell'oggetto, oppure null se non trovato
  */
-function gdrcd_chat_player_item($nome, $itemId)
+function gdrcd_chat_player_item($id_personaggio, $itemId)
 {
-    $items = gdrcd_chat_player_items($nome);
+    $items = gdrcd_chat_player_items($id_personaggio);
 
     foreach ($items as $item) {
         if ($item['id_oggetto'] == $itemId) {
@@ -453,18 +468,46 @@ function gdrcd_chat_get_race($raceId)
  * Utile per verificare l'esistenza del personaggio e recuperare
  * informazioni come lo stato di salute per controlli di validazione.
  *
- * @param string $nome Il nome del personaggio di cui recuperare le informazioni
+ * @param string $personaggio Nome del personaggio di cui recuperare le informazioni
  * @return null|array<string, string|int|float> Null se il personaggio non esiste,
  * altrimenti ritorna tutti i dati del personaggio
  */
-function gdrcd_chat_player_info($nome)
+function gdrcd_chat_player_info_by_name($personaggio)
 {
     $stmt = gdrcd_stmt(
         'SELECT * FROM personaggio WHERE nome = ?',
-        ['s', $nome]
+        ['s', $personaggio]
     );
 
     if (gdrcd_query($stmt, 'num_rows') === 0) {
+        return null;
+    }
+
+    $record = gdrcd_query($stmt, 'assoc');
+    gdrcd_query($stmt, 'free');
+    return $record;
+}
+
+/**
+ * Recupera le informazioni di base di un personaggio dal database.
+ *
+ * Questa funzione esegue una query per ottenere i dati essenziali
+ * di un personaggio specifico dalla tabella `personaggio`.
+ * Utile per verificare l'esistenza del personaggio e recuperare
+ * informazioni come lo stato di salute per controlli di validazione.
+ *
+ * @param int $id_personaggio ID del personaggio di cui recuperare le informazioni
+ * @return null|array<string, string|int|float> Null se il personaggio non esiste,
+ * altrimenti ritorna tutti i dati del personaggio
+ */
+function gdrcd_chat_player_info($id_personaggio)
+{
+    $stmt = gdrcd_stmt(
+        'SELECT * FROM personaggio WHERE id_personaggio = ?',
+        ['i', $id_personaggio]
+    );
+
+    if(gdrcd_query($stmt, 'num_rows') === 0) {
         return null;
     }
 

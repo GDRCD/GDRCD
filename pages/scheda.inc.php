@@ -11,7 +11,7 @@
     }
     $query = "SELECT personaggio.*, razza.sing_m, razza.sing_f, razza.id_razza, razza.bonus_car0, razza.bonus_car1, razza.bonus_car2, razza.bonus_car3, razza.bonus_car4, razza.bonus_car5
         FROM personaggio LEFT JOIN razza ON personaggio.id_razza=razza.id_razza
-        WHERE personaggio.nome = '".gdrcd_filter('in', $_REQUEST['pg'])."'";
+        WHERE personaggio.id_personaggio = '".gdrcd_filter('in', $_REQUEST['pg'])."'";
     $personaggi = gdrcd_query($query, 'result');
     //Se il personaggio non esiste
     if(gdrcd_query($personaggi, 'num_rows') == 0) {
@@ -21,7 +21,7 @@
     $personaggio = gdrcd_query($personaggi, 'fetch');
     $bonus_oggetti = gdrcd_query("SELECT SUM(oggetto.bonus_car0) AS BO0, SUM(oggetto.bonus_car1) AS BO1, SUM(oggetto.bonus_car2) AS BO2, SUM(oggetto.bonus_car3) AS BO3, SUM(oggetto.bonus_car4) AS BO4, SUM(oggetto.bonus_car5) AS BO5
             FROM oggetto JOIN clgpersonaggiooggetto ON oggetto.id_oggetto = clgpersonaggiooggetto.id_oggetto
-            WHERE clgpersonaggiooggetto.nome = '".gdrcd_filter('in', $_REQUEST['pg'])."' AND clgpersonaggiooggetto.posizione > ".ZAINO."");
+            WHERE clgpersonaggiooggetto.id_personaggio = '".gdrcd_filter('in', $_REQUEST['pg'])."' AND clgpersonaggiooggetto.posizione > ".ZAINO."");
 
     //Controllo esilio, se esiliato non visualizzo la scheda
     if($personaggio['esilio'] > strftime('%Y-%m-%d')) {
@@ -96,7 +96,7 @@
                     </div>
                 <?php } ?>
                 <div class="ritratto_invia_messaggio"><!-- Link invia messaggio -->
-                    <a href="main.php?page=messages_center&op=create&destinatario=<?=gdrcd_filter('url', $personaggio['nome']); ?>"
+                    <a href="main.php?page=messages_center&op=create&destinatario=<?=gdrcd_filter('url', $personaggio['id_personaggio']); ?>"
                        class="link_invia_messaggio">
                         <?php if(empty($PARAMETERS['names']['private_message']['image_file']) === false) { ?>
                             <img src="<?php echo $PARAMETERS['names']['private_message']['image_file']; ?>"
@@ -148,7 +148,7 @@
                     </div>
                     <div class="profilo_voce_valore">
                         <?php //carico le gilde
-                        $guilds = gdrcd_query("SELECT ruolo.nome_ruolo, ruolo.gilda, ruolo.immagine, gilda.visibile, gilda.nome AS nome_gilda FROM clgpersonaggioruolo LEFT JOIN ruolo ON ruolo.id_ruolo = clgpersonaggioruolo.id_ruolo LEFT JOIN gilda ON ruolo.gilda = gilda.id_gilda WHERE clgpersonaggioruolo.personaggio = '".gdrcd_filter('in', $personaggio['nome'])."'", 'result');
+                        $guilds = gdrcd_query("SELECT ruolo.nome_ruolo, ruolo.gilda, ruolo.immagine, gilda.visibile, gilda.nome AS nome_gilda FROM clgpersonaggioruolo LEFT JOIN ruolo ON ruolo.id_ruolo = clgpersonaggioruolo.id_ruolo LEFT JOIN gilda ON ruolo.gilda = gilda.id_gilda WHERE clgpersonaggioruolo.id_personaggio = '".gdrcd_filter('in', $personaggio['id_personaggio'])."'", 'result');
                         if(gdrcd_query($guilds, 'num_rows') == 0) {
                             echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['profile']['uneployed']);
                         } else {

@@ -12,18 +12,18 @@
                 echo '<div class="form_gioco">';
                 /*Seleziono i ruoli su cui l'account ha competenza*/
                 if ($_SESSION['permessi'] >= MODERATOR) {
-                    $people = "SELECT nome, cognome FROM personaggio  WHERE permessi > -1 ORDER BY nome";
+                    $people = "SELECT id_personaggio, nome, cognome FROM personaggio  WHERE permessi > -1 ORDER BY nome";
                     $query = "SELECT ruolo.id_ruolo, ruolo.nome_ruolo, gilda.nome FROM ruolo LEFT JOIN gilda ON ruolo.gilda = gilda.id_gilda  ORDER BY gilda.nome, ruolo.capo DESC, ruolo.stipendio DESC, ruolo.nome_ruolo";
-                    $members = "SELECT clgpersonaggioruolo.personaggio, clgpersonaggioruolo.id_ruolo, ruolo.nome_ruolo FROM clgpersonaggioruolo JOIN ruolo ON clgpersonaggioruolo.id_ruolo=ruolo.id_ruolo ORDER BY ruolo.gilda DESC, ruolo.stipendio DESC";
+                    $members = "SELECT personaggio.nome, personaggio.cognome,clgpersonaggioruolo.id_personaggio, clgpersonaggioruolo.id_ruolo, ruolo.nome_ruolo FROM clgpersonaggioruolo JOIN personaggio ON clgpersonaggioruolo.id_personaggio = personaggio.id_personaggio JOIN ruolo ON clgpersonaggioruolo.id_ruolo=ruolo.id_ruolo ORDER BY ruolo.gilda DESC, ruolo.stipendio DESC";
                 } else {
                     if ($_SESSION['permessi'] >= GUILDMODERATOR) {
-                        $people = "SELECT nome, cognome FROM personaggio  WHERE permessi > -1 ORDER BY nome";
-                        $query = "SELECT ruolo.id_ruolo, ruolo.nome_ruolo, gilda.nome FROM ruolo JOIN gilda ON ruolo.gilda = gilda.id_gilda WHERE ruolo.gilda IN (SELECT ruolo.gilda FROM clgpersonaggioruolo JOIN ruolo ON clgpersonaggioruolo.id_ruolo = ruolo.id_ruolo WHERE clgpersonaggioruolo.personaggio= '" . $_SESSION['login'] . "' AND ruolo.gilda>-1 AND ruolo.capo = 1)   ORDER BY gilda.nome, ruolo.capo DESC, ruolo.stipendio DESC, ruolo.nome_ruolo";
-                        $members = "SELECT clgpersonaggioruolo.personaggio, clgpersonaggioruolo.id_ruolo, ruolo.nome_ruolo FROM clgpersonaggioruolo JOIN ruolo ON clgpersonaggioruolo.id_ruolo=ruolo.id_ruolo WHERE ruolo.gilda IN (SELECT ruolo.gilda FROM clgpersonaggioruolo JOIN ruolo ON clgpersonaggioruolo.id_ruolo = ruolo.id_ruolo WHERE clgpersonaggioruolo.personaggio= '" . $_SESSION['login'] . "' AND ruolo.gilda>-1 AND ruolo.capo =1) OR ruolo.gilda=-1  ORDER BY ruolo.gilda DESC, ruolo.stipendio DESC";
+                        $people = "SELECT id_personaggio, nome, cognome FROM personaggio  WHERE permessi > -1 ORDER BY nome";
+                        $query = "SELECT ruolo.id_ruolo, ruolo.nome_ruolo, gilda.nome FROM ruolo JOIN gilda ON ruolo.gilda = gilda.id_gilda WHERE ruolo.gilda IN (SELECT ruolo.gilda FROM clgpersonaggioruolo JOIN ruolo ON clgpersonaggioruolo.id_ruolo = ruolo.id_ruolo WHERE clgpersonaggioruolo.id_personaggio= '" . $_SESSION['id_personaggio'] . "' AND ruolo.gilda>-1 AND ruolo.capo = 1)   ORDER BY gilda.nome, ruolo.capo DESC, ruolo.stipendio DESC, ruolo.nome_ruolo";
+                        $members = "SELECT personaggio.nome, personaggio.cognome,clgpersonaggioruolo.id_personaggio, clgpersonaggioruolo.id_ruolo, ruolo.nome_ruolo FROM clgpersonaggioruolo JOIN personaggio ON clgpersonaggioruolo.id_personaggio = personaggio.id_personaggio JOIN ruolo ON clgpersonaggioruolo.id_ruolo=ruolo.id_ruolo WHERE ruolo.gilda IN (SELECT ruolo.gilda FROM clgpersonaggioruolo JOIN ruolo ON clgpersonaggioruolo.id_ruolo = ruolo.id_ruolo WHERE clgpersonaggioruolo.id_personaggio= '" . $_SESSION['id_personaggio'] . "' AND ruolo.gilda>-1 AND ruolo.capo =1) OR ruolo.gilda=-1  ORDER BY ruolo.gilda DESC, ruolo.stipendio DESC";
                     } else {
-                        $people = "SELECT nome, cognome FROM personaggio  WHERE permessi > -1 ORDER BY nome";
-                        $query = "SELECT ruolo.id_ruolo, ruolo.nome_ruolo, gilda.nome FROM ruolo JOIN gilda ON ruolo.gilda = gilda.id_gilda WHERE ruolo.gilda IN (SELECT ruolo.gilda FROM clgpersonaggioruolo JOIN ruolo ON clgpersonaggioruolo.id_ruolo = ruolo.id_ruolo WHERE clgpersonaggioruolo.personaggio= '" . $_SESSION['login'] . "' AND ruolo.gilda>-1 AND ruolo.capo=1) ORDER BY gilda.nome, ruolo.capo DESC, ruolo.stipendio DESC, ruolo.nome_ruolo";
-                        $members = "SELECT clgpersonaggioruolo.personaggio, clgpersonaggioruolo.id_ruolo, ruolo.nome_ruolo, ruolo.gilda FROM clgpersonaggioruolo JOIN ruolo ON clgpersonaggioruolo.id_ruolo=ruolo.id_ruolo WHERE ruolo.gilda IN (SELECT ruolo.gilda FROM clgpersonaggioruolo JOIN ruolo ON clgpersonaggioruolo.id_ruolo = ruolo.id_ruolo WHERE clgpersonaggioruolo.personaggio= '" . $_SESSION['login'] . "' AND ruolo.gilda>-1 AND capo=1) OR ruolo.gilda=-1 ORDER BY ruolo.gilda DESC, ruolo.stipendio DESC";
+                        $people = "SELECT id_personaggio, nome, cognome FROM personaggio  WHERE permessi > -1 ORDER BY nome";
+                        $query = "SELECT ruolo.id_ruolo, ruolo.nome_ruolo, gilda.nome FROM ruolo JOIN gilda ON ruolo.gilda = gilda.id_gilda WHERE ruolo.gilda IN (SELECT ruolo.gilda FROM clgpersonaggioruolo JOIN ruolo ON clgpersonaggioruolo.id_ruolo = ruolo.id_ruolo WHERE clgpersonaggioruolo.id_personaggio= '" . $_SESSION['id_personaggio'] . "' AND ruolo.gilda>-1 AND ruolo.capo=1) ORDER BY gilda.nome, ruolo.capo DESC, ruolo.stipendio DESC, ruolo.nome_ruolo";
+                        $members = "SELECT personaggio.nome, personaggio.cognome, clgpersonaggioruolo.id_personaggio, clgpersonaggioruolo.id_ruolo, ruolo.nome_ruolo, ruolo.gilda FROM clgpersonaggioruolo JOIN ruolo ON clgpersonaggioruolo.id_ruolo=ruolo.id_ruolo JOIN personaggio clgpersonaggioruolo.id_personaggio = personaggio.id_personaggio ON WHERE ruolo.gilda IN (SELECT ruolo.gilda FROM clgpersonaggioruolo JOIN ruolo ON clgpersonaggioruolo.id_ruolo = ruolo.id_ruolo WHERE clgpersonaggioruolo.id_personaggio= '" . $_SESSION['id_personaggio'] . "' AND ruolo.gilda>-1 AND capo=1) OR ruolo.gilda=-1 ORDER BY ruolo.gilda DESC, ruolo.stipendio DESC";
                     }
                 }
                 $result = gdrcd_query($query, 'result');
@@ -53,10 +53,10 @@
                                 gdrcd_query($result, 'free');
                                 ?>
                             </select>
-                            <select name="nome">
+                            <select name="id_personaggio">
                                 <?php
                                 while ($row = gdrcd_query($people_result, 'fetch')) { ?>
-                                    <option value="<?php echo $row['nome']; ?>">
+                                    <option value="<?php echo $row['id_personaggio']; ?>">
                                         <?php echo $row['nome'] . ' ' . $row['cognome']; ?>
                                     </option>
                                 <?php }
@@ -84,8 +84,8 @@
                                         $echoed_null_row = true;
                                     }
                                     ?>
-                                    <option value="<?php echo $row['personaggio'] . "-" . $row['id_ruolo'] . "-" . $row['nome_ruolo']; ?>">
-                                        <?php echo $row['personaggio'] . " (" . $row['nome_ruolo'] . ")"; ?>
+                                    <option value="<?php echo $row['id_personaggio'] . "-" . $row['id_ruolo'] . "-" . $row['nome_ruolo']; ?>">
+                                        <?php echo $row['nome'] . ' ' . $row['cognome'] . " (" . $row['nome_ruolo'] . ")"; ?>
                                     </option>
                                 <?php }
                                 gdrcd_query($members_result, 'free');
@@ -100,7 +100,7 @@
                     </form>
                     <?php
                 }//else
-                $affiliazioni = "SELECT ruolo.nome_ruolo, gilda.nome, ruolo.id_ruolo FROM ruolo LEFT JOIN gilda ON gilda.id_gilda = ruolo.gilda WHERE ruolo.id_ruolo IN (SELECT id_ruolo FROM clgpersonaggioruolo WHERE personaggio = '" . $_SESSION['login'] . "' AND scadenza < NOW()) ";
+                $affiliazioni = "SELECT ruolo.nome_ruolo, gilda.nome, ruolo.id_ruolo FROM ruolo LEFT JOIN gilda ON gilda.id_gilda = ruolo.gilda WHERE ruolo.id_ruolo IN (SELECT id_ruolo FROM clgpersonaggioruolo WHERE id_personaggio = '" . $_SESSION['id_personaggio'] . "' AND scadenza < NOW()) ";
                 $affiliazioni_result = gdrcd_query($affiliazioni, 'result');
 
                 if (gdrcd_query($affiliazioni_result, 'num_rows') > 0) { ?>
@@ -119,7 +119,7 @@
                             </div>
                             <div class="form_submit">
                                 <input type="hidden" name="ruolo"
-                                       value="<?php echo $_SESSION['login'] . "-" . $row['id_ruolo'] . "-" . $row['nome_ruolo']; ?>"/>
+                                       value="<?php echo $_SESSION['id_personaggio'] . "-" . $row['id_ruolo'] . "-" . $row['nome_ruolo']; ?>"/>
                                 <input type="hidden" name="op" value="fire"/>
                                 <input type="submit" name="submit"
                                        value="<?php echo $MESSAGE['interface']['adm_guilds']['quit']; ?>"/>
@@ -131,9 +131,9 @@
                 }
             }
 
-            $me = gdrcd_filter('in', $_SESSION['login']);
-            $ruoli = gdrcd_query("SELECT ruolo.id_ruolo,ruolo.nome_ruolo FROM clgpersonaggioruolo LEFT JOIN ruolo 
-        ON (ruolo.id_ruolo = clgpersonaggioruolo.id_ruolo) WHERE clgpersonaggioruolo.personaggio='{$me}'", 'result');
+            $me = gdrcd_filter('in', $_SESSION['id_personaggio']);
+            $ruoli = gdrcd_query("SELECT ruolo.id_ruolo,ruolo.nome_ruolo FROM clgpersonaggioruolo LEFT JOIN ruolo
+        ON (ruolo.id_ruolo = clgpersonaggioruolo.id_ruolo) WHERE clgpersonaggioruolo.id_personaggio='{$me}'", 'result');
 
             ?>
 
@@ -161,11 +161,11 @@
         if (gdrcd_filter('get', $_POST['op']) == 'hire') {
             if ($_SESSION['permessi'] >= GUILDMODERATOR) {
                 /*Controllo il numero di affiliazioni correnti del personaggio*/
-                $jobs = gdrcd_query("SELECT COUNT(*) FROM clgpersonaggioruolo WHERE personaggio = '" . gdrcd_filter('in', $_POST['nome']) . "'");
+                $jobs = gdrcd_query("SELECT COUNT(*) FROM clgpersonaggioruolo WHERE id_personaggio = '" . gdrcd_filter('in', $_POST['id_personaggio']) . "'");
 
                 /*Se il personaggio ha raggiunto il limite*/
                 if ($jobs['COUNT(*)'] >= $PARAMETERS['settings']['guilds_limit']) {
-                    echo '<div class="warning">' . gdrcd_filter('out', $_POST['nome'] . ' ' . $MESSAGE['interface']['adm_guilds']['cannot_hire']) . '</div>';
+                    echo '<div class="warning">' . gdrcd_filter('out', $_POST['id_personaggio'] . ' ' . $MESSAGE['interface']['adm_guilds']['cannot_hire']) . '</div>';
                 } else {
                     /*Opero l'affiliazione*/
                     $subject = explode('-', gdrcd_filter('in', $_POST['ruolo']));
@@ -176,9 +176,9 @@
 
                     $contr = false;
 
-                    foreach ($ruoli_capi as $ruolo_capo){
+                    while ($ruolo_capo = gdrcd_query($ruoli_capi, 'assoc')){
 
-                        $jobs = gdrcd_query("SELECT COUNT(*) AS tot FROM clgpersonaggioruolo WHERE personaggio = '" . gdrcd_filter('in', $_POST['nome']) . "' AND  id_ruolo='{$ruolo_capo['id_ruolo']}'");
+                        $jobs = gdrcd_query("SELECT COUNT(*) AS tot FROM clgpersonaggioruolo WHERE id_personaggio = '" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "' AND  id_ruolo='{$ruolo_capo['id_ruolo']}'");
 
                         if($jobs['tot'] > 0){
                             $contr = true;
@@ -188,16 +188,18 @@
                     }
 
                     if(($contr) || ($_SESSION['permessi'] >= MODERATOR)) {
-                        gdrcd_query("INSERT INTO clgpersonaggioruolo  (personaggio, id_ruolo, scadenza) VALUES ('" . gdrcd_filter('in', $_POST['nome']) . "', " . $subject[0] . ", NOW())");
+                        gdrcd_query("INSERT INTO clgpersonaggioruolo  (id_personaggio, id_ruolo, scadenza) VALUES ('" . gdrcd_filter('in', $_POST['id_personaggio']) . "', " . $subject[0] . ", NOW())");
 
                         /*Confermo l'operazione*/
                         echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['interface']['adm_guilds']['ok_hire']) . '</div>';
                         /*Registro l'operazione*/
-                        gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES ('" . gdrcd_filter('in', $_POST['nome']) . "', '" . $_SESSION['login'] . "', NOW(), " . NUOVOLAVORO . ", '" . gdrcd_filter('out', $subject[1]) . "')");
+                        $personaggio = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "'");
+                        gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES ( '" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "', '" . gdrcd_filter('in', $personaggio['nome']) . "', '" . $_SESSION['login'] . "', NOW(), " . NUOVOLAVORO . ", '" . gdrcd_filter('out', $subject[1]) . "')");
 
                         /*Avviso l'utente*/
-                        if ($_SESSION['login'] != $_POST['nome']) {
-                            gdrcd_query("INSERT INTO messaggi (mittente, destinatario, spedito, testo) VALUES ('" . $_SESSION['login'] . "', '" . gdrcd_filter('in', $_POST['nome']) . "', NOW(), '" . gdrcd_filter('in', $MESSAGE['interface']['adm-guilds']['message_body']['hire'] . ' ' . $subject[1]) . "')");
+
+                        if ($_SESSION['id_personaggio'] != $_POST['id_personaggio']) {
+                            gdrcd_query("INSERT INTO messaggi (id_personaggio_mittente, id_personaggio_destinatario, spedito, testo) VALUES ('" . $_SESSION['id_personaggio'] . "','" . gdrcd_filter('in', $_POST['id_personaggio']) . "', NOW(), '" . gdrcd_filter('in', $MESSAGE['interface']['adm-guilds']['message_body']['hire'] . ' ' . $subject[1]) . "')");
                         }
                     }
                 }
@@ -220,9 +222,9 @@
 
                 $contr = false;
 
-                foreach ($ruoli_capi as $ruolo_capo){
+                while ($ruolo_capo = gdrcd_query($ruoli_capi, 'assoc')) {
 
-                    $jobs = gdrcd_query("SELECT COUNT(*) AS tot FROM clgpersonaggioruolo WHERE personaggio = '" . gdrcd_filter('in', $_POST['nome']) . "' AND  id_ruolo='{$ruolo_capo['id_ruolo']}'");
+                    $jobs = gdrcd_query("SELECT COUNT(*) AS tot FROM clgpersonaggioruolo WHERE id_personaggio = '" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "' AND  id_ruolo='{$ruolo_capo['id_ruolo']}'");
 
                     if($jobs['tot'] > 0){
                         $contr = true;
@@ -232,16 +234,17 @@
                 }
 
                 if(($contr) || ($_SESSION['permessi'] >= MODERATOR)) {
-                    gdrcd_query("DELETE FROM clgpersonaggioruolo WHERE personaggio='" . $subject[0] . "' AND id_ruolo = " . gdrcd_filter('num', $subject[1]) . " LIMIT 1");
+                    gdrcd_query("DELETE FROM clgpersonaggioruolo WHERE id_personaggio='" . $subject[0] . "' AND id_ruolo = " . gdrcd_filter('num', $subject[1]) . " LIMIT 1");
 
                     /*Confermo l'operazione*/
                     echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['interface']['adm_guilds']['ok_fire']) . '</div>';
                     /*Registro l'operazione*/
-                    gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES ('" . $subject[0] . "', '" . $_SESSION['login'] . "', NOW(), " . DIMISSIONE . ", '" . gdrcd_filter('out', $subject[2]) . "')");
+                    $personaggio = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $subject[0]) . "'");
+                    gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES ('" . $subject[0] . "','" . gdrcd_filter('in', $personaggio['nome']) . "', '" . $_SESSION['login'] . "', NOW(), " . DIMISSIONE . ", '" . gdrcd_filter('out', $subject[2]) . "')");
 
                     /*Avviso l'utente*/
-                    if ($_SESSION['login'] != $subject[0]) {
-                        gdrcd_query("INSERT INTO messaggi (mittente, destinatario, spedito, testo) VALUES ('" . $_SESSION['login'] . "', '" . $subject[0] . "', NOW(), '" . gdrcd_filter('in', $MESSAGE['interface']['adm-guilds']['message_body']['fire'] . ' ' . $subject[2]) . "')");
+                    if ($_SESSION['id_personaggio'] != $subject[0]) {
+                        gdrcd_query("INSERT INTO messaggi (id_personaggio_mittente, id_personaggio_destinatario, spedito, testo) VALUES ('" . $_SESSION['id_personaggio'] . "', '" . gdrcd_filter('in', $subject[0]) . "', NOW(), '" . gdrcd_filter('in', $MESSAGE['interface']['adm-guilds']['message_body']['fire'] . ' ' . $subject[2]) . "')");
                     }
                 }
             }
@@ -253,9 +256,9 @@
         if ($_POST['op'] == 'fire-yourself') {
 
             $ruolo = gdrcd_filter('num', $_POST['ruolo']);
-            $me = gdrcd_filter('in', $_SESSION['login']);
+            $me = gdrcd_filter('in', $_SESSION['id_personaggio']);
 
-            gdrcd_query("DELETE FROM clgpersonaggioruolo WHERE personaggio='{$me}' AND id_ruolo='{$ruolo}' LIMIT 1");
+            gdrcd_query("DELETE FROM clgpersonaggioruolo WHERE id_personaggio='{$me}' AND id_ruolo='{$ruolo}' LIMIT 1");
             ?>
             <div class="warning"> Licenziamento avvenuto con successo</div>
             <div class="panels_link">

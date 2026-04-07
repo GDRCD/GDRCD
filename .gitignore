@@ -30,6 +30,16 @@ local.properties
 .buildpath
 
 
+#############
+## Netbeans
+#############
+
+/nbproject/private/
+nbproject/project.xml
+nbproject/project.properties
+nbproject/configs/GDRCD.properties
+
+
 #################
 ## Visual Studio
 #################
@@ -118,7 +128,6 @@ Backup*/
 UpgradeLog*.XML
 
 
-
 ############
 ## Windows
 ############
@@ -173,7 +182,12 @@ pip-log.txt
 # chat_save
 giocate/
 
-includes/config-overrides.php
+# configs
+config.inc.php
+
+# db overrides
+core/db_overrides.php
+
+# others
 .directory
 .user.ini
-core/db_overrides.php

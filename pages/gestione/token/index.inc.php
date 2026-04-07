@@ -34,10 +34,14 @@ switch($filtro) {
         break;
     default:
         $where_clause = '';
-}
-
+} 
 // Recupera token
-$tokens_stmt = gdrcd_stmt("SELECT * FROM token_iscrizione $where_clause ORDER BY creato_il DESC");
+$tokens_stmt = gdrcd_stmt("SELECT 
+    token_iscrizione.*,
+    personaggio.nome as nome_personaggio
+    FROM token_iscrizione
+    LEFT JOIN personaggio ON token_iscrizione.id_personaggio = personaggio.id_personaggio
+      $where_clause ORDER BY creato_il DESC");      
 
 echo <<<HTML
 <div class="gestione-token-container">
@@ -104,7 +108,7 @@ if(gdrcd_query($tokens_stmt, 'num_rows') > 0) {
         $creato_il = gdrcd_filter('out', $token['creato_il']);
         $scadenza = gdrcd_filter('out', $token['scadenza']);
         $utilizzato = $token['utilizzato'];
-        $utilizzato_da = gdrcd_filter('out', $token['utilizzato_da']);
+        $utilizzato_da = gdrcd_filter('out', $token['nome_personaggio']);
         $data_utilizzo = gdrcd_filter('out', $token['data_utilizzo']);
         
         // Determina stato

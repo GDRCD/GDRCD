@@ -3,7 +3,7 @@ if (($_SESSION['permessi'] < MODERATOR) || ($PARAMETERS['mode']['spymessages'] !
         
         echo '<div class="error">'.gdrcd_filter('out',$MESSAGE['error']['not_allowed']).'</div>';
     } else {
-        $result=gdrcd_query("SELECT nome FROM personaggio ORDER BY nome", 'result');
+        $result=gdrcd_query("SELECT id_personaggio, nome FROM personaggio ORDER BY nome", 'result');
         $log_by_user_label = gdrcd_filter('out',$MESSAGE['interface']['administration']['log']['chat']['log_by_user']);
         $submit_value = gdrcd_filter('out',$MESSAGE['interface']['forms']['submit']);
         
@@ -18,9 +18,10 @@ if (($_SESSION['permessi'] < MODERATOR) || ($PARAMETERS['mode']['spymessages'] !
 HTML;
         
         while($row=gdrcd_query($result, 'fetch')){
+            $id_filtered = (int)$row['id_personaggio'];
             $nome_filtered = gdrcd_filter('out',$row['nome']);
             echo <<<HTML
-                        <option value="{$nome_filtered}">
+                        <option value="{$id_filtered}">
                             {$nome_filtered}
                         </option>
 HTML;
@@ -91,7 +92,7 @@ HTML;
         </div>
 
         <div class="link_back">
-            <a href="main.php?page=opzioni">Torna indietro</a>
+            <a href="main.php?page=gestione">Torna indietro</a>
         </div>
 HTML;
 

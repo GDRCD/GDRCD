@@ -13,6 +13,8 @@ gdrcd_module_allowed('chat');
 $map_id = $_SESSION['luogo'];
 $chat_last_id = gdrcd_chat_get_lastmessage_id();
 
+header('X-Last-Id: '. $chat_last_id);
+
 // Legge le nuove azioni dal database
 $output = gdrcd_chat_read_messages($map_id, $chat_last_id);
 

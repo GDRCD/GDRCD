@@ -3,7 +3,6 @@
 ## VERSIONE STABILE
 
 Le corrente versione è stabile, ma ancora soggetta ed ampliamenti,
-
 tuttavia dalla fase di testing della release beta è stata
 comprovato il corretto funzionamento del software.
 Le eventuali correzioni saranno rilasciate come nuove versioni

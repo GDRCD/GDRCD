@@ -31,6 +31,7 @@ $users = gdrcd_query("SELECT COUNT(nome) AS online FROM personaggio WHERE ora_en
 			?>
         </header>
 
+
         <div id="content">
             <aside>
                 <div class="side_modules nopad">

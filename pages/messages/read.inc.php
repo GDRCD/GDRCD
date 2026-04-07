@@ -2,7 +2,17 @@
 
 // Ottengo i dati del messaggio
 $id_messaggio = gdrcd_filter('num', $_REQUEST['id_messaggio']);
-$result = gdrcd_query("SELECT * FROM messaggi WHERE id = ".$id_messaggio." and ( destinatario = '".$_SESSION['login']."' or mittente = '".$_SESSION['login']."') LIMIT 1", 'result');
+$result = gdrcd_query("
+    SELECT messaggi.*,
+        personaggio_mittente.nome AS mittente,
+        personaggio_destinatario.nome AS destinatario
+    FROM messaggi
+    LEFT JOIN personaggio AS personaggio_mittente ON messaggi.id_personaggio_mittente = personaggio_mittente.id_personaggio
+    LEFT JOIN personaggio AS personaggio_destinatario ON messaggi.id_personaggio_destinatario = personaggio_destinatario.id_personaggio
+    WHERE   messaggi.id = ".$id_messaggio."
+        AND ( messaggi.id_personaggio_destinatario = '".$_SESSION['id_personaggio']."' or messaggi.id_personaggio_mittente = '".$_SESSION['id_personaggio']."')
+    LIMIT 1",
+    'result');
 
 // Se non ottengo alcun risultato, allora mostro un messaggio di errore
 if(gdrcd_query($result, 'num_rows') == 0) { ?>
@@ -17,7 +27,7 @@ if(gdrcd_query($result, 'num_rows') == 0) { ?>
     gdrcd_query($result, 'free');
 
     // Aggiorno lo stato letto del messaggio
-    if(($record['destinatario'] == $_SESSION['login']) && ($record['letto'] == 0)) {
+    if(($record['id_personaggio_destinatario'] == $_SESSION['id_personaggio']) && ($record['letto'] == 0)) {
         gdrcd_query("UPDATE messaggi SET letto = 1 WHERE id = ".gdrcd_filter('num', $record['id'])." LIMIT 1");
     }
 
@@ -35,7 +45,13 @@ if(gdrcd_query($result, 'num_rows') == 0) { ?>
         </div>
         <div class="infos">
  		    <span class="title"><?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['sender']).": "; ?></span>
-            <span class="body"><?php echo gdrcd_filter('out', $record['mittente']); ?></span>
+            <span class="body">
+                <?php 
+                    echo $record['id_personaggio_mittente'] == WEBMASTER_ID
+                        ? gdrcd_filter('out', $PARAMETERS['info']['webmaster_name'])
+                        : gdrcd_filter('out', $record['mittente']); 
+                ?>
+            </span>
         </div>
         <div class="infos">
             <span class="title"><?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['type']['title']).": "; ?></span>

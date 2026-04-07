@@ -13,18 +13,18 @@ include('../ref_header.inc.php'); /*Header comune*/
         <?php
         //Refresh presenza.
         if(isset($_REQUEST['disponibile']) === true) {
-            $query = "UPDATE personaggio SET ultimo_refresh = NOW(), disponibile=".gdrcd_filter('num', $_REQUEST['disponibile'])."  WHERE nome = '".gdrcd_filter('in', $_SESSION['login'])."'";
+            $query = "UPDATE personaggio SET ultimo_refresh = NOW(), disponibile=".gdrcd_filter('num', $_REQUEST['disponibile'])."  WHERE id_personaggio = ".gdrcd_filter('num', $_SESSION['id_personaggio']);
         } elseif(isset($_REQUEST['invisibile']) && ($_SESSION['permessi'] >= GAMEMASTER)) {
-            $query = "UPDATE personaggio SET ultimo_refresh = NOW(), is_invisible=".gdrcd_filter('num', $_REQUEST['invisibile'])."  WHERE nome = '".gdrcd_filter('in', $_SESSION['login'])."'";
+            $query = "UPDATE personaggio SET ultimo_refresh = NOW(), is_invisible=".gdrcd_filter('num', $_REQUEST['invisibile'])."  WHERE id_personaggio = ".gdrcd_filter('num', $_SESSION['id_personaggio']);
         } else {
-            $query = "UPDATE personaggio SET ultimo_refresh = NOW() WHERE nome = '".gdrcd_filter('in', $_SESSION['login'])."'";
+            $query = "UPDATE personaggio SET ultimo_refresh = NOW() WHERE id_personaggio = ".gdrcd_filter('num', $_SESSION['id_personaggio']);
         }
         gdrcd_query($query);
         echo '<div class="elenco_presenti">';
           if(gdrcd_controllo_chat($_SESSION['luogo'])) {
 
         //Carico la lista presenti (Entrati).
-        $query = "SELECT personaggio.nome, personaggio.cognome, personaggio.permessi, personaggio.sesso, personaggio.id_razza, razza.sing_m, razza.sing_f, razza.icon, personaggio.disponibile, personaggio.is_invisible FROM personaggio LEFT JOIN razza ON personaggio.id_razza = razza.id_razza WHERE DATE_ADD(personaggio.ora_entrata, INTERVAL 2 MINUTE) > NOW() ORDER BY personaggio.ora_entrata, personaggio.nome";
+        $query = "SELECT personaggio.id_personaggio, personaggio.nome, personaggio.cognome, personaggio.permessi, personaggio.sesso, personaggio.id_razza, razza.sing_m, razza.sing_f, razza.icon, personaggio.disponibile, personaggio.is_invisible FROM personaggio LEFT JOIN razza ON personaggio.id_razza = razza.id_razza WHERE DATE_ADD(personaggio.ora_entrata, INTERVAL 2 MINUTE) > NOW() ORDER BY personaggio.ora_entrata, personaggio.nome";
         $result = gdrcd_query($query, 'result');
 
         echo '<div class="luogo">'.$MESSAGE['interface']['logged_users']['logged_in'].'</li>';
@@ -72,10 +72,7 @@ include('../ref_header.inc.php'); /*Header comune*/
             //Icona del genere del pg
             echo '<img class="presenti_ico" src="../imgs/icons/testamini'.$record['sesso'].'.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]).'" />';
             //Nome pg e link alla sua scheda
-            echo ' <a href="../main.php?page=scheda&pg='.gdrcd_filter('url', $record['nome']).'" class="link_sheet" target="_top">'.gdrcd_filter('out', $record['nome']);
-            if(empty($record['cognome']) === false and 0) {
-                echo ' '.gdrcd_filter('out', $record['cognome']);
-            }
+            echo ' <a href="../main.php?page=scheda&pg='.gdrcd_filter('url', $record['id_personaggio']).'" class="link_sheet" target="_top">'.gdrcd_filter('out', $record['nome']);
             echo '</a> ';
             //Comando visibile/invisibile
             if(($_SESSION['permessi'] >= GAMEMASTER) && ($record['nome'] == $_SESSION['login'])) {
@@ -91,7 +88,7 @@ include('../ref_header.inc.php'); /*Header comune*/
         /** * Fix della query per includere l'uso dell'orario di uscita per capire istantaneamente quando un pg fa logout
          * @author Blancks
          */
-        $query = "SELECT personaggio.nome, personaggio.cognome, personaggio.permessi, personaggio.sesso, personaggio.id_razza, razza.sing_m, razza.sing_f, razza.icon, personaggio.disponibile, personaggio.is_invisible FROM personaggio LEFT JOIN razza ON personaggio.id_razza = razza.id_razza WHERE (personaggio.ora_uscita > personaggio.ora_entrata AND DATE_ADD(personaggio.ora_uscita, INTERVAL 1 MINUTE) > NOW()) OR (personaggio.ora_uscita < personaggio.ora_entrata AND DATE_ADD(personaggio.ultimo_refresh, INTERVAL 4 MINUTE) > NOW() AND DATE_ADD(personaggio.ultimo_refresh, INTERVAL 3 MINUTE) < NOW()) ORDER BY personaggio.ultimo_refresh, personaggio.nome";
+        $query = "SELECT personaggio.id_personaggio, personaggio.nome, personaggio.cognome, personaggio.permessi, personaggio.sesso, personaggio.id_razza, razza.sing_m, razza.sing_f, razza.icon, personaggio.disponibile, personaggio.is_invisible FROM personaggio LEFT JOIN razza ON personaggio.id_razza = razza.id_razza WHERE (personaggio.ora_uscita > personaggio.ora_entrata AND DATE_ADD(personaggio.ora_uscita, INTERVAL 1 MINUTE) > NOW()) OR (personaggio.ora_uscita < personaggio.ora_entrata AND DATE_ADD(personaggio.ultimo_refresh, INTERVAL 4 MINUTE) > NOW() AND DATE_ADD(personaggio.ultimo_refresh, INTERVAL 3 MINUTE) < NOW()) ORDER BY personaggio.ultimo_refresh, personaggio.nome";
         $result = gdrcd_query($query, 'result');
 
         echo '<div class="luogo">'.$MESSAGE['interface']['logged_users']['logged_out'].'</div>';
@@ -140,9 +137,6 @@ include('../ref_header.inc.php'); /*Header comune*/
             echo '<img class="presenti_ico" src="../imgs/icons/testamini'.$record['sesso'].'.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]).'" />';
             //Nome pg e link alla sua scheda
             echo ' <a href="../main.php?page=scheda&pg='.gdrcd_filter('in', $record['nome']).'" class="link_sheet" target="_top">'.gdrcd_filter('out', $record['nome']);
-            if(empty($record['cognome']) === false and 0) {
-                echo ' '.gdrcd_filter('out', $record['cognome']);
-            }
             echo '</a> ';
             //Comando visibile/invisibile
             if(($_SESSION['permessi'] >= GAMEMASTER) && ($record['nome'] == $_SESSION['login'])) {
@@ -158,7 +152,7 @@ include('../ref_header.inc.php'); /*Header comune*/
         /** * Fix della query per includere l'uso dell'orario di uscita per capire istantaneamente quando il pg non è più connesso
          * @author Blancks
          */
-        $query = "SELECT personaggio.nome, personaggio.cognome, personaggio.permessi, personaggio.sesso, personaggio.id_razza, razza.sing_m, razza.sing_f, razza.icon, personaggio.disponibile, personaggio.is_invisible, mappa.stanza_apparente, mappa.nome as luogo FROM personaggio LEFT JOIN mappa ON personaggio.ultimo_luogo = mappa.id LEFT JOIN razza ON personaggio.id_razza = razza.id_razza WHERE (personaggio.ora_entrata > personaggio.ora_uscita AND DATE_ADD(personaggio.ultimo_refresh, INTERVAL 4 MINUTE) > NOW()) AND personaggio.ultimo_luogo = ".$_SESSION['luogo']." AND personaggio.ultima_mappa= ".$_SESSION['mappa']." ORDER BY personaggio.is_invisible, personaggio.ultimo_luogo, personaggio.nome";
+        $query = "SELECT personaggio.id_personaggio, personaggio.nome, personaggio.cognome, personaggio.permessi, personaggio.sesso, personaggio.id_razza, razza.sing_m, razza.sing_f, razza.icon, personaggio.disponibile, personaggio.is_invisible, mappa.stanza_apparente, mappa.nome as luogo FROM personaggio LEFT JOIN mappa ON personaggio.ultimo_luogo = mappa.id LEFT JOIN razza ON personaggio.id_razza = razza.id_razza WHERE (personaggio.ora_entrata > personaggio.ora_uscita AND DATE_ADD(personaggio.ultimo_refresh, INTERVAL 4 MINUTE) > NOW()) AND personaggio.ultimo_luogo = ".$_SESSION['luogo']." AND personaggio.ultima_mappa= ".$_SESSION['mappa']." ORDER BY personaggio.is_invisible, personaggio.ultimo_luogo, personaggio.nome";
         $result = gdrcd_query($query, 'result');
 
         $ultimo_luogo_corrente = '';
@@ -200,7 +194,7 @@ include('../ref_header.inc.php'); /*Header comune*/
 
                 //Icona stato di disponibilità. E' sensibile se la riga che sto stampando corrisponde all'utente loggato.
                 $change_disp = ($record['disponibile'] + 1) % 3;
-                if($record['nome'] == $_SESSION['login']) {
+                if($record['id_personaggio'] == $_SESSION['id_personaggio']) {
                     //se c'e' stato un cambio di permessi aggiorno
                     if($record['permessi'] != $_SESSION['permessi']) {
                         $_SESSION['permessi'] = $record['permessi'];
@@ -222,10 +216,7 @@ include('../ref_header.inc.php'); /*Header comune*/
                 echo '<img class="presenti_ico" src="../imgs/icons/testamini'.$record['sesso'].'.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]).'" />';
 
                 //Nome pg e link alla sua scheda
-                echo ' <a href="../main.php?page=scheda&pg='.$record['nome'].'" class="link_sheet" target="_top">'.gdrcd_filter('out', $record['nome']);
-                if(empty($record['cognome']) === false and 0) {
-                    echo ' '.gdrcd_filter('out', $record['cognome']);
-                }
+                echo ' <a href="../main.php?page=scheda&pg='.$record['id_personaggio'].'" class="link_sheet" target="_top">'.gdrcd_filter('out', $record['nome']);
                 echo '</a> ';
 
                 //Comando visibile/invisibile

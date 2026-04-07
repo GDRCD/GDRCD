@@ -23,7 +23,7 @@ if (gdrcd_filter('get', $_POST['action']) == "bookRoom") {
     // Se la stanza è affittabile, allora procedo con la prenotazione
     if ($bookableRoom) {
         // Controllo i soldi in possesso del personaggio
-        $checkPG = gdrcd_query("SELECT soldi FROM personaggio WHERE nome ='".$_SESSION['login']."' LIMIT 1");
+        $checkPG = gdrcd_query("SELECT soldi FROM personaggio WHERE id_personaggio ='".$_SESSION['id_personaggio']."' LIMIT 1");
 
         // Imposto il valore minimo delle ore a 1
         $timeRoom = $timeRoom >= 0 ? $timeRoom : 1;
@@ -31,8 +31,8 @@ if (gdrcd_filter('get', $_POST['action']) == "bookRoom") {
         // Controllo se il personaggio ha abbastanza soldi
         if($checkPG['soldi'] >= ($timeRoom * $checkRoom['costo'])) {
             /*Opero la prenotazione*/
-            gdrcd_query("UPDATE mappa SET proprietario = '".$_SESSION['login']."', invitati='', ora_prenotazione=NOW(), scadenza=DATE_ADD(NOW(), INTERVAL ".gdrcd_filter('get', $_POST['ore'])." HOUR) WHERE id = ".gdrcd_filter('num', $idRoom)." and scadenza < NOW() LIMIT 1");
-            gdrcd_query("UPDATE personaggio SET soldi = soldi - ".gdrcd_filter('num', $timeRoom * $checkRoom['costo'])." WHERE nome = '".$_SESSION['login']."' LIMIT 1");
+            gdrcd_query("UPDATE mappa SET proprietario = '".$_SESSION['id_personaggio']."', invitati='', ora_prenotazione=NOW(), scadenza=DATE_ADD(NOW(), INTERVAL ".gdrcd_filter('get', $_POST['ore'])." HOUR) WHERE id = ".gdrcd_filter('num', $idRoom)." and scadenza < NOW() LIMIT 1");
+            gdrcd_query("UPDATE personaggio SET soldi = soldi - ".gdrcd_filter('num', $timeRoom * $checkRoom['costo'])." WHERE id_personaggio = '".$_SESSION['id_personaggio']."' LIMIT 1");
             echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['interface']['hotel']['ok']).'</div>';
         } else {
             echo '<div class="error">'.gdrcd_filter('out', $MESSAGE['interface']['hotel']['no_bucks']).'</div>';
@@ -41,7 +41,7 @@ if (gdrcd_filter('get', $_POST['action']) == "bookRoom") {
     else {
         // Se l'utente è il proprietario della stanza, allora lo segnalo
         // Forzo questo messaggio per evitare che l'utente veda un messaggio di errore
-        if($checkRoom['proprietario'] == $_SESSION['login']) {
+        if($checkRoom['proprietario'] == $_SESSION['id_personaggio']) {
             echo '<div class="error">'.gdrcd_filter('out', $MESSAGE['interface']['hotel']['already_booked_by_user']).'</div>';
         }
         // Altrimenti la stranza è prenotata da un altro utente

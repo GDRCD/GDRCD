@@ -106,13 +106,13 @@ div.success {
     color: #0f5132;
 }
 
-div.warning.mysql, 
+div.warning.mysql,
 div.error.mysql {
 	text-align:left;
 	font-weight:normal;
 }
 
-div.warning.mysql summary, 
+div.warning.mysql summary,
 div.error.mysql summary{
 	margin-top:1em;
 	font-weight:bold;
@@ -175,7 +175,7 @@ div.output {
     width: auto;
     overflow: auto;
     text-align: center;
-    background: url("imgs/main_bg.jpg") no-repeat top center #b9b9b9;
+    background: #b9b9b9;
 }
 
 /** * Informazioni con anteprima luogo
@@ -202,7 +202,7 @@ div.meteo_luna img{
     display: block;
 }
 
-/** * Frame Messaggi 
+/** * Frame Messaggi
 */
 iframe.iframe_messages,
 iframe.iframe_forums {
@@ -270,7 +270,7 @@ div.link_menu a.sprite:hover {
 
 /** * Mappa cliccabile */
 
-/** * Posizionamento mappa cliccabile 
+/** * Posizionamento mappa cliccabile
 */
 div.mappaclick_map {
     margin: 20px auto;
@@ -282,7 +282,7 @@ div.mappaclick_map a {
     font-weight: bolder;
 }
 
-/** * stile della tooltip di descrizione sulla mappa 
+/** * stile della tooltip di descrizione sulla mappa
 */
 div#descriptionLoc {
     position: absolute;
@@ -418,7 +418,7 @@ div.elenco_record_gestione table {
 
 /** * Accorgimenti Layout */
 
-/** * Allineamento verticale delle colonne 
+/** * Allineamento verticale delle colonne
 */
 #framecontentLeft, #framecontentRight {
     display: table;
@@ -653,7 +653,7 @@ div.innertube {
 .config-form-field {
     margin-bottom: 6px;
 }
- 
+
 
 .config-form-description {
     color: #666;
@@ -665,10 +665,10 @@ div.innertube {
 .config-form-submit {
     margin-top: 8px;
 }
- 
+
 
 /* Stili per il generatore di token */
- 
+
  .gestione-token-container {
     max-width: 1200px;
     margin: 0 auto;
