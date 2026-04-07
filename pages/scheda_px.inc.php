@@ -41,8 +41,19 @@
             $nome = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_REQUEST['pg']) . "'");
          
             /*Registro l'operazione*/
-            gdrcd_query("INSERT INTO log (id_personaggio,nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) 
-                                VALUES ('" . gdrcd_filter('in', $_REQUEST['pg']) . "','" . gdrcd_filter('in', $nome['nome']) . "', '" . $_SESSION['login'] . "', NOW(), " . PX . ", '(" . gdrcd_filter('in',$_POST['px']) . ' px) ' . gdrcd_filter('in', $_POST['causale']) . "')");
+            gdrcd_log_notice(
+                'Assegnazione punti esperienza al personaggio',
+                json_encode([
+                    'evento' => 'character.px.assigned',
+                    'codice_evento' => PX,
+                    'nome_interessato' => $nome['nome'],
+                    'autore' => $_SESSION['login'],
+                    'px' => (int) $_POST['px'],
+                    'causale' => $_POST['causale'],
+                    'origine' => 'gestione_px'
+                ]),
+                gdrcd_filter('num', $_REQUEST['pg'])
+            );
             echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['warning']['done']) . '</div>';
         } else
         {
@@ -53,63 +64,78 @@
 
     <div class="page_body">
         <div class="panels_box">
-            <?php /*Seleziono le ultime 20 assegnamzioni px*/
+            <?php
+                /* Seleziono le ultime assegnazioni px */
+                $stmt = gdrcd_stmt(
+                    "SELECT 
+                        JSON_UNQUOTE(JSON_EXTRACT(contesto, '$.px')) AS px,
+                        JSON_UNQUOTE(JSON_EXTRACT(contesto, '$.causale')) AS causale,
+                        JSON_UNQUOTE(JSON_EXTRACT(contesto, '$.autore')) AS autore,
+                        data
+                    FROM log
+                    WHERE id_personaggio = ?
+                    AND JSON_EXTRACT(contesto, '$.codice_evento') = ?
+                    ORDER BY data DESC
+                    LIMIT ?",
+                    ['iii', gdrcd_filter('num', $_REQUEST['pg']), PX, $num_logs]
+                );
 
-            $query = "SELECT  descrizione_evento, autore, data_evento FROM log WHERE id_personaggio = '" . gdrcd_filter('in',
-                    $_REQUEST['pg']) . "' AND codice_evento = " . PX . " ORDER BY data_evento DESC LIMIT " . $num_logs . "";
-            $result = gdrcd_query($query, 'result');
-           
+                $logs = [];
+                while ($row = gdrcd_query($stmt, 'assoc')) {
+                    $logs[] = $row;
+                }
 
-            $query = "SELECT esperienza FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_REQUEST['pg']) . "'";
-            ?>
-            <!-- Intestazione tabella elenco -->
-            <div class="elenco_record_gioco">
-                <table>
-                    <tr>
-                        <td class="casella_titolo">
-                            <div class="titoli_elenco">
-                                <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['px']['event']); ?>
-                            </div>
-                        </td>
-                        <td class="casella_titolo">
-                            <div class="titoli_elenco">
-                                <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['px']['date']); ?>
+                gdrcd_query($stmt, 'free');
 
-                            </div>
-                        </td>
-                        <td class="casella_titolo">
-                            <div class="titoli_elenco">
-                                <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['px']['author']); ?>
-                            </div>
-                        </td>
-                    </tr>
-
-
-                    <?php while ($record = gdrcd_query($result, 'fetch'))
-                    { ?>
-
+                $query = "SELECT esperienza FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_REQUEST['pg']) . "'";
+                ?>
+                <!-- Intestazione tabella elenco -->
+                <div class="elenco_record_gioco">
+                    <table>
                         <tr>
-                            <!-- Oggetto, immagine, quantità -->
-                            <td class="casella_elemento">
-                                <div class="elementi_elenco"><?php echo gdrcd_filter('out',
-                                        $record['descrizione_evento']); ?></div>
+                            <td class="casella_titolo">
+                                <div class="titoli_elenco">
+                                    <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['px']['event']); ?>
+                                </div>
                             </td>
-                            <td class="casella_elemento">
-                                <div class="elementi_elenco"><?php echo gdrcd_filter('out',
-                                        gdrcd_format_date($record['data_evento'])); ?></div>
+                            <td class="casella_titolo">
+                                <div class="titoli_elenco">
+                                    <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['px']['date']); ?>
+                                </div>
                             </td>
-                            <td class="casella_elemento">
-                                <div class="elementi_elenco"><?php echo gdrcd_filter('out', $record['autore']); ?></div>
+                            <td class="casella_titolo">
+                                <div class="titoli_elenco">
+                                    <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['px']['author']); ?>
+                                </div>
                             </td>
                         </tr>
-                    <?php }//while
 
-                    gdrcd_query($result, 'free');
-                    ?>
-                </table>
-
-            </div>
-
+                        <?php foreach ($logs as $record) { ?>
+                            <tr>
+                                <td class="casella_elemento">
+                                    <div class="elementi_elenco">
+                                        <?php
+                                        echo gdrcd_filter(
+                                            'out',
+                                            '(' . (int)$record['px'] . ' px) ' . $record['causale']
+                                        );
+                                        ?>
+                                    </div>
+                                </td>
+                                <td class="casella_elemento">
+                                    <div class="elementi_elenco">
+                                        <?php echo gdrcd_filter('out', gdrcd_format_date($record['data'])); ?>
+                                    </div>
+                                </td>
+                                <td class="casella_elemento">
+                                    <div class="elementi_elenco">
+                                        <?php echo gdrcd_filter('out', $record['autore']); ?>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </table>
+                </div>
             <?php if ($_SESSION['permessi'] >= GAMEMASTER)
             { ?>
                 <div class="form_gioco">

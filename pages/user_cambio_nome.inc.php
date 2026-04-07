@@ -17,7 +17,14 @@ $iscriz = $iscriz['0'];
     <div class="page_body">
         <?php /*Cambio pass utenti*/
         if($_POST['op'] == 'new') {
-            if((gdrcd_password_check($_POST['email'], $email)) && (gdrcd_password_check($_POST['new_pass'], $pass)) && ($iscriz >= strftime('%Y-%m-%d')) && (empty($_POST['new_name']) === false)) {
+           $isEmailOk = gdrcd_password_check($_POST['email'], $email);
+            $isPasswordOk = gdrcd_password_check($_POST['new_pass'], $pass);
+            $isDateOk = ($iscriz >= strftime('%Y-%m-%d'));
+            $isNameOk = !empty($_POST['new_name']);
+
+ 
+           if ($isEmailOk && $isPasswordOk && $isDateOk && $isNameOk) {
+
                 $query = "SELECT nome FROM personaggio WHERE nome ='".gdrcd_filter('in', $_POST['new_name'])."'";
                 $result = gdrcd_query($query, 'result');
                 if(gdrcd_query($result, 'num_rows') > 0) { ?>
@@ -26,12 +33,22 @@ $iscriz = $iscriz['0'];
                     </div>
                     <?php
                 } else {
-                    gdrcd_query("UPDATE personaggio SET nome = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE id_personaggio = '".$_SESSION['id_personaggio']."'");
                     $nome = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "'");
-                    gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".gdrcd_filter('in', $_SESSION['id_personaggio'])."','".gdrcd_filter('in', $_POST['new_name'])."','".$_SESSION['login']."', NOW(), ".CHANGEDNAME." ,'".$_SESSION['login'].' -> '.gdrcd_filter('in', $_POST['new_name'])."')");
-                    gdrcd_query("UPDATE log SET nome_interessato = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE id_personaggio = '".$_SESSION['id_personaggio']."'");
 
-                    $_SESSION['login'] = gdrcd_filter('get', $_POST['new_name']);
+                    gdrcd_query("UPDATE personaggio SET nome = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE id_personaggio = '".$_SESSION['id_personaggio']."'");
+                    
+                    gdrcd_log_notice(
+                        'Cambio nome del personaggio',
+                        json_encode([
+                            'evento' => 'character.name.changed',
+                            'codice_evento' => CHANGEDNAME,
+                            'nome_precedente' => $_SESSION['login'],
+                            'nome_nuovo' => $_POST['new_name'],
+                            'origine' => 'gestione_personaggio'
+                        ]),
+                        gdrcd_filter('num', $_SESSION['id_personaggio'])
+                    );
+                   $_SESSION['login'] = gdrcd_filter('get', $_POST['new_name']);
                     ?>
                     <div class="warning">
                         <?php echo gdrcd_filter('out', $MESSAGE['warning']['modified']); ?>
@@ -64,20 +81,30 @@ $iscriz = $iscriz['0'];
                     </div>
                 <?php } else {
                     if($_SESSION['permessi'] == SUPERUSER) {
+                        $nome = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_POST['account']) . "'");
 
-                        gdrcd_query("UPDATE log SET nome_interessato = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE id_personaggio = '".gdrcd_filter('in', $_POST['account'])."'");
-
+ 
                         gdrcd_query("UPDATE personaggio SET nome = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE id_personaggio = '".gdrcd_filter('in', $_POST['account'])."'");
                     } else {
-                        gdrcd_query("UPDATE log SET nome_interessato = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE id_personaggio = '".$_POST['account']."'");
-
+                       
                        gdrcd_query("UPDATE personaggio SET nome = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE id_personaggio = '".gdrcd_filter('in', $_POST['account'])."' AND permessi < ".SUPERUSER."");
                     }
 
                     /*Registro l'evento */
-                     $nome = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "'");
+                     
 
-                    gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ( '".gdrcd_filter('in', $_SESSION['id_personaggio'])."' , '".gdrcd_filter('in', $_POST['account'])."','".$_SESSION['login']."', NOW(), ".CHANGEDNAME." ,'".gdrcd_filter('in', $_POST['account']).' -> '.gdrcd_filter('in', $_POST['new_name'])."')");
+                    gdrcd_log_notice(
+                        'Cambio nome del personaggio',
+                        json_encode([
+                            'evento' => 'character.name.changed',
+                            'codice_evento' => CHANGEDNAME,
+                            'nome_precedente' => $nome['nome'],
+                            'nome_nuovo' => $_POST['new_name'],
+                            'eseguito_da' => $_SESSION['login'],
+                            'origine' => 'gestione_personaggio'
+                        ]),
+                        gdrcd_filter('num', $_SESSION['id_personaggio'])
+                    );
                     ?>
                     <div class="warning">
                         <?php echo gdrcd_filter('out', $MESSAGE['warning']['modified']); ?>
@@ -111,7 +138,7 @@ $iscriz = $iscriz['0'];
                                 <?php echo gdrcd_filter('out', $MESSAGE['interface']['user']['name']['pass']); ?>
                             </div>
                             <div class="form_field">
-                                <input name="new_pass" />
+                                <input name="new_pass" type="password" />
                             </div>
                             <div class="form_label">
                                 <?php echo gdrcd_filter('out', $MESSAGE['interface']['user']['name']['new']); ?>

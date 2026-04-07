@@ -194,7 +194,18 @@
                         echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['interface']['adm_guilds']['ok_hire']) . '</div>';
                         /*Registro l'operazione*/
                         $personaggio = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "'");
-                        gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES ( '" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "', '" . gdrcd_filter('in', $personaggio['nome']) . "', '" . $_SESSION['login'] . "', NOW(), " . NUOVOLAVORO . ", '" . gdrcd_filter('out', $subject[1]) . "')");
+                        gdrcd_log_notice(
+                            'Assegnato nuovo ruolo al personaggio',
+                            json_encode([
+                                'evento' => 'character.job.assigned',
+                                'codice_evento' => NUOVOLAVORO,
+                                'nome_interessato' => $personaggio['nome'],
+                                'autore' => $_SESSION['login'],
+                                'lavoro' => $subject[1],
+                                'origine' => 'gestione_lavoro'
+                            ]),
+                            gdrcd_filter('num', $_SESSION['id_personaggio'])
+                        );
 
                         /*Avviso l'utente*/
 
@@ -240,7 +251,18 @@
                     echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['interface']['adm_guilds']['ok_fire']) . '</div>';
                     /*Registro l'operazione*/
                     $personaggio = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $subject[0]) . "'");
-                    gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES ('" . $subject[0] . "','" . gdrcd_filter('in', $personaggio['nome']) . "', '" . $_SESSION['login'] . "', NOW(), " . DIMISSIONE . ", '" . gdrcd_filter('out', $subject[2]) . "')");
+                    gdrcd_log_notice(
+                        'Dimissione dal ruolo del personaggio',
+                        json_encode([
+                            'evento' => 'character.job.resigned',
+                            'codice_evento' => DIMISSIONE,
+                            'nome_interessato' => $personaggio['nome'],
+                            'autore' => $_SESSION['login'],
+                            'lavoro' => $subject[2],
+                            'origine' => 'gestione_lavoro'
+                        ]),
+                        gdrcd_filter('num', $subject[0])
+                    );
 
                     /*Avviso l'utente*/
                     if ($_SESSION['id_personaggio'] != $subject[0]) {

@@ -37,15 +37,16 @@
  */
 function gdrcd_log($descrizione, $livello_log, $contesto, $id_personaggio)
 {
+     
     gdrcd_query("
         INSERT INTO `log` (`id`, `data`, `descrizione`, `livello_log`, `contesto`, `id_personaggio`)
         VALUES
-            UUID(),
+            (UUID(),
             NOW(),
             '$descrizione',
             '$livello_log',
             '$contesto',
-            $id_personaggio
+            $id_personaggio)
     ");
 }
 

@@ -31,7 +31,17 @@ if(gdrcd_query($result, 'num_rows') > 0) {
     /*Se la postazione è stata esclusa*/
     echo '<div class="error_box"><h2 class="error_major">'.$MESSAGE['warning']['blacklisted'].'</h2></div>';
     /*Registro l'evento (Tentativo di connessione da postazione esclusa)*/
-    gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES (NULL, '".$login1."', 'Login_procedure', NOW(), ".BLOCKED.", '".$_SERVER['REMOTE_ADDR']."')");
+    gdrcd_log_warning(
+        'Tentativo di login bloccato',
+        json_encode([
+            'evento' => 'auth.login.blocked',
+            'codice_evento' => BLOCKED,
+            'utente' => $login1,
+            'ip' => $_SERVER['REMOTE_ADDR'],
+            'origine' => 'Login_procedure'
+        ]),
+        null
+    );
     exit();
 }
 
@@ -84,29 +94,83 @@ if( ! empty($record) && gdrcd_password_check($pass1, $record['pass']) && ($recor
     gdrcd_query($res, 'free');
 
     /* Carico l'ultimo ip con cui si è collegato il personaggio */
-    $lastlogindata = gdrcd_query("SELECT nome_interessato, autore FROM log WHERE id_personaggio = '". $_SESSION['id_personaggio'] ."' AND codice_evento=".LOGGEDIN." ORDER BY data_evento DESC LIMIT 1");
+    $stmt = gdrcd_stmt(
+        "SELECT 
+            JSON_UNQUOTE(JSON_EXTRACT(contesto, '$.utente')) AS nome_interessato,
+            JSON_UNQUOTE(JSON_EXTRACT(contesto, '$.ip')) AS autore
+        FROM log
+        WHERE id_personaggio = ?
+        AND JSON_EXTRACT(contesto, '$.codice_evento') = ?
+        ORDER BY data DESC
+        LIMIT 1",
+        ['ii', $_SESSION['id_personaggio'], LOGGEDIN]
+    );
 
+    $lastlogindata = gdrcd_query($stmt, 'assoc');
+    gdrcd_query($stmt, 'free');
     /* Se la postazione ha già un cookie attivo per un personaggio differente registro l'evento (Possibile account multiplo) */
     if((isset($_COOKIE['lastlogin']) === true) && ($_COOKIE['lastlogin'] != $_SESSION['id_personaggio'])) {
 
         $otherAccountData = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = ". $_SESSION['id_personaggio']);
         $otherAccountNome = !empty($otherAccountData)? $otherAccountData['nome'] : '-Sconosciuto-';
-
-        gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES (". $_SESSION['id_personaggio'] .", '".gdrcd_filter('in', $_SESSION['login'])."','doppio (cookie)', NOW(), ".ACCOUNTMULTIPLO.", '". gdrcd_filter('in', $otherAccountNome) ."')");
+        gdrcd_log_warning(
+            'Rilevato possibile account multiplo tramite cookie attivo',
+            json_encode([
+                'evento' => 'auth.multiaccount.cookie',
+                'codice_evento' => ACCOUNTMULTIPLO,
+                'utente_corrente' => $_SESSION['login'],
+                'altro_account' => $otherAccountNome,
+                'origine' => 'login'
+            ]),
+            $_SESSION['id_personaggio']
+        );
+        
 
     } elseif($lastlogindata['autore'] == $_SERVER['REMOTE_ADDR'] && $lastlogindata['nome_interessato'] != $_SESSION['login'] ) {
-
-        gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES (". $_SESSION['id_personaggio'] .", '".gdrcd_filter('in', $_SESSION['login'])."','doppio (ip)', NOW(), ".ACCOUNTMULTIPLO.", '".gdrcd_filter('in', $lastlogindata['nome_interessato'])."')");
+        /*possibile account multiplo tramite IP*/
+        gdrcd_log_notice(
+            'Possibile correlazione tra account tramite IP',
+            json_encode([
+                'evento' => 'auth.multiaccount.ip',
+                'codice_evento' => ACCOUNTMULTIPLO,
+                'utente_corrente' => $_SESSION['login'],
+                'altro_account' => $lastlogindata['nome_interessato'],
+                'ip' => $_SERVER['REMOTE_ADDR'],
+                'origine' => 'login'
+            ]),
+            $_SESSION['id_personaggio']
+        );
 
     }
 
     /* Registro l'evento (Avvenuto login) */
-    gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES (". $_SESSION['id_personaggio'] .", '".gdrcd_filter('in', $_SESSION['login'])."','".$_SERVER['REMOTE_ADDR']."', NOW(), ".LOGGEDIN." ,'".$_SERVER['REMOTE_ADDR']."')");
+    gdrcd_log_info(
+        'Login effettuato con successo',
+        json_encode([
+            'evento' => 'auth.login.success',
+            'codice_evento' => LOGGEDIN,
+            'utente' => $_SESSION['login'],
+            'ip' => $_SERVER['REMOTE_ADDR'],
+            'origine' => 'login'
+        ]),
+        $_SESSION['id_personaggio']
+    );
 } elseif(strtotime($record['ora_entrata']) > strtotime($record['ora_uscita']) || (strtotime($record['ultimo_refresh']) + $PARAMETERS['settings']['reconnection_cooldown']) > time()) {
     /* Se la postazione è stata esclusa */
     echo '<div class="error_box"><h2 class="error_major">'.$MESSAGE['warning']['double_connection'].'</h2></div>';
     /* Registro l'evento (Tentativo di connessione da postazione esclusa) */
-    gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES (". $record['id_personaggio'] .", '".$login1."', 'Login_procedure', NOW(), ".BLOCKED.", '".$_SERVER['REMOTE_ADDR']."')");
+    gdrcd_log_warning(
+        'Tentativo di connessione da postazione esclusa',
+        json_encode([
+            'evento' => 'auth.login.blocked.blacklist',
+            'codice_evento' => BLOCKED,
+            'utente' => $login1,
+            'id_personaggio' => $record['id_personaggio'],
+            'ip' => $_SERVER['REMOTE_ADDR'],
+            'origine' => 'Login_procedure'
+        ]),
+        $record['id_personaggio']
+    );
     exit();
 } else {
     /* Sono stati inseriti username e password errati */
@@ -115,9 +179,34 @@ if( ! empty($record) && gdrcd_password_check($pass1, $record['pass']) && ($recor
 
     if(($login1 != '') && ($pass1 != '')) {
         /* Registro l'evento (Login errato) */
-        gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES (NULL, '".gdrcd_filter('in', $login1)."','".$host."', NOW(), ".ERRORELOGIN." ,'".$_SERVER['REMOTE_ADDR']."')");
+        gdrcd_log_notice(
+            'Tentativo di login non riuscito',
+            json_encode([
+                'evento' => 'auth.login.failed',
+                'codice_evento' => ERRORELOGIN,
+                'utente' => $login1,
+                'host' => $host,
+                'ip' => $_SERVER['REMOTE_ADDR'],
+                'origine' => 'Login_procedure'
+            ]),
+            null
+        );
 
-        $record = gdrcd_query("SELECT count(*) FROM log WHERE descrizione_evento = '".$_SERVER['REMOTE_ADDR']."' AND codice_evento = ".ERRORELOGIN." AND DATE_ADD(data_evento, INTERVAL 60 MINUTE) > NOW()");
+        $stmt = gdrcd_stmt(
+            "SELECT COUNT(*) AS totale
+            FROM log
+            WHERE contesto LIKE ?
+            AND contesto LIKE ?
+            AND DATE_ADD(data, INTERVAL 60 MINUTE) > NOW()",
+            [
+                'ss',
+                '%\"ip\":\"' . $_SERVER['REMOTE_ADDR'] . '\"%',
+                '%\"codice_evento\":' . ERRORELOGIN . '%'
+            ]
+        );
+
+        $record = gdrcd_query($stmt, 'assoc');
+        gdrcd_query($stmt, 'free');
         /* Se ho tentato 10 login fallendo nel giro di un ora */
         $iErrorsNumber = $record['count(*)'];
 

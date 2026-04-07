@@ -19,7 +19,7 @@ class GDRCD57_Refactor_Log_Table extends DbMigration
             DEFAULT CHARSET=utf8
             COLLATE=utf8_general_ci
         ");
-
+ 
         gdrcd_query("
             INSERT INTO `log_new` (`id`, `data`, `descrizione`, `livello_log`, `contesto`, `id_personaggio`)
             SELECT
@@ -32,10 +32,11 @@ class GDRCD57_Refactor_Log_Table extends DbMigration
                     '\"nome_interessato\":\"', REPLACE(IFNULL(`nome_interessato`, ''), '\"', '\\\\\"'), '\",',
                     '\"autore\":\"', REPLACE(IFNULL(`autore`, ''), '\"', '\\\\\"'), '\",',
                     '\"codice_evento\":\"', REPLACE(IFNULL(`codice_evento`, ''), '\"', '\\\\\"'), '\"',
-                    '}'
+                    '}'),
                 id_personaggio
             FROM `log`
         ");
+       
 
         gdrcd_query("RENAME TABLE `log` TO `log_old`, `log_new` TO `log`");
         gdrcd_query("DROP TABLE `log_old`");
