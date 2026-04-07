@@ -32,13 +32,16 @@ if ($PARAMETERS['mode']['chatsavepvt'] == 'ON') {
                         c.tipo, c.ora,
                         c.testo, 
                         pm.url_img_chat, 
-                        pm.nome,
+                        pm.nome AS nome_mittente,
+                        pd.nome AS nome_destinatario,
                         m.ora_prenotazione,
                         m.privata
                     FROM chat c
                     INNER JOIN mappa m ON m.id = c.stanza
                     LEFT JOIN personaggio pm 
                     ON pm.id_personaggio = c.id_personaggio_mittente
+                     LEFT JOIN personaggio pd 
+                                ON pd.id_personaggio = c.id_personaggio_destinatario
                     WHERE c.stanza = " . $_SESSION['luogo'] . " AND DATE_SUB(NOW(), INTERVAL $tempo_salvataggio HOUR) < c.ora ORDER BY c.id " . $typeOrder; 
                         
 } else {
@@ -49,16 +52,20 @@ if ($PARAMETERS['mode']['chatsavepvt'] == 'ON') {
                         c.tipo, c.ora,
                         c.testo, 
                         pm.url_img_chat, 
-                        pm.nome,
+                        pm.nome AS nome_mittente,
+                        pd.nome AS nome_destinatario,
                         m.ora_prenotazione,
                         m.privata
                     FROM chat c
                     INNER JOIN mappa m ON m.id = c.stanza
                     LEFT JOIN personaggio pm ON pm.id_personaggio = c.id_personaggio_mittente
+                     LEFT JOIN personaggio pd 
+                                ON pd.id_personaggio = c.id_personaggio_destinatario
                     WHERE c.stanza = " . $_SESSION['luogo'] . " 
                     AND m.privata = 0 AND DATE_SUB(NOW(), INTERVAL $tempo_salvataggio HOUR) < c.ora 
                     AND c.ora > IFNULL(m.ora_prenotazione, '0000-00-00 00:00:00') ORDER BY c.id " . $typeOrder;
 }
+
 $do_query = gdrcd_query($query, 'result');
 
 /*Inizio a preparare il testo da inserire poi nel file da salvare.*/
@@ -86,7 +93,8 @@ while ($row = gdrcd_query($do_query, 'fetch')) {
  $add_chat .= '
             </body>
             </html>
-            ';
+            '; 
+
     /* Scrivo tutto in un file di testo */
     $start = gdrcd_format_datetime_cat($start_time);
     $end = gdrcd_format_datetime_cat($end_time);
