@@ -30,8 +30,6 @@ $users = gdrcd_query("SELECT COUNT(nome) AS online FROM personaggio WHERE ora_en
 				include (__DIR__ . '/login.inc.php');
 			?>
         </header>
-
-
         <div id="content">
             <aside>
                 <div class="side_modules nopad">
@@ -43,14 +41,12 @@ $users = gdrcd_query("SELECT COUNT(nome) AS online FROM personaggio WHERE ora_en
                 <div class="side_modules">
                     <strong><?php echo $users['online'], ' ', gdrcd_filter('out', $MESSAGE['homepage']['forms']['online_now']); ?></strong>
                 </div>
-
                 <div class="side_modules">
                     <?php
                         // Include il modulo di reset della password
                         include (__DIR__ . '/reset_password.inc.php');
                     ?>
                 </div>
-
                 <div class="side_modules nopad">
                     <?php
                         // Include le statistiche del sito
@@ -58,15 +54,12 @@ $users = gdrcd_query("SELECT COUNT(nome) AS online FROM personaggio WHERE ora_en
                     ?>
                 </div>
             </aside>
-
             <main>
                 <?php
                     gdrcd_load_modules('homepage__'.$MODULE['content']);
 				?>
             </main>
-
         </div>
-
         <footer>
             <div>
                 <p><?=$REFERENCES?></p>

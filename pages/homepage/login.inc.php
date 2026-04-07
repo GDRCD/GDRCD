@@ -12,7 +12,7 @@
 				<input type="password" id="password" name="pass1"/>
 			</div>
 			<?php if (!empty($PARAMETERS['themes']['available']) and count($PARAMETERS['themes']['available']) > 1): ?>
-				<div>
+				<div style="white-space: nowrap;">
 					<span class="form_label"><label for="theme"><?= gdrcd_filter('out', $MESSAGE['homepage']['forms']['theme_choice']) ?></label></span>
 					<select name="theme" id="theme">
 						<?php
