@@ -217,6 +217,21 @@ function gdrcd_stmt($sql, $binds = array(), $options = [])
     return $result;
 }
 
+/**
+ * Prepara una query SQL per l'esecuzione con prepared statement.
+ *
+ * Questa funzione è un helper interno che crea una struttura dati contenente
+ * lo statement MySQLi preparato e le opzioni di configurazione.
+ *
+ * @param string $sql La query SQL da preparare, con i segnaposto (?) per i parametri.
+ * @param array $options Array di opzioni opzionali.
+ *  - throw: se valorizzato a true la query lancia un'eccezione invece di interrompere l'esecuzione dello script
+ *
+ * @return array Array associativo contenente:
+ *  - 'sql': la query SQL originale
+ *  - 'stmt': l'oggetto mysqli_stmt preparato
+ *  - 'options': le opzioni passate alla funzione
+ */
 function gdrcd_stmt_prepare($sql, $options = [])
 {
     $db_link = gdrcd_connect();
@@ -228,11 +243,40 @@ function gdrcd_stmt_prepare($sql, $options = [])
     ];
 }
 
+/**
+ * Chiude uno statement preparato e libera le risorse associate.
+ *
+ * @param array $stmt Array associativo contenente lo statement da chiudere,
+ *                    come restituito da gdrcd_stmt_prepare.
+ *
+ * @return void
+ */
 function gdrcd_stmt_close($stmt)
 {
     mysqli_stmt_close($stmt['stmt']);
 }
 
+/**
+ * Esegue uno statement preparato con i parametri specificati.
+ *
+ * Questa funzione esegue uno statement MySQLi già preparato, eseguendo il binding
+ * dei parametri in modo automatico. Gestisce sia query SELECT che query di modifica
+ * (INSERT, UPDATE, DELETE), restituendo i risultati in un formato unificato.
+ *
+ * @param array $stmt Array associativo contenente lo statement preparato,
+ *                    come restituito da gdrcd_stmt_prepare.
+ * @param array $binds Array dei parametri da associare alla query.
+ *                     I tipi vengono determinati automaticamente tramite gdrcd_stmt_bind_type.
+ *                     Esempio: ['nome', 42, 3.14]
+ *
+ * @return array Array associativo contenente:
+ *  - 'data': oggetto StmtResultData con i dati della query (per SELECT) o null
+ *  - 'num_rows': numero di righe restituite (per SELECT) o null
+ *  - 'affected': numero di righe modificate (per INSERT/UPDATE/DELETE) o null
+ *  - 'last_id': ID dell'ultimo record inserito (per INSERT) o null
+ *
+ * @throws Exception Se la preparazione o l'esecuzione dello statement fallisce e l'opzione 'throw' è attiva.
+ */
 function gdrcd_stmt_execute($stmt, $binds = [])
 {
     $sql = $stmt['sql'];
@@ -328,6 +372,23 @@ function gdrcd_stmt_execute($stmt, $binds = [])
     return $resultArr;
 }
 
+/**
+ * Esegue una query preparata e restituisce una singola riga di risultato.
+ *
+ * Questa funzione è un helper che esegue una query con prepared statement
+ * e restituisce solo la prima riga del risultato. Utile per query che si aspettano
+ * un unico risultato (es. SELECT con WHERE su chiave primaria).
+ *
+ * @param string $sql La query SQL da eseguire, con i segnaposto (?) per i parametri.
+ * @param array $binds Array dei parametri da associare alla query.
+ *                     I tipi vengono determinati automaticamente.
+ *                     Esempio: ['Mario', 25]
+ * @param array $options Array di opzioni opzionali.
+ *  - throw: se valorizzato a true la query lancia un'eccezione invece di interrompere l'esecuzione dello script
+ *
+ * @return array|false La prima riga del risultato come array associativo e numerico,
+ *                     o false se non ci sono risultati.
+ */
 function gdrcd_stmt_one($sql, $binds = [], $options = [])
 {
     $stmt = gdrcd_stmt($sql, $binds, $options);
@@ -337,6 +398,23 @@ function gdrcd_stmt_one($sql, $binds = [], $options = [])
     return $row;
 }
 
+/**
+ * Esegue una query preparata e restituisce tutte le righe di risultato tramite un generatore.
+ *
+ * Questa funzione è un helper che esegue una query con prepared statement
+ * e restituisce le righe una alla volta tramite un generatore (yield), ottimizzando
+ * l'utilizzo della memoria per query con molti risultati.
+ *
+ * @param string $sql La query SQL da eseguire, con i segnaposto (?) per i parametri.
+ * @param array $binds Array dei parametri da associare alla query.
+ *                     I tipi vengono determinati automaticamente.
+ *                     Esempio: ['Mario', 25]
+ * @param array $options Array di opzioni opzionali.
+ *  - throw: se valorizzato a true la query lancia un'eccezione invece di interrompere l'esecuzione dello script
+ *
+ * @return Generator Generatore che produce le righe del risultato una alla volta,
+ *                   ogni riga è un array associativo e numerico.
+ */
 function gdrcd_stmt_all($sql, $binds = [], $options = [])
 {
     $stmt = gdrcd_stmt($sql, $binds, $options);
@@ -348,6 +426,20 @@ function gdrcd_stmt_all($sql, $binds = [], $options = [])
     gdrcd_query($stmt, 'free');
 }
 
+/**
+ * Determina il tipo di binding MySQLi per un valore.
+ *
+ * Questa funzione analizza un valore e restituisce il carattere corrispondente
+ * al tipo di parametro MySQLi da utilizzare per il binding:
+ *  - 'i' per integer
+ *  - 'd' per double/float
+ *  - 's' per string (anche per valori null)
+ *  - 'b' per blob (dati binari non UTF-8)
+ *
+ * @param mixed $value Il valore di cui determinare il tipo.
+ *
+ * @return string Il carattere identificativo del tipo MySQLi ('i', 'd', 's', 'b').
+ */
 function gdrcd_stmt_bind_type($value)
 {
     return match(true) {
@@ -359,6 +451,18 @@ function gdrcd_stmt_bind_type($value)
     };
 }
 
+/**
+ * Formatta una query preparata sostituendo i segnaposto con i valori dei parametri.
+ *
+ * Questa funzione è utile per il debug e il logging delle query, in quanto
+ * sostituisce i segnaposto (?) nella query con i valori effettivi dei parametri,
+ * formattandoli in modo appropriato (NULL, numeri senza apici, stringhe con apici).
+ *
+ * @param string $query La query SQL con i segnaposto (?).
+ * @param array $param Array dei parametri da sostituire ai segnaposto.
+ *
+ * @return string La query formattata con i valori sostituiti ai segnaposto.
+ */
 function gdrcd_stmt_display($query, $param) {
     $i = 0;
 
