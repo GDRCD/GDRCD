@@ -15,9 +15,7 @@ class GDRCD57_Refactor_Log_Table extends DbMigration
                 `id_personaggio` INT(10) UNSIGNED NULL DEFAULT NULL,
                 PRIMARY KEY (`id`),
                 INDEX `id_personaggio` (`id_personaggio`)
-            ) ENGINE=MyISAM
-            DEFAULT CHARSET=utf8
-            COLLATE=utf8_general_ci
+            ) EENGINE=MyISAM DEFAULT CHARSET=utf8;
         ");
  
         gdrcd_query("
@@ -53,9 +51,7 @@ class GDRCD57_Refactor_Log_Table extends DbMigration
                 `codice_evento` CHAR(20) NOT NULL DEFAULT '',
                 `descrizione_evento` CHAR(100) NOT NULL DEFAULT '',
                 PRIMARY KEY (`id`)
-            ) ENGINE=MyISAM
-            DEFAULT CHARSET=utf8
-            COLLATE=utf8_general_ci
+            ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
         ");
 
         gdrcd_query("
