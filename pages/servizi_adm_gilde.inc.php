@@ -196,15 +196,14 @@
                         $personaggio = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "'");
                         gdrcd_log_notice(
                             'Assegnato nuovo ruolo al personaggio',
-                            json_encode([
-                                'evento' => 'character.job.assigned',
-                                'codice_evento' => NUOVOLAVORO,
-                                'nome_interessato' => $personaggio['nome'],
+                            [
+                                'evento' => 'personaggio.assegna_lavoro',
+                                'id_personaggio' => $_SESSION['id_personaggio'],
                                 'autore' => $_SESSION['login'],
                                 'lavoro' => $subject[1],
                                 'origine' => 'gestione_lavoro'
-                            ]),
-                            gdrcd_filter('num', $_SESSION['id_personaggio'])
+                            ],
+                             $_SESSION['id_personaggio']
                         );
 
                         /*Avviso l'utente*/
@@ -253,15 +252,14 @@
                     $personaggio = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $subject[0]) . "'");
                     gdrcd_log_notice(
                         'Dimissione dal ruolo del personaggio',
-                        json_encode([
-                            'evento' => 'character.job.resigned',
-                            'codice_evento' => DIMISSIONE,
-                            'nome_interessato' => $personaggio['nome'],
+                        [
+                            'evento' => 'personaggio.dimissione_lavoro',
+                            'id_personaggio' => $subject[0],
                             'autore' => $_SESSION['login'],
                             'lavoro' => $subject[2],
                             'origine' => 'gestione_lavoro'
-                        ]),
-                        gdrcd_filter('num', $subject[0])
+                        ],
+                         $subject[0]
                     );
 
                     /*Avviso l'utente*/

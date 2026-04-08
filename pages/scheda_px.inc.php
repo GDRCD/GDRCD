@@ -43,16 +43,14 @@
             /*Registro l'operazione*/
             gdrcd_log_notice(
                 'Assegnazione punti esperienza al personaggio',
-                json_encode([
-                    'evento' => 'character.px.assigned',
-                    'codice_evento' => PX,
+                [
+                    'evento' => 'personaggio.assegna_px',
                     'nome_interessato' => $nome['nome'],
                     'autore' => $_SESSION['login'],
                     'px' => (int) $_POST['px'],
-                    'causale' => $_POST['causale'],
-                    'origine' => 'gestione_px'
-                ]),
-                gdrcd_filter('num', $_REQUEST['pg'])
+                    'causale' => $_POST['causale']
+                ],
+                 $_REQUEST['pg']
             );
             echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['warning']['done']) . '</div>';
         } else

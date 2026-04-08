@@ -60,17 +60,15 @@
                 $personaggio = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_REQUEST['pg']) . "'");
                 gdrcd_log_notice(
                     'Oggetto abbandonato dal personaggio',
-                    json_encode([
-                        'evento' => 'inventory.item.dropped',
-                        'codice_evento' => BONIFICO,
+                    [
+                        'evento' => 'personaggio.abbandona_oggetto',
                         'nome_interessato' => $personaggio['nome'],
                         'autore' => $_SESSION['login'],
                         'id_oggetto' => gdrcd_filter('num', $_POST['id_oggetto']),
                         'oggetto' => $_POST['checosa'],
                         'quantita_rimossa' => 1,
-                        'origine' => 'inventario'
-                    ]),
-                    gdrcd_filter('num', $_REQUEST['pg'])
+                    ],
+                     $_REQUEST['pg']
                 );
 
         echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['items']['warning']['done']);
@@ -110,9 +108,8 @@
             /* Registro l'evento lato destinatario */
             gdrcd_log_notice(
                 'Oggetto ricevuto da un altro personaggio',
-                json_encode([
-                    'evento' => 'inventory.item.received',
-                    'codice_evento' => BONIFICO,
+                [
+                    'evento' => 'personaggio.ricevi_oggetto',
                     'direzione' => 'entrata',
                     'id_oggetto' => gdrcd_filter('num', $_POST['id_oggetto']),
                     'oggetto' => $_POST['checosa'],
@@ -121,28 +118,24 @@
                     'controparte_id' => gdrcd_filter('num', $_REQUEST['pg']),
                     'controparte_nome' => $mittente['nome'],
                     'autore' => $_SESSION['login'],
-                    'origine' => 'inventario'
-                ]),
-                gdrcd_filter('num', $_POST['give_item'])
+                ],
+                 $_POST['give_item']
             );
 
             /* Registro l'evento lato mittente */
             gdrcd_log_notice(
                 'Oggetto ceduto a un altro personaggio',
-                json_encode([
-                    'evento' => 'inventory.item.given',
-                    'codice_evento' => BONIFICO,
-                    'direzione' => 'uscita',
+                [
+                    'evento' => 'personaggio.cedi_oggetto',
                     'id_oggetto' => gdrcd_filter('num', $_POST['id_oggetto']),
                     'oggetto' => $_POST['checosa'],
                     'quantita' => 1,
                     'cariche' => gdrcd_filter('num', $_POST['cariche']),
                     'controparte_id' => gdrcd_filter('num', $_POST['give_item']),
                     'controparte_nome' => $nome['nome'],
-                    'autore' => $_SESSION['login'],
-                    'origine' => 'inventario'
-                ]),
-                gdrcd_filter('num', $_REQUEST['pg'])
+                    'autore' => $_SESSION['login']
+                ],
+                 $_REQUEST['pg']
             );
 
              echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['warning']['done']).'</div>';

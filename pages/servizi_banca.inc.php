@@ -78,25 +78,22 @@ gdrcd_query($result, 'free');
                         $personaggio = $query;
                         gdrcd_log_notice(
                             'Bonifico ricevuto dal personaggio',
-                            json_encode([
-                                'evento' => 'finance.transfer.received',
-                                'codice_evento' => BONIFICO,
+                            [
+                                'evento' => 'banca.ricezione_bonifico',
                                 'direzione' => 'entrata',
                                 'nome_interessato' => $personaggio['nome'],
                                 'autore' => $_SESSION['login'],
                                 'controparte_id' => gdrcd_filter('num', $_REQUEST['pg']),
                                 'ammontare' => (int) $_POST['ammontare'],
                                 'valuta' => $PARAMETERS['names']['currency']['plur'],
-                                'causale' => $_POST['causale'],
-                                'origine' => 'bonifico'
-                            ]),
-                            gdrcd_filter('num', $_POST['beneficiario'])
+                                'causale' => $_POST['causale']
+                            ],
+                             $_POST['beneficiario']
                         );
                         gdrcd_log_notice(
                             'Bonifico inviato a un altro personaggio',
-                            json_encode([
-                                'evento' => 'finance.transfer.sent',
-                                'codice_evento' => BONIFICO,
+                            [
+                                'evento' => 'banca.invio_bonifico',
                                 'direzione' => 'uscita',
                                 'nome_interessato' => $_SESSION['login'],
                                 'autore' => $_SESSION['login'],
@@ -104,10 +101,9 @@ gdrcd_query($result, 'free');
                                 'controparte_nome' => $personaggio['nome'],
                                 'ammontare' => (int) $_POST['ammontare'],
                                 'valuta' => $PARAMETERS['names']['currency']['plur'],
-                                'causale' => $_POST['causale'],
-                                'origine' => 'bonifico'
-                            ]),
-                            gdrcd_filter('num', $_REQUEST['pg'])
+                                'causale' => $_POST['causale']
+                            ],
+                             $_REQUEST['pg']
                         );
                         gdrcd_query("INSERT INTO messaggi (id_personaggio_mittente, id_personaggio_destinatario, spedito, testo) VALUES ('".$_SESSION['id_personaggio']."','".gdrcd_filter('in', $_POST['beneficiario'])."', NOW(), '".gdrcd_filter('in', $_SESSION['login'].' '.$MESSAGE['interface']['bank']['notice'].' '.gdrcd_filter('num', $_POST['ammontare']).' '.$PARAMETERS['names']['currency']['plur']).'. \n\n'.gdrcd_filter('in', $_POST['causale'])."')");
                     }

@@ -113,13 +113,11 @@ gdrcd_query($result, 'free');
             
             gdrcd_log_notice(
                 'Il personaggio ha iniziato un nuovo lavoro',
-                json_encode([
-                    'evento' => 'character.job.assigned',
-                    'codice_evento' => NUOVOLAVORO,
-                    'lavoro' => $_POST['nome_lavoro'],
-                    'origine' => 'gestione_lavoro'
-                ]),
-                gdrcd_filter('num', $_SESSION['id_personaggio'])
+                [
+                    'evento' => 'personaggio.nuovo_lavoro',
+                    'lavoro' => $_POST['nome_lavoro']
+                ],
+                 $_SESSION['id_personaggio']
             );
             ?>
             <div class="link_back">
@@ -135,13 +133,11 @@ gdrcd_query($result, 'free');
             
             gdrcd_log_notice(
                 'Il personaggio si è dimesso dal lavoro',
-                json_encode([
-                    'evento' => 'character.job.resigned',
-                    'codice_evento' => DIMISSIONE,
-                    'lavoro' => $_POST['nome_lavoro'],
-                    'origine' => 'gestione_lavoro'
-                ]),
-                gdrcd_filter('num', $_SESSION['id_personaggio'])
+                [
+                    'evento' => 'personaggio.dimissioni_lavoro',
+                    'lavoro' => $_POST['nome_lavoro']
+                ],
+                 $_SESSION['id_personaggio']
             );
 
             ?>

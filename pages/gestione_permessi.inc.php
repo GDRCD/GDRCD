@@ -44,15 +44,13 @@
                 /*Registro l'operazione*/
                 gdrcd_log_notice(
                     'Cambio permesso del personaggio',
-                    json_encode([
-                        'evento' => 'character.role.changed',
-                        'codice_evento' => CHANGEDROLE,
+                    [
+                        'evento' => 'personaggio.permessi.cambio',
                         'nome_interessato' => $char_data['nome_interessato'],
                         'nome_autore' => $char_data['nome_autore'],
-                        'nuovo_ruolo' => $newrole,
-                        'origine' => 'gestione_personaggio'
-                    ]),
-                    gdrcd_filter('num', $_POST['id_personaggio'])
+                        'nuovo_ruolo' => $newrole
+                    ],
+                    $_POST['id_personaggio']
                 );
                 /*Avviso l'utente*/
                 gdrcd_query("INSERT INTO messaggi (id_personaggio_mittente, id_personaggio_destinatario, spedito, testo) VALUES (".gdrcd_filter('num', $_SESSION['id_personaggio']).", ".gdrcd_filter('num', $_POST['id_personaggio']).", NOW(), '".gdrcd_filter('in', $MESSAGE['interface']['administration']['roles']['message_body'][0].$newrole.$MESSAGE['interface']['administration']['roles']['message_body'][1])."')");

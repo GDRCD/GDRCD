@@ -15,7 +15,7 @@ class GDRCD57_Refactor_Log_Table extends DbMigration
                 `id_personaggio` INT(10) UNSIGNED NULL DEFAULT NULL,
                 PRIMARY KEY (`id`),
                 INDEX `id_personaggio` (`id_personaggio`)
-            ) EENGINE=MyISAM DEFAULT CHARSET=utf8;
+            ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
         ");
  
         gdrcd_query("

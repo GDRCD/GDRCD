@@ -39,14 +39,13 @@ $iscriz = $iscriz['0'];
                     
                     gdrcd_log_notice(
                         'Cambio nome del personaggio',
-                        json_encode([
-                            'evento' => 'character.name.changed',
-                            'codice_evento' => CHANGEDNAME,
+                        [
+                            'evento' => 'personaggio.cambio_nome',
                             'nome_precedente' => $_SESSION['login'],
                             'nome_nuovo' => $_POST['new_name'],
                             'origine' => 'gestione_personaggio'
-                        ]),
-                        gdrcd_filter('num', $_SESSION['id_personaggio'])
+                        ],
+                         $_SESSION['id_personaggio']
                     );
                    $_SESSION['login'] = gdrcd_filter('get', $_POST['new_name']);
                     ?>
@@ -95,15 +94,14 @@ $iscriz = $iscriz['0'];
 
                     gdrcd_log_notice(
                         'Cambio nome del personaggio',
-                        json_encode([
-                            'evento' => 'character.name.changed',
-                            'codice_evento' => CHANGEDNAME,
+                        [
+                            'evento' => 'personaggio.cambio_nome',
                             'nome_precedente' => $nome['nome'],
                             'nome_nuovo' => $_POST['new_name'],
                             'eseguito_da' => $_SESSION['login'],
                             'origine' => 'gestione_personaggio'
-                        ]),
-                        gdrcd_filter('num', $_SESSION['id_personaggio'])
+                        ],
+                         $_SESSION['id_personaggio']
                     );
                     ?>
                     <div class="warning">
