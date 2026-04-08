@@ -323,6 +323,26 @@ function gdrcd_stmt_execute($stmt, $binds = [])
     return $resultArr;
 }
 
+function gdrcd_stmt_one($sql, $binds = [], $options = [])
+{
+    $stmt = gdrcd_stmt($sql, $binds, false);
+    $row = gdrcd_query($stmt, 'fetch');
+    gdrcd_query($stmt, 'free');
+
+    return $row;
+}
+
+function gdrcd_stmt_all($sql, $binds = [], $options = [])
+{
+    $stmt = gdrcd_stmt($sql, $binds, false);
+
+    while ($row = gdrcd_query($stmt, 'fetch')) {
+        yield $row;
+    }
+
+    gdrcd_query($stmt, 'free');
+}
+
 /**
  * Funzione di recupero delle colonne e della loro dichiarazione della tabella specificata.
  * Si usa per la verifica dell'aggiornamento db da vecchie versioni di gdrcd5
