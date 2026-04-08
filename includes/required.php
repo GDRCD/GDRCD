@@ -31,6 +31,9 @@ require_once(GDRCD_PATH . '/vocabulary/' . $PARAMETERS['languages']['set'] . '.v
 // include le funzioni generiche
 require_once(GDRCD_PATH . '/includes/functions.inc.php');
 
+// include le funzioni del database
+require_once(GDRCD_PATH . '/includes/functions.database.inc.php');
+
 // include le funzioni per le api ajax/xhr
 require_once(GDRCD_PATH . '/includes/functions.api.inc.php');
 
