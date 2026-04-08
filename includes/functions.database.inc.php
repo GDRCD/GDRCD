@@ -202,14 +202,14 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
  * @param array  $binds Array dei parametri da associare alla query. L'indice 0 deve contenere
  *                      una stringa con i tipi dei parametri, gli indici successivi i valori.
  *                      Esempio: ['si', 'nome', 42]
+ * @param array{throw: bool} array di parametri opzionali
+ *  - throw: se valorizzato a true la query lancia un eccezione invece di interrompere l'esecuzione dello script
  *
  * @return StmtResult|false Restituisce il risultato della query (mysqli_result) in caso di SELECT,
  *                             true per query di modifica (INSERT/UPDATE/DELETE), oppure false in caso di errore.
  */
-function gdrcd_stmt($sql, $binds = array(), $throwOnError = false)
+function gdrcd_stmt($sql, $binds = array(), $options = [])
 {
-    $options = ['throw' => $throwOnError];
-
     $stmt = gdrcd_stmt_prepare($sql, $options);
     $result = gdrcd_stmt_execute($stmt, $binds);
     gdrcd_stmt_close($stmt);
@@ -235,12 +235,13 @@ function gdrcd_stmt_close($stmt)
 
 function gdrcd_stmt_execute($stmt, $binds = [])
 {
-    $throwOnError = !empty($options['throw']);
     $sql = $stmt['sql'];
+    $mysqliStmt = $stmt['stmt'];
     $options = $stmt['options'];
-    $stmt = $stmt['stmt'];
 
-    if ($stmt === false) {
+    $throwOnError = !empty($options['throw']);
+
+    if ($mysqliStmt === false) {
         $errorMsg = gdrcd_mysql_error('Failed when creating the statement.');
 
         if ($throwOnError) {
@@ -258,14 +259,14 @@ function gdrcd_stmt_execute($stmt, $binds = [])
             $refs[$k] = &$binds[$k];
         }
 
-        array_unshift($refs, $stmt);
+        array_unshift($refs, $mysqliStmt);
         call_user_func_array('mysqli_stmt_bind_param', $refs);
     }
 
-    if (!mysqli_stmt_execute($stmt)) {
-        $stmtError = mysqli_stmt_error($stmt);
-        $errorMsg = gdrcd_mysql_error($stmtError);
-        mysqli_stmt_close($stmt);
+    if (!mysqli_stmt_execute($mysqliStmt)) {
+        $mysqliStmtError = mysqli_stmt_error($mysqliStmt);
+        $errorMsg = gdrcd_mysql_error($mysqliStmtError);
+        mysqli_stmt_close($mysqliStmt);
 
         if ($throwOnError) {
             throw new Exception($errorMsg);
@@ -281,16 +282,16 @@ function gdrcd_stmt_execute($stmt, $binds = [])
         'last_id' => null,
     );
 
-    $meta = mysqli_stmt_result_metadata($stmt);
+    $meta = mysqli_stmt_result_metadata($mysqliStmt);
 
     if ($meta) {
 
         // SELECT-like query
-        $result = mysqli_stmt_get_result($stmt);
+        $result = mysqli_stmt_get_result($mysqliStmt);
         if ($result === false) {
-            $stmtError = mysqli_stmt_error($stmt);
-            $errorMsg = gdrcd_mysql_error($stmtError);
-            mysqli_stmt_close($stmt);
+            $mysqliStmtError = mysqli_stmt_error($mysqliStmt);
+            $errorMsg = gdrcd_mysql_error($mysqliStmtError);
+            mysqli_stmt_close($mysqliStmt);
             if ($throwOnError) {
                 throw new Exception($errorMsg);
             } else {
@@ -311,11 +312,11 @@ function gdrcd_stmt_execute($stmt, $binds = [])
     } else {
 
         // Non-SELECT query
-        $resultArr['affected'] = mysqli_stmt_affected_rows($stmt);
+        $resultArr['affected'] = mysqli_stmt_affected_rows($mysqliStmt);
 
         // Check if it's an INSERT
         if (preg_match('/^\s*INSERT\s/i', $sql)) {
-            $resultArr['last_id'] = mysqli_stmt_insert_id($stmt);
+            $resultArr['last_id'] = mysqli_stmt_insert_id($mysqliStmt);
         }
 
     }
@@ -325,7 +326,7 @@ function gdrcd_stmt_execute($stmt, $binds = [])
 
 function gdrcd_stmt_one($sql, $binds = [], $options = [])
 {
-    $stmt = gdrcd_stmt($sql, $binds, false);
+    $stmt = gdrcd_stmt($sql, $binds, $options);
     $row = gdrcd_query($stmt, 'fetch');
     gdrcd_query($stmt, 'free');
 
@@ -334,7 +335,7 @@ function gdrcd_stmt_one($sql, $binds = [], $options = [])
 
 function gdrcd_stmt_all($sql, $binds = [], $options = [])
 {
-    $stmt = gdrcd_stmt($sql, $binds, false);
+    $stmt = gdrcd_stmt($sql, $binds, $options);
 
     while ($row = gdrcd_query($stmt, 'fetch')) {
         yield $row;
