@@ -14,8 +14,16 @@ $email = $row['email'];
           
             if((gdrcd_password_check(gdrcd_filter_email($_POST['email']),$email)) && (gdrcd_check_pass($_POST['new_pass']) === true)) {
                 gdrcd_query("UPDATE personaggio SET pass = '".gdrcd_encript($_POST['new_pass'])."', ultimo_cambiopass = NOW() WHERE id_personaggio = '".$_SESSION['id_personaggio']."'");
-                    
-                gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".$_SESSION['id_personaggio']."', '".$_SESSION['login']."','".$_SESSION['login']."', NOW(), ".CHANGEDPASS." ,'".$_SERVER['REMOTE_ADDR']."')");
+               gdrcd_log_notice(
+                        'Cambio password del personaggio',
+                        [
+                            'evento' => 'personaggio.cambio_password',
+                            'ip' => $_SERVER['REMOTE_ADDR']       
+                        ],
+                         $_SESSION['id_personaggio']
+                    );     
+               
+                
                 ?>
                 <div class="warning">
                     <?php echo gdrcd_filter('out', $MESSAGE['warning']['modified']); ?>
@@ -42,8 +50,17 @@ $email = $row['email'];
                 gdrcd_query($query);
                 /*Registro l'evento */
                 $nome = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_POST['account']) . "'");
-               
-                gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".$_SESSION['id_personaggio']."', '".gdrcd_filter_in($nome['nome'])."','".$_SESSION['login']."', NOW(), ".CHANGEDPASS." ,'".$_SERVER['REMOTE_ADDR']."')");
+                gdrcd_log_notice(
+                        'Cambio password del personaggio',
+                        [
+                            'evento' => 'personaggio.cambio_password',
+                            'ip' => $_SERVER['REMOTE_ADDR'],
+                            'id_personaggio' => $_POST['account'],
+                            'nome' => $nome['nome'],
+                            
+                        ],
+                         $_SESSION['id_personaggio']
+                    );
                 ?>
                 <div class="warning">
                     <?php echo gdrcd_filter('out', $MESSAGE['warning']['modified']); ?>

@@ -23,59 +23,94 @@
             <div class="page_body">
                 <div class="panels_box">
                     <?php /*Seleziono le ultime 20 assegnamzioni px*/
-                    $query = "SELECT  descrizione_evento, autore, data_evento, nome_interessato FROM log WHERE ( nome_interessato = '".gdrcd_filter('in', $_REQUEST['pg']
-                        )."' OR autore = '".gdrcd_filter('in', $_REQUEST['pg'])."') AND codice_evento = ".BONIFICO." ORDER BY data_evento DESC LIMIT ".$num_logs."";
-                    $result = gdrcd_query($query, 'result');
-                    $query = "SELECT esperienza FROM personaggio WHERE id_personaggio = '".gdrcd_filter('in', $_REQUEST['pg'])."'";
-                    ?>
-                    <!-- Intestazione tabella elenco -->
+                    $ricezione_bonifico = estraiLog('banca.ricezione_bonifico', $num_logs, (int)$_REQUEST['pg']);
+                    
+                    if (!empty($ricezione_bonifico)) {
+                        ?>
+                        
                     <div class="elenco_record_gioco">
                         <table>
                             <tr>
-                                <td class="casella_titolo">
+                                <td class="casella_titolo" style="width: 30%;">
                                     <div class="titoli_elenco">
-                                        <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['px']['trans']); ?>
+                                        <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['log']['date']); ?>
                                     </div>
                                 </td>
                                 <td class="casella_titolo">
                                     <div class="titoli_elenco">
-                                        <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['px']['to']); ?>
-                                    </div>
-                                </td>
-                                <td class="casella_titolo">
-                                    <div class="titoli_elenco">
-                                        <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['px']['date']); ?>
-
-                                    </div>
-                                </td>
-                                <td class="casella_titolo">
-                                    <div class="titoli_elenco">
-                                        <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['px']['author']); ?>
+                                        Transazione in ingresso
                                     </div>
                                 </td>
                             </tr>
-                            <?php while($record = gdrcd_query($result, 'fetch')) { ?>
+
+                            <?php foreach ($ricezione_bonifico as $record) {
+                                $contesto = $record['contesto_decodificato'];
+                                $ammontare =   $contesto['ammontare'] . " " . $contesto['valuta'] . " - " . $contesto['causale'];
+                            ?>
                                 <tr>
-                                    <!-- Oggetto, immagine, quantità -->
-                                    <td class="casella_elemento">
-                                        <div class="elementi_elenco"><?php echo gdrcd_filter('out', $record['descrizione_evento']); ?></div>
+                                    <td class="casella_elemento" style="width: 30%;">
+                                        <div class="elementi_elenco">
+                                            <?php echo gdrcd_filter('out',
+                                                gdrcd_format_date($record['data']) . ' ' . gdrcd_format_time($record['data'])
+                                            ); ?>
+                                        </div>
                                     </td>
                                     <td class="casella_elemento">
-                                        <div class="elementi_elenco"><?php echo gdrcd_filter('out', $record['nome_interessato']); ?></div>
-                                    </td>
-                                    <td class="casella_elemento">
-                                        <div class="elementi_elenco"><?php echo gdrcd_filter('out', gdrcd_format_date($record['data_evento'])); ?></div>
-                                    </td>
-                                    <td class="casella_elemento">
-                                        <div class="elementi_elenco"><?php echo gdrcd_filter('out', $record['autore']); ?></div>
+                                        <div class="elementi_elenco">
+                                            <?php echo '[<a href="main.php?page=scheda&pg=' . gdrcd_filter('out',
+                                                    $contesto['controparte_id']) . '"  >' . gdrcd_filter('out',
+                                                    $contesto['nome_interessato']) . '</a>]: ' .gdrcd_filter('out', $ammontare); ?>
+                                        </div>
                                     </td>
                                 </tr>
-                            <?php }//while
-                            gdrcd_query($result, 'free');
-                            ?>
+                            <?php } ?>
                         </table>
                     </div>
-                </div>
+                <?php } 
+                $invio_bonifico = estraiLog('banca.invio_bonifico', $num_logs, (int)$_REQUEST['pg']);
+                    
+                    if (!empty($invio_bonifico)) {
+                        ?>
+                        
+                    <div class="elenco_record_gioco">
+                        <table>
+                            <tr>
+                                <td class="casella_titolo" style="width: 30%;">
+                                    <div class="titoli_elenco">
+                                        <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['log']['date']); ?>
+                                    </div>
+                                </td>
+                                <td class="casella_titolo">
+                                    <div class="titoli_elenco">
+                                        Transazione in uscita
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <?php foreach ($invio_bonifico as $record) {
+                                $contesto = $record['contesto_decodificato'];
+                                $ammontare =   $contesto['ammontare'] . " " . $contesto['valuta'] . " - " . $contesto['causale'];
+                            ?>
+                                <tr>
+                                    <td class="casella_elemento" style="width: 30%;">
+                                        <div class="elementi_elenco">
+                                            <?php echo gdrcd_filter('out',
+                                                gdrcd_format_date($record['data']) . ' ' . gdrcd_format_time($record['data'])
+                                            ); ?>
+                                        </div>
+                                    </td>
+                                    <td class="casella_elemento">
+                                        <div class="elementi_elenco">
+                                            <?php echo '[<a href="main.php?page=scheda&pg=' . gdrcd_filter('out',
+                                                    $contesto['controparte_id']) . '"  >' . gdrcd_filter('out',
+                                                    $contesto['controparte_nome']) . '</a>]: ' .gdrcd_filter('out', $ammontare); ?>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                        </table>
+                    </div>
+                <?php } ?>
                 <!-- Link a piè di pagina -->
                 <div class="link_back">
                     <a href="main.php?page=scheda&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']); ?>"><?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['link']['back']

@@ -103,7 +103,7 @@ gdrcd_query($result, 'free');
                                 'valuta' => $PARAMETERS['names']['currency']['plur'],
                                 'causale' => $_POST['causale']
                             ],
-                             $_REQUEST['pg']
+                             $_SESSION['id_personaggio']
                         );
                         gdrcd_query("INSERT INTO messaggi (id_personaggio_mittente, id_personaggio_destinatario, spedito, testo) VALUES ('".$_SESSION['id_personaggio']."','".gdrcd_filter('in', $_POST['beneficiario'])."', NOW(), '".gdrcd_filter('in', $_SESSION['login'].' '.$MESSAGE['interface']['bank']['notice'].' '.gdrcd_filter('num', $_POST['ammontare']).' '.$PARAMETERS['names']['currency']['plur']).'. \n\n'.gdrcd_filter('in', $_POST['causale'])."')");
                     }

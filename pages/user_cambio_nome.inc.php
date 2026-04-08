@@ -101,7 +101,7 @@ $iscriz = $iscriz['0'];
                             'eseguito_da' => $_SESSION['login'],
                             'origine' => 'gestione_personaggio'
                         ],
-                         $_SESSION['id_personaggio']
+                         $_POST['account']
                     );
                     ?>
                     <div class="warning">

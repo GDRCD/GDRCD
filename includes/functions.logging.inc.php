@@ -228,3 +228,266 @@ function gdrcd_log_emergency($messaggio, $contesto = null, $id_personaggio = nul
 {
     gdrcd_log($messaggio, 'emergency', $contesto, $id_personaggio);
 }
+
+
+
+function estraiLog( $evento, $limit, $idPersonaggio = null)
+{
+    $stmt = gdrcd_stmt(
+        "SELECT `data`, `descrizione`, `contesto`
+         FROM `log`
+         WHERE `id_personaggio` = ?
+           AND JSON_UNQUOTE(JSON_EXTRACT(`contesto`, '$.evento')) = ?
+         ORDER BY `data` DESC
+         LIMIT ?",
+        ['isi', (int)$idPersonaggio, $evento, (int)$limit]
+    );
+    $logs = [];
+
+    while ($row = gdrcd_query($stmt, 'assoc')) {
+        $row['contesto_decodificato'] = json_decode($row['contesto'], true) ?: [];
+        $logs[] = $row;
+    }
+
+    gdrcd_query($stmt, 'free');
+
+    return $logs;
+}
+
+function gdrcd_log_event_map()
+{
+    return [
+        'login_bloccato' => 'auth.login.bloccato',
+        'login_successo' => 'auth.login.successo',
+        'login_fallito' => 'auth.login.fallito',
+        'multiaccount_cookie' => 'auth.multiaccount.cookie',
+        'multiaccount_ip' => 'auth.multiaccount.ip',
+
+        'bonifico_inviato' => 'banca.invio_bonifico',
+        'bonifico_ricevuto' => 'banca.ricezione_bonifico',
+
+        'cambio_nome' => 'personaggio.cambio_nome',
+        'cambio_password' => 'personaggio.cambio_password',
+        'cancella_account' => 'personaggio.cancella_account',
+        'disabilita_account' => 'personaggio.disabilita_account',
+        'ripristina_account' => 'personaggio.ripristina_account',
+
+        'cambio_permessi' => 'personaggio.permessi.cambio',
+        'assegna_px' => 'personaggio.assegna_px',
+
+        'nuovo_lavoro' => 'personaggio.nuovo_lavoro',
+        'dimissioni_lavoro' => 'personaggio.dimissioni_lavoro',
+        'assegna_lavoro' => 'personaggio.assegna_lavoro',
+
+        'abbandona_oggetto' => 'personaggio.abbandona_oggetto',
+        'cedi_oggetto' => 'personaggio.cedi_oggetto',
+        'ricevi_oggetto' => 'personaggio.ricevi_oggetto',
+    ];
+}
+         /**
+         * Restituisce il gruppo di eventi JSON associati alla vecchia costante log.
+         */
+        
+function gdrcd_log_group_from_code($code)
+{
+    switch ((int)$code) {
+        case BLOCKED:
+            return ['auth.login.bloccato', 'auth.login.bloccato.blacklist'];
+
+        case LOGGEDIN:
+            return ['auth.login.successo'];
+
+        case ACCOUNTMULTIPLO:
+            return ['auth.multiaccount.cookie', 'auth.multiaccount.ip'];
+
+        case ERRORELOGIN:
+            return ['auth.login.fallito'];
+
+        case BONIFICO:
+            return ['banca.invio_bonifico', 'banca.ricezione_bonifico'];
+
+        case NUOVOLAVORO:
+            return ['personaggio.nuovo_lavoro', 'personaggio.assegna_lavoro'];
+
+        case DIMISSIONE:
+            return ['personaggio.dimissioni_lavoro'];
+
+        case CHANGEDROLE:
+            return ['personaggio.permessi.cambio'];
+
+        case CHANGEDPASS:
+            return ['personaggio.cambio_password'];
+
+        case PX:
+            return ['personaggio.assegna_px'];
+
+        case DELETEPG:
+            return [
+                'personaggio.cancella_account',
+                'personaggio.disabilita_account',
+                'personaggio.ripristina_account'
+            ];
+
+        case CHANGEDNAME:
+            return ['personaggio.cambio_nome'];
+
+        default:
+            return [];
+    }
+}
+        /**
+         * Conta i log per una lista di eventi.
+         */
+        function gdrcd_count_logs_by_events(array $eventi)
+        {
+            if (empty($eventi)) {
+                return 0;
+            }
+
+            $placeholders = implode(',', array_fill(0, count($eventi), '?'));
+            $types = str_repeat('s', count($eventi));
+
+            $stmt = gdrcd_stmt(
+                "SELECT COUNT(*) AS totale
+                 FROM `log`
+                 WHERE JSON_UNQUOTE(JSON_EXTRACT(`contesto`, '$.evento')) IN ($placeholders)",
+                array_merge([$types], $eventi)
+            );
+
+            $row = gdrcd_query($stmt, 'assoc');
+            gdrcd_query($stmt, 'free');
+
+            return (int)($row['totale'] ?? 0);
+        }
+        /**
+         * Estrae i log per una lista di eventi.
+         */
+        function gdrcd_extract_logs_by_events(array $eventi, $limit, $offset = 0)
+        {
+            if (empty($eventi)) {
+                return [];
+            }
+
+            $placeholders = implode(',', array_fill(0, count($eventi), '?'));
+            $types = str_repeat('s', count($eventi)) . 'ii';
+
+            $stmt = gdrcd_stmt(
+                "SELECT `id_personaggio`, `data`, `descrizione`, `contesto`
+                 FROM `log`
+                 WHERE JSON_UNQUOTE(JSON_EXTRACT(`contesto`, '$.evento')) IN ($placeholders)
+                 ORDER BY `data` DESC
+                 LIMIT ?, ?",
+                array_merge([$types], $eventi, [(int)$offset, (int)$limit])
+            );
+
+            $logs = [];
+
+            while ($row = gdrcd_query($stmt, 'assoc')) {
+                $row['contesto_decodificato'] = json_decode($row['contesto'], true) ?: [];
+                $logs[] = $row;
+            }
+
+            gdrcd_query($stmt, 'free');
+
+            return $logs;
+        }
+/**
+         * Trasforma un log in righe stampabili per la tabella admin.
+         */
+        function gdrcd_present_log_row($whichLog, array $row)
+        {
+            $contesto = $row['contesto_decodificato'] ?? [];
+
+            $autore = '-';
+            $destinatario = '-';
+            $descrizione = $row['descrizione'] ?? '';
+
+            switch ((int)$whichLog) {
+                case BLOCKED:
+                case LOGGEDIN:
+                case ERRORELOGIN:
+                    $autore = $contesto['ip'] ?? ($contesto['host'] ?? '-');
+                    $destinatario = $contesto['utente'] ?? '-';
+                    $descrizione = $row['descrizione'];
+
+                    $autore = gdrcd_mask_ip($autore);
+                    break;
+
+                case ACCOUNTMULTIPLO:
+                    $autore = $contesto['utente_corrente'] ?? '-';
+                    $destinatario = $contesto['altro_account'] ?? '-';
+                    $descrizione = $row['descrizione'];
+
+                    if (!empty($contesto['ip'])) {
+                        $descrizione .= ' (' . gdrcd_mask_ip($contesto['ip']) . ')';
+                    }
+                    break;
+
+                case BONIFICO:
+                    if (($contesto['direzione'] ?? '') === 'uscita') {
+                        $autore = $contesto['nome_interessato'] ?? '-';
+                        $destinatario = $contesto['controparte_nome'] ?? '-';
+                    } else {
+                        $autore = $contesto['autore'] ?? '-';
+                        $destinatario = $contesto['nome_interessato'] ?? '-';
+                    }
+
+                    $descrizione = ($contesto['ammontare'] ?? '-') . ' ' .
+                                   ($contesto['valuta'] ?? '') .
+                                   (!empty($contesto['causale']) ? ' - ' . $contesto['causale'] : '');
+                    break;
+
+                case NUOVOLAVORO:
+                case DIMISSIONE:
+                    $autore = $contesto['autore'] ?? ($contesto['eseguito_da'] ?? '-');
+                    $destinatario = $contesto['nome_interessato'] ?? ($contesto['id_personaggio'] ?? '-');
+                    $descrizione = $contesto['lavoro'] ?? $row['descrizione'];
+                    break;
+
+                case CHANGEDROLE:
+                    $autore = $contesto['nome_autore'] ?? '-';
+                    $destinatario = $contesto['nome_interessato'] ?? '-';
+                    $descrizione = $contesto['nuovo_ruolo'] ?? $row['descrizione'];
+                    break;
+
+                case CHANGEDPASS:
+                    $autore = $contesto['nome'] ?? ($contesto['id_personaggio'] ?? '-');
+                    $destinatario = $row['id_personaggio'] ?? '-';
+                    $descrizione = $row['descrizione'];
+
+                    if (!empty($contesto['ip'])) {
+                        $descrizione .= ' (' . gdrcd_mask_ip($contesto['ip']) . ')';
+                    }
+                    break;
+
+                case PX:
+                    $autore = $contesto['autore'] ?? '-';
+                    $destinatario = $contesto['nome_interessato'] ?? ($row['id_personaggio'] ?? '-');
+                    $descrizione = '(' . (int)($contesto['px'] ?? 0) . ' px) ' . ($contesto['causale'] ?? '');
+                    break;
+
+                case DELETEPG:
+                    $autore = $contesto['eseguito_da'] ?? ($_SESSION['login'] ?? '-');
+                    $destinatario = $contesto['id_personaggio'] ?? ($row['id_personaggio'] ?? '-');
+                    $descrizione = $row['descrizione'];
+                    break;
+
+                case CHANGEDNAME:
+                    $autore = $contesto['eseguito_da'] ?? '-';
+                    $destinatario = $contesto['nome_nuovo'] ?? ($row['id_personaggio'] ?? '-');
+                    $descrizione = 'Da "' . ($contesto['nome_precedente'] ?? '-') . '" a "' . ($contesto['nome_nuovo'] ?? '-') . '"';
+                    break;
+
+                default:
+                    $autore = $contesto['autore'] ?? ($contesto['eseguito_da'] ?? '-');
+                    $destinatario = $contesto['nome_interessato'] ?? ($row['id_personaggio'] ?? '-');
+                    $descrizione = $row['descrizione'];
+                    break;
+            }
+
+            return [
+                'autore' => $autore,
+                'destinatario' => $destinatario,
+                'descrizione' => $descrizione,
+            ];
+        }
