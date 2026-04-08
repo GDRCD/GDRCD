@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Connettore al database MySql
  */
@@ -188,7 +187,6 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
     }
 }
 
-
 /**
  * Esegue una query SQL utilizzando prepared statements tramite MySQLi.
  *
@@ -210,19 +208,41 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
  */
 function gdrcd_stmt($sql, $binds = array(), $throwOnError = false)
 {
-    $db_link = gdrcd_connect();
-    //Oggetto temporaneo che raccoglie i dati delle esecuzioni.
-    $resultArr = array(
-        'data' => null,
-        'num_rows' => null,
-        'affected' => null,
-        'last_id' => null,
-    );
+    $options = ['throw' => $throwOnError];
 
-    $stmt = mysqli_prepare($db_link, $sql);
+    $stmt = gdrcd_stmt_prepare($sql, $options);
+    $result = gdrcd_stmt_execute($stmt, $binds);
+    gdrcd_stmt_close($stmt);
+
+    return $result;
+}
+
+function gdrcd_stmt_prepare($sql, $options = [])
+{
+    $db_link = gdrcd_connect();
+
+    return [
+        'sql' => $sql,
+        'stmt' => mysqli_prepare($db_link, $sql),
+        'options' => $options,
+    ];
+}
+
+function gdrcd_stmt_close($stmt)
+{
+    mysqli_stmt_close($stmt['stmt']);
+}
+
+function gdrcd_stmt_execute($stmt, $binds = [])
+{
+    $throwOnError = !empty($options['throw']);
+    $sql = $stmt['sql'];
+    $options = $stmt['options'];
+    $stmt = $stmt['stmt'];
 
     if ($stmt === false) {
         $errorMsg = gdrcd_mysql_error('Failed when creating the statement.');
+
         if ($throwOnError) {
             throw new Exception($errorMsg);
         } else {
@@ -233,9 +253,11 @@ function gdrcd_stmt($sql, $binds = array(), $throwOnError = false)
     if (!empty($binds)) {
         // MySQLi requires references for bind_param
         $refs = array();
+
         foreach ($binds as $k => $v) {
             $refs[$k] = &$binds[$k];
         }
+
         array_unshift($refs, $stmt);
         call_user_func_array('mysqli_stmt_bind_param', $refs);
     }
@@ -244,6 +266,7 @@ function gdrcd_stmt($sql, $binds = array(), $throwOnError = false)
         $stmtError = mysqli_stmt_error($stmt);
         $errorMsg = gdrcd_mysql_error($stmtError);
         mysqli_stmt_close($stmt);
+
         if ($throwOnError) {
             throw new Exception($errorMsg);
         } else {
@@ -251,8 +274,17 @@ function gdrcd_stmt($sql, $binds = array(), $throwOnError = false)
         }
     }
 
+    $resultArr = array(
+        'data' => null,
+        'num_rows' => null,
+        'affected' => null,
+        'last_id' => null,
+    );
+
     $meta = mysqli_stmt_result_metadata($stmt);
+
     if ($meta) {
+
         // SELECT-like query
         $result = mysqli_stmt_get_result($stmt);
         if ($result === false) {
@@ -265,29 +297,31 @@ function gdrcd_stmt($sql, $binds = array(), $throwOnError = false)
                 die($errorMsg);
             }
         }
+
         $rows = array();
+
         while ($row = mysqli_fetch_array($result, MYSQLI_BOTH)) {
             $rows[] = $row;
         }
-        //popolo l'array di risultato e poi segno il numero di righe
+
         $resultArr['data'] = new StmtResultData($rows);
         $resultArr['num_rows'] = mysqli_num_rows($result);
         mysqli_free_result($result);
+
     } else {
+
         // Non-SELECT query
         $resultArr['affected'] = mysqli_stmt_affected_rows($stmt);
+
         // Check if it's an INSERT
         if (preg_match('/^\s*INSERT\s/i', $sql)) {
             $resultArr['last_id'] = mysqli_stmt_insert_id($stmt);
         }
+
     }
 
-    mysqli_stmt_close($stmt);
-
-    //return new StmtResult($resultArr['data'], $resultArr['num_rows'], $resultArr['affected_rows'], $resultArr['last_id']);
     return $resultArr;
 }
-
 
 /**
  * Funzione di recupero delle colonne e della loro dichiarazione della tabella specificata.
