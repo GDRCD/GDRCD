@@ -126,7 +126,6 @@ HTML;
 
             // Parametri di ricerca per le query al database
             $parametri_query = [
-                'iss',
                 $luogo,
                 $data_a,
                 $data_b,
@@ -216,7 +215,7 @@ HTML;
             </td>
             <td class="casella_elemento">
                 <div class="elementi_elenco">
-                    {$ora}               
+                    {$ora}
                 </div>
             </td>
             <td class="casella_elemento">
@@ -234,7 +233,7 @@ HTML;
                 </div>
                 HTML;
             }//if
-            
+
             echo <<<HTML
             <!-- Paginatore elenco -->
             <div class="pager">

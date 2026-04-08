@@ -817,7 +817,6 @@ function gdrcd_configuration_get($parametro)
     $result =  gdrcd_stmt(
         "SELECT valore, `default` FROM configurazioni WHERE categoria = ? AND parametro = ?",
         [
-            'ss',
             $categoria,
             $parametro
         ]
@@ -850,7 +849,6 @@ function gdrcd_configuration_set($parametro, $value)
                 WHERE categoria = ?
                     AND parametro = ?",
                 [
-                    'sss',
                     $value,
                     $categoria,
                     $parametro
