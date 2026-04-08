@@ -60,7 +60,7 @@ function gdrcd_log($descrizione, $livello_log, $contesto = null, $id_personaggio
      
     gdrcd_stmt(
         "INSERT INTO `log` (`id`, `data`, `descrizione`, `livello_log`, `contesto`, `id_personaggio`)
-         VALUES (UUID(), NOW(), ?, ?, ?, ?)",
+         VALUES (UUID_TO_BIN(UUID()), NOW(), ?, ?, ?, ?)",
         [
             'sssi',
             $descrizione,

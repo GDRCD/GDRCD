@@ -7,7 +7,7 @@ class GDRCD57_Refactor_Log_Table extends DbMigration
     {
         gdrcd_query("
             CREATE TABLE `log_new` (
-                `id` CHAR(36) NOT NULL,
+                `id` BINARY(16) NOT NULL,
                 `data` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `descrizione` VARCHAR(255) NOT NULL DEFAULT '',
                 `livello_log` VARCHAR(20) NOT NULL DEFAULT 'info',
