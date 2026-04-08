@@ -468,7 +468,7 @@ function gdrcd_log_group_from_code($code)
 
                 case DELETEPG:
                     $autore = $contesto['eseguito_da'] ?? ($_SESSION['login'] ?? '-');
-                    $destinatario = $contesto['id_personaggio'] ?? ($row['id_personaggio'] ?? '-');
+                    $destinatario = $contesto['nome'] ?? ($contesto['id_personaggio'] ?? '-');
                     $descrizione = $row['descrizione'];
                     break;
 
