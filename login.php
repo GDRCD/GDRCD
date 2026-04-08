@@ -33,14 +33,11 @@ if(gdrcd_query($result, 'num_rows') > 0) {
     /*Registro l'evento (Tentativo di connessione da postazione esclusa)*/
     gdrcd_log_warning(
         'Tentativo di login bloccato',
-        json_encode([
-            'evento' => 'auth.login.blocked',
-            'codice_evento' => BLOCKED,
+        [
+            'evento' => 'auth.login.bloccato',
             'utente' => $login1,
             'ip' => $_SERVER['REMOTE_ADDR'],
-            'origine' => 'Login_procedure'
-        ]),
-        null
+        ]
     );
     exit();
 }
@@ -115,13 +112,11 @@ if( ! empty($record) && gdrcd_password_check($pass1, $record['pass']) && ($recor
         $otherAccountNome = !empty($otherAccountData)? $otherAccountData['nome'] : '-Sconosciuto-';
         gdrcd_log_warning(
             'Rilevato possibile account multiplo tramite cookie attivo',
-            json_encode([
+            [
                 'evento' => 'auth.multiaccount.cookie',
-                'codice_evento' => ACCOUNTMULTIPLO,
                 'utente_corrente' => $_SESSION['login'],
                 'altro_account' => $otherAccountNome,
-                'origine' => 'login'
-            ]),
+            ],
             $_SESSION['id_personaggio']
         );
         
@@ -130,14 +125,12 @@ if( ! empty($record) && gdrcd_password_check($pass1, $record['pass']) && ($recor
         /*possibile account multiplo tramite IP*/
         gdrcd_log_notice(
             'Possibile correlazione tra account tramite IP',
-            json_encode([
+            [
                 'evento' => 'auth.multiaccount.ip',
-                'codice_evento' => ACCOUNTMULTIPLO,
                 'utente_corrente' => $_SESSION['login'],
                 'altro_account' => $lastlogindata['nome_interessato'],
-                'ip' => $_SERVER['REMOTE_ADDR'],
-                'origine' => 'login'
-            ]),
+                'ip' => $_SERVER['REMOTE_ADDR']
+            ],
             $_SESSION['id_personaggio']
         );
 
@@ -146,13 +139,11 @@ if( ! empty($record) && gdrcd_password_check($pass1, $record['pass']) && ($recor
     /* Registro l'evento (Avvenuto login) */
     gdrcd_log_info(
         'Login effettuato con successo',
-        json_encode([
-            'evento' => 'auth.login.success',
-            'codice_evento' => LOGGEDIN,
+         [
+            'evento' => 'auth.login.successo',
             'utente' => $_SESSION['login'],
             'ip' => $_SERVER['REMOTE_ADDR'],
-            'origine' => 'login'
-        ]),
+        ],
         $_SESSION['id_personaggio']
     );
 } elseif(strtotime($record['ora_entrata']) > strtotime($record['ora_uscita']) || (strtotime($record['ultimo_refresh']) + $PARAMETERS['settings']['reconnection_cooldown']) > time()) {
@@ -161,14 +152,12 @@ if( ! empty($record) && gdrcd_password_check($pass1, $record['pass']) && ($recor
     /* Registro l'evento (Tentativo di connessione da postazione esclusa) */
     gdrcd_log_warning(
         'Tentativo di connessione da postazione esclusa',
-        json_encode([
-            'evento' => 'auth.login.blocked.blacklist',
-            'codice_evento' => BLOCKED,
+        [
+            'evento' => 'auth.login.bloccato.blacklist',
             'utente' => $login1,
             'id_personaggio' => $record['id_personaggio'],
-            'ip' => $_SERVER['REMOTE_ADDR'],
-            'origine' => 'Login_procedure'
-        ]),
+            'ip' => $_SERVER['REMOTE_ADDR']
+        ],
         $record['id_personaggio']
     );
     exit();
@@ -179,18 +168,15 @@ if( ! empty($record) && gdrcd_password_check($pass1, $record['pass']) && ($recor
 
     if(($login1 != '') && ($pass1 != '')) {
         /* Registro l'evento (Login errato) */
-        gdrcd_log_notice(
-            'Tentativo di login non riuscito',
-            json_encode([
-                'evento' => 'auth.login.failed',
-                'codice_evento' => ERRORELOGIN,
-                'utente' => $login1,
-                'host' => $host,
-                'ip' => $_SERVER['REMOTE_ADDR'],
-                'origine' => 'Login_procedure'
-            ]),
-            null
-        );
+            gdrcd_log_notice(
+                'Tentativo di login non riuscito',
+                [
+                    'evento' => 'auth.login.fallito',
+                    'utente' => $login1,
+                    'host' => $host,
+                    'ip' => $_SERVER['REMOTE_ADDR'],
+                ]
+            );
 
         $stmt = gdrcd_stmt(
             "SELECT COUNT(*) AS totale
