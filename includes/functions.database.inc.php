@@ -252,6 +252,10 @@ function gdrcd_stmt_execute($stmt, $binds = [])
     }
 
     if (!empty($binds)) {
+        // Computa i tipi
+        $stringTypes = implode('', array_map('gdrcd_stmt_bind_type', $binds));
+        array_unshift($binds, $stringTypes);
+
         // MySQLi requires references for bind_param
         $refs = array();
 
@@ -342,6 +346,48 @@ function gdrcd_stmt_all($sql, $binds = [], $options = [])
     }
 
     gdrcd_query($stmt, 'free');
+}
+
+function gdrcd_stmt_bind_type($value)
+{
+    return match(true) {
+    	is_null($value) => 's',
+        is_int($value) => 'i',
+        is_float($value) => 'd',
+        ! mb_check_encoding($value, 'UTF-8') => 'b',
+        default => 's'
+    };
+}
+
+function gdrcd_stmt_display($query, $param) {
+    $i = 0;
+
+    $formatted = preg_replace_callback('/\?/', function($match) use (&$i, $param) {
+        //se non c'è un parametro corrispondente nell'array dei parametri
+        if (!array_key_exists($i, $param)) {
+            return '?';
+        }
+
+        //recupera il valore del parametro corrispondente
+        $v = $param[$i++];
+
+        //se è null lo sostituisce con il NULL di mysql
+        if (is_null($v)) {
+            return 'NULL';
+        }
+
+        //se è un valore numerico lo sostituisce normalmente
+        if (is_numeric($v)) {
+            return $v;
+        }
+
+        //altri casi
+        $v = addslashes(str_replace("\\","",$v));
+
+        return "'" . $v . "'";
+    }, $query);
+
+    return trim($formatted);
 }
 
 /**
