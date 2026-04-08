@@ -31,7 +31,7 @@
  *
  * @param string $descrizione Descrizione testuale dell'evento da registrare
  * @param string $livello_log Livello del log (es. debug, info, warning, error)
- * @param string $contesto Modulo o area applicativa da cui proviene il log
+ * @param array $contesto Modulo o area applicativa da cui proviene il log
  * @param int|null $id_personaggio ID del personaggio associato all'evento, se presente
  * @return void
  */
@@ -40,35 +40,35 @@
  *
  * @param string $descrizione
  * @param string $livello_log
- * @param array|string $contesto
+ * @param array $contesto
  * @param int|null $id_personaggio
  * @return void
  */
-function gdrcd_log($descrizione, $livello_log, $contesto = '', $id_personaggio = null)
+function gdrcd_log($descrizione, $livello_log, $contesto = null, $id_personaggio = null)
 {
+    
     if (is_array($contesto) || is_object($contesto)) {
         $contesto = json_encode($contesto, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
 
-    $descrizione = gdrcd_filter('in', (string)$descrizione);
-    $livello_log = gdrcd_filter('in', (string)$livello_log);
-    $contesto = gdrcd_filter('in', (string)$contesto);
+    if ($contesto === null) {
+        $contesto = 'NULL';
+    }
 
-    $id_personaggio_sql = ($id_personaggio === null)
-        ? 'NULL'
-        : gdrcd_filter('num', $id_personaggio);
-
-    gdrcd_query("
-        INSERT INTO `log` (`id`, `data`, `descrizione`, `livello_log`, `contesto`, `id_personaggio`)
-        VALUES (
-            UUID(),
-            NOW(),
-            '{$descrizione}',
-            '{$livello_log}',
-            '{$contesto}',
-            {$id_personaggio_sql}
-        )
-    ");
+    $descrizione = gdrcd_filter('in', $descrizione);
+    $livello_log = gdrcd_filter('in', $livello_log);
+     
+    gdrcd_stmt(
+        "INSERT INTO `log` (`id`, `data`, `descrizione`, `livello_log`, `contesto`, `id_personaggio`)
+         VALUES (UUID(), NOW(), ?, ?, ?, ?)",
+        [
+            'sssi',
+            $descrizione,
+            $livello_log,
+            $contesto,
+            ($id_personaggio === null ? 0 : (int)$id_personaggio)
+        ]
+    );
 }
 
 /*
@@ -107,11 +107,11 @@ function gdrcd_log($descrizione, $livello_log, $contesto = '', $id_personaggio =
  * durante sviluppo, test o analisi di problemi complessi.
  *
  * @param string $messaggio Descrizione dell'evento
- * @param string $contesto Modulo o area applicativa di riferimento
+ * @param array $contesto Modulo o area applicativa di riferimento
  * @param int|null $id_personaggio ID del personaggio associato al log
  * @return void
  */
-function gdrcd_log_debug($messaggio, $contesto = '', $id_personaggio = null)
+function gdrcd_log_debug($messaggio, $contesto = null, $id_personaggio = null)
 {
     gdrcd_log($messaggio, 'debug', $contesto, $id_personaggio);
 }
@@ -123,11 +123,11 @@ function gdrcd_log_debug($messaggio, $contesto = '', $id_personaggio = null)
  * o normali cambi di stato del sistema.
  *
  * @param string $messaggio Descrizione dell'evento
- * @param string $contesto Modulo o area applicativa di riferimento
+ * @param array $contesto Modulo o area applicativa di riferimento
  * @param int|null $id_personaggio ID del personaggio associato al log
  * @return void
  */
-function gdrcd_log_info($messaggio, $contesto = '', $id_personaggio = null)
+function gdrcd_log_info($messaggio, $contesto = null, $id_personaggio = null)       
 {
     gdrcd_log($messaggio, 'info', $contesto, $id_personaggio);
 }
@@ -139,11 +139,11 @@ function gdrcd_log_info($messaggio, $contesto = '', $id_personaggio = null)
  * ma che è utile conservare a fini di controllo o audit.
  *
  * @param string $messaggio Descrizione dell'evento
- * @param string $contesto Modulo o area applicativa di riferimento
+ * @param array $contesto Modulo o area applicativa di riferimento
  * @param int|null $id_personaggio ID del personaggio associato al log
  * @return void
  */
-function gdrcd_log_notice($messaggio, $contesto = '', $id_personaggio = null)
+function gdrcd_log_notice($messaggio, $contesto = null, $id_personaggio = null)
 {
     gdrcd_log($messaggio, 'notice', $contesto, $id_personaggio);
 }
@@ -155,11 +155,11 @@ function gdrcd_log_notice($messaggio, $contesto = '', $id_personaggio = null)
  * che non impediscono l'esecuzione del sistema ma meritano attenzione.
  *
  * @param string $messaggio Descrizione dell'evento
- * @param string $contesto Modulo o area applicativa di riferimento
+ * @param array $contesto Modulo o area applicativa di riferimento
  * @param int|null $id_personaggio ID del personaggio associato al log
  * @return void
  */
-function gdrcd_log_warning($messaggio, $contesto = '', $id_personaggio = null)
+function gdrcd_log_warning($messaggio, $contesto = null, $id_personaggio = null)
 {
     gdrcd_log($messaggio, 'warning', $contesto, $id_personaggio);
 }
@@ -171,11 +171,11 @@ function gdrcd_log_warning($messaggio, $contesto = '', $id_personaggio = null)
  * l'operazione fallisce, ma il sistema continua a funzionare.
  *
  * @param string $messaggio Descrizione dell'errore
- * @param string $contesto Modulo o area applicativa di riferimento
+ * @param array $contesto Modulo o area applicativa di riferimento
  * @param int|null $id_personaggio ID del personaggio associato al log
  * @return void
  */
-function gdrcd_log_error($messaggio, $contesto = '', $id_personaggio = null)
+function gdrcd_log_error($messaggio, $contesto = null, $id_personaggio = null)  
 {
     gdrcd_log($messaggio, 'error', $contesto, $id_personaggio);
 }
@@ -187,11 +187,11 @@ function gdrcd_log_error($messaggio, $contesto = '', $id_personaggio = null)
  * il corretto funzionamento del sistema o di una sua componente.
  *
  * @param string $messaggio Descrizione dell'errore critico
- * @param string $contesto Modulo o area applicativa di riferimento
+ * @param array $contesto Modulo o area applicativa di riferimento
  * @param int|null $id_personaggio ID del personaggio associato al log
  * @return void
  */
-function gdrcd_log_critical($messaggio, $contesto = '', $id_personaggio = null)
+function gdrcd_log_critical($messaggio, $contesto = null, $id_personaggio = null)   
 {
     gdrcd_log($messaggio, 'critical', $contesto, $id_personaggio);
 }
@@ -203,11 +203,11 @@ function gdrcd_log_critical($messaggio, $contesto = '', $id_personaggio = null)
  * Al momento funge principalmente da livello disponibile per usi futuri.
  *
  * @param string $messaggio Descrizione dell'evento
- * @param string $contesto Modulo o area applicativa di riferimento
+ * @param array $contesto Modulo o area applicativa di riferimento
  * @param int|null $id_personaggio ID del personaggio associato al log
  * @return void
  */
-function gdrcd_log_alert($messaggio, $contesto = '', $id_personaggio = null)
+function gdrcd_log_alert($messaggio, $contesto = null, $id_personaggio = null)
 {
     gdrcd_log($messaggio, 'alert', $contesto, $id_personaggio);
 }
@@ -220,11 +220,11 @@ function gdrcd_log_alert($messaggio, $contesto = '', $id_personaggio = null)
  * Attualmente è mantenuto per completezza e per possibili sviluppi futuri.
  *
  * @param string $messaggio Descrizione dell'evento
- * @param string $contesto Modulo o area applicativa di riferimento
+ * @param array $contesto Modulo o area applicativa di riferimento
  * @param int|null $id_personaggio ID del personaggio associato al log
  * @return void
  */
-function gdrcd_log_emergency($messaggio, $contesto = '', $id_personaggio = null)
+function gdrcd_log_emergency($messaggio, $contesto = null, $id_personaggio = null)
 {
     gdrcd_log($messaggio, 'emergency', $contesto, $id_personaggio);
 }
