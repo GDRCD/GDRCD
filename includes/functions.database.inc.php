@@ -544,6 +544,12 @@ function gdrcd_check_tables($table)
     return $output;
 }
 
+function gdrcd_database_last_error_msg()
+{
+    $db_link = gdrcd_connect();
+    return '[' . mysqli_errno($db_link) . '] ' . mysqli_error($db_link);
+}
+
 function gdrcd_database_error_handle($error, $sql = null, $binds = [], $throwOnError = false)
 {
     if ($throwOnError) {
