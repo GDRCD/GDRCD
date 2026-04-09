@@ -208,7 +208,7 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
  *  - 'affected': numero di righe modificate (per INSERT/UPDATE/DELETE) o null
  *  - 'last_id': ID dell'ultimo record inserito (per INSERT) o null
  */
-function gdrcd_stmt($sql, $binds = array(), $options = [])
+function gdrcd_stmt($sql, $binds = [], $options = [])
 {
     $stmt = gdrcd_stmt_prepare($sql, $options);
     $result = gdrcd_stmt_execute($stmt, $binds);
