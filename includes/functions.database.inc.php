@@ -16,7 +16,8 @@ function gdrcd_connect()
 
         $db_link = mysqli_connect($db_host, $db_user, $db_pass, $db_name);
 
-        mysqli_set_charset($db_link, "utf8mb4");
+        mysqli_report(MYSQLI_REPORT_ERROR);
+        mysqli_set_charset($db_link, 'utf8mb4');
 
         if (mysqli_connect_errno()) {
             gdrcd_database_error_format($db_error);
