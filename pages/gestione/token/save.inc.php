@@ -19,7 +19,7 @@ if(isset($_REQUEST['op'])) {
             // Genera token alfanumerico univoco
             do {
                 $token = bin2hex(random_bytes(8));
-                $check_stmt = gdrcd_stmt("SELECT id FROM token_iscrizione WHERE valore = ?", ['s', $token]);
+                $check_stmt = gdrcd_stmt("SELECT id FROM token_iscrizione WHERE valore = ?", [$token]);
                 $token_exists = gdrcd_query($check_stmt, 'num_rows') > 0;
 
             } while($token_exists);
