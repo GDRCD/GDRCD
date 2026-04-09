@@ -23,7 +23,7 @@
             <div class="page_body">
                 <div class="panels_box">
                     <?php /*Seleziono le ultime 20 assegnamzioni px*/
-                    $ricezione_bonifico = estraiLog('banca.ricezione_bonifico', $num_logs, (int)$_REQUEST['pg']);
+                    $ricezione_bonifico = gdrcd_extract_logs('banca.ricezione_bonifico', $num_logs, (int)$_REQUEST['pg']);
                     
                     if (!empty($ricezione_bonifico)) {
                         ?>
@@ -67,7 +67,7 @@
                         </table>
                     </div>
                 <?php } 
-                $invio_bonifico = estraiLog('banca.invio_bonifico', $num_logs, (int)$_REQUEST['pg']);
+                $invio_bonifico = gdrcd_extract_logs('banca.invio_bonifico', $num_logs, (int)$_REQUEST['pg']);
                     
                     if (!empty($invio_bonifico)) {
                         ?>

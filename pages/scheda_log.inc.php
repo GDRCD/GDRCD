@@ -31,7 +31,7 @@
             <?php 
             /*Seleziono gli ultimi login*/
             
-           $logs_login = estraiLog('auth.login.successo', $num_logs, (int)$_REQUEST['pg']);
+           $logs_login = gdrcd_extract_logs('auth.login.successo', $num_logs, (int)$_REQUEST['pg']);
 
             ?>
             <!-- Intestazione tabella elenco -->
@@ -76,8 +76,8 @@
             </div>
 
             <?php
-                $logs_multi_cookie = estraiLog('auth.multiaccount.cookie', $num_logs, (int)$_REQUEST['pg']);
-                $logs_multi_ip = estraiLog('auth.multiaccount.ip', $num_logs, (int)$_REQUEST['pg']);
+                $logs_multi_cookie = gdrcd_extract_logs('auth.multiaccount.cookie', $num_logs, (int)$_REQUEST['pg']);
+                $logs_multi_ip = gdrcd_extract_logs('auth.multiaccount.ip', $num_logs, (int)$_REQUEST['pg']);
 
                 $logs_multi = array_merge($logs_multi_cookie, $logs_multi_ip);
 
@@ -189,7 +189,7 @@
                 <?php }//if
                  }//if spymessages on
            
-           $logs_cambio_nome = estraiLog('personaggio.cambio_nome', $num_logs, (int)$_REQUEST['pg']);
+           $logs_cambio_nome = gdrcd_extract_logs('personaggio.cambio_nome', $num_logs, (int)$_REQUEST['pg']);
 
          if (!empty($logs_cambio_nome)) {
                 ?>

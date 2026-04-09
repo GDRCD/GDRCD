@@ -72,8 +72,8 @@
                 if (empty($eventi)) {
                     echo '<div class="error">' . gdrcd_filter('out', $MESSAGE['error']['unknown_operation']) . '</div>';
                 } else {
-                    $totaleresults = gdrcd_count_logs_by_events($eventi);
-                    $logs = gdrcd_extract_logs_by_events($eventi, $pageend, $pagebegin);
+                    $totaleresults = gdrcd_count_logs($eventi);
+                    $logs = gdrcd_extract_logs($eventi, $pageend, $pagebegin);
                     $numresults = count($logs);
 
                     if ($numresults > 0) { ?>
