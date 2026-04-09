@@ -50,7 +50,7 @@ $record = gdrcd_query("SELECT personaggio.id_personaggio, personaggio.pass, pers
 if( ! empty($record) && gdrcd_password_check($pass1, $record['pass']) && ($record['permessi'] > -1) && (strtotime($record['ora_entrata']) < strtotime($record['ora_uscita']) || (strtotime($record['ultimo_refresh']) + $PARAMETERS['settings']['reconnection_cooldown']) < time())) {
     $_SESSION['id_personaggio'] = $record['id_personaggio'];
     $_SESSION['login'] = gdrcd_filter_in($record['nome']);
-    $_SESSION['cognome'] = $record['cognome'];
+    $_SESSION['cognome'] = gdrcd_filter_in($record['cognome']);
     $_SESSION['permessi'] = $record['permessi'];
     $_SESSION['sesso'] = $record['sesso'];
 
