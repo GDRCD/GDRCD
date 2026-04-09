@@ -86,6 +86,7 @@ $MESSAGE['register']['error']['name_taken'] = 'Il nome scelto è già in uso.';
 $MESSAGE['register']['error']['email_taken'] = 'Esiste già un account registrato con questa e-mail.';
 $MESSAGE['register']['error']['email_needed'] = 'Specificare un\'email valida.';
 $MESSAGE['register']['error']['invalid_name'] = 'Il nome scelto è non valido.';
+$MESSAGE['register']['error']['invalid_surname'] = 'Il cognome scelto è non valido.';
 
 
 /********** Pagine utente **********/
