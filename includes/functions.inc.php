@@ -551,6 +551,11 @@ function gdrcd_capital_letter($word)
     return ucwords(strtolower($word));
 }
 
+/**
+ * Funzione di sicurezza per i nomi dei personaggi
+ * @param string $word : la parola da manipolare
+ * @return string : $word con solo la prima lettera maiuscola e filtrata
+ */
 function gdrcd_safe_name($word)
 {
     return trim(gdrcd_capital_letter(gdrcd_filter_in($word)));
