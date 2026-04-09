@@ -457,7 +457,11 @@ function gdrcd_stmt_bind_type($value)
  *
  * @return string La query formattata con i valori sostituiti ai segnaposto.
  */
-function gdrcd_stmt_display($query, $param) {
+function gdrcd_stmt_display($query, $param = []) {
+    if (count($param) === 0) {
+        return $query;
+    }
+
     $i = 0;
 
     $formatted = preg_replace_callback('/\?/', function($match) use (&$i, $param) {
