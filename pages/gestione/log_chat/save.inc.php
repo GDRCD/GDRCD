@@ -142,7 +142,7 @@ HTML;
 
             $totaleresults = $record_globale['numero_azioni'];
 
-            // RQuery per il recupero della pagina di azioni richiesta
+            // Query per il recupero della pagina di azioni richiesta
             $query = <<<SQL
                 SELECT
                     mittente.nome AS nome_mittente,
