@@ -192,16 +192,10 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
  *
  * Questa funzione permette di eseguire in modo sicuro query SQL, prevenendo SQL injection,
  * tramite l'utilizzo di prepared statements. I parametri della query vengono passati tramite
- * un array, dove il primo elemento specifica i tipi dei parametri secondo la sintassi MySQLi:
- *  - 'i' per integer
- *  - 'd' per double/float
- *  - 's' per string
- *  - 'b' per blob
+ * un array.
  *
  * @param string $sql   La query SQL da eseguire, con i segnaposto (?) per i parametri.
- * @param array  $binds Array dei parametri da associare alla query. L'indice 0 deve contenere
- *                      una stringa con i tipi dei parametri, gli indici successivi i valori.
- *                      Esempio: ['si', 'nome', 42]
+ * @param array  $binds Array dei parametri da associare alla query.
  * @param array{throw: bool} array di parametri opzionali
  *  - throw: se valorizzato a true la query lancia un eccezione invece di interrompere l'esecuzione dello script
  *
