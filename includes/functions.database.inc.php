@@ -62,7 +62,6 @@ function gdrcd_close_connection($db)
 function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
 {
     $db_link = gdrcd_connect();
-    $getMysqliError = fn() => '[' . mysqli_errno($db_link) . '] ' . mysqli_error($db_link);
 
     // Rileva se l'input è già un risultato (object o array) o una query string
     $isResultObject = is_object($sql) && ($sql instanceof mysqli_result);
@@ -83,7 +82,7 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
                     $result = mysqli_query($db_link, $sql);
 
                     if ($result === false) {
-                        gdrcd_database_error_handle($getMysqliError(), $sql, $throwOnError);
+                        gdrcd_database_error_handle(gdrcd_database_last_error_msg(), $sql, [], $throwOnError);
                     }
 
                     $row = mysqli_fetch_array($result, MYSQLI_BOTH);
@@ -94,23 +93,23 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
                     $result = mysqli_query($db_link, $sql);
 
                     if ($result === false) {
-                        gdrcd_database_error_handle($getMysqliError(), $sql, $throwOnError);
+                        gdrcd_database_error_handle(gdrcd_database_last_error_msg(), $sql, [], $throwOnError);
                     }
 
                     return $result;
             }
             break;
 
-
         case 'result':
             if ($isStmtResult) {
                 // Restituisce l'intero array di dati per i prepared statements
                 return $sql['data'];
             }
+
             $result = mysqli_query($db_link, $sql);
 
             if ($result === false) {
-                gdrcd_database_error_handle($getMysqliError(), $sql, $throwOnError);
+                gdrcd_database_error_handle(gdrcd_database_last_error_msg(), $sql, [], $throwOnError);
             }
 
             return $result;
@@ -123,8 +122,8 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
             return (int)mysqli_num_rows($sql);
             break;
 
-            //aggiunto il supporto per i risultati di gdrcd_stmt per queste casistiche è necessario mantenere
-            //lo stato del "puntatore" all'interno dell'array
+        //aggiunto il supporto per i risultati di gdrcd_stmt per queste casistiche è necessario mantenere
+        //lo stato del "puntatore" all'interno dell'array
         case 'fetch':
             if ($isStmtResult) {
                 $current = $sql['data']->current();
@@ -135,6 +134,7 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
                 return mysqli_fetch_array($sql);
             }
             break;
+
         case 'assoc':
             if ($isStmtResult) {
                 return $sql['data']->fetchAssoc();
@@ -143,6 +143,7 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
                 return mysqli_fetch_array($sql, MYSQLI_ASSOC);
             }
             break;
+
         case 'object':
             if ($isStmtResult) {
                 $row = $sql['data']->current();
@@ -180,7 +181,12 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
             break;
 
         default:
-            gdrcd_database_error_handle('Impossibile determinare l\'operazione da eseguire sul database.', $sql, $throwOnError);
+            gdrcd_database_error_handle(
+                'Modalità gdrcd_query sconosciuta: '. $mode,
+                $sql,
+                [],
+                $throwOnError
+            );
     }
 }
 
@@ -229,7 +235,7 @@ function gdrcd_stmt_prepare($sql, $options = [])
     $mysqliStmt = mysqli_prepare($db_link, $sql);
 
     if (!($mysqliStmt instanceof mysqli_stmt)) {
-        gdrcd_database_error_handle(mysqli_error($db_link), $sql, [], !empty($options['throw']));
+        gdrcd_database_error_handle(gdrcd_database_last_error_msg(), $sql, [], !empty($options['throw']));
     }
 
     return [
