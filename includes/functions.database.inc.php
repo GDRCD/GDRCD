@@ -582,7 +582,7 @@ function gdrcd_database_error_format($details = null, $sql = null)
     $base = null;
 
     foreach ($backtrace as $v) {
-        if ($base === null && in_array($v['function'], $queryFunctions)) {
+        if (in_array($v['function'], $queryFunctions)) {
             $base = $v;
         }
         $history .= '<strong>FILE: </strong>: ' . $v['file'] . ' - ';
