@@ -238,6 +238,12 @@ if (gdrcd_configuration_get('registrazione.stato_registrazione') === 'chiuso') {
                         echo '<div class="error">' . gdrcd_filter('out', $MESSAGE['register']['error']['invalid_name']) . '</div>';
                     }
 
+                    $surname_regex = '#[^\p{L}\s\'\-]#u';
+                    if (!empty($_POST['cognome']) && empty(gdrcd_safe_name($_POST['cognome'])) && preg_match($surname_regex, $_POST['cognome'])) {
+                        $ok = false;
+                        echo '<div class="error">' . gdrcd_filter('out', $MESSAGE['register']['error']['invalid_surname']) . '</div>';
+                    }
+
                     if ((gdrcd_filter('num', $_POST['car0']) + gdrcd_filter('num', $_POST['car1']) + gdrcd_filter('num', $_POST['car2']) + gdrcd_filter('num', $_POST['car3']
                             ) + gdrcd_filter('num', $_POST['car4']) + gdrcd_filter('num', $_POST['car5'])) != $PARAMETERS['settings']['cars_sum']) {
                         $ok = false;
@@ -245,15 +251,12 @@ if (gdrcd_configuration_get('registrazione.stato_registrazione') === 'chiuso') {
                     }
 
                     $race_id = gdrcd_filter('num', $_POST['razza']);
-
                     $race_data = gdrcd_query("SELECT iscrizione FROM razza WHERE id_razza='{$race_id}' LIMIT 1");
                     $race_iscr = gdrcd_filter('num', $race_data['iscrizione']);
                     if (!$race_iscr) {
                         $ok = false;
                         echo '<div class="error">Razza non disponibile all\'iscrizione.</div>';
                     }
-
-
 
                     if ($ok == false) { ?>
                         <div class="form_gioco">
@@ -495,17 +498,22 @@ if (gdrcd_configuration_get('registrazione.stato_registrazione') === 'chiuso') {
                     }
 
                     $result = gdrcd_query("SELECT nome FROM personaggio WHERE nome='" . gdrcd_safe_name($_POST['nome']) . "' LIMIT 1", 'result');
-
                     if (gdrcd_query($result, 'num_rows') > 0) {
                         gdrcd_query($result, 'free');
                         $ok = false;
                         echo '<div class="error">' . gdrcd_filter('out', $MESSAGE['register']['error']['name_taken']) . '</div>';
                     }
-                    $regex = '#[^\p{L}\s]#u';
 
+                    $regex = '#[^\p{L}\s]#u';
                     if (preg_match($regex, $_POST['nome'])) {
                         $ok = false;
                         echo '<div class="error">' . gdrcd_filter('out', $MESSAGE['register']['error']['invalid_name']) . '</div>';
+                    }
+
+                    $surname_regex = '#[^\p{L}\s\'\-]#u';
+                    if (!empty($_POST['cognome']) && preg_match($surname_regex, $_POST['cognome'])) {
+                        $ok = false;
+                        echo '<div class="error">' . gdrcd_filter('out', $MESSAGE['register']['error']['invalid_surname']) . '</div>';
                     }
 
                     if ((gdrcd_filter('num', $_POST['car0']) + gdrcd_filter('num', $_POST['car1']) + gdrcd_filter('num', $_POST['car2']) + gdrcd_filter('num', $_POST['car3']
