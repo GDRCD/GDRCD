@@ -19,7 +19,7 @@ function gdrcd_connect()
         mysqli_set_charset($db_link, "utf8mb4");
 
         if (mysqli_connect_errno()) {
-            gdrcd_mysql_error($db_error);
+            gdrcd_database_error_format($db_error);
         }
     }
     return $db_link;
@@ -62,11 +62,13 @@ function gdrcd_close_connection($db)
 function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
 {
     $db_link = gdrcd_connect();
+    $getMysqliError = fn() => '[' . mysqli_errno($db_link) . '] ' . mysqli_error($db_link);
 
     // Rileva se l'input è già un risultato (object o array) o una query string
     $isResultObject = is_object($sql) && ($sql instanceof mysqli_result);
     $isStmtResult = (is_array($sql) && $sql['data'] instanceof StmtResultData) || (is_array($sql) && isset($sql['affected']));
-    //veccio metodo non modificato, mantiene la retrocompatibilità e gestisce le query normali
+
+    // vecchio metodo non modificato, mantiene la retrocompatibilità e gestisce le query normali
     switch (strtolower(trim($mode))) {
         case 'query':
             if ($isStmtResult) {
@@ -75,29 +77,26 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
                 $sql['data']->free();
                 return $row;
             }
+
             switch (strtoupper(substr(trim($sql), 0, 6))) {
                 case 'SELECT':
                     $result = mysqli_query($db_link, $sql);
+
                     if ($result === false) {
-                        if ($throwOnError) {
-                            throw new Exception("Query DB Fallita: " . $sql . "\n\n" . mysqli_error($db_link));
-                        } else {
-                            die(gdrcd_mysql_error($sql));
-                        }
+                        gdrcd_database_error_handle($getMysqliError(), $sql, $throwOnError);
                     }
+
                     $row = mysqli_fetch_array($result, MYSQLI_BOTH);
                     mysqli_free_result($result);
 
                     return $row;
                 default:
                     $result = mysqli_query($db_link, $sql);
+
                     if ($result === false) {
-                        if ($throwOnError) {
-                            throw new Exception("Query DB Fallita: " . $sql . "\n\n" . mysqli_error($db_link));
-                        } else {
-                            die(gdrcd_mysql_error($sql));
-                        }
+                        gdrcd_database_error_handle($getMysqliError(), $sql, $throwOnError);
                     }
+
                     return $result;
             }
             break;
@@ -109,13 +108,11 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
                 return $sql['data'];
             }
             $result = mysqli_query($db_link, $sql);
+
             if ($result === false) {
-                if ($throwOnError) {
-                    throw new Exception("Query DB Fallita: " . $sql . "\n\n" . mysqli_error($db_link));
-                } else {
-                    die(gdrcd_mysql_error($sql));
-                }
+                gdrcd_database_error_handle($getMysqliError(), $sql, $throwOnError);
             }
+
             return $result;
             break;
 
@@ -183,7 +180,7 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
             break;
 
         default:
-            throw new Exception("Impossibile determinare l'operazione da eseguire sul database.");
+            gdrcd_database_error_handle('Impossibile determinare l\'operazione da eseguire sul database.', $sql, $throwOnError);
     }
 }
 
@@ -229,10 +226,15 @@ function gdrcd_stmt($sql, $binds = array(), $options = [])
 function gdrcd_stmt_prepare($sql, $options = [])
 {
     $db_link = gdrcd_connect();
+    $mysqliStmt = mysqli_prepare($db_link, $sql);
+
+    if ($mysqliStmt === false) {
+        gdrcd_database_error_handle('Failed when creating the statement.', $sql, [], !empty($options['throw']));
+    }
 
     return [
         'sql' => $sql,
-        'stmt' => mysqli_prepare($db_link, $sql),
+        'stmt' => $mysqliStmt,
         'options' => $options,
     ];
 }
@@ -247,7 +249,15 @@ function gdrcd_stmt_prepare($sql, $options = [])
  */
 function gdrcd_stmt_close($stmt)
 {
-    mysqli_stmt_close($stmt['stmt']);
+    $sql = $stmt['sql'] ?? null;
+    $mysqliStmt = $stmt['stmt'] ?? null;
+    $options = $stmt['options'] ?? [];
+
+    if ($mysqliStmt === false) {
+        gdrcd_database_error_handle('Invalid statement.', $sql, [], !empty($options['throw']));
+    }
+
+    mysqli_stmt_close($mysqliStmt);
 }
 
 /**
@@ -273,20 +283,13 @@ function gdrcd_stmt_close($stmt)
  */
 function gdrcd_stmt_execute($stmt, $binds = [])
 {
-    $sql = $stmt['sql'];
-    $mysqliStmt = $stmt['stmt'];
-    $options = $stmt['options'];
-
+    $sql = $stmt['sql'] ?? null;
+    $mysqliStmt = $stmt['stmt'] ?? null;
+    $options = $stmt['options'] ?? [];
     $throwOnError = !empty($options['throw']);
 
-    if ($mysqliStmt === false) {
-        $errorMsg = gdrcd_mysql_error('Failed when creating the statement.');
-
-        if ($throwOnError) {
-            throw new Exception($errorMsg);
-        } else {
-            die($errorMsg);
-        }
+    if (!($mysqliStmt instanceof mysqli_stmt)) {
+        gdrcd_database_error_handle('Invalid statement.', $sql, $binds, $throwOnError);
     }
 
     if (!empty($binds)) {
@@ -307,14 +310,10 @@ function gdrcd_stmt_execute($stmt, $binds = [])
 
     if (!mysqli_stmt_execute($mysqliStmt)) {
         $mysqliStmtError = mysqli_stmt_error($mysqliStmt);
-        $errorMsg = gdrcd_mysql_error($mysqliStmtError);
+        $errorMsg = gdrcd_database_error_format($mysqliStmtError);
         mysqli_stmt_close($mysqliStmt);
 
-        if ($throwOnError) {
-            throw new Exception($errorMsg);
-        } else {
-            die($errorMsg);
-        }
+        gdrcd_database_error_handle($errorMsg, $sql, $binds, $throwOnError);
     }
 
     $resultArr = array(
@@ -332,13 +331,10 @@ function gdrcd_stmt_execute($stmt, $binds = [])
         $result = mysqli_stmt_get_result($mysqliStmt);
         if ($result === false) {
             $mysqliStmtError = mysqli_stmt_error($mysqliStmt);
-            $errorMsg = gdrcd_mysql_error($mysqliStmtError);
+            $errorMsg = gdrcd_database_error_format($mysqliStmtError);
             mysqli_stmt_close($mysqliStmt);
-            if ($throwOnError) {
-                throw new Exception($errorMsg);
-            } else {
-                die($errorMsg);
-            }
+
+            gdrcd_database_error_handle($errorMsg, $sql, $binds, $throwOnError);
         }
 
         $rows = array();
@@ -548,31 +544,67 @@ function gdrcd_check_tables($table)
     return $output;
 }
 
+function gdrcd_database_error_handle($error, $sql = null, $binds = [], $throwOnError = false)
+{
+    if ($throwOnError) {
+        throw new Exception($error);
+    }
+
+    $errorMsg = gdrcd_database_error_format(
+        $error,
+        gdrcd_stmt_display($sql, $binds)
+    );
+
+    die($errorMsg);
+}
+
 /**
  * Gestione degli errori tornati dalle query
- * @param string $details : una descrizione dell'errore avvenuto
+ * @param ?string $details : una descrizione dell'errore avvenuto
+ * @param ?string $sql : dump sql della query andata in errore
  * @return string: una stringa HTML che descrive l'errore riscontrato
  */
-function gdrcd_mysql_error($details = false)
+function gdrcd_database_error_format($details = null, $sql = null)
 {
     $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 50);
     $history = '';
 
+    $queryFunctions = [
+        'gdrcd_stmt_one',
+        'gdrcd_stmt_all',
+        'gdrcd_stmt',
+        'gdrcd_stmt_prepare',
+        'gdrcd_stmt_execute',
+        'gdrcd_stmt_close',
+        'gdrcd_query',
+    ];
+
+    $base = null;
+
     foreach ($backtrace as $v) {
-        if ($v['function'] == 'gdrcd_query') {
+        if ($base === null && in_array($v['function'], $queryFunctions)) {
             $base = $v;
         }
         $history .= '<strong>FILE: </strong>: ' . $v['file'] . ' - ';
         $history .= '<strong>LINE: </strong>: ' . $v['line'] . '</br />';
     }
+
     $error_msg  = '<div class="error mysql">';
-    $error_msg .= '<strong>GDRCD MySQLi Error</strong>:</br>';
-    if ($details !== false) {
-        $error_msg .= '<strong>QUERY: </strong>: ' . $details . '</br>';
+    $error_msg .= '<strong>GDRCD Database Error</strong>:</br>';
+
+    if ($details) {
+        $error_msg .= '<strong>ERROR: </strong>: ' . $details . '</br>';
     }
-    $error_msg .= '<strong>ERROR [' . mysqli_errno(gdrcd_connect()) . ']</strong>: ' . mysqli_error(gdrcd_connect()) .'<br />';
-    $error_msg .= '<strong>FILE: </strong>: ' . $base['file'] . ' - ';
-    $error_msg .= '<strong>LINE: </strong>: ' . $base['line'] . '<br />';
+
+    if ($sql) {
+        $error_msg .= '<strong>QUERY: </strong>: ' . $sql . '</br>';
+    }
+
+    if ($base) {
+        $error_msg .= '<strong>FILE: </strong>: ' . $base['file'] . ' - ';
+        $error_msg .= '<strong>LINE: </strong>: ' . $base['line'] . '<br />';
+    }
+
     $error_msg .= '<details>';
     $error_msg .= '<summary>Dettagli</summary>';
     $error_msg .= $history;
