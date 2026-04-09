@@ -503,62 +503,6 @@ function gdrcd_stmt_display($query, $param = []) {
 }
 
 /**
- * Funzione di recupero delle colonne e della loro dichiarazione della tabella specificata.
- * Si usa per la verifica dell'aggiornamento db da vecchie versioni di gdrcd5
- * @param string $table : il nome della tabella da controllare
- * @return array : un oggetto contenente la descrizione della tabella negli attributi
- * @throws Exception
- */
-function gdrcd_check_tables($table)
-{
-    $result = gdrcd_query("SELECT * FROM $table LIMIT 1", 'result');
-    $describe = gdrcd_query("SHOW COLUMNS FROM $table", 'result');
-
-    $i = 0;
-    $output = [];
-
-    while ($field = gdrcd_query($describe, 'object')) {
-        $defInfo = mysqli_fetch_field_direct($result, $i);
-
-        $field->auto_increment = (strpos($field->Extra, 'auto_increment') === false ? 0 : 1);
-        $field->definition = $field->Type;
-
-        if ($field->Null == 'NO' && $field->Key != 'PRI') {
-            $field->definition .= ' NOT NULL';
-        }
-
-        if ($field->Default) {
-            $field->definition .= " DEFAULT '" . mysqli_real_escape_string(gdrcd_connect(), $field->Default) . "'";
-        }
-
-        if ($field->auto_increment) {
-            $field->definition .= ' AUTO_INCREMENT';
-        }
-
-        switch ($field->Key) {
-            case 'PRI':
-                $field->definition .= ' PRIMARY KEY';
-                break;
-            case 'UNI':
-                $field->definition .= ' UNIQUE KEY';
-                break;
-            case 'MUL':
-                $field->definition .= ' KEY';
-                break;
-        }
-
-        $field->len = $defInfo->length;
-        $output[$field->Field] = $field;
-        ++$i;
-
-        unset($defInfo);
-    }
-    gdrcd_query($describe, 'free');
-
-    return $output;
-}
-
-/**
  * Recupera l'ultimo messaggio di errore dal database.
  *
  * Questa funzione restituisce l'ultimo errore MySQL verificatosi sulla connessione corrente,
