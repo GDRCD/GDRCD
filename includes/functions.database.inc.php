@@ -585,24 +585,24 @@ function gdrcd_database_error_format($details = null, $sql = null)
         if (in_array($v['function'], $queryFunctions)) {
             $base = $v;
         }
-        $history .= '<strong>FILE: </strong>: ' . $v['file'] . ' - ';
-        $history .= '<strong>LINE: </strong>: ' . $v['line'] . '</br />';
+        $history .= '<strong>FILE</strong>: ' . $v['file'] . ' - ';
+        $history .= '<strong>LINE</strong>: ' . $v['line'] . '</br />';
     }
 
     $error_msg  = '<div class="error mysql">';
-    $error_msg .= '<strong>GDRCD Database Error</strong>:</br>';
+    $error_msg .= '<strong>GDRCD Database Error</strong></br>';
 
     if ($details) {
-        $error_msg .= '<strong>ERROR: </strong>: ' . $details . '</br>';
+        $error_msg .= '<strong>ERROR</strong>: ' . $details . '</br>';
     }
 
     if ($sql) {
-        $error_msg .= '<strong>QUERY: </strong>: ' . $sql . '</br>';
+        $error_msg .= '<strong>QUERY</strong>: ' . $sql . '</br>';
     }
 
     if ($base) {
-        $error_msg .= '<strong>FILE: </strong>: ' . $base['file'] . ' - ';
-        $error_msg .= '<strong>LINE: </strong>: ' . $base['line'] . '<br />';
+        $error_msg .= '<strong>FILE</strong>: ' . $base['file'] . ' - ';
+        $error_msg .= '<strong>LINE</strong>: ' . $base['line'] . '<br />';
     }
 
     $error_msg .= '<details>';
