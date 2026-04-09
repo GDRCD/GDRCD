@@ -192,7 +192,7 @@ function gdrcd_chat_room_info($luogo)
         FROM mappa
 
         WHERE id = ?',
-        ['i', $luogo]
+        [$luogo]
     );
 
     if (gdrcd_query($stmt, 'num_rows') === 0) {
@@ -238,7 +238,7 @@ function gdrcd_chat_player_skills($id_personaggio)
             OR abilita.id_razza = (SELECT id_razza FROM personaggio WHERE id_personaggio = ?)
 
         ORDER BY abilita.nome',
-        ['ii', $id_personaggio, $id_personaggio]
+        [$id_personaggio, $id_personaggio]
     );
 
     if (gdrcd_query($stmt, 'num_rows') > 0) {
@@ -365,7 +365,7 @@ function gdrcd_chat_player_items($id_personaggio)
             AND clgpersonaggiooggetto.posizione > 1
 
         ORDER BY clgpersonaggiooggetto.posizione',
-        ['i', $id_personaggio]
+        [$id_personaggio]
     );
 
     if (gdrcd_query($stmt, 'num_rows') > 0) {
@@ -447,7 +447,7 @@ function gdrcd_chat_get_race($raceId)
         FROM razza
 
         WHERE id_razza = ?',
-        ['i', $raceId]
+        [$raceId]
     );
 
     if (gdrcd_query($racial_stmt, 'num_rows') === 0) {
@@ -476,7 +476,7 @@ function gdrcd_chat_player_info_by_name($personaggio)
 {
     $stmt = gdrcd_stmt(
         'SELECT * FROM personaggio WHERE nome = ?',
-        ['s', $personaggio]
+        [$personaggio]
     );
 
     if (gdrcd_query($stmt, 'num_rows') === 0) {
@@ -504,7 +504,7 @@ function gdrcd_chat_player_info($id_personaggio)
 {
     $stmt = gdrcd_stmt(
         'SELECT * FROM personaggio WHERE id_personaggio = ?',
-        ['i', $id_personaggio]
+        [$id_personaggio]
     );
 
     if(gdrcd_query($stmt, 'num_rows') === 0) {

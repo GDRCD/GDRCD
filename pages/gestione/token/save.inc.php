@@ -15,30 +15,30 @@ if(isset($_REQUEST['op'])) {
             if($giorni_scadenza < 1 || $giorni_scadenza > 365) {
                 $giorni_scadenza = 30;
             }
-            
+
             // Genera token alfanumerico univoco
             do {
                 $token = bin2hex(random_bytes(8));
-                $check_stmt = gdrcd_stmt("SELECT id FROM token_iscrizione WHERE valore = ?", ['s', $token]);
+                $check_stmt = gdrcd_stmt("SELECT id FROM token_iscrizione WHERE valore = ?", [$token]);
                 $token_exists = gdrcd_query($check_stmt, 'num_rows') > 0;
-               
+
             } while($token_exists);
-            
+
             $insert_stmt = gdrcd_stmt(
                 "INSERT INTO token_iscrizione (valore, creato_il, scadenza, utilizzato, id_personaggio, data_utilizzo) VALUES (?, CURDATE(), DATE_ADD(CURDATE(), INTERVAL ? DAY), 0, NULL, NULL)",
-                ['si', $token, $giorni_scadenza]
+                [$token, $giorni_scadenza]
             );
-             
+
             echo '<div class="success">Token generato con successo: ' . gdrcd_filter('out', $token) . '</div>';
             break;
-            
+
         case 'elimina_token':
             $token_id = intval($_REQUEST['token_id']);
             $delete_stmt = gdrcd_stmt(
                 "DELETE FROM token_iscrizione WHERE id = ?",
-                ['i', $token_id]
+                [$token_id]
             );
-            
+
             echo '<div class="success">Token eliminato con successo.</div>';
             break;
     }

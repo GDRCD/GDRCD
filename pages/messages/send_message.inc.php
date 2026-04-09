@@ -42,10 +42,7 @@ switch($opRequest) {
             AND nome IS NOT NULL
             GROUP BY nome
             ',
-            array_merge(
-                ['s'.str_repeat('s', count($destinatari) - 1)],
-                $destinatari
-            )
+            $destinatari
         );
         $sended = gdrcd_query($destinatariCheck_stmt,'num_rows');
         $num_dest = count($destinatari);

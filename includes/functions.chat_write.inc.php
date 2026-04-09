@@ -1062,7 +1062,6 @@ function gdrcd_chat_private_invite_save(
         WHERE id = ?
         LIMIT 1",
         [
-            'si',
             implode(',', $invitati),
             $info['id'],
         ]
@@ -1073,7 +1072,6 @@ function gdrcd_chat_private_invite_save(
         'INSERT INTO messaggi ( id_personaggio_mittente, id_personaggio_destinatario, spedito, letto, testo )
         VALUES (?, ?, NOW(), 0, ?)',
         [
-            'sss',
             0,
             $personaggio['id_personaggio'],
             $_SESSION['login']
@@ -1180,7 +1178,6 @@ function gdrcd_chat_private_kick_save(
         WHERE id = ?
         LIMIT 1",
         [
-            'si',
             implode(',', $invitati),
             $info['id'],
         ]
@@ -1198,7 +1195,6 @@ function gdrcd_chat_private_kick_save(
         'INSERT INTO messaggi ( id_personaggio_mittente, id_personaggio_destinatario, spedito, letto, testo )
         VALUES (?, ?, NOW(), 0, ?)',
         [
-            'sss',
             0,
             $personaggio['id_personaggio'],
             $_SESSION['login']
@@ -1257,10 +1253,7 @@ function gdrcd_chat_private_list_save(
     if ($invitatiLength) {
         $stmt = gdrcd_stmt(
             'SELECT id_personaggio, nome FROM personaggio WHERE id_personaggio IN(?'. str_repeat(',?', $invitatiLength-1) .')',
-            [
-                str_repeat('i', $invitatiLength),
-                ...$invitatiIds
-            ]
+            $invitatiIds
         );
 
         $map = [];
@@ -1343,7 +1336,6 @@ function gdrcd_chat_db_insert(
         'INSERT INTO chat (stanza, imgs, id_personaggio_mittente, id_personaggio_destinatario, tag_posizione, ora, tipo, testo)
         VALUES (?, ?, ?, ?, ?, NOW(), ?, ?)',
         [
-            'isiisss',
             $stanza,
             implode(';', $imgs),
             $id_mittente,
@@ -1451,7 +1443,6 @@ function gdrcd_chat_player_item_consume($id_personaggio, $item)
 
             LIMIT 1',
             [
-                'ii',
                 $id_personaggio,
                 $item['id_oggetto']
             ]
@@ -1474,7 +1465,6 @@ function gdrcd_chat_player_item_consume($id_personaggio, $item)
 
             LIMIT 1',
             [
-                'iii',
                 $item['max_cariche'],
                 $id_personaggio,
                 $item['id_oggetto']
@@ -1491,7 +1481,6 @@ function gdrcd_chat_player_item_consume($id_personaggio, $item)
     gdrcd_stmt(
         'DELETE FROM clgpersonaggiooggetto WHERE id_personaggio = ? AND id_oggetto = ? LIMIT 1',
         [
-            'ii',
             $id_personaggio,
             $item['id_oggetto']
         ]
@@ -1555,7 +1544,6 @@ function gdrcd_chat_assign_experience($message)
     gdrcd_stmt(
         'UPDATE personaggio SET esperienza = esperienza + ? WHERE id_personaggio = ? LIMIT 1',
         [
-            'di',
             $exp_bonus,
             $_SESSION['id_personaggio'],
         ]

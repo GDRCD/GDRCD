@@ -23,7 +23,7 @@ if(!gdrcd_controllo_permessi_forum($araldo['tipo'],$araldo['proprietari'])){
                 $id_record = (int) $_POST['id_record'];
                 $status_imp = (int) $_POST['status_imp'];
 
-                gdrcd_query("UPDATE messaggioaraldo SET importante = $status_imp WHERE id_messaggio = $id_record") or die(gdrcd_mysql_error());
+                gdrcd_query("UPDATE messaggioaraldo SET importante = $status_imp WHERE id_messaggio = $id_record");
 
                 break;
 
@@ -31,7 +31,7 @@ if(!gdrcd_controllo_permessi_forum($araldo['tipo'],$araldo['proprietari'])){
                 $id_record = (int) $_POST['id_record'];
                 $status_cls = (int) $_POST['status_cls'];
 
-                gdrcd_query("UPDATE messaggioaraldo SET chiuso = $status_cls WHERE id_messaggio = $id_record") or die(gdrcd_mysql_error());
+                gdrcd_query("UPDATE messaggioaraldo SET chiuso = $status_cls WHERE id_messaggio = $id_record");
 
                 break;
         }
