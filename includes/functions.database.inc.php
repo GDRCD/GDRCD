@@ -311,7 +311,12 @@ function gdrcd_stmt_execute($stmt, $binds = [])
         }
 
         array_unshift($refs, $mysqliStmt);
-        call_user_func_array('mysqli_stmt_bind_param', $refs);
+
+        try {
+            call_user_func_array('mysqli_stmt_bind_param', $refs);
+        } catch (Throwable $e) {
+            gdrcd_database_error_handle($e->getMessage(), $sql, $binds, $throwOnError);
+        }
     }
 
     if (!mysqli_stmt_execute($mysqliStmt)) {
