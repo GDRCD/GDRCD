@@ -202,8 +202,11 @@ function gdrcd_query($sql, $mode = 'query', $throwOnError = false)
  * @param array{throw: bool} array di parametri opzionali
  *  - throw: se valorizzato a true la query lancia un eccezione invece di interrompere l'esecuzione dello script
  *
- * @return StmtResult|false Restituisce il risultato della query (mysqli_result) in caso di SELECT,
- *                             true per query di modifica (INSERT/UPDATE/DELETE), oppure false in caso di errore.
+ * @return array Array associativo contenente:
+ *  - 'data': oggetto StmtResultData con i dati della query (per SELECT) o null
+ *  - 'num_rows': numero di righe restituite (per SELECT) o null
+ *  - 'affected': numero di righe modificate (per INSERT/UPDATE/DELETE) o null
+ *  - 'last_id': ID dell'ultimo record inserito (per INSERT) o null
  */
 function gdrcd_stmt($sql, $binds = array(), $options = [])
 {
@@ -555,12 +558,35 @@ function gdrcd_check_tables($table)
     return $output;
 }
 
+/**
+ * Recupera l'ultimo messaggio di errore dal database.
+ *
+ * Questa funzione restituisce l'ultimo errore MySQL verificatosi sulla connessione corrente,
+ * formattato con codice di errore e descrizione.
+ *
+ * @return string Messaggio di errore nel formato "[codice] descrizione".
+ */
 function gdrcd_database_last_error_msg()
 {
     $db_link = gdrcd_connect();
     return '[' . mysqli_errno($db_link) . '] ' . mysqli_error($db_link);
 }
 
+/**
+ * Gestisce gli errori del database.
+ *
+ * Questa funzione centralizza la gestione degli errori delle operazioni sul database.
+ * A seconda del parametro $throwOnError, può lanciare un'eccezione o terminare l'esecuzione
+ * dello script mostrando un messaggio di errore formattato.
+ *
+ * @param string $error Messaggio di errore da gestire.
+ * @param string|null $sql Query SQL che ha causato l'errore (opzionale).
+ * @param array $binds Parametri della query preparata (opzionale).
+ * @param bool $throwOnError Se true, lancia un'eccezione invece di terminare lo script.
+ *
+ * @return void
+ * @throws Exception Se $throwOnError è true.
+ */
 function gdrcd_database_error_handle($error, $sql = null, $binds = [], $throwOnError = false)
 {
     if ($throwOnError) {
