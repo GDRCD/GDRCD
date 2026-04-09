@@ -31,8 +31,7 @@ function gdrcd_connect()
  */
 function gdrcd_close_connection($db)
 {
-    // Chiudo la connessione al database
-    if (is_resource($db) && get_resource_type($db) === 'mysql link') {
+    if ($db instanceof mysqli) {
         mysqli_close($db);
     }
 }
@@ -228,8 +227,8 @@ function gdrcd_stmt_prepare($sql, $options = [])
     $db_link = gdrcd_connect();
     $mysqliStmt = mysqli_prepare($db_link, $sql);
 
-    if ($mysqliStmt === false) {
-        gdrcd_database_error_handle('Failed when creating the statement.', $sql, [], !empty($options['throw']));
+    if (!($mysqliStmt instanceof mysqli_stmt)) {
+        gdrcd_database_error_handle(mysqli_error($db_link), $sql, [], !empty($options['throw']));
     }
 
     return [
@@ -253,7 +252,7 @@ function gdrcd_stmt_close($stmt)
     $mysqliStmt = $stmt['stmt'] ?? null;
     $options = $stmt['options'] ?? [];
 
-    if ($mysqliStmt === false) {
+    if (!($mysqliStmt instanceof mysqli_stmt)) {
         gdrcd_database_error_handle('Invalid statement.', $sql, [], !empty($options['throw']));
     }
 
