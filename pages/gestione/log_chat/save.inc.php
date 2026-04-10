@@ -126,7 +126,6 @@ HTML;
 
             // Parametri di ricerca per le query al database
             $parametri_query = [
-                'iss',
                 $luogo,
                 $data_a,
                 $data_b,
@@ -143,7 +142,7 @@ HTML;
 
             $totaleresults = $record_globale['numero_azioni'];
 
-            // RQuery per il recupero della pagina di azioni richiesta
+            // Query per il recupero della pagina di azioni richiesta
             $query = <<<SQL
                 SELECT
                     mittente.nome AS nome_mittente,
@@ -216,7 +215,7 @@ HTML;
             </td>
             <td class="casella_elemento">
                 <div class="elementi_elenco">
-                    {$ora}               
+                    {$ora}
                 </div>
             </td>
             <td class="casella_elemento">
@@ -234,7 +233,7 @@ HTML;
                 </div>
                 HTML;
             }//if
-            
+
             echo <<<HTML
             <!-- Paginatore elenco -->
             <div class="pager">
