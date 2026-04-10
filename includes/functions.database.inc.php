@@ -14,15 +14,16 @@ function gdrcd_connect()
         $db_host = $GLOBALS['PARAMETERS']['database']['url'];
         $db_error = $GLOBALS['MESSAGE']['error']['db_not_found'];
 
-        $db_link = mysqli_connect($db_host, $db_user, $db_pass, $db_name);
-
         mysqli_report(MYSQLI_REPORT_ERROR);
-        mysqli_set_charset($db_link, 'utf8mb4');
+        $db_link = mysqli_connect($db_host, $db_user, $db_pass, $db_name);
 
         if (mysqli_connect_errno()) {
             gdrcd_database_error_format($db_error);
         }
+
+        mysqli_set_charset($db_link, 'utf8mb4');
     }
+
     return $db_link;
 }
 
