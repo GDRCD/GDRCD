@@ -330,7 +330,7 @@ function gdrcd_stmt_execute($stmt, $binds = [])
         $errorMsg = gdrcd_database_error_format($mysqliStmtError);
         mysqli_stmt_close($mysqliStmt);
 
-        gdrcd_database_error_handle($errorMsg, $sql, $binds, $throwOnError);
+        gdrcd_database_error_handle($mysqliStmtError, $sql, $binds, $throwOnError);
     }
 
     $resultArr = array(
@@ -351,7 +351,7 @@ function gdrcd_stmt_execute($stmt, $binds = [])
             $errorMsg = gdrcd_database_error_format($mysqliStmtError);
             mysqli_stmt_close($mysqliStmt);
 
-            gdrcd_database_error_handle($errorMsg, $sql, $binds, $throwOnError);
+            gdrcd_database_error_handle($mysqliStmtError, $sql, $binds, $throwOnError);
         }
 
         $rows = array();
