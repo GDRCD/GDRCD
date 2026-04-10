@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Questo file contiene le funzioni di log.
  *
@@ -10,62 +9,13 @@
  * - segnalazione di problemi critici
  *
  * Tutte le funzioni wrapper presenti nel file delegano a gdrcd_log(),
- * che rappresenta il punto centrale di scrittura dei log nella tabella `log`.
+ * che rappresenta il punto centrale di scrittura dei log nella tabella `logs`.
  *
  * NOTA:
  * Questo file si occupa esclusivamente della scrittura dei log e non della
  * loro visualizzazione o consultazione.
  * ============================================================================
  */
-
-/**
- * Registra un evento nella tabella di log.
- *
- * Questa è la funzione base del sistema di logging: salva nel database
- * la descrizione dell'evento, il livello di gravità, il contesto applicativo
- * in cui si è verificato e l'eventuale personaggio collegato all'azione.
- *
- * Viene richiamata indirettamente dalle funzioni wrapper dedicate ai singoli
- * livelli di log (debug, info, warning, error, ecc.), così da centralizzare
- * in un solo punto la scrittura dei record.
- *
- * @param string $descrizione Descrizione testuale dell'evento da registrare
- * @param string $livello_log Livello del log (es. debug, info, warning, error)
- * @param array $contesto Modulo o area applicativa da cui proviene il log
- * @param int|null $id_personaggio ID del personaggio associato all'evento, se presente
- * @return void
- */
-/**
- * Registra un evento nella tabella di log.
- *
- * @param string $descrizione
- * @param string $livello_log
- * @param array $contesto
- * @param int|null $id_personaggio
- * @return void
- */
-function gdrcd_log($descrizione, $livello_log, $contesto = null, $id_personaggio = null)
-{
-
-    if (is_array($contesto) || is_object($contesto)) {
-        $contesto = json_encode($contesto, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-    }
-
-    if ($contesto === null) {
-        $contesto = 'NULL';
-    }
-
-    gdrcd_stmt(
-        "INSERT INTO `log` (`id`, `data`, `descrizione`, `livello_log`, `contesto`, `id_personaggio`)
-         VALUES (UUID_TO_BIN(UUID()), NOW(), ?, ?, ?, ?)",
-        [
-            $descrizione,
-            $livello_log,
-            $contesto,
-            ($id_personaggio === null ? 0 : (int)$id_personaggio)
-        ]
-    );
-}
 
 /*
 |--------------------------------------------------------------------------
@@ -95,6 +45,41 @@ function gdrcd_log($descrizione, $livello_log, $contesto = null, $id_personaggio
 |             attualmente previsto per usi futuri.
 |--------------------------------------------------------------------------
 */
+
+/**
+ * Registra un evento nella tabella di log.
+ *
+ * Questa è la funzione base del sistema di logging: salva nel database
+ * la descrizione dell'evento, il livello di gravità, il contesto applicativo
+ * in cui si è verificato e l'eventuale personaggio collegato all'azione.
+ *
+ * Viene richiamata indirettamente dalle funzioni wrapper dedicate ai singoli
+ * livelli di log (debug, info, warning, error, ecc.), così da centralizzare
+ * in un solo punto la scrittura dei record.
+ *
+ * @param string $descrizione Descrizione testuale dell'evento da registrare
+ * @param string $livello_log Livello del log (es. debug, info, warning, error)
+ * @param array $contesto Modulo o area applicativa da cui proviene il log
+ * @param int|null $id_personaggio ID del personaggio associato all'evento, se presente
+ * @return void
+ */
+function gdrcd_log($descrizione, $livello_log, $contesto = null, $id_personaggio = null)
+{
+    if (is_array($contesto)) {
+        $contesto = json_encode($contesto, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
+
+    gdrcd_stmt(
+        "INSERT INTO `logs` (`id`, `data`, `descrizione`, `livello_log`, `contesto`, `id_personaggio`)
+         VALUES (UUID_TO_BIN(UUID()), NOW(), ?, ?, ?, ?)",
+        [
+            $descrizione,
+            $livello_log,
+            $contesto,
+            ($id_personaggio === null ? 0 : (int)$id_personaggio)
+        ]
+    );
+}
 
 /**
  * Registra un log di livello debug.

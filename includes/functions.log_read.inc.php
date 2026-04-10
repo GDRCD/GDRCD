@@ -106,7 +106,7 @@ function gdrcd_extract_logs($eventi, $limit = 100, $offset = 0, $idPersonaggio =
 
     $placeholders = implode(',', array_fill(0, count($eventi), '?'));
     $sql = "SELECT `id_personaggio`, `data`, `descrizione`, `contesto`
-            FROM `log`
+            FROM `logs`
             WHERE JSON_UNQUOTE(JSON_EXTRACT(`contesto`, '$.evento')) IN ($placeholders)";
 
 
@@ -155,7 +155,7 @@ function gdrcd_count_logs(array $eventi)
 
     $stmt = gdrcd_stmt_one(
         "SELECT COUNT(*) AS totale
-            FROM `log`
+            FROM `logs`
             WHERE JSON_UNQUOTE(JSON_EXTRACT(`contesto`, '$.evento')) IN ($placeholders)",
         $eventi
     );

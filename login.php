@@ -154,7 +154,7 @@ elseif ($credentialsOk && $sessionExpired) {
                     JSON_UNQUOTE(JSON_EXTRACT(contesto, '$.utente'))         AS nome_interessato,
                     JSON_UNQUOTE(JSON_EXTRACT(contesto, '$.ip'))             AS autore,
                     JSON_UNQUOTE(JSON_EXTRACT(contesto, '$.id_personaggio')) AS id_personaggio
-                FROM log
+                FROM logs
                 WHERE JSON_EXTRACT(contesto, '$.ip')    = ?
                 AND JSON_EXTRACT(contesto, '$.evento') = ?
                 ORDER BY data DESC",
@@ -217,7 +217,7 @@ elseif ($credentialsOk && $sessionExpired) {
 
         $failRecord = gdrcd_stmt_one(
             "SELECT COUNT(*) AS totale
-             FROM log
+             FROM logs
              WHERE contesto LIKE ?
                AND contesto LIKE ?
                AND DATE_ADD(data, INTERVAL 60 MINUTE) > NOW()",
