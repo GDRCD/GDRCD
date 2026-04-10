@@ -34,7 +34,7 @@ if(gdrcd_query($result, 'num_rows') > 0) {
     gdrcd_log_warning(
         'Tentativo di login bloccato',
         [
-            'evento' => 'auth.login.bloccato',
+            'evento' => 'auth.login.bloccato.blacklist',
             'utente' => $login1,
             'ip' => $_SERVER['REMOTE_ADDR'],
         ]
@@ -192,7 +192,7 @@ if( !empty($record) && gdrcd_password_check($pass1, $record['pass']) && ($record
     gdrcd_log_warning(
         'Tentativo di connessione da postazione esclusa',
         [
-            'evento' => 'auth.login.bloccato.blacklist',
+            'evento' => 'auth.login.bloccato',
             'utente' => $login1,
             'id_personaggio' => $record['id_personaggio'],
             'ip' => $_SERVER['REMOTE_ADDR']
