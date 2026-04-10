@@ -580,11 +580,11 @@ function gdrcd_database_error_format($details = null, $sql = null)
     $error_msg .= '<strong>GDRCD Database Error</strong></br>';
 
     if ($details) {
-        $error_msg .= '<strong>ERROR</strong>: ' . $details . '</br>';
+        $error_msg .= '<strong>ERROR</strong>: ' . gdrcd_filter_out($details) . '</br>';
     }
 
     if ($sql) {
-        $error_msg .= '<strong>QUERY</strong>: ' . $sql . '</br>';
+        $error_msg .= '<strong>QUERY</strong>: ' . gdrcd_filter_out($sql) . '</br>';
     }
 
     if ($base) {
