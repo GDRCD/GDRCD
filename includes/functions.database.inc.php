@@ -327,9 +327,7 @@ function gdrcd_stmt_execute($stmt, $binds = [])
 
     if (!mysqli_stmt_execute($mysqliStmt)) {
         $mysqliStmtError = mysqli_stmt_error($mysqliStmt);
-        $errorMsg = gdrcd_database_error_format($mysqliStmtError);
-        mysqli_stmt_close($mysqliStmt);
-
+        gdrcd_stmt_close($stmt);
         gdrcd_database_error_handle($mysqliStmtError, $sql, $binds, $throwOnError);
     }
 
@@ -348,8 +346,7 @@ function gdrcd_stmt_execute($stmt, $binds = [])
         $result = mysqli_stmt_get_result($mysqliStmt);
         if ($result === false) {
             $mysqliStmtError = mysqli_stmt_error($mysqliStmt);
-            $errorMsg = gdrcd_database_error_format($mysqliStmtError);
-            mysqli_stmt_close($mysqliStmt);
+            gdrcd_stmt_close($stmt);
 
             gdrcd_database_error_handle($mysqliStmtError, $sql, $binds, $throwOnError);
         }
