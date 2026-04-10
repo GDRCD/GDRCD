@@ -709,7 +709,7 @@ $MESSAGE['installer']['install'] = "Esegui l\'installazione automatica";
 
 
 /********** MESSAGGI DI ERRORE **********/
-$MESSAGE['error']['db_not_found'] = 'Impossibile trovare il database, verificare l\'installazione di GDRCD.';
+$MESSAGE['error']['db_not_found'] = 'Impossibile connettersi al database, verificare i parametri di connessione o l\'installazione di GDRCD.';
 $MESSAGE['error']['db_empty'] = 'Il database non contiene tabelle, è necessario effettuare l\'installazione';
 $MESSAGE['error']['db_not_updated'] = 'E\' stata rilevata l\'installazione di Mr Fabers GDRCD5, per aggiornare il database e renderlo compatibile proseguire cliccando sul link sottostante';
 $MESSAGE['error']['can_t_load_frame'] = 'Impossibile caricare la pagina.';
