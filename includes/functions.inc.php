@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Funzioni di CORE di GDRCD
  */
@@ -197,9 +198,9 @@ function gdrcd_controllo_esilio($id_personaggio, $return = false)
     if (strtotime($exiled['esilio']) > time()) {
 
         $message = gdrcd_filter_out($exiled['nome'])
-            . ' '. gdrcd_filter_out($GLOBALS['MESSAGE']['warning']['character_exiled'])
-            . ' '. gdrcd_format_date($exiled['esilio'])
-            . ' ('. $exiled['motivo_esilio']. ' - '. $exiled['autore_esilio']. ')';
+            . ' ' . gdrcd_filter_out($GLOBALS['MESSAGE']['warning']['character_exiled'])
+            . ' ' . gdrcd_format_date($exiled['esilio'])
+            . ' (' . $exiled['motivo_esilio'] . ' - ' . $exiled['autore_esilio'] . ')';
 
         if ($return) {
             return $message;
@@ -271,32 +272,33 @@ function gdrcd_controllo_permessi_forum($tipo, $proprietari = '')
  * @return bool
  * @throws Exception
  */
-function gdrcd_controllo_chat($location) {
+function gdrcd_controllo_chat($location)
+{
     global $PARAMETERS;
 
     $location = gdrcd_filter('num', $location);
 
-    $chat_data = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprietario, scadenza FROM mappa WHERE id=".$location." LIMIT 1");
+    $chat_data = gdrcd_query("SELECT nome, stanza_apparente, invitati, privata, proprietario, scadenza FROM mappa WHERE id=" . $location . " LIMIT 1");
     $private = gdrcd_filter('num', $chat_data['privata']);
 
     // Se la stanza è privata
-    if($private) {
+    if ($private) {
 
         // Controllo permessi utente
         $spy_room_enabled = $PARAMETERS['mode']['spyprivaterooms'] === 'ON';
         $isModerator = ($_SESSION['permessi'] >= MODERATOR);
-        if($spy_room_enabled && $isModerator){
+        if ($spy_room_enabled && $isModerator) {
             return true;
         }
 
         // Controllo scadenza stanza, se non scaduta
         $expiring = $chat_data['scadenza'];
         $actual_time = strftime('%Y-%m-%d %H:%M:%S');
-        if($expiring > $actual_time) {
+        if ($expiring > $actual_time) {
 
             // Controllo membri della stanza
             $owner = gdrcd_filter('out', $chat_data['proprietario']);
-            $me = gdrcd_filter('out',gdrcd_capital_letter($_SESSION['login']));
+            $me = gdrcd_filter('out', gdrcd_capital_letter($_SESSION['login']));
             $mineGuild = gdrcd_filter('out', $_SESSION['gilda']);
             $chat_invited = explode(',', $chat_data['invitati']);
 
@@ -313,7 +315,7 @@ function gdrcd_controllo_chat($location) {
             }
         }
     } else {
-       return true;
+        return true;
     }
 
     return false;
@@ -369,21 +371,19 @@ function gdrcd_load_modules($page, $params = [], $throwOnError = false)
         // Controllo la tipologia di informazione passata (file o page) e poi determino il percorso del modulo
         $modulePath = is_file($page) ? $page : gdrcd_pages_path($page);
 
-        if(!file_exists($modulePath)) {
+        if (!file_exists($modulePath)) {
             throw new Exception($MESSAGE['interface']['layout_not_found']);
         }
 
         // Includo il modulo
         include_once($modulePath);
-    }
-    catch(Exception $e) {
+    } catch (Exception $e) {
         if ($throwOnError) {
             throw $e;
         }
 
         echo $e->getMessage();
     }
-
 }
 
 /**
@@ -397,7 +397,7 @@ function gdrcd_load_modules($page, $params = [], $throwOnError = false)
  */
 function gdrcd_module_enable($id)
 {
-    if ( !defined('GDRCD_ENABLED_MODULE') ) {
+    if (!defined('GDRCD_ENABLED_MODULE')) {
         define('GDRCD_ENABLED_MODULE', $id);
     }
 }
@@ -411,14 +411,13 @@ function gdrcd_module_enable($id)
  */
 function gdrcd_module_allowed($id)
 {
-    if ( !defined('GDRCD_ENABLED_MODULE') || GDRCD_ENABLED_MODULE !== $id ) {
+    if (!defined('GDRCD_ENABLED_MODULE') || GDRCD_ENABLED_MODULE !== $id) {
 
         if (!headers_sent()) {
             http_response_code(403);
         }
 
         die($GLOBALS['MESSAGE']['error']['unknown_operation']);
-
     }
 }
 
@@ -432,9 +431,9 @@ function gdrcd_pages_format($page)
     // Rimuove i puntini di ritorno
     $page = str_replace('..', '', $page);
     // Rimuove i backslash (\)
-    $page = str_replace('\\',DIRECTORY_SEPARATOR, $page);
+    $page = str_replace('\\', DIRECTORY_SEPARATOR, $page);
     // Converte la combinazione di caratteri __ nel separatore di directory
-    $page = str_replace('__',DIRECTORY_SEPARATOR, $page);
+    $page = str_replace('__', DIRECTORY_SEPARATOR, $page);
     //
     return gdrcd_filter('include', $page);
 }
@@ -451,39 +450,39 @@ function gdrcd_pages_path($page)
     global $MESSAGE;
 
     // Controllo che sia stato attribuito un valore a page
-    if(empty($page)) {
+    if (empty($page)) {
         throw new Exception($MESSAGE['interface']['page_missing']);
     }
 
     // Inizializzo le variabili del metodo
-    $pagesPath = dirname(__FILE__) . DIRECTORY_SEPARATOR. '..'.DIRECTORY_SEPARATOR.'pages';
+    $pagesPath = dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'pages';
     $pageFormatted = gdrcd_pages_format($page);
 
     // Imposto i possibili percorsi che posso caricare
     $routes = [
         '.inc.php',
-        DIRECTORY_SEPARATOR.'index.inc.php'
+        DIRECTORY_SEPARATOR . 'index.inc.php'
     ];
 
     // Inizializzo la variabile contenitore dei moduli
     $modules = [];
 
     // Scorro i percorsi impostati per individuare corrispondenze
-    foreach ($routes AS $route) {
-        $file = implode(DIRECTORY_SEPARATOR, [$pagesPath, $pageFormatted.$route]);
+    foreach ($routes as $route) {
+        $file = implode(DIRECTORY_SEPARATOR, [$pagesPath, $pageFormatted . $route]);
         // Se esiste la corrispondenza, allora inserisco
-        if(file_exists($file)) {
+        if (file_exists($file)) {
             $modules[] = $file;
         }
     }
 
     // Controllo che sia stata trovata almeno una corrispondenza
-    if(empty($modules)) {
+    if (empty($modules)) {
         throw new Exception($MESSAGE['interface']['page_not_found']);
     }
 
     // Se sono state trovate piu corrispondenze, blocco il caricamento
-    if(count($modules) > 1) {
+    if (count($modules) > 1) {
         throw new Exception($MESSAGE['interface']['multiple_page_found']);
     }
 
@@ -745,7 +744,7 @@ function gdrcd_list($str)
         $characters = gdrcd_query($query, 'result');
 
         while ($option = gdrcd_query($characters, 'fetch')) {
-            $list .= '<option value="' . $option['nome'] . '" />';//TODO escape HTMl del nome!
+            $list .= '<option value="' . $option['nome'] . '" />'; //TODO escape HTMl del nome!
         }
         gdrcd_query($characters, 'free');
         $list .= '</datalist>';
@@ -804,7 +803,8 @@ function gdrcd_brute_debug($args)
  * @param string $parametro il parametro o il valore di configurazione da formattare
  * @return string
  */
-function gdrcd_configuration_label($parametro) {
+function gdrcd_configuration_label($parametro)
+{
     return gdrcd_filter('out', ucwords(strtr($parametro, ['_' => ' '])));
 }
 
@@ -846,17 +846,34 @@ function gdrcd_configuration_get($parametro)
  */
 function gdrcd_configuration_set($parametro, $value)
 {
-     [$categoria, $parametro] = explode('.', $parametro, 2);
+    [$categoria, $parametro] = explode('.', $parametro, 2);
     // Query di salvataggio del $valore nel db per $parametro
-            gdrcd_stmt(
-                "UPDATE configurazioni
+    gdrcd_stmt(
+        "UPDATE configurazioni
                     SET valore = ?
                 WHERE categoria = ?
                     AND parametro = ?",
-                [
-                    $value,
-                    $categoria,
-                    $parametro
-                ]
-            );
+        [
+            $value,
+            $categoria,
+            $parametro
+        ]
+    );
+}
+
+/**
+ * Maschera un IPv4.
+ */
+function gdrcd_mask_ip($ip)
+{
+    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+        $parts = explode('.', $ip);
+        if (count($parts) === 4) {
+            $parts[2] = 'X';
+            $parts[3] = 'X';
+            return implode('.', $parts);
+        }
+    }
+
+    return $ip;
 }

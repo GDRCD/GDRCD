@@ -1,10 +1,17 @@
 <?php
 
+/**
+ * Questo file contiene le funzioni di log.
+ *
+ * Il sistema di log permette di leggere i log registrati nel database.
+ * Permette di filtrare i log per eventi specifici, per personaggi e per paginazione.
+ */
 /*
 |--------------------------------------------------------------------------
 | Compatibilità con codici log legacy
 |--------------------------------------------------------------------------
 */
+
 /**
  * Restituisce il gruppo di eventi JSON associati a una costante legacy.
  *
@@ -83,7 +90,7 @@ function gdrcd_log_group_from_code($code)
  * @return array Lista dei log trovati, ciascuno arricchito con il campo
  *               `contesto_decodificato`
  */
-function gdrcd_extract_logs($eventi, $limit, $offset = 0, $idPersonaggio = null)
+function gdrcd_extract_logs($eventi, $limit = 100, $offset = 0, $idPersonaggio = null)
 {
     if (!is_array($eventi)) {
         $eventi = [$eventi];
@@ -102,37 +109,32 @@ function gdrcd_extract_logs($eventi, $limit, $offset = 0, $idPersonaggio = null)
             FROM `log`
             WHERE JSON_UNQUOTE(JSON_EXTRACT(`contesto`, '$.evento')) IN ($placeholders)";
 
-    $types = str_repeat('s', count($eventi));
+
     $params = $eventi;
 
     if ($idPersonaggio !== null) {
         $sql .= " AND `id_personaggio` = ?";
-        $types .= 'i';
+
         $params[] = (int)$idPersonaggio;
     }
 
     $sql .= " ORDER BY `data` DESC
               LIMIT ?, ?";
-    $types .= 'ii';
+
     $params[] = (int)$offset;
     $params[] = (int)$limit;
 
-    $stmt = gdrcd_stmt($sql, array_merge([$types], $params));
-
     $logs = [];
-
-    while ($row = gdrcd_query($stmt, 'assoc')) {
-        $row['contesto_decodificato'] = json_decode($row['contesto'], true) ?: [];
-        $logs[] = $row;
+    foreach (gdrcd_stmt_all($sql, $params) as $log) {
+        $log['contesto_decodificato'] = json_decode($log['contesto'], true) ?: [];
+        $logs[] = $log;
     }
-
-    gdrcd_query($stmt, 'free');
 
     return $logs;
 }
 
 
-       
+
 /**
  * Conta il numero di log associati a una lista di eventi JSON.
  *
@@ -150,19 +152,27 @@ function gdrcd_count_logs(array $eventi)
     }
 
     $placeholders = implode(',', array_fill(0, count($eventi), '?'));
-    $types = str_repeat('s', count($eventi));
 
-    $stmt = gdrcd_stmt(
+    $stmt = gdrcd_stmt_one(
         "SELECT COUNT(*) AS totale
             FROM `log`
             WHERE JSON_UNQUOTE(JSON_EXTRACT(`contesto`, '$.evento')) IN ($placeholders)",
-        array_merge([$types], $eventi)
+        $eventi
     );
 
-    $row = gdrcd_query($stmt, 'assoc');
-    gdrcd_query($stmt, 'free');
+    return (int)($stmt['totale'] ?? 0);
+}
 
-    return (int)($row['totale'] ?? 0);
+/**
+ * Estrapola il contesto JSON da una riga di log JSON.
+ * 
+ * @param array $row Riga log dal database
+ * @return array Contesto JSON decodificato
+ */
+function gdrcd_extract_log_contesto(array $row)
+{
+    $contesto = $row['contesto_decodificato'] ?? [];
+    return $contesto;
 }
 
 /**
@@ -179,9 +189,9 @@ function gdrcd_count_logs(array $eventi)
  *
  * @return array{autore: string, destinatario: string, descrizione: string}
  */
-function gdrcd_present_log_row($whichLog, array $row) 
+function gdrcd_present_log_row($whichLog, array $row)
 {
-    $contesto = $row['contesto_decodificato'] ?? [];
+    $contesto = gdrcd_extract_log_contesto($row);
 
     $autore = '-';
     $destinatario = '-';
@@ -210,16 +220,16 @@ function gdrcd_present_log_row($whichLog, array $row)
 
         case BONIFICO:
             if (($contesto['direzione'] ?? '') === 'uscita') {
-                $autore = $contesto['nome_interessato'] ?? '-';
-                $destinatario = $contesto['controparte_nome'] ?? '-';
+                $autore = $contesto['nome_mittente'] ?? '-';
+                $destinatario = $contesto['destinatario'] ?? '-';
             } else {
-                $autore = $contesto['autore'] ?? '-';
-                $destinatario = $contesto['nome_interessato'] ?? '-';
+                $autore = $contesto['nome_mittente'] ?? '-';
+                $destinatario = $contesto['destinatario'] ?? '-';
             }
 
             $descrizione = ($contesto['ammontare'] ?? '-') . ' ' .
-                            ($contesto['valuta'] ?? '') .
-                            (!empty($contesto['causale']) ? ' - ' . $contesto['causale'] : '');
+                ($contesto['valuta'] ?? '') .
+                (!empty($contesto['causale']) ? ' - ' . $contesto['causale'] : '');
             break;
 
         case NUOVOLAVORO:

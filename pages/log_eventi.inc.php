@@ -4,25 +4,7 @@
     if ($_SESSION['permessi'] < SUPERUSER) {
         echo '<div class="error">' . gdrcd_filter('out', $MESSAGE['error']['not_allowed']) . '</div>';
     } else {
-
-      
-        /**
-         * Maschera un IPv4.
-         */
-        function gdrcd_mask_ip($ip)
-        {
-            if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-                $parts = explode('.', $ip);
-                if (count($parts) === 4) {
-                    $parts[2] = 'X';
-                    $parts[3] = 'X';
-                    return implode('.', $parts);
-                }
-            }
-
-            return $ip;
-        } 
-        ?>
+    ?>
 
         <div class="page_title">
             <h2><?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['log']['events']['page_name']); ?></h2>
@@ -47,8 +29,8 @@
                                 </select>
                             </div>
                             <div class='form_submit'>
-                                <input type="hidden" value="view" name="op"/>
-                                <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>"/>
+                                <input type="hidden" value="view" name="op" />
+                                <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>" />
                             </div>
                         </form>
                     </div>
@@ -104,7 +86,7 @@
 
                                 <?php foreach ($logs as $row) {
                                     $presentazione = gdrcd_present_log_row($whichLog, $row);
-                                    ?>
+                                ?>
                                     <tr class="risultati_elenco_record_gestione">
                                         <td class="casella_elemento">
                                             <div class="elementi_elenco">
@@ -146,7 +128,7 @@
                                     <a href="main.php?page=log_eventi&op=view&which_log=<?php echo $whichLog; ?>&offset=<?php echo $i; ?>">
                                         <?php echo $i + 1; ?>
                                     </a>
-                                <?php } else {
+                        <?php } else {
                                     echo ' ' . ($i + 1) . ' ';
                                 }
                             }
@@ -159,7 +141,7 @@
                             <?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['log']['events']['link']['back']); ?>
                         </a>
                     </div>
-                <?php }
+            <?php }
             } ?>
         </div>
     <?php } ?>

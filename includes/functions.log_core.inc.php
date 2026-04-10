@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Questo file contiene le funzioni di logging.
+ * Questo file contiene le funzioni di log.
  *
- * Il sistema di logging permette di registrare nel database eventi utili per:
+ * Il sistema di log permette di registrare nel database eventi utili per:
  * - debug tecnico
  * - tracciamento delle azioni utente
  * - monitoraggio di anomalie o errori gestiti
@@ -46,7 +46,7 @@
  */
 function gdrcd_log($descrizione, $livello_log, $contesto = null, $id_personaggio = null)
 {
-    
+
     if (is_array($contesto) || is_object($contesto)) {
         $contesto = json_encode($contesto, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
@@ -55,14 +55,10 @@ function gdrcd_log($descrizione, $livello_log, $contesto = null, $id_personaggio
         $contesto = 'NULL';
     }
 
-    $descrizione = gdrcd_filter('in', $descrizione);
-    $livello_log = gdrcd_filter('in', $livello_log);
-     
     gdrcd_stmt(
         "INSERT INTO `log` (`id`, `data`, `descrizione`, `livello_log`, `contesto`, `id_personaggio`)
          VALUES (UUID_TO_BIN(UUID()), NOW(), ?, ?, ?, ?)",
         [
-            'sssi',
             $descrizione,
             $livello_log,
             $contesto,
@@ -127,7 +123,7 @@ function gdrcd_log_debug($messaggio, $contesto = null, $id_personaggio = null)
  * @param int|null $id_personaggio ID del personaggio associato al log
  * @return void
  */
-function gdrcd_log_info($messaggio, $contesto = null, $id_personaggio = null)       
+function gdrcd_log_info($messaggio, $contesto = null, $id_personaggio = null)
 {
     gdrcd_log($messaggio, 'info', $contesto, $id_personaggio);
 }
@@ -175,7 +171,7 @@ function gdrcd_log_warning($messaggio, $contesto = null, $id_personaggio = null)
  * @param int|null $id_personaggio ID del personaggio associato al log
  * @return void
  */
-function gdrcd_log_error($messaggio, $contesto = null, $id_personaggio = null)  
+function gdrcd_log_error($messaggio, $contesto = null, $id_personaggio = null)
 {
     gdrcd_log($messaggio, 'error', $contesto, $id_personaggio);
 }
@@ -191,7 +187,7 @@ function gdrcd_log_error($messaggio, $contesto = null, $id_personaggio = null)
  * @param int|null $id_personaggio ID del personaggio associato al log
  * @return void
  */
-function gdrcd_log_critical($messaggio, $contesto = null, $id_personaggio = null)   
+function gdrcd_log_critical($messaggio, $contesto = null, $id_personaggio = null)
 {
     gdrcd_log($messaggio, 'critical', $contesto, $id_personaggio);
 }
@@ -228,5 +224,3 @@ function gdrcd_log_emergency($messaggio, $contesto = null, $id_personaggio = nul
 {
     gdrcd_log($messaggio, 'emergency', $contesto, $id_personaggio);
 }
-
- 
