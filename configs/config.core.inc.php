@@ -329,7 +329,7 @@ $PARAMETERS['settings']['audiotype']['.wav'] = 'audio/x-wav';
 /**
  * HELP:
  * nome del file audio usato per il suono dei nuovi messaggi in arrivo
- * - il file DEVE trovarsi nella cartella sounds
+ * - il file DEVE trovarsi nella cartella public/sounds
  * - il file DEVE essere in uno dei formati concessi per l'uso
  * - per non usare file audio per le nuove missive, semplicemente lasciare vuoto il campo
  *

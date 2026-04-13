@@ -180,7 +180,7 @@ if( !empty($_SESSION['id_personaggio']) ) {
         <link rel='stylesheet' href='themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/main.css' TYPE='text/css'>
         <link rel='stylesheet' href='themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/homepage.css'
               TYPE='text/css'>
-        <link rel='shortcut icon' href='imgs/favicon.ico' />
+        <link rel='shortcut icon' href='public/images/favicon.ico' />
     </head>
     <body>
         <div class="error_box">

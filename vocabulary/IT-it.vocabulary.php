@@ -5,7 +5,7 @@ IMPORTANTE! non cancellate alcuna delle righe, ne modificate quanto scritto tra 
 
 /********** Homepage **********/
 /*Testo centrale homepage*/
-$MESSAGE['homepage']['main_content']['site_title'] = '<img src="imgs/logo_gdrcd.png" alt="GDRCD"/>';
+$MESSAGE['homepage']['main_content']['site_title'] = '<img src="public/images/logo_gdrcd.png" alt="GDRCD"/>';
 $MESSAGE['homepage']['main_content']['site_subtitle'] = 'Il CMS Open Source per i Giochi di Ruolo play-by-chat';
 $MESSAGE['homepage']['main_content']['welcome'] = 'Benvenuto in GDRCD!';
 $MESSAGE['homepage']['main_content']['infos'] = 'Prima di iniziare a realizzare il tuo sito, hai letto la LICENZA D\'USO che accompagna il prodotto? Se non l\'hai ancora fatto premurati gentilmente di leggerla. Troverai le istruzioni su come utilizzare  GDRCD 5.4 nel manuale allegato. Buon divertimento!';
@@ -456,7 +456,7 @@ $MESSAGE['interface']['administration']['locations']['page'] = 'Pagina associata
 $MESSAGE['interface']['administration']['locations']['is_chat'] = 'Chat';
 $MESSAGE['interface']['administration']['locations']['is_chat_info'] = 'Spuntare se la stanza è adibita a chat, altrimenti specificare nel campo "pagina" il file da caricare nel riquadro principale';
 $MESSAGE['interface']['administration']['locations']['image'] = 'Nome del file immagine';
-$MESSAGE['interface']['administration']['locations']['image_info'] = 'Specificare il nome del file da utilizzare come immagine che deve essere posizionato nella cartella imgs/locations del tema scelto.';
+$MESSAGE['interface']['administration']['locations']['image_info'] = 'Specificare il nome del file da utilizzare come immagine che deve essere posizionato nella cartella public/images/locations del tema scelto.';
 $MESSAGE['interface']['administration']['locations']['screen_name'] = 'Nome vistualizzato nell\'elenco presenti';
 $MESSAGE['interface']['administration']['locations']['screen_name_info'] = 'Se specificato, il nome in questa casella viene visualizzato nell\'elenco presenti al posto del nome della stanza';
 $MESSAGE['interface']['administration']['locations']['map_id'] = 'Mappa di appartenenza';

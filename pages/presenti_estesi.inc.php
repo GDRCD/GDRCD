@@ -69,7 +69,7 @@
              * @author Blancks
              */
             $online_state = '';
-            if ($PARAMETERS['mode']['user_online_state'] == 'ON' && ! empty($record['online_status']) && $record['online_status'] != null) {                 
+            if ($PARAMETERS['mode']['user_online_state'] == 'ON' && ! empty($record['online_status']) && $record['online_status'] != null) {
                     if($PARAMETERS['mode']['online_message_bbcode'] == 'ON') {
                         if($PARAMETERS['settings']['online_message_bbcode']['type'] == 'bbd' && $PARAMETERS['settings']['bbd']['free_html'] == 'ON') {
                             $online_state = bbdecoder(gdrcd_html_filter($record['online_status']), true);
@@ -80,8 +80,8 @@
                         }
                     } else {
                         $online_state = gdrcd_html_filter($record['online_status']);
-                    }  
-                     $online_state = 'onmouseover="show_desc(event, \''.$online_state.'\');" onmouseout="hide_desc();""'; 
+                    }
+                     $online_state = 'onmouseover="show_desc(event, \''.$online_state.'\');" onmouseout="hide_desc();""';
             }
             //Stampo il PG
             echo '<li class="presente"'.$online_state.'>';
@@ -96,12 +96,12 @@
             //Se e' loggato da meno di 2 minuti
             if ($activity <= 2)   {
                 //Lo segnalo come appena entrato
-                echo '<img class="presenti_ico" src="imgs/icons/enter.gif" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['enter']).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['enter']).'" />';
+                echo '<img class="presenti_ico" src="public/images/icons/enter.gif" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['enter']).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['enter']).'" />';
             } else  {
              //Altrimenti e' semplicemente loggato
-                echo '<img class="presenti_ico" src="imgs/icons/blank.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['logged']).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['logged']).'" />';
+                echo '<img class="presenti_ico" src="public/images/icons/blank.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['logged']).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['logged']).'" />';
             }//else
-             
+
             switch ($record['permessi']) {
                 case USER:
                     $alt_permessi = '';
@@ -120,11 +120,11 @@
                     break;
             }//else
             //Livello di accesso del PG (utente, master, admin, superuser)
-            echo '<img class="presenti_ico" src="imgs/icons/permessi'.$record['permessi'].'.gif" alt="'.gdrcd_filter('out', $alt_permessi).'" title="'.gdrcd_filter('out', $alt_permessi).'" />';
+            echo '<img class="presenti_ico" src="public/images/icons/permessi'.$record['permessi'].'.gif" alt="'.gdrcd_filter('out', $alt_permessi).'" title="'.gdrcd_filter('out', $alt_permessi).'" />';
 
             //Icona stato di disponibilità. E' sensibile se la riga che sto stampando corrisponde all'utente loggato.
             $change_disp = ($record['disponibile'] + 1) % 3;
-            echo '<img class="presenti_ico" src="imgs/icons/disponibile'.$record['disponibile'].'.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['availability'][$record['disponibile']]).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['availability'][$record['disponibile']]).'" />';
+            echo '<img class="presenti_ico" src="public/images/icons/disponibile'.$record['disponibile'].'.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['availability'][$record['disponibile']]).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['availability'][$record['disponibile']]).'" />';
 
             //Icona della razza pg
             if ($record['icon'] == '') {
@@ -133,7 +133,7 @@
             echo '<img class="presenti_ico" src="themes/'.$PARAMETERS['themes']['current_theme'].'/imgs/races/'.$record['icon'].'" alt="'.gdrcd_filter('out', $record['sing_'.$record['sesso']]).'" title="'.gdrcd_filter('out', $record['sing_'.$record['sesso']]).'" />';
 
             //Icona del genere del pg
-            echo '<img class="presenti_ico" src="imgs/icons/testamini'.$record['sesso'].'.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]).'" />';
+            echo '<img class="presenti_ico" src="public/images/icons/testamini'.$record['sesso'].'.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]).'" />';
 
             //Nome pg e link alla sua scheda
             echo '<a href="main.php?page=messages_center&op=create&destinatario='.gdrcd_filter('url', $record['nome']).'" class="link_sheet">MP</a> ';

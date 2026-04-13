@@ -121,10 +121,10 @@ $totaleresults = gdrcd_query(gdrcd_query($sqlMessages, 'result'), 'num_rows');
                             <div class="elementi_elenco">
                                 <?php
                                 if($row['letto'] == 0) { ?>
-                                    <img src="imgs/icons/mail_new.png" class="colonna_elenco_messaggi_icon">
+                                    <img src="public/images/icons/mail_new.png" class="colonna_elenco_messaggi_icon">
                                     <?php
                                 } else { ?>
-                                    <img src="imgs/icons/mail_read.png" class="colonna_elenco_messaggi_icon">
+                                    <img src="public/images/icons/mail_read.png" class="colonna_elenco_messaggi_icon">
                                     <?php
                                 } ?>
                             </div>
@@ -176,7 +176,7 @@ $totaleresults = gdrcd_query(gdrcd_query($sqlMessages, 'result'), 'num_rows');
                                         <input type="hidden" name="reply_subject" value="Re: <?php echo $row['oggetto']; ?>" />
                                         <input type="hidden" name="reply_tipo" value="<?php echo $row['tipo']; ?>" />
                                         <input type="hidden" name="op" value="reply" />
-                                        <input type="image" src="imgs/icons/reply.png" value="submit" alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']); ?>"
+                                        <input type="image" src="public/images/icons/reply.png" value="submit" alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']); ?>"
                                                title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']); ?>" />
                                     </form>
                                 </div>
@@ -186,7 +186,7 @@ $totaleresults = gdrcd_query(gdrcd_query($sqlMessages, 'result'), 'num_rows');
                                         <input type="hidden" name="id_messaggio" value="<?php echo $row['id']; ?>" />
                                         <input type="hidden" name="type" value="<?php echo $delType; ?>" />
                                         <input type="hidden" name="op" value="erase" />
-                                        <input type="image" src="imgs/icons/erase.png" value="submit" alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['erase']); ?>"
+                                        <input type="image" src="public/images/icons/erase.png" value="submit" alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['erase']); ?>"
                                                title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['erase']); ?>" />
                                     </form>
                                 </div>
