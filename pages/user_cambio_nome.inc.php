@@ -40,10 +40,11 @@ $iscriz = $iscriz['0'];
                     gdrcd_log_notice(
                         'Cambio nome del personaggio',
                         [
-                            'evento' => 'personaggio.cambio_nome',
+                            'evento' =>'personaggio.cambio_nome',
+                            'id_autore' => $_SESSION['id_personaggio'],
+                            'autore' => $_SESSION['login'],
                             'nome_precedente' => $_SESSION['login'],
                             'nome_nuovo' => $_POST['new_name'],
-                            'origine' => 'gestione_personaggio'
                         ],
                          $_SESSION['id_personaggio']
                     );
@@ -94,14 +95,30 @@ $iscriz = $iscriz['0'];
 
                     gdrcd_log_notice(
                         'Cambio nome del personaggio',
-                        [
+                            [
                             'evento' => 'personaggio.cambio_nome',
+                            'id_autore' => $_SESSION['id_personaggio'],
+                            'autore' => $_SESSION['login'],
+                            'id_soggetto' => $_POST['account'],
+                            'soggetto' => $nome['nome'],
                             'nome_precedente' => $nome['nome'],
                             'nome_nuovo' => $_POST['new_name'],
-                            'eseguito_da' => $_SESSION['login'],
-                            'origine' => 'gestione_personaggio'
                         ],
                          $_POST['account']
+                    );
+                    /*Registro l'evento per chi ha effettuato l'operazione */
+                    gdrcd_log_notice(
+                        'Cambio nome del personaggio',
+                            [
+                            'evento' => 'personaggio.cambio_nome',
+                            'id_autore' => $_SESSION['id_personaggio'],
+                            'autore' => $_SESSION['login'],
+                            'id_soggetto' => $_POST['account'],
+                            'soggetto' => $nome['nome'],
+                            'nome_precedente' => $nome['nome'],
+                            'nome_nuovo' => $_POST['new_name'],
+                        ],
+                         $_SESSION['id_personaggio']
                     );
                     ?>
                     <div class="warning">

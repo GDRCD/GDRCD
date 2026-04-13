@@ -65,10 +65,14 @@
  */
 function gdrcd_log($descrizione, $livello_log, $contesto = null, $id_personaggio = null)
 {
-    if (is_array($contesto)) {
+    
+      if ($contesto !== null) {
+        if (!is_array($contesto)) {
+            throw Exception('Parametro $contesto non valido. Sono ammessi solo array');
+        }
+        
         $contesto = json_encode($contesto, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
-
     gdrcd_stmt(
         "INSERT INTO `logs` (`id`, `data`, `descrizione`, `livello_log`, `contesto`, `id_personaggio`)
          VALUES (UUID_TO_BIN(UUID()), NOW(), ?, ?, ?, ?)",

@@ -31,11 +31,13 @@ $blacklistResult = gdrcd_query(
 if (gdrcd_query($blacklistResult, 'num_rows') > 0) {
     gdrcd_query($blacklistResult, 'free');
     echo '<div class="error_box"><h2 class="error_major">' . $MESSAGE['warning']['blacklisted'] . '</h2></div>';
-    gdrcd_log_warning('Tentativo di login bloccato', [
-        'evento' => 'auth.login.bloccato.blacklist',
-        'utente' => $login1,
-        'ip'     => $_SERVER['REMOTE_ADDR'],
-    ]);
+    gdrcd_log_warning(
+        'Tentativo di login bloccato', 
+        [
+            'evento' => 'auth.login.bloccato.blacklist',
+            'autore' => $login1,
+            'ip' => $_SERVER['REMOTE_ADDR'],
+        ]);
     exit();
 }
 
@@ -84,12 +86,14 @@ $sessionActive  = $credentialsOk && !$sessionExpired;
 if ($accountExiled) {
 
     echo '<div class="error_box"><h2 class="error_major">' . $MESSAGE['warning']['exiled'] . '</h2></div>';
-    gdrcd_log_warning('Tentativo di login su account in esilio', [
-        'evento'         => 'auth.login.bloccato',
-        'utente'         => $login1,
-        'id_personaggio' => $record['id_personaggio'],
-        'ip'             => $_SERVER['REMOTE_ADDR'],
-    ], $record['id_personaggio']);
+    gdrcd_log_warning('Tentativo di login su account in esilio', 
+    [
+    'evento' => 'auth.login.bloccato.esilio',
+    'id_autore' => $record['id_personaggio'],
+    'autore' => $login1,
+    'ip' => $_SERVER['REMOTE_ADDR'],
+    ] , 
+    $record['id_personaggio']);
     exit();
 }
 /* CASO 1: Login OK */ 
@@ -138,11 +142,14 @@ elseif ($credentialsOk && $sessionExpired) {
             SELECT id_personaggio, nome FROM personaggio
             WHERE id_personaggio = " . $_SESSION['id_personaggio']
         );
-        gdrcd_log_warning('Rilevato possibile account multiplo tramite cookie attivo', [
-            'evento'           => 'auth.multiaccount.cookie',
-            'utente_corrente'  => $_SESSION['login'],
-            'id_altro_account' => $otherAccountData['id_personaggio'],
-            'altro_account'    => !empty($otherAccountData) ? $otherAccountData['nome'] : '-Sconosciuto-',
+        gdrcd_log_warning('Rilevato possibile account multiplo tramite cookie attivo', 
+        [
+            'evento' => 'auth.multiaccount.cookie',
+            'id_autore' =>$_SESSION['id_personaggio'],
+            'autore' => $_SESSION['login'],
+            'id_destinatario' =>  $otherAccountData['id_personaggio'],
+            'destinatario' => $otherAccountData['nome'],
+            
         ], $_SESSION['id_personaggio']);
     }
 
@@ -168,21 +175,27 @@ elseif ($credentialsOk && $sessionExpired) {
     if (count($lastlogindata) > 1) {
         foreach ($lastlogindata as $row) {
             if ($row['autore'] == $_SERVER['REMOTE_ADDR'] && $row['nome_interessato'] != $_SESSION['login']) {
-                gdrcd_log_warning('Possibile correlazione tra account tramite IP', [
-                    'evento'          => 'auth.multiaccount.ip',
-                    'utente_corrente' => $_SESSION['login'],
-                    'altro_account'   => $row['nome_interessato'],
-                    'id_altro_account' => $row['id_personaggio'],
-                    'ip'              => $_SERVER['REMOTE_ADDR'],
+                gdrcd_log_warning('Possibile correlazione tra account tramite IP', 
+                
+                [
+                    'evento' => 'auth.multiaccount.ip',
+                    'id_autore' =>$_SESSION['id_personaggio'],
+                    'autore' => $_SESSION['login'],
+                    'id_destinatario' => $row['id_personaggio'],
+                    'destinatario' => $row['nome_interessato'],
+                    'ip' => $_SERVER['REMOTE_ADDR'],
                 ], $_SESSION['id_personaggio']);
             }
         }
     }
 
-    gdrcd_log_info('Login effettuato con successo', [
+    gdrcd_log_info('Login effettuato con successo', 
+    [
         'evento' => 'auth.login.successo',
-        'utente' => $_SESSION['login'],
-        'ip'     => $_SERVER['REMOTE_ADDR'],
+        'id_autore' => $_SESSION['id_personaggio'],
+        'autore' => $_SESSION['login'],
+        'ip' => $_SERVER['REMOTE_ADDR'],
+     
     ], $_SESSION['id_personaggio']);
 
     /* ------------------------------------------------------------------ */
@@ -191,11 +204,12 @@ elseif ($credentialsOk && $sessionExpired) {
 } elseif ($sessionActive) {
 
     echo '<div class="error_box"><h2 class="error_major">' . $MESSAGE['warning']['double_connection'] . '</h2></div>';
-    gdrcd_log_warning('Tentativo di connessione da postazione ancora attiva', [
-        'evento'         => 'auth.login.bloccato',
-        'utente'         => $login1,
-        'id_personaggio' => $record['id_personaggio'],
-        'ip'             => $_SERVER['REMOTE_ADDR'],
+    gdrcd_log_warning('Tentativo di connessione da postazione ancora attiva', 
+    [
+        'evento' => 'auth.login.bloccato',
+        'id_autore' =>  $record['id_personaggio'],
+        'autore' =>     $login1,
+        'ip' => $_SERVER['REMOTE_ADDR'],    
     ], $record['id_personaggio']);
     exit();
 
@@ -208,12 +222,12 @@ elseif ($credentialsOk && $sessionExpired) {
     $_SESSION['login']          = '';
 
     if ($login1 !== '' && $pass1 !== '') {
-        gdrcd_log_notice('Tentativo di login non riuscito', [
+        gdrcd_log_notice('Tentativo di login non riuscito',
+        [
             'evento' => 'auth.login.fallito',
-            'utente' => $login1,
-            'host'   => $host,
-            'ip'     => $_SERVER['REMOTE_ADDR'],
-        ]);
+            'autore' => $login1,
+            'ip' => $_SERVER['REMOTE_ADDR'], 
+        ] );
 
         $failRecord = gdrcd_stmt_one(
             "SELECT COUNT(*) AS totale

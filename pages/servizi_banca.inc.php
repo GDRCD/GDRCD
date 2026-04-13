@@ -77,31 +77,35 @@ gdrcd_query($result, 'free');
                         /*Registro l'evento (Passaggio di danaro)*/
                         $personaggio = $query;
                         
-                        gdrcd_log_notice(
+                        gdrcd_log_info(
                             'Bonifico inviato a un altro personaggio',
                             [
                                 'evento' => 'banca.invio_bonifico',
                                 'direzione' => 'uscita',
-                                'nome_mittente' => $_SESSION['login'],
-                                'id_mittente' => $_SESSION['id_personaggio'],
+                                'id_autore' => $_SESSION['id_personaggio'],
+                                'autore' => $_SESSION['login'],
+                                'id_soggetto' => $_SESSION['id_personaggio'],
+                                'soggetto' => $_SESSION['login'],
                                 'id_destinatario' => gdrcd_filter('num', $_POST['beneficiario']),
-                                'nome_destinatario' => $personaggio['nome'],
-                                'ammontare' => (int) $_POST['ammontare'],
+                                'destinatario' => $personaggio['nome'],
+                                'ammontare' =>gdrcd_filter('num', $_POST['ammontare']),
                                 'valuta' => $PARAMETERS['names']['currency']['plur'],
                                 'causale' => $_POST['causale']
                             ],
                              $_SESSION['id_personaggio']
                         );
-                        gdrcd_log_notice(
+                        gdrcd_log_info(
                             'Bonifico ricevuto dal personaggio',
                             [
                                 'evento' => 'banca.ricezione_bonifico',
                                 'direzione' => 'entrata',
-                                'nome_mittente' => $_SESSION['login'],
-                                'id_mittente' => $_SESSION['id_personaggio'],
+                                'id_autore' => $_SESSION['id_personaggio'],
+                                'autore' => $_SESSION['login'],
+                                'id_soggetto' => $_SESSION['id_personaggio'],
+                                'soggetto' => $_SESSION['login'],
                                 'id_destinatario' => gdrcd_filter('num', $_POST['beneficiario']),
-                                'nome_destinatario' => $personaggio['nome'],
-                                'ammontare' => (int) $_POST['ammontare'],
+                                'destinatario' => $personaggio['nome'],
+                                'ammontare' =>gdrcd_filter('num', $_POST['ammontare']),
                                 'valuta' => $PARAMETERS['names']['currency']['plur'],
                                 'causale' => $_POST['causale']
                             ],

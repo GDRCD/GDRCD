@@ -862,16 +862,38 @@ function gdrcd_configuration_set($parametro, $value)
 }
 
 /**
- * Maschera un IPv4.
+ * Maschera un indirizzo IP (IPv4 o IPv6).
+ * - IPv4: 192.168.X.X
+ * - IPv6: mostra solo i primi 4 blocchi, il resto mascherato
+ *   es. 2001:0db8:85a3:0000:X:X:X:X
  */
 function gdrcd_mask_ip($ip)
 {
+    // IPv4
     if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
         $parts = explode('.', $ip);
+
         if (count($parts) === 4) {
             $parts[2] = 'X';
             $parts[3] = 'X';
             return implode('.', $parts);
+        }
+    }
+
+    // IPv6
+    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+        $packed = inet_pton($ip);
+
+        if ($packed !== false) {
+            $hex = unpack('H*', $packed)[1];
+            $blocks = str_split($hex, 4);
+
+            // Mantieni i primi 4 blocchi, maschera gli altri
+            for ($i = 4; $i < 8; $i++) {
+                $blocks[$i] = 'X';
+            }
+
+            return implode(':', $blocks);
         }
     }
 

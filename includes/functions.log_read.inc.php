@@ -81,7 +81,7 @@ function gdrcd_log_group_from_code($code)
  *
  * @param string|array $eventi        Evento singolo o lista di eventi da cercare
  *                                    (es. 'auth.login.successo' oppure
- *                                    ['auth.login.successo', 'auth.login.fallito'])
+ *                                    ['auth.login.successo', 'auth.login.fallito']) 
  * @param int          $limit         Numero massimo di risultati da estrarre
  * @param int          $offset        Offset iniziale per la paginazione
  * @param int|null     $idPersonaggio ID del personaggio da filtrare; se null,
@@ -90,31 +90,34 @@ function gdrcd_log_group_from_code($code)
  * @return array Lista dei log trovati, ciascuno arricchito con il campo
  *               `contesto_decodificato`
  */
-function gdrcd_extract_logs($eventi, $limit = 100, $offset = 0, $idPersonaggio = null)
+function gdrcd_extract_logs($eventi = null, $idPersonaggio = null, $limit = 100, $offset = 0)
 {
-    if (!is_array($eventi)) {
-        $eventi = [$eventi];
-    }
-
-    $eventi = array_values(array_filter($eventi, static function ($evento) {
-        return $evento !== null && $evento !== '';
-    }));
-
-    if (empty($eventi)) {
-        return [];
-    }
-
-    $placeholders = implode(',', array_fill(0, count($eventi), '?'));
     $sql = "SELECT `id_personaggio`, `data`, `descrizione`, `contesto`
             FROM `logs`
-            WHERE JSON_UNQUOTE(JSON_EXTRACT(`contesto`, '$.evento')) IN ($placeholders)";
+            WHERE 1=1";
 
+    $params = [];
 
-    $params = $eventi;
+    // Filtro per tipo evento (opzionale)
+    if ($eventi !== null) {
+        if (!is_array($eventi)) {
+            $eventi = [$eventi];
+        }
 
+        $eventi = array_values(array_filter($eventi, static function ($evento) {
+            return $evento !== null && $evento !== '';
+        }));
+
+        if (!empty($eventi)) {
+            $placeholders = implode(',', array_fill(0, count($eventi), '?'));
+            $sql .= " AND JSON_UNQUOTE(JSON_EXTRACT(`contesto`, '$.evento')) IN ($placeholders)";
+            $params = array_merge($params, $eventi);
+        }
+    }
+
+    // Filtro per personaggio (opzionale)
     if ($idPersonaggio !== null) {
         $sql .= " AND `id_personaggio` = ?";
-
         $params[] = (int)$idPersonaggio;
     }
 
@@ -134,7 +137,6 @@ function gdrcd_extract_logs($eventi, $limit = 100, $offset = 0, $idPersonaggio =
 }
 
 
-
 /**
  * Conta il numero di log associati a una lista di eventi JSON.
  *
@@ -145,24 +147,31 @@ function gdrcd_extract_logs($eventi, $limit = 100, $offset = 0, $idPersonaggio =
  *
  * @return int Numero totale di log trovati
  */
-function gdrcd_count_logs(array $eventi)
+function gdrcd_count_logs($eventi = null): int
 {
-    if (empty($eventi)) {
-        return 0;
+    $sql = "SELECT COUNT(*) AS totale FROM `logs` WHERE 1=1";
+    $params = [];
+
+    if ($eventi !== null) {
+        if (!is_array($eventi)) {
+            $eventi = [$eventi];
+        }
+
+        $eventi = array_values(array_filter($eventi, static function ($evento) {
+            return $evento !== null && $evento !== '';
+        }));
+
+        if (!empty($eventi)) {
+            $placeholders = implode(',', array_fill(0, count($eventi), '?'));
+            $sql .= " AND JSON_UNQUOTE(JSON_EXTRACT(`contesto`, '$.evento')) IN ($placeholders)";
+            $params = array_merge($params, $eventi);
+        }
     }
 
-    $placeholders = implode(',', array_fill(0, count($eventi), '?'));
+    $row = gdrcd_stmt_one($sql, $params);
 
-    $stmt = gdrcd_stmt_one(
-        "SELECT COUNT(*) AS totale
-            FROM `logs`
-            WHERE JSON_UNQUOTE(JSON_EXTRACT(`contesto`, '$.evento')) IN ($placeholders)",
-        $eventi
-    );
-
-    return (int)($stmt['totale'] ?? 0);
+    return (int)($row['totale'] ?? 0);
 }
-
 /**
  * Estrapola il contesto JSON da una riga di log JSON.
  * 
@@ -184,99 +193,125 @@ function gdrcd_extract_log_contesto(array $row)
  * - destinatario
  * - descrizione
  *
- * @param int   $whichLog Tipo di log (costante legacy)
+ * @param int|null $whichLog Tipo di log (costante legacy), null = tutti i log
  * @param array $row      Riga log dal database
  *
  * @return array{autore: string, destinatario: string, descrizione: string}
  */
-function gdrcd_present_log_row($whichLog, array $row)
+function gdrcd_present_log_row(?int $whichLog, array $row): array
 {
     $contesto = gdrcd_extract_log_contesto($row);
 
-    $autore = '-';
-    $destinatario = '-';
+    $evento = $contesto['evento'] ?? null;
+
+    $autore = $contesto['autore'] ?? '-';
+    $idAutore = $contesto['id_autore'] ?? null;
+
+    $soggetto = $contesto['soggetto'] ?? '-';
+    $idSoggetto = $contesto['id_soggetto'] ?? null;
+
+    $destinatario = $contesto['destinatario'] ?? '-';
+    $idDestinatario = $contesto['id_destinatario'] ?? null;
+
     $descrizione = $row['descrizione'] ?? '';
 
-    switch ((int)$whichLog) {
+    // Vista "Tutti i log": usa il nuovo schema standard
+    if ($whichLog === null) {
+        $dest = '-';
+
+        if ($destinatario !== '-') {
+            $dest = $destinatario;
+        } elseif ($soggetto !== '-') {
+            $dest = $soggetto;
+        } elseif (!empty($row['id_personaggio'])) {
+            $dest = '';
+        }
+
+        return [
+            'autore' => $autore,
+            'destinatario' => $dest,
+            'descrizione' => $descrizione,
+        ];
+    }
+
+    switch (gdrcd_filter('num', $whichLog)) {
         case BLOCKED:
         case LOGGEDIN:
         case ERRORELOGIN:
-            $autore = $contesto['ip'] ?? ($contesto['host'] ?? '-');
-            $destinatario = $contesto['utente'] ?? '-';
-            $descrizione = $row['descrizione'];
-
-            $autore = gdrcd_mask_ip($autore);
+            $autore = $contesto['ip'] ?? '-';
+            $destinatario = $contesto['autore'] ?? $autore;
+            $descrizione = $row['descrizione'] ?? '';
             break;
 
         case ACCOUNTMULTIPLO:
-            $autore = $contesto['utente_corrente'] ?? '-';
+            $autore = $contesto['utente_corrente'] ?? ($contesto['autore'] ?? '-');
             $destinatario = $contesto['altro_account'] ?? '-';
-            $descrizione = $row['descrizione'];
-
+            $descrizione = $row['descrizione'] ?? '';
             if (!empty($contesto['ip'])) {
                 $descrizione .= ' (' . gdrcd_mask_ip($contesto['ip']) . ')';
             }
             break;
 
         case BONIFICO:
-            if (($contesto['direzione'] ?? '') === 'uscita') {
-                $autore = $contesto['nome_mittente'] ?? '-';
-                $destinatario = $contesto['destinatario'] ?? '-';
-            } else {
-                $autore = $contesto['nome_mittente'] ?? '-';
-                $destinatario = $contesto['destinatario'] ?? '-';
-            }
+            $autore = $autore;
+            $destinatario = ($destinatario !== '-') ? $destinatario : $soggetto;
+            $descrizione = (string)($contesto['ammontare'] ?? '-');
 
-            $descrizione = ($contesto['ammontare'] ?? '-') . ' ' .
-                ($contesto['valuta'] ?? '') .
-                (!empty($contesto['causale']) ? ' - ' . $contesto['causale'] : '');
+            if (!empty($contesto['valuta'])) {
+                $descrizione .= ' ' . $contesto['valuta'];
+            }
+            if (!empty($contesto['causale'])) {
+                $descrizione .= ' - ' . $contesto['causale'];
+            }
             break;
 
         case NUOVOLAVORO:
         case DIMISSIONE:
-            $autore = $contesto['autore'] ?? ($contesto['eseguito_da'] ?? '-');
-            $destinatario = $contesto['nome_interessato'] ?? ($contesto['id_personaggio'] ?? '-');
-            $descrizione = $contesto['lavoro'] ?? $row['descrizione'];
+            $autore = $autore;
+            $destinatario = ($soggetto !== '-') ? $soggetto : $destinatario;
+            $descrizione = $contesto['lavoro'] ?? ($row['descrizione'] ?? '');
             break;
 
         case CHANGEDROLE:
-            $autore = $contesto['nome_autore'] ?? '-';
-            $destinatario = $contesto['nome_interessato'] ?? '-';
-            $descrizione = $contesto['nuovo_ruolo'] ?? $row['descrizione'];
+            $autore = $autore;
+            $destinatario = ($soggetto !== '-') ? $soggetto : $destinatario;
+            $descrizione = $contesto['nuovo_ruolo'] ?? ($row['descrizione'] ?? '');
             break;
 
         case CHANGEDPASS:
-            $autore = $contesto['nome'] ?? ($contesto['id_personaggio'] ?? '-');
-            $destinatario = $row['id_personaggio'] ?? '-';
-            $descrizione = $row['descrizione'];
-
+            $autore = $autore;
+            $destinatario = ($soggetto !== '-') ? $soggetto : (!empty($row['id_personaggio']) ? '#' . (int)$row['id_personaggio'] : '-');
+            $descrizione = $row['descrizione'] ?? '';
             if (!empty($contesto['ip'])) {
                 $descrizione .= ' (' . gdrcd_mask_ip($contesto['ip']) . ')';
             }
             break;
 
         case PX:
-            $autore = $contesto['autore'] ?? '-';
-            $destinatario = $contesto['nome_interessato'] ?? ($row['id_personaggio'] ?? '-');
-            $descrizione = '(' . (int)($contesto['px'] ?? 0) . ' px) ' . ($contesto['causale'] ?? '');
+            $autore = $autore;
+            $destinatario = ($soggetto !== '-') ? $soggetto : $destinatario;
+            $descrizione = '(' . (int)($contesto['px'] ?? 0) . ' px)';
+            if (!empty($contesto['causale'])) {
+                $descrizione .= ' ' . $contesto['causale'];
+            }
             break;
 
         case DELETEPG:
-            $autore = $contesto['eseguito_da'] ?? ($_SESSION['login'] ?? '-');
-            $destinatario = $contesto['nome'] ?? ($contesto['id_personaggio'] ?? '-');
-            $descrizione = $row['descrizione'];
+            $autore = $autore;
+            $destinatario = ($soggetto !== '-') ? $soggetto : $destinatario;
+            $descrizione = $row['descrizione'] ?? '';
             break;
 
         case CHANGEDNAME:
-            $autore = $contesto['eseguito_da'] ?? '-';
-            $destinatario = $contesto['nome_nuovo'] ?? ($row['id_personaggio'] ?? '-');
+            $autore = $autore;
+            $destinatario = ($soggetto !== '-') ? $soggetto : ($contesto['nome_nuovo'] ?? '-');
             $descrizione = 'Da "' . ($contesto['nome_precedente'] ?? '-') . '" a "' . ($contesto['nome_nuovo'] ?? '-') . '"';
             break;
 
         default:
-            $autore = $contesto['autore'] ?? ($contesto['eseguito_da'] ?? '-');
-            $destinatario = $contesto['nome_interessato'] ?? ($row['id_personaggio'] ?? '-');
-            $descrizione = $row['descrizione'];
+            $autore = $autore;
+            $destinatario = ($destinatario !== '-') ? $destinatario : $soggetto;
+            $descrizione = $row['descrizione'] ?? '';
             break;
     }
 

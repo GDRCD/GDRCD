@@ -33,24 +33,24 @@
                         break;
                 }
                 /*Recupero i nomi dei personaggi per il log*/
-                $char_data = gdrcd_query("SELECT 
-                    target.nome as nome_interessato, 
-                    autore.nome as nome_autore 
-                    FROM personaggio target 
-                    JOIN personaggio autore ON autore.id_personaggio = ".gdrcd_filter('num', $_SESSION['id_personaggio'])."
-                    WHERE target.id_personaggio = ".gdrcd_filter('num', $_POST['id_personaggio'])." 
-                    LIMIT 1");
+                $char_data = gdrcd_stmt_one("SELECT nome 
+                    FROM personaggio  
+                    WHERE id_personaggio = ?",
+                [ $_POST['id_personaggio']]
+                );
 
                 /*Registro l'operazione*/
                 gdrcd_log_notice(
                     'Cambio permesso del personaggio',
                     [
                         'evento' => 'personaggio.permessi.cambio',
-                        'nome_interessato' => $char_data['nome_interessato'],
-                        'nome_autore' => $char_data['nome_autore'],
+                        'id_autore' => $_SESSION['id_personaggio'],
+                        'autore' => $_SESSION['login'],
+                        'id_soggetto' => $_POST['id_personaggio'],
+                        'soggetto' => $char_data['nome'] ?? '-',
                         'nuovo_ruolo' => $newrole
-                    ],
-                    $_POST['id_personaggio']
+                    ] ,
+                    $_SESSION['id_personaggio']
                 );
                 /*Avviso l'utente*/
                 gdrcd_query("INSERT INTO messaggi (id_personaggio_mittente, id_personaggio_destinatario, spedito, testo) VALUES (".gdrcd_filter('num', $_SESSION['id_personaggio']).", ".gdrcd_filter('num', $_POST['id_personaggio']).", NOW(), '".gdrcd_filter('in', $MESSAGE['interface']['administration']['roles']['message_body'][0].$newrole.$MESSAGE['interface']['administration']['roles']['message_body'][1])."')");

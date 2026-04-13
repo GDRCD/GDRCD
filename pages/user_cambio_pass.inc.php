@@ -18,6 +18,8 @@ $email = $row['email'];
                         'Cambio password del personaggio',
                         [
                             'evento' => 'personaggio.cambio_password',
+                            'id_autore' => $_SESSION['id_personaggio'],
+                            'autore' => $_SESSION['login'],
                             'ip' => $_SERVER['REMOTE_ADDR']       
                         ],
                          $_SESSION['id_personaggio']
@@ -50,14 +52,28 @@ $email = $row['email'];
                 gdrcd_query($query);
                 /*Registro l'evento */
                 $nome = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_POST['account']) . "'");
+                //notice sul personaggio interessato
                 gdrcd_log_notice(
                         'Cambio password del personaggio',
                         [
                             'evento' => 'personaggio.cambio_password',
+                            'id_autore' => $_SESSION['id_personaggio'],
+                            'autore' => $_SESSION['login'],
+                            'id_soggetto' => $_POST['account'],
+                            'soggetto' => $nome['nome'],
                             'ip' => $_SERVER['REMOTE_ADDR'],
-                            'id_personaggio' => $_POST['account'],
-                            'nome' => $nome['nome'],
-                            
+                        ],
+                         $_POST['account']
+                    );
+                    // notice sull'autore dell'azione
+                    gdrcd_log_notice(
+                        'Cambio password del personaggio',
+                        [
+                             'evento' => 'personaggio.cambio_password',
+                            'id_autore' => $_SESSION['id_personaggio'],
+                            'autore' => $_SESSION['login'],
+                            'id_soggetto' => $_POST['account'],
+                            'soggetto' => $nome['nome'],
                         ],
                          $_SESSION['id_personaggio']
                     );
@@ -92,7 +108,7 @@ $email = $row['email'];
                             <?php echo gdrcd_filter('out', $MESSAGE['interface']['user']['pass']['new']); ?>
                         </div>
                         <div class="form_field">
-                            <input name="new_pass" />
+                            <input name="new_pass" type="password" />
                         </div>
                         <div class="form_submit">
                             <input type="hidden" name="op" value="new" />

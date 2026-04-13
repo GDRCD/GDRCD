@@ -46,7 +46,7 @@
 
                                 <?php
                                 /*Seleziono gli ultimi login*/
-                                $logs_login = gdrcd_extract_logs('auth.login.successo', $num_logs, 0, (int)$_REQUEST['pg']);
+                                $logs_login = gdrcd_extract_logs('auth.login.successo',$_REQUEST['pg'], $num_logs);
 
                                 foreach ($logs_login as $record) {
                                     $contesto = gdrcd_extract_log_contesto($record);
@@ -73,10 +73,8 @@
                         
 
                         <?php
-                        $logs_multi_cookie = gdrcd_extract_logs('auth.multiaccount.cookie', $num_logs, 0, (int)$_GET['pg']);
-                        $logs_multi_ip = gdrcd_extract_logs('auth.multiaccount.ip', $num_logs, 0, (int)$_GET['pg']);
-
-                        $logs_multi = array_merge($logs_multi_cookie, $logs_multi_ip);
+                         
+                        $logs_multi = gdrcd_extract_logs(['auth.multiaccount.ip','auth.multiaccount.cookie'], (int)$_GET['pg'], $num_logs, 0);
 
                         usort($logs_multi, function ($a, $b) {
                             return strtotime($b['data']) <=> strtotime($a['data']);
@@ -108,6 +106,7 @@
                                     foreach ($logs_multi as $record) {
                                         $contesto = gdrcd_extract_log_contesto($record);
                                         //controllo che utente corrente e altro account non siano lo stesso
+                                       
                                         if($contesto['utente_corrente'] != $contesto['altro_account']) {
                                             
                                     ?>
@@ -122,7 +121,7 @@
                                             </td>
                                             <td class="casella_elemento">
                                                 <div class="elementi_elenco">
-                                                    <?php echo $contesto['altro_account']; ?>
+                                                    <?php echo $contesto['altro_account'] . " ( ".$record['descrizione']." )"; ?>
                                                 </div>
                                             </td>
                                         </tr>
@@ -205,7 +204,7 @@
                             <?php } //if
                         } //if spymessages on
 
-                        $logs_cambio_nome = gdrcd_extract_logs('personaggio.cambio_nome', $num_logs, 0, (int)$_REQUEST['pg']);
+                        $logs_cambio_nome = gdrcd_extract_logs('personaggio.cambio_nome', $_REQUEST['pg'], $num_logs,);
 
                         if (!empty($logs_cambio_nome)) {
                             ?>

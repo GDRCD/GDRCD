@@ -198,8 +198,10 @@
                             'Assegnato nuovo ruolo al personaggio',
                             [
                                 'evento' => 'personaggio.assegna_lavoro',
-                                'id_personaggio' => $_SESSION['id_personaggio'],
+                                'id_autore' => $_SESSION['id_personaggio'],
                                 'autore' => $_SESSION['login'],
+                                'id_soggetto' => $_POST['id_personaggio'],
+                                'soggetto' => $personaggio['nome'],
                                 'lavoro' => $subject[1],
                                 'origine' => 'gestione_lavoro'
                             ],
@@ -254,10 +256,11 @@
                         'Dimissione dal ruolo del personaggio',
                         [
                             'evento' => 'personaggio.dimissione_lavoro',
-                            'id_personaggio' => $subject[0],
+                            'id_autore' => $_SESSION['id_personaggio'],
                             'autore' => $_SESSION['login'],
-                            'lavoro' => $subject[2],
-                            'origine' => 'gestione_lavoro'
+                            'id_destinatario' =>  $subject[0],
+                            'destinatario' => $personaggio['nome'],
+                            'lavoro' => $subject[2]
                         ],
                          $subject[0]
                     );

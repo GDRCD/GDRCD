@@ -31,18 +31,35 @@
                     //Recupero il nome del personaggio
                     $nome = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_GET['pg']) . "'");
 
-                    /*Registro l'operazione*/
+                    /*Registro l'operazione */
                     gdrcd_log_notice(
                         'Assegnazione punti esperienza al personaggio',
+
                         [
                             'evento' => 'personaggio.assegna_px',
-                            'id_personaggio' => $_GET['pg'],
                             'id_autore' => $_SESSION['id_personaggio'],
                             'autore' => $_SESSION['login'],
+                            'id_soggetto' => $_GET['pg'],
+                            'soggetto' => $nome['nome'],
                             'px' => (int) $_POST['px'],
                             'causale' => $_POST['causale']
                         ],
                         $_GET['pg']
+                    );
+                     /*Registro l'operazione per chi ha effettuato l'operazione*/
+                    gdrcd_log_notice(
+                        'Assegnazione punti esperienza al personaggio',
+
+                        [
+                            'evento' => 'personaggio.assegna_px',
+                            'id_autore' => $_SESSION['id_personaggio'],
+                            'autore' => $_SESSION['login'],
+                            'id_soggetto' => $_GET['pg'],
+                            'soggetto' => $nome['nome'],
+                            'px' => (int) $_POST['px'],
+                            'causale' => $_POST['causale']
+                        ],
+                        $_SESSION['id_personaggio']
                     );
                     echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['warning']['done']) . '</div>';
                 } else {

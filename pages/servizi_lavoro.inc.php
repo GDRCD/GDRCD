@@ -111,11 +111,14 @@ gdrcd_query($result, 'free');
 
             echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['interface']['job']['ok_job']).'</div>';
             
-            gdrcd_log_notice(
+            gdrcd_log_info(
                 'Il personaggio ha iniziato un nuovo lavoro',
                 [
                     'evento' => 'personaggio.nuovo_lavoro',
-                    'lavoro' => $_POST['nome_lavoro']
+                    'id_autore' => $_SESSION['id_personaggio'],
+                    'autore' => $_SESSION['login'],
+                    'lavoro' => $_POST['nome_lavoro'],
+                    'id_lavoro' => $_POST['id_record']
                 ],
                  $_SESSION['id_personaggio']
             );
@@ -131,11 +134,14 @@ gdrcd_query($result, 'free');
 
             echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['interface']['job']['ok_quit']).'</div>';
             
-            gdrcd_log_notice(
+            gdrcd_log_info(
                 'Il personaggio si è dimesso dal lavoro',
                 [
                     'evento' => 'personaggio.dimissioni_lavoro',
-                    'lavoro' => $_POST['nome_lavoro']
+                    'id_autore' => $_SESSION['id_personaggio'],
+                    'autore' => $_SESSION['login'],
+                    'lavoro' => $_POST['nome_lavoro'],
+                    'id_lavoro' => $_POST['id_record']
                 ],
                  $_SESSION['id_personaggio']
             );

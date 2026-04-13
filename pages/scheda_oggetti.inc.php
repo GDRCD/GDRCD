@@ -58,11 +58,11 @@
         gdrcd_query($query);
          /*Registro l'evento*/
                 $personaggio = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_REQUEST['pg']) . "'");
-                gdrcd_log_notice(
+                gdrcd_log_info(
                     'Oggetto abbandonato dal personaggio',
                     [
-                        'evento' => 'personaggio.abbandona_oggetto',
-                        'nome_interessato' => $personaggio['nome'],
+                        'evento' =>'personaggio.abbandona_oggetto',
+                        'id_autore' =>  $_SESSION['id_personaggio'],
                         'autore' => $_SESSION['login'],
                         'id_oggetto' => gdrcd_filter('num', $_POST['id_oggetto']),
                         'oggetto' => $_POST['checosa'],
@@ -102,38 +102,43 @@
             gdrcd_query($result_loc, 'free');
             // Eseguo la query
             gdrcd_query($query);
-            $nome = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_POST['give_item']) . "'");
+            $destinatario = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_POST['give_item']) . "'");
             $mittente = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_REQUEST['pg']) . "'");
 
             /* Registro l'evento lato destinatario */
-            gdrcd_log_notice(
+            gdrcd_log_info(
                 'Oggetto ricevuto da un altro personaggio',
                 [
                     'evento' => 'personaggio.ricevi_oggetto',
-                    'direzione' => 'entrata',
+                    'id_autore' =>  $_SESSION['id_personaggio'],
+                    'autore' => $_SESSION['login'],
+                    'id_soggetto' => $_POST['give_item'],
+                    'soggetto' => $mittente['nome'],
+                    'id_destinatario' => $_POST['give_item'],
+                    'destinatario' => $destinatario['nome'],
                     'id_oggetto' => gdrcd_filter('num', $_POST['id_oggetto']),
                     'oggetto' => $_POST['checosa'],
                     'quantita' => 1,
                     'cariche' => gdrcd_filter('num', $_POST['cariche']),
-                    'controparte_id' => gdrcd_filter('num', $_REQUEST['pg']),
-                    'controparte_nome' => $mittente['nome'],
-                    'autore' => $_SESSION['login'],
                 ],
                  $_POST['give_item']
             );
 
             /* Registro l'evento lato mittente */
-            gdrcd_log_notice(
+            gdrcd_log_info(
                 'Oggetto ceduto a un altro personaggio',
                 [
                     'evento' => 'personaggio.cedi_oggetto',
+                    'id_autore' =>  $_SESSION['id_personaggio'],
+                    'autore' => $_SESSION['login'],
+                    'id_soggetto' =>  $_POST['give_item'],
+                    'soggetto' => $mittente['nome'],
+                    'id_destinatario' => $_POST['give_item'],
+                    'destinatario' => $destinatario['nome'],
                     'id_oggetto' => gdrcd_filter('num', $_POST['id_oggetto']),
                     'oggetto' => $_POST['checosa'],
                     'quantita' => 1,
                     'cariche' => gdrcd_filter('num', $_POST['cariche']),
-                    'controparte_id' => gdrcd_filter('num', $_POST['give_item']),
-                    'controparte_nome' => $nome['nome'],
-                    'autore' => $_SESSION['login']
                 ],
                  $_REQUEST['pg']
             );
