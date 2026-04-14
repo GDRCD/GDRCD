@@ -9,11 +9,11 @@ if(!gdrcd_controllo_permessi($PARAMETERS['administration']['maintenance']['acces
 
 if((is_numeric($_POST['mesi']) === true) && ($_POST['mesi'] >= 0) && ($_POST['mesi'] <= 12)) {
     /*Eseguo l'aggiornamento*/
-    gdrcd_query("DELETE FROM log WHERE DATE_SUB(NOW(), INTERVAL ".gdrcd_filter('num', $_POST['mesi'])." MONTH) > data_evento");
+    gdrcd_query("DELETE FROM logs WHERE DATE_SUB(NOW(), INTERVAL ".gdrcd_filter('num', $_POST['mesi'])." MONTH) > data");
     /**  * Ottimizziamo la tabella dopo averne svuotato i dati, è come se equivalesse ad una deframmentazione.
      * @author Blancks
      */
-    gdrcd_query("OPTIMIZE TABLE log");
+    gdrcd_query("OPTIMIZE TABLE logs");
     ?>
     <!-- Conferma -->
     <div class="success">

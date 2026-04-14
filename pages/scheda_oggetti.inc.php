@@ -56,6 +56,19 @@
                     $_POST['id_oggetto']) . " AND id_personaggio = '" . gdrcd_filter('get', $_REQUEST['pg']) . "' LIMIT 1 ";
         }
         gdrcd_query($query);
+         /*Registro l'evento*/
+                $personaggio = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_REQUEST['pg']) . "'");
+                $contestoLog = gdrcd_log_context_make([
+                            'id_oggetto' => gdrcd_filter('num', $_POST['id_oggetto']),
+                            'oggetto' => $_POST['checosa'],
+                            'quantita_rimossa' => 1,
+                        ]                        
+                    );
+                gdrcd_log_info(
+                    'Oggetto abbandonato dal personaggio',
+                    ['evento' =>'personaggio.abbandona_oggetto', ...$contestoLog],
+                     $_REQUEST['pg']
+                );
 
         echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['items']['warning']['done']);
     }
@@ -88,13 +101,35 @@
             gdrcd_query($result_loc, 'free');
             // Eseguo la query
             gdrcd_query($query);
-            $nome = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_POST['give_item']) . "'");
-         
+            $destinatario = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_POST['give_item']) . "'");
+            $mittente = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_REQUEST['pg']) . "'");
+            $contestoLog = gdrcd_log_context_make([
+                            'id_oggetto' => gdrcd_filter('num', $_POST['id_oggetto']),
+                            'oggetto' => $_POST['checosa'],
+                            'quantita_rimossa' => 1,
+                            'cariche' => gdrcd_filter('num', $_POST['cariche']),
+                            'id_destinatario' => $_POST['give_item'],
+                            'destinatario' => $destinatario['nome'],
+                        ],
+                        $_POST['give_item'],
+                        $mittente['nome']
+                    );
+            
+            /* Registro l'evento lato destinatario */
+            gdrcd_log_info(
+                'Oggetto ricevuto da un altro personaggio',
+                ['evento' => 'personaggio.ricevi_oggetto', ...$contestoLog],
+                 $_POST['give_item']
+            );
 
-            /*Registro l'evento*/
-            gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES ('".$_POST['give_item']."', '".gdrcd_filter('in', $nome['nome'])."' ,'".$_SESSION['login']."', NOW(), ".BONIFICO.", '".gdrcd_filter('in', $_POST['checosa'])."')");
+            /* Registro l'evento lato mittente */
+            gdrcd_log_info(
+                'Oggetto ceduto a un altro personaggio',
+                ['evento' => 'personaggio.cedi_oggetto', ...$contestoLog],  
+                 $_REQUEST['pg']
+            );
 
-            echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['warning']['done']).'</div>';
+             echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['warning']['done']).'</div>';
         } else {
             echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['warning']['cant_do']).'</div>';
         }

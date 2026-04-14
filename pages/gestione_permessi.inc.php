@@ -33,17 +33,25 @@
                         break;
                 }
                 /*Recupero i nomi dei personaggi per il log*/
-                $char_data = gdrcd_query("SELECT 
-                    target.nome as nome_interessato, 
-                    autore.nome as nome_autore 
-                    FROM personaggio target 
-                    JOIN personaggio autore ON autore.id_personaggio = ".gdrcd_filter('num', $_SESSION['id_personaggio'])."
-                    WHERE target.id_personaggio = ".gdrcd_filter('num', $_POST['id_personaggio'])." 
-                    LIMIT 1");
+                $char_data = gdrcd_stmt_one("SELECT nome 
+                    FROM personaggio  
+                    WHERE id_personaggio = ?",
+                [ $_POST['id_personaggio']]
+                );
+                $contestoLog = gdrcd_log_context_make(
+                        [
+                              'nuovo_ruolo' => $newrole
+                        ],
+                        $_POST['id_personaggio'],
+                       $char_data['nome'] ?? '-',
+                    ); 
 
                 /*Registro l'operazione*/
-                gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES (".gdrcd_filter('num', $_POST['id_personaggio']).", '".gdrcd_filter('in', $char_data['nome_interessato'])."', '".gdrcd_filter('in', $char_data['nome_autore'])."', NOW(), '".CHANGEDROLE."', '->".$newrole."')");
-
+                gdrcd_log_notice(
+                    'Cambio permesso del personaggio',
+                    ['evento' => 'personaggio.permessi.cambio', ...$contestoLog],
+                    $_SESSION['id_personaggio']
+                );
                 /*Avviso l'utente*/
                 gdrcd_query("INSERT INTO messaggi (id_personaggio_mittente, id_personaggio_destinatario, spedito, testo) VALUES (".gdrcd_filter('num', $_SESSION['id_personaggio']).", ".gdrcd_filter('num', $_POST['id_personaggio']).", NOW(), '".gdrcd_filter('in', $MESSAGE['interface']['administration']['roles']['message_body'][0].$newrole.$MESSAGE['interface']['administration']['roles']['message_body'][1])."')");
 
