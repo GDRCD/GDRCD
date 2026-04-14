@@ -30,37 +30,28 @@
                     gdrcd_query("UPDATE personaggio SET esperienza = esperienza + " . gdrcd_filter('in', $_POST['px']) . " WHERE id_personaggio = '" . gdrcd_filter('in', $_GET['pg']) . "' LIMIT 1 ");
                     //Recupero il nome del personaggio
                     $nome = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_GET['pg']) . "'");
+                    $contestoLog = gdrcd_log_context_make(
+                            [
+                                'px' => (int) $_POST['px'],
+                                'causale' => $_POST['causale']
+                            ],
+                            $_GET['pg'],
+                            $nome['nome']
+                        );
 
                     /*Registro l'operazione */
                     gdrcd_log_notice(
-                        'Assegnazione punti esperienza al personaggio',
-
-                        [
-                            'evento' => 'personaggio.assegna_px',
-                            'id_autore' => $_SESSION['id_personaggio'],
-                            'autore' => $_SESSION['login'],
-                            'id_soggetto' => $_GET['pg'],
-                            'soggetto' => $nome['nome'],
-                            'px' => (int) $_POST['px'],
-                            'causale' => $_POST['causale']
-                        ],
+                        'Ricevuti punti esperienza',
+                        ['evento' => 'personaggio.riceve_px', ...$contestoLog],
                         $_GET['pg']
                     );
                      /*Registro l'operazione per chi ha effettuato l'operazione*/
                     gdrcd_log_notice(
                         'Assegnazione punti esperienza al personaggio',
-
-                        [
-                            'evento' => 'personaggio.assegna_px',
-                            'id_autore' => $_SESSION['id_personaggio'],
-                            'autore' => $_SESSION['login'],
-                            'id_soggetto' => $_GET['pg'],
-                            'soggetto' => $nome['nome'],
-                            'px' => (int) $_POST['px'],
-                            'causale' => $_POST['causale']
-                        ],
+                        ['evento' => 'personaggio.assegna_px', ...$contestoLog],
                         $_SESSION['id_personaggio']
                     );
+
                     echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['warning']['done']) . '</div>';
                 } else {
                     echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['warning']['camt_do']) . '</div>';
@@ -93,7 +84,8 @@
                             </tr>
 
                             <?php
-                            $logs = gdrcd_extract_logs('personaggio.assegna_px', $num_logs, 0, $_GET['pg']);
+                            $logs = gdrcd_extract_logs('personaggio.riceve_px', $_GET['pg'], $num_logs);
+                              
                             foreach ($logs as $record) {
                                 $contesto = gdrcd_extract_log_contesto($record);
                             ?>

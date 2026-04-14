@@ -27,35 +27,26 @@
                 gdrcd_query($query);
                 /*Registro l'evento*/
                 $personaggio = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_REQUEST['pg']) . "'");
-                gdrcd_log_info(
-                    'Oggetto abbandonato dal personaggio',
+                $contestoLog = gdrcd_log_context_make(
                     [
-                        'evento' => 'personaggio.abbandona_oggetto',
-                        'id_autore' => $_SESSION['id_personaggio'],
-                        'autore' => $_SESSION['login'],
-                        'id_soggetto' =>  $_REQUEST['pg'],
-                        'soggetto' => $personaggio['nome'],
                         'id_oggetto' => gdrcd_filter('num', $_POST['id_oggetto']),
                         'oggetto' => $_POST['checosa'],
-                        'quantita_rimossa' => 1
+                        'quantita_rimossa' => 1,
                     ],
+                    $_REQUEST['pg'],
+                    $personaggio['nome'],
+                ); 
+                gdrcd_log_info(
+                    'Oggetto abbandonato dal personaggio',
+                    [ 'evento' => 'personaggio.abbandona_oggetto', ...$contestoLog],
                     $_REQUEST['pg']
                 );
                 //nel caso il personaggio che abbandona non sia il proprietario ma uno staffer, loggo comunque l'evento 
                 // ma con autore e id_personaggio riferiti allo staffer e non al pg proprietario dell'oggetto
-                if($_REQUEST['pg']!== $_SESSION['id_personaggio']) {
+                if($_REQUEST['pg']!= $_SESSION['id_personaggio']) {
                         gdrcd_log_notice(
                         'Oggetto abbandonato dal personaggio',
-                         [
-                            'evento' => 'personaggio.abbandona_oggetto',
-                            'id_autore' => $_SESSION['id_personaggio'],
-                            'autore' => $_SESSION['login'],
-                            'id_soggetto' =>  $_REQUEST['pg'],
-                            'soggetto' => $personaggio['nome'],
-                            'id_oggetto' => gdrcd_filter('num', $_POST['id_oggetto']),
-                            'oggetto' => $_POST['checosa'],
-                            'quantita_rimossa' => 1
-                        ],  
+                        [ 'evento' => 'personaggio.abbandona_oggetto', ...$contestoLog], 
                         $_SESSION['id_personaggio']
                     );
                 }
@@ -93,64 +84,38 @@
                     $mittente = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '".$mittenteId."'");
                     $destinatario = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '".$destinatarioId."'");
 
-                    /* Log lato mittente */
-                    gdrcd_log_info(
-                        'Oggetto ceduto a un altro personaggio',
+                    $contestoLog = gdrcd_log_context_make(
                         [
-                            'evento' => 'personaggio.cedi_oggetto',
-                            'id_autore' =>  $_SESSION['id_personaggio'],
-                            'autore' => $_SESSION['login'],
-                            'id_soggetto' => $mittenteId,
-                            'soggetto' => $mittente['nome'],
                             'id_destinatario' => $destinatarioId,
                             'destinatario' => $destinatario['nome'],
                             'oggetto' => $nomeOggetto,
                             'quantita' => 1,
                             'cariche' => $cariche,
                         ],
+                        $mittenteId,
+                        $mittente['nome'],
+                    ); 
+                    /* Log lato mittente */
+                    gdrcd_log_info(
+                        'Oggetto ceduto a un altro personaggio',
+                        [ 'evento' => 'personaggio.cedi_oggetto', ...$contestoLog],
                         $mittenteId
                     );
 
                     /* Log lato destinatario */
                     gdrcd_log_info(
                         'Oggetto ricevuto da un altro personaggio',
-                        [
-                            'evento' => 'personaggio.ricevi_oggetto',
-                            'id_autore' =>  $_SESSION['id_personaggio'],
-                            'autore' => $_SESSION['login'],
-                            'id_soggetto' => $mittenteId,
-                            'soggetto' => $mittente['nome'],
-                            'id_destinatario' => $destinatarioId,
-                            'destinatario' => $destinatario['nome'],
-                            'oggetto' => $nomeOggetto,
-                            'quantita' => 1,
-                            'cariche' => $cariche,
-                        ],
+                        ['evento' => 'personaggio.ricevi_oggetto', ...$contestoLog ],
                         $destinatarioId
                     );
                     /* Log lato gestione se il mittente è diverso dal destinatario (es. cessione tra pg diversi o cessione da parte di uno staffer) */
                     if($mittenteId!= $_SESSION['id_personaggio']) {
                         gdrcd_log_notice(
-                        'Oggetto ceduto a un altro personaggio',
-                        [
-                            'evento' => 'personaggio.cedi_oggetto',
-                            'id_autore' =>  $_SESSION['id_personaggio'],
-                            'autore' => $_SESSION['login'],
-                            'id_soggetto' => $mittenteId,
-                            'soggetto' => $mittente['nome'],
-                            'id_destinatario' => $destinatarioId,
-                            'destinatario' => $destinatario['nome'],
-                            'oggetto' => $nomeOggetto,
-                            'quantita' => 1,
-                            'cariche' => $cariche,
-                        ],
-                         $_SESSION['id_personaggio']
-                    );
-                        
+                            'Oggetto ceduto a un altro personaggio',
+                            ['evento' => 'personaggio.cedi_oggetto', ...$contestoLog],
+                            $_SESSION['id_personaggio']
+                        );
                     }
-
-
-
                     echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['warning']['done']).'</div>';
                 } else {
                     echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['warning']['cant_do']).'</div>';

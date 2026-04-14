@@ -36,16 +36,16 @@ $iscriz = $iscriz['0'];
                     $nome = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "'");
 
                     gdrcd_query("UPDATE personaggio SET nome = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE id_personaggio = '".$_SESSION['id_personaggio']."'");
-                    
+                    $contestoLog = gdrcd_log_context_make(
+                            [
+                                'nome_precedente' => $_SESSION['login'],
+                                'nome_nuovo' => $_POST['new_name'],
+                            ],
+                        );
+
                     gdrcd_log_notice(
                         'Cambio nome del personaggio',
-                        [
-                            'evento' =>'personaggio.cambio_nome',
-                            'id_autore' => $_SESSION['id_personaggio'],
-                            'autore' => $_SESSION['login'],
-                            'nome_precedente' => $_SESSION['login'],
-                            'nome_nuovo' => $_POST['new_name'],
-                        ],
+                        ['evento' =>'personaggio.cambio_nome', ...$contestoLog,],
                          $_SESSION['id_personaggio']
                     );
                    $_SESSION['login'] = gdrcd_filter('get', $_POST['new_name']);
@@ -90,34 +90,26 @@ $iscriz = $iscriz['0'];
                        gdrcd_query("UPDATE personaggio SET nome = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE id_personaggio = '".gdrcd_filter('in', $_POST['account'])."' AND permessi < ".SUPERUSER."");
                     }
 
+                    $contestoLog = gdrcd_log_context_make(
+                            [
+                                'nome_precedente' => $nome['nome'],
+                                'nome_nuovo' => $_POST['new_name'],
+                            ],
+                            $_POST['account'],
+                            $nome['nome'],
+                        );
                     /*Registro l'evento */
                      
 
                     gdrcd_log_notice(
                         'Cambio nome del personaggio',
-                            [
-                            'evento' => 'personaggio.cambio_nome',
-                            'id_autore' => $_SESSION['id_personaggio'],
-                            'autore' => $_SESSION['login'],
-                            'id_soggetto' => $_POST['account'],
-                            'soggetto' => $nome['nome'],
-                            'nome_precedente' => $nome['nome'],
-                            'nome_nuovo' => $_POST['new_name'],
-                        ],
+                            ['evento' => 'personaggio.cambio_nome',...$contestoLog,],
                          $_POST['account']
                     );
                     /*Registro l'evento per chi ha effettuato l'operazione */
                     gdrcd_log_notice(
                         'Cambio nome del personaggio',
-                            [
-                            'evento' => 'personaggio.cambio_nome',
-                            'id_autore' => $_SESSION['id_personaggio'],
-                            'autore' => $_SESSION['login'],
-                            'id_soggetto' => $_POST['account'],
-                            'soggetto' => $nome['nome'],
-                            'nome_precedente' => $nome['nome'],
-                            'nome_nuovo' => $_POST['new_name'],
-                        ],
+                            ['evento' => 'personaggio.cambio_nome',...$contestoLog,],
                          $_SESSION['id_personaggio']
                     );
                     ?>

@@ -38,18 +38,18 @@
                     WHERE id_personaggio = ?",
                 [ $_POST['id_personaggio']]
                 );
+                $contestoLog = gdrcd_log_context_make(
+                        [
+                              'nuovo_ruolo' => $newrole
+                        ],
+                        $_POST['id_personaggio'],
+                       $char_data['nome'] ?? '-',
+                    ); 
 
                 /*Registro l'operazione*/
                 gdrcd_log_notice(
                     'Cambio permesso del personaggio',
-                    [
-                        'evento' => 'personaggio.permessi.cambio',
-                        'id_autore' => $_SESSION['id_personaggio'],
-                        'autore' => $_SESSION['login'],
-                        'id_soggetto' => $_POST['id_personaggio'],
-                        'soggetto' => $char_data['nome'] ?? '-',
-                        'nuovo_ruolo' => $newrole
-                    ] ,
+                    ['evento' => 'personaggio.permessi.cambio', ...$contestoLog],
                     $_SESSION['id_personaggio']
                 );
                 /*Avviso l'utente*/

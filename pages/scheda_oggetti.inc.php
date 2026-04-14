@@ -58,16 +58,15 @@
         gdrcd_query($query);
          /*Registro l'evento*/
                 $personaggio = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_REQUEST['pg']) . "'");
+                $contestoLog = gdrcd_log_context_make([
+                            'id_oggetto' => gdrcd_filter('num', $_POST['id_oggetto']),
+                            'oggetto' => $_POST['checosa'],
+                            'quantita_rimossa' => 1,
+                        ]                        
+                    );
                 gdrcd_log_info(
                     'Oggetto abbandonato dal personaggio',
-                    [
-                        'evento' =>'personaggio.abbandona_oggetto',
-                        'id_autore' =>  $_SESSION['id_personaggio'],
-                        'autore' => $_SESSION['login'],
-                        'id_oggetto' => gdrcd_filter('num', $_POST['id_oggetto']),
-                        'oggetto' => $_POST['checosa'],
-                        'quantita_rimossa' => 1,
-                    ],
+                    ['evento' =>'personaggio.abbandona_oggetto', ...$contestoLog],
                      $_REQUEST['pg']
                 );
 
@@ -104,42 +103,29 @@
             gdrcd_query($query);
             $destinatario = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_POST['give_item']) . "'");
             $mittente = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_REQUEST['pg']) . "'");
-
+            $contestoLog = gdrcd_log_context_make([
+                            'id_oggetto' => gdrcd_filter('num', $_POST['id_oggetto']),
+                            'oggetto' => $_POST['checosa'],
+                            'quantita_rimossa' => 1,
+                            'cariche' => gdrcd_filter('num', $_POST['cariche']),
+                            'id_destinatario' => $_POST['give_item'],
+                            'destinatario' => $destinatario['nome'],
+                        ],
+                        $_POST['give_item'],
+                        $mittente['nome']
+                    );
+            
             /* Registro l'evento lato destinatario */
             gdrcd_log_info(
                 'Oggetto ricevuto da un altro personaggio',
-                [
-                    'evento' => 'personaggio.ricevi_oggetto',
-                    'id_autore' =>  $_SESSION['id_personaggio'],
-                    'autore' => $_SESSION['login'],
-                    'id_soggetto' => $_POST['give_item'],
-                    'soggetto' => $mittente['nome'],
-                    'id_destinatario' => $_POST['give_item'],
-                    'destinatario' => $destinatario['nome'],
-                    'id_oggetto' => gdrcd_filter('num', $_POST['id_oggetto']),
-                    'oggetto' => $_POST['checosa'],
-                    'quantita' => 1,
-                    'cariche' => gdrcd_filter('num', $_POST['cariche']),
-                ],
+                ['evento' => 'personaggio.ricevi_oggetto', ...$contestoLog],
                  $_POST['give_item']
             );
 
             /* Registro l'evento lato mittente */
             gdrcd_log_info(
                 'Oggetto ceduto a un altro personaggio',
-                [
-                    'evento' => 'personaggio.cedi_oggetto',
-                    'id_autore' =>  $_SESSION['id_personaggio'],
-                    'autore' => $_SESSION['login'],
-                    'id_soggetto' =>  $_POST['give_item'],
-                    'soggetto' => $mittente['nome'],
-                    'id_destinatario' => $_POST['give_item'],
-                    'destinatario' => $destinatario['nome'],
-                    'id_oggetto' => gdrcd_filter('num', $_POST['id_oggetto']),
-                    'oggetto' => $_POST['checosa'],
-                    'quantita' => 1,
-                    'cariche' => gdrcd_filter('num', $_POST['cariche']),
-                ],
+                ['evento' => 'personaggio.cedi_oggetto', ...$contestoLog],  
                  $_REQUEST['pg']
             );
 

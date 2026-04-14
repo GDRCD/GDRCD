@@ -110,16 +110,14 @@ gdrcd_query($result, 'free');
             }//else
 
             echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['interface']['job']['ok_job']).'</div>';
-            
+            $contestoLog = gdrcd_log_context_make([
+                               'lavoro' => $_POST['nome_lavoro'],
+                                'id_lavoro' => $_POST['id_record']
+                            ]
+                        );
             gdrcd_log_info(
                 'Il personaggio ha iniziato un nuovo lavoro',
-                [
-                    'evento' => 'personaggio.nuovo_lavoro',
-                    'id_autore' => $_SESSION['id_personaggio'],
-                    'autore' => $_SESSION['login'],
-                    'lavoro' => $_POST['nome_lavoro'],
-                    'id_lavoro' => $_POST['id_record']
-                ],
+                ['evento' => 'personaggio.nuovo_lavoro', ...$contestoLog],
                  $_SESSION['id_personaggio']
             );
             ?>
@@ -133,16 +131,14 @@ gdrcd_query($result, 'free');
             gdrcd_query("DELETE FROM clgpersonaggioruolo WHERE id_personaggio='".$_SESSION['id_personaggio']."' AND id_ruolo = ".gdrcd_filter('num', $_POST['id_record'])." LIMIT 1");
 
             echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['interface']['job']['ok_quit']).'</div>';
-            
+            $contestoLog = gdrcd_log_context_make([
+                               'lavoro' => $_POST['nome_lavoro'],
+                                'id_lavoro' => $_POST['id_record']
+                            ]
+                        );
             gdrcd_log_info(
                 'Il personaggio si è dimesso dal lavoro',
-                [
-                    'evento' => 'personaggio.dimissioni_lavoro',
-                    'id_autore' => $_SESSION['id_personaggio'],
-                    'autore' => $_SESSION['login'],
-                    'lavoro' => $_POST['nome_lavoro'],
-                    'id_lavoro' => $_POST['id_record']
-                ],
+                ['evento' => 'personaggio.dimissioni_lavoro', ...$contestoLog],
                  $_SESSION['id_personaggio']
             );
 

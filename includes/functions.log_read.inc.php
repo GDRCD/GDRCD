@@ -180,8 +180,7 @@ function gdrcd_count_logs($eventi = null): int
  */
 function gdrcd_extract_log_contesto(array $row)
 {
-    $contesto = $row['contesto_decodificato'] ?? [];
-    return $contesto;
+       return json_decode($row['contesto'], true) ?: [];
 }
 
 /**
@@ -320,4 +319,35 @@ function gdrcd_present_log_row(?int $whichLog, array $row): array
         'destinatario' => $destinatario,
         'descrizione' => $descrizione,
     ];
+}
+
+/**
+ * Crea il contesto del log
+ * @param array $contesto Il contesto del log
+ * @param int $idSoggetto L'ID del soggetto
+ * @param string $soggetto Il nome del soggetto
+ * @param int $idAutore L'ID dell'autore
+ * @param string $autore Il nome dell'autore
+ * @return array Il contesto del log
+ */
+
+function gdrcd_log_context_make(
+    array $contesto,
+    int $idSoggetto = null,
+    string $soggetto = null,
+    int $idAutore = null,
+    string $autore = null
+    
+    
+) {
+    $autore = [
+        'id_autore' => $idAutore ?? $_SESSION['id_personaggio'],
+        'autore' => $autore ?? $_SESSION['login']
+    ];
+     $soggetto = $idSoggetto && $soggetto ? [
+        'id_soggetto' => $idSoggetto,
+        'soggetto' => $soggetto,
+    ] : [];
+
+    return [...$autore, ...$soggetto, ...$contesto];
 }

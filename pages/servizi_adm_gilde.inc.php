@@ -194,22 +194,21 @@
                         echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['interface']['adm_guilds']['ok_hire']) . '</div>';
                         /*Registro l'operazione*/
                         $personaggio = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "'");
+                        $contestoLog = gdrcd_log_context_make(
+                            [
+                                'id_lavoro' => $subject[0],
+                                'lavoro' => $subject[1],
+                            ],
+                            $_POST['id_personaggio'],
+                            $personaggio['nome'] ?? '-',
+                        ); 
                         gdrcd_log_notice(
                             'Assegnato nuovo ruolo al personaggio',
-                            [
-                                'evento' => 'personaggio.assegna_lavoro',
-                                'id_autore' => $_SESSION['id_personaggio'],
-                                'autore' => $_SESSION['login'],
-                                'id_soggetto' => $_POST['id_personaggio'],
-                                'soggetto' => $personaggio['nome'],
-                                'lavoro' => $subject[1],
-                                'origine' => 'gestione_lavoro'
-                            ],
+                            ['evento' => 'personaggio.assegna_lavoro',...$contestoLog],
                              $_SESSION['id_personaggio']
                         );
 
                         /*Avviso l'utente*/
-
                         if ($_SESSION['id_personaggio'] != $_POST['id_personaggio']) {
                             gdrcd_query("INSERT INTO messaggi (id_personaggio_mittente, id_personaggio_destinatario, spedito, testo) VALUES ('" . $_SESSION['id_personaggio'] . "','" . gdrcd_filter('in', $_POST['id_personaggio']) . "', NOW(), '" . gdrcd_filter('in', $MESSAGE['interface']['adm-guilds']['message_body']['hire'] . ' ' . $subject[1]) . "')");
                         }
@@ -252,16 +251,17 @@
                     echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['interface']['adm_guilds']['ok_fire']) . '</div>';
                     /*Registro l'operazione*/
                     $personaggio = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $subject[0]) . "'");
+                    $contestoLog = gdrcd_log_context_make(
+                            [
+                                'id_lavoro' => $subject[1],
+                                'lavoro' => $subject[2],
+                            ],
+                            $subject[0],
+                            $personaggio['nome'] ?? '-',
+                        ); 
                     gdrcd_log_notice(
                         'Dimissione dal ruolo del personaggio',
-                        [
-                            'evento' => 'personaggio.dimissione_lavoro',
-                            'id_autore' => $_SESSION['id_personaggio'],
-                            'autore' => $_SESSION['login'],
-                            'id_destinatario' =>  $subject[0],
-                            'destinatario' => $personaggio['nome'],
-                            'lavoro' => $subject[2]
-                        ],
+                        ['evento' => 'personaggio.dimissione_lavoro',...$contestoLog],
                          $subject[0]
                     );
 
