@@ -21,27 +21,13 @@ function gdrcd_configuration_label($parametro) {
  */
 function gdrcd_configuration_get($parametro)
 {
-    // Recupera il valore tramite query
-    // Se il valore nel db non esiste, ritorna esplicitamente null
-    [$categoria, $parametro] = explode('.', $parametro, 2);
-
-    $result = gdrcd_stmt(
-        "SELECT valore, `default` FROM configurazioni WHERE categoria = ? AND parametro = ?",
-        [
-            $categoria,
-            $parametro
-        ]
-    );
-
-    if (gdrcd_query($result, 'num_rows') === 0) {
-        return null;
+    if (!gdrcd_configuration_cache_exist()) {
+        gdrcd_configuration_cache_create();
     }
 
-    $value = gdrcd_query($result, 'assoc');
+    $configuration = gdrcd_configuration_cache_get();
 
-    return !is_null($value['valore']) && $value['valore'] !== ''
-        ? $value['valore']
-        : $value['default'];
+    return $configuration[$parametro] ?? null;
 }
 
 /**
@@ -66,4 +52,47 @@ function gdrcd_configuration_set($parametro, $value)
             $parametro
         ]
     );
+}
+
+function gdrcd_configuration_cache_filename()
+{
+    return GDRCD_PATH . 'cache/configuration.cache.php';
+}
+
+function gdrcd_configuration_cache_exist()
+{
+    return file_exists(gdrcd_configuration_cache_filename());
+}
+
+function gdrcd_configuration_cache_create()
+{
+    $configurations = gdrcd_stmt_all('SELECT categoria, parametro, valore, `default` FROM configurazioni');
+
+    $configMap = [];
+
+    foreach ($configurations as $config) {
+        $key = implode('.', [$config['categoria'], $config['parametro']]);
+
+        $configMap[$key] = !is_null($config['valore']) && $config['valore'] !== ''
+            ? $config['valore']
+            : $config['default'];
+    }
+
+    $cacheContent = '<?php return '. var_export($configMap, true) .';';
+
+    $cacheFilename = gdrcd_configuration_cache_filename();
+    $cacheFolder = dirname($cacheFilename);
+
+    if (!file_exists($cacheFolder) && !mkdir($cacheFolder, 0777, true)) {
+        throw new Exception('Errore! Non posso creare la cartella in: '. $cacheFolder);
+    }
+
+    if (file_put_contents($cacheFilename, $cacheContent, LOCK_EX) === false) {
+        throw new Exception('Errore! Non posso creare il file in: '. $cacheFilename);
+    }
+}
+
+function gdrcd_configuration_cache_get()
+{
+    require gdrcd_configuration_cache_filename();
 }
