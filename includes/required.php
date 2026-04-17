@@ -41,6 +41,7 @@ require_once(GDRCD_PATH . '/includes/functions.api.inc.php');
 require_once(GDRCD_PATH . '/includes/functions.chat_core.inc.php');
 require_once(GDRCD_PATH . '/includes/functions.chat_read.inc.php');
 require_once(GDRCD_PATH . '/includes/functions.chat_write.inc.php');
+require_once(GDRCD_PATH . '/includes/functions.configuration.inc.php');
 
 // carica la gestione dei suoni
 require_once(GDRCD_PATH . '/includes/AudioController.class.php');
