@@ -9,16 +9,16 @@ $typeOrder = ($PARAMETERS['mode']['chat_from_bottom'] == 'ON') ? 'DESC' : 'ASC';
 //recupero il tempo di salvataggio delle chat
 $tempo_salvataggio= gdrcd_configuration_get('salva_chat.tempo_salvataggio');
 //recuper il parametro per controllare che il personaggio sia presente in giocata
-$check_savataggio= gdrcd_configuration_get('salva_chat.controllo_salvataggio');
+$solo_autore= gdrcd_configuration_get('salva_chat.solo_autore');
 
 
-if($check_savataggio == 'si'){
+if($solo_autore == 'si'){
     $check_pg=gdrcd_query("SELECT count(*) as conta 
     FROM chat 
     WHERE stanza = ".$_SESSION['luogo']." 
     AND DATE_SUB(NOW(), INTERVAL $tempo_salvataggio HOUR) < ora and id_personaggio_mittente = '".$_SESSION['id_personaggio']."' AND tipo !='S'");
     if(!$check_pg['conta']){
-        echo "<h2>ATTENZIONE</h2> Non puoi salvare la chat"; 
+        echo $MESSAGE['chat']['error']['solo_autore'];
         exit; 
     }
 }
