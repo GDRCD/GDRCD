@@ -11,6 +11,7 @@ class Insert_ChatSave_In_Configurazioni_Table  extends DbMigration
 
     public function down() {
         // Rimozione tabelle create in up()
-        gdrcd_query("DROP TABLE IF EXISTS `configurazioni`");
+        gdrcd_query("DELETE FROM `configurazioni` WHERE categoria = 'salva_chat' AND parametro = 'controllo_salvataggio'");
+        gdrcd_query("DELETE FROM `configurazioni` WHERE categoria = 'salva_chat' AND parametro = 'tempo_salvataggio'");
     }
 }
