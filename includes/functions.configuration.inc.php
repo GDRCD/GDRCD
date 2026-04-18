@@ -94,6 +94,13 @@ function gdrcd_configuration_cache_create()
 
 function gdrcd_configuration_cache_get()
 {
-    $cache = require gdrcd_configuration_cache_filename();
+    static $cache = null;
+
+    if ($cache === null) {
+        $cache = gdrcd_configuration_cache_exist()
+            ? require gdrcd_configuration_cache_filename()
+            : [];
+    }
+
     return $cache;
 }
