@@ -1,6 +1,6 @@
 <?php
 
-class Insert_ChatSave_In_Configurazioni_Table  extends DbMigration
+class GDRCD57_Insert_ChatSave_In_Configurazioni_Table extends DbMigration
 {
     public function up() {
         // Inserimento parametri su tabella configurazioni
