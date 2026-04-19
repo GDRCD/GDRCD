@@ -564,6 +564,7 @@ function gdrcd_database_error_format($details = null, $sql = null)
         'gdrcd_stmt_execute',
         'gdrcd_stmt_close',
         'gdrcd_query',
+        'gdrcd_database_transaction',
     ];
 
     $base = null;
