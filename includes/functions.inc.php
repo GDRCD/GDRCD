@@ -860,3 +860,14 @@ function gdrcd_configuration_set($parametro, $value)
                 ]
             );
 }
+
+/**
+ * Ritorna l'IP corrente del client
+ *
+ * @return string L'indirizzo IP
+ */
+function gdrcd_client_ip(): string
+{
+    return $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+}
+
