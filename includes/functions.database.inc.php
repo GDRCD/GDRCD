@@ -390,8 +390,8 @@ function gdrcd_stmt_execute($stmt, $binds = [])
  * @param array $options Array di opzioni opzionali.
  *  - throw: se valorizzato a true la query lancia un'eccezione invece di interrompere l'esecuzione dello script
  *
- * @return array|false La prima riga del risultato come array associativo e numerico,
- *                     o false se non ci sono risultati.
+ * @return array|null La prima riga del risultato come array associativo e numerico,
+ *                     o null se non ci sono risultati.
  */
 function gdrcd_stmt_one($sql, $binds = [], $options = [])
 {
