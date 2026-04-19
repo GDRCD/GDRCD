@@ -456,6 +456,70 @@ function gdrcd_stmt_bind_type($value)
 }
 
 /**
+ * Esegue una callback all'interno di una transazione MySQL.
+ *
+ * Se la transazione fallisce con un errore ritenuto transitorio (deadlock, lock timeout),
+ * viene automaticamente riprovata fino ad un massimo configurabile di tentativi.
+ * Ad ogni retry viene applicato un ritardo con jitter.
+ *
+ * @param Closure $callback La funzione da eseguire all'interno della transazione.
+ * @param array $options Array di opzioni:
+ *  - throw: se true lancia un'eccezione invece di interrompere lo script
+ *  - retries: numero massimo di tentativi (default: 3, min: 0, max: 10)
+ *
+ * @return mixed il valore ritornato dalla $callback
+ * @throws Exception Se l'opzione throw è attiva e tutti i tentativi falliscono.
+ */
+function gdrcd_database_transaction(Closure $callback, array $options = []): mixed
+{
+    $connection = gdrcd_connect();
+    $max_retries = max(0, min(10, (int) ($options['retries'] ?? 3)));
+
+    $base_wait_ms = 75;
+
+    $mysql_retryable_errors = [
+        1205,   // Lock wait timeout exceeded
+        1213,   // Deadlock found when trying to get lock
+    ];
+
+    $attempt = 0;
+
+    while ($attempt++ <= $max_retries) {
+        try {
+
+            $connection->begin_transaction();
+            $output = $callback();
+            $connection->commit();
+
+            return $output;
+
+        } catch (Throwable $e) {
+
+            $connection->rollback();
+
+            $errno = $connection->errno;
+            $is_retryable = in_array($errno, $mysql_retryable_errors, true);
+
+            if ($is_retryable && $attempt <= $max_retries) {
+                $delay_us = ($base_wait_ms + random_int(0, $base_wait_ms)) * 1000;
+                usleep($delay_us);
+                continue;
+            }
+
+            gdrcd_database_error_handle(
+                'Database Transaction Error: ' . $e->getMessage(),
+                null,
+                [],
+                !empty($options['throw'])
+            );
+
+        }
+    }
+
+    return null;
+}
+
+/**
  * Formatta una query preparata sostituendo i segnaposto con i valori dei parametri.
  *
  * Questa funzione è utile per il debug e il logging delle query, in quanto
