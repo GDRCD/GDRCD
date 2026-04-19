@@ -37,6 +37,10 @@ require_once(GDRCD_PATH . '/includes/functions.database.inc.php');
 // include le funzioni per le api ajax/xhr
 require_once(GDRCD_PATH . '/includes/functions.api.inc.php');
 
+// include le funzioni per le sessioni
+require_once(GDRCD_PATH . '/includes/functions.session_core.inc.php');
+require_once(GDRCD_PATH . '/includes/functions.session_auth.inc.php');
+
 // include le funzioni per le chat
 require_once(GDRCD_PATH . '/includes/functions.chat_core.inc.php');
 require_once(GDRCD_PATH . '/includes/functions.chat_read.inc.php');
