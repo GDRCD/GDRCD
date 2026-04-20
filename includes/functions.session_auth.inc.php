@@ -136,7 +136,7 @@ function gdrcd_session_auth(): void
     $data_refresh = strtotime($metadata['data_refresh']);
 
     if (!$data_refresh || $now >= $data_refresh) {
-        gdrcd_session_refresh($metadata);
+        gdrcd_session_refresh();
         gdrcd_session_commit();
         return;
     }
@@ -162,52 +162,50 @@ function gdrcd_session_auth(): void
  * Marca la vecchia sessione come refreshed, genera un nuovo id
  * e crea un nuovo record nella tabella sessions.
  *
- * Utilizza affected_rows per gestire la concorrenza: solo una richiesta
- * effettuerà il refresh, le altre non eseguiranno alcuna azione.
- *
- * @param array $old_metadata I metadati della sessione corrente da refreshare.
  * @return void
  */
-function gdrcd_session_refresh(array $old_metadata): void
+function gdrcd_session_refresh(): void
 {
     $old_id = gdrcd_session_id();
 
-    gdrcd_database_transaction(function() use($old_metadata, $old_id) {
+    gdrcd_database_transaction(function() use ($old_id) {
 
-        // Tenta di marcare la sessione come refreshed (idempotente tramite affected_rows)
-        $result = gdrcd_stmt(
-            'UPDATE `sessions`
-                SET `status` = ?, `data_refreshed_at` = NOW()
-            WHERE `id_sessione` = ? AND `status` = ?',
-            [GDRCD_SESSION_STATUS_REFRESHED, $old_id, GDRCD_SESSION_STATUS_ACTIVE]
+        // Tenta di acquisire il lock sulla sessione corrente
+        $old_metadata = gdrcd_stmt_one(
+            'SELECT id_personaggio, data_login, `status` FROM `sessions` WHERE `id_sessione` = ? FOR UPDATE',
+            [$old_id]
         );
 
-        // Se affected_rows === 0, un'altra richiesta ha già gestito il refresh
-        if (($result['affected'] ?? 0) === 0) {
+        // Se la sessione non è già più attiva non facciamo niente
+        if ($old_metadata === null || $old_metadata['status'] !== GDRCD_SESSION_STATUS_ACTIVE) {
             return;
         }
+
+        $id_personaggio = (int) $old_metadata['id_personaggio'];
 
         // Genera un nuovo id di sessione
         $new_id = gdrcd_session_regenerate();
 
-        // Aggiorna il riferimento alla sessione successiva nella vecchia
-        gdrcd_stmt(
-            'UPDATE `sessions` SET `id_sessione_next` = ? WHERE `id_sessione` = ?',
-            [$new_id, $old_id]
-        );
-
         // Crea il nuovo record preservando la data_login originale
         gdrcd_session_metadata_create(
             $new_id,
-            (int) $old_metadata['id_personaggio'],
+            $id_personaggio,
             $old_metadata['data_login']
         );
 
-    });
+        // Aggiorna lo stato della vecchia sessione
+        gdrcd_stmt(
+            'UPDATE `sessions`
+                SET `status` = ?, `data_refreshed_at` = NOW(), `id_sessione_next` = ?
+            WHERE `id_sessione` = ?',
+            [GDRCD_SESSION_STATUS_REFRESHED, $new_id, $old_id]
+        );
 
-    // Rinfresca i dati della sessione PHP
-    $session_data = gdrcd_session_data((int) $old_metadata['id_personaggio']);
-    gdrcd_session_write($session_data);
+        // Aggiorna i dati nella sessione appena rigenerata
+        $session_data = gdrcd_session_data($id_personaggio);
+        gdrcd_session_write($session_data);
+
+    });
 }
 
 /**
@@ -296,66 +294,55 @@ function gdrcd_session_metadata_create(string $id_sessione, int $id_personaggio,
  *
  * @param int $id_personaggio L'id del personaggio che tenta il takeover.
  * @param string $token Il token OTP fornito dall'utente.
- * @return array|null I dati del personaggio se il takeover ha successo, null altrimenti.
+ * @return bool True se l-operazione è andata a buon fine, false altrimenti
  */
-function gdrcd_session_takeover(int $id_personaggio, #[SensitiveParameter] string $token): ?array
+function gdrcd_session_takeover(int $id_personaggio, #[SensitiveParameter] string $token): bool
 {
     gdrcd_session_init();
 
-    // TODO: da svolgere in transazione mysql
+    $result = gdrcd_database_transaction(function() use ($id_personaggio, $token) {
+        // Recupera il token valido per il personaggio
+        $token_record = gdrcd_stmt_one(
+            'SELECT `token`, `data_scadenza`
+            FROM `sessions_protection_token`
+            WHERE `id_personaggio` = ?
+                AND `data_utilizzo` IS NULL
+                AND `data_scadenza` > NOW()
+            ORDER BY `data_creazione` DESC
+            LIMIT 1
+            FOR UPDATE',
+            [$id_personaggio]
+        );
 
-    // Recupera il token valido per il personaggio
-    $token_record = gdrcd_stmt_one(
-        'SELECT `token`, `data_scadenza`
-        FROM `sessions_protection_token`
-        WHERE `id_personaggio` = ? AND `data_utilizzo` IS NULL AND `data_scadenza` > NOW()
-        ORDER BY `data_creazione` DESC LIMIT 1',
-        [$id_personaggio]
-    );
+        // Nessun token trovato: esco
+        if ($token_record === null) {
+            return false;
+        }
 
-    if ($token_record === null) {
-        gdrcd_session_commit();
-        return null;
-    }
+        // Token non corrisponde: esco
+        if (!gdrcd_password_check($token, $token_record['token'])) {
+            return false;
+        }
 
-    // Verifica il token tramite hash
-    if (!gdrcd_password_check($token, $token_record['token'])) {
-        gdrcd_session_commit();
-        return null;
-    }
+        // Da questo punto in poi il token è verificato: invalida le sessioni attive e crea quella nuova
+        gdrcd_session_disconnect_query($id_personaggio);
+        gdrcd_session_create($id_personaggio);
+        $new_session_id = gdrcd_session_id();
 
-    // Verifica fingerprint delle sessioni attive per avvisare di possibile compromissione
-    $active_session = gdrcd_stmt_one(
-        'SELECT * FROM `sessions` WHERE `id_personaggio` = ? AND `status` = ?',
-        [$id_personaggio, GDRCD_SESSION_STATUS_ACTIVE]
-    );
+        // Marca il token come utilizzato
+        gdrcd_stmt(
+            'UPDATE `sessions_protection_token`
+            SET `data_utilizzo` = NOW(), `id_sessione` = ?
+            WHERE `id_personaggio` = ? AND `token` = ?',
+            [$new_session_id, $id_personaggio, $token_record['token']]
+        );
 
-    if (gdrcd_session_fingerprint($active_session) < GDRCD_FINGERPRINT_CONFIDENT) {
-        // TODO: logga l'evento
-    }
-
-    // Revoca tutte le sessioni attive
-    gdrcd_session_disconnect($id_personaggio);
-
-    // Crea la nuova sessione
-    gdrcd_session_create($id_personaggio);
-
-    // Marca il token come utilizzato
-    $new_session_id = gdrcd_session_id();
-
-    gdrcd_stmt(
-        'UPDATE `sessions_protection_token`
-        SET `data_utilizzo` = NOW(), `id_sessione` = ?
-        WHERE `id_personaggio` = ? AND `token` = ?',
-        [$new_session_id, $id_personaggio, $token_record['token']]
-    );
+        return true;
+    });
 
     gdrcd_session_commit();
 
-    // Recupera i dati del personaggio
-    $personaggio = gdrcd_session_data($id_personaggio);
-
-    return $personaggio;
+    return $result;
 }
 
 /**
@@ -440,7 +427,7 @@ function gdrcd_session_login(string $username, #[SensitiveParameter] string $pas
     }
 
     // Credenziali errate: account disabilitato
-    if ((int) $record['permessi'] <= DELETED) {
+    if ((int) $record['permessi'] < USER) {
         gdrcd_session_commit();
         return null;
     }
@@ -469,8 +456,11 @@ function gdrcd_session_login(string $username, #[SensitiveParameter] string $pas
 
     if ($skip_takeover) {
         // Stesso device: invalida sessioni precedenti e procedi
-        gdrcd_session_disconnect($id_personaggio);
-        gdrcd_session_create($id_personaggio);
+        gdrcd_database_transaction(function() use ($id_personaggio) {
+            gdrcd_session_disconnect_query($id_personaggio);
+            gdrcd_session_create($id_personaggio);
+        });
+
         gdrcd_session_commit();
 
         return [
@@ -504,9 +494,26 @@ function gdrcd_session_logout(): void
 
     $id_sessione = gdrcd_session_id();
 
-    gdrcd_session_clear();
     gdrcd_session_invalidate($id_sessione);
+    gdrcd_session_clear();
     gdrcd_session_destroy();
+}
+
+/**
+ * Segnala l'ultima volta che l'utente ha utilizzato la sessione
+ * aggiornando il campo data_ultimavisita a NOW().
+ *
+ * Solo una sessione attiva può essere "pingata".
+ *
+ * @param string $id_sessione L'id della sessione da pingare.
+ * @return void
+ */
+function gdrcd_session_ping(string $id_sessione): void
+{
+    gdrcd_stmt(
+        'UPDATE `sessions` SET `data_ultimavisita` = NOW() WHERE `id_sessione` = ? AND `status` = ?',
+        [$id_sessione, GDRCD_SESSION_STATUS_ACTIVE]
+    );
 }
 
 /**
@@ -518,11 +525,16 @@ function gdrcd_session_logout(): void
  */
 function gdrcd_session_invalidate(string $id_sessione): void
 {
+    gdrcd_database_transaction(fn() => gdrcd_session_invalidate_query($id_sessione));
+}
+
+function gdrcd_session_invalidate_query(string $id_sessione): void
+{
     gdrcd_stmt(
         'UPDATE `sessions`
             SET `status` = ?, `data_scadenza` = NOW()
-        WHERE `id_sessione` = ?',
-        [GDRCD_SESSION_STATUS_REVOKED, $id_sessione]
+        WHERE `id_sessione` = ? AND `status` = ?',
+        [GDRCD_SESSION_STATUS_REVOKED, $id_sessione, GDRCD_SESSION_STATUS_ACTIVE]
     );
 }
 
@@ -534,6 +546,11 @@ function gdrcd_session_invalidate(string $id_sessione): void
  * @return void
  */
 function gdrcd_session_disconnect(int $id_personaggio): void
+{
+    gdrcd_database_transaction(fn() => gdrcd_session_disconnect_query($id_personaggio));
+}
+
+function gdrcd_session_disconnect_query(int $id_personaggio): void
 {
     gdrcd_stmt(
         'UPDATE `sessions`
