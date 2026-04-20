@@ -208,6 +208,77 @@ const ESITI_PERM = GAMEMASTER;
 //definisce quali permessi hanno accesso alla visione di tutti gli esiti (default: moderator)
 const FULL_PERM = MODERATOR;
 
+/**
+ * Soglie di fingerprint per la validazione delle sessioni.
+ * Il fingerprint è un indice probabilistico che indica quanto è probabile
+ * che il client corrente sia lo stesso che ha creato la sessione.
+ */
+
+/** @var int Device identico */
+const GDRCD_FINGERPRINT_VERYCONFIDENT = 3;
+
+/** @var int Verosimilmente stesso device */
+const GDRCD_FINGERPRINT_CONFIDENT = 2;
+
+/** @var int Zona grigia, forse stesso device */
+const GDRCD_FINGERPRINT_UNSURE = 1;
+
+/** @var int Device differente */
+const GDRCD_FINGERPRINT_WRONG = 0;
+
+/**
+ * Nomi dei segnali utilizzati per il fingerprint del client.
+ */
+const GDRCD_FINGERPRINT_SIGNAL_USERAGENT = 'user_agent';
+const GDRCD_FINGERPRINT_SIGNAL_IP = 'ip';
+const GDRCD_FINGERPRINT_SIGNAL_ACCEPT = 'accept';
+const GDRCD_FINGERPRINT_SIGNAL_LANGUAGE = 'language';
+const GDRCD_FINGERPRINT_SIGNAL_ENCODING = 'encoding';
+
+/**
+ * Pesi per il calcolo del fingerprint.
+ * Ogni parametro contribuisce allo score totale in base al suo peso.
+ */
+const GDRCD_FINGERPRINT_WEIGHTS = [
+    GDRCD_FINGERPRINT_SIGNAL_USERAGENT  => 4.0,
+    GDRCD_FINGERPRINT_SIGNAL_IP         => 2.0,
+    GDRCD_FINGERPRINT_SIGNAL_ACCEPT     => 1.5,
+    GDRCD_FINGERPRINT_SIGNAL_LANGUAGE   => 1.5,
+    GDRCD_FINGERPRINT_SIGNAL_ENCODING   => 1.0,
+];
+
+/**
+ * Configurazione temporale delle sessioni
+ */
+
+/** @var int Durata massima assoluta di una sessione in secondi (24 ore) */
+const GDRCD_SESSION_MAX_TTL = 86400;
+
+/** @var int Intervallo di refresh della sessione in secondi (10 minuti) */
+const GDRCD_SESSION_REFRESH_INTERVAL = 600;
+
+/** @var int Durata della sessione dalla creazione alla scadenza in secondi (15 minuti) */
+const GDRCD_SESSION_EXPIRY = 900;
+
+/** @var int Periodo di grazia per sessioni refreshed in secondi */
+const GDRCD_SESSION_GRACE_PERIOD = 20;
+
+/** @var int Debounce per aggiornamento data_ultimavisita in secondi */
+const GDRCD_SESSION_ACTIVITY_DEBOUNCE = 60;
+
+/** @var int Durata del token di protezione takeover in secondi (5 minuti) */
+const GDRCD_SESSION_TAKEOVER_TOKEN_TTL = 300;
+
+/**
+ * Stati delle sessioni
+ */
+const GDRCD_SESSION_STATUS_ACTIVE = 'active';
+const GDRCD_SESSION_STATUS_REFRESHED = 'refreshed';
+const GDRCD_SESSION_STATUS_REVOKED = 'revoked';
+
+const GDRCD_LOGIN_SUCCESS = 'success';
+const GDRCD_LOGIN_TAKEOVER = 'takeover';
+
 /*Vettori globali dei parametri*/
 $PARAMETER = array();
 $MESSAGES = array();

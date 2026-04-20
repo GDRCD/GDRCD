@@ -860,3 +860,33 @@ function gdrcd_configuration_set($parametro, $value)
                 ]
             );
 }
+
+/**
+ * Ritorna l'IP corrente del client
+ *
+ * @return string L'indirizzo IP
+ */
+function gdrcd_client_ip(): string
+{
+    return $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+}
+
+/**
+ * Stampa un messaggio d'errore e termina lo script
+ *
+ * @param string $messaggio Il messaggio da stampare, viene filtrato con gdrcd_filter_out
+ * @param string $filter_out default true. Se false disattiva il filtraggio interno con gdrcd_filter_out
+ * @return void
+ */
+function gdrcd_error(string $message, bool $filter_out = true): void
+{
+    if ($filter_out) {
+        $message = gdrcd_filter_out($message);
+    }
+
+    echo <<<HTML
+        <div class="error">{$message}</div>
+    HTML;
+
+    die();
+}
