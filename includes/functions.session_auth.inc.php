@@ -147,7 +147,7 @@ function gdrcd_session_auth(): void
 
         if (!$data_ultimavisita || ($now - $data_ultimavisita) >= GDRCD_SESSION_ACTIVITY_DEBOUNCE) {
             gdrcd_stmt(
-                "UPDATE `sessions` SET `data_ultimavisita` = NOW() WHERE `id_sessione` = ? AND `status` = ?",
+                'UPDATE `sessions` SET `data_ultimavisita` = NOW() WHERE `id_sessione` = ? AND `status` = ?',
                 [$id_sessione, GDRCD_SESSION_STATUS_ACTIVE]
             );
         }
@@ -176,9 +176,9 @@ function gdrcd_session_refresh(array $old_metadata): void
 
         // Tenta di marcare la sessione come refreshed (idempotente tramite affected_rows)
         $result = gdrcd_stmt(
-            "UPDATE `sessions`
-            SET `status` = ?, `data_refreshed_at` = NOW()
-            WHERE `id_sessione` = ? AND `status` = ?",
+            'UPDATE `sessions`
+                SET `status` = ?, `data_refreshed_at` = NOW()
+            WHERE `id_sessione` = ? AND `status` = ?',
             [GDRCD_SESSION_STATUS_REFRESHED, $old_id, GDRCD_SESSION_STATUS_ACTIVE]
         );
 
@@ -192,7 +192,7 @@ function gdrcd_session_refresh(array $old_metadata): void
 
         // Aggiorna il riferimento alla sessione successiva nella vecchia
         gdrcd_stmt(
-            "UPDATE `sessions` SET `id_sessione_next` = ? WHERE `id_sessione` = ?",
+            'UPDATE `sessions` SET `id_sessione_next` = ? WHERE `id_sessione` = ?',
             [$new_id, $old_id]
         );
 
@@ -238,7 +238,7 @@ function gdrcd_session_create(int $id_personaggio): void
 function gdrcd_session_metadata(string $id_sessione): array|null
 {
     return gdrcd_stmt_one(
-        "SELECT * FROM `sessions` WHERE `id_sessione` = ?",
+        'SELECT * FROM `sessions` WHERE `id_sessione` = ?',
         [$id_sessione]
     );
 }
@@ -262,10 +262,18 @@ function gdrcd_session_metadata_create(string $id_sessione, int $id_personaggio,
     $client = json_encode(gdrcd_session_client_data(), JSON_UNESCAPED_UNICODE);
 
     gdrcd_stmt(
-        "INSERT INTO `sessions`
-            (`id_sessione`, `id_personaggio`, `status`, `data_creazione`, `data_refresh`,
-             `data_scadenza`, `data_ultimavisita`, `data_login`, `ip`, `client`)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        'INSERT INTO `sessions` (
+            `id_sessione`,
+            `id_personaggio`,
+            `status`,
+            `data_creazione`,
+            `data_refresh`,
+            `data_scadenza`,
+            `data_ultimavisita`,
+            `data_login`,
+            `ip`,
+            `client`
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
         [
             $id_sessione,
             $id_personaggio,
@@ -298,10 +306,10 @@ function gdrcd_session_takeover(int $id_personaggio, #[SensitiveParameter] strin
 
     // Recupera il token valido per il personaggio
     $token_record = gdrcd_stmt_one(
-        "SELECT `token`, `data_scadenza`
-         FROM `sessions_protection_token`
-         WHERE `id_personaggio` = ? AND `data_utilizzo` IS NULL AND `data_scadenza` > NOW()
-         ORDER BY `data_creazione` DESC LIMIT 1",
+        'SELECT `token`, `data_scadenza`
+        FROM `sessions_protection_token`
+        WHERE `id_personaggio` = ? AND `data_utilizzo` IS NULL AND `data_scadenza` > NOW()
+        ORDER BY `data_creazione` DESC LIMIT 1',
         [$id_personaggio]
     );
 
@@ -318,7 +326,7 @@ function gdrcd_session_takeover(int $id_personaggio, #[SensitiveParameter] strin
 
     // Verifica fingerprint delle sessioni attive per avvisare di possibile compromissione
     $active_session = gdrcd_stmt_one(
-        "SELECT * FROM `sessions` WHERE `id_personaggio` = ? AND `status` = ?",
+        'SELECT * FROM `sessions` WHERE `id_personaggio` = ? AND `status` = ?',
         [$id_personaggio, GDRCD_SESSION_STATUS_ACTIVE]
     );
 
@@ -336,9 +344,9 @@ function gdrcd_session_takeover(int $id_personaggio, #[SensitiveParameter] strin
     $new_session_id = gdrcd_session_id();
 
     gdrcd_stmt(
-        "UPDATE `sessions_protection_token`
-         SET `data_utilizzo` = NOW(), `id_sessione` = ?
-         WHERE `id_personaggio` = ? AND `token` = ?",
+        'UPDATE `sessions_protection_token`
+        SET `data_utilizzo` = NOW(), `id_sessione` = ?
+        WHERE `id_personaggio` = ? AND `token` = ?',
         [$new_session_id, $id_personaggio, $token_record['token']]
     );
 
@@ -370,23 +378,23 @@ function gdrcd_session_takeover_begin(int $id_personaggio): void
     $scadenza = date('Y-m-d H:i:s', time() + GDRCD_SESSION_TAKEOVER_TOKEN_TTL);
 
     gdrcd_stmt(
-        "INSERT INTO `sessions_protection_token` (`id_personaggio`, `token`, `data_creazione`, `data_scadenza`)
-         VALUES (?, ?, ?, ?)",
+        'INSERT INTO `sessions_protection_token` (`id_personaggio`, `token`, `data_creazione`, `data_scadenza`)
+        VALUES (?, ?, ?, ?)',
         [$id_personaggio, $token_hash, $now, $scadenza]
     );
 
     // Recupera l'email del personaggio
     $pg = gdrcd_stmt_one(
-        "SELECT `email`, `nome` FROM `personaggio` WHERE `id_personaggio` = ?",
+        'SELECT `email`, `nome` FROM `personaggio` WHERE `id_personaggio` = ?',
         [$id_personaggio]
     );
 
     if ($pg !== null && !empty($pg['email'])) {
         $subject = 'Codice di verifica accesso - ' . $GLOBALS['PARAMETERS']['info']['site_name'];
-        $body = "Ciao " . $pg['nome'] . ",\n\n";
+        $body = "Ciao {$pg['nome']},\n\n";
         $body .= "E' stato rilevato un tentativo di accesso al tuo account mentre risulta gia' attiva una sessione.\n\n";
-        $body .= "Il tuo codice di verifica e': " . $token_plain . "\n\n";
-        $body .= "Il codice scade tra " . (GDRCD_SESSION_TAKEOVER_TOKEN_TTL / 60) . " minuti.\n\n";
+        $body .= "Il tuo codice di verifica e': {$token_plain}\n\n";
+        $body .= "Il codice scade tra ". intval(GDRCD_SESSION_TAKEOVER_TOKEN_TTL / 60) ." minuti.\n\n";
         $body .= "Se non hai richiesto tu questo accesso, ti consigliamo di cambiare la tua password.";
 
         @mail($pg['email'], $subject, $body);
@@ -412,10 +420,10 @@ function gdrcd_session_login(string $username, #[SensitiveParameter] string $pas
 
     // Recupera il personaggio
     $record = gdrcd_stmt_one(
-        "SELECT `id_personaggio`, `pass`, `nome`, `permessi`
-         FROM `personaggio`
-         WHERE `nome` = ?
-         LIMIT 1",
+        'SELECT `id_personaggio`, `pass`, `nome`, `permessi`
+        FROM `personaggio`
+        WHERE `nome` = ?
+        LIMIT 1',
         [$username]
     );
 
@@ -441,7 +449,7 @@ function gdrcd_session_login(string $username, #[SensitiveParameter] string $pas
 
     // Controlla sessioni attive esistenti per questo personaggio
     $active_session = gdrcd_stmt_one(
-        "SELECT * FROM `sessions` WHERE `id_personaggio` = ? AND `status` = ?",
+        'SELECT * FROM `sessions` WHERE `id_personaggio` = ? AND `status` = ?',
         [$id_personaggio, GDRCD_SESSION_STATUS_ACTIVE]
     );
 
@@ -511,9 +519,9 @@ function gdrcd_session_logout(): void
 function gdrcd_session_invalidate(string $id_sessione): void
 {
     gdrcd_stmt(
-        "UPDATE `sessions`
-         SET `status` = ?, `data_scadenza` = NOW()
-         WHERE `id_sessione` = ?",
+        'UPDATE `sessions`
+            SET `status` = ?, `data_scadenza` = NOW()
+        WHERE `id_sessione` = ?',
         [GDRCD_SESSION_STATUS_REVOKED, $id_sessione]
     );
 }
@@ -528,9 +536,9 @@ function gdrcd_session_invalidate(string $id_sessione): void
 function gdrcd_session_disconnect(int $id_personaggio): void
 {
     gdrcd_stmt(
-        "UPDATE `sessions`
-         SET `status` = ?, `data_scadenza` = NOW(), `data_logout` = NOW()
-         WHERE `id_personaggio` = ? AND `status` = ?",
+        'UPDATE `sessions`
+            SET `status` = ?, `data_scadenza` = NOW(), `data_logout` = NOW()
+        WHERE `id_personaggio` = ? AND `status` = ?',
         [GDRCD_SESSION_STATUS_REVOKED, $id_personaggio, GDRCD_SESSION_STATUS_ACTIVE]
     );
 }
@@ -546,9 +554,9 @@ function gdrcd_session_disconnect(int $id_personaggio): void
 function gdrcd_session_mark_refresh(int $id_personaggio): void
 {
     gdrcd_stmt(
-        "UPDATE `sessions`
-         SET `data_refresh` = NOW()
-         WHERE `id_personaggio` = ? AND `status` = ?",
+        'UPDATE `sessions`
+            SET `data_refresh` = NOW()
+        WHERE `id_personaggio` = ? AND `status` = ?',
         [$id_personaggio, GDRCD_SESSION_STATUS_ACTIVE]
     );
 }
@@ -563,7 +571,7 @@ function gdrcd_session_mark_refresh(int $id_personaggio): void
 function gdrcd_session_data(int $id_personaggio): array
 {
     $record = gdrcd_stmt_one(
-        "SELECT
+        'SELECT
             personaggio.id_personaggio,
             personaggio.nome,
             personaggio.cognome,
@@ -580,7 +588,7 @@ function gdrcd_session_data(int $id_personaggio): array
         FROM personaggio
         LEFT JOIN razza ON personaggio.id_razza = razza.id_razza
         WHERE personaggio.id_personaggio = ?
-        LIMIT 1",
+        LIMIT 1',
         [$id_personaggio]
     );
 
@@ -610,10 +618,10 @@ function gdrcd_session_data(int $id_personaggio): array
     $img_gilda = '';
 
     $personaggio_ruoli = gdrcd_stmt_all(
-        "SELECT ruolo.gilda, ruolo.immagine
-         FROM ruolo
-         JOIN clgpersonaggioruolo ON clgpersonaggioruolo.id_ruolo = ruolo.id_ruolo
-         WHERE clgpersonaggioruolo.id_personaggio = ?",
+        'SELECT ruolo.gilda, ruolo.immagine
+        FROM ruolo
+        JOIN clgpersonaggioruolo ON clgpersonaggioruolo.id_ruolo = ruolo.id_ruolo
+        WHERE clgpersonaggioruolo.id_personaggio = ?',
         [$id_personaggio]
     );
 
@@ -638,8 +646,8 @@ function gdrcd_session_data(int $id_personaggio): array
 function gdrcd_session_prune(int $days): void
 {
     gdrcd_stmt(
-        "DELETE FROM `sessions`
-         WHERE `status` != ? AND `data_scadenza` < DATE_SUB(NOW(), INTERVAL ? DAY)",
+        'DELETE FROM `sessions`
+        WHERE `status` != ? AND `data_scadenza` < DATE_SUB(NOW(), INTERVAL ? DAY)',
         [GDRCD_SESSION_STATUS_ACTIVE, $days]
     );
 }
@@ -654,9 +662,14 @@ function gdrcd_session_prune(int $days): void
 function gdrcd_session_log(int $id_personaggio, string $descrizione): void
 {
     gdrcd_stmt(
-        "INSERT INTO `log`
-            (`id_personaggio`, `nome_interessato`, `autore`, `data_evento`, `codice_evento`, `descrizione_evento`)
-         VALUES (?, ?, ?, NOW(), ?, ?)",
+        'INSERT INTO `log` (
+            `id_personaggio`,
+            `nome_interessato`,
+            `autore`,
+            `data_evento`,
+            `codice_evento`,
+            `descrizione_evento`
+        ) VALUES (?, ?, ?, NOW(), ?, ?)',
         [
             $id_personaggio,
             '',
