@@ -22,10 +22,10 @@ function gdrcd_session_init(?string $id_sessione = null): void
     }
 
     session_set_cookie_params([
-        'lifetime' => 0,
-        'path'     => '/',
-        'domain'   => '',
-        'secure'   => filter_var($_SERVER['HTTPS'] ?? '', FILTER_VALIDATE_BOOL),
+        'lifetime'  => 0,
+        'path'      => '/',
+        'domain'    => '',
+        'secure'    => filter_var($_SERVER['HTTPS'] ?? '', FILTER_VALIDATE_BOOL),
         'httponly'  => true,
         'samesite'  => 'Strict',
     ]);
