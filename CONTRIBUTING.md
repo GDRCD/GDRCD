@@ -28,7 +28,7 @@ Una volta individuata una issue su cui si vuole lavorare:
 - dichiarare chiaramente la propria disponibilità a occuparsene
 - descrivere brevemente l'approccio che si intende seguire per la risoluzione
 
-> [!INFO]
+> [!NOTE]
 > Questo passaggio serve a evitare sovrapposizioni e a valutare la coerenza della proposta con l'evoluzione del progetto.
 
 ---
