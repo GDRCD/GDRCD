@@ -7,7 +7,6 @@
 .metadata
 bin/
 tmp/
-cache/
 *.tmp
 *.bak
 *.swp
@@ -179,6 +178,9 @@ pip-log.txt
 #############
 ## GDRCD
 #############
+
+# cache
+cache/
 
 # chat_save
 giocate/
