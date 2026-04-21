@@ -278,6 +278,8 @@ const GDRCD_SESSION_STATUS_REVOKED = 'revoked';
 
 const GDRCD_LOGIN_SUCCESS = 'success';
 const GDRCD_LOGIN_TAKEOVER = 'takeover';
+const GDRCD_LOGIN_WRONG = 'wrong-credentials';
+const GDRCD_LOGIN_DISABLED = 'user-deleted';
 
 /*Vettori globali dei parametri*/
 $PARAMETER = array();
