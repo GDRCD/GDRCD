@@ -903,6 +903,17 @@ function gdrcd_error(string $message, bool $filter_out = true): void
     echo <<<HTML
         <div class="error">{$message}</div>
     HTML;
+}
 
+/**
+ * Stampa un messaggio d'errore e termina lo script
+ *
+ * @param string $messaggio Il messaggio da stampare, viene filtrato con gdrcd_filter_out
+ * @param string $filter_out default true. Se false disattiva il filtraggio interno con gdrcd_filter_out
+ * @return void
+ */
+function gdrcd_exit_error(string $message, bool $filter_out = true): void
+{
+    gdrcd_error($message, $filter_out);
     die();
 }
