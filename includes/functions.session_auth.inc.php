@@ -396,7 +396,7 @@ function gdrcd_session_takeover_begin(int $id_personaggio): void
  *
  * @param string $username Il nome utente (nome del personaggio).
  * @param string $password La password in chiaro.
- * @return array Array con id del personaggio e stato dell'operazione
+ * @return array{result: string, id_personaggio: ?int} Array con id del personaggio e stato dell'operazione
  *  Possibili chiavi di ritorno:
  *  - 'result': GDRCD_LOGIN_SUCCESS | GDRCD_LOGIN_TAKEOVER | GDRCD_LOGIN_WRONG | GDRCD_LOGIN_DISABLED
  *  - 'id_personaggio': null|int
