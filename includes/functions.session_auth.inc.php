@@ -396,89 +396,97 @@ function gdrcd_session_takeover_begin(int $id_personaggio): void
  *
  * @param string $username Il nome utente (nome del personaggio).
  * @param string $password La password in chiaro.
- * @return array|null Array con id del personaggio e stato dell'operazione, null se credenziali errate.
+ * @return array Array con id del personaggio e stato dell'operazione
  *  Possibili chiavi di ritorno:
- *  - 'result': 'success' | 'takeover_required' | 'takeover_veryconfident'
- *  - 'id_personaggio': true se rilevata discrepanza fingerprint
+ *  - 'result': GDRCD_LOGIN_SUCCESS | GDRCD_LOGIN_TAKEOVER | GDRCD_LOGIN_WRONG | GDRCD_LOGIN_DISABLED
+ *  - 'id_personaggio': null|int
  */
 function gdrcd_session_login(string $username, #[SensitiveParameter] string $password): ?array
 {
     gdrcd_session_init();
 
-    // Recupera il personaggio
-    $record = gdrcd_stmt_one(
-        'SELECT `id_personaggio`, `pass`, `nome`, `permessi`
-        FROM `personaggio`
-        WHERE `nome` = ?
-        LIMIT 1',
-        [$username]
-    );
+    $status = gdrcd_database_transaction(function() use($username, $password) {
+        $record = gdrcd_stmt_one(
+            'SELECT `id_personaggio`, `pass`, `nome`, `permessi`
+            FROM `personaggio`
+            WHERE `nome` = ?
+            LIMIT 1
+            FOR UPDATE',
+            [$username]
+        );
 
-    // Credenziali errate: utente non trovato
-    if ($record === null) {
-        gdrcd_session_commit();
-        return null;
-    }
+        // Personaggio non trovato
+        if (!$record) {
+            return [
+                'result' => GDRCD_LOGIN_WRONG,
+                'id_personaggio' => null
+            ];
+        }
 
-    // Credenziali errate: password non corrisponde
-    if (!gdrcd_password_check($password, $record['pass'])) {
-        gdrcd_session_commit();
-        return null;
-    }
+        // Credenziali errate: password non corrisponde
+        if (!gdrcd_password_check($password, $record['pass'])) {
+            return [
+                'result' => GDRCD_LOGIN_WRONG,
+                'id_personaggio' => null
+            ];
+        }
 
-    // Credenziali errate: account disabilitato
-    if ((int) $record['permessi'] < USER) {
-        gdrcd_session_commit();
-        return null;
-    }
+        // Account disabilitato
+        if ((int) $record['permessi'] < USER) {
+            return [
+                'result' => GDRCD_LOGIN_DISABLED,
+                'id_personaggio' => null
+            ];
+        }
 
-    $id_personaggio = (int) $record['id_personaggio'];
+        $id_personaggio = (int) $record['id_personaggio'];
 
-    // Controlla sessioni attive esistenti per questo personaggio
-    $active_session = gdrcd_stmt_one(
-        'SELECT * FROM `sessions` WHERE `id_personaggio` = ? AND `status` = ?',
-        [$id_personaggio, GDRCD_SESSION_STATUS_ACTIVE]
-    );
+        // Controlla sessioni attive esistenti per questo personaggio
+        $active_session = gdrcd_stmt_one(
+            'SELECT * FROM `sessions` WHERE `id_personaggio` = ? AND `status` = ?',
+            [$id_personaggio, GDRCD_SESSION_STATUS_ACTIVE]
+        );
 
-    if ($active_session === null) {
-        // Nessuna sessione attiva: procedi con il login diretto
-        gdrcd_session_create($id_personaggio);
-        gdrcd_session_commit();
+        if ($active_session === null) {
+            return [
+                'result' => GDRCD_LOGIN_SUCCESS,
+                'id_personaggio' => $id_personaggio,
+            ];
+        }
 
-        return [
-            'result' => GDRCD_LOGIN_SUCCESS,
-            'id_personaggio' => $id_personaggio,
-        ];
-    }
+        // Sessioni attive presenti: controlla fingerprint
+        $skip_takeover = gdrcd_session_fingerprint($active_session) === GDRCD_FINGERPRINT_VERYCONFIDENT;
 
-    // Sessioni attive presenti: controlla fingerprint
-    $skip_takeover = gdrcd_session_fingerprint($active_session) === GDRCD_FINGERPRINT_VERYCONFIDENT;
-
-    if ($skip_takeover) {
-        // Stesso device: invalida sessioni precedenti e procedi
-        gdrcd_database_transaction(function() use ($id_personaggio) {
+        if ($skip_takeover) {
+            // Stesso device: invalida sessioni precedenti e procedi
             gdrcd_session_disconnect_query($id_personaggio);
-            gdrcd_session_create($id_personaggio);
-        });
 
-        gdrcd_session_commit();
+            return [
+                'result' => GDRCD_LOGIN_SUCCESS,
+                'id_personaggio' => $id_personaggio,
+            ];
+        }
 
+        // Device diverso o incerto: richiedi verifica tramite token
         return [
-            'result' => GDRCD_LOGIN_SUCCESS,
+            'result' => GDRCD_LOGIN_TAKEOVER,
             'id_personaggio' => $id_personaggio,
         ];
+    });
+
+    switch ($status['result']) {
+        case GDRCD_LOGIN_SUCCESS:
+            gdrcd_session_create($status['id_personaggio']);
+            break;
+
+        case GDRCD_LOGIN_TAKEOVER:
+            gdrcd_session_takeover_begin($status['id_personaggio']);
+            break;
     }
 
-    // Device diverso o incerto: richiedi verifica tramite token
-    gdrcd_session_takeover_begin($id_personaggio);
     gdrcd_session_commit();
 
-    $result = [
-        'result' => GDRCD_LOGIN_TAKEOVER,
-        'id_personaggio' => $id_personaggio,
-    ];
-
-    return $result;
+    return $status;
 }
 
 /**
