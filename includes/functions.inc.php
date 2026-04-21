@@ -872,7 +872,23 @@ function gdrcd_client_ip(): string
 }
 
 /**
- * Stampa un messaggio d'errore e termina lo script
+ * Ritorna l'hostname corrente del client
+ *
+ * @param null|string $ip L'indirizzo IP. Di default usa l'ip corrente
+ * @return string
+ */
+function gdrcd_client_host(?string $ip = null): string
+{
+    $remote_ip = $ip ?? gdrcd_client_ip();
+
+    return match ($remote_ip) {
+        '::1', '127.0.0.1' => 'localhost',
+        default => gethostbyaddr($remote_ip),
+    };
+}
+
+/**
+ * Stampa un messaggio d'errore
  *
  * @param string $messaggio Il messaggio da stampare, viene filtrato con gdrcd_filter_out
  * @param string $filter_out default true. Se false disattiva il filtraggio interno con gdrcd_filter_out
