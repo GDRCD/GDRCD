@@ -81,7 +81,12 @@
                                 </td>
                                 <td class="casella_titolo">
                                     <div class="titoli_elenco">
-                                        <?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['log']['events']['dest']); ?>
+                                        <?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['log']['events']['sogg'] ); ?>
+                                    </div>
+                                </td>
+                                <td class="casella_titolo">
+                                    <div class="titoli_elenco">
+                                        <?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['log']['events']['dest'] ); ?>
                                     </div>
                                 </td>
                                 
@@ -94,7 +99,7 @@
 
                             <?php foreach ($logs as $row):
                                 $presentazione = gdrcd_present_log_row($whichLog, $row);
-                                //gdrcd_debug($row); 
+                              //  gdrcd_debug($row); 
                             ?>
                                 <tr class="risultati_elenco_record_gestione">
                                     <td class="casella_elemento">
@@ -104,12 +109,17 @@
                                     </td>
                                     <td class="casella_elemento">
                                         <div class="elementi_elenco">
-                                            <?php echo gdrcd_filter('out', $presentazione['autore']); ?>
+                                            <a href="main.php?page=scheda&pg=<?php echo $presentazione['id_autore']; ?>"><?php echo gdrcd_filter('out', $presentazione['autore']); ?></a>
                                         </div>
                                     </td>
                                     <td class="casella_elemento">
                                         <div class="elementi_elenco">
-                                            <?php echo gdrcd_filter('out', $presentazione['destinatario']); ?>
+                                            <a href="main.php?page=scheda&pg=<?php echo $presentazione['id_sogggetto']; ?>"><?php echo gdrcd_filter('out', $presentazione['soggetto']); ?></a>
+                                        </div>
+                                    </td>
+                                    <td class="casella_elemento">
+                                        <div class="elementi_elenco">
+                                            <a href="main.php?page=scheda&pg=<?php echo $presentazione['id_destinatario']; ?>"><?php echo gdrcd_filter('out', $presentazione['destinatario']); ?></a>
                                         </div>
                                     </td>
                                     

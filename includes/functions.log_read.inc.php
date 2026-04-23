@@ -123,7 +123,6 @@ function gdrcd_extract_logs($eventi = null, $idPersonaggio = null, $limit = 100,
 
     $sql .= " ORDER BY `data` DESC
               LIMIT ?, ?";
-
     $params[] = (int)$offset;
     $params[] = (int)$limit;
 
@@ -132,6 +131,8 @@ function gdrcd_extract_logs($eventi = null, $idPersonaggio = null, $limit = 100,
         $log['contesto_decodificato'] = json_decode($log['contesto'], true) ?: [];
         $logs[] = $log;
     }
+   
+   
 
     return $logs;
 }
@@ -213,22 +214,18 @@ function gdrcd_present_log_row(?int $whichLog, array $row): array
     $idDestinatario = $contesto['id_destinatario'] ?? null;
 
     $descrizione = $row['descrizione'] ?? '';
-
-    // Vista "Tutti i log": usa il nuovo schema standard
+     // Vista "Tutti i log": usa il nuovo schema standard
     if ($whichLog === null) {
-        $dest = '-';
-
-        if ($destinatario !== '-') {
-            $dest = $destinatario;
-        } elseif ($soggetto !== '-') {
-            $dest = $soggetto;
-        } elseif (!empty($row['id_personaggio'])) {
-            $dest = '';
-        }
+        
+        
 
         return [
             'autore' => $autore,
-            'destinatario' => $dest,
+            'id_autore' => $idAutore,
+            'soggetto' => $soggetto,
+            'id_soggetto' => $idSoggetto,
+            'id_destinatario' => $idDestinatario,
+            'destinatario' => $destinatario,
             'descrizione' => $descrizione,
         ];
     }
@@ -237,17 +234,26 @@ function gdrcd_present_log_row(?int $whichLog, array $row): array
         case BLOCKED:
         case LOGGEDIN:
         case ERRORELOGIN:
-            $autore = $contesto['ip'] ?? '-';
+            $autore = $contesto['autore'] ?? '-';
+            $idAutore = $contesto['id_autore'] ?? null;
             $destinatario = $contesto['autore'] ?? $autore;
+            $idDestinatario = $contesto['id_destinatario'] ?? null;
+            $soggetto = $contesto['soggetto'] ?? '-';
+            $idSoggetto = $contesto['id_soggetto'] ?? null;
+
             $descrizione = $row['descrizione'] ?? '';
+            
             break;
 
         case ACCOUNTMULTIPLO:
-            $autore = $contesto['utente_corrente'] ?? ($contesto['autore'] ?? '-');
-            $destinatario = $contesto['altro_account'] ?? '-';
-            $descrizione = $row['descrizione'] ?? '';
+           $autore = $contesto['autore'] ?? '-';
+            $idAutore = $contesto['id_autore'] ?? null;
+            $destinatario = $contesto['autore'] ?? $autore;
+            $idDestinatario = $contesto['id_destinatario'] ?? null;
+            $soggetto = $contesto['soggetto'] ?? '-';
+            $idSoggetto = $contesto['id_soggetto'] ?? null;
             if (!empty($contesto['ip'])) {
-                $descrizione .= ' (' . gdrcd_mask_ip($contesto['ip']) . ')';
+                $descrizione .= ' (' . ($contesto['ip']) . ')';
             }
             break;
 
@@ -318,6 +324,9 @@ function gdrcd_present_log_row(?int $whichLog, array $row): array
         'autore' => $autore,
         'destinatario' => $destinatario,
         'descrizione' => $descrizione,
+        'id_autore' => $idAutore,
+        'id_soggetto' => $idSoggetto,
+        'id_destinatario' => $idDestinatario,
     ];
 }
 

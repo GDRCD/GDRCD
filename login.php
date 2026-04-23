@@ -199,8 +199,8 @@ elseif ($credentialsOk && $sessionExpired) {
                     );
 
     gdrcd_log_info('Login effettuato con successo', 
-    [
-        ['evento' => 'auth.login.successo', ...$contestoLog]], 
+    
+        ['evento' => 'auth.login.successo', ...$contestoLog], 
         $_SESSION['id_personaggio']);
 
     /* ------------------------------------------------------------------ */
@@ -234,11 +234,11 @@ elseif ($credentialsOk && $sessionExpired) {
                             'ip' => $_SERVER['REMOTE_ADDR'],
                         ],
                         $record['id_personaggio'],
-                        $login1,
+                        $_POST['login1'],
                     );
         gdrcd_log_notice('Tentativo di login non riuscito',
-        [
-            ['evento' => 'auth.login.fallito', ...$contestoLog]], 
+        
+            ['evento' => 'auth.login.fallito', ...$contestoLog], 
             $record['id_personaggio'],
         );
 
