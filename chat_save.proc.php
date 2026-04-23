@@ -70,26 +70,9 @@ $do_query = gdrcd_query($query, 'result');
 
 /*Inizio a preparare il testo da inserire poi nel file da salvare.*/
 $add_chat = '
-        <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-            "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-            <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="it" lang="it">
-            <head>
-            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-            <link rel="shortcut icon" href="imgs/favicon.ico" type="image/gif" />
-            <link rel="stylesheet" href="' . $PARAMETERS['info']['site_url'] . '/css/homepage.css" type="text/css" />
-            <link rel="stylesheet" href="' . $PARAMETERS['info']['site_url'] . '/themes/' . $PARAMETERS['themes']['current_theme'] . '/main.css" type="text/css" />
-            <link rel="stylesheet" href="' . $PARAMETERS['info']['site_url'] . '/themes/' . $PARAMETERS['themes']['current_theme'] . '/chat.css" type="text/css" />
-            <link rel="stylesheet" href="' . $PARAMETERS['info']['site_url'] . '/layouts/' . $PARAMETERS['themes']['kind_of_layout'] . '_frames.php?css=true" type="text/css" />
-            </head>
-            <body class="main_body" style="overflow:auto; text-align:justify;"> ';
+        <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN";
 
 
-$i = 0;
-/* Eseguo la query  */
-while ($row = gdrcd_query($do_query, 'fetch')) {
-    $add_chat .= gdrcd_chat_message_handler($row);
-}
  $add_chat .= '
             </body>
             </html>

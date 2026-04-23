@@ -26,7 +26,7 @@ $handleDBConnection = gdrcd_connect();
 
 
     # Recupero la giocata dall'id, dopo aver verificato che appartenga al pg
-    $check = gdrcd_query("SELECT id_personaggio, stanza, data_inizio, data_fine FROM segnalazione_role WHERE id = " . gdrcd_filter('num', $_GET['id']) . " 
+    $check = gdrcd_query("SELECT id_personaggio, stanza, data_inizio, data_fine FROM segnalazione_role WHERE id = " . gdrcd_filter('num', $_GET['id']) . "
         AND id_personaggio = '" .gdrcd_filter('in', $_SESSION['id_personaggio'] ). "'AND conclusa = 1 ", 'result');
     $num_check = gdrcd_query($check, 'num_rows');
     $check_f= gdrcd_query($check, 'fetch');
@@ -39,7 +39,7 @@ $handleDBConnection = gdrcd_connect();
     /*Query per caricamento dati dalla chat corrente, carica le azioni degli ultimi 240 min - 4 ore !! NON SALVA LE CHAT PRIVATE !!*/
 
 
-        $query = gdrcd_query("SELECT 
+        $query = gdrcd_query("SELECT
                                 c.id,
                                 c.imgs,
                                 c.id_personaggio_mittente,
@@ -52,14 +52,14 @@ $handleDBConnection = gdrcd_connect();
                                 c.tag_posizione,
                                 pm.url_img_chat AS url_img_chat
                             FROM chat c
-                            LEFT JOIN personaggio pm 
+                            LEFT JOIN personaggio pm
                                 ON pm.id_personaggio = c.id_personaggio_mittente
-                            LEFT JOIN personaggio pd 
+                            LEFT JOIN personaggio pd
                                 ON pd.id_personaggio = c.id_personaggio_destinatario
-                                WHERE stanza = " . $check_f['stanza'] . " AND ora >= '" . gdrcd_filter('in', $check_f['data_inizio']) . "' 
-                                AND ora <= '" . gdrcd_filter('in', $check_f['data_fine']) . "' 
+                                WHERE stanza = " . $check_f['stanza'] . " AND ora >= '" . gdrcd_filter('in', $check_f['data_inizio']) . "'
+                                AND ora <= '" . gdrcd_filter('in', $check_f['data_fine']) . "'
                                 ORDER BY ora ". $typeOrder, 'result');
-                            
+
 
     /*Inizio a preparare il testo da inserire poi nel file da salvare.*/
     $add_chat = '
@@ -69,13 +69,13 @@ $handleDBConnection = gdrcd_connect();
             <head>
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
             <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-            <link rel="shortcut icon" href="imgs/favicon.ico" type="image/gif" />
+            <link rel="shortcut icon" href="public/images/favicon.ico" type="image/gif" />
             <link rel="stylesheet" href="' . $PARAMETERS['info']['site_url'] . '/css/homepage.css" type="text/css" />
             <link rel="stylesheet" href="' . $PARAMETERS['info']['site_url'] . '/themes/' . $PARAMETERS['themes']['current_theme'] . '/main.css" type="text/css" />
             <link rel="stylesheet" href="' . $PARAMETERS['info']['site_url'] . '/themes/' . $PARAMETERS['themes']['current_theme'] . '/chat.css" type="text/css" />
             <link rel="stylesheet" href="' . $PARAMETERS['info']['site_url'] . '/layouts/' . $PARAMETERS['themes']['kind_of_layout'] . '_frames.php?css=true" type="text/css" />
             </head>
-    
+
             <body class="main_body" style="overflow:auto; text-align:justify;">
             ';
 

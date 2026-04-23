@@ -46,9 +46,9 @@ $PARAMETERS['languages']['set'] = 'IT-it'; //lingua italiana
 
 /* SCELTA DEL TEMA */
 // HOMEPAGE
-$PARAMETERS['themes']['homepage'] = 'advanced'; //tema in uso
+$PARAMETERS['themes']['homepage'] = 'night'; //tema in uso
 // MAINPAGE
-$PARAMETERS['themes']['current_theme'] = 'advanced'; //tema in uso
+$PARAMETERS['themes']['current_theme'] = 'night'; //tema in uso
 
 /**
  * Inserendo i nomi dei temi in questo elenco è possibile rendere disponibili agli utenti temi alternativi rispetto a quello di default
@@ -60,6 +60,7 @@ $PARAMETERS['themes']['current_theme'] = 'advanced'; //tema in uso
  * NOTA: le pagine esterne del sito, cioè quelle visualizzate prima del login saranno sempre visualizzate con il tema di default
  */
 $PARAMETERS['themes']['available'] = array(
-    'advanced' => 'Tema "Advanced" GDRCD',
+    'night' => 'Tema "Night" GDRCD',
+    //'advanced' => 'Tema "Advanced" GDRCD',
     //'il_mio_tema_preferito' => 'Il mio tema troppo figo'
 );
