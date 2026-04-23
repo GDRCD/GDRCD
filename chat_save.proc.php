@@ -46,7 +46,7 @@ $add_chat = '
         <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <link rel="shortcut icon" href="imgs/favicon.ico" type="image/gif" />
+        <link rel="shortcut icon" href="public/images/favicon.ico" type="image/gif" />
         <link rel="stylesheet" href="' . $PARAMETERS['info']['site_url'] . '/css/homepage.css" type="text/css" />
         <link rel="stylesheet" href="' . $PARAMETERS['info']['site_url'] . '/themes/' . $PARAMETERS['themes']['current_theme'] . '/main.css" type="text/css" />
         <link rel="stylesheet" href="' . $PARAMETERS['info']['site_url'] . '/themes/' . $PARAMETERS['themes']['current_theme'] . '/chat.css" type="text/css" />
@@ -90,7 +90,7 @@ while ($row = gdrcd_query($query, 'fetch')) {
                  src="' . $PARAMETERS['info']['site_url'] . '/themes/' . $PARAMETERS['themes']['current_theme'] . '/imgs/icons/races/' . $icone_chat[1] . '">';
             }
             if ($PARAMETERS['settings']['chat']['gender'] == 'ON') {
-                $add_icon .= '<img class="presenti_ico" src="' . $PARAMETERS['info']['site_url'] . '/imgs/icons/testamini' . $icone_chat[0] . '.png">';
+                $add_icon .= '<img class="presenti_ico" src="' . $PARAMETERS['info']['site_url'] . '/public/images/icons/testamini' . $icone_chat[0] . '.png">';
             }
             if ($PARAMETERS['settings']['chat']['guilds'] == 'ON') {
 
@@ -110,7 +110,7 @@ while ($row = gdrcd_query($query, 'fetch')) {
                 }
 
                 for ($i = $PARAMETERS['settings']['guilds_limit']; $i > $gilde; $i--) {
-                    $add_icon .= '<img class="presenti_ico" src="' . $PARAMETERS['info']['site_url'] . '/imgs/icons/guilds/null.png" alt="" title="" />';
+                    $add_icon .= '<img class="presenti_ico" src="' . $PARAMETERS['info']['site_url'] . '/public/images/icons/guilds/null.png" alt="" title="" />';
                 }
             }
         } else {
@@ -119,7 +119,7 @@ while ($row = gdrcd_query($query, 'fetch')) {
             *@author eLDiabolo
             */
             $add_icon .= '<img class="presenti_ico" src="' . $PARAMETERS['info']['site_url'] . '/themes/' . $PARAMETERS['themes']['current_theme'] . '/imgs/icons/races/' . $icone_chat[1] . '">';
-            $add_icon .= '<img class="presenti_ico" src="' . $PARAMETERS['info']['site_url'] . '/imgs/icons/testamini' . $icone_chat[0] . '.png">';
+            $add_icon .= '<img class="presenti_ico" src="' . $PARAMETERS['info']['site_url'] . '/public/images/icons/testamini' . $icone_chat[0] . '.png">';
         }
 
         /*Corretta la svista riportata nel pacchetto "Icone Chat v 1.1"

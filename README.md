@@ -49,12 +49,14 @@ questi standard non verranno prese in considerazione.
     La struttura delle cartelle è la seguente:
 
     ```
-    imgs
-    ├─ avatars
-    ├─ icons
-    ├─ pegi
+    public
+    ├─ sounds
     ├─ images
-    ├─ locations
+    |  ├─ avatars
+    |  ├─ icons
+    |  ├─ pegi
+    |  ├─ images
+    |  ├─ locations
     includes
     pages
     layouts
@@ -74,7 +76,7 @@ questi standard non verranno prese in considerazione.
 
     ***
 
-    `/imgs`: La cartella contiene alcune immagini utilizzate dal sistema, in
+    `/public/images`: La cartella contiene alcune immagini utilizzate dal sistema, in
     particolare icone di sistrma. Se si desidera modificarle è possibile
     agire sul contenuto di questa cartella anche se non è parte dei temi.
     La cartella pegi contiene i simboli pegi per la homepage, la cartella
