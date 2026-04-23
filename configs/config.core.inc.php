@@ -87,9 +87,9 @@ $PARAMETERS['languages']['set'] = 'IT-it'; //lingua italiana
 
 /* SCELTA DEL TEMA */
 // HOMEPAGE
-$PARAMETERS['themes']['homepage'] = 'advanced'; //tema in uso
+$PARAMETERS['themes']['homepage'] = 'night'; //tema in uso
 // MAINPAGE
-$PARAMETERS['themes']['current_theme'] = 'advanced'; //tema in uso
+$PARAMETERS['themes']['current_theme'] = 'night'; //tema in uso
 
 /**
  * Inserendo i nomi dei temi in questo elenco è possibile rendere disponibili agli utenti temi alternativi rispetto a quello di default
@@ -329,7 +329,7 @@ $PARAMETERS['settings']['audiotype']['.wav'] = 'audio/x-wav';
 /**
  * HELP:
  * nome del file audio usato per il suono dei nuovi messaggi in arrivo
- * - il file DEVE trovarsi nella cartella sounds
+ * - il file DEVE trovarsi nella cartella public/sounds
  * - il file DEVE essere in uno dei formati concessi per l'uso
  * - per non usare file audio per le nuove missive, semplicemente lasciare vuoto il campo
  *
@@ -708,39 +708,23 @@ $PARAMETERS['mode']['chatsave_download'] = 'OFF';
 
 
 /* CLASSIFICAZIONE PEGI */
+
 /**
  * HELP:
- * Per visualizzare le icone stile pegi in homepage rimuovere i commenti davanti alle voci ( il  // )
- * Il PEGI non è una risorsa gratuita, le icone sono disabilitate di base perchè per adoperarle è necessaria una licenza che si ACQUISTA.
+ * È possibile configurare le icone PEGI da visualizzare nella pagina principale del gioco, in calce al menu.
+ * Per farlo è sufficiente aggiungere una voce alla configurazione del menu, usando la seguente struttura:
  *
- * La funzionalità rimane pertanto per consentire il facile inserimento delle vostre iconcine personalizzate.
+ * $PARAMETERS['pegi']['example']['image_file'] = 'example.gif'; //Nome del file dell'icona
+ * $PARAMETERS['pegi']['example']['text'] = 'PEGI Esempio'; //Testo alternativo dell'icona
+ *
+ * L'icona deve essere caricata nella cartella public/images/pegi e deve essere in formato .gif, .jpg o .png.
+ *
+ * Le icone ufficiali PEGI sono disponibili a pagamento sul sito ufficiale PEGI ( https://pegi.info/ ) e sono protette da copyright,
+ * pertanto non è possibile caricarle senza acquistarne la licenza. Se si desidera utilizzare le icone ufficiali PEGI è necessario
+ * acquistare la licenza e caricare le icone nella cartella public/images/pegi, dopodichè è possibile configurarle come descritto sopra.
  */
-//$PARAMETERS['pegi']['violenza']['image_file']='117.gif';
-//$PARAMETERS['pegi']['violenza']['text']='Gioco che contiene scene di violenza';
-//$PARAMETERS['pegi']['droghe']['image_file']='112.gif';
-//$PARAMETERS['pegi']['droghe']['text']='Gioco che fa riferimento a o rappresenta l’uso di droghe';
-//$PARAMETERS['pegi']['discriminazione']['image_file']='111.gif';
-//$PARAMETERS['pegi']['discriminazione']['text']='Gioco che contiene scene di discriminazione o materiale che possa incoraggiarla';
-//$PARAMETERS['pegi']['paura']['image_file']='113.gif';
-//$PARAMETERS['pegi']['paura']['text']='Gioco che può allarmare o spaventare i bambini ';
-//$PARAMETERS['pegi']['azzardo']['image_file']='114.gif';
-//$PARAMETERS['pegi']['azzardo']['text']='Gioco che incoraggia o insegna a giocare d’azzardo ';
-//$PARAMETERS['pegi']['sesso']['image_file']='116.gif';
-//$PARAMETERS['pegi']['sesso']['text']='Gioco che contiene scene di nudo e/o comportamenti sessuali o riferimenti sessuali ';
-//$PARAMETERS['pegi']['volgarita']['image_file']='115.gif';
-//$PARAMETERS['pegi']['volgarita']['text']='Gioco che contiene espressioni volgari';
-//$PARAMETERS['pegi']['online']['image_file']='237.gif';
-//$PARAMETERS['pegi']['online']['text']='Gioco online';
-//$PARAMETERS['pegi']['3+']['image_file']='149.gif';
-//$PARAMETERS['pegi']['3+']['text']='Gioco adatto ai bambini';
-//$PARAMETERS['pegi']['7+']['image_file']='151.gif';
-//$PARAMETERS['pegi']['7+']['text']='Gioco adatto ai bambini';
-//$PARAMETERS['pegi']['12+']['image_file']='154.gif';
-//$PARAMETERS['pegi']['12+']['text']='Gioco adatto ai ragazzi';
-//$PARAMETERS['pegi']['16+']['image_file']='155.gif';
-//$PARAMETERS['pegi']['16+']['text']='Gioco adatto ai ragazzi';
-//$PARAMETERS['pegi']['18+']['image_file']='156.gif';
-//$PARAMETERS['pegi']['18+']['text']='Per un pubblico adulto';
+// $PARAMETERS['pegi']['example']['image_file']='example.gif';
+// $PARAMETERS['pegi']['example']['text']='PEGI Esempio';
 
 
 /* COSTRUZIONE OPZIONI MENU */

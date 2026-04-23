@@ -179,6 +179,9 @@ pip-log.txt
 ## GDRCD
 #############
 
+# cache
+cache/
+
 # chat_save
 giocate/
 

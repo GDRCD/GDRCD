@@ -1,0 +1,510 @@
+/** * Skin Advanced
+	* Il presente files regola gli stili CSS della homepage
+	* @author Blancks
+*/
+
+/** * STILI DEI CONTENUTI DEL SITO */
+/** * Skin advanced
+	* @author Blancks
+*/
+
+/** * Parametri di default nella pagina
+*/
+body {
+    padding: 0;
+    margin: 0;
+    color: #222;
+    font-family: Verdana, Sans;
+    font-size: 11px;
+    background: #111827;
+}
+
+body.transparent_body {
+    background-color: transparent;
+    background-image: none;
+}
+
+div, ul, li {
+    margin: 0;
+    padding: 0;
+}
+
+.blank {
+    clear: both;
+}
+
+a, a:visited {
+    color: #d1d5db;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #f1f1f1;
+    text-decoration: underline;
+}
+
+div.form_field table {
+    margin: 5px auto;
+    table-layout: fixed;
+    width: 100%;
+}
+
+textarea {
+    height: 100px;
+}
+
+div.form_label {
+    font-size: 13px;
+    font-weight: bolder;
+    margin-top: 5px;
+}
+
+div.form_info {
+    font-size: 12px;
+    margin-bottom: 15px;
+}
+
+select.day, select.month, select.year {
+    width: 60px;
+    display: inline-block;
+}
+
+/** * Stile dei messaggi d'avviso dell'engine */
+div.warning, div.error {
+    background-color: #cf8888;
+    font-size: 12px;
+    text-align: center;
+    margin: 15px;
+    font-weight: bolder;
+    padding: 10px;
+    border: solid 1px #800;
+    color: #970b0b;
+}
+
+div.warning.mysql,
+div.error.mysql {
+	text-align:left;
+	font-weight:normal;
+}
+
+div.warning.mysql summary,
+div.error.mysql summary{
+	margin-top:1em;
+	font-weight:bold;
+}
+
+div.link_back {
+    text-align: center;
+    background-color: #d1d1d1;
+    padding: 2px;
+}
+
+
+/** * Titolo del sito
+*/
+h1 {
+    margin: 0;
+    padding: 30px 0 0 76px;
+    font-size: 38px;
+    font-family: Myriad Pro, Myriad Web Pro Regular, Lucida Grande, Geneva, Trebuchet MS, sans-serif;
+}
+
+/** * Stile del link sul titolo */
+h1 a, h1 a:visited, h1 a:hover {
+    color: #222;
+    text-decoration: none;
+}
+
+/** * Sottotitolo
+*/
+div.subtitle {
+    margin-left: 78px;
+    font-family: Verdana, Sans;
+    font-size: 12px;
+}
+
+/** * Stili del form di login
+*/
+div.login_form{
+	float:right;
+	width:230px;
+	padding:20px 10px;
+	margin-top: 20px;
+}
+
+/** * stile che ingloba i gruppi label/input
+*/
+div.login_form div {
+    margin-bottom: 4px;
+}
+
+/** * Stile per le label dei form
+*/
+span.form_label {
+    text-align: left;
+    font-weight: bolder;
+}
+
+input[type="submit"],
+input[type="button"],
+button {
+    display: inline-block;
+    padding: 8px 14px;
+    min-height: 34px;
+    border: 1px solid #5c7193;
+    border-radius: 4px;
+    background: linear-gradient(180deg, #3d5373 0%, #2b3d57 100%);
+    color: #f4f7fb;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: Arial, Helvetica, sans-serif;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 1px 2px rgba(0,0,0,0.25);
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+/* Hover */
+input[type="submit"]:hover,
+input[type="button"]:hover,
+button:hover{
+    background: linear-gradient(180deg, #486287 0%, #324867 100%);
+    border-color: #7a93bb;
+    color: #ffffff;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 2px 6px rgba(0,0,0,0.28);
+}
+
+/* Click */
+input[type="submit"]:active,
+input[type="button"]:active,
+button:active {
+    transform: translateY(1px);
+    background: linear-gradient(180deg, #2a3b54 0%, #223146 100%);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.25);
+}
+
+/* Focus accessibile */
+input[type="submit"]:focus,
+input[type="button"]:focus,
+button:focus{
+    outline: none;
+    border-color: #9db6de;
+    box-shadow: 0 0 0 3px rgba(125, 160, 215, 0.25);
+}
+select,
+input[type="text"],
+input[type="password"],
+input[type="email"],
+textarea {
+    height: 34px;
+    padding: 6px 10px;
+    border: 1px solid #50627d;
+    border-radius: 4px;
+    background: #f4f6fa;
+    color: #1d2735;
+    font-size: 13px;
+    font-family: Arial, Helvetica, sans-serif;
+    box-sizing: border-box;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.10);
+    transition: all 0.2s ease;
+}
+
+select:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+textarea:focus {
+    outline: none;
+    border-color: #87a4d4;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(135,164,212,0.20);
+}
+
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 34px;
+    background-image:
+        linear-gradient(180deg, #f4f6fa 0%, #e7edf6 100%),
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path fill='%23384a67' d='M2.2 4.2 6 8l3.8-3.8z'/></svg>");
+    background-position: 0 0, right 10px center;
+    background-size: 100% 100%, 12px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+/** * Contenuti principali della pagina
+*/
+
+/** * Titolo della sezione */
+h2 {
+    font-size: 25px;
+    font-weight: normal;
+    margin: 0;
+    padding-bottom: 4px;
+    border-bottom: solid 1px #d9d9d9;
+}
+
+/** * Contenuti testuali */
+div.content_body p {
+    font-size: 13px;
+    padding: 0 10px;
+}
+
+div.content_body a {
+    color: #79a6b9;
+    text-decoration: underline;
+}
+
+/** * Men� di navigazione
+*/
+div.sidecontent ul {
+    margin: 10px 0 0 10px;
+    padding: 20px 10px 20px 10px;
+    background-color: #243041;
+    color: #d1d5db;
+    list-style-type: none;
+    border: solid 1px #33445c;
+}
+
+/** * Contenitore delle voci nel men� **/
+div.sidecontent ul li {
+    margin-bottom: 5px;
+}
+
+/** * Link voce men� al passaggio del mouse **/
+div.sidecontent ul li a, div.sidecontent ul li a:visited {
+    color: #f1f1f1;
+    text-decoration: none;
+    display: block;
+    font-size: 17px;
+    padding: 2px;
+    background-color: transparent;
+}
+
+/** * Link voce men� al passaggio del mouse
+*/
+div.sidecontent ul li a:hover {
+    background-color: #3e5677;
+    color: #f1f1f1;
+}
+
+/** Stile generico contenitore per altri contenuti nella sidebar
+*/
+div.side_modules {
+    margin: 10px 0 0 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.05);
+    background-color: #243041;
+    color: #d1d5db;
+    padding: 10px;
+}
+
+div.side_modules .form_label {
+    font-size: 10px;
+    margin-right: 2px;
+}
+
+/** * Tabella statistiche */
+table.statistics {
+    text-align: right;
+    margin-top: 10px;
+    font-size: 10px;
+}
+
+table.statistics td {
+    padding-right: 5px;
+}
+
+/** * Stile di colorazione per definire le righe pari */
+table.statistics tr.pair {
+    background-color: #33445c;
+}
+
+/** * Stile per definire il titolo del parametro statistico */
+table.statistics td.label {
+    font-weight: bolder;
+    text-align: left;
+    padding: 2px;
+}
+
+/** * Recupero password */
+div.pass_rec {
+    margin-top: 10px;
+}
+
+input#passrecovery {
+    width: 126px;
+}
+
+div.pass_rec input[type='submit'] {
+    margin-top: 3px;
+}
+
+/** * Footer info */
+div#footer div {
+    background-color: #243041;
+    padding: 5px 0 3px 0;
+}
+
+div#footer p {
+    font-size: 10px;
+    margin: 0;
+    padding: 0 15px 2px 15px;
+    text-align: center;
+}
+div#footer p a {
+    color: #d1d5db;
+    text-decoration: none;
+}
+
+/** * LAYOUT SITO */
+
+/** * Struttura contenitore di tutto il sito
+*/
+div#main {
+    height: 100%;
+    width: 100%;
+
+    text-align: center;
+}
+
+/** * Larghezza della struttura del sito
+*/
+div#site_width {
+    margin: 0 auto;
+    width: 960px;
+    text-align: left;
+}
+
+/** * Header
+*/
+div#header {
+    height: 180px;
+    background-color: #243041;
+    color: #d1d5db;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.05);
+}
+div#header > div {
+    float: left;
+    height: 100%;
+}
+
+div#header .titlecontent {
+    width: calc(100% - 250px);
+    background-color: #33445c;
+}
+
+/** * Corpo contenuti della pagina
+*/
+div#content {
+    padding: 0 10px 10px 10px;
+    background-color: #1f2937;
+    color: #d1d5db;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.05);
+
+}
+
+/** * Struttura colonna di lato
+*/
+div.sidecontent {
+    width: 200px;
+    float: left;
+}
+
+/** * Struttura corpo contenuti pagina
+*/
+div.content_body {
+    width: 620px;
+    padding: 10px;
+    float: left;
+}
+
+/** * pie di pagina
+*/
+div#footer {
+    height: 68px;
+    background-color: #1f2937;
+    color: #d1d5db;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+
+/** *** Fine stili regolatori del layout *** */
+
+/**
+ * TABELLA
+ */
+
+div.elenco_record_gioco {
+    padding: 20px;
+}
+
+div.elenco_record_gioco table {
+    width: 100%;
+    background-color: #243041;
+
+}
+
+div.elementi_elenco {
+    padding-top: 5px;
+    text-align: center;
+}
+
+div.titoli_elenco,
+span.titoli_elenco {
+    font-weight: bold;
+    font-size: 12px;
+    font-style: italic;
+}
+
+img.colonna_elenco_messaggi_icon {
+    width: 30px;
+    height: 30px;
+}
+
+div.controlli_elenco {
+    width: 60px;
+}
+
+div.controllo_elenco {
+    width: 20px;
+    float: left;
+}
+
+div.controllo_elenco input[type='image'] {
+    width: 15px;
+}
+
+
+div.elementi_elenco {
+    min-height: 20px;
+}
+
+td.casella_elemento, div.elementi_elenco {
+    font-size: 12px;
+    background-color: #33445c;
+    color: #d1d5db;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+div.controllo_elenco input[type='image'] {
+    height: 15px;
+    width: 15px;
+    display: block;
+    margin: 2px 5px;
+}
+
+div.elementi_elenco a {
+    font-weight: bolder;
+}
+
+div.elementi_elenco a:hover {
+    text-decoration: none;
+}

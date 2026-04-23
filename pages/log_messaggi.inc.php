@@ -58,7 +58,7 @@
                     FROM backmessaggi
                     LEFT JOIN personaggio ON backmessaggi.id_personaggio_destinatario = personaggio.id_personaggio
                     WHERE backmessaggi.id_personaggio_mittente = ? ORDER BY backmessaggi.spedito DESC LIMIT ?, ?",
-                    ['siii', $GLOBALS['MESSAGE']['interface']['user']['cancelled'], $_REQUEST['pg'], $pagebegin, $pageend]);
+                    [$GLOBALS['MESSAGE']['interface']['user']['cancelled'], $_REQUEST['pg'], $pagebegin, $pageend]);
                 $numresults = gdrcd_query($result, 'num_rows');
 
                 /* Se esistono record */

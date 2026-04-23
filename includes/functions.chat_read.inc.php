@@ -53,7 +53,6 @@ function gdrcd_chat_read_messages($luogo, $last_id = 0)
 
         ORDER BY id ASC",
         [
-            'sii',
             $GLOBALS['MESSAGE']['interface']['user']['cancelled'] .' ('. $GLOBALS['MESSAGE']['interface']['messages']['sender'] .')',
             $last_id,
             $luogo,
@@ -853,15 +852,18 @@ function gdrcd_chat_avatar_component($azione)
 
     $larghezza = $PARAMETERS['settings']['chat_avatar']['width'];
     $altezza = $PARAMETERS['settings']['chat_avatar']['height'];
-    $avatar_url = $azione['url_img_chat'];
+    $avatar_url = trim($azione['url_img_chat']);
+    $chat_avatar = '';
 
-    $chat_avatar = <<<HTML
-        <img
-            src="{$avatar_url}"
-            class="chat_avatar"
-            style="width:{$larghezza}px; height:{$altezza}px;"
-        />
-        HTML;
+    if (!empty($avatar_url)) {
+        $chat_avatar = <<<HTML
+            <img
+                src="{$avatar_url}"
+                class="chat_avatar"
+                style="width:{$larghezza}px; height:{$altezza}px;"
+            />
+            HTML;
+    }
 
     if(
         isset($PARAMETERS['settings']['chat_avatar']['link']['mode'])
@@ -935,7 +937,7 @@ function gdrcd_chat_icons_component($azione)
     $icone = explode(';', $azione['imgs']);
 
     $icona_genere_url = sprintf(
-        'imgs/icons/testamini%s.png',
+        'public/images/icons/testamini%s.png',
         urlencode($icone[0])
     );
 

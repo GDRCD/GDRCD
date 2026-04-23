@@ -23,7 +23,7 @@ if(!gdrcd_controllo_permessi_forum($araldo['tipo'],$araldo['proprietari'])){
                 $id_record = (int) $_POST['id_record'];
                 $status_imp = (int) $_POST['status_imp'];
 
-                gdrcd_query("UPDATE messaggioaraldo SET importante = $status_imp WHERE id_messaggio = $id_record") or die(gdrcd_mysql_error());
+                gdrcd_query("UPDATE messaggioaraldo SET importante = $status_imp WHERE id_messaggio = $id_record");
 
                 break;
 
@@ -31,7 +31,7 @@ if(!gdrcd_controllo_permessi_forum($araldo['tipo'],$araldo['proprietari'])){
                 $id_record = (int) $_POST['id_record'];
                 $status_cls = (int) $_POST['status_cls'];
 
-                gdrcd_query("UPDATE messaggioaraldo SET chiuso = $status_cls WHERE id_messaggio = $id_record") or die(gdrcd_mysql_error());
+                gdrcd_query("UPDATE messaggioaraldo SET chiuso = $status_cls WHERE id_messaggio = $id_record");
 
                 break;
         }
@@ -183,7 +183,7 @@ if(!gdrcd_controllo_permessi_forum($araldo['tipo'],$araldo['proprietari'])){
                                                 <input type="hidden" name="id_record" value="<?php echo $row['id_messaggio'] ?>" />
                                                 <input type="hidden" name="status_imp" value="<?php echo $set_imp; ?>" />
                                                 <input type="hidden" name="ops" value="important" />
-                                                <input type="image" src="imgs/icons/<?php echo $img_imp; ?>"
+                                                <input type="image" src="public/images/icons/<?php echo $img_imp; ?>"
                                                        alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops'][$label_imp]); ?>"
                                                        title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops'][$label_imp]); ?>" />
                                             </form>
@@ -194,7 +194,7 @@ if(!gdrcd_controllo_permessi_forum($araldo['tipo'],$araldo['proprietari'])){
                                                 <input type="hidden" name="id_record" value="<?php echo $row['id_messaggio'] ?>" />
                                                 <input type="hidden" name="status_cls" value="<?php echo $set_cls; ?>" />
                                                 <input type="hidden" name="ops" value="close" />
-                                                <input type="image" src="imgs/icons/<?php echo $img_cls; ?>"
+                                                <input type="image" src="public/images/icons/<?php echo $img_cls; ?>"
                                                        alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops'][$label_cls]); ?>"
                                                        title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops'][$label_cls]); ?>" />
                                             </form>
@@ -202,7 +202,7 @@ if(!gdrcd_controllo_permessi_forum($araldo['tipo'],$araldo['proprietari'])){
                                                                   <!-- Elimina -->
                                         <div class="controllo_elenco">
                                             <a href="main.php?page=forum&op=delete_conf&id_record=<?php echo $row['id_messaggio']; ?>&padre=-1">
-                                                <img src="imgs/icons/erase.png" alt="Elimina" width="15" />
+                                                <img src="public/images/icons/erase.png" alt="Elimina" width="15" />
                                             </a>
                                         </div>
                                     </div>

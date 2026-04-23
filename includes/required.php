@@ -31,6 +31,9 @@ require_once(GDRCD_PATH . '/vocabulary/' . $PARAMETERS['languages']['set'] . '.v
 // include le funzioni generiche
 require_once(GDRCD_PATH . '/includes/functions.inc.php');
 
+// include le funzioni del database
+require_once(GDRCD_PATH . '/includes/functions.database.inc.php');
+
 // include le funzioni per le api ajax/xhr
 require_once(GDRCD_PATH . '/includes/functions.api.inc.php');
 
@@ -38,11 +41,12 @@ require_once(GDRCD_PATH . '/includes/functions.api.inc.php');
 require_once(GDRCD_PATH . '/includes/functions.chat_core.inc.php');
 require_once(GDRCD_PATH . '/includes/functions.chat_read.inc.php');
 require_once(GDRCD_PATH . '/includes/functions.chat_write.inc.php');
+require_once(GDRCD_PATH . '/includes/functions.configuration.inc.php');
 
 // carica la gestione dei suoni
 require_once(GDRCD_PATH . '/includes/AudioController.class.php');
 
 // carica il tema definito
-if(!empty($_SESSION['theme']) and array_key_exists($_SESSION['theme'], $PARAMETERS['themes']['available'])){
+if(!empty($_SESSION['theme']) && array_key_exists($_SESSION['theme'], $PARAMETERS['themes']['available'])){
     $PARAMETERS['themes']['current_theme'] = $_SESSION['theme'];
 }

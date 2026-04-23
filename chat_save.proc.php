@@ -13,7 +13,7 @@ $solo_autore= gdrcd_configuration_get('salva_chat.solo_autore');
 
 
 if($solo_autore == 'si'){
-    $check_pg=gdrcd_query("SELECT count(*) as conta 
+    $check_pg=gdrcd_stmt_one("SELECT count(*) as conta 
     FROM chat 
     WHERE stanza = ".$_SESSION['luogo']." 
     AND DATE_SUB(NOW(), INTERVAL $tempo_salvataggio HOUR) < ora and id_personaggio_mittente = '".$_SESSION['id_personaggio']."' AND tipo !='S'");
