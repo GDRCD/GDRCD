@@ -42,7 +42,7 @@ if ($PARAMETERS['mode']['chatsavepvt'] == 'ON') {
                     ON pm.id_personaggio = c.id_personaggio_mittente
                      LEFT JOIN personaggio pd 
                                 ON pd.id_personaggio = c.id_personaggio_destinatario
-                    WHERE c.stanza = " . $_SESSION['luogo'] . " AND DATE_SUB(NOW(), INTERVAL $tempo_salvataggio HOUR) < c.ora ORDER BY c.id " . $typeOrder; 
+                    WHERE c.stanza = ? AND DATE_SUB(NOW(), INTERVAL ? HOUR) < c.ora ORDER BY c.id " . $typeOrder; 
                         
 } else {
     $query = "	SELECT  c.id, 
@@ -61,12 +61,12 @@ if ($PARAMETERS['mode']['chatsavepvt'] == 'ON') {
                     LEFT JOIN personaggio pm ON pm.id_personaggio = c.id_personaggio_mittente
                      LEFT JOIN personaggio pd 
                                 ON pd.id_personaggio = c.id_personaggio_destinatario
-                    WHERE c.stanza = " . $_SESSION['luogo'] . " 
-                    AND m.privata = 0 AND DATE_SUB(NOW(), INTERVAL $tempo_salvataggio HOUR) < c.ora 
+                    WHERE c.stanza = ? 
+                    AND m.privata = 0 AND DATE_SUB(NOW(), INTERVAL ? HOUR) < c.ora 
                     AND c.ora > IFNULL(m.ora_prenotazione, '0000-00-00 00:00:00') ORDER BY c.id " . $typeOrder;
 }
 
-$do_query = gdrcd_query($query, 'result');
+$do_query = gdrcd_stmt_all($query, [$_SESSION['luogo'], $tempo_salvataggio]);
 
 /*Inizio a preparare il testo da inserire poi nel file da salvare.*/
 $add_chat = '
@@ -88,10 +88,10 @@ $add_chat = '
 
 $i = 0;
 /* Eseguo la query  */
-while ($row = gdrcd_query($do_query, 'fetch')) {
+
+foreach($do_query as $row){
     $add_chat .= gdrcd_chat_message_handler($row);
 }
-
  $add_chat .= '
             </body>
             </html>
