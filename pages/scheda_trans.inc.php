@@ -23,9 +23,8 @@
             <div class="page_body">
                 <div class="panels_box">
                     <?php /*Seleziono le ultime 20 assegnamzioni px*/
-                    $ricezione_bonifico = gdrcd_extract_logs('banca.ricezione_bonifico', $num_logs,0,  (int)$_GET['pg']);
-                    $invio_bonifico = gdrcd_extract_logs('banca.invio_bonifico', $num_logs,0, (int)$_GET['pg']);
-                    $logs_multi = array_merge($ricezione_bonifico, $invio_bonifico);
+                    $logs_multi = gdrcd_extract_logs(['banca.ricezione_bonifico', 'banca.invio_bonifico'],  $_GET['pg'], $num_logs);
+                   
                     usort($logs_multi, function($a, $b) {
                         return $b['data'] - $a['data'];
                     });
@@ -65,8 +64,8 @@
                                         <div class="elementi_elenco">
                                             <?php 
                                             if($direzione === 'entrata'){
-                                                $id = $contesto['id_mittente'];
-                                                $nome = $contesto['nome_mittente'];
+                                                $id = $contesto['id_autore'];
+                                                $nome = $contesto['autore'];
                                                 $icona = '<span style="color: #009933; font-size: 16px;font-weight: bold;" title="Entrata">↑</span>';
                                             } else {
                                                  $id = $contesto['id_destinatario'];
@@ -74,7 +73,7 @@
                                                 $icona = '<span style="color: #ff0000ff; font-size: 16px;font-weight: bold;" title="Uscita">↓</span>';
                                             }
                                             
-                                            echo $icona .' [<a href="main.php?page=scheda&pg=' . $id . '"  >' . gdrcd_filter('out',
+                                            echo $icona . ' ' . $record['descrizione'] . ' ' . ' [<a href="main.php?page=scheda&pg=' . $id . '"  >' . gdrcd_filter('out',
                                                       $nome) . '</a>]: ' .gdrcd_filter('out', $ammontare); ?>
                                         </div>
                                     </td>

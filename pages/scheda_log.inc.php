@@ -10,10 +10,12 @@
         } else {
             /*Visualizzo la pagina*/
             /*Verifico l'esistenza del PG*/
-            $query = "SELECT id_personaggio FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('get', $_REQUEST['pg']) . "'";
-            $result = gdrcd_query($query, 'result');
+            $query = "SELECT id_personaggio
+             FROM personaggio 
+            WHERE id_personaggio = ?";
+            $result = gdrcd_stmt_one($query, [$_REQUEST['pg']]);
             //Se non esiste il pg
-            if (gdrcd_query($result, 'num_rows') == 0) {
+            if ($result === false) {
                 echo '<div class="error">' . gdrcd_filter('out', $MESSAGE['error']['unknown_character_sheet']) . '</div>';
             } else {
                 $num_logs = $PARAMETERS['settings']['view_logs'];
@@ -74,7 +76,7 @@
 
                         <?php
                          
-                        $logs_multi = gdrcd_extract_logs(['auth.multiaccount.ip','auth.multiaccount.cookie'], (int)$_GET['pg'], $num_logs, 0);
+                        $logs_multi = gdrcd_extract_logs(['auth.multiaccount.ip','auth.multiaccount.cookie'], $_GET['pg'], $num_logs);
 
                         usort($logs_multi, function ($a, $b) {
                             return strtotime($b['data']) <=> strtotime($a['data']);
@@ -105,10 +107,7 @@
                                     <?php 
                                     foreach ($logs_multi as $record) {
                                         $contesto = gdrcd_extract_log_contesto($record);
-                                        //controllo che utente corrente e altro account non siano lo stesso
-                                       
-                                        if($contesto['utente_corrente'] != $contesto['altro_account']) {
-                                            
+                                        //controllo che utente corrente e altro account non siano lo stesso                                            
                                     ?>
                                         <tr>
                                             <td class="casella_elemento" style="width: 30%;">
@@ -121,13 +120,13 @@
                                             </td>
                                             <td class="casella_elemento">
                                                 <div class="elementi_elenco">
-                                                    <?php echo $contesto['altro_account'] . " ( ".$record['descrizione']." )"; ?>
+                                                    <?php echo $contesto['soggetto'] . " - ".$record['descrizione']." IP:" . $contesto['ip']; ?>
                                                 </div>
                                             </td>
                                         </tr>
-                                    <?php } //fine if
+                                    <?php
                                      } //fine ciclo
-                                        
+
                                      ?>
                                 </table>
                             </div>
@@ -135,19 +134,22 @@
 
                         /*Seleziono gli ultimi messaggi*/
                         if ($PARAMETERS['mode']['spymessages'] == 'ON') {
+
                             $query = "SELECT 
                             id_personaggio_destinatario, 
                             personaggio.nome AS destinatario,
                             spedito, 
                             testo  
-                            FROM backmessaggi 
-                            LEFT JOIN personaggio ON backmessaggi.id_personaggio_destinatario = personaggio.id_personaggio
-                            WHERE id_personaggio_mittente = '" . gdrcd_filter('in', $_REQUEST['pg']) . "' 
+                            FROM messaggi 
+                            LEFT JOIN personaggio ON messaggi.id_personaggio_destinatario = personaggio.id_personaggio
+                            WHERE id_personaggio_mittente = ? 
                             ORDER BY spedito DESC LIMIT " . $num_logs . "";
-                            $result = gdrcd_query($query, 'result');
+                           
+                           
+                            $result = gdrcd_stmt_all($query, [$_GET['pg']]);
 
 
-                            if (gdrcd_query($result, 'num_rows') > 0) {
+                            if ($result) {
                             ?>
                                 <div class="page_title">
                                     <h2>Messaggi</h2>
@@ -173,7 +175,7 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        <?php while ($record = gdrcd_query($result, 'fetch')) { ?>
+                                        <?php foreach ($result as $record) { ?>
                                             <tr>
                                                 <td class="casella_elemento" style="width: 30%;">
                                                     <div class="elementi_elenco"><?php echo gdrcd_filter(
@@ -196,8 +198,6 @@
                                                 </td>
                                             </tr>
                                         <?php } //while
-
-                                        gdrcd_query($result, 'free');
                                         ?>
                                     </table>
                                 </div>
@@ -269,5 +269,5 @@
             <?php
         } //else </div>
             ?>
-                    </div>
-                    <!-- Pagina -->
+</div>
+               

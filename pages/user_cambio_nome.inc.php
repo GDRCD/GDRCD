@@ -102,13 +102,13 @@ $iscriz = $iscriz['0'];
                      
 
                     gdrcd_log_notice(
-                        'Cambio nome del personaggio',
+                        'Il nome del personaggio viene cambiato.',
                             ['evento' => 'personaggio.cambio_nome',...$contestoLog,],
                          $_POST['account']
                     );
                     /*Registro l'evento per chi ha effettuato l'operazione */
                     gdrcd_log_notice(
-                        'Cambio nome del personaggio',
+                        'Cambia il nome del personaggio',
                             ['evento' => 'personaggio.cambio_nome',...$contestoLog,],
                          $_SESSION['id_personaggio']
                     );

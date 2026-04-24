@@ -100,7 +100,7 @@ $pass = $row['pass'];
                     );
            // Registro l'evento sia per il personaggio interessato che per l'autore dell'azione
             gdrcd_log_notice(
-                        'Disabilita account del personaggio',
+                        'L\'account viene disabilitato',
                         ['evento' =>  'personaggio.disabilita_account', ...$contestoLog],   
                          $_POST['account']
                     );
@@ -136,7 +136,7 @@ $pass = $row['pass'];
                     );
             // Registro l'evento sia per il personaggio interessato che per l'autore dell'azione
              gdrcd_log_notice(
-                        'Ripristina account del personaggio',
+                        'L\'account viene ripristato.',
                         ['evento' =>  'personaggio.ripristina_account', ...$contestoLog],   
                          $_POST['account']
                     );   

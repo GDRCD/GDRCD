@@ -39,13 +39,13 @@ function gdrcd_log_group_from_code($code)
             return ['auth.login.fallito'];
 
         case BONIFICO:
-            return ['banca.invio_bonifico', 'banca.ricezione_bonifico'];
+            return ['banca.invio_bonifico', 'banca.ricezione_bonifico', 'personaggio.cedi_oggetto','personaggio.ricevi_oggetto'];
 
         case NUOVOLAVORO:
             return ['personaggio.nuovo_lavoro', 'personaggio.assegna_lavoro'];
 
         case DIMISSIONE:
-            return ['personaggio.dimissioni_lavoro'];
+            return ['personaggio.dimissione_lavoro'];
 
         case CHANGEDROLE:
             return ['personaggio.permessi.cambio'];
@@ -54,7 +54,7 @@ function gdrcd_log_group_from_code($code)
             return ['personaggio.cambio_password'];
 
         case PX:
-            return ['personaggio.assegna_px'];
+            return ['personaggio.assegna_px','personaggio.riceve_px'];
 
         case DELETEPG:
             return [
@@ -148,7 +148,7 @@ function gdrcd_extract_logs($eventi = null, $idPersonaggio = null, $limit = 100,
  *
  * @return int Numero totale di log trovati
  */
-function gdrcd_count_logs($eventi = null): int
+function gdrcd_count_logs($eventi = null, $idPersonaggio = null): int
 {
     $sql = "SELECT COUNT(*) AS totale FROM `logs` WHERE 1=1";
     $params = [];
@@ -168,6 +168,13 @@ function gdrcd_count_logs($eventi = null): int
             $params = array_merge($params, $eventi);
         }
     }
+
+    // Filtro per personaggio (opzionale)
+    if ($idPersonaggio !== null) {
+        $sql .= " AND `id_personaggio` = ?";
+        $params[] = (int)$idPersonaggio;
+    }
+    
 
     $row = gdrcd_stmt_one($sql, $params);
 
@@ -234,102 +241,113 @@ function gdrcd_present_log_row(?int $whichLog, array $row): array
         case BLOCKED:
         case LOGGEDIN:
         case ERRORELOGIN:
-            $autore = $contesto['autore'] ?? '-';
-            $idAutore = $contesto['id_autore'] ?? null;
-            $destinatario = $contesto['autore'] ?? $autore;
-            $idDestinatario = $contesto['id_destinatario'] ?? null;
-            $soggetto = $contesto['soggetto'] ?? '-';
-            $idSoggetto = $contesto['id_soggetto'] ?? null;
-
+            
             $descrizione = $row['descrizione'] ?? '';
             
             break;
 
         case ACCOUNTMULTIPLO:
-           $autore = $contesto['autore'] ?? '-';
-            $idAutore = $contesto['id_autore'] ?? null;
-            $destinatario = $contesto['autore'] ?? $autore;
-            $idDestinatario = $contesto['id_destinatario'] ?? null;
-            $soggetto = $contesto['soggetto'] ?? '-';
-            $idSoggetto = $contesto['id_soggetto'] ?? null;
+           
             if (!empty($contesto['ip'])) {
                 $descrizione .= ' (' . ($contesto['ip']) . ')';
             }
             break;
 
         case BONIFICO:
-            $autore = $autore;
-            $destinatario = ($destinatario !== '-') ? $destinatario : $soggetto;
-            $descrizione = (string)($contesto['ammontare'] ?? '-');
-
-            if (!empty($contesto['valuta'])) {
-                $descrizione .= ' ' . $contesto['valuta'];
-            }
-            if (!empty($contesto['causale'])) {
-                $descrizione .= ' - ' . $contesto['causale'];
-            }
+            
+            $descrizione = $row['descrizione'] . ' (' . gdrcd_descrizione_transazione_pg($contesto) . ')';
+             
             break;
 
         case NUOVOLAVORO:
         case DIMISSIONE:
-            $autore = $autore;
-            $destinatario = ($soggetto !== '-') ? $soggetto : $destinatario;
-            $descrizione = $contesto['lavoro'] ?? ($row['descrizione'] ?? '');
-            break;
-
-        case CHANGEDROLE:
-            $autore = $autore;
-            $destinatario = ($soggetto !== '-') ? $soggetto : $destinatario;
-            $descrizione = $contesto['nuovo_ruolo'] ?? ($row['descrizione'] ?? '');
-            break;
-
-        case CHANGEDPASS:
-            $autore = $autore;
-            $destinatario = ($soggetto !== '-') ? $soggetto : (!empty($row['id_personaggio']) ? '#' . (int)$row['id_personaggio'] : '-');
+             
             $descrizione = $row['descrizione'] ?? '';
-            if (!empty($contesto['ip'])) {
-                $descrizione .= ' (' . gdrcd_mask_ip($contesto['ip']) . ')';
+            if (!empty($contesto['lavoro'])) {
+                $descrizione .= ' (' . $contesto['lavoro'] . ')';
             }
             break;
 
+        case CHANGEDROLE:
+            
+            $descrizione = $row['descrizione'] . ' (' . ($contesto['nuovo_ruolo'] ?? '-') . ')';
+            break;
+
+        case CHANGEDPASS:
+            
+            $descrizione = $row['descrizione'] ?? '';
+           
+            break;
+
         case PX:
-            $autore = $autore;
-            $destinatario = ($soggetto !== '-') ? $soggetto : $destinatario;
-            $descrizione = '(' . (int)($contesto['px'] ?? 0) . ' px)';
+             $descrizione = $row['descrizione'] . ' ' . '(' . (int)($contesto['px'] ?? 0) . ' px)';
             if (!empty($contesto['causale'])) {
-                $descrizione .= ' ' . $contesto['causale'];
+                $descrizione .= ' Causale: ' . $contesto['causale'];
             }
             break;
 
         case DELETEPG:
-            $autore = $autore;
-            $destinatario = ($soggetto !== '-') ? $soggetto : $destinatario;
-            $descrizione = $row['descrizione'] ?? '';
+             $descrizione = $row['descrizione'] ?? '';
             break;
 
         case CHANGEDNAME:
-            $autore = $autore;
-            $destinatario = ($soggetto !== '-') ? $soggetto : ($contesto['nome_nuovo'] ?? '-');
-            $descrizione = 'Da "' . ($contesto['nome_precedente'] ?? '-') . '" a "' . ($contesto['nome_nuovo'] ?? '-') . '"';
+            $descrizione = $row['descrizione'] . ' ' . '(Da "' . ($contesto['nome_precedente'] ?? '-') . '" a "' . ($contesto['nome_nuovo'] ?? '-') . '")';
             break;
 
         default:
-            $autore = $autore;
-            $destinatario = ($destinatario !== '-') ? $destinatario : $soggetto;
+            
             $descrizione = $row['descrizione'] ?? '';
             break;
-    }
-
+    }     
+            
     return [
-        'autore' => $autore,
-        'destinatario' => $destinatario,
-        'descrizione' => $descrizione,
-        'id_autore' => $idAutore,
-        'id_soggetto' => $idSoggetto,
-        'id_destinatario' => $idDestinatario,
+        'id_autore' =>  $contesto['id_autore'] ?? null,
+        'autore' => $contesto['autore'] ?? '-',
+        'id_soggetto' => $contesto['id_soggetto'] ?? null,
+        'soggetto' => $contesto['soggetto'] ?? '-',
+        'id_destinatario' => $contesto['id_destinatario'] ?? null,
+        'destinatario' => $contesto['destinatario'] ?? '-',
+        'descrizione' => $descrizione
     ];
 }
 
+
+function gdrcd_descrizione_transazione_pg(array $contesto): string
+{
+    $evento = $contesto['evento'] ?? '';
+
+    if (in_array($evento, ['banca.invio_bonifico', 'banca.ricezione_bonifico'], true)) {
+        $descrizione = (string)($contesto['ammontare'] ?? '-');
+
+        if (!empty($contesto['valuta'])) {
+            $descrizione .= ' ' . $contesto['valuta'];
+        }
+
+        if (!empty($contesto['causale'])) {
+            $descrizione .= ' - ' . $contesto['causale'];
+        }
+
+        return $descrizione;
+    }
+
+    if (in_array($evento, ['personaggio.cedi_oggetto', 'personaggio.ricevi_oggetto'], true)) {
+        $descrizione = (string)($contesto['oggetto'] ?? 'Oggetto');
+
+        $quantita = (int)($contesto['quantita_rimossa'] ?? $contesto['quantita'] ?? 1);
+        if ($quantita > 1) {
+            $descrizione .= ' x' . $quantita;
+        }
+
+        $cariche = (int)($contesto['cariche'] ?? 0);
+        if ($cariche > 0) {
+            $descrizione .= ' (' . $cariche . ' cariche)';
+        }
+
+        return $descrizione;
+    }
+
+    return '-';
+}
 /**
  * Crea il contesto del log
  * @param array $contesto Il contesto del log

@@ -140,15 +140,16 @@ elseif ($credentialsOk && $sessionExpired) {
     if (isset($_COOKIE['lastlogin']) && $_COOKIE['lastlogin'] != $_SESSION['id_personaggio']) {
         $otherAccountData = gdrcd_query(
             "SELECT id_personaggio, nome FROM personaggio
-            WHERE id_personaggio = " . $_SESSION['id_personaggio']
+            WHERE id_personaggio = " . gdrcd_filter('in', $_COOKIE['lastlogin'])
         );
         $contestoLog = gdrcd_log_context_make([
                             'ip' => $_SERVER['REMOTE_ADDR'],
                         ],
+                        $otherAccountData['id_personaggio'],
+                        $otherAccountData['nome'], 
                         $_SESSION['id_personaggio'],
                         $_SESSION['login'],
-                        $otherAccountData['id_personaggio'],
-                        $otherAccountData['nome']
+                        
                     );
         gdrcd_log_warning(
             'Rilevato possibile account multiplo tramite cookie attivo', 
@@ -211,9 +212,9 @@ elseif ($credentialsOk && $sessionExpired) {
     echo '<div class="error_box"><h2 class="error_major">' . $MESSAGE['warning']['double_connection'] . '</h2></div>';
     $contestoLog = gdrcd_log_context_make([
                             'ip' => $_SERVER['REMOTE_ADDR'],
-                        ],
-                        $record['id_personaggio'],
-                        $login1,
+                            'autore' => $login1,
+                            'id_autore' => $record['id_personaggio'],
+                        ]
                     );
     gdrcd_log_warning('Tentativo di connessione da postazione ancora attiva', 
     [
@@ -232,9 +233,8 @@ elseif ($credentialsOk && $sessionExpired) {
     if ($login1 !== '' && $pass1 !== '') {
         $contestoLog = gdrcd_log_context_make([
                             'ip' => $_SERVER['REMOTE_ADDR'],
-                        ],
-                        $record['id_personaggio'],
-                        $_POST['login1'],
+                            'autore' => $login1,
+                        ] 
                     );
         gdrcd_log_notice('Tentativo di login non riuscito',
         
