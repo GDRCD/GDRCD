@@ -213,6 +213,7 @@ $MESSAGE['interface']['sheet']['trans']['page_name'] = 'Transazioni';
 $MESSAGE['interface']['sheet']['log']['author'] = 'Autore';
 $MESSAGE['interface']['sheet']['log']['name_change'] = 'Cambio nome';
 $MESSAGE['interface']['sheet']['log']['page_name'] = 'Registrazioni';
+$MESSAGE['interface']['sheet']['log']['all'] = 'Visualizza tutti i log di';
 $MESSAGE['interface']['sheet']['log']['date'] = 'Data';
 $MESSAGE['interface']['sheet']['log']['ip'] = 'IP';
 $MESSAGE['interface']['sheet']['log']['other_account'] = 'Doppio';

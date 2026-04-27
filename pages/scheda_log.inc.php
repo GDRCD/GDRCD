@@ -10,7 +10,7 @@
         } else {
             /*Visualizzo la pagina*/
             /*Verifico l'esistenza del PG*/
-            $query = "SELECT id_personaggio
+            $query = "SELECT id_personaggio, nome
              FROM personaggio 
             WHERE id_personaggio = ?";
             $result = gdrcd_stmt_one($query, [$_REQUEST['pg']]);
@@ -24,6 +24,11 @@
                 <div class="page_title">
                     <h2><?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['log']['page_name']); ?></h2>
                 </div>
+                        <div class="link_back">
+                            <a  href="main.php?page=log_eventi&id_personaggio=<?php echo gdrcd_filter('url', $_REQUEST['pg']); ?>"> <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['log']['all']); ?> <?php echo gdrcd_filter('out', $result['nome']); ?></a>
+                        </div>
+                        <hr>
+
 
                 <div class="page_body">
                     <div class="page_title">
@@ -72,6 +77,7 @@
                                 <?php } ?>
                             </table>
                         </div>
+                       
                         
 
                         <?php
