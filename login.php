@@ -236,7 +236,7 @@ elseif ($credentialsOk && $sessionExpired) {
                             'autore' => $login1,
                         ] 
                     );
-        gdrcd_log_notice('Tentativo di login non riuscito',
+        gdrcd_log_warning('Tentativo di login non riuscito',
         
             ['evento' => 'auth.login.fallito', ...$contestoLog], 
             $record['id_personaggio'],

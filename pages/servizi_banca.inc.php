@@ -85,12 +85,12 @@ gdrcd_query($result, 'free');
                             ]
                         );
              
-                        gdrcd_log_info(
+                        gdrcd_log_notice(
                             'Bonifico inviato a un altro personaggio',
                             ['evento' => 'banca.invio_bonifico', 'direzione' => 'uscita', ...$contestoLog],
                              $_SESSION['id_personaggio']
                         );
-                        gdrcd_log_info(
+                        gdrcd_log_notice(
                             'Bonifico ricevuto dal personaggio',
                             ['evento' => 'banca.ricezione_bonifico', 'direzione' => 'entrata', ...$contestoLog],
                              $_POST['beneficiario']

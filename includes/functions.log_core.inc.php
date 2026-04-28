@@ -21,16 +21,18 @@
 |--------------------------------------------------------------------------
 | Significato dei livelli di log
 |--------------------------------------------------------------------------
-| debug     : informazioni tecniche a basso livello, utili in fase di sviluppo
-|             o analisi approfondita (es. query SQL, dati interni, flussi tecnici).
+| debug     : Solo sviluppo/test. Dati tecnici molto dettagliati.
+|             Utili solo durante sviluppo o test, non in produzione.
+|             Utili per debug tecnico, analisi approfondite, ecc.
+|             (es. query SQL, dati interni, flussi tecnici).    
 |
-| info      : eventi informativi legati al normale funzionamento del sistema
-|             o ad azioni compiute dagli utenti.
+| info      : Azioni ordinarie dell’utente o del sistema.
+|               (es. Login riuscito)
 |
-| notice    : eventi rilevanti ma non problematici, utili da tenere sotto controllo,
-|             ad esempio attività di gestione o operazioni amministrative.
+| notice    : Eventi importanti ma non problematici 
+|                (es. Bonifico tra PG, assegnazione PX, consegna oggetto, modifica scheda da staff.)
 |
-| warning   : situazioni anomale che non bloccano il sistema ma richiedono attenzione.
+| warning   : Anomalia o comportamento sospetto (Login fallito, tentativo accesso pagina non autorizzata, dati mancanti ma recuperabili.)
 |
 | error     : errori gestiti dall'applicazione, per cui il sistema continua a funzionare
 |             ma l'operazione non è andata a buon fine.
@@ -88,8 +90,8 @@ function gdrcd_log($descrizione, $livello_log, $contesto = null, $id_personaggio
 /**
  * Registra un log di livello debug.
  *
- * Da utilizzare per informazioni tecniche dettagliate, utili soprattutto
- * durante sviluppo, test o analisi di problemi complessi.
+ * Da utilizzare per informazioni tecniche dettagliate,
+ * utili solo durante sviluppo o test 
  *
  * @param string $messaggio Descrizione dell'evento
  * @param array $contesto Modulo o area applicativa di riferimento
@@ -120,8 +122,8 @@ function gdrcd_log_info($messaggio, $contesto = null, $id_personaggio = null)
 /**
  * Registra un log di livello notice.
  *
- * Da utilizzare per eventi degni di nota che non rappresentano errori,
- * ma che è utile conservare a fini di controllo o audit.
+ * Da utilizzare per tracciare eventi importanti ma non problematici,
+ * come la ricezione di un bonifico o l'assegnazione di un oggetto.
  *
  * @param string $messaggio Descrizione dell'evento
  * @param array $contesto Modulo o area applicativa di riferimento
@@ -136,8 +138,8 @@ function gdrcd_log_notice($messaggio, $contesto = null, $id_personaggio = null)
 /**
  * Registra un log di livello warning.
  *
- * Da utilizzare per anomalie, incoerenze o situazioni potenzialmente problematiche
- * che non impediscono l'esecuzione del sistema ma meritano attenzione.
+ * Da utilizzare per anomalie, incoerenze o situazioni potenzialmente problematiche,
+ * come il tentativo fallito di login
  *
  * @param string $messaggio Descrizione dell'evento
  * @param array $contesto Modulo o area applicativa di riferimento
