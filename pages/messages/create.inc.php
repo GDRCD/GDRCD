@@ -1,3 +1,10 @@
+<?php
+    $destinatario= gdrcd_stmt_one(
+                    "SELECT nome 
+                    from personaggio 
+                    WHERE id_personaggio = ?", 
+                    [$_REQUEST['destinatario']]);
+?>
 <div class="panels_box">
     <form class="form_messaggi" action="main.php?page=messages_center" method="post">
         <!-- Destinatario -->
@@ -8,7 +15,8 @@
             <?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['multiple']['info']); ?>
         </div>
         <div class='form_field'>
-            <input type="text" list="personaggi" name="destinatario" placeholder="Nome del personaggio" value="<?=gdrcd_filter('get', ($_POST['destinatario'] ?: $_GET['destinatario']));?>" required />
+            <input type="text" list="personaggi" name="destinatario" placeholder="Nome del personaggio" 
+            value="<?=$destinatario['nome'] ?>" required />
         </div>
         <?php
             // Costruisco la lista dei Personaggio da cui attingere per il datalist
