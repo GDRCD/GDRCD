@@ -4,10 +4,14 @@
 if (gdrcd_filter('get', $_POST['action']) == "searchPersonaggio") {
 
     if (!empty($_POST['nome']) || !empty($_POST['genere']) || !empty($_POST['razza'])) {
+
+        $params = [];
+        $whereFilters = [];
+
         // Ottengo i filtri inviati dal FORM
         if (gdrcd_filter('get', $_POST['nome'])) {
-            $whereFilters[] = "personaggio.nome LIKE '% ?%'";
-            $params[] = $_POST['nome'];
+            $whereFilters[] = "personaggio.nome LIKE ?";
+            $params[] = '%'. $_POST['nome'] .'%';
         }
 
         if (gdrcd_filter('get', $_POST['genere'])) {
@@ -20,19 +24,28 @@ if (gdrcd_filter('get', $_POST['action']) == "searchPersonaggio") {
             $params[] = $_POST['razza'];
         }
 
+        // Filtra il limit, e imposta il massimo valore possibile a 500
         $limit_val = gdrcd_filter('num', $_POST['limit']);
+        $limit_val = max(1, min($limit_val, 500));
 
-        $limit = (isset($_POST['limit']) && ($_POST['limit'] > 0)) ? " LIMIT {$_POST['limit']} " : '';
+        if (trim($_POST['limit']) === '') {
+            $_POST['limit'] = $limit_val;
+        }
+
+        $params[] = $limit_val;
+
         // Costruisco la query
-        $querySearch = "SELECT personaggio.url_img_chat, personaggio.nome, personaggio.cognome, personaggio.sesso,personaggio.id_personaggio,
+        $querySearch = 'SELECT personaggio.url_img_chat, personaggio.nome, personaggio.cognome, personaggio.sesso,personaggio.id_personaggio,
                                razza.nome_razza
                         FROM personaggio
                         LEFT JOIN razza ON personaggio.id_razza = razza.id_razza
-                        WHERE 1 " . (isset($whereFilters) ? ' AND ' . implode(' AND ', $whereFilters) : NULL) . '
-                        ORDER BY nome ASC '.$limit;
+                        WHERE '. implode(' AND ', $whereFilters) .'
+                        ORDER BY nome ASC
+                        LIMIT ?';
 
 
-        $resultSearch = gdrcd_stmt_all($querySearch,  $params);
+        $resultSearch = gdrcd_stmt_all($querySearch, $params);
+
 
         // Se ottengo dei risultati, costruisco la tabella
         if (!empty($resultSearch)) {
@@ -75,7 +88,7 @@ if (gdrcd_filter('get', $_POST['action']) == "searchPersonaggio") {
                 $tds[] = '<td class="casella_elemento">
                             <div class="controllo_elenco">
                                 <form action="main.php?page=messages_center&op=create" method="post">
-                                    <input type="hidden" name="destinatario" value="'.$rowSearch['id_personaggio'].'" />
+                                    <input type="hidden" name="destinatario" value="'.$rowSearch['nome'].'" />
                                     <input type="image" src="public/images/icons/reply.png" value="submit" alt="'.gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']).'"
                                            title="'.gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']).'" />
                                 </form>
@@ -101,7 +114,7 @@ if (gdrcd_filter('get', $_POST['action']) == "searchPersonaggio") {
                 </div>';
         }
     } else {
-        echo '<div class="warning">Selezionare almeno un criterio di ricerca.</div>';
+        echo '<div class="warning">Selezionare almeno un criterio di ricerca.</div>'; // TODO inserire in messages
     }
 }
 
@@ -159,7 +172,7 @@ foreach ($genders as $gender) {
             <!-- LIMITE PG -->
             <div class="single_input">
                 <div class="label"><?= $MESSAGE['interface']['pg_list']['search']['limit']; ?></div>
-                <input type="number" name="limit" value="<?= isset($_REQUEST['limit']) ? gdrcd_filter('out', $_REQUEST['limit']) : 0; ?>"/>
+                <input type="number" name="limit" value="<?= isset($_POST['limit']) ? gdrcd_filter('out', $_POST['limit']) : 0; ?>"/>
                 <div class="subtitle"><?= $MESSAGE['interface']['pg_list']['search']['limit_info']; ?></div>
             </div>
 
