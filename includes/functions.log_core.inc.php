@@ -106,19 +106,26 @@ function gdrcd_logs_buffer($flush = false, $descrizione = null, $timestamp = nul
         $params = [];
 
         foreach ($logs as $log) {
-            $values[] = '(UUID_TO_BIN(UUID()), ?, ?, ?, ?, ?)';
+            $param = [];
+            $param[] = $log['data'];
+            $param[] = $log['descrizione'];
+            $param[] = $log['livello_log'];
+            $param[] = $log['contesto'];
+            $param[] = $log['id_personaggio'];
 
-            $params[] = $log['data'];
-            $params[] = $log['descrizione'];
-            $params[] = $log['livello_log'];
-            $params[] = $log['contesto'];
-            $params[] = $log['id_personaggio'];
+            $params[] = $param;
         }
 
-        gdrcd_stmt(
-            "INSERT INTO `logs` (`id`, `data`, `descrizione`, `livello_log`, `contesto`, `id_personaggio`) VALUES " . implode(', ', $values),
-            $params
-        );
+        $sql_insert_values = '(UUID_TO_BIN(UUID()), ?, ?, ?, ?, ?)';
+
+        foreach (array_chunk($params, 100) as $chunk) {
+            $sql_chunk_values = $sql_insert_values . str_repeat(','. $sql_insert_values, count($chunk)-1);
+
+            gdrcd_stmt(
+                "INSERT INTO `logs` (`id`, `data`, `descrizione`, `livello_log`, `contesto`, `id_personaggio`) VALUES ". $sql_chunk_values,
+                array_merge(...$chunk)
+            );
+        }
 
         $logs = [];
     }
