@@ -33,7 +33,7 @@ gdrcd_query("UPDATE personaggio SET ora_uscita = NOW() WHERE id_personaggio = '"
 </html>
 <?php
 /*Chiudo la connessione al database*/
-gdrcd_close_connection($handleDBConnection);
+//gdrcd_close_connection($handleDBConnection);
 
 /** * Per ottimizzare le risorse impiegate le liberiamo dopo che non ne abbiamo più bisogno
 * @author Blancks

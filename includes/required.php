@@ -53,3 +53,4 @@ require_once(GDRCD_PATH . '/includes/AudioController.class.php');
 if(!empty($_SESSION['theme']) && array_key_exists($_SESSION['theme'], $PARAMETERS['themes']['available'])){
     $PARAMETERS['themes']['current_theme'] = $_SESSION['theme'];
 }
+gdrcd_logs_init();

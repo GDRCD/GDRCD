@@ -40,7 +40,7 @@ if($PARAMETERS['mode']['popup_choise'] == 'ON') {
 /*Chiudo la connessione al database, se presente*/
 if(isset($handleDBConnection)) {
     // Chiudo la connessione al database
-    gdrcd_close_connection($handleDBConnection);
+     //gdrcd_close_connection($handleDBConnection);
     // Libero la memoria occupata dalla variabile
     unset($handleDBConnection);
 }

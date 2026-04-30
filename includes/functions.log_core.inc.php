@@ -49,41 +49,124 @@
 */
 
 /**
- * Registra un evento nella tabella di log.
+ * Inizializza il buffer dei log e registra il flush automatico a fine script.
  *
- * Questa è la funzione base del sistema di logging: salva nel database
- * la descrizione dell'evento, il livello di gravità, il contesto applicativo
- * in cui si è verificato e l'eventuale personaggio collegato all'azione.
+ * La shutdown function svuota il buffer richiamando gdrcd_logs_buffer(true),
+ * così i log accumulati vengono scritti nel database con un'unica INSERT multipla.
  *
- * Viene richiamata indirettamente dalle funzioni wrapper dedicate ai singoli
- * livelli di log (debug, info, warning, error, ecc.), così da centralizzare
- * in un solo punto la scrittura dei record.
+ * @return void
+ */
+function gdrcd_logs_init()
+{
+    static $initialized = false;
+
+    if ($initialized) {
+        return;
+    }
+
+    $initialized = true;
+
+    register_shutdown_function(function () {
+        gdrcd_logs_buffer(true);
+    });
+}
+
+/**
+ * Accumula i log in memoria e, quando richiesto, li scrive nel database.
  *
- * @param string $descrizione Descrizione testuale dell'evento da registrare
- * @param string $livello_log Livello del log (es. debug, info, warning, error)
- * @param array $contesto Modulo o area applicativa da cui proviene il log
+ * Se descrizione, timestamp e livello sono valorizzati, il log viene aggiunto
+ * al buffer statico. Se $flush vale true, il buffer viene svuotato con una
+ * singola INSERT multipla.
+ *
+ * @param bool $flush Se true, forza la scrittura dei log accumulati
+ * @param string|null $descrizione Descrizione testuale dell'evento da registrare
+ * @param string|null $timestamp Timestamp del log in formato compatibile con MySQL
+ * @param string|null $livello_log Livello del log (es. debug, info, warning, error)
+ * @param string|null $contesto Contesto già codificato in JSON, se presente
  * @param int|null $id_personaggio ID del personaggio associato all'evento, se presente
  * @return void
  */
+function gdrcd_logs_buffer($flush = false, $descrizione = null, $timestamp = null, $livello_log = null, $contesto = null, $id_personaggio = null)
+{
+    static $logs = [];
+
+    if ($descrizione !== null && $timestamp !== null && $livello_log !== null) {
+        $logs[] = [
+            'data' => $timestamp,
+            'descrizione' => $descrizione,
+            'livello_log' => $livello_log,
+            'contesto' => $contesto,
+            'id_personaggio' => ($id_personaggio === null ? 0 : (int)$id_personaggio),
+        ];
+    }
+
+    if ($flush === true && !empty($logs)) {
+        
+        $values_placeholders = [];
+        $params = [];
+
+        foreach ($logs as $log) {
+            $values[] = '(UUID_TO_BIN(UUID()), ?, ?, ?, ?, ?)';
+
+            $params[] = $log['data'];
+            $params[] = $log['descrizione'];
+            $params[] = $log['livello_log'];
+            $params[] = $log['contesto'];
+            $params[] = $log['id_personaggio'];
+        }
+
+        gdrcd_stmt(
+            "INSERT INTO `logs` (`id`, `data`, `descrizione`, `livello_log`, `contesto`, `id_personaggio`) VALUES " . implode(', ', $values),
+            $params
+        );
+
+        $logs = [];
+    }
+}
+
+/**
+ * Registra un evento nella tabella di log.
+ *
+ * Questa è la funzione base del sistema di logging: prepara la descrizione
+ * dell'evento, il livello di gravità, il contesto applicativo e l'eventuale
+ * personaggio collegato, poi delega la scrittura a gdrcd_logs_buffer().
+ *
+ * Viene richiamata indirettamente dalle funzioni wrapper dedicate ai singoli
+ * livelli di log (debug, info, warning, error, ecc.), così da centralizzare
+ * in un solo punto la preparazione dei record.
+ *
+ * @param string $descrizione Descrizione testuale dell'evento da registrare
+ * @param string $livello_log Livello del log (es. debug, info, warning, error)
+ * @param array|null $contesto Modulo o area applicativa da cui proviene il log
+ * @param int|null $id_personaggio ID del personaggio associato all'evento, se presente
+ * @return void
+ * @throws Exception
+ */
 function gdrcd_log($descrizione, $livello_log, $contesto = null, $id_personaggio = null)
 {
-    
-      if ($contesto !== null) {
-        if (!is_array($contesto)) {
-            throw Exception('Parametro $contesto non valido. Sono ammessi solo array');
+    global $PARAMETERS;
+
+    if ($livello_log === 'debug') {
+        if (empty($PARAMETERS['debug_mode'])) {
+            return;
         }
-        
+    }
+
+    if ($contesto !== null) {
+        if (!is_array($contesto)) {
+            throw new Exception('Parametro $contesto non valido. Sono ammessi solo array');
+        }
+
         $contesto = json_encode($contesto, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
-    gdrcd_stmt(
-        "INSERT INTO `logs` (`id`, `data`, `descrizione`, `livello_log`, `contesto`, `id_personaggio`)
-         VALUES (UUID_TO_BIN(UUID()), NOW(), ?, ?, ?, ?)",
-        [
-            $descrizione,
-            $livello_log,
-            $contesto,
-            ($id_personaggio === null ? 0 : (int)$id_personaggio)
-        ]
+
+    gdrcd_logs_buffer(
+        false,
+        $descrizione,
+        date('Y-m-d H:i:s'),
+        $livello_log,
+        $contesto,
+        $id_personaggio
     );
 }
 

@@ -351,4 +351,4 @@ if (!empty($_SESSION['id_personaggio'])) {
 
     </html>
     <?php
-    gdrcd_close_connection($handleDBConnection);
+   // gdrcd_close_connection($handleDBConnection);
