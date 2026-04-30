@@ -5,10 +5,10 @@ IMPORTANTE! non cancellate alcuna delle righe, ne modificate quanto scritto tra 
 
 /********** Homepage **********/
 /*Testo centrale homepage*/
-$MESSAGE['homepage']['main_content']['site_title'] = '<img src="imgs/logo_gdrcd.png" alt="GDRCD"/>';
+$MESSAGE['homepage']['main_content']['site_title'] = '<img src="public/images/logo_gdrcd.png" alt="GDRCD"/>';
 $MESSAGE['homepage']['main_content']['site_subtitle'] = 'Il CMS Open Source per i Giochi di Ruolo play-by-chat';
 $MESSAGE['homepage']['main_content']['welcome'] = 'Benvenuto in GDRCD!';
-$MESSAGE['homepage']['main_content']['infos'] = 'Prima di iniziare a realizzare il tuo sito, hai letto la LICENZA D\'USO che accompagna il prodotto? Se non l\'hai ancora fatto premurati gentilmente di leggerla. Troverai le istruzioni su come utilizzare  GDRCD 5.4 nel manuale allegato. Buon diverimento!';
+$MESSAGE['homepage']['main_content']['infos'] = 'Prima di iniziare a realizzare il tuo sito, hai letto la LICENZA D\'USO che accompagna il prodotto? Se non l\'hai ancora fatto premurati gentilmente di leggerla. Troverai le istruzioni su come utilizzare  GDRCD 5.4 nel manuale allegato. Buon divertimento!';
 /*Box informativi*/
 $MESSAGE['homepage']['forms']['access_to'] = 'Accedi';
 $MESSAGE['homepage']['forms']['username'] = 'User';
@@ -380,9 +380,11 @@ $MESSAGE['interface']['pg_list']['select'] = 'Visualizza il personaggio';
 $MESSAGE['interface']['pg_list']['search']['title'] = 'Ricerca Personaggio';
 $MESSAGE['interface']['pg_list']['search']['img'] = 'Avatar Chat';
 $MESSAGE['interface']['pg_list']['search']['personaggio'] = 'Personaggio';
+$MESSAGE['interface']['pg_list']['search']['nome'] = 'Nome';
 $MESSAGE['interface']['pg_list']['search']['sesso'] = 'Sesso';
 $MESSAGE['interface']['pg_list']['search']['razza'] = 'Razza';
-$MESSAGE['interface']['pg_list']['search']['limit'] = 'Limite personaggio estratti. Inserire 0 per ottenerli tutti.';
+$MESSAGE['interface']['pg_list']['search']['limit'] = 'Limite personaggio estratti';
+$MESSAGE['interface']['pg_list']['search']['limit_info'] = 'Inserire 0 per ottenerli tutti.';
 $MESSAGE['interface']['pg_list']['search']['submit'] = 'Cerca';
 /*Elenco abilita*/
 $MESSAGE['interface']['skills']['page_name'] = 'Elenco abilità';
@@ -454,7 +456,7 @@ $MESSAGE['interface']['administration']['locations']['page'] = 'Pagina associata
 $MESSAGE['interface']['administration']['locations']['is_chat'] = 'Chat';
 $MESSAGE['interface']['administration']['locations']['is_chat_info'] = 'Spuntare se la stanza è adibita a chat, altrimenti specificare nel campo "pagina" il file da caricare nel riquadro principale';
 $MESSAGE['interface']['administration']['locations']['image'] = 'Nome del file immagine';
-$MESSAGE['interface']['administration']['locations']['image_info'] = 'Specificare il nome del file da utilizzare come immagine che deve essere posizionato nella cartella imgs/locations del tema scelto.';
+$MESSAGE['interface']['administration']['locations']['image_info'] = 'Specificare il nome del file da utilizzare come immagine che deve essere posizionato nella cartella public/images/locations del tema scelto.';
 $MESSAGE['interface']['administration']['locations']['screen_name'] = 'Nome vistualizzato nell\'elenco presenti';
 $MESSAGE['interface']['administration']['locations']['screen_name_info'] = 'Se specificato, il nome in questa casella viene visualizzato nell\'elenco presenti al posto del nome della stanza';
 $MESSAGE['interface']['administration']['locations']['map_id'] = 'Mappa di appartenenza';
@@ -466,6 +468,7 @@ $MESSAGE['interface']['administration']['locations']['is_privat'] = 'Stanza priv
 $MESSAGE['interface']['administration']['locations']['is_privat_info'] = 'Spuntare per rendere privata la stanza e specificare il proprietario o il gruppo di appartenenza, la scadenza ed il costo di affitto, altrimenti lasciare bianchi i campi seguenti.';
 $MESSAGE['interface']['administration']['locations']['owner'] = 'Proprietario';
 $MESSAGE['interface']['administration']['locations']['owner_default'] = 'Nessuno';
+$MESSAGE['interface']['administration']['locations']['no_invited'] = 'Nessun utente invitato';
 $MESSAGE['interface']['administration']['locations']['owner_err'] = 'Nessun gruppo o utente presente.';
 $MESSAGE['interface']['administration']['locations']['expiration_date'] = 'Scadenza';
 $MESSAGE['interface']['administration']['locations']['rent'] = 'Costo orario di affitto';
@@ -611,17 +614,18 @@ $MESSAGE['interface']['administration']['plot']['link']['back'] = 'Torna all\'el
 $MESSAGE['interface']['administration']['plot']['link']['new'] = 'Nuovo capitolo';
 /*Manutensione*/
 $MESSAGE['interface']['administration']['maintenance']['page_name'] = 'Manutenzione';
-$MESSAGE['interface']['administration']['maintenance']['link']['back'] = 'Indietro...';
-$MESSAGE['interface']['administration']['maintenance']['old_log'] = 'Elimina log più vecchi di';
-$MESSAGE['interface']['administration']['maintenance']['old_chat'] = 'Elimina log di chat più vecchi di';
-$MESSAGE['interface']['administration']['maintenance']['old_messages'] = 'Elimina messaggi più vecchi di';
-$MESSAGE['interface']['administration']['maintenance']['old_messages_info'] = 'Saranno cancellati anche i backup dei messaggi.';
-$MESSAGE['interface']['administration']['maintenance']['missing'] = 'Elimina i personaggi che non effettuano il login da più di';
-$MESSAGE['interface']['administration']['maintenance']['missing_info'] = 'Non sarà possibile ripristinarli.';
-$MESSAGE['interface']['administration']['maintenance']['deleted'] = 'Elimina i personaggi provvisoriamente cancellati';
-$MESSAGE['interface']['administration']['maintenance']['deleted_info'] = 'Non sarà più possibile ripristinarli.';
-$MESSAGE['interface']['administration']['maintenance']['blacklisted'] = 'Cancella la blacklist';
-$MESSAGE['interface']['administration']['maintenance']['blacklisted_info'] = '';
+$MESSAGE['interface']['administration']['maintenance']['old_log']['title'] = 'Pulisci Log';
+$MESSAGE['interface']['administration']['maintenance']['old_log']['info'] = 'Indica qui di quanto tempo devono essere vecchi i log per essere eliminati.';
+$MESSAGE['interface']['administration']['maintenance']['old_chat']['title'] = 'Pulisci Chat';
+$MESSAGE['interface']['administration']['maintenance']['old_chat']['info'] = 'Indica qui di quanto tempo devono essere vecchi i messaggi delle chat per essere eliminati.';
+$MESSAGE['interface']['administration']['maintenance']['old_messages']['title'] = 'Pulisci Messaggi';
+$MESSAGE['interface']['administration']['maintenance']['old_messages']['info'] = 'Indica qui di quanto tempo devono essere vecchi i messaggi per essere eliminati. Non sarà più possibile ripristinarli.';
+$MESSAGE['interface']['administration']['maintenance']['deleted_users']['title'] = 'Elimina Personaggi Temporaneamente Eliminati';
+$MESSAGE['interface']['administration']['maintenance']['deleted_users']['info'] = 'Non sarà più possibile ripristinarli.';
+$MESSAGE['interface']['administration']['maintenance']['missing_users']['title'] = 'Elimina Personaggi Non Attivi';
+$MESSAGE['interface']['administration']['maintenance']['missing_users']['info'] = 'Indica da quanto tempo un personaggio deve essere inattivo per essere eliminato. Non sarà più possibile ripristinarlo.';
+$MESSAGE['interface']['administration']['maintenance']['blacklisted']['title'] = 'Pulisci Blacklist';
+$MESSAGE['interface']['administration']['maintenance']['blacklisted']['info'] = '';
 $MESSAGE['interface']['administration']['maintenance']['months'] = 'mesi';
 /*Log*/
 $MESSAGE['interface']['administration']['log']['events']['page_name'] = 'Log eventi';
@@ -698,13 +702,14 @@ $MESSAGE['interface']['user']['stats']['date_end'] = "Esiliato fino al";
 $MESSAGE['interface']['user']['stats']['why'] = "Motivo";
 $MESSAGE['interface']['user']['stats']['link']['back'] = "Torna alle statistiche...";
 
+$MESSAGE['interface']['user']['cancelled'] = 'Personaggio Cancellato';
 
 /*Installer*/
 $MESSAGE['installer']['install'] = "Esegui l\'installazione automatica";
 
 
 /********** MESSAGGI DI ERRORE **********/
-$MESSAGE['error']['db_not_found'] = 'Impossibile trovare il database, verificare l\'installazione di GDRCD.';
+$MESSAGE['error']['db_not_found'] = 'Impossibile connettersi al database, verificare i parametri di connessione o l\'installazione di GDRCD.';
 $MESSAGE['error']['db_empty'] = 'Il database non contiene tabelle, è necessario effettuare l\'installazione';
 $MESSAGE['error']['db_not_updated'] = 'E\' stata rilevata l\'installazione di Mr Fabers GDRCD5, per aggiornare il database e renderlo compatibile proseguire cliccando sul link sottostante';
 $MESSAGE['error']['can_t_load_frame'] = 'Impossibile caricare la pagina.';
@@ -780,20 +785,21 @@ $MESSAGE['status_pg']['invisible'][1] = 'Invisibile';
 
 /********** Chat **********/
 $MESSAGE['chat']['type']['info'] = 'Tipo';
-$MESSAGE['chat']['type'][0] = 'Parlato';
-$MESSAGE['chat']['type'][1] = 'Azione';
-$MESSAGE['chat']['type'][2] = 'Master';
-$MESSAGE['chat']['type'][3] = 'PNG';
-$MESSAGE['chat']['type'][4] = 'Sussurro';
-$MESSAGE['chat']['type'][5] = 'Invita';
-$MESSAGE['chat']['type'][6] = 'Caccia';
-$MESSAGE['chat']['type'][7] = 'Elenco';
-$MESSAGE['chat']['warning']['invited'] = 'invitato';
+$MESSAGE['chat']['type'][GDRCD_CHAT_ACTION_TYPE] = 'Azione';
+$MESSAGE['chat']['type'][GDRCD_CHAT_MASTER_TYPE] = 'Master';
+$MESSAGE['chat']['type'][GDRCD_CHAT_PNG_TYPE] = 'PNG';
+$MESSAGE['chat']['type'][GDRCD_CHAT_WHISPER_TYPE] = 'Sussurro';
+$MESSAGE['chat']['type'][GDRCD_CHAT_IMAGE_TYPE] = 'Immagine';
+$MESSAGE['chat']['type'][GDRCD_CHAT_PRIVATE_INVITE_TYPE] = 'Invita';
+$MESSAGE['chat']['type'][GDRCD_CHAT_PRIVATE_KICK_TYPE] = 'Caccia';
+$MESSAGE['chat']['type'][GDRCD_CHAT_PRIVATE_LIST_TYPE] = 'Elenco';
+$MESSAGE['chat']['warning']['invited'] = 'ha invitato';
 $MESSAGE['chat']['warning']['already_invited'] = 'già invitato';
 $MESSAGE['chat']['warning']['not_invited'] = 'non invitato';
-$MESSAGE['chat']['warning']['expelled'] = 'escluso';
-$MESSAGE['chat']['warning']['invited_list'] = 'Ospiti';
+$MESSAGE['chat']['warning']['expelled'] = 'ha escluso';
+$MESSAGE['chat']['warning']['invited_list'] = 'Ospiti della stanza';
 $MESSAGE['chat']['warning']['invited_message'] = 'ti ha inoltrato un invito per';
+$MESSAGE['chat']['warning']['expelled_message'] = 'ha revocato il tuo invito per';
 $MESSAGE['chat']['tag']['info']['tag'] = 'Tag';
 $MESSAGE['chat']['tag']['info']['png'] = '/PNG';
 $MESSAGE['chat']['tag']['info']['dst'] = '/Dest.';
@@ -808,13 +814,39 @@ $MESSAGE['chat']['commands']['stats'] = 'Usa caratteristica';
 $MESSAGE['chat']['commands']['dice'] = 'Tira dado';
 $MESSAGE['chat']['commands']['item'] = 'Usa oggetto';
 $MESSAGE['chat']['commands']['use_skills']['uses'] = 'usa';
-$MESSAGE['chat']['commands']['use_skills']['die'] = 'dado';
-$MESSAGE['chat']['commands']['use_skills']['ramk'] = 'rango';
-$MESSAGE['chat']['commands']['use_skills']['items'] = 'oggetti';
-$MESSAGE['chat']['commands']['use_skills']['sum'] = 'totale';
-$MESSAGE['chat']['commands']['die']['cast'] = 'lancia 1d';
-$MESSAGE['chat']['commands']['die']['sum'] = 'Risultato';
-$MESSAGE['chat']['commands']['die']['item'] = 'utilizza';
+$MESSAGE['chat']['commands']['use_skills']['die'] = 'Dado';
+$MESSAGE['chat']['commands']['use_skills']['rank'] = 'Rango';
+$MESSAGE['chat']['commands']['use_skills']['items'] = 'Oggetti';
+$MESSAGE['chat']['commands']['use_skills']['sum'] = 'Totale';
+$MESSAGE['chat']['commands']['die']['cast'] = 'ha lanciato';
+$MESSAGE['chat']['commands']['die']['sum'] = 'Somma:';
+$MESSAGE['chat']['commands']['die']['modifier'] = 'Modificatore:';
+$MESSAGE['chat']['commands']['die']['successes'] = 'Successi:';
+$MESSAGE['chat']['commands']['use_items']['uses'] = 'utilizza l\'oggetto';
+$MESSAGE['chat']['error']['permissions'] = 'Non hai i permessi per l\'operazione';
+$MESSAGE['chat']['error']['empty_message'] = 'Non puoi inviare messaggi senza testo';
+$MESSAGE['chat']['error']['invalid_recipient'] = 'Non è stato definito il destinatario del messaggio';
+$MESSAGE['chat']['error']['invalid_message_type'] = 'Tipo di messaggio sconosciuto';
+$MESSAGE['chat']['error']['invalid_skillsystem_type'] = 'Nessuna tipologia di tiro selezionata';
+$MESSAGE['chat']['error']['invalid_dice'] = 'Stringa dadi invalida';
+$MESSAGE['chat']['error']['dice_allowed_values'] = 'Valori ammessi:';
+$MESSAGE['chat']['error']['invalid_dice_faces'] = 'Numero di facce invalido.';
+$MESSAGE['chat']['error']['invalid_dice_number'] = 'Numero di dadi invalido.';
+$MESSAGE['chat']['error']['invalid_dice_modifier'] = 'Modificatore invalido.';
+$MESSAGE['chat']['error']['invalid_dice_threshold'] = 'Numero soglia successi invalido.';
+$MESSAGE['chat']['error']['solo_autore'] = '<h2>ATTENZIONE</h2> Non puoi salvare la giocata se non inviato azioni in chat';
+
+//Chat private
+$MESSAGE['chat']['error']['invalid_stats'] = 'Caratteristica invalida';
+$MESSAGE['chat']['error']['invalid_skill'] = 'Abilità invalida';
+$MESSAGE['chat']['error']['invalid_item'] = 'Oggetto invalido';
+$MESSAGE['chat']['error']['unknown_error'] = 'Errore interno sconosciuto';
+$MESSAGE['chat']['error']['unknown_recipient'] = 'Il destinatario non esiste';
+$MESSAGE['chat']['error']['unknown_skill'] = 'Abilità non configurata nel database';
+$MESSAGE['chat']['error']['unknown_stats'] = 'Caratteristica non configurata nel database';
+$MESSAGE['chat']['error']['unknown_race'] = 'Razza non configurata nel database';
+$MESSAGE['chat']['error']['already_invited'] = 'Personaggio già invitato';
+$MESSAGE['chat']['error']['already_kicked'] = 'Personaggio già cacciato';
 
 
 /********** Eventi **********/

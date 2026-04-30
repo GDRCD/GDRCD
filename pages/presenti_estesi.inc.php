@@ -15,14 +15,32 @@
         /** * Fix della query per includere l'uso dell'orario di uscita per capire istantaneamente quando il pg non è più connesso
          * @author Blancks
          */
-        $query = "SELECT personaggio.nome, personaggio.cognome, personaggio.permessi, personaggio.sesso, personaggio.id_razza, razza.sing_m, razza.sing_f, razza.icon, personaggio.disponibile, personaggio.online_status, personaggio.is_invisible, personaggio.ultima_mappa, personaggio.ultimo_luogo, personaggio.posizione, personaggio.ora_entrata, personaggio.ora_uscita, personaggio.ultimo_refresh, mappa.stanza_apparente, mappa.nome as luogo, mappa_click.nome as mappa FROM personaggio LEFT JOIN mappa ON personaggio.ultimo_luogo = mappa.id LEFT JOIN mappa_click ON personaggio.ultima_mappa = mappa_click.id_click LEFT JOIN razza ON personaggio.id_razza = razza.id_razza WHERE personaggio.ora_entrata > personaggio.ora_uscita AND DATE_ADD(personaggio.ultimo_refresh, INTERVAL 4 MINUTE) > NOW() ORDER BY personaggio.is_invisible, personaggio.ultima_mappa, personaggio.ultimo_luogo, personaggio.nome";
-        $result = gdrcd_query($query, 'result');
+        $query = "SELECT  
+            personaggio.id_personaggio, personaggio.nome,
+            personaggio.url_img_chat, personaggio.cognome,
+            personaggio.permessi, personaggio.sesso, personaggio.id_razza, 
+            razza.sing_m, razza.sing_f, razza.icon, personaggio.disponibile, 
+            personaggio.online_status, personaggio.is_invisible, 
+            personaggio.ultima_mappa, personaggio.ultimo_luogo,
+            personaggio.posizione, personaggio.ora_entrata, 
+            personaggio.ora_uscita, personaggio.ultimo_refresh, 
+            mappa.stanza_apparente, 
+            mappa.nome as luogo, 
+            mappa_click.nome as mappa
+            FROM personaggio 
+            LEFT JOIN mappa ON personaggio.ultimo_luogo = mappa.id 
+            LEFT JOIN mappa_click ON personaggio.ultima_mappa = mappa_click.id_click 
+            LEFT JOIN razza ON personaggio.id_razza = razza.id_razza 
+            WHERE personaggio.ora_entrata > personaggio.ora_uscita 
+            AND DATE_ADD(personaggio.ultimo_refresh, INTERVAL 4 MINUTE) > NOW() 
+            ORDER BY personaggio.is_invisible, personaggio.ultima_mappa, personaggio.ultimo_luogo, personaggio.nome";
+        $result = gdrcd_stmt_all($query);
 
         echo '<ul class="elenco_presenti">';
         $ultimo_luogo_corrente = '';
         $mappa_corrente = '';
 
-        while ($record = gdrcd_query($result, 'fetch')) {
+        foreach ($result as $record) {
 
             //Stampo il nome del luogo
             if ($record['is_invisible'] == 1)  {
@@ -70,27 +88,38 @@
              */
             $online_state = '';
             if ($PARAMETERS['mode']['user_online_state'] == 'ON' && ! empty($record['online_status']) && $record['online_status'] != null) {
-                $record['online_status'] = trim(nl2br(gdrcd_filter('in', $record['online_status'])));
-                $record['online_status'] = strtr($record['online_status'], ["\n\r" => '', "\n" => '', "\r" => '', '"' => '&quot;']);
-                $online_state = 'onmouseover="show_desc(event, \''.$record['online_status'].'\');" onmouseout="hide_desc();""';
+                    if($PARAMETERS['mode']['online_message_bbcode'] == 'ON') {
+                        if($PARAMETERS['settings']['online_message_bbcode']['type'] == 'bbd' && $PARAMETERS['settings']['bbd']['free_html'] == 'ON') {
+                            $online_state = bbdecoder(gdrcd_html_filter($record['online_status']), true);
+                        } elseif($PARAMETERS['settings']['online_message_bbcode']['type'] == 'bbd') {
+                            $online_state = bbdecoder(gdrcd_filter('out', $record['online_status']), true);
+                        } else {
+                            $online_state = gdrcd_bbcoder(gdrcd_filter('out', $record['online_status']));
+                        }
+                    } else {
+                        $online_state = gdrcd_html_filter($record['online_status']);
+                    }
+                     $online_state = 'onmouseover="show_desc(event, \''.$online_state.'\');" onmouseout="hide_desc();""';
             }
             //Stampo il PG
             echo '<li class="presente"'.$online_state.'>';
             //Entrata, uscita PG
             //Controllo da quanto il pg e' loggato
-
+            if (gdrcd_configuration_get('presenti_estesi.avatar') === 'si') {
+                 echo '<img class="presenti_avatar" src="'.gdrcd_filter("out",$record['url_img_chat']).'" />';
+            }
 
             $activity = gdrcd_check_time($record['ora_entrata']);
 
             //Se e' loggato da meno di 2 minuti
             if ($activity <= 2)   {
                 //Lo segnalo come appena entrato
-                echo '<img class="presenti_ico" src="imgs/icons/enter.gif" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['enter']).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['enter']).'" />';
+                echo '<img class="presenti_ico" src="public/images/icons/enter.gif" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['enter']).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['enter']).'" />';
             } else  {
              //Altrimenti e' semplicemente loggato
-                echo '<img class="presenti_ico" src="imgs/icons/blank.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['logged']).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['logged']).'" />';
+                echo '<img class="presenti_ico" src="public/images/icons/blank.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['logged']).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['logged']).'" />';
             }//else
-             
+
             switch ($record['permessi']) {
                 case USER:
                     $alt_permessi = '';
@@ -109,11 +138,11 @@
                     break;
             }//else
             //Livello di accesso del PG (utente, master, admin, superuser)
-            echo '<img class="presenti_ico" src="imgs/icons/permessi'.$record['permessi'].'.gif" alt="'.gdrcd_filter('out', $alt_permessi).'" title="'.gdrcd_filter('out', $alt_permessi).'" />';
+            echo '<img class="presenti_ico" src="public/images/icons/permessi'.$record['permessi'].'.gif" alt="'.gdrcd_filter('out', $alt_permessi).'" title="'.gdrcd_filter('out', $alt_permessi).'" />';
 
             //Icona stato di disponibilità. E' sensibile se la riga che sto stampando corrisponde all'utente loggato.
             $change_disp = ($record['disponibile'] + 1) % 3;
-            echo '<img class="presenti_ico" src="imgs/icons/disponibile'.$record['disponibile'].'.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['availability'][$record['disponibile']]).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['availability'][$record['disponibile']]).'" />';
+            echo '<img class="presenti_ico" src="public/images/icons/disponibile'.$record['disponibile'].'.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['availability'][$record['disponibile']]).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['availability'][$record['disponibile']]).'" />';
 
             //Icona della razza pg
             if ($record['icon'] == '') {
@@ -122,13 +151,13 @@
             echo '<img class="presenti_ico" src="themes/'.$PARAMETERS['themes']['current_theme'].'/imgs/races/'.$record['icon'].'" alt="'.gdrcd_filter('out', $record['sing_'.$record['sesso']]).'" title="'.gdrcd_filter('out', $record['sing_'.$record['sesso']]).'" />';
 
             //Icona del genere del pg
-            echo '<img class="presenti_ico" src="imgs/icons/testamini'.$record['sesso'].'.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]).'" />';
+            echo '<img class="presenti_ico" src="public/images/icons/testamini'.$record['sesso'].'.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]).'" />';
 
             //Nome pg e link alla sua scheda
             echo '<a href="main.php?page=messages_center&op=create&destinatario='.gdrcd_filter('url', $record['nome']).'" class="link_sheet">MP</a> ';
 
             //Nome pg e link alla sua scheda
-            echo ' <a href="main.php?page=scheda&pg='.$record['nome'].'" class="link_sheet gender_'.$record['sesso'].'">'.gdrcd_filter('out', $record['nome']);
+            echo ' <a href="main.php?page=scheda&pg='.$record['id_personaggio'].'" class="link_sheet gender_'.$record['sesso'].'">'.gdrcd_filter('out', $record['nome']);
             if (empty($record['cognome']) === false) {
                 echo ' '.gdrcd_filter('out', $record['cognome']);
             }

@@ -48,7 +48,7 @@ function bbdecoder($str, $escaped = false)
 
     $regexpMail = "([a-z0-9._-]+)@[a-z0-9._-]+\.[a-z]{2,4}";
     $regexpUrl = "https?://([-\w\.]+)+(:\d+)?(/([-\w/_\.]*(\?\S+)?)?)?";
-    $regexpYT = "https?://www\.youtube\.com/watch\?v=([a-zA-Z0-9_-]{11})(&.*)?";
+    $regexpYT = "https?://(www\.youtube\.com|youtu\.be)/(watch\?v=)?([a-zA-Z0-9_-]{11})&?\??(.*)?";
     $regexpColor = "(\#[0-9a-fA-F]{3,6})|([a-zA-Z]{3,6})";
 
 
@@ -65,8 +65,7 @@ function bbdecoder($str, $escaped = false)
 
     if ($PARAMETERS['settings']['bbd']['youtube'] == 'ON')
     {
-        $bbcode["#\[youtube\]($regexpYT)+\[/youtube\]#is"] = "<object data=\"http://www.youtube.com/v/\\2&hl=it&fs=1\" type=\"application/x-shockwave-flash\" width=\"425\" height=\"344\"><embed src=\"http://www.youtube.com/v/\\2&hl=it&fs=1\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" width=\"425\" height=\"344\" /></object>";
-
+        $bbcode["#\[youtube\]($regexpYT)+\[/youtube\]#is"] = '<iframe width="560" height="315" src="https://www.youtube.com/embed/\\4?\\5" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>';
     }
 
 

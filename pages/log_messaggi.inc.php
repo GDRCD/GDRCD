@@ -17,14 +17,14 @@
                     <div class="form_gestione">
                         <form action="main.php?page=log_messaggi" method="post">
                             <?php
-                            $result = gdrcd_query("SELECT nome FROM personaggio WHERE permessi > ".DELETED." ORDER BY nome", 'result'); ?>
+                            $result = gdrcd_query("SELECT nome, id_personaggio FROM personaggio WHERE permessi > ".DELETED." ORDER BY nome", 'result'); ?>
                             <div class='form_label'>
                                 <?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['log']['messages']['log_type']); ?>
                             </div>
                             <div class='form_field'>
                                 <select name="pg">
                                     <?php while($row = gdrcd_query($result, 'fetch')) { ?>
-                                        <option value="<?php echo gdrcd_filter('out', $row['nome']); ?>">
+                                        <option value="<?php echo gdrcd_filter('out', $row['id_personaggio']); ?>">
                                             <?php echo gdrcd_filter('out', $row['nome']); ?>
                                         </option>
                                     <?php }//while
@@ -48,10 +48,17 @@
                 $pagebegin = (int) $_REQUEST['offset'] * $PARAMETERS['settings']['records_per_page'];
                 $pageend = $PARAMETERS['settings']['records_per_page'];
                 //Conteggio record totali
-                $record_globale = gdrcd_query("SELECT COUNT(*) FROM backmessaggi WHERE mittente = '".gdrcd_filter('in', $_REQUEST['pg'])."'");
+                $record_globale = gdrcd_query("SELECT COUNT(*) FROM backmessaggi WHERE id_personaggio_mittente = '".gdrcd_filter('in', $_REQUEST['pg'])."'");
                 $totaleresults = $record_globale['COUNT(*)'];
                 //Lettura record
-                $result = gdrcd_query("SELECT destinatario, spedito, testo FROM backmessaggi WHERE mittente = '".gdrcd_filter('in', $_REQUEST['pg'])."' ORDER BY spedito DESC LIMIT ".$pagebegin.", ".$pageend."", 'result');
+                $result = gdrcd_stmt(
+                    "SELECT IFNULL(personaggio.nome, ?) AS destinatario,
+                            backmessaggi.spedito,
+                            backmessaggi.testo
+                    FROM backmessaggi
+                    LEFT JOIN personaggio ON backmessaggi.id_personaggio_destinatario = personaggio.id_personaggio
+                    WHERE backmessaggi.id_personaggio_mittente = ? ORDER BY backmessaggi.spedito DESC LIMIT ?, ?",
+                    [$GLOBALS['MESSAGE']['interface']['user']['cancelled'], $_REQUEST['pg'], $pagebegin, $pageend]);
                 $numresults = gdrcd_query($result, 'num_rows');
 
                 /* Se esistono record */
@@ -78,7 +85,7 @@
                                 </td>
                             </tr>
                             <!-- Record -->
-                            <?php while($row = gdrcd_query($result, 'fetch')) { ?>
+                            <?php while($row = gdrcd_query($result, 'assoc')) { ?>
                                 <tr class="risultati_elenco_record_gestione">
                                     <td class="casella_elemento">
                                         <div class="elementi_elenco">
