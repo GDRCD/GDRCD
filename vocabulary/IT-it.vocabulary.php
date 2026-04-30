@@ -834,7 +834,9 @@ $MESSAGE['chat']['error']['invalid_dice_faces'] = 'Numero di facce invalido.';
 $MESSAGE['chat']['error']['invalid_dice_number'] = 'Numero di dadi invalido.';
 $MESSAGE['chat']['error']['invalid_dice_modifier'] = 'Modificatore invalido.';
 $MESSAGE['chat']['error']['invalid_dice_threshold'] = 'Numero soglia successi invalido.';
+$MESSAGE['chat']['error']['solo_autore'] = '<h2>ATTENZIONE</h2> Non puoi salvare la giocata se non inviato azioni in chat';
 
+//Chat private
 $MESSAGE['chat']['error']['invalid_stats'] = 'Caratteristica invalida';
 $MESSAGE['chat']['error']['invalid_skill'] = 'Abilità invalida';
 $MESSAGE['chat']['error']['invalid_item'] = 'Oggetto invalido';
