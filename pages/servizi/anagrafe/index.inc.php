@@ -3,35 +3,52 @@
 // Avvio l'operazione di ricerca nel caso sia stato inviato il form
 if (gdrcd_filter('get', $_POST['action']) == "searchPersonaggio") {
 
-    if (!empty($_REQUEST['nome']) || !empty($_REQUEST['genere']) || !empty($_REQUEST['razza'])) {
+    if (!empty($_POST['nome']) || !empty($_POST['genere']) || !empty($_POST['razza'])) {
+
+        $params = [];
+        $whereFilters = [];
+
         // Ottengo i filtri inviati dal FORM
-        if (gdrcd_filter('get', $_REQUEST['nome'])) {
-            $whereFilters[] = "personaggio.nome LIKE '%" . gdrcd_filter('get', $_REQUEST['nome']) . "%'";
+        if (gdrcd_filter('get', $_POST['nome'])) {
+            $whereFilters[] = "personaggio.nome LIKE ?";
+            $params[] = '%'. $_POST['nome'] .'%';
         }
 
-        if (gdrcd_filter('get', $_REQUEST['genere'])) {
-            $whereFilters[] = "personaggio.sesso = '" . gdrcd_filter('get', $_REQUEST['genere']) . "'";
+        if (gdrcd_filter('get', $_POST['genere'])) {
+            $whereFilters[] = "personaggio.sesso = ?";
+            $params[] = $_POST['genere'];
         }
 
-        if (gdrcd_filter('get', $_REQUEST['razza'])) {
-            $whereFilters[] = "personaggio.id_razza = '" . gdrcd_filter('get', $_REQUEST['razza']) . "'";
+        if (gdrcd_filter('get', $_POST['razza'])) {
+            $whereFilters[] = "personaggio.id_razza = ?";
+            $params[] = $_POST['razza'];
         }
 
-        $limit_val = gdrcd_filter('num', $_REQUEST['limit']);
+        // Filtra il limit, e imposta il massimo valore possibile a 500
+        $limit_val = gdrcd_filter('num', $_POST['limit']);
+        $limit_val = max(1, min($limit_val, 500));
 
-        $limit = (isset($_REQUEST['limit']) && ($_REQUEST['limit'] > 0)) ? " LIMIT {$_REQUEST['limit']} " : '';
+        if (trim($_POST['limit']) === '') {
+            $_POST['limit'] = $limit_val;
+        }
+
+        $params[] = $limit_val;
 
         // Costruisco la query
-        $querySearch = "SELECT personaggio.url_img_chat, personaggio.nome, personaggio.cognome, personaggio.sesso,
+        $querySearch = 'SELECT personaggio.url_img_chat, personaggio.nome, personaggio.cognome, personaggio.sesso,personaggio.id_personaggio,
                                razza.nome_razza
                         FROM personaggio
                         LEFT JOIN razza ON personaggio.id_razza = razza.id_razza
-                        WHERE 1 " . (isset($whereFilters) ? ' AND ' . implode(' AND ', $whereFilters) : NULL) . '
-                        ORDER BY nome DESC '.$limit;
-        $resultSearch = gdrcd_query($querySearch, 'result');
+                        WHERE '. implode(' AND ', $whereFilters) .'
+                        ORDER BY nome ASC
+                        LIMIT ?';
+
+
+        $resultSearch = gdrcd_stmt_all($querySearch, $params);
+
 
         // Se ottengo dei risultati, costruisco la tabella
-        if (gdrcd_query($resultSearch, 'num_rows') > 0) {
+        if (!empty($resultSearch)) {
 
             // Costruisco le intestazioni
             $trs[] = '<tr>
@@ -43,7 +60,7 @@ if (gdrcd_filter('get', $_POST['action']) == "searchPersonaggio") {
                      </tr>';
 
             // Scorro i risultati
-            while ($rowSearch = gdrcd_query($resultSearch, 'fetch')) {
+           foreach ($resultSearch as $rowSearch) {
                 // Aggiungo le celle con i dettagli del personaggio
                 $tds[] = '<td class="casella_elemento">
                             <div class="elementi_elenco">
@@ -53,7 +70,7 @@ if (gdrcd_filter('get', $_POST['action']) == "searchPersonaggio") {
                           </td>';
                 $tds[] = '<td class="casella_elemento">
                             <div class="elementi_elenco">
-                                <a href="main.php?page=scheda&pg=' . gdrcd_filter('out', $rowSearch['nome']) . '">' .
+                                <a href="main.php?page=scheda&pg=' . gdrcd_filter('out', $rowSearch['id_personaggio']) . '">' .
                                     gdrcd_filter('out', $rowSearch['nome']) . ' ' . gdrcd_filter('out', $rowSearch['cognome']) . '
                                 </a>
                             </div>
@@ -97,17 +114,17 @@ if (gdrcd_filter('get', $_POST['action']) == "searchPersonaggio") {
                 </div>';
         }
     } else {
-        echo '<div class="warning">Selezionare almeno un criterio di ricerca.</div>';
+        echo '<div class="warning">Selezionare almeno un criterio di ricerca.</div>'; // TODO inserire in messages
     }
 }
 
 
 // Ottengo le razze per costruire le opzioni
-$result = gdrcd_query("SELECT id_razza, nome_razza FROM razza ORDER BY nome_razza", 'result');
+$result = gdrcd_stmt_all("SELECT id_razza, nome_razza FROM razza ORDER BY nome_razza");
 // Scorro i risultati e inserisco le opzioni
 $optionsRazze = [];
-while ($razza = gdrcd_query($result, 'fetch')) {
-    $isSelected = gdrcd_filter('get', $_REQUEST['razza']) == $razza['id_razza'] ? 'selected' : NULL;
+foreach ($result as $razza) {
+    $isSelected = gdrcd_filter('get', $_POST['razza']) == $razza['id_razza'] ? 'selected' : NULL;
     $optionsRazze[] = '<option value="' . $razza['id_razza'] . '" ' . $isSelected . '>' . gdrcd_filter('out', $razza['nome_razza']) . '</option>';
 }
 
@@ -155,7 +172,7 @@ foreach ($genders as $gender) {
             <!-- LIMITE PG -->
             <div class="single_input">
                 <div class="label"><?= $MESSAGE['interface']['pg_list']['search']['limit']; ?></div>
-                <input type="number" name="limit" value="<?= isset($_REQUEST['limit']) ? gdrcd_filter('out', $_REQUEST['limit']) : 0; ?>"/>
+                <input type="number" name="limit" value="<?= isset($_POST['limit']) ? gdrcd_filter('out', $_POST['limit']) : 0; ?>"/>
                 <div class="subtitle"><?= $MESSAGE['interface']['pg_list']['search']['limit_info']; ?></div>
             </div>
 
