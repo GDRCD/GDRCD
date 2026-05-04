@@ -102,7 +102,6 @@ function gdrcd_logs_buffer($flush = false, $descrizione = null, $timestamp = nul
 
     if ($flush === true && !empty($logs)) {
         
-        $values_placeholders = [];
         $params = [];
 
         foreach ($logs as $log) {
