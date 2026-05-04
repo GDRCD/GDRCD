@@ -3,7 +3,7 @@ if (($_SESSION['permessi'] < MODERATOR) || ($PARAMETERS['mode']['spymessages'] !
         
         echo '<div class="error">'.gdrcd_filter('out',$MESSAGE['error']['not_allowed']).'</div>';
     } else {
-        $result=gdrcd_query("SELECT id_personaggio, nome FROM personaggio ORDER BY nome", 'result');
+        $result=gdrcd_stmt_all("SELECT id_personaggio, nome FROM personaggio ORDER BY nome");
         $log_by_user_label = gdrcd_filter('out',$MESSAGE['interface']['administration']['log']['chat']['log_by_user']);
         $submit_value = gdrcd_filter('out',$MESSAGE['interface']['forms']['submit']);
         
@@ -16,8 +16,7 @@ if (($_SESSION['permessi'] < MODERATOR) || ($PARAMETERS['mode']['spymessages'] !
             <div class='form_field'>
                 <select name="pg">
 HTML;
-        
-        while($row=gdrcd_query($result, 'fetch')){
+        foreach($result as $row){
             $id_filtered = (int)$row['id_personaggio'];
             $nome_filtered = gdrcd_filter('out',$row['nome']);
             echo <<<HTML
@@ -39,7 +38,7 @@ HTML;
 </div>
 HTML;
         
-        $result=gdrcd_query("SELECT nome, id FROM mappa WHERE chat=1 ORDER BY nome", 'result');
+        $result=gdrcd_stmt_all("SELECT nome, id FROM mappa WHERE chat=1 ORDER BY nome");
         $log_by_room_label = gdrcd_filter('out',$MESSAGE['interface']['administration']['log']['chat']['log_by_room']);
         $begin_label = gdrcd_filter('out',$MESSAGE['interface']['administration']['log']['chat']['begin']);
         $end_label = gdrcd_filter('out',$MESSAGE['interface']['administration']['log']['chat']['end']);
@@ -57,7 +56,7 @@ HTML;
                 <select name="luogo">
 HTML;
         
-        while($row=gdrcd_query($result, 'fetch')){
+        foreach($result as $row){
             $id_filtered = gdrcd_filter('out',$row['id']);
             $nome_filtered = gdrcd_filter('out',$row['nome']);
             echo <<<HTML
