@@ -1,6 +1,5 @@
 <?php
 if (($_SESSION['permessi'] < MODERATOR) || ($PARAMETERS['mode']['spymessages'] != 'ON')){
-        
         echo '<div class="error">'.gdrcd_filter('out',$MESSAGE['error']['not_allowed']).'</div>';
     } else {
         $result=gdrcd_stmt_all("SELECT id_personaggio, nome FROM personaggio ORDER BY nome");
@@ -32,9 +31,9 @@ HTML;
             <!-- bottoni -->
             <div class='form_submit'>
                 <input type="hidden" value="view_user" name="op" />
-<input type="submit"  value="{$submit_value}" />
-</div>
-</form>
+                <input type="submit"  value="{$submit_value}" />
+            </div>
+        </form>
 </div>
 HTML;
         
