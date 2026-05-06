@@ -5,31 +5,28 @@ if ($_POST['op']=='insert') {
     if (isset($_POST['note'])===FALSE) { $note = 'Nessuna';} else { $note = gdrcd_filter('in',$_POST['note']); }
 
     /* Estraggo id_personaggio per il destinatario */
-    $dest_pg_data = gdrcd_query("SELECT id_personaggio FROM personaggio WHERE nome = '".gdrcd_filter('in', $_POST['pg'])."'");
+    $dest_pg_data = gdrcd_stmt("SELECT id_personaggio FROM personaggio WHERE nome = ? ", [$_POST['pg']]);
     
     if ($dest_pg_data['id_personaggio'] != $_SESSION['id_personaggio']) {
         /*Eseguo l'inserimento del blocco*/
-        gdrcd_query("INSERT INTO blocco_esiti (titolo, id_personaggio_destinatario, id_personaggio_autore, id_personaggio_master) 
-            VALUES 
-            ('".gdrcd_filter('in',$_POST['titolo'])."','".$dest_pg_data['id_personaggio']."', 
-            '".$_SESSION['id_personaggio']."','".$_SESSION['id_personaggio']."') ");
+        gdrcd_stmt("INSERT INTO blocco_esiti (titolo, id_personaggio_destinatario, id_personaggio_autore, id_personaggio_master) 
+            VALUES (?, ?, ?, ?)", 
+            [$_POST['titolo'], $dest_pg_data['id_personaggio'], $_SESSION['id_personaggio'], $_SESSION['id_personaggio']]);
 
     } else {
         /*Eseguo l'inserimento del blocco*/
-        gdrcd_query("INSERT INTO blocco_esiti (titolo, id_personaggio_destinatario, id_personaggio_autore) 
-            VALUES 
-            ('".gdrcd_filter('in',$_POST['titolo'])."','".$dest_pg_data['id_personaggio']."', 
-            '".$_SESSION['id_personaggio']."') ");
+        gdrcd_stmt("INSERT INTO blocco_esiti (titolo, id_personaggio_destinatario, id_personaggio_autore) 
+            VALUES (?, ?, ?)", 
+            [$_POST['titolo'], $dest_pg_data['id_personaggio'], $_SESSION['id_personaggio']]);
     }
-    $load_blocco=gdrcd_query("SELECT id, id_personaggio_master FROM blocco_esiti WHERE titolo='".gdrcd_filter('in',$_POST['titolo'])."' 
-    ORDER BY id DESC LIMIT 1 ");
+    $load_blocco=gdrcd_stmt("SELECT id, id_personaggio_master FROM blocco_esiti WHERE titolo=? 
+    ORDER BY id DESC LIMIT 1 ", [$_POST['titolo']]);
 
     /*Eseguo l'inserimento del singolo esito*/
-    gdrcd_query("INSERT INTO esiti (titolo, id_personaggio_destinatario, id_personaggio_autore, contenuto, noteoff, id_personaggio_master, id_blocco, letto_master) 
-            VALUES 
-            ('".gdrcd_filter('in',$_POST['titolo'])."','".$dest_pg_data['id_personaggio']."',
-            '".$_SESSION['id_personaggio']."','".gdrcd_filter('in', $_POST['contenuto'])."',
-            '".$note."', '".$load_blocco['id_personaggio_master']."',  ".$load_blocco['id'].", 1) ");
+    gdrcd_stmt("INSERT INTO esiti (titolo, id_personaggio_destinatario, id_personaggio_autore, contenuto, noteoff, id_personaggio_master, id_blocco, letto_master) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)", 
+            [$_POST['titolo'], $dest_pg_data['id_personaggio'], $_SESSION['id_personaggio'], $_POST['contenuto'],
+            $note, $load_blocco['id_personaggio_master'], $load_blocco['id'], 1]);
 
     if ($dest_pg_data['id_personaggio'] != $_SESSION['id_personaggio']) {
         #Invio messaggio di avviso al giocatore

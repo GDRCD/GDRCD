@@ -2,14 +2,15 @@
 /*Inserimento di un nuovo record*/
 if ($_POST['op']=='add') {
 
-    $load_blocco=gdrcd_query("SELECT id_personaggio_destinatario, id_personaggio_master, titolo, closed FROM blocco_esiti 
-        WHERE id='".gdrcd_filter('num',$_POST['id'])."'  LIMIT 1 ");
+    $load_blocco=gdrcd_stmt_one("SELECT id_personaggio_destinatario, id_personaggio_master, titolo, closed FROM blocco_esiti 
+        WHERE id=? ", [$_POST['id']]);
 
-    if ($load_blocco['closed']==1) { ?>
+    if (empty($load_blocco)) { ?>
         <div class="warning">
             Questa serie di esiti è al momento chiusa
         </div>
-    <?php 	} else {
+    <?php 	
+    } else {
         if (isset($_POST['note'])===FALSE) { $note = 'Nessuna';} else { $note = gdrcd_filter('in',$_POST['note']); }
         if (isset($_POST['chat'])===FALSE) { $chat = 0;} else { $chat = gdrcd_filter('num',$_POST['chat']); }
         if (isset($_POST['id_ab'])===FALSE) { $ab = 0;} else { $ab = gdrcd_filter('num',$_POST['id_ab']); }
@@ -34,7 +35,7 @@ if ($_POST['op']=='add') {
         #Invio messaggio di avviso al giocatore
         $text ='Hai ricevuto un nuovo esito dal Master '.gdrcd_filter('out', $_SESSION['login']).' per la 
 				serie di esiti intitolata: "'.gdrcd_filter('out', $load_blocco['titolo']).'" ';
-        $dest_data = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = " . $load_blocco['id_personaggio_destinatario']);
+        $dest_data = gdrcd_stmt_one("SELECT nome FROM personaggio WHERE id_personaggio = ? ", [$load_blocco['id_personaggio_destinatario']]);  
         $dest = $dest_data['nome'];
 
         #Invio
@@ -42,21 +43,17 @@ if ($_POST['op']=='add') {
         # '" . gdrcd_filter('in', $dest) . "', NOW(), '" . gdrcd_filter('in', $text). "')");
 
         /*Eseguo l'inserimento del singolo esito*/
-        gdrcd_query("INSERT INTO esiti (titolo, id_personaggio_destinatario, id_personaggio_autore, contenuto, noteoff, id_ab, chat, CD_1, CD_2, 
+        gdrcd_stmt("INSERT INTO esiti (titolo, id_personaggio_destinatario, id_personaggio_autore, contenuto, noteoff, id_ab, chat, CD_1, CD_2, 
                    CD_3, CD_4, id_blocco, id_personaggio_master, dice_face, dice_num, dice_results,letto_master) 
-                   VALUES 
-                          ('".gdrcd_filter('in',$_POST['titolo'])."',
-                   '".$load_blocco['id_personaggio_destinatario']."','".$_SESSION['id_personaggio']."',
-                   '".gdrcd_filter('in', $_POST['contenuto'])."','".$note."', ".$ab.", ".$chat.", 
-                   '".gdrcd_filter('in', $_POST['CD_1'])."', '".gdrcd_filter('in', $_POST['CD_2'])."', 
-                   '".gdrcd_filter('in', $_POST['CD_3'])."', '".gdrcd_filter('in', $_POST['CD_4'])."', 
-                   ".$_POST['id'].", '".$_SESSION['id_personaggio']."', ".gdrcd_filter('num', $facce).",
-                   ".gdrcd_filter('num', $num).", '".gdrcd_filter('in', $dice_res)."', 1 )");
+                   VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
+                   [$_POST['titolo'], $load_blocco['id_personaggio_destinatario'], $_SESSION['id_personaggio'], $_POST['contenuto'], $note, $ab, $chat,
+                   $_POST['CD_1'], $_POST['CD_2'], $_POST['CD_3'], $_POST['CD_4'],  
+                   $_POST['id'], $load_blocco['id_personaggio_master'], $facce, $num, $dice_res, 1]);
 
         #Aggiorno il master se non presente
         if ($load_blocco['id_personaggio_master'] === NULL && $_SESSION['permessi']>=ESITI_PERM && $load_blocco['id_personaggio_destinatario']!=$_SESSION['id_personaggio']) {
-            gdrcd_query("UPDATE blocco_esiti SET id_personaggio_master = '".$_SESSION['id_personaggio']."' 
-					WHERE id = ".gdrcd_filter('num', $_POST['id'] )." ");
+            gdrcd_stmt("UPDATE blocco_esiti SET id_personaggio_master = ? 
+					WHERE id = ? ", [$_SESSION['id_personaggio'], $_POST['id']]);
         }
 
         ?>
