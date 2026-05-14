@@ -42,7 +42,7 @@
             $result = gdrcd_stmt_all("SELECT id_razza, nome_razza FROM razza ORDER BY nome_razza");
             foreach($result as $raz) {
                 ?>
-                <option value="<?php echo $raz['id_razza']; ?>" >
+                <option>
                     <?php echo gdrcd_filter('out', $raz['nome_razza']); ?>
                 </option>
             <?php

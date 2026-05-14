@@ -56,17 +56,11 @@
     </div>
     <!-- bottoni -->
     <div class='form_submit'>
-        <?php /* Se l'operazione è una modifica stampo i tasti modifica e annulla */
-        if($operation == "edit") { ?>
+       
             <input type="hidden" name="id_record" value="<?php echo $loaded_record['id_abilita']; ?>">
-            <input type="hidden" name="op" value="modify" />
+            <input type="hidden" name="op" value="save_edit" />
             <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['skills']['submit']['edit']); ?>" />
-        <?php
-        }  else {  /* Altrimenti il tasto inserisci */ ?>
-            <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['skills']['submit']['insert']); ?>" />
-            <input type="hidden" name="op" value="insert" />
-        <?php
-        } ?>
+     
     </div>
 </form>
 

@@ -56,7 +56,7 @@ if(!empty($result)) { ?>
                             <div class="controllo_elenco">
                                 <form class="opzioni_elenco_record_gestione" action="main.php?page=gestione_abilita" method="post">
                                     <input type="hidden" name="id_record" value="<?php echo $row['id_abilita'] ?>" />
-                                    <input type="hidden" name="op" value="erase" />
+                                    <input type="hidden" name="op" value="save_delete" />
                                     <input type="image" src="public/images/icons/erase.png" alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['erase']); ?>" title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['erase']); ?>" />
                                 </form>
                             </div>
