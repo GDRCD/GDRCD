@@ -281,6 +281,62 @@ const GDRCD_LOGIN_TAKEOVER = 'takeover';
 const GDRCD_LOGIN_WRONG = 'wrong-credentials';
 const GDRCD_LOGIN_DISABLED = 'user-deleted';
 
+/**
+ * Costanti per definire le stringe ritornate dalla funzione gdrcd_random_string
+ */
+
+/** @var int Flag per includere caratteri speciali (es. !, #, @, ...) */
+const GDRCD_RANDOMSTRING_SPECIALS = 1;
+
+/** @var int Flag per includere cifre numeriche (0-9) */
+const GDRCD_RANDOMSTRING_NUMBERS = 2;
+
+/** @var int Flag per includere lettere minuscole (a-z) */
+const GDRCD_RANDOMSTRING_LOWERCASE_LETTERS = 4;
+
+/** @var int Flag per includere lettere maiuscole (A-Z) */
+const GDRCD_RANDOMSTRING_UPPERCASE_LETTERS = 8;
+
+/** @var int Flag per includere virgolette singole e doppie */
+const GDRCD_RANDOMSTRING_QUOTES = 16;
+
+/** @var int Combinazione: solo lettere maiuscole */
+const GDRCD_RANDOMSTRING_LETTERS = GDRCD_RANDOMSTRING_UPPERCASE_LETTERS;
+
+/** @var int Combinazione: lettere maiuscole e minuscole (case-insensitive) */
+const GDRCD_RANDOMSTRING_LETTERS_CI =
+    GDRCD_RANDOMSTRING_UPPERCASE_LETTERS
+    | GDRCD_RANDOMSTRING_LOWERCASE_LETTERS;
+
+/** @var int Combinazione: lettere maiuscole e cifre numeriche */
+const GDRCD_RANDOMSTRING_ALPHA =
+    GDRCD_RANDOMSTRING_UPPERCASE_LETTERS
+    | GDRCD_RANDOMSTRING_NUMBERS;
+
+/** @var int Combinazione: lettere maiuscole, minuscole e cifre numeriche */
+const GDRCD_RANDOMSTRING_ALPHA_CI =
+    GDRCD_RANDOMSTRING_UPPERCASE_LETTERS
+    | GDRCD_RANDOMSTRING_LOWERCASE_LETTERS
+    | GDRCD_RANDOMSTRING_NUMBERS;
+
+/** @var int Combinazione: tutti i caratteri disponibili (speciali, numerici, lettere e virgolette) */
+const GDRCD_RANDOMSTRING_ALL =
+    GDRCD_RANDOMSTRING_SPECIALS
+    | GDRCD_RANDOMSTRING_NUMBERS
+    | GDRCD_RANDOMSTRING_LOWERCASE_LETTERS
+    | GDRCD_RANDOMSTRING_UPPERCASE_LETTERS
+    | GDRCD_RANDOMSTRING_QUOTES;
+
+/** @var int Combinazione: tutti i caratteri sicuri da usare per la generazione di password casuali */
+const GDRCD_RANDOM_PASSWORD =
+    GDRCD_RANDOMSTRING_SPECIALS
+    | GDRCD_RANDOMSTRING_NUMBERS
+    | GDRCD_RANDOMSTRING_LOWERCASE_LETTERS
+    | GDRCD_RANDOMSTRING_UPPERCASE_LETTERS;
+
+/** @var int Definisce la lunghezza di default della password ritornata dalla funzione gdrcd_random_password */
+const GDRCD_RANDOM_PASSWORD_LENGTH = 12;
+
 /*Vettori globali dei parametri*/
 $PARAMETER = array();
 $MESSAGES = array();
