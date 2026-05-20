@@ -562,6 +562,9 @@ function gdrcd_safe_name($word)
 }
 
 /**
+ * @deprecated
+ * @see gdrcd_random_password()
+ *
  * Genera una password casuale, esclusivamente alfabetica con lettere maiuscole
  * @return string : una stringa casuale lunga 8 caratteri
  */
