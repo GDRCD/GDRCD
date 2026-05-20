@@ -59,3 +59,7 @@ require_once(GDRCD_PATH . '/includes/AudioController.class.php');
 if(!empty($_SESSION['theme']) && array_key_exists($_SESSION['theme'], $PARAMETERS['themes']['available'])){
     $PARAMETERS['themes']['current_theme'] = $_SESSION['theme'];
 }
+
+if(($PARAMETERS['mode']['user_bbcode'] == 'ON' && $PARAMETERS['settings']['user_bbcode']['type'] == 'bbd') || $PARAMETERS['settings']['forum_bbcode']['type'] == 'bbd') {
+    require_once('plugins/bbdecoder/bbdecoder.php');
+}
