@@ -280,6 +280,10 @@ const GDRCD_LOGIN_SUCCESS = 'success';
 const GDRCD_LOGIN_TAKEOVER = 'takeover';
 const GDRCD_LOGIN_WRONG = 'wrong-credentials';
 const GDRCD_LOGIN_DISABLED = 'user-deleted';
+const GDRCD_LOGIN_BLACKLISTED = 'user-blacklisted';
+
+/** @var int Numero di tentativi di login concessi prima della blacklist automatica */
+const GDRCD_BLACKLIST_MAX_ATTEMPTS = 9;
 
 /**
  * Costanti per definire le stringe ritornate dalla funzione gdrcd_random_string

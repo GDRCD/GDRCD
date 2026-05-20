@@ -356,7 +356,7 @@ function gdrcd_session_takeover(int $id_personaggio, #[SensitiveParameter] strin
 function gdrcd_session_takeover_begin(int $id_personaggio): void
 {
     // Genera un token casuale di 6 caratteri numerici
-    $token_plain = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+    $token_plain = gdrcd_random_string_numbers(6);
 
     // Hash del token per il salvataggio
     $token_hash = gdrcd_encript($token_plain);
@@ -390,22 +390,32 @@ function gdrcd_session_takeover_begin(int $id_personaggio): void
 
 /**
  * Gestisce il flusso completo di login.
- * Verifica le credenziali, controlla sessioni attive esistenti
- * e decide se procedere con il login diretto, il takeover protection
- * o il rifiuto.
  *
  * @param string $username Il nome utente (nome del personaggio).
  * @param string $password La password in chiaro.
- * @return array{result: string, id_personaggio: ?int} Array con id del personaggio e stato dell'operazione
+ * @return array{result: string, id_personaggio: ?int, attempt: int} Array con id del personaggio e stato dell'operazione
  *  Possibili chiavi di ritorno:
- *  - 'result': GDRCD_LOGIN_SUCCESS | GDRCD_LOGIN_TAKEOVER | GDRCD_LOGIN_WRONG | GDRCD_LOGIN_DISABLED
- *  - 'id_personaggio': null|int
+ *  - 'result': stati operazione, identificati dalle costanti GDRCD_LOGIN_*
+ *  - 'id_personaggio': id del personaggio identificato dal tentativo di login
+ *  - 'attempt': numero di tentativi falliti da una stessa postazione
  */
 function gdrcd_session_login(string $username, #[SensitiveParameter] string $password): ?array
 {
     gdrcd_session_init();
 
-    $status = gdrcd_database_transaction(function() use($username, $password) {
+    // Indirizzo IP client e host
+    $remote_ip = gdrcd_client_ip();
+    $host = gdrcd_client_host();
+
+    // Helper per formattare gli stati di ritorno del login
+    $state = fn(string $result, ?int $id_personaggio = null, int $attempt = 0) => [
+        'result' => $result,
+        'id_personaggio' => $id_personaggio,
+        'attempt' => $attempt,
+    ];
+
+    // Tutti i controlli del login si svolgono qui dentro
+    $status = gdrcd_database_transaction(function() use($username, $password, $remote_ip, $host, $state) {
         $record = gdrcd_stmt_one(
             'SELECT `id_personaggio`, `pass`, `nome`, `permessi`
             FROM `personaggio`
@@ -415,72 +425,90 @@ function gdrcd_session_login(string $username, #[SensitiveParameter] string $pas
             [$username]
         );
 
+        $attempt = gdrcd_session_login_attempt();
+
         // Personaggio non trovato
         if (!$record) {
-            return [
-                'result' => GDRCD_LOGIN_WRONG,
-                'id_personaggio' => null
-            ];
-        }
-
-        // Credenziali errate: password non corrisponde
-        if (!gdrcd_password_check($password, $record['pass'])) {
-            return [
-                'result' => GDRCD_LOGIN_WRONG,
-                'id_personaggio' => null
-            ];
-        }
-
-        // Account disabilitato
-        if ((int) $record['permessi'] < USER) {
-            return [
-                'result' => GDRCD_LOGIN_DISABLED,
-                'id_personaggio' => null
-            ];
+            return $state(GDRCD_LOGIN_WRONG);
         }
 
         $id_personaggio = (int) $record['id_personaggio'];
 
-        // Controlla sessioni attive esistenti per questo personaggio
+        // IP in blacklist
+        if (gdrcd_session_blacklisted($remote_ip)) {
+            return $state(GDRCD_LOGIN_BLACKLISTED, $id_personaggio, $attempt);
+        }
+
+        // Password Errata
+        if (!gdrcd_password_check($password, $record['pass'])) {
+
+            // Blacklist per troppi tentativi effettuati
+            if ($attempt > GDRCD_BLACKLIST_MAX_ATTEMPTS) {
+                gdrcd_session_blacklist_add($remote_ip, $username, $host);
+                return $state(GDRCD_LOGIN_BLACKLISTED, $id_personaggio, $attempt);
+            }
+
+            return $state(GDRCD_LOGIN_WRONG, $id_personaggio, $attempt);
+        }
+
+        // Personaggio disattivato
+        if ((int) $record['permessi'] < USER) {
+            return $state(GDRCD_LOGIN_DISABLED, $id_personaggio, $attempt);
+        }
+
         $active_session = gdrcd_stmt_one(
             'SELECT * FROM `sessions` WHERE `id_personaggio` = ? AND `status` = ?',
             [$id_personaggio, GDRCD_SESSION_STATUS_ACTIVE]
         );
 
+        // Login confermato!
         if ($active_session === null) {
-            return [
-                'result' => GDRCD_LOGIN_SUCCESS,
-                'id_personaggio' => $id_personaggio,
-            ];
+            return $state(GDRCD_LOGIN_SUCCESS, $id_personaggio, $attempt);
         }
 
-        // Sessioni attive presenti: controlla fingerprint
-        $skip_takeover = gdrcd_session_fingerprint($active_session) === GDRCD_FINGERPRINT_VERYCONFIDENT;
+        // Se siamo arrivati qui, c'è già una sessione attiva per l'utente
 
-        if ($skip_takeover) {
-            // Stesso device: invalida sessioni precedenti e procedi
+        $is_same_client = gdrcd_session_fingerprint($active_session) === GDRCD_FINGERPRINT_VERYCONFIDENT;
+
+        // Se il device della sessione è identico, Login confermato!
+        if ($is_same_client) {
             gdrcd_session_disconnect_query($id_personaggio);
-
-            return [
-                'result' => GDRCD_LOGIN_SUCCESS,
-                'id_personaggio' => $id_personaggio,
-            ];
+            return $state(GDRCD_LOGIN_SUCCESS, $id_personaggio, $attempt);
         }
 
         // Device diverso o incerto: richiedi verifica tramite token
-        return [
-            'result' => GDRCD_LOGIN_TAKEOVER,
-            'id_personaggio' => $id_personaggio,
-        ];
+        return $state(GDRCD_LOGIN_TAKEOVER, $id_personaggio, $attempt);
     });
 
     switch ($status['result']) {
         case GDRCD_LOGIN_SUCCESS:
+            gdrcd_stmt(
+                'INSERT INTO `log` (`id_personaggio`, `nome_interessato`, `autore`, `data_evento`, `codice_evento`, `descrizione_evento`)
+                VALUES (?, ?, ?, NOW(), ?, ?)',
+                [$status['id_personaggio'], gdrcd_session('login'), $remote_ip, LOGGEDIN, $remote_ip]
+            );
+
             gdrcd_session_create($status['id_personaggio']);
             break;
 
         case GDRCD_LOGIN_TAKEOVER:
             gdrcd_session_takeover_begin($status['id_personaggio']);
+            break;
+
+        case GDRCD_LOGIN_WRONG:
+            gdrcd_stmt(
+                'INSERT INTO `log` (`id_personaggio`, `nome_interessato`, `autore`, `data_evento`, `codice_evento`, `descrizione_evento`)
+                VALUES (NULL, ?, ?, NOW(), ?, ?)',
+                [$username, $host, ERRORELOGIN, $remote_ip]
+            );
+            break;
+
+        case GDRCD_LOGIN_BLACKLISTED:
+            gdrcd_stmt(
+                'INSERT INTO `log` (`id_personaggio`, `nome_interessato`, `autore`, `data_evento`, `codice_evento`, `descrizione_evento`)
+                VALUES (NULL, ?, ?, NOW(), ?, ?)',
+                [$username, 'Login_procedure', BLOCKED, $remote_ip]
+            );
             break;
     }
 
@@ -715,4 +743,30 @@ function gdrcd_session_expired_error(): void
 {
     $message = $GLOBALS['MESSAGE']['error']['session_expired'] ?? 'Sessione scaduta.';
     gdrcd_error($message);
+}
+
+function gdrcd_session_login_attempt(): int
+{
+    $attempts = gdrcd_session('login.attempts', 0);
+    gdrcd_session_write('login.attempts', ++$attempts);
+
+    return $attempts;
+}
+
+function gdrcd_session_blacklisted(string $ip): bool
+{
+    $blacklisted = gdrcd_stmt_one(
+        'SELECT 1 FROM `blacklist` WHERE `ip` = ? AND `granted` = 0 LIMIT 1',
+        [$ip]
+    );
+
+    return $blacklisted !== null;
+}
+
+function gdrcd_session_blacklist_add(string $ip, string $username, string $host): void
+{
+    gdrcd_stmt(
+        'INSERT INTO `blacklist` (`ip`, `nota`, `ora`, `host`) VALUES (?, ?, NOW(), ?)',
+        [$ip, $username . ' (tenta password)', $host]
+    );
 }

@@ -23,10 +23,6 @@ $login_theme = $_POST['theme'] ?? '';
 $otp_token = $_POST['token'] ?? '';
 $otp_personaggio = $_POST['id_personaggio'] ?? '';
 
-// Indirizzo IP client e host
-$remote_ip = gdrcd_client_ip();
-$host = gdrcd_client_host();
-
 // Normalizza lo username
 $login_user = ucwords(strtolower(trim($login_user)));
 
@@ -42,29 +38,6 @@ $conteggio_login_falliti = 0;
 
 
 /*
- * Blacklist
- */
-
-$blacklisted = gdrcd_stmt_one(
-    'SELECT 1 FROM `blacklist` WHERE `ip` = ? AND `granted` = 0 LIMIT 1',
-    [$remote_ip]
-);
-
-if ($blacklisted !== null) {
-    gdrcd_stmt(
-        'INSERT INTO `log` (`id_personaggio`, `nome_interessato`, `autore`, `data_evento`, `codice_evento`, `descrizione_evento`)
-        VALUES (NULL, ?, ?, NOW(), ?, ?)',
-        [$login_user, 'Login_procedure', BLOCKED, $remote_ip]
-    );
-
-    require 'header.inc.php';
-    gdrcd_error($MESSAGE['warning']['blacklisted']);
-    require 'footer.inc.php';
-    die();
-}
-
-
-/*
  * Login: Verifica OTP
  */
 
@@ -73,12 +46,10 @@ if (!empty($otp_token) && !empty($otp_personaggio)) {
     $id_personaggio_takeover = (int) $otp_personaggio;
 
     if (!gdrcd_session_takeover($id_personaggio_takeover, $otp_token)) {
-        require 'header.inc.php';
-        gdrcd_error('Token di verifica non valido o scaduto.'); // TODO vocabulary
-        require 'footer.inc.php';
-        die();
+        gdrcd_error_fatal('Token di verifica non valido o scaduto.'); // TODO vocabulary
     }
 
+    // Risultati del login
     $login_result = GDRCD_LOGIN_SUCCESS;
     $id_personaggio = $id_personaggio_takeover;
 
@@ -89,55 +60,33 @@ if (!empty($otp_token) && !empty($otp_personaggio)) {
 
 } elseif (!empty($login_user) && !empty($login_password)) {
 
-    // Tenta l'accesso: se va a buon fine crea automaticamente la sessione utente
     $login_procedure = gdrcd_session_login($login_user, $login_password);
 
     // Risultati del login
     $login_result = $login_procedure['result'];
     $id_personaggio = $login_procedure['id_personaggio'];
+    $conteggio_login_falliti = $login_procedure['attempt'];
 
-    // Gestione casi d'errore del login
-    switch ($login_result) {
+}
 
-        case GDRCD_LOGIN_WRONG:
-            // Registro il tentativo fallito
-            gdrcd_stmt(
-                'INSERT INTO `log` (`id_personaggio`, `nome_interessato`, `autore`, `data_evento`, `codice_evento`, `descrizione_evento`)
-                VALUES (NULL, ?, ?, NOW(), ?, ?)',
-                [$login_user, $host, ERRORELOGIN, $remote_ip]
-            );
 
-            // Conto i tentativi falliti nell'ultima ora
-            $login_failed = gdrcd_stmt_one(
-                'SELECT COUNT(*) AS `cnt`
-                FROM `log`
-                WHERE `descrizione_evento` = ?
-                    AND `codice_evento` = ?
-                    AND DATE_ADD(`data_evento`, INTERVAL 60 MINUTE) > NOW()',
-                [$remote_ip, ERRORELOGIN]
-            );
+/*
+ * Login: gestione casi di errore
+ */
 
-            $conteggio_login_falliti = (int) ($login_failed['cnt'] ?? 0);
+switch ($login_result){
+    case GDRCD_LOGIN_WRONG:
+        break;
 
-            // Auto-blacklist dopo 10 tentativi falliti in un'ora
-            if ($conteggio_login_falliti >= 10) {
-                gdrcd_stmt(
-                    'INSERT INTO `blacklist` (`ip`, `nota`, `ora`, `host`) VALUES (?, ?, NOW(), ?)',
-                    [$remote_ip, $login_user . ' (tenta password)', $host]
-                );
-            }
-            break;
+    case GDRCD_LOGIN_TAKEOVER:
+        $show_stp_form = true;
+        break;
 
-        case GDRCD_LOGIN_DISABLED:
-            require 'header.inc.php';
-            gdrcd_error('Account disabilitato.'); // TODO vocabulary
-            require 'footer.inc.php';
-            die();
+    case GDRCD_LOGIN_DISABLED:
+        gdrcd_error_fatal('Account disabilitato.');
 
-        case GDRCD_LOGIN_TAKEOVER:
-            $show_stp_form = true;
-            break;
-    }
+    case GDRCD_LOGIN_BLACKLISTED:
+        gdrcd_error_fatal($MESSAGE['warning']['blacklisted']);
 }
 
 
@@ -148,20 +97,10 @@ if (!empty($otp_token) && !empty($otp_personaggio)) {
 if ($login_result === GDRCD_LOGIN_SUCCESS && !empty($id_personaggio)) {
 
     /*
-     * Log del login avvenuto
-     */
-
-    gdrcd_stmt(
-        'INSERT INTO `log` (`id_personaggio`, `nome_interessato`, `autore`, `data_evento`, `codice_evento`, `descrizione_evento`)
-        VALUES (?, ?, ?, NOW(), ?, ?)',
-        [$id_personaggio, gdrcd_session('login'), $remote_ip, LOGGEDIN, $remote_ip]
-    );
-
-
-    /*
      * Controllo doppi
      */
 
+    // TODO isola in funzione dedicata
     // Doppio per cookie
     if (isset($_COOKIE['lastlogin']) && (int) $_COOKIE['lastlogin'] !== $id_personaggio) {
         $personaggio_doppio = gdrcd_stmt_one(
@@ -210,13 +149,10 @@ if ($login_result === GDRCD_LOGIN_SUCCESS && !empty($id_personaggio)) {
     if (gdrcd_controllo_esilio($id_personaggio) === true) {
         gdrcd_session_logout();
 
-        require 'header.inc.php';
-        gdrcd_error(
+        gdrcd_error_fatal(
             '<a href="index.php">' . gdrcd_filter_out($PARAMETERS['info']['homepage_name']) . '</a>',
             false
         );
-        require 'footer.inc.php';
-        die();
     }
 
 
@@ -305,26 +241,25 @@ if ($login_result === GDRCD_LOGIN_SUCCESS && !empty($id_personaggio)) {
  */
 
 if ($show_stp_form) {
+    gdrcd_basic_page(
+        <<<HTML
+            <div class="info_box">
+                <h2>Verifica richiesta</h2>
+                <p>&Egrave; stata rilevata una sessione già attiva per il tuo account.</p>
+                <p>Ti abbiamo inviato un codice di verifica via email.</p>
+                <p>Inserisci il codice per completare l'accesso:</p>
+                <form method="POST" action="login.php">
+                    <input type="hidden" name="id_personaggio" value="{$id_personaggio}">
+                    <label for="token">Codice di verifica:</label>
+                    <input type="text" name="token" id="token" required maxlength="6" pattern="[0-9]{6}">
+                    <button type="submit">Verifica</button>
+                </form>
+                <p><a href="index.php">Annulla e torna alla homepage</a></p>
+            </div>
+        HTML
+    );
 
-    require 'header.inc.php';
-?>
-    <div class="info_box">
-        <h2>Verifica richiesta</h2>
-        <p>&Egrave; stata rilevata una sessione già attiva per il tuo account.</p>
-        <p>Ti abbiamo inviato un codice di verifica via email.</p>
-        <p>Inserisci il codice per completare l'accesso:</p>
-        <form method="POST" action="login.php">
-            <input type="hidden" name="id_personaggio" value="<?php echo (int) $id_personaggio; ?>">
-            <label for="token">Codice di verifica:</label>
-            <input type="text" name="token" id="token" required maxlength="6" pattern="[0-9]{6}">
-            <button type="submit">Verifica</button>
-        </form>
-        <p><a href="index.php">Annulla e torna alla homepage</a></p>
-    </div>
-<?php
-    require 'footer.inc.php';
     die();
-
 }
 
 
@@ -340,6 +275,4 @@ $errorMessage = ($MESSAGE['error']['unknown_username'] ?? '')
     . ' <a href="mailto:' . gdrcd_filter_out($PARAMETERS['menu']['webmaster_email']) . '">'
     . gdrcd_filter_out($PARAMETERS['menu']['webmaster_email']) . '</a>';
 
-require 'header.inc.php';
-gdrcd_error($errorMessage, false);
-require 'footer.inc.php';
+gdrcd_basic_page($errorMessage);
