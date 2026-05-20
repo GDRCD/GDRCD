@@ -20,6 +20,9 @@ if(file_exists(GDRCD_PATH . '/config.inc.php')){
     include_once GDRCD_PATH . '/config.inc.php';
 }
 
+// include le funzioni helper per la formattazione degli errori
+require_once(GDRCD_PATH . '/includes/functions.errors.inc.php');
+
 // carica le funzioni di gestione delle migrazioni
 require_once(GDRCD_PATH . '/includes/DbMigration/DbMigrationEngine.class.php');
 require_once(GDRCD_PATH . '/includes/DbMigration/DbMigration.class.php');

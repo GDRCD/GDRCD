@@ -887,33 +887,10 @@ function gdrcd_client_host(?string $ip = null): string
     };
 }
 
-/**
- * Stampa un messaggio d'errore
- *
- * @param string $messaggio Il messaggio da stampare, viene filtrato con gdrcd_filter_out
- * @param string $filter_out default true. Se false disattiva il filtraggio interno con gdrcd_filter_out
- * @return void
- */
-function gdrcd_error(string $message, bool $filter_out = true): void
+// TODO documenta questa funzione
+function gdrcd_basic_page(string $html): void
 {
-    if ($filter_out) {
-        $message = gdrcd_filter_out($message);
-    }
-
-    echo <<<HTML
-        <div class="error">{$message}</div>
-    HTML;
-}
-
-/**
- * Stampa un messaggio d'errore e termina lo script
- *
- * @param string $messaggio Il messaggio da stampare, viene filtrato con gdrcd_filter_out
- * @param string $filter_out default true. Se false disattiva il filtraggio interno con gdrcd_filter_out
- * @return void
- */
-function gdrcd_exit_error(string $message, bool $filter_out = true): void
-{
-    gdrcd_error($message, $filter_out);
-    die();
+    require 'header.inc.php';
+    echo $html;
+    require 'footer.inc.php';
 }
