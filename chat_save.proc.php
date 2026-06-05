@@ -2,24 +2,21 @@
 
 include('includes/required.php');
 
-/* Eseguo la connessione al database */
-$handleDBConnection = gdrcd_connect();
-
 $typeOrder = ($PARAMETERS['mode']['chat_from_bottom'] == 'ON') ? 'DESC' : 'ASC';
 //recupero il tempo di salvataggio delle chat
-$tempo_salvataggio= gdrcd_configuration_get('salva_chat.tempo_salvataggio');
+$tempo_salvataggio = gdrcd_configuration_get('salva_chat.tempo_salvataggio');
 //recuper il parametro per controllare che il personaggio sia presente in giocata
-$solo_autore= gdrcd_configuration_get('salva_chat.solo_autore');
+$solo_autore = gdrcd_configuration_get('salva_chat.solo_autore');
 
 
-if($solo_autore == 'si'){
-    $check_pg=gdrcd_stmt_one("SELECT count(*) as conta 
+if ($solo_autore == 'si') {
+    $check_pg = gdrcd_stmt_one("SELECT count(*) as conta 
     FROM chat 
-    WHERE stanza = ".$_SESSION['luogo']." 
-    AND DATE_SUB(NOW(), INTERVAL $tempo_salvataggio HOUR) < ora and id_personaggio_mittente = '".$_SESSION['id_personaggio']."' AND tipo !='S'");
-    if(!$check_pg['conta']){
+    WHERE stanza = " . $_SESSION['luogo'] . " 
+    AND DATE_SUB(NOW(), INTERVAL $tempo_salvataggio HOUR) < ora and id_personaggio_mittente = '" . $_SESSION['id_personaggio'] . "' AND tipo !='S'");
+    if (!$check_pg['conta']) {
         echo $MESSAGE['chat']['error']['solo_autore'];
-        exit; 
+        exit;
     }
 }
 
@@ -42,8 +39,7 @@ if ($PARAMETERS['mode']['chatsavepvt'] == 'ON') {
                     ON pm.id_personaggio = c.id_personaggio_mittente
                      LEFT JOIN personaggio pd 
                                 ON pd.id_personaggio = c.id_personaggio_destinatario
-                    WHERE c.stanza = ? AND DATE_SUB(NOW(), INTERVAL ? HOUR) < c.ora ORDER BY c.id " . $typeOrder; 
-                        
+                    WHERE c.stanza = ? AND DATE_SUB(NOW(), INTERVAL ? HOUR) < c.ora ORDER BY c.id " . $typeOrder;
 } else {
     $query = "	SELECT  c.id, 
                         c.imgs, 
@@ -89,37 +85,35 @@ $add_chat = '
 $i = 0;
 /* Eseguo la query  */
 
-foreach($do_query as $row){
+foreach ($do_query as $row) {
     $add_chat .= gdrcd_chat_message_handler($row);
 }
- $add_chat .= '
+$add_chat .= '
             </body>
             </html>
-            '; 
+            ';
 
-    /* Scrivo tutto in un file di testo */
-    $start = gdrcd_format_datetime_cat($start_time);
-    $end = gdrcd_format_datetime_cat($end_time);
-    /* Scrivo tutto in un file di testo */
-    $file = $start . "-" . $end . "-" . $_SESSION['id_personaggio'];
-    $rand = rand(1, 10000);
-    $file = md5($file . $rand);
-    $file = $file . ".html";
+/* Scrivo tutto in un file di testo */
+$start = gdrcd_format_datetime_cat($start_time);
+$end = gdrcd_format_datetime_cat($end_time);
+/* Scrivo tutto in un file di testo */
+$file = $start . "-" . $end . "-" . $_SESSION['id_personaggio'];
+$rand = rand(1, 10000);
+$file = md5($file . $rand);
+$file = $file . ".html";
 
-    $byteLength = strlen($add_chat);
+$byteLength = strlen($add_chat);
 
-    /* Do le informazioni di download */
-    header("Content-Disposition: attachment; filename=" . urlencode($file));
-    header("Content-Type: application/force-download");
-    header("Content-Type: application/octet-stream");
-    header("Content-Type: application/download");
-    header("Content-Description: File Transfer");
-    header("Content-Length: " . strlen($add_chat));
+/* Do le informazioni di download */
+header("Content-Disposition: attachment; filename=" . urlencode($file));
+header("Content-Type: application/force-download");
+header("Content-Type: application/octet-stream");
+header("Content-Type: application/download");
+header("Content-Description: File Transfer");
+header("Content-Length: " . strlen($add_chat));
 
-    $chunkSize = 4096;
+$chunkSize = 4096;
 
-    for ($bufferIndex = 0; $bufferIndex <= $byteLength; $bufferIndex += $chunkSize) {
-        echo substr($add_chat, $bufferIndex, $chunkSize);
-    }
-    
-
+for ($bufferIndex = 0; $bufferIndex <= $byteLength; $bufferIndex += $chunkSize) {
+    echo substr($add_chat, $bufferIndex, $chunkSize);
+}
