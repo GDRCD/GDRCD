@@ -14,26 +14,26 @@
     <div class="page_body">
         <?php
         //Determinazione pagina (paginazione)
-        $pagebegin = (int)$_REQUEST['offset'] * $PARAMETERS['settings']['posts_per_page'];
+        $pagebegin = gdrcd_filter('int', $_REQUEST['offset']) * $PARAMETERS['settings']['posts_per_page'];
         $pageend = $pagebegin + $PARAMETERS['settings']['posts_per_page'];
 
         //Conteggio record totali
-        $record_globale = gdrcd_query("SELECT COUNT(*) FROM send_GM ");
+        $record_globale = gdrcd_stmt_one("SELECT COUNT(*) FROM send_GM ");
         $totaleresults = $record_globale['COUNT(*)'];
-
-        $query = "SELECT * , 
+         $query = "SELECT send_GM.* , 
                     personaggio.nome
                     FROM send_GM
                     LEFT JOIN personaggio 
                     ON personaggio.id_personaggio = send_GM.id_personaggio
                     ORDER BY data DESC LIMIT " . $pagebegin . ", " . $PARAMETERS['settings']['posts_per_page'] . "";
-        $result = gdrcd_query($query, 'result');
+        $result = gdrcd_stmt_all($query);
 
-        if (gdrcd_query($result, 'num_rows') == 0) {
+        if (empty($result)) {
             echo '<div class="fate_frame">';
             echo 'Nessuna segnalazione presente';
             echo '</div>';
-        } else { ?>
+            return; 
+        }  ?>
 
         <!-- Paginatore elenco -->
         <div class="pager">
@@ -82,14 +82,14 @@
                     </td>
                 </tr>
                 <!-- Record -->
-                <?php while ($row = gdrcd_query($result, 'fetch')) {
+                <?php 
+                foreach ($result as $row) {
                     $roles = "SELECT sr.*, GROUP_CONCAT(p.nome SEPARATOR ', ') AS partecipanti_nomi
                                 FROM segnalazione_role sr
                                 JOIN personaggio p ON FIND_IN_SET(p.id_personaggio, sr.partecipanti)
-                                WHERE sr.id = " . $row['role_reg'] . " 
+                                WHERE sr.id = ? 
                                 GROUP BY sr.id";
-                    $res_roles = gdrcd_query($roles, 'result');
-                    $roles_f = gdrcd_query($res_roles, 'fetch');
+                    $roles_f = gdrcd_stmt_one($roles, [$row['role_reg']]);
 
                     ?>
                     <tr class="risultati_elenco_record_gestione">
@@ -100,7 +100,7 @@
                         </td>
                         <td class="casella_elemento">
                             <div class="elementi_elenco">
-                                <?php echo $row['nome']; ?>
+                                <?php echo gdrcd_filter('out', $row['nome']); ?>
                             </div>
                         </td>
                         <td class="casella_elemento">
@@ -115,9 +115,8 @@
                         </td>
                         <?php
                         //
-                        $quer = "SELECT * FROM mappa WHERE id = '" . $roles_f['stanza'] . "' ";
-                        $res = gdrcd_query($quer, 'result');
-                        $rec = gdrcd_query($res, 'fetch');
+                        $quer = "SELECT * FROM mappa WHERE id = ? ";
+                        $rec = gdrcd_stmt_one($quer, [$roles_f['stanza']]);
                         ?>
                         <td class="casella_elemento">
                             <div class="elementi_elenco">
@@ -136,26 +135,20 @@
                             <div class="controllo_elenco">
                                  <form action="main.php?page=gestione_segnalazioni&segn=log&pg=<?php echo gdrcd_filter('in', $row['id_personaggio']); ?>"  
                                       method="post">
-                                    <input type="hidden"
-                                           name="op"
-                                           value="log"/>
-                                    <input type="hidden"
-                                           name="id"
-                                           value="<?php echo $row['role_reg']; ?>"/>
+                                    <input type="hidden" name="op" value="log"/>
+                                    <input type="hidden" name="id" value="<?php echo gdrcd_filter('in', $row['role_reg']); ?>"/>
                                     <button type="submit" class="but_roles" name="submit">Apri log chat</button>
                                 </form>
                             </div>
 
                         </td>
                     </tr>
-                <?php } //while 
+                <?php } //foreach
                 ?>
             </table>
 
 
-            <?php } #Fine blocco
-
-            ?>
+           
         </div>
 <?php
 }

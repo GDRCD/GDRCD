@@ -1,6 +1,5 @@
 <?php
-$blocco = gdrcd_query("SELECT id_personaggio_destinatario, id_personaggio_master, titolo FROM blocco_esiti WHERE id='".gdrcd_filter('num',$_GET['blocco'])."'
-    LIMIT 1 ");
+$blocco = gdrcd_stmt_one("SELECT id_personaggio_destinatario, id_personaggio_master, titolo FROM blocco_esiti WHERE id = ? ", [$_GET['blocco']]);
 
 
 if ($_SESSION['permessi']>=SUPERUSER || ($_SESSION['permessi']>=ESITI_PERM && ESITI_CHAT && $blocco['id_personaggio_destinatario']!=$_SESSION['id_personaggio'])){
@@ -28,9 +27,9 @@ if ($_SESSION['permessi']>=SUPERUSER || ($_SESSION['permessi']>=ESITI_PERM && ES
                 Scegli la chat
             </div>
             <div class='form_field'>
-                <?php $quer=gdrcd_query("SELECT * FROM mappa ORDER BY id ", 'result'); ?>
+                <?php $query=gdrcd_stmt_all("SELECT * FROM mappa ORDER BY id "); ?>
                 <select name="chat">
-                    <?php while ($res=gdrcd_query($quer, 'fetch')) { ?>
+                    <?php foreach ($query as $res) { ?>
                         <option value="<?php echo $res['id'];?>"><?php echo $res['nome'];?></option>
                     <?php } ?>
                 </select>
@@ -40,9 +39,9 @@ if ($_SESSION['permessi']>=SUPERUSER || ($_SESSION['permessi']>=ESITI_PERM && ES
                 Skill da tirare
             </div>
             <div class='form_field'>
-                <?php $ability=gdrcd_query("SELECT * FROM abilita WHERE id_razza = -1 ORDER BY nome ", 'result'); ?>
+                <?php $ability=gdrcd_stmt_all("SELECT * FROM abilita WHERE id_razza = ? ORDER BY nome ", [-1]); ?>
                 <select name="id_ab">
-                    <?php while ($r_ab=gdrcd_query($ability, 'fetch')) { ?>
+                    <?php foreach ($ability as $r_ab) { ?>
                         <option value="<?php echo $r_ab['id_abilita'];?>"><?php echo $r_ab['nome'];?></option>
                     <?php } ?>
                 </select>

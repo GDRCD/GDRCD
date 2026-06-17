@@ -6,42 +6,41 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
     </div>
 
     <div class="form_info">
-        <?=$MESSAGE['interface']['esiti']['gm_page'];?>
+        <?php echo $MESSAGE['interface']['esiti']['gm_page'];?>
     </div>
     <?php
     # Lista di tutti i blocchi di esiti
      if ($_POST['op']=='list') {
         $id = gdrcd_filter('num', $_POST['id']);
         if ($_SESSION['permessi'] < FULL_PERM) {
-            $query = gdrcd_query("SELECT * FROM blocco_esiti WHERE id = " . $id . " 
-            AND (id_personaggio_master IS NULL || id_personaggio_master ='" . $_SESSION['id_personaggio'] . "') 
-            ORDER BY id ", 'result');
+            $blocco = gdrcd_stmt_one("SELECT * FROM blocco_esiti WHERE id = ? 
+            AND (id_personaggio_master IS NULL || id_personaggio_master = ?) 
+            ORDER BY id ", [$id, $_SESSION['id_personaggio']]);
         } else {
-            $query = gdrcd_query("SELECT * FROM blocco_esiti WHERE id = " . $id . " 
-            ORDER BY id ", 'result');
+            $blocco = gdrcd_stmt_one("SELECT * FROM blocco_esiti WHERE id = ? 
+            ORDER BY id ", [$id]);
         }
-        $blocco=gdrcd_query($query, 'fetch');
-
-        $tit = gdrcd_filter('out', $blocco['titolo']);
-        $pg_data = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = " . $blocco['id_personaggio_destinatario']);
+        
+        
+        $pg_data = gdrcd_stmt_one("SELECT nome FROM personaggio WHERE id_personaggio = ? ", [$blocco['id_personaggio_destinatario']]);
         $pg = gdrcd_filter('out', $pg_data['nome']);
 
-        gdrcd_query("UPDATE esiti SET letto_master = 1 WHERE id_blocco = ".gdrcd_filter('num',$blocco['id'])." ");
-
+        gdrcd_stmt("UPDATE esiti SET letto_master = 1 WHERE id_blocco = ? ", [$blocco['id']]);
+ 
         ?>
         <div class="fate_frame">
             <div class="titolo_box">
                 <h2 style="margin-top:3px;">
-                    <b><?=$tit;?> - <?=$pg;?></b>
+                    <b><?=gdrcd_filter('out',$blocco['titolo']);?> - <?=$pg;?></b>
                 </h2>
             </div>
 
             <?php
             //
-            $quer="SELECT * FROM esiti WHERE id_blocco = ".gdrcd_filter('num',$blocco['id'])." ORDER BY data DESC";
-            $res=gdrcd_query($quer, 'result');
+            $quer="SELECT * FROM esiti WHERE id_blocco = ? ORDER BY data DESC";
+            $res=gdrcd_stmt_all($quer, [$blocco['id']]);
 
-            if (!isset($tit['closed'])) { ?>
+            if (!isset($blocco['closed'])) { ?>
                 <div class="titolo_box">
                     <a class="link_new" href='main.php?page=gestione_segnalazioni&segn=esito_index&op=edit&id=<?=gdrcd_filter('num',$blocco['id']);?>'>
                         [ Modifica ]
@@ -50,12 +49,12 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
             <?php 	}
 
             //
-            while  ($row=gdrcd_query($res, 'fetch')) {
-                $abilita=gdrcd_query("SELECT nome FROM abilita WHERE id_abilita = ".$row['id_ab']." ");
-                $chat=gdrcd_query("SELECT nome FROM mappa WHERE id = ".$row['chat']." ");	?>
+            foreach ($res as $row) {
+                $abilita=gdrcd_stmt_one("SELECT nome FROM abilita WHERE id_abilita = ? ", [$row['id_ab']]);
+                $chat=gdrcd_stmt_one("SELECT nome FROM mappa WHERE id = ".$row['chat']." ");	?>
                 <div class="title_esi">
                     <?php 
-                    $autore_data = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = " . $row['id_personaggio_autore']);
+                    $autore_data = gdrcd_stmt_one("SELECT nome FROM personaggio WHERE id_personaggio = ? ", [$row['id_personaggio_autore']]);
                     ?>
                     Autore:<b><?=$autore_data['nome'].'</b> | Creato il: '.gdrcd_format_date($row['data']).' alle
                      '.gdrcd_format_time($row['data']);?>
@@ -111,7 +110,7 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
     $pageend = $pagebegin + $PARAMETERS['settings']['posts_per_page'];
 
     //Conteggio record totali
-    $record_globale = gdrcd_query("SELECT COUNT(*) FROM blocco_esiti ");
+    $record_globale = gdrcd_stmt_one("SELECT COUNT(*) FROM blocco_esiti ");
     $totaleresults = $record_globale['COUNT(*)'];
 
     if ($_SESSION['permessi'] < FULL_PERM) {    #seleziono la lista di esiti sulla base dei permessi
@@ -185,11 +184,9 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
                         </div>
                     </td>
                 </tr>
-                <?php while ($rec = gdrcd_query($blocco, 'fetch')) {
-                    $num = gdrcd_query(gdrcd_query("SELECT * FROM esiti WHERE id_blocco = " . gdrcd_filter('num', $rec['id']) . " 
-                    AND id_personaggio_autore != '" . $rec['id_personaggio_destinatario'] . "' ORDER BY id_personaggio_master, data DESC", 'result'), 'num_rows');
-                    $new = gdrcd_query(gdrcd_query("SELECT * FROM esiti WHERE id_blocco = " . gdrcd_filter('num', $rec['id']) . " 
-                    AND letto_master = 0 ", 'result'), 'num_rows');
+                <?php foreach ($blocco as $rec) {
+                    $num = gdrcd_stmt_all("SELECT * FROM esiti WHERE id_blocco = ? AND id_personaggio_autore != ? ORDER BY id_personaggio_master, data DESC", [$rec['id'], $rec['id_personaggio_destinatario']]);
+                    $new = gdrcd_stmt_one("SELECT * FROM esiti WHERE id_blocco = ? AND letto_master = 0 ", [$rec['id'],]);
                     ?>
 
                     <tr>
@@ -207,7 +204,9 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
                             <div class="elementi_elenco">
                                 <?php if ($rec['id_personaggio_master'] === NULL) {
                                     echo '<u>In attesa di risposta</u>';
-                                } else {
+                                }elseif($rec['closed']==1){
+                                    echo 'Chiusa';
+                                }  else {
                                     echo 'Presa in carico';
                                 } ?>
                             </div>
@@ -228,12 +227,8 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
                         </td>
                         <td>
                             <form action="main.php?page=gestione_segnalazioni&segn=esiti_master" method="post">
-                                <input type="hidden"
-                                       name="op"
-                                       value="list"/>
-                                <input type="hidden"
-                                       name="id"
-                                       value="<?php echo $rec['id']; ?>"/>
+                                <input type="hidden"  name="op"   value="list"/>
+                                <input type="hidden"  name="id"  value="<?php echo $rec['id']; ?>"/>
                                 <input type="submit" name="submit" class="submitroles" value="Apri serie"/>
                             </form>
                         </td>
@@ -256,3 +251,6 @@ if ($_SESSION['permessi'] >= ESITI_PERM && ESITI) {
     echo '<div class="warning">Non hai i permessi per visualizzare questa sezione</div>';
 }
 ?>
+  <div class="link_back">
+            <a href="main.php?page=gestione">Torna indietro</a>
+        </div>

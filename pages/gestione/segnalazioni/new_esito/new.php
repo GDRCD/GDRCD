@@ -1,5 +1,5 @@
 <?php
-$blocco = gdrcd_query("SELECT titolo FROM blocco_esiti WHERE id='".gdrcd_filter('num',$_GET['blocco'])."' LIMIT 1 ");
+$blocco = gdrcd_stmt_one("SELECT titolo FROM blocco_esiti WHERE id = ? ", [$_GET['blocco']]);
 
 if ($_GET['op']=='new') {
     ?>
@@ -38,8 +38,8 @@ if ($_GET['op']=='new') {
                 Tira dei dadi
             </div>
             <div class='form_field'>
-                Numero di dadi: <input name="dice_num" value="" /><br>
-                Numero di facce dei dadi: <input name="dice_face" value="" /><br>
+                Numero di dadi: <input type="number" name="dice_num" value="" /><br>
+                Numero di facce dei dadi: <input type="number" name="dice_face" value="" /><br>
             </div>
         <?php } ?>
         <div class='form_label'>

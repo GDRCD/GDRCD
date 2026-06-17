@@ -4,18 +4,17 @@ if ($_GET['op']=='edit' && ($_SESSION['permessi']>=ESITI_PERM)) {  ?>
         <h2>Modifica serie di esiti</h2>
     </div>
     <?php
-    $id_edit = gdrcd_query("SELECT * FROM blocco_esiti WHERE id = ".$_GET['id']."
-     AND (id_personaggio_master IS NULL || id_personaggio_master ='" . $_SESSION['id_personaggio'] . "') ", 'result');
-    $id_num = gdrcd_query($id_edit, 'num_rows');
+    $tit = gdrcd_stmt_one("SELECT * FROM blocco_esiti WHERE id = ? AND (id_personaggio_master IS NULL || id_personaggio_master =?) ", 
+    [$_GET['id'], $_SESSION['id_personaggio']]);
+    
 
-    if($id_num==0) {
+    if(empty($tit)) {
         echo '<div class="warning">Non hai i permessi per modificare questa serie di esiti</div>';
-    } else { ?>
+        return;
+    } ?>
         <form action="main.php?page=gestione_segnalazioni&segn=esito_index"
               method="post"
               class="form_gestione">
-            <?php 	$tit=gdrcd_query($id_edit, 'fetch'); ?>
-
             <div class='form_label'>
                 Titolo
             </div>
@@ -53,4 +52,3 @@ if ($_GET['op']=='edit' && ($_SESSION['permessi']>=ESITI_PERM)) {  ?>
             Torna alla lista
         </a>
     </div>
-<?php } ?>
