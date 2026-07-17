@@ -23,11 +23,24 @@
 
     gdrcd_query($result, 'free');
 
-    /* Spostamento di un oggetto dallo zaino nell'inventario*/
+    /* Spostamento di un oggetto dall'inventario allo zaino'*/
     if (($_POST['op'] == "togli") && ($_SESSION['id_personaggio'] == $_REQUEST['pg']))
     {
         gdrcd_query("UPDATE clgpersonaggiooggetto SET posizione = 0 WHERE id_oggetto = " . gdrcd_filter('num',
                 $_POST['id_oggetto']) . " AND id_personaggio = '" . gdrcd_filter('in', $_REQUEST['pg']) . "' LIMIT 1 ");
+        $contestoLog = gdrcd_log_context_make(
+                [
+                    'id_oggetto' => $_POST['id_oggetto'],
+                    'posizione' => $_POST['posizione'],
+                ],
+                    $_SESSION['id_personaggio']
+            ); 
+            /* Log lato mittente */
+            gdrcd_log_info(
+                'Oggetto  spostato nell\'inventario dal personaggio',
+                [ 'evento' => 'personaggio.sposta_oggetto_zaino', ...$contestoLog],
+                $_SESSION['id_personaggio']
+            );
 
         echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['warning']['done']) . '</div>';
     }

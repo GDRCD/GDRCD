@@ -123,10 +123,42 @@
                 break;
             case 'indossa':    /*Indossatura un oggetto*/
                 gdrcd_query("UPDATE clgpersonaggiooggetto SET posizione = ".gdrcd_filter('num', $_POST['posizione'])." WHERE id_oggetto = ".$_POST['id_oggetto']." AND id_personaggio = '".gdrcd_filter('get', $_REQUEST['pg'])."' LIMIT 1 ");
+                 
+                
+                $contestoLog = gdrcd_log_context_make(
+                        [
+                            'id_oggetto' => $_POST['id_oggetto'],
+                            'posizione' => $_POST['posizione'],
+                        ],
+                         $_SESSION['id_personaggio']
+                    ); 
+                    /* Log lato mittente */
+                    gdrcd_log_info(
+                        'Oggetto indossato dal personaggio',
+                        [ 'evento' => 'personaggio.indossa_oggetto', ...$contestoLog],
+                        $_SESSION['id_personaggio']
+                    );
+                
+                
                 echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['warning']['done']).'</div>';
                 break;
             case 'in_zaino':    /* Spostamento di un oggetto dall'inventario nello zaino */
                 gdrcd_query("UPDATE clgpersonaggiooggetto SET posizione = 1 WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND id_personaggio = '".gdrcd_filter('in', $_REQUEST['pg'])."' LIMIT 1 ");
+                $contestoLog = gdrcd_log_context_make(
+                        [
+                            'id_oggetto' => $_POST['id_oggetto'],
+                            'posizione' => $_POST['posizione'],
+                        ],
+                         $_SESSION['id_personaggio']
+                    ); 
+                    /* Log lato mittente */
+                    gdrcd_log_info(
+                        'Oggetto  spostato nello zaino dal personaggio',
+                        [ 'evento' => 'personaggio.sposta_oggetto_inventario', ...$contestoLog],
+                        $_SESSION['id_personaggio']
+                    );
+                
+                
                 echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['warning']['done']).'</div>';
                 break;
         }

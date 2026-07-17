@@ -40,7 +40,8 @@ function gdrcd_log_group_from_code($code)
 
         case BONIFICO:
             return ['banca.invio_bonifico', 'banca.ricezione_bonifico', 'personaggio.cedi_oggetto','personaggio.ricevi_oggetto'];
-
+        case INVENTARIO:
+            return [ 'personaggio.indossa_oggetto', 'personaggio.sposta_oggetto_inventario', 'personaggio.sposta_oggetto_zaino'];
         case NUOVOLAVORO:
             return ['personaggio.nuovo_lavoro', 'personaggio.assegna_lavoro'];
 
@@ -69,6 +70,46 @@ function gdrcd_log_group_from_code($code)
         default:
             return [];
     }
+}
+
+/**
+ * Restituisce il codice legacy associato a un evento JSON.
+ *
+ * Consente alla vista completa dei log di applicare la stessa formattazione
+ * dei dettagli usata quando viene selezionato un filtro.
+ *
+ * @param string|null $evento Evento JSON salvato nel contesto
+ * @return int|null Codice legacy associato, oppure null se non riconosciuto
+ */
+function gdrcd_log_code_from_event($evento)
+{
+    if ($evento === null || $evento === '') {
+        return null;
+    }
+
+    $codes = [
+        BLOCKED,
+        LOGGEDIN,
+        ACCOUNTMULTIPLO,
+        ERRORELOGIN,
+        BONIFICO,
+        NUOVOLAVORO,
+        DIMISSIONE,
+        CHANGEDROLE,
+        CHANGEDPASS,
+        PX,
+        DELETEPG,
+        CHANGEDNAME,
+        INVENTARIO
+    ];
+
+    foreach ($codes as $code) {
+        if (in_array($evento, gdrcd_log_group_from_code($code), true)) {
+            return (int)$code;
+        }
+    }
+
+    return null;
 }
 
 /**
@@ -221,23 +262,11 @@ function gdrcd_present_log_row(?int $whichLog, array $row): array
     $idDestinatario = $contesto['id_destinatario'] ?? null;
 
     $descrizione = $row['descrizione'] ?? '';
-     // Vista "Tutti i log": usa il nuovo schema standard
-    if ($whichLog === null) {
-        
-        
+    // Nella vista "Tutti i log" ricava il tipo dal contesto, così i dettagli
+    // vengono presentati come nella corrispondente vista filtrata.
+    $presentationLog = $whichLog ?? gdrcd_log_code_from_event($evento);
 
-        return [
-            'autore' => $autore,
-            'id_autore' => $idAutore,
-            'soggetto' => $soggetto,
-            'id_soggetto' => $idSoggetto,
-            'id_destinatario' => $idDestinatario,
-            'destinatario' => $destinatario,
-            'descrizione' => $descrizione,
-        ];
-    }
-
-    switch (gdrcd_filter('num', $whichLog)) {
+    switch ($presentationLog !== null ? gdrcd_filter('num', $presentationLog) : null) {
         case BLOCKED:
         case LOGGEDIN:
         case ERRORELOGIN:
@@ -301,12 +330,12 @@ function gdrcd_present_log_row(?int $whichLog, array $row): array
     }     
             
     return [
-        'id_autore' =>  $contesto['id_autore'] ?? null,
-        'autore' => $contesto['autore'] ?? '-',
-        'id_soggetto' => $contesto['id_soggetto'] ?? null,
-        'soggetto' => $contesto['soggetto'] ?? '-',
-        'id_destinatario' => $contesto['id_destinatario'] ?? null,
-        'destinatario' => $contesto['destinatario'] ?? '-',
+        'id_autore' => $idAutore,
+        'autore' => $autore,
+        'id_soggetto' => $idSoggetto,
+        'soggetto' => $soggetto,
+        'id_destinatario' => $idDestinatario,
+        'destinatario' => $destinatario,
         'descrizione' => $descrizione
     ];
 }

@@ -33,6 +33,10 @@
                 : null;   // null = tutti i personaggi
                 
             $personaggi=gdrcd_stmt_all("SELECT id_personaggio, nome FROM personaggio ORDER BY nome");
+
+            // Ordina alfabeticamente le etichette mantenendo i codici evento come chiavi.
+            $eventiOrdinati = $MESSAGE['event'];
+            asort($eventiOrdinati, SORT_NATURAL | SORT_FLAG_CASE);
             ?>
 
             <!-- ===== FILTRI ===== -->
@@ -43,7 +47,7 @@
                         <div class="form_field">
                             <select name="which_log">
                                 <option value=""><?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['log']['events']['log_type']); ?></option>
-                                <?php foreach ($MESSAGE['event'] as $eventKey => $eventLabel): ?>
+                                <?php foreach ($eventiOrdinati as $eventKey => $eventLabel): ?>
                                     <option value="<?php echo (int)$eventKey; ?>"
                                         <?php echo ($whichLog === (int)$eventKey) ? 'selected' : ''; ?>>
                                         <?php echo gdrcd_filter('out', $eventLabel); ?>
@@ -137,8 +141,8 @@
                                     <td class="casella_elemento">
                                         <div class="elementi_elenco">
                                             <?php
-                                            if ($presentazione['id_sogggetto'] !== null) {
-                                                echo '<a href="main.php?page=scheda&pg=' . $presentazione['id_sogggetto'] . '">' . gdrcd_filter('out', $presentazione['soggetto']) . '</a>';
+                                            if ($presentazione['id_soggetto'] !== null) {
+                                                echo '<a href="main.php?page=scheda&pg=' . $presentazione['id_soggetto'] . '">' . gdrcd_filter('out', $presentazione['soggetto']) . '</a>';
                                                 
                                             } else {
                                                 echo $presentazione['soggetto'];

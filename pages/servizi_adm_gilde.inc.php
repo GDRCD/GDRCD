@@ -203,10 +203,16 @@
                             $personaggio['nome'] ?? '-',
                         ); 
                         gdrcd_log_notice(
-                            'Assegnato nuovo ruolo al personaggio',
+                            'Ha assegnato nuovo ruolo al personaggio',
                             ['evento' => 'personaggio.assegna_lavoro',...$contestoLog],
                              $_SESSION['id_personaggio']
                         );
+                         gdrcd_log_notice(
+                            'Assegnato nuovo ruolo al personaggio',
+                            ['evento' => 'personaggio.assegna_lavoro',...$contestoLog],
+                            $_POST['id_personaggio'],
+                        );
+
 
                         /*Avviso l'utente*/
                         if ($_SESSION['id_personaggio'] != $_POST['id_personaggio']) {
@@ -263,6 +269,11 @@
                         'Dimissione dal ruolo del personaggio',
                         ['evento' => 'personaggio.dimissione_lavoro',...$contestoLog],
                          $subject[0]
+                    );
+                    gdrcd_log_notice(
+                        'Ha dimesso il ruolo del personaggio',
+                        ['evento' => 'personaggio.dimissione_lavoro',...$contestoLog],
+                        $_SESSION['id_personaggio']
                     );
 
                     /*Avviso l'utente*/

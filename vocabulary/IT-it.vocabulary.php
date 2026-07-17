@@ -856,7 +856,7 @@ $MESSAGE['event'][BLOCKED] = 'Postazioni bloccate';
 $MESSAGE['event'][LOGGEDIN] = 'Log in';
 $MESSAGE['event'][ACCOUNTMULTIPLO] = 'Doppi';
 $MESSAGE['event'][ERRORELOGIN] = 'Log in errati';
-$MESSAGE['event'][BONIFICO] = 'Transazioni tra PG';
+$MESSAGE['event'][BONIFICO] = 'Transazioni banca';
 $MESSAGE['event'][NUOVOLAVORO] = 'Assunzioni';
 $MESSAGE['event'][DIMISSIONE] = 'Dimissioni';
 $MESSAGE['event'][CHANGEDROLE] = 'Cambio permessi';
@@ -864,6 +864,7 @@ $MESSAGE['event'][CHANGEDPASS] = 'Cambio password';
 $MESSAGE['event'][PX] = 'Esperienza assegnata';
 $MESSAGE['event'][DELETEPG] = 'Personaggi cancellati';
 $MESSAGE['event'][CHANGEDNAME] = 'Cambi nome';
+$MESSAGE['event'][INVENTARIO] = 'Spostamenti oggetti e inventario';
 
 
 /********** Ricorrenti **********/
