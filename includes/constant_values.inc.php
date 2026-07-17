@@ -25,7 +25,7 @@ define('CHANGEDPASS', 9);
 define('PX', 10);
 define('DELETEPG', 11);
 define('CHANGEDNAME', 12);
-define('INVENTARIO', 13);
+define('OGGETTI', 13);
 
 /*Stati di disponibilità*/
 define('NONDISPONIBILE', 0);

@@ -864,7 +864,7 @@ $MESSAGE['event'][CHANGEDPASS] = 'Cambio password';
 $MESSAGE['event'][PX] = 'Esperienza assegnata';
 $MESSAGE['event'][DELETEPG] = 'Personaggi cancellati';
 $MESSAGE['event'][CHANGEDNAME] = 'Cambi nome';
-$MESSAGE['event'][INVENTARIO] = 'Spostamenti oggetti e inventario';
+$MESSAGE['event'][OGGETTI] = 'Spostamenti oggetti e inventario';
 
 
 /********** Ricorrenti **********/
