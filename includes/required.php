@@ -1,4 +1,19 @@
 <?php
+
+if (PHP_VERSION_ID < 80000) {
+    header('Content-Type: text/html; charset=UTF-8');
+    die(
+        '<div style="font-family: sans-serif; padding: 2em;">'
+        . '<h2>Versione di PHP non supportata</h2>'
+        . '<p>GDRCD richiede PHP 8.0 o superiore. '
+        . 'La versione attualmente in uso sul server &egrave; PHP '
+        . htmlspecialchars(PHP_VERSION) . '.</p>'
+        . '<p>Contatta il tuo hosting per aggiornare la versione di PHP, '
+        . 'oppure aggiorna la configurazione del server.</p>'
+        . '</div>'
+    );
+}
+
 session_start();
 
 /**
