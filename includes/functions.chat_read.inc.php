@@ -117,51 +117,189 @@ function gdrcd_chat_read_messages($luogo, $last_id = 0)
  *      imgs: string,
  *      testo: string,
  * } $azione
- * @return null|string La formattazione HTML dell'azione. Può ritornare invece `null` se l'azione è
- * di una tipologia non supportata o l'utente non ha i permessi per visionarla (esempio: sussurri)
+ * @param string $formato 'html' (default) per la formattazione html usata in chat, 'txt' per una
+ * resa testuale semplice (senza tag) usata per l'export TXT della chat, 'pdf' per un markup HTML
+ * minimale (classi CSS convertite in `style=` inline) compatibile col parser HTML del vendored
+ * php-pdf, usato per l'export PDF
+ * @return null|string La formattazione dell'azione nel formato richiesto. Può ritornare invece `null`
+ * se l'azione è di una tipologia non supportata o l'utente non ha i permessi per visionarla (esempio: sussurri)
  */
-function gdrcd_chat_message_handler($azione)
+function gdrcd_chat_message_handler($azione, $formato = 'html')
 {
     switch ($azione['tipo']) {
         case GDRCD_CHAT_ACTION_TYPE:
-            return gdrcd_chat_action_format($azione);
+            $html = gdrcd_chat_action_format($azione);
+            break;
 
         case GDRCD_CHAT_WHISPER_TYPE:
-            return gdrcd_chat_whisper_format($azione);
+            $html = gdrcd_chat_whisper_format($azione);
+            break;
 
         case GDRCD_CHAT_STATS_TYPE:
-            return gdrcd_chat_stats_format($azione);
+            $html = gdrcd_chat_stats_format($azione);
+            break;
 
         case GDRCD_CHAT_SKILL_TYPE:
-            return gdrcd_chat_skill_format($azione);
+            $html = gdrcd_chat_skill_format($azione);
+            break;
 
         case GDRCD_CHAT_DICE_TYPE:
-            return gdrcd_chat_dice_format($azione);
+            $html = gdrcd_chat_dice_format($azione);
+            break;
 
         case GDRCD_CHAT_ITEM_TYPE:
-            return gdrcd_chat_item_format($azione);
+            $html = gdrcd_chat_item_format($azione);
+            break;
 
         case GDRCD_CHAT_MASTER_TYPE:
-            return gdrcd_chat_master_format($azione);
+            $html = gdrcd_chat_master_format($azione);
+            break;
 
         case GDRCD_CHAT_PNG_TYPE:
-            return gdrcd_chat_png_format($azione);
+            $html = gdrcd_chat_png_format($azione);
+            break;
 
         case GDRCD_CHAT_IMAGE_TYPE:
-            return gdrcd_chat_image_format($azione);
+            $html = gdrcd_chat_image_format($azione);
+            break;
 
         case GDRCD_CHAT_PRIVATE_INVITE_TYPE:
-            return gdrcd_chat_private_invite_format($azione);
+            $html = gdrcd_chat_private_invite_format($azione);
+            break;
 
         case GDRCD_CHAT_PRIVATE_KICK_TYPE:
-            return gdrcd_chat_private_kick_format($azione);
+            $html = gdrcd_chat_private_kick_format($azione);
+            break;
 
         case GDRCD_CHAT_PRIVATE_LIST_TYPE:
-            return gdrcd_chat_private_list_format($azione);
+            $html = gdrcd_chat_private_list_format($azione);
+            break;
 
         default:
             return null;
     }
+
+    if ($html === null || $formato === 'html') {
+        return $html;
+    }
+
+    if ($formato === 'pdf') {
+        return gdrcd_chat_html_to_pdf_markup($html);
+    }
+
+    return gdrcd_chat_html_to_plaintext($html);
+}
+
+/**
+ * Converte la formattazione HTML di un messaggio di chat in testo semplice, rimuovendo tag e
+ * ricomponendo su un'unica riga il contenuto sparso su più righe dagli heredoc dei formattatori.
+ * Usata per l'export della chat in formato TXT.
+ *
+ * @param string $html Formattazione HTML prodotta da uno dei gdrcd_chat_*_format()
+ * @return string
+ */
+function gdrcd_chat_html_to_plaintext($html)
+{
+    $text = html_entity_decode(strip_tags($html), ENT_QUOTES, 'UTF-8');
+    $text = preg_replace('/\s+/', ' ', $text);
+
+    return trim($text);
+}
+
+/**
+ * Converte la formattazione HTML di un messaggio di chat in un markup HTML minimale adatto al
+ * parser del vendored php-pdf, che non legge `chat.css`. Il suo`HtmlParser` non supporta 
+ * `<style>`/CSS esterno/selettori di classe, solo l'attributo `style="..."` inline sui 
+ * singoli elementi (vedi `Document::fromHtml()`). Per questo, qui non si inlinea l'intero 
+ * foglio di stile ma si convertono in `style=` inline solo le classi che nella chat dal vivo 
+ * veicolano un significato; ogni altro `class="..."` residuo viene rimosso.
+ * I colori usati qui sono scelti per leggibilità su pagina PDF bianca
+ *
+ * @param string $html Formattazione HTML prodotta da uno dei gdrcd_chat_*_format()
+ * @return string
+ */
+function gdrcd_chat_html_to_pdf_markup($html)
+{
+    static $inlineStyles = [
+        'chat_dice_roll_success' => 'color:#2e7d32;font-weight:bold;',
+        'chat_dice_roll_max' => 'color:#2e7d32;font-weight:bold;',
+        'chat_dice_roll_min' => 'color:#b42727;font-weight:bold;',
+        'chat_skill_bonus_value' => 'color:#b8860b;font-weight:bold;',
+        'chat_skill_total_value' => 'color:#2e7d32;font-weight:bold;',
+        'chat_master' => 'color:#3e5677;font-weight:bold;',
+        'chat_me_master' => 'color:#3e5677;font-weight:bold;text-decoration:underline;',
+        'chat_me' => 'text-decoration:underline;',
+        'chat_name' => 'font-weight:bold;',
+        'chat_row_S' => 'font-style:italic;',
+    ];
+
+    foreach ($inlineStyles as $class => $style) {
+        $html = preg_replace('/class="' . preg_quote($class, '/') . '"/', 'style="' . $style . '"', $html);
+    }
+
+    // Ogni class="..." rimasto non ha più un significato da preservare: il parser PDF lo
+    // ignorerebbe comunque, lo si toglie solo per non lasciare markup fuorviante in giro.
+    return preg_replace('/\s*class="[^"]*"/', '', $html);
+}
+
+/**
+ * Sostituisce, in un blocco HTML già formattato, ogni `src="..."` che punta a un file
+ * effettivamente presente sul disco locale (es. icone razza/genere in `themes/*\/imgs/races/`,
+ * `public/images/icons/`) con l'equivalente `data:` URI in base64, così l'HTML risulta
+ * visualizzabile offline senza dipendere dal sito live. Usata per l'export HTML della chat.
+ *
+ * I riferimenti già assoluti (`http://`, `https://`, `//`) o già in formato `data:` non vengono
+ * toccati: avatar (`url_img_chat`) e immagini di chat postate dai giocatori sono URL arbitrari
+ * scelti da loro, spesso esterni, e non vengono scaricati per non introdurre un vettore SSRF.
+ *
+ * @param string $html Blocco HTML in cui cercare e sostituire i riferimenti a immagini locali
+ * @param string $docroot Percorso assoluto della root del progetto, usato per risolvere i src relativi
+ * e impedire che un src malformato (es. con `..`) esca dalla docroot
+ * @return string HTML con i riferimenti locali sostituiti da data URI, dove possibile
+ */
+function gdrcd_chat_html_embed_local_images($html, $docroot)
+{
+    static $cache = [];
+
+    $docroot = rtrim($docroot, '/');
+
+    return preg_replace_callback(
+        '/\ssrc="([^"]+)"/i',
+        function ($matches) use ($docroot, &$cache) {
+            $src = $matches[1];
+
+            // Lascia invariati i riferimenti già remoti o già in formato data URI
+            if (preg_match('#^(https?:)?//#i', $src) || str_starts_with($src, 'data:')) {
+                return $matches[0];
+            }
+
+            if (!array_key_exists($src, $cache)) {
+                $path = realpath($docroot . '/' . ltrim($src, '/'));
+
+                $isInsideDocroot = $path !== false
+                    && strncmp($path, $docroot . '/', strlen($docroot) + 1) === 0
+                    && is_file($path);
+
+                $mime = $isInsideDocroot ? match (strtolower(pathinfo($path, PATHINFO_EXTENSION))) {
+                    'png' => 'image/png',
+                    'jpg', 'jpeg' => 'image/jpeg',
+                    'gif' => 'image/gif',
+                    'svg' => 'image/svg+xml',
+                    'webp' => 'image/webp',
+                    default => null,
+                } : null;
+
+                $cache[$src] = $mime !== null
+                    ? 'data:' . $mime . ';base64,' . base64_encode(file_get_contents($path))
+                    : false;
+            }
+
+            return $cache[$src] === false
+                ? $matches[0]
+                : ' src="' . $cache[$src] . '"';
+        },
+        $html
+    );
 }
 
 /**

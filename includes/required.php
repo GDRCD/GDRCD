@@ -20,6 +20,9 @@ if(file_exists(GDRCD_PATH . '/config.inc.php')){
     include_once GDRCD_PATH . '/config.inc.php';
 }
 
+// carica l'autoloader PSR-4 della libreria PDF vendorizzata
+require_once(GDRCD_PATH . '/core/vendor/autoload.core.php');
+
 // carica le funzioni di gestione delle migrazioni
 require_once(GDRCD_PATH . '/includes/DbMigration/DbMigrationEngine.class.php');
 require_once(GDRCD_PATH . '/includes/DbMigration/DbMigration.class.php');
