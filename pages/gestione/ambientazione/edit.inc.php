@@ -5,7 +5,7 @@
     return;
 } 
 $id = gdrcd_filter('num', $_POST['id']);
-$loaded_record = gdrcd_stmt_one("SELECT * FROM ambientazione WHERE capitolo=?  LIMIT 1", [$id]);
+$loaded_record = gdrcd_stmt_one("SELECT * FROM ambientazione WHERE id=?  LIMIT 1", [$id]);
 ?>
 <div class="panels_box">
     <form action="main.php?page=gestione_ambientazione" method="post" class="form_gestione">
@@ -13,7 +13,7 @@ $loaded_record = gdrcd_stmt_one("SELECT * FROM ambientazione WHERE capitolo=?  L
             <?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['plot']['art']); ?>
         </div>
         <div class='form_field'>
-            <input name="articolo" value="<?php echo 0 + $loaded_record['capitolo']; ?>" />
+            <input name="articolo" type="number" value="<?php echo 0 + $loaded_record['capitolo']; ?>" />
         </div>
         <div class='form_label'>
             <?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['plot']['title']); ?>
@@ -33,8 +33,8 @@ $loaded_record = gdrcd_stmt_one("SELECT * FROM ambientazione WHERE capitolo=?  L
         <!-- bottoni -->
         <div class='form_submit'>
                 <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['modify']); ?>" />
-                <input type="hidden" name="art" value="<?php echo 0 + $loaded_record['capitolo']; ?>">
-                <input type="hidden" name="op" value="doedit">
+                <input type="hidden" name="id" value="<?php echo 0 + $loaded_record['id']; ?>">
+                <input type="hidden" name="op" value="save_edit">
         </div>
     </form>
 </div>
