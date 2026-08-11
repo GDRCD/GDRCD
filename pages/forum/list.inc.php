@@ -29,7 +29,7 @@ $ultimotipo = -1;
                     <?php
                 } //if
 
-                $new_msg = gdrcd_query("SELECT COUNT(id) AS num FROM araldo_letto WHERE araldo_id = ".$row['id_araldo']." AND nome = '".$_SESSION['login']."';");
+                $new_msg = gdrcd_query("SELECT COUNT(id) AS num FROM araldo_letto WHERE araldo_id = ".$row['id_araldo']." AND id_personaggio = '".gdrcd_filter('in', $_SESSION['id_personaggio'])."';");
                 $new_msg2 = gdrcd_query("SELECT COUNT(id_messaggio) AS num FROM messaggioaraldo WHERE id_araldo = ".$row['id_araldo']." AND id_messaggio_padre = -1");
 
                 ?>

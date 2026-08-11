@@ -1,7 +1,7 @@
 <?php
 
 $pg = gdrcd_filter('out', $_REQUEST['pg']);
-$me = gdrcd_filter('out',$_SESSION['login']);
+$me = gdrcd_filter('out',$_SESSION['id_personaggio']);
 $permessi  = gdrcd_filter('out',$_SESSION['permessi']);
 
 # Modifica
@@ -38,7 +38,7 @@ if (($pg == $me) || ($permessi >= GUILDMODERATOR)) { ?>
     </a>
 
     <!-- DIARIO -->
-<?php if (defined('PG_DIARY_ENABLED') and PG_DIARY_ENABLED) { ?>
+<?php if (defined('PG_DIARY_ENABLED') && PG_DIARY_ENABLED) { ?>
     <a href="main.php?page=scheda_diario&pg=<?=$pg;?>">
         <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['menu']['diary']); ?>
     </a>

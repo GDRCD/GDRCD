@@ -10,7 +10,7 @@
             if($_POST['op'] == 'load') {
                 $loaded_item = gdrcd_query("SELECT * FROM oggetto WHERE id_oggetto=".gdrcd_filter('num', $_POST['load_item'])."");
 
-                $characters = gdrcd_query("SELECT nome FROM personaggio ORDER BY nome", 'result');
+                $characters = gdrcd_query("SELECT id_personaggio, nome FROM personaggio ORDER BY nome", 'result');
             }
             /*Se e' stato richiesto di modificare un oggetto...*/
             if($_POST['op'] == 'update') {
@@ -24,10 +24,10 @@
                         /*Risarcisco gli eventuali possessori */
                         $rec = gdrcd_query("SELECT costo FROM oggetto WHERE id_oggetto=".gdrcd_filter('num', $_POST['id_oggetto'])." LIMIT 1");
 
-                        $refound = gdrcd_query("SELECT nome FROM clgpersonaggiooggetto WHERE id_oggetto=".gdrcd_filter('num', $_POST['id_oggetto'])."", 'result');
+                        $refound = gdrcd_query("SELECT id_personaggio FROM clgpersonaggiooggetto WHERE id_oggetto=".gdrcd_filter('num', $_POST['id_oggetto'])."", 'result');
 
                         while($do_refound = gdrcd_query($refound, 'fetch')) {
-                            gdrcd_query("UPDATE personaggio SET soldi = soldi + ".gdrcd_filter('num', $rec['costo'])." WHERE nome = '".gdrcd_filter_in($do_refound['nome'])."'");
+                            gdrcd_query("UPDATE personaggio SET soldi = soldi + ".gdrcd_filter('num', $rec['costo'])." WHERE id_personaggio = '".gdrcd_filter_in($do_refound['id_personaggio'])."'");
                         }
                         gdrcd_query($refound, 'free');
                         /*Elimino l'oggetto*/
@@ -53,7 +53,7 @@
             /*Se e' stato richiesto di assegnare un oggetto al mercato o ad un PG*/
             if((gdrcd_filter('get', $_POST['op']) == 'assign') && (gdrcd_filter('num', $_POST['num_oggetti']) > 0)) {
                 if($_POST['give_item'] == 'mercato') {
-                    $result = gdrcd_query("SELECT id_oggetto FROM mercato WHERE id_oggetto = ".$_POST['id_oggetto']."", 'result');
+                    $result = gdrcd_query("SELECT id_oggetto FROM mercato WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])."", 'result');
 
                     if(gdrcd_query($result, 'num_rows') > 0) {
                         gdrcd_query($result, 'free');
@@ -63,13 +63,13 @@
                     }
                     gdrcd_query($query);
                 } else {
-                    $result = gdrcd_query("SELECT id_oggetto FROM clgpersonaggiooggetto WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND nome = '".gdrcd_filter('in', $_POST['give_item'])."'", 'result');
+                    $result = gdrcd_query("SELECT id_oggetto FROM clgpersonaggiooggetto WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND id_personaggio = ".gdrcd_filter('num', $_POST['give_item'])."", 'result');
 
                     if(gdrcd_query($result, 'num_rows') > 0) {
                         gdrcd_query($result, 'free');
-                        $query = "UPDATE clgpersonaggiooggetto SET numero = numero + ".gdrcd_filter('num', $_POST['num_oggetti'])." WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND nome = '".gdrcd_filter('in', $_POST['give_item'])."'";
+                        $query = "UPDATE clgpersonaggiooggetto SET numero = numero + ".gdrcd_filter('num', $_POST['num_oggetti'])." WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND id_personaggio = ".gdrcd_filter('num', $_POST['give_item'])."";
                     } else {
-                        $query = "INSERT INTO clgpersonaggiooggetto (nome, id_oggetto, cariche, numero) VALUES ('".gdrcd_filter('in', $_POST['give_item'])."', ".gdrcd_filter('num', $_POST['id_oggetto']).", ".gdrcd_filter('num', $_POST['cariche_oggetto']).", ".gdrcd_filter('num', $_POST['num_oggetti']).")";
+                        $query = "INSERT INTO clgpersonaggiooggetto (id_personaggio, id_oggetto, cariche, numero) VALUES (".gdrcd_filter('num', $_POST['give_item']).", ".gdrcd_filter('num', $_POST['id_oggetto']).", ".gdrcd_filter('num', $_POST['cariche_oggetto']).", ".gdrcd_filter('num', $_POST['num_oggetti']).")";
                     }
                     gdrcd_query($query);
                 }
@@ -283,7 +283,7 @@
                                 <select name="give_item">
                                     <option value="mercato"><?php echo gdrcd_filter('out', $PARAMETERS['names']['market_name']); ?></option>
                                     <?php while($option = gdrcd_query($characters, 'fetch')) { ?>
-                                        <option value="<?php echo $option['nome']; ?>">
+                                        <option value="<?php echo $option['id_personaggio']; ?>">
                                             <?php echo gdrcd_filter('out', $option['nome']); ?>
                                         </option>
                                     <?php }

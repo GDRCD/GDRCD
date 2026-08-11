@@ -6,7 +6,7 @@
     } else {
         /*Visualizzo la pagina*/
         /*Verifico l'esistenza del PG*/
-        $query = "SELECT nome FROM personaggio WHERE personaggio.nome = '".gdrcd_filter('in', $_REQUEST['pg'])."'";
+        $query = "SELECT nome FROM personaggio WHERE id_personaggio = '".gdrcd_filter('in', $_REQUEST['pg'])."'";
         $result = gdrcd_query($query, 'result');
         //Se non esiste il pg
         if(gdrcd_query($result, 'num_rows') == 0) {
@@ -26,7 +26,7 @@
                     $query = "SELECT  descrizione_evento, autore, data_evento, nome_interessato FROM log WHERE ( nome_interessato = '".gdrcd_filter('in', $_REQUEST['pg']
                         )."' OR autore = '".gdrcd_filter('in', $_REQUEST['pg'])."') AND codice_evento = ".BONIFICO." ORDER BY data_evento DESC LIMIT ".$num_logs."";
                     $result = gdrcd_query($query, 'result');
-                    $query = "SELECT esperienza FROM personaggio WHERE nome = '".gdrcd_filter('in', $_REQUEST['pg'])."'";
+                    $query = "SELECT esperienza FROM personaggio WHERE id_personaggio = '".gdrcd_filter('in', $_REQUEST['pg'])."'";
                     ?>
                     <!-- Intestazione tabella elenco -->
                     <div class="elenco_record_gioco">

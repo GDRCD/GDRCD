@@ -18,5 +18,3 @@ if(file_exists(__DIR__.'/chat/pannelli/'.$pannello.'.php')) {
 else{
     echo 'Pannello non trovato.';
 }
-
-?>

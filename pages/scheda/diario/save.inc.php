@@ -13,7 +13,7 @@ switch ($_POST['op']) {
         $testo = gdrcd_filter('in', $_POST['testo']);
         $pg = gdrcd_filter('in', $_POST['pg']);
 
-        gdrcd_query("INSERT INTO diario (titolo,data, data_inserimento, visibile, testo, personaggio )  VALUES
+        gdrcd_query("INSERT INTO diario (titolo,data, data_inserimento, visibile, testo, id_personaggio )  VALUES
         ('{$titolo}', '{$data}',NOW(),'{$inv}' ,'{$testo}','{$pg}') ");
         break;
 

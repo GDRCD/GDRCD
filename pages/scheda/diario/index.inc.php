@@ -1,5 +1,5 @@
 <?php /*Controllo che il diario sia del pg loggato, per inserimento nuove pagine*/
-if ($_REQUEST['pg'] == $_SESSION['login']) { ?>
+if ($_REQUEST['pg'] == $_SESSION['id_personaggio']) { ?>
     <form action="main.php?page=scheda_diario&pg=<?php echo gdrcd_filter('url', $_REQUEST['pg']); ?>" method="post">
         <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['diary']['new']); ?>">
         <input type="hidden" name="op" value="new"/>
@@ -15,7 +15,7 @@ if ($_REQUEST['pg'] == $_SESSION['login']) { ?>
             <?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['diary']['title']); ?>
         </div>
         <?php
-        if ($_REQUEST['pg'] == $_SESSION['login'] || $_SESSION['permessi'] >= MODERATOR) { ?>
+        if ($_REQUEST['pg'] == $_SESSION['id_personaggio'] || $_SESSION['permessi'] >= MODERATOR) { ?>
             <div class="td">
                 <?php echo $MESSAGE['interface']['sheet']['diary']['visible']; ?>
             </div>
@@ -30,10 +30,10 @@ if ($_REQUEST['pg'] == $_SESSION['login']) { ?>
     </div>
 
     <?php
-    if ($_REQUEST['pg'] == $_SESSION['login'] || $_SESSION['permessi'] >= PERMESSI_DIARIO) {
-        $query = "SELECT id, data, titolo, testo, visibile FROM diario WHERE personaggio='" . gdrcd_filter('url', $_REQUEST['pg']) . "' ORDER BY data DESC";
+    if ($_REQUEST['pg'] == $_SESSION['id_personaggio'] || $_SESSION['permessi'] >= PERMESSI_DIARIO) {
+        $query = "SELECT id, data, titolo, testo, visibile FROM diario WHERE id_personaggio='" . gdrcd_filter('url', $_REQUEST['pg']) . "' ORDER BY data DESC";
     } else {
-        $query = "SELECT id, data, titolo, testo, visibile FROM diario WHERE personaggio='" . gdrcd_filter('url', $_REQUEST['pg']) . "' and visibile='si' ORDER BY data DESC";
+        $query = "SELECT id, data, titolo, testo, visibile FROM diario WHERE id_personaggio='" . gdrcd_filter('url', $_REQUEST['pg']) . "' and visibile='si' ORDER BY data DESC";
     }
     $result = gdrcd_query($query, 'result');
 
@@ -52,7 +52,7 @@ if ($_REQUEST['pg'] == $_SESSION['login']) { ?>
                 </form>
             </div>
             <?php
-            if ($_REQUEST['pg'] == $_SESSION['login'] || $_SESSION['permessi'] >= PERMESSI_DIARIO) { ?>
+            if ($_REQUEST['pg'] == $_SESSION['id_personaggio'] || $_SESSION['permessi'] >= PERMESSI_DIARIO) { ?>
                 <div class="td">
                     <?php echo gdrcd_filter('out', $row['visibile']); ?>
                 </div>

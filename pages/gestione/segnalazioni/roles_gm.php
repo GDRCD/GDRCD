@@ -21,7 +21,12 @@
         $record_globale = gdrcd_query("SELECT COUNT(*) FROM send_GM ");
         $totaleresults = $record_globale['COUNT(*)'];
 
-        $query = "SELECT * FROM send_GM ORDER BY data DESC LIMIT " . $pagebegin . ", " . $PARAMETERS['settings']['posts_per_page'] . "";
+        $query = "SELECT * , 
+                    personaggio.nome
+                    FROM send_GM
+                    LEFT JOIN personaggio 
+                    ON personaggio.id_personaggio = send_GM.id_personaggio
+                    ORDER BY data DESC LIMIT " . $pagebegin . ", " . $PARAMETERS['settings']['posts_per_page'] . "";
         $result = gdrcd_query($query, 'result');
 
         if (gdrcd_query($result, 'num_rows') == 0) {
@@ -78,7 +83,11 @@
                 </tr>
                 <!-- Record -->
                 <?php while ($row = gdrcd_query($result, 'fetch')) {
-                    $roles = "SELECT * FROM segnalazione_role WHERE id = " . $row['role_reg'] . " ";
+                    $roles = "SELECT sr.*, GROUP_CONCAT(p.nome SEPARATOR ', ') AS partecipanti_nomi
+                                FROM segnalazione_role sr
+                                JOIN personaggio p ON FIND_IN_SET(p.id_personaggio, sr.partecipanti)
+                                WHERE sr.id = " . $row['role_reg'] . " 
+                                GROUP BY sr.id";
                     $res_roles = gdrcd_query($roles, 'result');
                     $roles_f = gdrcd_query($res_roles, 'fetch');
 
@@ -91,7 +100,7 @@
                         </td>
                         <td class="casella_elemento">
                             <div class="elementi_elenco">
-                                <?php echo $row['autore']; ?>
+                                <?php echo $row['nome']; ?>
                             </div>
                         </td>
                         <td class="casella_elemento">
@@ -101,7 +110,7 @@
                         </td>
                         <td class="casella_elemento">
                             <div class="elementi_elenco">
-                                <?php echo gdrcd_filter('out', $roles_f['partecipanti']); ?>
+                                <?php echo gdrcd_filter('out', $roles_f['partecipanti_nomi']); ?>
                             </div>
                         </td>
                         <?php
@@ -125,7 +134,7 @@
                         <td class="casella_controlli"><!-- Iconcine dei controlli -->
                             <!-- Vai a -->
                             <div class="controllo_elenco">
-                                <form action="popup.php?page=scheda_roles&pg=<?php echo gdrcd_filter('in', $row['autore']); ?>"
+                                 <form action="main.php?page=gestione_segnalazioni&segn=log&pg=<?php echo gdrcd_filter('in', $row['id_personaggio']); ?>"  
                                       method="post">
                                     <input type="hidden"
                                            name="op"
@@ -139,9 +148,7 @@
 
                         </td>
                     </tr>
-                <?php } //while
-
-                gdrcd_query($result, 'free');
+                <?php } //while 
                 ?>
             </table>
 

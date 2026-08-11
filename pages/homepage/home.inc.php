@@ -27,4 +27,4 @@
     <u>Ogni aiuto offerto è sempre prezioso!</u>
 </p>
 
-<p>Buon diverimento!</p>
+<p>Buon divertimento!</p>

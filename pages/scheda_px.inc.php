@@ -11,7 +11,7 @@
     {
     /*Visualizzo la pagina*/
     /*Verifico l'esistenza del PG*/
-    $query = "SELECT nome FROM personaggio WHERE personaggio.nome = '" . gdrcd_filter('in', $_REQUEST['pg']) . "'";
+    $query = "SELECT id_personaggio FROM personaggio WHERE personaggio.id_personaggio = '" . gdrcd_filter('in', $_REQUEST['pg']) . "'";
     $result = gdrcd_query($query, 'result');
     //Se non esiste il pg
     if (gdrcd_query($result, 'num_rows') == 0)
@@ -36,11 +36,13 @@
     {
         if ((is_numeric($_POST['px']) === true) && ($_SESSION['permessi'] >= GAMEMASTER))
         {
-            gdrcd_query("UPDATE personaggio SET esperienza = esperienza + " . gdrcd_filter('in', $_POST['px']) . " WHERE nome = '" . gdrcd_filter('in', $_REQUEST['pg']) . "' LIMIT 1 ");
-
+            gdrcd_query("UPDATE personaggio SET esperienza = esperienza + " . gdrcd_filter('in', $_POST['px']) . " WHERE id_personaggio = '" . gdrcd_filter('in', $_REQUEST['pg']) . "' LIMIT 1 ");
+            //Recupero il nome del personaggio
+            $nome = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_REQUEST['pg']) . "'");
+         
             /*Registro l'operazione*/
-            gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) 
-                                VALUES ('" . gdrcd_filter('in', $_REQUEST['pg']) . "', '" . $_SESSION['login'] . "', NOW(), " . PX . ", '(" . gdrcd_filter('in',$_POST['px']) . ' px) ' . gdrcd_filter('in', $_POST['causale']) . "')");
+            gdrcd_query("INSERT INTO log (id_personaggio,nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) 
+                                VALUES ('" . gdrcd_filter('in', $_REQUEST['pg']) . "','" . gdrcd_filter('in', $nome['nome']) . "', '" . $_SESSION['login'] . "', NOW(), " . PX . ", '(" . gdrcd_filter('in',$_POST['px']) . ' px) ' . gdrcd_filter('in', $_POST['causale']) . "')");
             echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['warning']['done']) . '</div>';
         } else
         {
@@ -53,11 +55,12 @@
         <div class="panels_box">
             <?php /*Seleziono le ultime 20 assegnamzioni px*/
 
-            $query = "SELECT  descrizione_evento, autore, data_evento FROM log WHERE nome_interessato = '" . gdrcd_filter('in',
+            $query = "SELECT  descrizione_evento, autore, data_evento FROM log WHERE id_personaggio = '" . gdrcd_filter('in',
                     $_REQUEST['pg']) . "' AND codice_evento = " . PX . " ORDER BY data_evento DESC LIMIT " . $num_logs . "";
             $result = gdrcd_query($query, 'result');
+           
 
-            $query = "SELECT esperienza FROM personaggio WHERE nome = '" . gdrcd_filter('in', $_REQUEST['pg']) . "'";
+            $query = "SELECT esperienza FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_REQUEST['pg']) . "'";
             ?>
             <!-- Intestazione tabella elenco -->
             <div class="elenco_record_gioco">

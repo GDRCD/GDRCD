@@ -1,6 +1,6 @@
 <?php
 $pg = $_REQUEST['pg'];
-if ($_REQUEST['pg'] == $_SESSION['login']) {
+if ($_REQUEST['pg'] == $_SESSION['id_personaggio']) {
     $mesedopo = $_POST['mese']+1;
     $meseprima=$_POST['mese']-1;
     ?>

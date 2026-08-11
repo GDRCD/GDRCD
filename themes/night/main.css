@@ -1,0 +1,929 @@
+/** * Skin advanced
+	* @author Blancks
+*/
+
+/** * Parametri di default nella pagina
+*/
+body {
+    padding: 0;
+    margin: 0;
+    color: #d1d5db;
+    font-family: Verdana, Sans;
+    font-size: 11px;
+    background: #111827  ; 
+}
+
+body.transparent_body {
+    background-color: transparent;
+    background-image: none;
+}
+
+div, ul, li {
+    margin: 0;
+    padding: 0;
+}
+
+.blank {
+    clear: both;
+}
+
+a, a:visited {
+    color: #d1d5db;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #d1d5db;
+    font-weight: bolder;
+    text-decoration: underline;
+}
+
+div.form_field table {
+    margin: 5px auto;
+}
+
+/* Bottoni base home */
+input[type="submit"],
+input[type="button"],
+button {
+    display: inline-block;
+    padding: 8px 14px;
+    min-height: 34px;
+    border: 1px solid #5c7193;
+    border-radius: 4px;
+    background: linear-gradient(180deg, #3d5373 0%, #2b3d57 100%);
+    color: #f4f7fb;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: Arial, Helvetica, sans-serif;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 1px 2px rgba(0,0,0,0.25);
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+/* Hover */
+input[type="submit"]:hover,
+input[type="button"]:hover,
+button:hover{
+    background: linear-gradient(180deg, #486287 0%, #324867 100%);
+    border-color: #7a93bb;
+    color: #ffffff;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 2px 6px rgba(0,0,0,0.28);
+}
+
+/* Click */
+input[type="submit"]:active,
+input[type="button"]:active,
+button:active {
+    transform: translateY(1px);
+    background: linear-gradient(180deg, #2a3b54 0%, #223146 100%);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.25);
+}
+
+/* Focus accessibile */
+input[type="submit"]:focus,
+input[type="button"]:focus,
+button:focus{
+    outline: none;
+    border-color: #9db6de;
+    box-shadow: 0 0 0 3px rgba(125, 160, 215, 0.25);
+}
+select,
+input[type="text"],
+input[type="password"],
+input[type="email"],
+textarea {
+    height: 34px;
+    padding: 6px 10px;
+    border: 1px solid #50627d;
+    border-radius: 4px;
+    background: #f4f6fa;
+    color: #1d2735;
+    font-size: 13px;
+    font-family: Arial, Helvetica, sans-serif;
+    box-sizing: border-box;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.10);
+    transition: all 0.2s ease;
+}
+
+select:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+textarea:focus {
+    outline: none;
+    border-color: #87a4d4;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(135,164,212,0.20);
+}
+
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 34px;
+    background-image:
+        linear-gradient(180deg, #f4f6fa 0%, #e7edf6 100%),
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path fill='%23384a67' d='M2.2 4.2 6 8l3.8-3.8z'/></svg>");
+    background-position: 0 0, right 10px center;
+    background-size: 100% 100%, 12px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+div.form_label {
+    font-size: 13px;
+    font-weight: bolder;
+    margin-top: 5px;
+}
+
+div.form_info {
+    font-size: 12px;
+    margin-bottom: 15px;
+}
+
+select.day, select.month, select.year {
+    width: 60px;
+    display: inline-block;
+}
+
+/** * Stile dei messaggi d'avviso dell'engine */
+div.error, div.warning, div.warning_low,
+div.success {
+    font-size: 12px;
+    text-align: center;
+    margin: 15px;
+    font-weight: bolder;
+    padding: 10px;
+}
+
+div.error {
+    background-color: #cf8888;
+    border: solid 1px #800;
+    color: #970b0b;
+}
+
+div.warning {
+    background-color: #fff3cd;
+    border: solid 1px #ffecb5;
+    color: #664d03;
+}
+
+div.warning_low {
+    background-color: #e2e3e5;
+    border: solid 1px #d3d6d8;
+    color: #41464b;
+}
+
+div.success {
+    background-color: #d1e7dd;
+    border: solid 1px #badbcc;
+    color: #0f5132;
+}
+
+div.warning.mysql, 
+div.error.mysql {
+	text-align:left;
+	font-weight:normal;
+}
+
+div.warning.mysql summary, 
+div.error.mysql summary{
+	margin-top:1em;
+	font-weight:bold;
+}
+
+div.link_back {
+    text-align: center;
+    background-color: #3e5677;
+    padding: 2px;
+}
+
+/** * Logout */
+div.logout_box {
+    margin: 20px auto;
+    padding: 10px;
+    text-align: center;
+    background-color: #243041;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.05);
+    -moz-border-radius: 5px; /* Bordi arrotondati */
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    border-radius: 5px;
+}
+
+div.logout_box a {
+    text-decoration: underline;
+    font-style: italic;
+}
+
+/** * Titoli delle sezioni
+*/
+div.innertube h2, div.output h2, div.page_title h2 {
+    font-size: 14px;
+    font-weight: bolder;
+    border-bottom: 1px solid #D9D9D9;
+    padding-bottom: 4px;
+    margin-top: 0;
+}
+
+/** * Stile dei contenitori grigi con i bordini arrotondati
+*/
+div.pagina_info_location, div.messages, div.forums, div.menu, div.presenti, div.output {
+    margin: 5px auto;
+    padding: 10px;
+    width: 180px;
+    background-color: #1f2937;
+    
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.05);
+    
+}
+
+div.output {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0px;
+    left: 0px;
+    width: auto;
+    overflow: auto;
+    text-align: center;
+    background: #1f2937;
+}
+
+/** * Informazioni con anteprima luogo
+*/
+div.info_image {
+    text-align: center;
+}
+
+div.box_stato_luogo {
+    padding-top: 2px;
+    margin-bottom: 15px;
+}
+
+div.meteo, div.meteo_date {
+    padding-top: 5px;
+    text-align: center;
+    font-size: 12px;
+}
+
+div.meteo_luna img{
+    margin:0 auto;
+    width: 30px;
+    height: 30px;
+    display: block;
+}
+
+/** * Frame Messaggi 
+*/
+iframe.iframe_messages,
+iframe.iframe_forums {
+    height: 20px;
+    width: 180px;
+}
+
+div.box_messages, .box_forums {
+    text-align: center;
+    font-size: 14px;
+}
+
+div.box_messages a,
+div.box_forums a,
+div.box_messages a:visited,
+div.box_forums a:visited {
+    text-decoration: none;
+    color: #f3f4f6;
+}
+
+div.messaggio_forum_nuovo a, div.messaggio_forum_nuovo a:visited {
+    font-weight: bolder;
+    font-style: italic;
+    color: #38bdf8;
+}
+
+/** * Men� di gioco
+*/
+select#gotomap {
+    display: block;
+    width: 160px;
+    margin: 0 auto 15px auto;
+}
+
+div.link_menu {
+    padding: 0 0 0 20px;
+    font-size: 14px;
+}
+
+div.link_menu a {
+    display: block;
+    padding: 5px;
+    text-align: left;
+}
+
+div.link_menu a:hover {
+    background-color: #3e5677;
+    color: #d1d5db;
+    text-decoration: none;
+    -moz-border-radius: 5px; /* Bordi arrotondati */
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    border-radius: 5px;
+}
+
+div.link_menu a.sprite {
+    display: block;
+    width: 50px;
+    height: 50px;
+    background: no-repeat top left;
+}
+
+div.link_menu a.sprite:hover {
+    background-position: 0 100%;
+}
+
+/** * Mappa cliccabile */
+
+/** * Posizionamento mappa cliccabile 
+*/
+div.mappaclick_map {
+    margin: 20px auto;
+}
+
+/** * Link testuali sulla mappa */
+div.mappaclick_map a {
+    font-size: 13px;
+    font-weight: bolder;
+}
+
+/** * stile della tooltip di descrizione sulla mappa 
+*/
+div#descriptionLoc {
+    position: absolute;
+    width: 200px;
+    background-color: #3e5677;
+    padding: 20px;
+    font-size: 12px;
+    
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.05);
+    font-family: Verdana, Sans;
+    text-align: left;
+
+    -moz-border-radius: 5px; /* Bordi arrotondati */
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    border-radius: 5px;
+
+    display: none; /*NON TOCCARE* Di configurazione: nasconde la tip in partenza */
+    z-index: 9999; /*NON TOCCARE* Di configurazione: mostra la tooltip sopra gli altri link */
+}
+
+/** * Stili relativi all'elenco delle mappe in basso
+*/
+div.mappaclick_more {
+    padding-top: 10px;
+}
+
+div.mappaclick_more a {
+    background-color: #3e5677;
+    padding: 8px;
+    margin-right: 10px;
+    -moz-border-radius: 5px; /* Bordi arrotondati */
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    border-radius: 5px;
+}
+
+/** * Messages center
+*/
+div.elenco_record_gioco {
+    padding: 20px;
+}
+
+div.elenco_record_gioco table {
+    width: 100%;
+    background-color: #243041;
+    
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+div.elementi_elenco {
+    padding-top: 5px;
+    text-align: center;
+}
+
+div.titoli_elenco,
+span.titoli_elenco {
+    font-weight: bold;
+    font-size: 12px;
+    font-style: italic;
+}
+
+img.colonna_elenco_messaggi_icon {
+    width: 30px;
+    height: 30px;
+}
+
+div.controlli_elenco {
+    width: 60px;
+}
+
+div.controllo_elenco {
+    width: 20px;
+    float: left;
+}
+
+div.controllo_elenco input[type='image'] {
+    width: 15px;
+}
+
+/** * Ambientazione/Regolamento */
+div.user_ambientazione div.elementi_elenco, div.servizi_abilita div.elementi_elenco {
+    text-align: left;
+    padding: 5px;
+}
+
+div.user_ambientazione td.casella_titolo div.elementi_elenco,
+div.servizi_abilita td.casella_titolo div.elementi_elenco {
+    font-size: 14px;
+    font-weight: bolder;
+    padding: 2px 0 2px 10px;
+}
+
+/** * Generico per elenchi, bacheche, regolamento, ambientazione etc */
+div.capitolo_elenco {
+    font-weight: bolder;
+    font-size: 13px;
+    text-align: left;
+    padding: 5px 5px 5px 20px;
+    background-color: #3e5677;
+}
+
+div.elementi_elenco {
+    min-height: 20px;
+}
+
+td.casella_elemento, div.elementi_elenco {
+    font-size: 12px;
+    background-color: #1f2937;
+}
+
+div.controllo_elenco input[type='image'] {
+    height: 15px;
+    width: 15px;
+    display: block;
+    margin: 2px 5px;
+}
+
+div.elementi_elenco a {
+    font-weight: bolder;
+}
+
+div.elementi_elenco a:hover {
+    text-decoration: none;
+}
+
+/** * Stile tabelle nei moduli di gestione */
+div.elenco_record_gestione table {
+    width: 95%;
+    margin: 10px auto;
+}
+
+/** * Accorgimenti Layout */
+
+/** * Allineamento verticale delle colonne 
+*/
+#framecontentLeft, #framecontentRight {
+    display: table;
+}
+
+/*** DIARI ***/
+.btn-link {
+    border: none;
+    outline: none;
+    background: none;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+    font-family: inherit;
+    font-size: inherit;
+}
+
+/** * margine delle colonne */
+div.innertube {
+    margin: 0;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+/**
+ * Stili relative alle pagine dei menù:
+ * GESTIONE
+ * SERVIZI
+ */
+.gestione_pagina > .gestione_incipit,
+.servizi_pagina > .servizi_incipit {
+    
+    padding: 10px;
+    width: 80%;
+    margin:5px auto;
+    font-size: 13px;
+}
+
+.gestione_pagina > .gestione_incipit > .title,
+.servizi_pagina > .servizi_incipit > .title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #f3f4f6;
+}
+
+.gestione_pagina > .gestione_incipit > .subtitle,
+.servizi_pagina > .servizi_incipit > .subtitle {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.gestione_pagina > .gestione_incipit > .highlight,
+.servizi_pagina > .servizi_incipit > .highlight {
+    font-weight: bold;
+    color: rgb(177, 71, 71);
+}
+
+.gestione_pagina > .gestione_incipit > ul,
+.servizi_pagina > .servizi_incipit > ul {
+    width: 80%;
+    margin:0 auto;
+}
+
+.gestione_pagina > .gestione_incipit > ul > li,
+.servizi_pagina > .servizi_incipit > ul > li {
+    padding: 5px 0;
+    text-align: left;
+}
+
+.gestione_pagina > .gestione_body,
+.servizi_pagina > .servizi_body {
+    width: 80%;
+    margin: 5px auto;
+}
+
+.gestione_pagina > .gestione_body > .form_container,
+.servizi_pagina > .servizi_body > .form_container,
+.form_container{
+    width: 90%;
+    margin: 5px auto;
+}
+
+.gestione_pagina > .gestione_body > .form_container.form_container_bg,
+.servizi_pagina > .servizi_body > .form_container.form_container_bg,
+.form_container.form_container_bg{
+    border: none;
+    margin: 10px auto;
+    padding: 5px;
+    background-color: #243041;
+    
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.05);
+      
+}
+
+.gestione_pagina > .gestione_body > .form_container > .form,
+.servizi_pagina > .servizi_body > .form_container > .form,
+.form_container > .form {
+    width: 100%;
+}
+
+.gestione_pagina > .gestione_body > .form_container > .form > .title,
+.servizi_pagina > .servizi_body > .form_container > .form > .title,
+.form_container > .form > .title {
+    font-size: 15px;
+    font-weight: bold;
+    text-decoration-line: underline;
+    margin: 10px 0;
+    padding: 5px 0;
+    clear: both;
+}
+
+
+.gestione_pagina  > .gestione_body > .form_container > .form > .single_input,
+.servizi_pagina  > .servizi_body > .form_container > .form > .single_input,
+.form_container > .form > .single_input{
+    width: 100%;
+    margin: 5px;
+}
+
+.gestione_pagina > .gestione_body > .form_container > .form > .single_input > .label,
+.servizi_pagina > .servizi_body > .form_container > .form > .single_input > .label,
+.form_container > .form > .single_input > .label{
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.gestione_pagina > .gestione_body > .form_container > .form > .single_input > .subtitle,
+.servizi_pagina > .servizi_body > .form_container > .form > .single_input > .subtitle,
+.form_container > .form > .single_input > .subtitle{
+    font-size: 11px;
+    width: 50%;
+    margin: 0 25%;
+}
+
+.gestione_pagina > .gestione_body > .form_container > .form > .single_input > input textarea select,
+.servizi_pagina > .servizi_body > .form_container > .form > .single_input > input textarea select,
+.form_container > .form > .single_input > input,
+.form_container > .form > .single_input > textarea,
+.form_container > .form > .single_input > select{
+    margin: 0 !important;
+    max-width: 500px;
+}
+
+
+/*** FAKE-TABLE ***/
+
+.fake-table{
+    margin: 5px 0;
+}
+
+.fake-table .tr{
+    width: 100%;
+    height: auto;
+    margin: 5px 0;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.fake-table .tr .td{
+    display: inline-block;
+    vertical-align: top;
+}
+
+.fake-table .table-subtitle{
+    font-size: 15px;
+    font-weight: bold;
+    padding: 5px 0;
+}
+
+.fake-table .table-text{
+    margin:5px 0;
+    text-align: left;
+}
+
+/* Stili per sezioni espandibili configurazioni */
+.config-section {
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fafafa;
+    transition: all 0.3s ease;
+}
+
+.config-section[open] {
+    border-color: #272727;
+    box-shadow: 0 2px 8px rgba(0, 124, 186, 0.1);
+}
+
+.config-section-summary {
+    padding: 10px 12px;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    font-weight: bold;
+    color: #333;
+    border-bottom: 1px solid #ddd;
+    transition: background-color 0.2s ease;
+    outline: none;
+}
+
+.config-section-summary:hover {
+    background-color: #e8e8e8;
+}
+
+.config-section[open] .config-section-summary {
+    background-color: #272727;
+    color: white;
+    border-bottom-color: #272727;
+}
+
+.config-section-content {
+    padding: 10px;
+}
+
+.config-form {
+    border: 1px solid #ccc;
+    margin: 6px 0;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+}
+
+.config-form-title {
+    margin-top: 0;
+    color: #666;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+    font-size: 16px;
+}
+
+.config-form-field {
+    margin-bottom: 6px;
+}
+ 
+
+.config-form-description {
+    color: #666;
+    font-style: italic;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.config-form-submit {
+    margin-top: 8px;
+}
+ 
+
+/* Stili per il generatore di token */
+ 
+ .gestione-token-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.token-stats {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #243041;
+    
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 5px;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat-label {
+    font-size: 12px;
+     
+    margin-bottom: 5px;
+}
+
+.stat-value {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.stat-active { color: #28a745; }
+.stat-used { color: #6c757d; }
+.stat-expired { color: #dc3545; }
+
+.token-generator {
+    background: #243041;
+    
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.05);
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.generate-form {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+
+.btn-generate {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.btn-generate:hover {
+    background: #0056b3;
+}
+
+.token-filters {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.filter-link {
+    padding: 8px 16px;
+    background: #3e5677;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 3px;
+    
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.filter-link:hover {
+    background: #3e5677;
+}
+
+.token-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.token-table .tr {
+    display: flex;
+    border-bottom: 1px solid #ddd;
+}
+
+.token-table .tr.header {
+    background: #243041;
+    font-weight: bold;
+}
+
+.token-table .td {
+    flex: 1;
+    padding: 10px;
+    border-right: 1px solid #ddd;
+}
+
+.token-table .td:last-child {
+    border-right: none;
+}
+
+.token-value {
+    font-family: monospace;
+    font-weight: bold;
+}
+
+.status {
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.status-active {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-used {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.status-expired {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.btn-delete {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.btn-delete:hover {
+    background: #c82333;
+}
+
+.success {
+    background: #d4edda;
+    color: #155724;
+    padding: 10px;
+    border: 1px solid #c3e6cb;
+    border-radius: 3px;
+    margin-bottom: 20px;
+}
+
+.error {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border: 1px solid #f5c6cb;
+    border-radius: 3px;
+    margin-bottom: 20px;
+}

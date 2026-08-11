@@ -3,7 +3,7 @@ $disoccupato = 0;/*Il pg e' affiliato ad una gilda*/
 $lavoro = -1;
 $jobsn = 0;
 $ultimolavoro = strftime("%Y-%m-%d");
-$query = "SELECT clgpersonaggioruolo.id_ruolo, clgpersonaggioruolo.scadenza, ruolo.gilda FROM clgpersonaggioruolo LEFT JOIN ruolo ON clgpersonaggioruolo.id_ruolo = ruolo.id_ruolo WHERE clgpersonaggioruolo.personaggio = '".$_SESSION['login']."' ORDER BY ruolo.gilda";
+$query = "SELECT clgpersonaggioruolo.id_ruolo, clgpersonaggioruolo.scadenza, ruolo.gilda FROM clgpersonaggioruolo LEFT JOIN ruolo ON clgpersonaggioruolo.id_ruolo = ruolo.id_ruolo WHERE clgpersonaggioruolo.id_personaggio = '".$_SESSION['id_personaggio']."' ORDER BY ruolo.gilda";
 $result = gdrcd_query($query, 'result');
 
 while($jobs = gdrcd_query($result, 'fetch')) {
@@ -104,14 +104,14 @@ gdrcd_query($result, 'free');
         /*Scelta lavoro*/
         if($_POST['op'] == 'pick') {
             if($disoccupato == -1) {
-                gdrcd_query("UPDATE clgpersonaggioruolo SET id_ruolo = ".gdrcd_filter('num', $_POST['id_record']).", scadenza = DATE_ADD(NOW(), INTERVAL ".gdrcd_filter('num', $PARAMETERS['settings']['minimum_employment'])." DAY) WHERE personaggio='".$_SESSION['login']."' AND id_ruolo = ".gdrcd_filter('num', $lavoro)." LIMIT 1");
+                gdrcd_query("UPDATE clgpersonaggioruolo SET id_ruolo = ".gdrcd_filter('num', $_POST['id_record']).", scadenza = DATE_ADD(NOW(), INTERVAL ".gdrcd_filter('num', $PARAMETERS['settings']['minimum_employment'])." DAY) WHERE id_personaggio='".$_SESSION['id_personaggio']."' AND id_ruolo = ".gdrcd_filter('num', $lavoro)." LIMIT 1");
             } else {
-                gdrcd_query("INSERT INTO clgpersonaggioruolo (id_ruolo, personaggio, scadenza) VALUES (".gdrcd_filter('num', $_POST['id_record']).", '".$_SESSION['login']."', DATE_ADD(NOW(), INTERVAL ".gdrcd_filter('num', $PARAMETERS['settings']['minimum_employment'])." DAY))");
+                gdrcd_query("INSERT INTO clgpersonaggioruolo (id_ruolo, id_personaggio, scadenza) VALUES (".gdrcd_filter('num', $_POST['id_record']).", '".$_SESSION['id_personaggio']."', DATE_ADD(NOW(), INTERVAL ".gdrcd_filter('num', $PARAMETERS['settings']['minimum_employment'])." DAY))");
             }//else
 
             echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['interface']['job']['ok_job']).'</div>';
-
-            gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES ('".$_SESSION['login']."', '".$_SESSION['login']."', NOW(), ".NUOVOLAVORO.", '".gdrcd_filter_in($_POST['nome_lavoro'])."')");
+            
+            gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES ('".$_SESSION['id_personaggio']."', '".$_SESSION['login']."', '".$_SESSION['login']."', NOW(), ".NUOVOLAVORO.", '".gdrcd_filter_in($_POST['nome_lavoro'])."')");
             ?>
             <div class="link_back">
                 <a href="main.php?page=servizi_lavoro"><?php echo gdrcd_filter('out', $MESSAGE['interface']['job']['back']); ?></a>
@@ -120,10 +120,10 @@ gdrcd_query($result, 'free');
         } //if
         /*Dimissioni*/
         if($_POST['op'] == 'resign') {
-            gdrcd_query("DELETE FROM clgpersonaggioruolo WHERE personaggio='".$_SESSION['login']."' AND id_ruolo = ".gdrcd_filter('num', $_POST['id_record'])." LIMIT 1");
+            gdrcd_query("DELETE FROM clgpersonaggioruolo WHERE id_personaggio='".$_SESSION['id_personaggio']."' AND id_ruolo = ".gdrcd_filter('num', $_POST['id_record'])." LIMIT 1");
 
             echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['interface']['job']['ok_quit']).'</div>';
-            gdrcd_query("INSERT INTO log (nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES ('".$_SESSION['login']."', '".$_SESSION['login']."', NOW(), ".DIMISSIONE.", '".gdrcd_filter('in', $_POST['nome_lavoro'])."')");
+            gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES ('".$_SESSION['id_personaggio']."', '".$_SESSION['login']."', '".$_SESSION['login']."', NOW(), ".DIMISSIONE.", '".gdrcd_filter('in', $_POST['nome_lavoro'])."')");
             ?>
             <div class="panels_link">
                 <a href="main.php?page=servizi_lavoro"><?php echo gdrcd_filter('out', $MESSAGE['interface']['job']['back']); ?></a>
