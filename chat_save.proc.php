@@ -2,9 +2,6 @@
 
 include('includes/required.php');
 
-/* Eseguo la connessione al database */
-$handleDBConnection = gdrcd_connect();
-
 $typeOrder = ($PARAMETERS['mode']['chat_from_bottom'] == 'ON') ? 'DESC' : 'ASC';
 //recupero il tempo di salvataggio delle chat
 $tempo_salvataggio= gdrcd_configuration_get('salva_chat.tempo_salvataggio');
@@ -122,4 +119,3 @@ foreach($do_query as $row){
         echo substr($add_chat, $bufferIndex, $chunkSize);
     }
     
-
