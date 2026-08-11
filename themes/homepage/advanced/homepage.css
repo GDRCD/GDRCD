@@ -138,10 +138,12 @@ div.subtitle {
 /** * Stili del form di login
 */
 div.login_form{
-	float:right;
+	float:none;
 	width:230px;
 	padding:20px 10px;
 	margin-top: 20px;
+    margin-left: auto;
+    box-sizing: border-box;
 }
 
 /** * stile che ingloba i gruppi label/input
@@ -161,6 +163,12 @@ div.login_form input {
     width: 145px;
     margin: 0;
 }
+
+div.login_form select {
+    width: 180px;
+    margin: 0;
+}
+
 div.login_form input[type=checkbox]{
 	width: auto;
 	vertical-align: middle;
@@ -170,8 +178,8 @@ div.login_form input[type=checkbox]{
 */
 div.login_form input[type='submit'] {
     display: block;
-    float: right;
-    margin-right: 52px;
+    float: none;
+    margin: 8px 52px 0 auto;
     width: 65px;
 }
 
@@ -321,16 +329,21 @@ div#site_width {
 /** * Header
 */
 div#header {
-    height: 180px;
+    min-height: 220px;
+    overflow: hidden;
 }
 
 div#header > div {
     float: left;
-    height: 100%;
+    min-height: 220px;
 }
 
 div#header .titlecontent {
     width: calc(100% - 250px);
+}
+
+div#header .logincontent {
+    width: 250px;
 }
 
 /** * Corpo contenuti della pagina

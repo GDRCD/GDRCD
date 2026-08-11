@@ -126,7 +126,7 @@ div.subtitle {
 /** * Stili del form di login
 */
 div.login_form{
-	float:right;
+	float:none;
 	width:230px;
 	padding:20px 10px;
 	margin-top: 20px;
@@ -382,7 +382,7 @@ div#site_width {
 /** * Header
 */
 div#header {
-    height: 180px;
+    overflow: hidden;
     background-color: #243041;
     color: #d1d5db;
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);
@@ -390,7 +390,7 @@ div#header {
 }
 div#header > div {
     float: left;
-    height: 100%;
+    min-height: 220px;
 }
 
 div#header .titlecontent {
