@@ -1,7 +1,7 @@
 # Design: pipeline CI/CD di deploy verso Altervista (test + produzione)
 
 - **Data**: 2026-08-11
-- **Repo**: fork `egodi99/GDRCD` (origin), branch di lavoro: `master` (unico branch remoto esistente prima di questo lavoro)
+- **Repo**: fork `egodi99/GDRCD` (origin). Branch di lavoro: `feature/cicd-altervista`, creato da `master` (unico branch remoto esistente prima di questo lavoro)
 - **Stato**: approvato, pronto per il piano di implementazione
 
 ## Contesto
