@@ -2,14 +2,6 @@
 
 include('includes/required.php');
 
-/* Eseguo la connessione al database */
-$handleDBConnection = gdrcd_connect();
-
-if ($PARAMETERS['mode']['chatsave'] != 'ON') {
-    echo $MESSAGE['chat']['error']['permissions'];
-    exit;
-}
-
 $typeOrder = ($PARAMETERS['mode']['chat_from_bottom'] == 'ON') ? 'DESC' : 'ASC';
 $formato = in_array($_POST['formato'] ?? null, ['html', 'txt', 'pdf']) ? $_POST['formato'] : 'html';
 //recupero il tempo di salvataggio delle chat
@@ -202,4 +194,3 @@ if ($formato === 'pdf') {
         echo substr($add_chat, $bufferIndex, $chunkSize);
     }
     
-
