@@ -836,6 +836,21 @@ $MESSAGE['chat']['error']['invalid_dice_modifier'] = 'Modificatore invalido.';
 $MESSAGE['chat']['error']['invalid_dice_threshold'] = 'Numero soglia successi invalido.';
 $MESSAGE['chat']['error']['solo_autore'] = '<h2>ATTENZIONE</h2> Non puoi salvare la giocata se non inviato azioni in chat';
 
+// Salva chat
+$MESSAGE['chat']['salvachat']['link'] = 'Salva Chat';
+$MESSAGE['chat']['salvachat']['title'] = 'Salva chat';
+$MESSAGE['chat']['salvachat']['label']['formato'] = 'Formato';
+$MESSAGE['chat']['salvachat']['label']['formato_html'] = 'HTML';
+$MESSAGE['chat']['salvachat']['label']['formato_txt'] = 'TXT';
+$MESSAGE['chat']['salvachat']['label']['formato_pdf'] = 'PDF';
+$MESSAGE['chat']['salvachat']['label']['nomefile'] = 'Nome file';
+$MESSAGE['chat']['salvachat']['label']['ore'] = 'Intervallo da esportare (ore)';
+$MESSAGE['chat']['salvachat']['label']['includi_sistema'] = 'Includi messaggi di sistema/OOC';
+$MESSAGE['chat']['salvachat']['label']['ordine'] = 'Ordine messaggi';
+$MESSAGE['chat']['salvachat']['label']['ordine_asc'] = 'Dal più vecchio al più recente';
+$MESSAGE['chat']['salvachat']['label']['ordine_desc'] = 'Dal più recente al più vecchio';
+$MESSAGE['chat']['salvachat']['submit'] = 'Scarica';
+
 //Chat private
 $MESSAGE['chat']['error']['invalid_stats'] = 'Caratteristica invalida';
 $MESSAGE['chat']['error']['invalid_skill'] = 'Abilità invalida';
