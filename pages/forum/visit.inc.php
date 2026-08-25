@@ -48,7 +48,7 @@ if(!gdrcd_controllo_permessi_forum($araldo['tipo'],$araldo['proprietari'])){
     $totaleresults = $record_globale['COUNT(*)'];
 
     /*Carico l'elenco dei forum*/
-    $result = gdrcd_query("SELECT messaggioaraldo.id_messaggio, messaggioaraldo.titolo, messaggioaraldo.id_personaggio as id_personaggio_autore, messaggioaraldo.data_messaggio, messaggioaraldo.data_ultimo_messaggio, messaggioaraldo.importante, messaggioaraldo.chiuso, araldo_letto.id AS new_msg, personaggio.nome as autore FROM messaggioaraldo LEFT JOIN araldo_letto ON messaggioaraldo.id_messaggio = araldo_letto.thread_id AND araldo_letto.id_personaggio = '".gdrcd_filter('in', $_SESSION['id_personaggio'])."' INNER JOIN personaggio ON messaggioaraldo.id_personaggio = personaggio.id_personaggio WHERE messaggioaraldo.id_messaggio_padre = -1 AND messaggioaraldo.id_araldo = ".gdrcd_filter('num', $_REQUEST['what'])." ORDER BY messaggioaraldo.importante DESC, messaggioaraldo.data_ultimo_messaggio DESC LIMIT ".$pagebegin.", ".$PARAMETERS['settings']['posts_per_page']."", 'result');
+    $result = gdrcd_query("SELECT messaggioaraldo.id_messaggio, messaggioaraldo.titolo, messaggioaraldo.id_personaggio as id_personaggio_autore, messaggioaraldo.data_messaggio, messaggioaraldo.data_ultimo_messaggio, messaggioaraldo.importante, messaggioaraldo.chiuso, messaggioaraldo.visite, araldo_letto.id AS new_msg, personaggio.nome as autore FROM messaggioaraldo LEFT JOIN araldo_letto ON messaggioaraldo.id_messaggio = araldo_letto.thread_id AND araldo_letto.id_personaggio = '".gdrcd_filter('in', $_SESSION['id_personaggio'])."' INNER JOIN personaggio ON messaggioaraldo.id_personaggio = personaggio.id_personaggio WHERE messaggioaraldo.id_messaggio_padre = -1 AND messaggioaraldo.id_araldo = ".gdrcd_filter('num', $_REQUEST['what'])." ORDER BY messaggioaraldo.importante DESC, messaggioaraldo.data_ultimo_messaggio DESC LIMIT ".$pagebegin.", ".$PARAMETERS['settings']['posts_per_page']."", 'result');
 
     if(gdrcd_query($result, 'num_rows') == 0) {
         echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['interface']['forums']['warning']['no_topic']).'</div>';
@@ -61,9 +61,9 @@ if(!gdrcd_controllo_permessi_forum($araldo['tipo'],$araldo['proprietari'])){
                     <tr><!-- Intestazione tabella -->
                         <?php if($_SESSION['permessi'] >= MODERATOR) {
                         ?>
-                        <td colspan="4">
+                        <td colspan="5">
                         <?php } else  { ?>
-                        <td colspan="3">
+                        <td colspan="4">
                         <?php } ?>
                             <div class="capitolo_elenco">
                                 <?php echo gdrcd_filter('get', $araldo['nome']); ?>
@@ -84,6 +84,11 @@ if(!gdrcd_controllo_permessi_forum($araldo['tipo'],$araldo['proprietari'])){
                         <td class="casella_titolo">
                             <div class="capitolo_elenco">
                                 <?php echo gdrcd_filter('out', $MESSAGE['interface']['forums']['topic']['posts']); ?>
+                            </div>
+                        </td>
+                        <td class="casella_titolo"><!-- Intestazione visite -->
+                            <div class="capitolo_elenco">
+                                <?php echo gdrcd_filter('out', $MESSAGE['interface']['forums']['topic']['views']); ?>
                             </div>
                         </td>
                         <?php
@@ -149,6 +154,11 @@ if(!gdrcd_controllo_permessi_forum($araldo['tipo'],$araldo['proprietari'])){
                                             echo gdrcd_filter('out', $MESSAGE['interface']['forums']['topic']['last_post']).':   '.gdrcd_format_date($lastupdate).' '.gdrcd_format_time($lastupdate);
                                         } ?>
                                     </div>
+                                </div>
+                            </td>
+                            <td class="casella_elemento"><!-- Visite -->
+                                <div class="elementi_elenco">
+                                    <?php echo gdrcd_filter('out', $row['visite']).' '.gdrcd_filter('out', $MESSAGE['interface']['forums']['topic']['views']); ?>
                                 </div>
                             </td>
                             <?php
