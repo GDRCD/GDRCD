@@ -21,10 +21,6 @@ if(file_exists("../../../includes/config-overrides.php")){
     include_once "../../../includes/config-overrides.php";
 }
 
-/* Eseguo la connessione al database */
-$handleDBConnection = gdrcd_connect();
-
-
     # Recupero la giocata dall'id, dopo aver verificato che appartenga al pg
     $check = gdrcd_query("SELECT id_personaggio, stanza, data_inizio, data_fine FROM segnalazione_role WHERE id = " . gdrcd_filter('num', $_GET['id']) . "
         AND id_personaggio = '" .gdrcd_filter('in', $_SESSION['id_personaggio'] ). "'AND conclusa = 1 ", 'result');
