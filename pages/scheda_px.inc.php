@@ -28,29 +28,8 @@
             if ($_POST['op'] == "assegna") {
                 if ((is_numeric($_POST['px']) === true) && ($_SESSION['permessi'] >= GAMEMASTER)) {
                     gdrcd_query("UPDATE personaggio SET esperienza = esperienza + " . gdrcd_filter('in', $_POST['px']) . " WHERE id_personaggio = '" . gdrcd_filter('in', $_GET['pg']) . "' LIMIT 1 ");
-                    //Recupero il nome del personaggio
-                    $nome = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_GET['pg']) . "'");
-                    $contestoLog = gdrcd_log_context_make(
-                            [
-                                'px' => (int) $_POST['px'],
-                                'causale' => $_POST['causale']
-                            ],
-                            $_GET['pg'],
-                            $nome['nome']
-                        );
-
                     /*Registro l'operazione */
-                    gdrcd_log_notice(
-                        'Ricevuti punti esperienza',
-                        ['evento' => 'personaggio.riceve_px', ...$contestoLog],
-                        $_GET['pg']
-                    );
-                     /*Registro l'operazione per chi ha effettuato l'operazione*/
-                    gdrcd_log_notice(
-                        'Assegnazione punti esperienza al personaggio',
-                        ['evento' => 'personaggio.assegna_px', ...$contestoLog],
-                        $_SESSION['id_personaggio']
-                    );
+                    gdrcd_event_experience_assign($_GET['pg'], $_POST['px'], $_POST['causale']);
 
                     echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['warning']['done']) . '</div>';
                 } else {

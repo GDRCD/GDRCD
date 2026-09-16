@@ -15,15 +15,7 @@ $pass = $row['pass'];
 
             if((gdrcd_password_check(gdrcd_filter_email($_POST['email']),$email))  && (gdrcd_password_check($_POST['new_pass'], $pass))) {
                 gdrcd_query("UPDATE personaggio SET permessi = -1 WHERE id_personaggio = '".$_SESSION['id_personaggio']."' ");
-                $contestoLog = gdrcd_log_context_make([
-                            'ip' => $_SERVER['REMOTE_ADDR'],
-                        ]
-                    );  
-                gdrcd_log_notice(
-                        'Cancella account del personaggio',
-                        ['evento' => 'personaggio.cancella_account', ...$contestoLog],
-                        $_SESSION['id_personaggio']
-                    );
+                gdrcd_event_character_account_delete($_SESSION['id_personaggio']);
                 ?>
                 <div class="warning">
                     <?php echo gdrcd_filter('out', $MESSAGE['warning']['modified']); ?>
@@ -50,30 +42,8 @@ $pass = $row['pass'];
         /*Cancella altri - MODERATORE (Disabilita account)*/
         if((gdrcd_filter('get', $_POST['op']) == 'force') && ($_SESSION['permessi'] == MODERATOR)) {
             gdrcd_query("UPDATE personaggio SET permessi = -1 WHERE id_personaggio = '".gdrcd_filter('in', $_POST['account'])."' AND permessi < ".SUPERUSER."");
-            $nome = gdrcd_stmt_one("SELECT nome 
-            FROM personaggio
-            WHERE id_personaggio = ?",
-            [$_POST['account']]);
-
-            $contestoLog = gdrcd_log_context_make([
-                            'ip' => $_SERVER['REMOTE_ADDR']
-                        ],
-                            $_POST['account'],
-                            $nome['nome'],
-                    );  
-
             // Registro l'evento sia per il personaggio interessato che per l'autore dell'azione
-            gdrcd_log_notice(
-                        'Disabilita account del personaggio',
-                        ['evento' =>  'personaggio.disabilita_account', ...$contestoLog],
-                          $_POST['account']     
-                    );
-
-            gdrcd_log_notice(
-                'Disabilita account del personaggio',
-                ['evento' =>  'personaggio.disabilita_account', ...$contestoLog],   
-                $_SESSION['id_personaggio']
-            ); 
+            gdrcd_event_character_account_status($_POST['account'], false);
             ?>
             <div class="warning">
                 <?php echo gdrcd_filter('out', $MESSAGE['warning']['modified']); ?>
@@ -86,30 +56,9 @@ $pass = $row['pass'];
         <?php }
         /*Cancella altri - SUPERUSER (Disabilita account) */
         if((gdrcd_filter('get', $_POST['op']) == 'force') && ($_SESSION['permessi'] == SUPERUSER)) {
-            $nome=gdrcd_stmt_one("SELECT nome FROM personaggio
-             WHERE id_personaggio = ?", [$_POST['account']]);
-           
-            
-
             gdrcd_query("UPDATE personaggio SET permessi = -1 WHERE id_personaggio = '".gdrcd_filter('in', $_POST['account'])."'");
-            $contestoLog = gdrcd_log_context_make([
-                            'ip' => $_SERVER['REMOTE_ADDR']
-                        ],
-                            $_POST['account'],
-                            $nome['nome'],
-                    );
-           // Registro l'evento sia per il personaggio interessato che per l'autore dell'azione
-            gdrcd_log_notice(
-                        'L\'account viene disabilitato',
-                        ['evento' =>  'personaggio.disabilita_account', ...$contestoLog],   
-                         $_POST['account']
-                    );
-
-                     gdrcd_log_notice(
-                        'Disabilita account del personaggio',
-                            ['evento' =>  'personaggio.disabilita_account', ...$contestoLog],    
-                         $_SESSION['id_personaggio']
-                    );
+            // Registro l'evento sia per il personaggio interessato che per l'autore dell'azione
+            gdrcd_event_character_account_status($_POST['account'], false);
             
             ?>
             <div class="warning">
@@ -123,28 +72,9 @@ $pass = $row['pass'];
         <?php }
         /*Ripristina account*/
         if((gdrcd_filter('get', $_POST['op']) == 'get_back') && ($_SESSION['permessi'] >= MODERATOR)) {
-            $nome=gdrcd_stmt_one("SELECT nome FROM personaggio
-             WHERE id_personaggio = ?", [$_POST['account']]);
-           
-            
             gdrcd_query("UPDATE personaggio SET permessi = 0 WHERE id_personaggio = '".gdrcd_filter('in', $_POST['account'])."'");
-            $contestoLog = gdrcd_log_context_make([
-                            'ip' => $_SERVER['REMOTE_ADDR']
-                        ],
-                            $_POST['account'],
-                            $nome['nome'],
-                    );
             // Registro l'evento sia per il personaggio interessato che per l'autore dell'azione
-             gdrcd_log_notice(
-                        'L\'account viene ripristato.',
-                        ['evento' =>  'personaggio.ripristina_account', ...$contestoLog],   
-                         $_POST['account']
-                    );   
-            gdrcd_log_notice(
-                        'Ripristina account del personaggio',
-                        ['evento' =>  'personaggio.ripristina_account', ...$contestoLog],   
-                         $_SESSION['id_personaggio']
-                    );
+            gdrcd_event_character_account_status($_POST['account'], true);
             
             ?>
             <div class="warning">

@@ -75,25 +75,12 @@ gdrcd_query($result, 'free');
                         gdrcd_query("UPDATE personaggio SET banca = banca + ".gdrcd_filter('num', $_POST['ammontare'])." WHERE id_personaggio = '".gdrcd_filter_num($_POST['beneficiario'])."' LIMIT 1");
 
                         /*Registro l'evento (Passaggio di danaro)*/
-                        $personaggio = $query;
-                        $contestoLog = gdrcd_log_context_make([
-                                'id_destinatario' => gdrcd_filter('num', $_POST['beneficiario']),
-                                'destinatario' => $personaggio['nome'],
-                                'ammontare' =>gdrcd_filter('num', $_POST['ammontare']),
-                                'valuta' => $PARAMETERS['names']['currency']['plur'],
-                                'causale' => $_POST['causale']
-                            ]
-                        );
-             
-                        gdrcd_log_notice(
-                            'Bonifico inviato a un altro personaggio',
-                            ['evento' => 'banca.invio_bonifico', 'direzione' => 'uscita', ...$contestoLog],
-                             $_SESSION['id_personaggio']
-                        );
-                        gdrcd_log_notice(
-                            'Bonifico ricevuto dal personaggio',
-                            ['evento' => 'banca.ricezione_bonifico', 'direzione' => 'entrata', ...$contestoLog],
-                             $_POST['beneficiario']
+                        gdrcd_event_bank_transfer(
+                            $_SESSION['id_personaggio'],
+                            $_POST['beneficiario'],
+                            gdrcd_filter('num', $_POST['ammontare']),
+                            $PARAMETERS['names']['currency']['plur'],
+                            $_POST['causale']
                         );
                         gdrcd_query("INSERT INTO messaggi (id_personaggio_mittente, id_personaggio_destinatario, spedito, testo) VALUES ('".$_SESSION['id_personaggio']."','".gdrcd_filter('in', $_POST['beneficiario'])."', NOW(), '".gdrcd_filter('in', $_SESSION['login'].' '.$MESSAGE['interface']['bank']['notice'].' '.gdrcd_filter('num', $_POST['ammontare']).' '.$PARAMETERS['names']['currency']['plur']).'. \n\n'.gdrcd_filter('in', $_POST['causale'])."')");
                     }

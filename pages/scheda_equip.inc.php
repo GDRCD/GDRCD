@@ -26,30 +26,7 @@
                 }
                 gdrcd_query($query);
                 /*Registro l'evento*/
-                $personaggio = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_REQUEST['pg']) . "'");
-                $contestoLog = gdrcd_log_context_make(
-                    [
-                        'id_oggetto' => gdrcd_filter('num', $_POST['id_oggetto']),
-                        'oggetto' => $_POST['checosa'],
-                        'quantita_rimossa' => 1,
-                    ],
-                    $_REQUEST['pg'],
-                    $personaggio['nome'],
-                ); 
-                gdrcd_log_info(
-                    'Oggetto abbandonato dal personaggio',
-                    [ 'evento' => 'personaggio.abbandona_oggetto', ...$contestoLog],
-                    $_REQUEST['pg']
-                );
-                //nel caso il personaggio che abbandona non sia il proprietario ma uno staffer, loggo comunque l'evento 
-                // ma con autore e id_personaggio riferiti allo staffer e non al pg proprietario dell'oggetto
-                if($_REQUEST['pg']!= $_SESSION['id_personaggio']) {
-                        gdrcd_log_notice(
-                        'Oggetto abbandonato dal personaggio',
-                        [ 'evento' => 'personaggio.abbandona_oggetto', ...$contestoLog], 
-                        $_SESSION['id_personaggio']
-                    );
-                }
+                gdrcd_event_item_discard($_REQUEST['pg'], $_POST['id_oggetto']);
 
                 echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['warning']['done']).'</div>';
                 break;
@@ -75,47 +52,7 @@
                     }
                     gdrcd_query($query);
                     /*Registro l'evento*/
-                    $mittenteId = gdrcd_filter('num', $_REQUEST['pg']);
-                    $destinatarioId = gdrcd_filter('num', $_POST['give_item']);
-                    $idOggetto = gdrcd_filter('num', $_POST['id_oggetto']);
-                    $cariche = gdrcd_filter('num', $_POST['cariche']);
-                    $nomeOggetto = $_POST['checosa'];
-
-                    $mittente = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '".$mittenteId."'");
-                    $destinatario = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '".$destinatarioId."'");
-
-                    $contestoLog = gdrcd_log_context_make(
-                        [
-                            'id_destinatario' => $destinatarioId,
-                            'destinatario' => $destinatario['nome'],
-                            'oggetto' => $nomeOggetto,
-                            'quantita' => 1,
-                            'cariche' => $cariche,
-                        ],
-                        $mittenteId,
-                        $mittente['nome'],
-                    ); 
-                    /* Log lato mittente */
-                    gdrcd_log_info(
-                        'Oggetto ceduto a un altro personaggio',
-                        [ 'evento' => 'personaggio.cedi_oggetto', ...$contestoLog],
-                        $mittenteId
-                    );
-
-                    /* Log lato destinatario */
-                    gdrcd_log_info(
-                        'Oggetto ricevuto da un altro personaggio',
-                        ['evento' => 'personaggio.ricevi_oggetto', ...$contestoLog ],
-                        $destinatarioId
-                    );
-                    /* Log lato gestione se il mittente è diverso dal destinatario (es. cessione tra pg diversi o cessione da parte di uno staffer) */
-                    if($mittenteId!= $_SESSION['id_personaggio']) {
-                        gdrcd_log_notice(
-                            'Oggetto ceduto a un altro personaggio',
-                            ['evento' => 'personaggio.cedi_oggetto', ...$contestoLog],
-                            $_SESSION['id_personaggio']
-                        );
-                    }
+                    gdrcd_event_item_transfer($_REQUEST['pg'], $_POST['give_item'], $_POST['id_oggetto'], 1, $_POST['cariche']);
                     echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['warning']['done']).'</div>';
                 } else {
                     echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['warning']['cant_do']).'</div>';
@@ -125,38 +62,14 @@
                 gdrcd_query("UPDATE clgpersonaggiooggetto SET posizione = ".gdrcd_filter('num', $_POST['posizione'])." WHERE id_oggetto = ".$_POST['id_oggetto']." AND id_personaggio = '".gdrcd_filter('get', $_REQUEST['pg'])."' LIMIT 1 ");
                  
                 
-                $contestoLog = gdrcd_log_context_make(
-                        [
-                            'id_oggetto' => $_POST['id_oggetto'],
-                            'posizione' => $_POST['posizione'],
-                        ],
-                         $_SESSION['id_personaggio']
-                    ); 
-                    /* Log lato mittente */
-                    gdrcd_log_info(
-                        'Oggetto indossato dal personaggio',
-                        [ 'evento' => 'personaggio.indossa_oggetto', ...$contestoLog],
-                        $_SESSION['id_personaggio']
-                    );
+                gdrcd_event_item_equip($_REQUEST['pg'], $_POST['id_oggetto'], $_POST['posizione']);
                 
                 
                 echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['warning']['done']).'</div>';
                 break;
             case 'in_zaino':    /* Spostamento di un oggetto dall'inventario nello zaino */
                 gdrcd_query("UPDATE clgpersonaggiooggetto SET posizione = 1 WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND id_personaggio = '".gdrcd_filter('in', $_REQUEST['pg'])."' LIMIT 1 ");
-                $contestoLog = gdrcd_log_context_make(
-                        [
-                            'id_oggetto' => $_POST['id_oggetto'],
-                            'posizione' => $_POST['posizione'],
-                        ],
-                         $_SESSION['id_personaggio']
-                    ); 
-                    /* Log lato mittente */
-                    gdrcd_log_info(
-                        'Oggetto  spostato nello zaino dal personaggio',
-                        [ 'evento' => 'personaggio.sposta_oggetto_inventario', ...$contestoLog],
-                        $_SESSION['id_personaggio']
-                    );
+                gdrcd_event_item_move_to_backpack($_REQUEST['pg'], $_POST['id_oggetto']);
                 
                 
                 echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['warning']['done']).'</div>';

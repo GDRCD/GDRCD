@@ -193,25 +193,7 @@
                         /*Confermo l'operazione*/
                         echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['interface']['adm_guilds']['ok_hire']) . '</div>';
                         /*Registro l'operazione*/
-                        $personaggio = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "'");
-                        $contestoLog = gdrcd_log_context_make(
-                            [
-                                'id_lavoro' => $subject[0],
-                                'lavoro' => $subject[1],
-                            ],
-                            $_POST['id_personaggio'],
-                            $personaggio['nome'] ?? '-',
-                        ); 
-                        gdrcd_log_notice(
-                            'Ha assegnato nuovo ruolo al personaggio',
-                            ['evento' => 'personaggio.assegna_lavoro',...$contestoLog],
-                             $_SESSION['id_personaggio']
-                        );
-                         gdrcd_log_notice(
-                            'Assegnato nuovo ruolo al personaggio',
-                            ['evento' => 'personaggio.assegna_lavoro',...$contestoLog],
-                            $_POST['id_personaggio'],
-                        );
+                        gdrcd_event_guild_role_assign($_POST['id_personaggio'], $subject[0], $subject[1]);
 
 
                         /*Avviso l'utente*/
@@ -256,25 +238,7 @@
                     /*Confermo l'operazione*/
                     echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['interface']['adm_guilds']['ok_fire']) . '</div>';
                     /*Registro l'operazione*/
-                    $personaggio = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $subject[0]) . "'");
-                    $contestoLog = gdrcd_log_context_make(
-                            [
-                                'id_lavoro' => $subject[1],
-                                'lavoro' => $subject[2],
-                            ],
-                            $subject[0],
-                            $personaggio['nome'] ?? '-',
-                        ); 
-                    gdrcd_log_notice(
-                        'Dimissione dal ruolo del personaggio',
-                        ['evento' => 'personaggio.dimissione_lavoro',...$contestoLog],
-                         $subject[0]
-                    );
-                    gdrcd_log_notice(
-                        'Ha dimesso il ruolo del personaggio',
-                        ['evento' => 'personaggio.dimissione_lavoro',...$contestoLog],
-                        $_SESSION['id_personaggio']
-                    );
+                    gdrcd_event_guild_role_remove($subject[0], $subject[1], $subject[2]);
 
                     /*Avviso l'utente*/
                     if ($_SESSION['id_personaggio'] != $subject[0]) {

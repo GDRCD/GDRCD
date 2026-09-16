@@ -39,9 +39,9 @@ function gdrcd_log_group_from_code($code)
             return ['auth.login.fallito'];
 
         case BONIFICO:
-            return ['banca.invio_bonifico', 'banca.ricezione_bonifico', 'personaggio.cedi_oggetto','personaggio.ricevi_oggetto'];
+            return ['banca.invio_bonifico', 'banca.ricezione_bonifico'];
         case OGGETTI:
-            return [ 'personaggio.indossa_oggetto', 'personaggio.sposta_oggetto_inventario', 'personaggio.sposta_oggetto_zaino'];
+            return [ 'personaggio.indossa_oggetto', 'personaggio.cedi_oggetto','personaggio.ricevi_oggetto', 'personaggio.sposta_oggetto_inventario', 'personaggio.sposta_oggetto_zaino', 'personaggio.abbandona_oggetto'];
         case NUOVOLAVORO:
             return ['personaggio.nuovo_lavoro', 'personaggio.assegna_lavoro'];
 
@@ -288,6 +288,10 @@ function gdrcd_present_log_row(?int $whichLog, array $row): array
              
             break;
 
+        case OGGETTI:
+            $descrizione = $row['descrizione'] . ' (' . gdrcd_descrizione_oggetto($contesto) . ')';
+            break;
+
         case NUOVOLAVORO:
         case DIMISSIONE:
              
@@ -360,22 +364,37 @@ function gdrcd_descrizione_transazione_pg(array $contesto): string
     }
 
     if (in_array($evento, ['personaggio.cedi_oggetto', 'personaggio.ricevi_oggetto'], true)) {
-        $descrizione = (string)($contesto['oggetto'] ?? 'Oggetto');
-
-        $quantita = (int)($contesto['quantita_rimossa'] ?? $contesto['quantita'] ?? 1);
-        if ($quantita > 1) {
-            $descrizione .= ' x' . $quantita;
-        }
-
-        $cariche = (int)($contesto['cariche'] ?? 0);
-        if ($cariche > 0) {
-            $descrizione .= ' (' . $cariche . ' cariche)';
-        }
-
-        return $descrizione;
+        return gdrcd_descrizione_oggetto($contesto);
     }
 
     return '-';
+}
+
+/**
+ * Costruisce il dettaglio leggibile di un evento relativo a un oggetto.
+ *
+ * @param array $contesto Contesto JSON decodificato del log
+ * @return string Nome dell'oggetto con eventuali quantità e cariche
+ */
+function gdrcd_descrizione_oggetto(array $contesto): string
+{
+    $descrizione = (string)($contesto['oggetto'] ?? 'Oggetto');
+
+    if ($descrizione === 'Oggetto' && !empty($contesto['id_oggetto'])) {
+        $descrizione .= ' #' . (int)$contesto['id_oggetto'];
+    }
+
+    $quantita = (int)($contesto['quantita_rimossa'] ?? $contesto['quantita'] ?? 1);
+    if ($quantita > 1) {
+        $descrizione .= ' x' . $quantita;
+    }
+
+    $cariche = (int)($contesto['cariche'] ?? 0);
+    if ($cariche > 0) {
+        $descrizione .= ' (' . $cariche . ' cariche)';
+    }
+
+    return $descrizione;
 }
 /**
  * Crea il contesto del log

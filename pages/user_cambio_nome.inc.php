@@ -33,21 +33,8 @@ $iscriz = $iscriz['0'];
                     </div>
                     <?php
                 } else {
-                    $nome = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "'");
-
                     gdrcd_query("UPDATE personaggio SET nome = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE id_personaggio = '".$_SESSION['id_personaggio']."'");
-                    $contestoLog = gdrcd_log_context_make(
-                            [
-                                'nome_precedente' => $_SESSION['login'],
-                                'nome_nuovo' => $_POST['new_name'],
-                            ],
-                        );
-
-                    gdrcd_log_notice(
-                        'Cambio nome del personaggio',
-                        ['evento' =>'personaggio.cambio_nome', ...$contestoLog,],
-                         $_SESSION['id_personaggio']
-                    );
+                    gdrcd_event_character_name_change($_SESSION['id_personaggio'], $_SESSION['login'], $_POST['new_name']);
                    $_SESSION['login'] = gdrcd_filter('get', $_POST['new_name']);
                     ?>
                     <div class="warning">
@@ -80,38 +67,17 @@ $iscriz = $iscriz['0'];
                         <?php echo gdrcd_filter('out', $MESSAGE['error']['existing_name']); ?>
                     </div>
                 <?php } else {
-                    if($_SESSION['permessi'] == SUPERUSER) {
-                        $nome = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_POST['account']) . "'");
+                    $nome = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_POST['account']) . "'");
 
- 
+                    if($_SESSION['permessi'] == SUPERUSER) {
                         gdrcd_query("UPDATE personaggio SET nome = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE id_personaggio = '".gdrcd_filter('in', $_POST['account'])."'");
                     } else {
                        
                        gdrcd_query("UPDATE personaggio SET nome = '".gdrcd_filter('in', $_POST['new_name'])."' WHERE id_personaggio = '".gdrcd_filter('in', $_POST['account'])."' AND permessi < ".SUPERUSER."");
                     }
 
-                    $contestoLog = gdrcd_log_context_make(
-                            [
-                                'nome_precedente' => $nome['nome'],
-                                'nome_nuovo' => $_POST['new_name'],
-                            ],
-                            $_POST['account'],
-                            $nome['nome'],
-                        );
                     /*Registro l'evento */
-                     
-
-                    gdrcd_log_notice(
-                        'Il nome del personaggio viene cambiato.',
-                            ['evento' => 'personaggio.cambio_nome',...$contestoLog,],
-                         $_POST['account']
-                    );
-                    /*Registro l'evento per chi ha effettuato l'operazione */
-                    gdrcd_log_notice(
-                        'Cambia il nome del personaggio',
-                            ['evento' => 'personaggio.cambio_nome',...$contestoLog,],
-                         $_SESSION['id_personaggio']
-                    );
+                    gdrcd_event_character_name_change($_POST['account'], $nome['nome'], $_POST['new_name']);
                     ?>
                     <div class="warning">
                         <?php echo gdrcd_filter('out', $MESSAGE['warning']['modified']); ?>

@@ -32,26 +32,8 @@
                         $newrole = gdrcd_filter('out', $PARAMETERS['names']['administrator']['sing']);
                         break;
                 }
-                /*Recupero i nomi dei personaggi per il log*/
-                $char_data = gdrcd_stmt_one("SELECT nome 
-                    FROM personaggio  
-                    WHERE id_personaggio = ?",
-                [ $_POST['id_personaggio']]
-                );
-                $contestoLog = gdrcd_log_context_make(
-                        [
-                              'nuovo_ruolo' => $newrole
-                        ],
-                        $_POST['id_personaggio'],
-                       $char_data['nome'] ?? '-',
-                    ); 
-
                 /*Registro l'operazione*/
-                gdrcd_log_notice(
-                    'Cambio permesso del personaggio',
-                    ['evento' => 'personaggio.permessi.cambio', ...$contestoLog],
-                    $_SESSION['id_personaggio']
-                );
+                gdrcd_event_character_permission_change($_POST['id_personaggio'], $newrole);
                 /*Avviso l'utente*/
                 gdrcd_query("INSERT INTO messaggi (id_personaggio_mittente, id_personaggio_destinatario, spedito, testo) VALUES (".gdrcd_filter('num', $_SESSION['id_personaggio']).", ".gdrcd_filter('num', $_POST['id_personaggio']).", NOW(), '".gdrcd_filter('in', $MESSAGE['interface']['administration']['roles']['message_body'][0].$newrole.$MESSAGE['interface']['administration']['roles']['message_body'][1])."')");
 
