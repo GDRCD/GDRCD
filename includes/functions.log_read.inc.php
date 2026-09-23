@@ -122,7 +122,7 @@ function gdrcd_log_code_from_event($evento)
  *
  * @param string|array $eventi        Evento singolo o lista di eventi da cercare
  *                                    (es. 'auth.login.successo' oppure
- *                                    ['auth.login.successo', 'auth.login.fallito']) 
+ *                                    ['auth.login.successo', 'auth.login.fallito'])
  * @param int          $limit         Numero massimo di risultati da estrarre
  * @param int          $offset        Offset iniziale per la paginazione
  * @param int|null     $idPersonaggio ID del personaggio da filtrare; se null,
@@ -172,8 +172,8 @@ function gdrcd_extract_logs($eventi = null, $idPersonaggio = null, $limit = 100,
         $log['contesto_decodificato'] = json_decode($log['contesto'], true) ?: [];
         $logs[] = $log;
     }
-   
-   
+
+
 
     return $logs;
 }
@@ -215,7 +215,7 @@ function gdrcd_count_logs($eventi = null, $idPersonaggio = null): int
         $sql .= " AND `id_personaggio` = ?";
         $params[] = (int)$idPersonaggio;
     }
-    
+
 
     $row = gdrcd_stmt_one($sql, $params);
 
@@ -223,7 +223,7 @@ function gdrcd_count_logs($eventi = null, $idPersonaggio = null): int
 }
 /**
  * Estrapola il contesto JSON da una riga di log JSON.
- * 
+ *
  * @param array $row Riga log dal database
  * @return array Contesto JSON decodificato
  */
@@ -270,22 +270,22 @@ function gdrcd_present_log_row(?int $whichLog, array $row): array
         case BLOCKED:
         case LOGGEDIN:
         case ERRORELOGIN:
-            
+
             $descrizione = $row['descrizione'] ?? '';
-            
+
             break;
 
         case ACCOUNTMULTIPLO:
-           
+
             if (!empty($contesto['ip'])) {
                 $descrizione .= ' (' . ($contesto['ip']) . ')';
             }
             break;
 
         case BONIFICO:
-            
+
             $descrizione = $row['descrizione'] . ' (' . gdrcd_descrizione_transazione_pg($contesto) . ')';
-             
+
             break;
 
         case OGGETTI:
@@ -294,7 +294,7 @@ function gdrcd_present_log_row(?int $whichLog, array $row): array
 
         case NUOVOLAVORO:
         case DIMISSIONE:
-             
+
             $descrizione = $row['descrizione'] ?? '';
             if (!empty($contesto['lavoro'])) {
                 $descrizione .= ' (' . $contesto['lavoro'] . ')';
@@ -302,14 +302,14 @@ function gdrcd_present_log_row(?int $whichLog, array $row): array
             break;
 
         case CHANGEDROLE:
-            
+
             $descrizione = $row['descrizione'] . ' (' . ($contesto['nuovo_ruolo'] ?? '-') . ')';
             break;
 
         case CHANGEDPASS:
-            
+
             $descrizione = $row['descrizione'] ?? '';
-           
+
             break;
 
         case PX:
@@ -328,11 +328,11 @@ function gdrcd_present_log_row(?int $whichLog, array $row): array
             break;
 
         default:
-            
+
             $descrizione = $row['descrizione'] ?? '';
             break;
-    }     
-            
+    }
+
     return [
         'id_autore' => $idAutore,
         'autore' => $autore,
@@ -408,12 +408,10 @@ function gdrcd_descrizione_oggetto(array $contesto): string
 
 function gdrcd_log_context_make(
     array $contesto,
-    int $idSoggetto = null,
-    string $soggetto = null,
-    int $idAutore = null,
-    string $autore = null
-    
-    
+    ?int $idSoggetto = null,
+    ?string $soggetto = null,
+    ?int $idAutore = null,
+    ?string $autore = null
 ) {
     $autore = [
         'id_autore' => $idAutore ?? $_SESSION['id_personaggio'],
@@ -424,5 +422,5 @@ function gdrcd_log_context_make(
         'soggetto' => $soggetto,
     ] : [];
 
-    return [...$autore, ...$soggetto, ...$contesto];
+    return $autore + $soggetto + $contesto;
 }

@@ -53,7 +53,7 @@ function gdrcd_event_auth_login_exiled($idPersonaggio, $nomePersonaggio, $ip)
     );
     gdrcd_log_warning(
         'Tentativo di login su account in esilio',
-        ['evento' => 'auth.login.bloccato.esilio', ...$contesto],
+        ['evento' => 'auth.login.bloccato.esilio'] + $contesto,
         (int)$idPersonaggio
     );
 }
@@ -78,7 +78,7 @@ function gdrcd_event_auth_multiaccount_cookie($idPersonaggio, $altroIdPersonaggi
     );
     gdrcd_log_warning(
         'Rilevato possibile account multiplo tramite cookie attivo',
-        ['evento' => 'auth.multiaccount.cookie', ...$contesto],
+        ['evento' => 'auth.multiaccount.cookie'] + $contesto,
         $idPersonaggio
     );
 }
@@ -104,7 +104,7 @@ function gdrcd_event_auth_multiaccount_ip($idPersonaggio, $altroIdPersonaggio, $
     );
     gdrcd_log_warning(
         'Possibile correlazione tra account tramite IP',
-        ['evento' => 'auth.multiaccount.ip', ...$contesto],
+        ['evento' => 'auth.multiaccount.ip'] + $contesto,
         $idPersonaggio
     );
 }
@@ -128,7 +128,7 @@ function gdrcd_event_auth_login_success($idPersonaggio, $ip)
     );
     gdrcd_log_info(
         'Login effettuato con successo',
-        ['evento' => 'auth.login.successo', ...$contesto],
+        ['evento' => 'auth.login.successo'] + $contesto,
         $idPersonaggio
     );
 }
@@ -193,7 +193,7 @@ function gdrcd_event_character_permission_change($idPersonaggio, $nuovoRuolo, $i
 
     gdrcd_log_notice(
         'Cambio permesso del personaggio',
-        ['evento' => 'personaggio.permessi.cambio', ...$contesto],
+        ['evento' => 'personaggio.permessi.cambio'] + $contesto,
         $idAutore
     );
 }
@@ -228,14 +228,14 @@ function gdrcd_event_item_discard($idPersonaggio, $idOggetto, $quantita = 1, $id
 
     gdrcd_log_info(
         'Oggetto abbandonato dal personaggio',
-        ['evento' => 'personaggio.abbandona_oggetto', ...$contesto],
+        ['evento' => 'personaggio.abbandona_oggetto'] + $contesto,
         $idPersonaggio
     );
 
     if ($idAutore !== $idPersonaggio) {
         gdrcd_log_notice(
             'Oggetto abbandonato dal personaggio',
-            ['evento' => 'personaggio.abbandona_oggetto', ...$contesto],
+            ['evento' => 'personaggio.abbandona_oggetto'] + $contesto,
             $idAutore
         );
     }
@@ -277,19 +277,19 @@ function gdrcd_event_item_transfer($mittenteId, $destinatarioId, $idOggetto, $qu
 
     gdrcd_log_info(
         'Oggetto ceduto a un altro personaggio',
-        ['evento' => 'personaggio.cedi_oggetto', ...$contesto],
+        ['evento' => 'personaggio.cedi_oggetto'] + $contesto,
         $mittenteId
     );
     gdrcd_log_info(
         'Oggetto ricevuto da un altro personaggio',
-        ['evento' => 'personaggio.ricevi_oggetto', ...$contesto],
+        ['evento' => 'personaggio.ricevi_oggetto'] + $contesto,
         $destinatarioId
     );
 
     if ($idAutore !== $mittenteId) {
         gdrcd_log_notice(
             'Oggetto ceduto a un altro personaggio',
-            ['evento' => 'personaggio.cedi_oggetto', ...$contesto],
+            ['evento' => 'personaggio.cedi_oggetto'] + $contesto,
             $idAutore
         );
     }
@@ -318,7 +318,7 @@ function gdrcd_event_item_equip($idPersonaggio, $idOggetto, $posizione)
 
     gdrcd_log_info(
         'Oggetto indossato dal personaggio',
-        ['evento' => 'personaggio.indossa_oggetto', ...$contesto],
+        ['evento' => 'personaggio.indossa_oggetto'] + $contesto,
         $idPersonaggio
     );
 }
@@ -345,7 +345,7 @@ function gdrcd_event_item_move_to_backpack($idPersonaggio, $idOggetto)
 
     gdrcd_log_info(
         'Oggetto spostato nello zaino dal personaggio',
-        ['evento' => 'personaggio.sposta_oggetto_inventario', ...$contesto],
+        ['evento' => 'personaggio.sposta_oggetto_inventario'] + $contesto,
         $idPersonaggio
     );
 }
@@ -372,7 +372,7 @@ function gdrcd_event_item_move_to_inventory($idPersonaggio, $idOggetto)
 
     gdrcd_log_info(
         'Oggetto spostato nell\'inventario dal personaggio',
-        ['evento' => 'personaggio.sposta_oggetto_zaino', ...$contesto],
+        ['evento' => 'personaggio.sposta_oggetto_zaino'] + $contesto,
         $idPersonaggio
     );
 }
@@ -400,8 +400,8 @@ function gdrcd_event_experience_assign($idPersonaggio, $px, $causale, $idAutore 
         gdrcd_character_name($idAutore)
     );
 
-    gdrcd_log_notice('Ricevuti punti esperienza', ['evento' => 'personaggio.riceve_px', ...$contesto], (int)$idPersonaggio);
-    gdrcd_log_notice('Assegnazione punti esperienza al personaggio', ['evento' => 'personaggio.assegna_px', ...$contesto], $idAutore);
+    gdrcd_log_notice('Ricevuti punti esperienza', ['evento' => 'personaggio.riceve_px'] + $contesto, (int)$idPersonaggio);
+    gdrcd_log_notice('Assegnazione punti esperienza al personaggio', ['evento' => 'personaggio.assegna_px'] + $contesto, $idAutore);
 }
 
 /**
@@ -424,8 +424,8 @@ function gdrcd_event_bank_transfer($mittenteId, $destinatarioId, $ammontare, $va
         'causale' => $causale,
     ]);
 
-    gdrcd_log_notice('Bonifico inviato a un altro personaggio', ['evento' => 'banca.invio_bonifico', 'direzione' => 'uscita', ...$contesto], (int)$mittenteId);
-    gdrcd_log_notice('Bonifico ricevuto dal personaggio', ['evento' => 'banca.ricezione_bonifico', 'direzione' => 'entrata', ...$contesto], (int)$destinatarioId);
+    gdrcd_log_notice('Bonifico inviato a un altro personaggio', ['evento' => 'banca.invio_bonifico', 'direzione' => 'uscita'] + $contesto, (int)$mittenteId);
+    gdrcd_log_notice('Bonifico ricevuto dal personaggio', ['evento' => 'banca.ricezione_bonifico', 'direzione' => 'entrata'] + $contesto, (int)$destinatarioId);
 }
 
 /**
@@ -439,7 +439,7 @@ function gdrcd_event_bank_transfer($mittenteId, $destinatarioId, $ammontare, $va
 function gdrcd_event_job_start($idPersonaggio, $idLavoro, $nomeLavoro)
 {
     $contesto = gdrcd_log_context_make(['lavoro' => $nomeLavoro, 'id_lavoro' => (int)$idLavoro]);
-    gdrcd_log_info('Il personaggio ha iniziato un nuovo lavoro', ['evento' => 'personaggio.nuovo_lavoro', ...$contesto], (int)$idPersonaggio);
+    gdrcd_log_info('Il personaggio ha iniziato un nuovo lavoro', ['evento' => 'personaggio.nuovo_lavoro'] + $contesto, (int)$idPersonaggio);
 }
 
 /**
@@ -453,7 +453,7 @@ function gdrcd_event_job_start($idPersonaggio, $idLavoro, $nomeLavoro)
 function gdrcd_event_job_resign($idPersonaggio, $idLavoro, $nomeLavoro)
 {
     $contesto = gdrcd_log_context_make(['lavoro' => $nomeLavoro, 'id_lavoro' => (int)$idLavoro]);
-    gdrcd_log_info('Il personaggio si è dimesso dal lavoro', ['evento' => 'personaggio.dimissione_lavoro', ...$contesto], (int)$idPersonaggio);
+    gdrcd_log_info('Il personaggio si è dimesso dal lavoro', ['evento' => 'personaggio.dimissione_lavoro'] + $contesto, (int)$idPersonaggio);
 }
 
 /**
@@ -478,8 +478,8 @@ function gdrcd_event_guild_role_assign($idPersonaggio, $idRuolo, $nomeRuolo, $id
         $idAutore,
         gdrcd_character_name($idAutore)
     );
-    gdrcd_log_notice('Ha assegnato nuovo ruolo al personaggio', ['evento' => 'personaggio.assegna_lavoro', ...$contesto], $idAutore);
-    gdrcd_log_notice('Assegnato nuovo ruolo al personaggio', ['evento' => 'personaggio.assegna_lavoro', ...$contesto], (int)$idPersonaggio);
+    gdrcd_log_notice('Ha assegnato nuovo ruolo al personaggio', ['evento' => 'personaggio.assegna_lavoro'] + $contesto, $idAutore);
+    gdrcd_log_notice('Assegnato nuovo ruolo al personaggio', ['evento' => 'personaggio.assegna_lavoro'] + $contesto, (int)$idPersonaggio);
 }
 
 /**
@@ -504,8 +504,8 @@ function gdrcd_event_guild_role_remove($idPersonaggio, $idRuolo, $nomeRuolo, $id
         $idAutore,
         gdrcd_character_name($idAutore)
     );
-    gdrcd_log_notice('Dimissione dal ruolo del personaggio', ['evento' => 'personaggio.dimissione_lavoro', ...$contesto], (int)$idPersonaggio);
-    gdrcd_log_notice('Ha dimesso il ruolo del personaggio', ['evento' => 'personaggio.dimissione_lavoro', ...$contesto], $idAutore);
+    gdrcd_log_notice('Dimissione dal ruolo del personaggio', ['evento' => 'personaggio.dimissione_lavoro'] + $contesto, (int)$idPersonaggio);
+    gdrcd_log_notice('Ha dimesso il ruolo del personaggio', ['evento' => 'personaggio.dimissione_lavoro'] + $contesto, $idAutore);
 }
 
 /**
@@ -531,9 +531,9 @@ function gdrcd_event_character_name_change($idPersonaggio, $nomePrecedente, $nom
         $idAutore,
         gdrcd_character_name($idAutore)
     );
-    gdrcd_log_notice('Cambio nome del personaggio', ['evento' => 'personaggio.cambio_nome', ...$contesto], $idPersonaggio);
+    gdrcd_log_notice('Cambio nome del personaggio', ['evento' => 'personaggio.cambio_nome'] + $contesto, $idPersonaggio);
     if ($idAutore !== $idPersonaggio) {
-        gdrcd_log_notice('Cambia il nome del personaggio', ['evento' => 'personaggio.cambio_nome', ...$contesto], $idAutore);
+        gdrcd_log_notice('Cambia il nome del personaggio', ['evento' => 'personaggio.cambio_nome'] + $contesto, $idAutore);
     }
 }
 
@@ -558,9 +558,9 @@ function gdrcd_event_character_password_change($idPersonaggio, $idAutore = null,
         $idAutore,
         gdrcd_character_name($idAutore)
     );
-    gdrcd_log_notice('Cambio password del personaggio', ['evento' => 'personaggio.cambio_password', ...$contesto], $idPersonaggio);
+    gdrcd_log_notice('Cambio password del personaggio', ['evento' => 'personaggio.cambio_password'] + $contesto, $idPersonaggio);
     if ($idAutore !== $idPersonaggio) {
-        gdrcd_log_notice('Cambio password del personaggio', ['evento' => 'personaggio.cambio_password', ...$contesto], $idAutore);
+        gdrcd_log_notice('Cambio password del personaggio', ['evento' => 'personaggio.cambio_password'] + $contesto, $idAutore);
     }
 }
 
@@ -574,7 +574,7 @@ function gdrcd_event_character_password_change($idPersonaggio, $idAutore = null,
 function gdrcd_event_character_account_delete($idPersonaggio, $ip = null)
 {
     $contesto = gdrcd_log_context_make(['ip' => $ip ?? ($_SERVER['REMOTE_ADDR'] ?? '')]);
-    gdrcd_log_notice('Cancella account del personaggio', ['evento' => 'personaggio.cancella_account', ...$contesto], (int)$idPersonaggio);
+    gdrcd_log_notice('Cancella account del personaggio', ['evento' => 'personaggio.cancella_account'] + $contesto, (int)$idPersonaggio);
 }
 
 /**
@@ -602,8 +602,8 @@ function gdrcd_event_character_account_status($idPersonaggio, $abilitato, $idAut
         $idAutore,
         gdrcd_character_name($idAutore)
     );
-    gdrcd_log_notice($descrizione, ['evento' => $evento, ...$contesto], $idPersonaggio);
+    gdrcd_log_notice($descrizione, ['evento' => $evento] + $contesto, $idPersonaggio);
     if ($idAutore !== $idPersonaggio) {
-        gdrcd_log_notice($descrizione, ['evento' => $evento, ...$contesto], $idAutore);
+        gdrcd_log_notice($descrizione, ['evento' => $evento] + $contesto, $idAutore);
     }
 }
