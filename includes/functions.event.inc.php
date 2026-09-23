@@ -217,7 +217,7 @@ function gdrcd_event_item_discard($idPersonaggio, $idOggetto, $quantita = 1, $id
     $contesto = gdrcd_log_context_make(
         [
             'id_oggetto' => (int)$idOggetto,
-            'oggetto' => gdrcd_event_item_name($idOggetto),
+            'oggetto' => gdrcd_item_name($idOggetto),
             'quantita_rimossa' => (int)$quantita,
         ],
         $idPersonaggio,
@@ -265,7 +265,7 @@ function gdrcd_event_item_transfer($mittenteId, $destinatarioId, $idOggetto, $qu
             'id_oggetto' => (int)$idOggetto,
             'id_destinatario' => $destinatarioId,
             'destinatario' => gdrcd_character_name($destinatarioId),
-            'oggetto' => gdrcd_event_item_name($idOggetto),
+            'oggetto' => gdrcd_item_name($idOggetto),
             'quantita' => (int)$quantita,
             'cariche' => (int)$cariche,
         ],
@@ -309,7 +309,7 @@ function gdrcd_event_item_equip($idPersonaggio, $idOggetto, $posizione)
     $contesto = gdrcd_log_context_make(
         [
             'id_oggetto' => (int)$idOggetto,
-            'oggetto' => gdrcd_event_item_name($idOggetto),
+            'oggetto' => gdrcd_item_name($idOggetto),
             'posizione' => (int)$posizione,
         ],
         $idPersonaggio,
@@ -336,7 +336,7 @@ function gdrcd_event_item_move_to_backpack($idPersonaggio, $idOggetto)
     $contesto = gdrcd_log_context_make(
         [
             'id_oggetto' => (int)$idOggetto,
-            'oggetto' => gdrcd_event_item_name($idOggetto),
+            'oggetto' => gdrcd_item_name($idOggetto),
             'posizione' => ZAINO,
         ],
         $idPersonaggio,
@@ -363,7 +363,7 @@ function gdrcd_event_item_move_to_inventory($idPersonaggio, $idOggetto)
     $contesto = gdrcd_log_context_make(
         [
             'id_oggetto' => (int)$idOggetto,
-            'oggetto' => gdrcd_event_item_name($idOggetto),
+            'oggetto' => gdrcd_item_name($idOggetto),
             'posizione' => INVENTARIO,
         ],
         $idPersonaggio,
