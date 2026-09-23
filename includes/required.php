@@ -37,6 +37,12 @@ require_once(GDRCD_PATH . '/includes/functions.database.inc.php');
 // include le funzioni per le api ajax/xhr
 require_once(GDRCD_PATH . '/includes/functions.api.inc.php');
 
+// include le funzioni helper per i personaggi
+require_once(GDRCD_PATH . '/includes/functions.character.inc.php');
+
+// include le funzioni helper per gli oggetti
+require_once(GDRCD_PATH . '/includes/functions.item.inc.php');
+
 // include le funzioni per le chat
 require_once(GDRCD_PATH . '/includes/functions.chat_core.inc.php');
 require_once(GDRCD_PATH . '/includes/functions.chat_read.inc.php');
