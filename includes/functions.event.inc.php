@@ -72,9 +72,9 @@ function gdrcd_event_auth_multiaccount_cookie($idPersonaggio, $altroIdPersonaggi
     $contesto = gdrcd_log_context_make(
         ['ip' => $ip],
         (int)$altroIdPersonaggio,
-        gdrcd_event_character_name($altroIdPersonaggio),
+        gdrcd_character_name($altroIdPersonaggio),
         $idPersonaggio,
-        gdrcd_event_character_name($idPersonaggio)
+        gdrcd_character_name($idPersonaggio)
     );
     gdrcd_log_warning(
         'Rilevato possibile account multiplo tramite cookie attivo',
@@ -98,7 +98,7 @@ function gdrcd_event_auth_multiaccount_ip($idPersonaggio, $altroIdPersonaggio, $
     $contesto = gdrcd_log_context_make(
         ['ip' => $ip],
         $idPersonaggio,
-        gdrcd_event_character_name($idPersonaggio),
+        gdrcd_character_name($idPersonaggio),
         (int)$altroIdPersonaggio,
         $altroNomePersonaggio
     );
@@ -122,9 +122,9 @@ function gdrcd_event_auth_login_success($idPersonaggio, $ip)
     $contesto = gdrcd_log_context_make(
         ['ip' => $ip],
         $idPersonaggio,
-        gdrcd_event_character_name($idPersonaggio),
+        gdrcd_character_name($idPersonaggio),
         $idPersonaggio,
-        gdrcd_event_character_name($idPersonaggio)
+        gdrcd_character_name($idPersonaggio)
     );
     gdrcd_log_info(
         'Login effettuato con successo',
@@ -186,9 +186,9 @@ function gdrcd_event_character_permission_change($idPersonaggio, $nuovoRuolo, $i
     $contesto = gdrcd_log_context_make(
         ['nuovo_ruolo' => $nuovoRuolo],
         (int)$idPersonaggio,
-        gdrcd_event_character_name($idPersonaggio),
+        gdrcd_character_name($idPersonaggio),
         $idAutore,
-        gdrcd_event_character_name($idAutore)
+        gdrcd_character_name($idAutore)
     );
 
     gdrcd_log_notice(
@@ -221,9 +221,9 @@ function gdrcd_event_item_discard($idPersonaggio, $idOggetto, $quantita = 1, $id
             'quantita_rimossa' => (int)$quantita,
         ],
         $idPersonaggio,
-        gdrcd_event_character_name($idPersonaggio),
+        gdrcd_character_name($idPersonaggio),
         $idAutore,
-        gdrcd_event_character_name($idAutore)
+        gdrcd_character_name($idAutore)
     );
 
     gdrcd_log_info(
@@ -264,15 +264,15 @@ function gdrcd_event_item_transfer($mittenteId, $destinatarioId, $idOggetto, $qu
         [
             'id_oggetto' => (int)$idOggetto,
             'id_destinatario' => $destinatarioId,
-            'destinatario' => gdrcd_event_character_name($destinatarioId),
+            'destinatario' => gdrcd_character_name($destinatarioId),
             'oggetto' => gdrcd_event_item_name($idOggetto),
             'quantita' => (int)$quantita,
             'cariche' => (int)$cariche,
         ],
         $mittenteId,
-        gdrcd_event_character_name($mittenteId),
+        gdrcd_character_name($mittenteId),
         $idAutore,
-        gdrcd_event_character_name($idAutore)
+        gdrcd_character_name($idAutore)
     );
 
     gdrcd_log_info(
@@ -313,7 +313,7 @@ function gdrcd_event_item_equip($idPersonaggio, $idOggetto, $posizione)
             'posizione' => (int)$posizione,
         ],
         $idPersonaggio,
-        gdrcd_event_character_name($idPersonaggio)
+        gdrcd_character_name($idPersonaggio)
     );
 
     gdrcd_log_info(
@@ -340,7 +340,7 @@ function gdrcd_event_item_move_to_backpack($idPersonaggio, $idOggetto)
             'posizione' => ZAINO,
         ],
         $idPersonaggio,
-        gdrcd_event_character_name($idPersonaggio)
+        gdrcd_character_name($idPersonaggio)
     );
 
     gdrcd_log_info(
@@ -367,7 +367,7 @@ function gdrcd_event_item_move_to_inventory($idPersonaggio, $idOggetto)
             'posizione' => INVENTARIO,
         ],
         $idPersonaggio,
-        gdrcd_event_character_name($idPersonaggio)
+        gdrcd_character_name($idPersonaggio)
     );
 
     gdrcd_log_info(
@@ -395,9 +395,9 @@ function gdrcd_event_experience_assign($idPersonaggio, $px, $causale, $idAutore 
     $contesto = gdrcd_log_context_make(
         ['px' => (int)$px, 'causale' => $causale],
         (int)$idPersonaggio,
-        gdrcd_event_character_name($idPersonaggio),
+        gdrcd_character_name($idPersonaggio),
         $idAutore,
-        gdrcd_event_character_name($idAutore)
+        gdrcd_character_name($idAutore)
     );
 
     gdrcd_log_notice('Ricevuti punti esperienza', ['evento' => 'personaggio.riceve_px', ...$contesto], (int)$idPersonaggio);
@@ -418,7 +418,7 @@ function gdrcd_event_bank_transfer($mittenteId, $destinatarioId, $ammontare, $va
 {
     $contesto = gdrcd_log_context_make([
         'id_destinatario' => (int)$destinatarioId,
-        'destinatario' => gdrcd_event_character_name($destinatarioId),
+        'destinatario' => gdrcd_character_name($destinatarioId),
         'ammontare' => $ammontare,
         'valuta' => $valuta,
         'causale' => $causale,
@@ -474,9 +474,9 @@ function gdrcd_event_guild_role_assign($idPersonaggio, $idRuolo, $nomeRuolo, $id
     $contesto = gdrcd_log_context_make(
         ['id_lavoro' => (int)$idRuolo, 'lavoro' => $nomeRuolo],
         (int)$idPersonaggio,
-        gdrcd_event_character_name($idPersonaggio),
+        gdrcd_character_name($idPersonaggio),
         $idAutore,
-        gdrcd_event_character_name($idAutore)
+        gdrcd_character_name($idAutore)
     );
     gdrcd_log_notice('Ha assegnato nuovo ruolo al personaggio', ['evento' => 'personaggio.assegna_lavoro', ...$contesto], $idAutore);
     gdrcd_log_notice('Assegnato nuovo ruolo al personaggio', ['evento' => 'personaggio.assegna_lavoro', ...$contesto], (int)$idPersonaggio);
@@ -500,9 +500,9 @@ function gdrcd_event_guild_role_remove($idPersonaggio, $idRuolo, $nomeRuolo, $id
     $contesto = gdrcd_log_context_make(
         ['id_lavoro' => (int)$idRuolo, 'lavoro' => $nomeRuolo],
         (int)$idPersonaggio,
-        gdrcd_event_character_name($idPersonaggio),
+        gdrcd_character_name($idPersonaggio),
         $idAutore,
-        gdrcd_event_character_name($idAutore)
+        gdrcd_character_name($idAutore)
     );
     gdrcd_log_notice('Dimissione dal ruolo del personaggio', ['evento' => 'personaggio.dimissione_lavoro', ...$contesto], (int)$idPersonaggio);
     gdrcd_log_notice('Ha dimesso il ruolo del personaggio', ['evento' => 'personaggio.dimissione_lavoro', ...$contesto], $idAutore);
@@ -529,7 +529,7 @@ function gdrcd_event_character_name_change($idPersonaggio, $nomePrecedente, $nom
         $idPersonaggio,
         $nomePrecedente,
         $idAutore,
-        gdrcd_event_character_name($idAutore)
+        gdrcd_character_name($idAutore)
     );
     gdrcd_log_notice('Cambio nome del personaggio', ['evento' => 'personaggio.cambio_nome', ...$contesto], $idPersonaggio);
     if ($idAutore !== $idPersonaggio) {
@@ -554,9 +554,9 @@ function gdrcd_event_character_password_change($idPersonaggio, $idAutore = null,
     $contesto = gdrcd_log_context_make(
         ['ip' => $ip ?? ($_SERVER['REMOTE_ADDR'] ?? '')],
         $idPersonaggio,
-        gdrcd_event_character_name($idPersonaggio),
+        gdrcd_character_name($idPersonaggio),
         $idAutore,
-        gdrcd_event_character_name($idAutore)
+        gdrcd_character_name($idAutore)
     );
     gdrcd_log_notice('Cambio password del personaggio', ['evento' => 'personaggio.cambio_password', ...$contesto], $idPersonaggio);
     if ($idAutore !== $idPersonaggio) {
@@ -598,9 +598,9 @@ function gdrcd_event_character_account_status($idPersonaggio, $abilitato, $idAut
     $contesto = gdrcd_log_context_make(
         ['ip' => $ip ?? ($_SERVER['REMOTE_ADDR'] ?? '')],
         $idPersonaggio,
-        gdrcd_event_character_name($idPersonaggio),
+        gdrcd_character_name($idPersonaggio),
         $idAutore,
-        gdrcd_event_character_name($idAutore)
+        gdrcd_character_name($idAutore)
     );
     gdrcd_log_notice($descrizione, ['evento' => $evento, ...$contesto], $idPersonaggio);
     if ($idAutore !== $idPersonaggio) {
