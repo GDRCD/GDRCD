@@ -16,7 +16,7 @@
  * @param int|null $idAutore Identificativo esplicito dell'autore
  * @return int Identificativo dell'autore, oppure 0 se non disponibile
  */
-function gdrcd_event_actor_id($idAutore = null)
+function gdrcd_event_default_actor_id($idAutore = null)
 {
     return $idAutore !== null ? (int)$idAutore : (int)($_SESSION['id_personaggio'] ?? 0);
 }
@@ -182,7 +182,7 @@ function gdrcd_event_auth_login_failed($nomeUtente, $ip, $idPersonaggio = null)
  */
 function gdrcd_event_character_permission_change($idPersonaggio, $nuovoRuolo, $idAutore = null)
 {
-    $idAutore = gdrcd_event_actor_id($idAutore);
+    $idAutore = gdrcd_event_default_actor_id($idAutore);
     $contesto = gdrcd_log_context_make(
         ['nuovo_ruolo' => $nuovoRuolo],
         (int)$idPersonaggio,
@@ -213,7 +213,7 @@ function gdrcd_event_character_permission_change($idPersonaggio, $nuovoRuolo, $i
 function gdrcd_event_item_discard($idPersonaggio, $idOggetto, $quantita = 1, $idAutore = null)
 {
     $idPersonaggio = (int)$idPersonaggio;
-    $idAutore = gdrcd_event_actor_id($idAutore);
+    $idAutore = gdrcd_event_default_actor_id($idAutore);
     $contesto = gdrcd_log_context_make(
         [
             'id_oggetto' => (int)$idOggetto,
@@ -259,7 +259,7 @@ function gdrcd_event_item_transfer($mittenteId, $destinatarioId, $idOggetto, $qu
 {
     $mittenteId = (int)$mittenteId;
     $destinatarioId = (int)$destinatarioId;
-    $idAutore = gdrcd_event_actor_id($idAutore);
+    $idAutore = gdrcd_event_default_actor_id($idAutore);
     $contesto = gdrcd_log_context_make(
         [
             'id_oggetto' => (int)$idOggetto,
@@ -391,7 +391,7 @@ function gdrcd_event_item_move_to_inventory($idPersonaggio, $idOggetto)
  */
 function gdrcd_event_experience_assign($idPersonaggio, $px, $causale, $idAutore = null)
 {
-    $idAutore = gdrcd_event_actor_id($idAutore);
+    $idAutore = gdrcd_event_default_actor_id($idAutore);
     $contesto = gdrcd_log_context_make(
         ['px' => (int)$px, 'causale' => $causale],
         (int)$idPersonaggio,
@@ -470,7 +470,7 @@ function gdrcd_event_job_resign($idPersonaggio, $idLavoro, $nomeLavoro)
  */
 function gdrcd_event_guild_role_assign($idPersonaggio, $idRuolo, $nomeRuolo, $idAutore = null)
 {
-    $idAutore = gdrcd_event_actor_id($idAutore);
+    $idAutore = gdrcd_event_default_actor_id($idAutore);
     $contesto = gdrcd_log_context_make(
         ['id_lavoro' => (int)$idRuolo, 'lavoro' => $nomeRuolo],
         (int)$idPersonaggio,
@@ -496,7 +496,7 @@ function gdrcd_event_guild_role_assign($idPersonaggio, $idRuolo, $nomeRuolo, $id
  */
 function gdrcd_event_guild_role_remove($idPersonaggio, $idRuolo, $nomeRuolo, $idAutore = null)
 {
-    $idAutore = gdrcd_event_actor_id($idAutore);
+    $idAutore = gdrcd_event_default_actor_id($idAutore);
     $contesto = gdrcd_log_context_make(
         ['id_lavoro' => (int)$idRuolo, 'lavoro' => $nomeRuolo],
         (int)$idPersonaggio,
@@ -523,7 +523,7 @@ function gdrcd_event_guild_role_remove($idPersonaggio, $idRuolo, $nomeRuolo, $id
 function gdrcd_event_character_name_change($idPersonaggio, $nomePrecedente, $nomeNuovo, $idAutore = null)
 {
     $idPersonaggio = (int)$idPersonaggio;
-    $idAutore = gdrcd_event_actor_id($idAutore);
+    $idAutore = gdrcd_event_default_actor_id($idAutore);
     $contesto = gdrcd_log_context_make(
         ['nome_precedente' => $nomePrecedente, 'nome_nuovo' => $nomeNuovo],
         $idPersonaggio,
@@ -550,7 +550,7 @@ function gdrcd_event_character_name_change($idPersonaggio, $nomePrecedente, $nom
 function gdrcd_event_character_password_change($idPersonaggio, $idAutore = null, $ip = null)
 {
     $idPersonaggio = (int)$idPersonaggio;
-    $idAutore = gdrcd_event_actor_id($idAutore);
+    $idAutore = gdrcd_event_default_actor_id($idAutore);
     $contesto = gdrcd_log_context_make(
         ['ip' => $ip ?? ($_SERVER['REMOTE_ADDR'] ?? '')],
         $idPersonaggio,
@@ -592,7 +592,7 @@ function gdrcd_event_character_account_delete($idPersonaggio, $ip = null)
 function gdrcd_event_character_account_status($idPersonaggio, $abilitato, $idAutore = null, $ip = null)
 {
     $idPersonaggio = (int)$idPersonaggio;
-    $idAutore = gdrcd_event_actor_id($idAutore);
+    $idAutore = gdrcd_event_default_actor_id($idAutore);
     $evento = $abilitato ? 'personaggio.ripristina_account' : 'personaggio.disabilita_account';
     $descrizione = $abilitato ? 'Ripristina account del personaggio' : 'Disabilita account del personaggio';
     $contesto = gdrcd_log_context_make(
