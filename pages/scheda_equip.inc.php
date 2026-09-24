@@ -67,6 +67,15 @@
                 
                 echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['warning']['done']).'</div>';
                 break;
+            case 'disequipaggia':    /*disequipaggia un oggetto all'equip*/
+                gdrcd_query("UPDATE clgpersonaggiooggetto SET posizione = ".gdrcd_filter('num', $_POST['posizione'])." WHERE id_oggetto = ".$_POST['id_oggetto']." AND id_personaggio = '".gdrcd_filter('get', $_REQUEST['pg'])."' LIMIT 1 ");
+                 
+                
+                gdrcd_event_item_disequip($_REQUEST['pg'], $_POST['id_oggetto'], $_POST['posizione']);
+                
+                
+                echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['warning']['done']).'</div>';
+                break;
             case 'in_zaino':    /* Spostamento di un oggetto dall'inventario nello zaino */
                 gdrcd_query("UPDATE clgpersonaggiooggetto SET posizione = 1 WHERE id_oggetto = ".gdrcd_filter('num', $_POST['id_oggetto'])." AND id_personaggio = '".gdrcd_filter('in', $_REQUEST['pg'])."' LIMIT 1 ");
                 gdrcd_event_item_move_to_backpack($_REQUEST['pg'], $_POST['id_oggetto']);
@@ -353,7 +362,7 @@
                                             } else { ?>
                                                 <form action="main.php?page=scheda_equip&pg=<?php echo gdrcd_filter('num', $_REQUEST['pg']); ?>" method="post">
                                                     <input type="hidden" value="<?php echo gdrcd_filter('out', $_REQUEST['pg']); ?>" name="pg" />
-                                                    <input type="hidden" value="indossa" name="op" />
+                                                    <input type="hidden" value="disequipaggia" name="op" />
                                                     <input type="hidden" value="1" name="posizione" />
                                                     <input type="hidden" value="<?php echo $record['id_oggetto']; ?>" name="id_oggetto" />
                                                     <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['items']['list']['unwear']); ?>" />

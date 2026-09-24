@@ -180,11 +180,12 @@ function gdrcd_event_auth_login_failed($nomeUtente, $ip, $idPersonaggio = null)
  * @param int|null $idAutore Personaggio che esegue la modifica; usa la sessione se omesso
  * @return void
  */
-function gdrcd_event_character_permission_change($idPersonaggio, $nuovoRuolo, $idAutore = null)
+function gdrcd_event_character_permission_change($idPersonaggio, $vecchioRuolo, $nuovoRuolo, $idAutore = null)
 {
+     
     $idAutore = gdrcd_event_default_actor_id($idAutore);
     $contesto = gdrcd_log_context_make(
-        ['nuovo_ruolo' => $nuovoRuolo],
+        ['nuovo_ruolo' => $nuovoRuolo, 'vecchio_ruolo' => $vecchioRuolo],
         (int)$idPersonaggio,
         gdrcd_character_name($idPersonaggio),
         $idAutore,
@@ -319,6 +320,34 @@ function gdrcd_event_item_equip($idPersonaggio, $idOggetto, $posizione)
     gdrcd_log_info(
         'Oggetto indossato dal personaggio',
         ['evento' => 'personaggio.indossa_oggetto'] + $contesto,
+        $idPersonaggio
+    );
+}
+
+/**
+ * Registra il disequipaggiamento di un oggetto in una posizione del personaggio.
+ *
+ * @param int $idPersonaggio Personaggio che indossa l'oggetto
+ * @param int $idOggetto Identificativo dell'oggetto
+ * @param int $posizione Posizione di equipaggiamento
+ * @return void
+ */
+function gdrcd_event_item_disequip($idPersonaggio, $idOggetto, $posizione)
+{
+    $idPersonaggio = (int)$idPersonaggio;
+    $contesto = gdrcd_log_context_make(
+        [
+            'id_oggetto' => (int)$idOggetto,
+            'oggetto' => gdrcd_item_name($idOggetto),
+            'posizione' => (int)$posizione,
+        ],
+        $idPersonaggio,
+        gdrcd_character_name($idPersonaggio)
+    );
+
+    gdrcd_log_info(
+        'Oggetto disequipaggiato dal personaggio',
+        ['evento' => 'personaggio.disequipaggiato_oggetto'] + $contesto,
         $idPersonaggio
     );
 }

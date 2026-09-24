@@ -41,7 +41,7 @@ function gdrcd_log_group_from_code($code)
         case BONIFICO:
             return ['banca.invio_bonifico', 'banca.ricezione_bonifico'];
         case OGGETTI:
-            return [ 'personaggio.indossa_oggetto', 'personaggio.cedi_oggetto','personaggio.ricevi_oggetto', 'personaggio.sposta_oggetto_inventario', 'personaggio.sposta_oggetto_zaino', 'personaggio.abbandona_oggetto'];
+            return [ 'personaggio.indossa_oggetto', 'personaggio.cedi_oggetto','personaggio.ricevi_oggetto', 'personaggio.sposta_oggetto_inventario', 'personaggio.sposta_oggetto_zaino', 'personaggio.abbandona_oggetto', 'personaggio.disequipaggiato_oggetto'];
         case NUOVOLAVORO:
             return ['personaggio.nuovo_lavoro', 'personaggio.assegna_lavoro'];
 
@@ -303,7 +303,7 @@ function gdrcd_present_log_row(?int $whichLog, array $row): array
 
         case CHANGEDROLE:
 
-            $descrizione = $row['descrizione'] . ' (' . ($contesto['nuovo_ruolo'] ?? '-') . ')';
+            $descrizione = $row['descrizione'] . ' (Vecchio ruolo: ' . ($contesto['vecchio_ruolo'] ?? '-') . ', Nuovo ruolo: ' . ($contesto['nuovo_ruolo'] ?? '-') . ')';
             break;
 
         case CHANGEDPASS:
