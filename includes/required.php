@@ -1,19 +1,4 @@
 <?php
-
-if (PHP_VERSION_ID < 80000) {
-    header('Content-Type: text/html; charset=UTF-8');
-    die(
-        '<div style="font-family: sans-serif; padding: 2em;">'
-        . '<h2>Versione di PHP non supportata</h2>'
-        . '<p>GDRCD richiede PHP 8.0 o superiore. '
-        . 'La versione attualmente in uso sul server &egrave; PHP '
-        . htmlspecialchars(PHP_VERSION) . '.</p>'
-        . '<p>Contatta il tuo hosting per aggiornare la versione di PHP, '
-        . 'oppure aggiorna la configurazione del server.</p>'
-        . '</div>'
-    );
-}
-
 session_start();
 
 /**
@@ -49,6 +34,12 @@ require_once(GDRCD_PATH . '/vocabulary/' . $PARAMETERS['languages']['set'] . '.v
 
 // include le funzioni generiche
 require_once(GDRCD_PATH . '/includes/functions.inc.php');
+
+// blocca l'esecuzione se la versione di PHP non è più supportata
+if (version_compare(PHP_VERSION, GDRCD_PHP_MIN_VERSION, '<')) {
+    gdrcd_error_fatal(sprintf($MESSAGE['error']['php_version'], GDRCD_PHP_MIN_VERSION, PHP_VERSION));
+    exit;
+}
 
 // include le funzioni del database
 require_once(GDRCD_PATH . '/includes/functions.database.inc.php');
