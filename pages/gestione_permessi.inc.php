@@ -17,9 +17,8 @@
                     'SELECT permessi FROM personaggio WHERE id_personaggio = ?',
                         [gdrcd_filter('num', $_POST['id_personaggio'])]
                     );
-                    
 
-                     switch(gdrcd_filter('num', $oldrole)) {
+                     switch(gdrcd_filter('num', $oldrole['permessi'])) {
                     case USER:
                         $vecchioRuolo = gdrcd_filter('out', $PARAMETERS['names']['users_name']['sing']);
                         break;
@@ -36,7 +35,7 @@
                         $vecchioRuolo = gdrcd_filter('out', $PARAMETERS['names']['administrator']['sing']);
                         break;
                 }
-                
+
                  gdrcd_query("UPDATE personaggio SET permessi = ".gdrcd_filter('num', $_POST['permessi'])." WHERE id_personaggio = ".gdrcd_filter('num', $_POST['id_personaggio'])." LIMIT 1");
 
                 switch(gdrcd_filter('num', $_POST['permessi'])) {
@@ -56,7 +55,7 @@
                         $newrole = gdrcd_filter('out', $PARAMETERS['names']['administrator']['sing']);
                         break;
                 }
-             
+
                 /*Registro l'operazione*/
                 gdrcd_event_character_permission_change($_POST['id_personaggio'], $vecchioRuolo, $newrole);
                 /*Avviso l'utente*/
