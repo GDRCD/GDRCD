@@ -116,8 +116,8 @@
 
                 <?php if($PARAMETERS['mode']['chatsave'] == 'ON') { ?>
                     | <span class="casella_info">
-                        <a href="javascript:void(0);" onClick="window.open('chat_save.proc.php','Log','width=1,height=1,toolbar=no');">
-                            Salva Chat
+                        <a href="javascript:parent.modalWindow('salvachat', '<?php echo gdrcd_filter('out', $MESSAGE['chat']['salvachat']['title']); ?>', 'popup.php?page=chat_pannelli_index&pannello=salva_chat', 460, 480);">
+                            <?php echo gdrcd_filter('out', $MESSAGE['chat']['salvachat']['link']); ?>
                         </a>
                     </span>
                 <?php } ?>
