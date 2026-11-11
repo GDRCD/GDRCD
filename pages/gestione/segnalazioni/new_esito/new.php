@@ -1,5 +1,5 @@
 <?php
-$blocco = gdrcd_query("SELECT pg, master, titolo FROM blocco_esiti WHERE id='".gdrcd_filter('num',$_GET['blocco'])."' LIMIT 1 ");
+$blocco = gdrcd_query("SELECT titolo FROM blocco_esiti WHERE id='".gdrcd_filter('num',$_GET['blocco'])."' LIMIT 1 ");
 
 if ($_GET['op']=='new') {
     ?>

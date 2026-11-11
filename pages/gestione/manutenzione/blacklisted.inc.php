@@ -10,6 +10,7 @@ if(!gdrcd_controllo_permessi($PARAMETERS['administration']['maintenance']['acces
 /*Eseguo l'aggiornamento*/
 gdrcd_query("DELETE FROM blacklist WHERE 1");
 gdrcd_query("OPTIMIZE TABLE blacklist");
+
 ?>
 <!-- Conferma -->
 <div class="success">

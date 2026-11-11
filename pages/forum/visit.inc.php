@@ -23,7 +23,7 @@ if(!gdrcd_controllo_permessi_forum($araldo['tipo'],$araldo['proprietari'])){
                 $id_record = (int) $_POST['id_record'];
                 $status_imp = (int) $_POST['status_imp'];
 
-                gdrcd_query("UPDATE messaggioaraldo SET importante = $status_imp WHERE id_messaggio = $id_record") or die(mysql_error());
+                gdrcd_query("UPDATE messaggioaraldo SET importante = $status_imp WHERE id_messaggio = $id_record");
 
                 break;
 
@@ -31,7 +31,7 @@ if(!gdrcd_controllo_permessi_forum($araldo['tipo'],$araldo['proprietari'])){
                 $id_record = (int) $_POST['id_record'];
                 $status_cls = (int) $_POST['status_cls'];
 
-                gdrcd_query("UPDATE messaggioaraldo SET chiuso = $status_cls WHERE id_messaggio = $id_record") or die(mysql_error());
+                gdrcd_query("UPDATE messaggioaraldo SET chiuso = $status_cls WHERE id_messaggio = $id_record");
 
                 break;
         }
@@ -48,7 +48,7 @@ if(!gdrcd_controllo_permessi_forum($araldo['tipo'],$araldo['proprietari'])){
     $totaleresults = $record_globale['COUNT(*)'];
 
     /*Carico l'elenco dei forum*/
-    $result = gdrcd_query("SELECT MA.id_messaggio, MA.titolo, MA.autore, MA.data_messaggio, MA.data_ultimo_messaggio, MA.importante, MA.chiuso, AL.id AS new_msg FROM messaggioaraldo AS MA LEFT JOIN araldo_letto AS AL ON MA.id_messaggio=AL.thread_id AND AL.nome='".$_SESSION['login']."' WHERE MA.id_messaggio_padre = -1 AND MA.id_araldo = ".gdrcd_filter('num', $_REQUEST['what'])." ORDER BY MA.importante DESC, MA.data_ultimo_messaggio DESC LIMIT ".$pagebegin.", ".$PARAMETERS['settings']['posts_per_page']."", 'result');
+    $result = gdrcd_query("SELECT messaggioaraldo.id_messaggio, messaggioaraldo.titolo, messaggioaraldo.id_personaggio as id_personaggio_autore, messaggioaraldo.data_messaggio, messaggioaraldo.data_ultimo_messaggio, messaggioaraldo.importante, messaggioaraldo.chiuso, araldo_letto.id AS new_msg, personaggio.nome as autore FROM messaggioaraldo LEFT JOIN araldo_letto ON messaggioaraldo.id_messaggio = araldo_letto.thread_id AND araldo_letto.id_personaggio = '".gdrcd_filter('in', $_SESSION['id_personaggio'])."' INNER JOIN personaggio ON messaggioaraldo.id_personaggio = personaggio.id_personaggio WHERE messaggioaraldo.id_messaggio_padre = -1 AND messaggioaraldo.id_araldo = ".gdrcd_filter('num', $_REQUEST['what'])." ORDER BY messaggioaraldo.importante DESC, messaggioaraldo.data_ultimo_messaggio DESC LIMIT ".$pagebegin.", ".$PARAMETERS['settings']['posts_per_page']."", 'result');
 
     if(gdrcd_query($result, 'num_rows') == 0) {
         echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['interface']['forums']['warning']['no_topic']).'</div>';
@@ -136,7 +136,7 @@ if(!gdrcd_controllo_permessi_forum($araldo['tipo'],$araldo['proprietari'])){
                             </td>
                             <td class="casella_elemento">
                                 <div class="elementi_elenco"><!-- Autore -->
-                                    <a href="main.php?page=scheda&pg=<?php echo gdrcd_filter('out', $row['autore']); ?>">
+                                    <a href="main.php?page=scheda&pg=<?php echo gdrcd_filter('out', $row['id_personaggio_autore']); ?>">
                                         <?php echo gdrcd_filter('out', $row['autore']); ?>
                                     </a>
                                 </div>
@@ -183,7 +183,7 @@ if(!gdrcd_controllo_permessi_forum($araldo['tipo'],$araldo['proprietari'])){
                                                 <input type="hidden" name="id_record" value="<?php echo $row['id_messaggio'] ?>" />
                                                 <input type="hidden" name="status_imp" value="<?php echo $set_imp; ?>" />
                                                 <input type="hidden" name="ops" value="important" />
-                                                <input type="image" src="imgs/icons/<?php echo $img_imp; ?>"
+                                                <input type="image" src="public/images/icons/<?php echo $img_imp; ?>"
                                                        alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops'][$label_imp]); ?>"
                                                        title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops'][$label_imp]); ?>" />
                                             </form>
@@ -194,7 +194,7 @@ if(!gdrcd_controllo_permessi_forum($araldo['tipo'],$araldo['proprietari'])){
                                                 <input type="hidden" name="id_record" value="<?php echo $row['id_messaggio'] ?>" />
                                                 <input type="hidden" name="status_cls" value="<?php echo $set_cls; ?>" />
                                                 <input type="hidden" name="ops" value="close" />
-                                                <input type="image" src="imgs/icons/<?php echo $img_cls; ?>"
+                                                <input type="image" src="public/images/icons/<?php echo $img_cls; ?>"
                                                        alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops'][$label_cls]); ?>"
                                                        title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops'][$label_cls]); ?>" />
                                             </form>
@@ -202,7 +202,7 @@ if(!gdrcd_controllo_permessi_forum($araldo['tipo'],$araldo['proprietari'])){
                                                                   <!-- Elimina -->
                                         <div class="controllo_elenco">
                                             <a href="main.php?page=forum&op=delete_conf&id_record=<?php echo $row['id_messaggio']; ?>&padre=-1">
-                                                <img src="imgs/icons/erase.png" alt="Elimina" width="15" />
+                                                <img src="public/images/icons/erase.png" alt="Elimina" width="15" />
                                             </a>
                                         </div>
                                     </div>

@@ -41,8 +41,8 @@ if (SEND_GM) {
 
     #Inserimento segnalazione GM
     if ($_POST['op'] == 'segnala_send') {
-        gdrcd_query("INSERT INTO send_GM (data, autore, role_reg, note ) 
-                                VALUES ( NOW(), '" . gdrcd_filter('in', $_SESSION['login']) . "', 
+        gdrcd_query("INSERT INTO send_GM (data, id_personaggio, role_reg, note ) 
+                                VALUES ( NOW(), '" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "', 
                                     " . gdrcd_filter('num', $_POST['id']) . ", 
                                     '" . gdrcd_filter('in', $_POST['note']) . "' )");
 

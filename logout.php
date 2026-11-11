@@ -3,13 +3,11 @@
 //Includio i parametri, la configurazione, la lingua e le funzioni
 require ('includes/required.php');
 
-//Eseguo la connessione al database
-$handleDBConnection = gdrcd_connect();
-
 /** * Aggiorno l'ora di uscita del pg
 * @author Blancks
 */
-gdrcd_query("UPDATE personaggio SET ora_uscita = NOW() WHERE nome='" . gdrcd_filter('in', $_SESSION['login']) . "'");
+gdrcd_query("UPDATE personaggio SET ora_uscita = NOW() WHERE id_personaggio = '" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "'");
+
 ?>
 <html>
 <head>
@@ -31,9 +29,6 @@ gdrcd_query("UPDATE personaggio SET ora_uscita = NOW() WHERE nome='" . gdrcd_fil
 </body>
 </html>
 <?php
-/*Chiudo la connessione al database*/
-gdrcd_close_connection($handleDBConnection);
-
 /** * Per ottimizzare le risorse impiegate le liberiamo dopo che non ne abbiamo più bisogno
 * @author Blancks
 */

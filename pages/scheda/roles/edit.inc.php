@@ -1,5 +1,5 @@
 <?php
-if ($_SESSION['permessi'] >= EDIT_PERM || $_REQUEST['pg'] == $_SESSION['login']) {
+if ($_SESSION['permessi'] >= EDIT_PERM || $_REQUEST['pg'] == $_SESSION['id_personaggio']) {
     #Inserimento modifiche edit
     if ($_POST['op'] == 'send_edit') {
         gdrcd_query("UPDATE segnalazione_role SET tags = '" . gdrcd_filter('in', $_POST['ab']) . "', 

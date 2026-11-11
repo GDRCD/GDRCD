@@ -46,6 +46,8 @@ a:hover {
 
 div.form_field table {
     margin: 5px auto;
+    table-layout: fixed;
+    width: 100%;
 }
 
 input, textarea, select {
@@ -136,10 +138,12 @@ div.subtitle {
 /** * Stili del form di login
 */
 div.login_form{
-	float:right;
+	float:none;
 	width:230px;
 	padding:20px 10px;
 	margin-top: 20px;
+    margin-left: auto;
+    box-sizing: border-box;
 }
 
 /** * stile che ingloba i gruppi label/input
@@ -159,6 +163,12 @@ div.login_form input {
     width: 145px;
     margin: 0;
 }
+
+div.login_form select {
+    width: 180px;
+    margin: 0;
+}
+
 div.login_form input[type=checkbox]{
 	width: auto;
 	vertical-align: middle;
@@ -168,8 +178,8 @@ div.login_form input[type=checkbox]{
 */
 div.login_form input[type='submit'] {
     display: block;
-    float: right;
-    margin-right: 52px;
+    float: none;
+    margin: 8px 52px 0 auto;
     width: 65px;
 }
 
@@ -205,7 +215,6 @@ div.sidecontent ul {
     list-style-type: none;
     -moz-border-radius: 5px; /* Bordi arrotondati */
     -webkit-border-radius: 5px;
-    -khtml-border-radius: 5px;
     border-radius: 5px;
 }
 
@@ -236,12 +245,11 @@ div.sidecontent ul li a:hover {
 div.side_modules {
     margin: 10px 0 0 10px;
     background-color: #b9b9b9;
-    font-color: #333;
+    color: #333;
     padding: 10px;
     text-align: center;
     -moz-border-radius: 5px; /* Bordi arrotondati */
     -webkit-border-radius: 5px;
-    -khtml-border-radius: 5px;
     border-radius: 5px;
 }
 
@@ -321,16 +329,21 @@ div#site_width {
 /** * Header
 */
 div#header {
-    height: 180px;
+    min-height: 220px;
+    overflow: hidden;
 }
 
 div#header > div {
     float: left;
-    height: 100%;
+    min-height: 220px;
 }
 
 div#header .titlecontent {
     width: calc(100% - 250px);
+}
+
+div#header .logincontent {
+    width: 250px;
 }
 
 /** * Corpo contenuti della pagina
@@ -379,7 +392,6 @@ div.elenco_record_gioco table {
     background-color: #d1d1d1;
     -moz-border-radius: 5px; /* Bordi arrotondati */
     -webkit-border-radius: 5px;
-    -khtml-border-radius: 5px;
     border-radius: 5px;
 }
 

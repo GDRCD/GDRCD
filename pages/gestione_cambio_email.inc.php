@@ -8,9 +8,9 @@
         <?php if (gdrcd_filter('get', $_POST['op']) == 'force') {
             if (($_SESSION['permessi'] >= MODERATOR)) {
                 if ($_SESSION['permessi'] == SUPERUSER) {
-                    $query = "UPDATE personaggio SET email = '" . gdrcd_encript($_POST['new_email']) . "' WHERE nome = '" . gdrcd_filter_in($_POST['account']) . "'";
+                    $query = "UPDATE personaggio SET email = '" . gdrcd_encript($_POST['new_email']) . "' WHERE id_personaggio = '" . gdrcd_filter_in($_POST['account']) . "'";
                 } else {
-                    $query = "UPDATE personaggio SET email = '" . gdrcd_encript($_POST['new_email']) . "' WHERE nome = '" . gdrcd_filter_in($_POST['account']) . "' AND permessi < " . SUPERUSER . "";
+                    $query = "UPDATE personaggio SET email = '" . gdrcd_encript($_POST['new_email']) . "' WHERE id_personaggio = '" . gdrcd_filter_in($_POST['account']) . "' AND permessi < " . SUPERUSER . "";
                 }
                 gdrcd_query($query);
 
@@ -33,7 +33,7 @@
         /*Visualizzazione di base*/
         if (isset($_POST['op']) === false) {
             if ($_SESSION['permessi'] >= MODERATOR) {
-                $query = ($_SESSION['permessi'] == SUPERUSER) ? "SELECT nome FROM personaggio ORDER BY nome" : "SELECT nome FROM personaggio WHERE permessi < " . SUPERUSER . " ORDER BY nome";
+                $query = ($_SESSION['permessi'] == SUPERUSER) ? "SELECT id_personaggio, nome FROM personaggio ORDER BY nome" : "SELECT id_personaggio, nome FROM personaggio WHERE permessi < " . SUPERUSER . " ORDER BY nome";
                 $result = gdrcd_query($query, 'result'); ?>
                 <div class="panels_box">
                     <div class="form_gioco">
@@ -52,7 +52,7 @@
                                 <select name="account" required>
                                     <option disabled selected><?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['email']['change_to']); ?></option>
                                     <?php while ($row = gdrcd_query($result, 'fetch')) { ?>
-                                        <option value="<?php echo $row['nome']; ?>"><?php echo $row['nome']; ?></option>
+                                        <option value="<?php echo $row['id_personaggio']; ?>"><?php echo $row['nome']; ?></option>
                                     <?php }//while
                                     gdrcd_query($result, 'free');
                                     ?>

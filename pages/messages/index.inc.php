@@ -12,11 +12,15 @@ $delType = $msgType.'_del';
 
 // Costruisco la query per i messaggi
 $sqlMessages = "
-    SELECT * 
-    FROM messaggi 
-    WHERE   ".$msgType." = '".$_SESSION['login']."' 
-        AND ".$delType." = 0 
-    ORDER BY spedito DESC";
+    SELECT messaggi.*,
+        personaggio_mittente.nome AS mittente,
+        personaggio_destinatario.nome AS destinatario
+    FROM messaggi
+    LEFT JOIN personaggio AS personaggio_mittente ON messaggi.id_personaggio_mittente = personaggio_mittente.id_personaggio
+    LEFT JOIN personaggio AS personaggio_destinatario ON messaggi.id_personaggio_destinatario = personaggio_destinatario.id_personaggio
+    WHERE   messaggi.id_personaggio_".$msgType." = '".$_SESSION['id_personaggio']."'
+        AND messaggi.".$delType." = 0
+    ORDER BY messaggi.spedito DESC";
 $result = gdrcd_query($sqlMessages." LIMIT ".$pagebegin.", ".$pageend, 'result');
 $numresults = gdrcd_query($result, 'num_rows');
 
@@ -117,10 +121,10 @@ $totaleresults = gdrcd_query(gdrcd_query($sqlMessages, 'result'), 'num_rows');
                             <div class="elementi_elenco">
                                 <?php
                                 if($row['letto'] == 0) { ?>
-                                    <img src="imgs/icons/mail_new.png" class="colonna_elenco_messaggi_icon">
+                                    <img src="public/images/icons/mail_new.png" class="colonna_elenco_messaggi_icon">
                                     <?php
                                 } else { ?>
-                                    <img src="imgs/icons/mail_read.png" class="colonna_elenco_messaggi_icon">
+                                    <img src="public/images/icons/mail_read.png" class="colonna_elenco_messaggi_icon">
                                     <?php
                                 } ?>
                             </div>
@@ -129,11 +133,13 @@ $totaleresults = gdrcd_query(gdrcd_query($sqlMessages, 'result'), 'num_rows');
                             <div class="elementi_elenco">
                                 <?php
                                 if($isSentMessage) {
-                                    echo '<a href="main.php?page=scheda&pg='.$row['destinatario'].'">'.$row['destinatario'].'</a>';
+                                    echo '<a href="main.php?page=scheda&pg='.$row['id_personaggio_destinatario'].'">'.$row['destinatario'].'</a>';
                                 } elseif(is_numeric($row['mittente']) == true) {
                                     echo gdrcd_filter('out', $MESSAGE['interface']['messages']['to_guild']);
                                 } else {
-                                    echo '<a href="main.php?page=scheda&pg='.$row['mittente'].'">'.$row['mittente'].'</a>';
+                                    echo $row['id_personaggio_mittente'] == WEBMASTER_ID
+                                        ? '<a href="javascript:void(0);">'. gdrcd_filter('out', $PARAMETERS['info']['webmaster_name']) .'</a>'
+                                        : '<a href="main.php?page=scheda&pg='.$row['id_personaggio_mittente'].'">'. gdrcd_filter('out', $row['mittente']) .'</a>';
                                 } ?>
                             </div>
                         </td>
@@ -154,10 +160,12 @@ $totaleresults = gdrcd_query(gdrcd_query($sqlMessages, 'result'), 'num_rows');
                         </td>
                         <td>
                             <div class="elementi_elenco">
-                                <a href="main.php?page=messages_center&op=read&id_messaggio=<?php echo $row['id'] ?>"><?php echo gdrcd_filter('out', substr(nl2br(gdrcd_bbcoder($row['testo'])), 0, 40)); ?>
+                                <a href="main.php?page=messages_center&op=read&id_messaggio=<?php echo $row['id']; ?>">
+                                    <?php echo gdrcd_filter('out', substr(strip_tags(nl2br(gdrcd_bbcoder($row['testo']))), 0, 40)); ?>
                                     ...
                                 </a>
                             </div>
+
                         </td>
                         <td>
                             <div class="controlli_elenco">
@@ -168,7 +176,7 @@ $totaleresults = gdrcd_query(gdrcd_query($sqlMessages, 'result'), 'num_rows');
                                         <input type="hidden" name="reply_subject" value="Re: <?php echo $row['oggetto']; ?>" />
                                         <input type="hidden" name="reply_tipo" value="<?php echo $row['tipo']; ?>" />
                                         <input type="hidden" name="op" value="reply" />
-                                        <input type="image" src="imgs/icons/reply.png" value="submit" alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']); ?>"
+                                        <input type="image" src="public/images/icons/reply.png" value="submit" alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']); ?>"
                                                title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['reply']); ?>" />
                                     </form>
                                 </div>
@@ -178,7 +186,7 @@ $totaleresults = gdrcd_query(gdrcd_query($sqlMessages, 'result'), 'num_rows');
                                         <input type="hidden" name="id_messaggio" value="<?php echo $row['id']; ?>" />
                                         <input type="hidden" name="type" value="<?php echo $delType; ?>" />
                                         <input type="hidden" name="op" value="erase" />
-                                        <input type="image" src="imgs/icons/erase.png" value="submit" alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['erase']); ?>"
+                                        <input type="image" src="public/images/icons/erase.png" value="submit" alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['erase']); ?>"
                                                title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['messages']['erase']); ?>" />
                                     </form>
                                 </div>

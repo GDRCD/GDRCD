@@ -6,9 +6,9 @@
 
 // In base alla tipologia di visualizzazione, elimino i relativi messaggi letti
 if(gdrcd_filter_in($_POST['type']) === 'destinatario_del') {
-    $query = "UPDATE messaggi SET destinatario_del = 1 WHERE destinatario='".gdrcd_filter('in', $_SESSION['login'])."' AND letto = 1";
+    $query = "UPDATE messaggi SET destinatario_del = 1 WHERE id_personaggio_destinatario = '".gdrcd_filter('in', $_SESSION['id_personaggio'])."' AND letto = 1";
 } elseif(gdrcd_filter_in($_POST['type']) === 'mittente_del') {
-    $query = "UPDATE messaggi SET mittente_del = 1 WHERE mittente='".gdrcd_filter('in', $_SESSION['login'])."' AND letto = 1";
+    $query = "UPDATE messaggi SET mittente_del = 1 WHERE id_personaggio_mittente = '".gdrcd_filter('in', $_SESSION['id_personaggio'])."' AND letto = 1";
 }
 
 // Avvio l'operazione

@@ -5,7 +5,7 @@ if ($_GET['op']=='edit' && ($_SESSION['permessi']>=ESITI_PERM)) {  ?>
     </div>
     <?php
     $id_edit = gdrcd_query("SELECT * FROM blocco_esiti WHERE id = ".$_GET['id']."
-     AND (master = '0' || master ='" . gdrcd_filter('in', $_SESSION['login']) . "') ", 'result');
+     AND (id_personaggio_master IS NULL || id_personaggio_master ='" . $_SESSION['id_personaggio'] . "') ", 'result');
     $id_num = gdrcd_query($id_edit, 'num_rows');
 
     if($id_num==0) {

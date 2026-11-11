@@ -4,7 +4,7 @@
 require ('../../../includes/required.php');
 
 // Determino il tema selezionato
-if(!empty($_SESSION['theme']) and array_key_exists($_SESSION['theme'], $PARAMETERS['themes']['available'])){
+if(!empty($_SESSION['theme']) && array_key_exists($_SESSION['theme'], $PARAMETERS['themes']['available'])){
     $PARAMETERS['themes']['current_theme'] = $_SESSION['theme'];
 }
 
@@ -21,7 +21,7 @@ if($PARAMETERS['mode']['check_forum'] === 'ON') {
     $result = gdrcd_query("SELECT id_araldo, nome, tipo, proprietari FROM araldo ORDER BY tipo, nome", 'result');
     while($row = gdrcd_query($result, 'fetch')) {
         if(($row['tipo'] <= PERTUTTI) || (($row['tipo'] == SOLORAZZA) && ($_SESSION['id_razza'] == $row['proprietari'])) || (($row['tipo'] == SOLOGILDA) && (strpos($_SESSION['gilda'], '*'.$row['proprietari'].'*') != false)) || (($row['tipo'] == SOLOMASTERS) && ($_SESSION['permessi'] >= GAMEMASTER)) || ($_SESSION['permessi'] >= MODERATOR)) {
-            $new_msg = gdrcd_query("SELECT COUNT(id) AS num FROM araldo_letto WHERE araldo_id = ".$row['id_araldo']." AND nome = '".$_SESSION['login']."';");
+            $new_msg = gdrcd_query("SELECT COUNT(id) AS num FROM araldo_letto WHERE araldo_id = ".$row['id_araldo']." AND id_personaggio = '".gdrcd_filter('in', $_SESSION['id_personaggio'])."';");
 
             $new_msg2 = gdrcd_query("SELECT COUNT(id_messaggio) AS num FROM messaggioaraldo WHERE id_araldo = ".$row['id_araldo']." AND id_messaggio_padre = -1");
 
@@ -47,23 +47,23 @@ if($PARAMETERS['mode']['check_forum'] === 'ON') {
 
             // Inserisco lo script per il click dell'immagine
             $textForum = '
-                <script type="text/javascript"> 
-                    if (document.images) { 
-                        var msg_button1_up = new Image(); 
-                        msg_button1_up.src = "../../../themes/'.$PARAMETERS['themes']['current_theme'].'/imgs/menu/'.$img_up.'"; 
-                        
-                        var msg_button1_over = new Image(); 
+                <script type="text/javascript">
+                    if (document.images) {
+                        var msg_button1_up = new Image();
+                        msg_button1_up.src = "../../../themes/'.$PARAMETERS['themes']['current_theme'].'/imgs/menu/'.$img_up.'";
+
+                        var msg_button1_over = new Image();
                         msg_button1_over.src = "../../../themes/'.$PARAMETERS['themes']['current_theme'].'/imgs/menu/'.$img_down.'";
-                    } 
-                    
-                    function msg_over_button() { 
-                        if (document.images) { 
+                    }
+
+                    function msg_over_button() {
+                        if (document.images) {
                             document["msg_buttonOne"].src = msg_button1_over.src;
                         }
-                    } 
-                    
-                    function msg_up_button() { 
-                        if (document.images) { 
+                    }
+
+                    function msg_up_button() {
+                        if (document.images) {
                             document["msg_buttonOne"].src = msg_button1_up.src
                         }
                     }

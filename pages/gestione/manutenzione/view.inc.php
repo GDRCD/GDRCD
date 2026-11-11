@@ -1,130 +1,129 @@
 <?php
     /*HELP: */
     /*Controllo permessi utente*/
-    if(!gdrcd_controllo_permessi(SUPERUSER)) {
+    if(!gdrcd_controllo_permessi($PARAMETERS['administration']['maintenance']['access_level'])) {
         echo '<div class="error">'.gdrcd_filter('out', $MESSAGE['error']['not_allowed']).'</div>';
         die();
     }
 
+    // Ottengo il numero di utenti cancellati
+    $deletedUsers = gdrcd_query("SELECT COUNT(*) AS deletedUsers FROM personaggio WHERE permessi = -1");
+    $deletedUsers = $deletedUsers['deletedUsers'];
+
     ?>
 
 <!-- Log -->
-<div class="panels_box">
-    <form action="main.php?page=gestione/manutenzione"
-          method="post"
-          class="form_gestione">
-        <div class='form_label'>
-            <?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['old_log']); ?>
-        </div>
-        <div class='form_field'>
-            <select name="mesi" ?>
+<div id="ManutenzioneCleanLogs" class="form_container form_container_bg">
+    <form action="main.php?page=gestione/manutenzione" method="post" class="form">
+        <!-- Titolo -->
+        <div class="title"><?=gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['old_log']['title']); ?></div>
+        <!-- Campi -->
+        <div class='single_input'>
+            <select name="mesi" >
                 <?php for($i = 0; $i <= 12; $i++) { ?>
                     <option value="<?php echo $i; ?>"><?php echo $i.' '.gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['months']); ?></option>
                 <?php } ?>
             </select>
+            <div class="subtitle"><?=gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['old_log']['info']); ?></div>
         </div>
-        <!-- bottoni -->
+        <!-- Bottoni -->
         <div class='form_submit'>
             <input type="hidden" name="op" value="old_log">
             <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>" />
         </div>
     </form>
 </div>
+
 <!-- Chat -->
-<div class="panels_box">
-    <form action="main.php?page=gestione/manutenzione" method="post" class="form_gestione">
-        <div class='form_label'>
-            <?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['old_chat']); ?>
-        </div>
-        <div class='form_field'>
-            <select name="mesi" ?>
+<div id="ManutenzioneCleanChat" class="form_container form_container_bg">
+    <form action="main.php?page=gestione/manutenzione" method="post" class="form">
+        <!-- Titolo -->
+        <div class="title"><?=gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['old_chat']['title']); ?></div>
+        <!-- Campi -->
+        <div class='single_input'>
+            <select name="mesi" >
                 <?php for($i = 0; $i <= 12; $i++) { ?>
                     <option value="<?php echo $i; ?>"><?php echo $i.' '.gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['months']); ?></option>
                 <?php } ?>
             </select>
+            <div class="subtitle"><?=gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['old_chat']['info']); ?></div>
         </div>
-        <!-- bottoni -->
+        <!-- Bottoni -->
         <div class='form_submit'>
             <input type="hidden" name="op" value="old_chat">
             <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>" />
         </div>
     </form>
 </div>
+
 <!-- Messaggi -->
-<div class="panels_box">
-    <form action="main.php?page=gestione/manutenzione" method="post" class="form_gestione">
-        <div class='form_label'>
-            <?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['old_messages']); ?>
-        </div>
-        <div class='form_field'>
-            <select name="mesi" ?>
+<div id="ManutenzioneCleanMessages" class="form_container form_container_bg">
+    <form action="main.php?page=gestione/manutenzione" method="post" class="form">
+        <!-- Titolo -->
+        <div class="title"><?=gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['old_messages']['title']); ?></div>
+        <!-- Campi -->
+        <div class='single_input'>
+            <select name="mesi" >
                 <?php for($i = 0; $i <= 12; $i++) { ?>
                     <option value="<?php echo $i; ?>"><?php echo $i.' '.gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['months']); ?></option>
                 <?php } ?>
             </select>
+            <div class="subtitle"><?=gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['old_messages']['info']); ?></div>
         </div>
-        <div class='form_info'>
-            <?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['old_messages_info']); ?>
-        </div>
-        <!-- bottoni -->
+        <!-- Bottoni -->
         <div class='form_submit'>
             <input type="hidden" name="op" value="old_messages">
             <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>" />
         </div>
     </form>
 </div>
-<!-- Cancellati -->
-<div class="panels_box">
-    <form action="main.php?page=gestione/manutenzione" method="post" class="form_gestione">
-        <div class='form_label'>
-            <?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['deleted']); ?>
-        </div>
-        <div class='form_info'>
-            <?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['deleted_info']); ?>
-        </div>
-        <!-- bottoni -->
+
+<!-- Utenti Temporaneamente Eliminati -->
+<div id="ManutenzioneDeletedUsers" class="form_container form_container_bg">
+    <form action="main.php?page=gestione/manutenzione" method="post" class="form">
+        <!-- Titolo -->
+        <div class="title"><?=gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['deleted_users']['title']); ?></div>
+        <!-- Info -->
+        <div class='info'>Personaggi coinvolti: <strong><?=$deletedUsers;?></strong></div>
+        <div class='info'><?=gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['deleted_users']['info']); ?></div>
+        <!-- Bottoni -->
         <div class='form_submit'>
-            <input type="hidden" name="op" value="deleted">
+            <input type="hidden" name="op" value="deleted_users">
             <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>" />
         </div>
     </form>
 </div>
-<!-- Assenti -->
-<div class="panels_box">
-    <form action="main.php?page=gestione/manutenzione"
-          method="post"
-          class="form_gestione">
-        <div class='form_label'>
-            <?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['missing']); ?>
-        </div>
-        <div class='form_field'>
-            <select name="mesi" ?>
-                <?php
-                for($i = 1; $i <= 12; $i++) { ?>
+
+<!-- Utenti Non Attivi -->
+<div id="ManutenzioneMissingUsers" class="form_container form_container_bg">
+    <form action="main.php?page=gestione/manutenzione" method="post" class="form">
+        <!-- Titolo -->
+        <div class="title"><?=gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['missing_users']['title']); ?></div>
+        <!-- Campi -->
+        <div class='single_input'>
+            <select name="mesi" >
+                <?php for($i = 0; $i <= 12; $i++) { ?>
                     <option value="<?php echo $i; ?>"><?php echo $i.' '.gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['months']); ?></option>
                 <?php } ?>
             </select>
+            <div class="subtitle"><?=gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['missing_users']['info']); ?></div>
         </div>
-        <div class='form_info'>
-            <?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['missing_info']); ?>
-        </div>
-        <!-- bottoni -->
+        <!-- Bottoni -->
         <div class='form_submit'>
-            <input type="hidden" name="op" value="missing">
+            <input type="hidden" name="op" value="missing_users">
             <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>" />
         </div>
     </form>
 </div>
+
 <!-- Blacklisted -->
-<div class="panels_box">
-    <form action="main.php?page=gestione/manutenzione" method="post" class="form_gestione">
-        <div class='form_label'>
-            <?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['blacklisted']); ?>
-        </div>
-        <div class='form_info'>
-            <?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['blacklisted_info']); ?>
-        </div>
-        <!-- bottoni -->
+<div id="ManutenzioneCleanBlacklist" class="form_container form_container_bg">
+    <form action="main.php?page=gestione/manutenzione" method="post" class="form">
+        <!-- Titolo -->
+        <div class="title"><?=gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['blacklisted']['title']); ?></div>
+        <!-- Info -->
+        <div class='info'><?=gdrcd_filter('out', $MESSAGE['interface']['administration']['maintenance']['blacklisted']['info']); ?></div>
+        <!-- Bottoni -->
         <div class='form_submit'>
             <input type="hidden" name="op" value="blacklisted">
             <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['forms']['submit']); ?>" />

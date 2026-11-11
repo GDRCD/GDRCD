@@ -1,5 +1,5 @@
 <?php
-$result = gdrcd_query("SELECT messaggioaraldo.id_messaggio, messaggioaraldo.id_messaggio_padre, messaggioaraldo.titolo, messaggioaraldo.messaggio, messaggioaraldo.autore, messaggioaraldo.data_messaggio, messaggioaraldo.chiuso, araldo.tipo, araldo.nome, araldo.proprietari, personaggio.url_img, araldo.id_araldo FROM messaggioaraldo LEFT JOIN araldo ON messaggioaraldo.id_araldo = araldo.id_araldo LEFT JOIN personaggio ON messaggioaraldo.autore = personaggio.nome WHERE (messaggioaraldo.id_messaggio_padre = ".gdrcd_filter('num', $_REQUEST['what'])." AND messaggioaraldo.id_messaggio_padre != -1) OR messaggioaraldo.id_messaggio = ".gdrcd_filter('num', $_REQUEST['what'])." ORDER BY id_messaggio_padre, data_messaggio", 'result');
+$result = gdrcd_query("SELECT messaggioaraldo.id_messaggio, messaggioaraldo.id_messaggio_padre, messaggioaraldo.titolo, messaggioaraldo.messaggio, messaggioaraldo.id_personaggio as id_personaggio_autore, messaggioaraldo.data_messaggio, messaggioaraldo.chiuso, araldo.tipo, araldo.nome, araldo.proprietari, personaggio.url_img, araldo.id_araldo, personaggio.nome as autore FROM messaggioaraldo LEFT JOIN araldo ON messaggioaraldo.id_araldo = araldo.id_araldo LEFT JOIN personaggio ON messaggioaraldo.id_personaggio = personaggio.id_personaggio WHERE (messaggioaraldo.id_messaggio_padre = ".gdrcd_filter('num', $_REQUEST['what'])." AND messaggioaraldo.id_messaggio_padre != -1) OR messaggioaraldo.id_messaggio = ".gdrcd_filter('num', $_REQUEST['what'])." ORDER BY id_messaggio_padre, data_messaggio", 'result');
 $row = gdrcd_query($result, 'fetch');
 if( ! empty($row)) {
     $araldo = (int) $row['id_araldo'];
@@ -10,9 +10,9 @@ if( ! empty($row)) {
         echo '<div class="error">'.gdrcd_filter('out', $MESSAGE['error']['not_allowed']).'</div>';
     } else {
         //Inserimento il record al pg come thread letto
-        $check_letto = gdrcd_query("SELECT * FROM araldo_letto WHERE nome = '".$_SESSION['login']."' AND thread_id = ".gdrcd_filter('num', $_REQUEST['what']));
+        $check_letto = gdrcd_query("SELECT * FROM araldo_letto WHERE id_personaggio = '".gdrcd_filter('in', $_SESSION['id_personaggio'])."' AND thread_id = ".gdrcd_filter('num', $_REQUEST['what']));
         if($check_letto['id'] <= 0) {
-            gdrcd_query("INSERT INTO araldo_letto (nome, araldo_id, thread_id) VALUES ('".$_SESSION['login']."', ".gdrcd_filter('num', $_REQUEST['where']).", ".gdrcd_filter('num', $_REQUEST['what']).")");
+            gdrcd_query("INSERT INTO araldo_letto (id_personaggio, araldo_id, thread_id) VALUES ('".gdrcd_filter('in', $_SESSION['id_personaggio'])."', ".gdrcd_filter('num', $_REQUEST['where']).", ".gdrcd_filter('num', $_REQUEST['what']).")");
         }
         ?>
         <div class="panels_box">
@@ -34,7 +34,7 @@ if( ! empty($row)) {
                 <tr>
                     <td class="forum_main_post_author">
                         <div class="forum_post_author">
-                            <a href="main.php?page=scheda&pg=<?php echo gdrcd_filter('out', $row['autore']); ?>">
+                            <a href="main.php?page=scheda&pg=<?php echo gdrcd_filter('out', $row['id_personaggio_autore']); ?>">
                                 <?php echo gdrcd_filter('out', $row['autore']); ?>
                             </a>
 
@@ -69,7 +69,7 @@ if( ! empty($row)) {
                                 <?php
                             }
 
-                            if(($_SESSION['login'] == $row['autore'] && $chiuso == 0) || ($_SESSION['permessi'] >= MODERATOR)) {
+                            if(($_SESSION['id_personaggio'] == $row['id_personaggio_autore'] && $chiuso == 0) || ($_SESSION['permessi'] >= MODERATOR)) {
                                 ?>
                                 <a href="main.php?page=forum&op=modifica&what=<?php echo $row['id_messaggio']; ?>&where=<?php echo gdrcd_filter('num', $_REQUEST['where']); ?>">[<?php echo $MESSAGE['interface']['forums']['link']['edit']; ?>]</a>
                                 <a href="main.php?page=forum&op=delete_conf&id_record=<?php echo $row['id_messaggio']; ?>&padre=<?php echo $row['id_messaggio_padre']; ?>">[<?php echo gdrcd_filter('out', $MESSAGE['interface']['forums']['link']['delete']); ?>]</a>
@@ -85,7 +85,7 @@ if( ! empty($row)) {
                     <tr>
                         <td class="forum_other_post_author">
                             <div class="forum_post_author">
-                                <a href="main.php?page=scheda&pg=<?php echo gdrcd_filter('out', $row['autore']); ?>">
+                                <a href="main.php?page=scheda&pg=<?php echo gdrcd_filter('out', $row['id_personaggio_autore']); ?>">
                                     <?php echo gdrcd_filter('out', $row['autore']); ?>
                                 </a>
                                 <div class="forum_avatar">
@@ -118,7 +118,7 @@ if( ! empty($row)) {
                                     <a href="main.php?page=forum&op=composer&what=<?php echo gdrcd_filter('num', $_REQUEST['what']); ?>&where=<?php echo gdrcd_filter('num', $_REQUEST['where']); ?>&quote=<?php echo $row['id_messaggio']; ?>">[<?php echo gdrcd_filter('out', $MESSAGE['interface']['forums']['link']['quote']); ?>]</a>
                                     <?php
                                 }
-                                if(($_SESSION['login'] == $row['autore'] && $row['chiuso'] == 0) || ($_SESSION['permessi'] >= MODERATOR)) {
+                                if(($_SESSION['id_personaggio'] == $row['id_personaggio_autore'] && $row['chiuso'] == 0) || ($_SESSION['permessi'] >= MODERATOR)) {
                                     ?>
                                     <a href="main.php?page=forum&op=modifica&what=<?php echo $row['id_messaggio']; ?>">[<?php echo gdrcd_filter('out', $MESSAGE['interface']['forums']['link']['edit']); ?>]</a>
                                     <a href="main.php?page=forum&op=delete_conf&id_record=<?php echo $row['id_messaggio']; ?>&padre=<?php echo $row['id_messaggio_padre']; ?>">[<?php echo gdrcd_filter('out', $MESSAGE['interface']['forums']['link']['delete']); ?>]</a>
@@ -148,7 +148,7 @@ if( ! empty($row)) {
                                 Risposta rapida
                             </div>
                             <div class="form_field">
-                                <textarea name="messaggio" /></textarea>
+                                <textarea name="messaggio" required></textarea>
                             </div>
                             <div class="form_info">
                                 <?php echo gdrcd_filter('out', $MESSAGE['interface']['help']['bbcode']); ?>
