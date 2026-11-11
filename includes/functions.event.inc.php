@@ -182,7 +182,7 @@ function gdrcd_event_auth_login_failed($nomeUtente, $ip, $idPersonaggio = null)
  */
 function gdrcd_event_character_permission_change($idPersonaggio, $vecchioRuolo, $nuovoRuolo, $idAutore = null)
 {
-     
+
     $idAutore = gdrcd_event_default_actor_id($idAutore);
     $contesto = gdrcd_log_context_make(
         ['nuovo_ruolo' => $nuovoRuolo, 'vecchio_ruolo' => $vecchioRuolo],
@@ -196,6 +196,12 @@ function gdrcd_event_character_permission_change($idPersonaggio, $vecchioRuolo, 
         'Cambio permesso del personaggio',
         ['evento' => 'personaggio.permessi.cambio'] + $contesto,
         $idAutore
+    );
+
+    gdrcd_log_notice(
+        'Cambio permesso del personaggio',
+        ['evento' => 'personaggio.permessi.cambio'] + $contesto,
+        $idPersonaggio
     );
 }
 
