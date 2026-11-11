@@ -66,11 +66,11 @@
                                             if($direzione === 'entrata'){
                                                 $id = $contesto['id_autore'];
                                                 $nome = $contesto['autore'];
-                                                $icona = '<span style="color: #009933; font-size: 16px;font-weight: bold;" title="Entrata">↑</span>';
+                                                $icona = '<span style="color: #009933; font-size: 16px;font-weight: bold;" title="Entrata">↓</span>';
                                             } else {
                                                  $id = $contesto['id_destinatario'];
                                                 $nome = $contesto['nome_destinatario'];
-                                                $icona = '<span style="color: #ff0000ff; font-size: 16px;font-weight: bold;" title="Uscita">↓</span>';
+                                                $icona = '<span style="color: #ff0000ff; font-size: 16px;font-weight: bold;" title="Uscita">↑</span>';
                                             }
                                             
                                             echo $icona . ' ' . $record['descrizione'] . ' ' . ' [<a href="main.php?page=scheda&pg=' . $id . '"  >' . gdrcd_filter('out',
