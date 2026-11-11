@@ -13,7 +13,7 @@
         switch($_REQUEST['op']) {
             case 'view_user': // Salvataggio modifiche
             case 'view_date': // Salvataggio modifiche
-                include('gestione/log_chat/save.inc.php');
+                include('gestione/log_chat/action.inc.php');
                 break;
 
             default: //Lista pagine
