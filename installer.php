@@ -1,6 +1,6 @@
 <?php
-$dont_check = true;
-require 'header.inc.php'; /*Header comune*/
+require 'includes/required.php';
+require 'header.inc.php';
 ?>
 <div class="pagina_ambientazione">
     <?php
@@ -15,7 +15,7 @@ require 'header.inc.php'; /*Header comune*/
             echo '<div class="warning">' . gdrcd_filter('out', $e->getMessage()) . '</div>';
         }
     }
-    
+
     if (DbMigrationEngine::dbNeedsUpdate()) {
         ?>
         <form method="post" action="installer.php">

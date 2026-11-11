@@ -209,6 +209,139 @@ const ESITI_PERM = GAMEMASTER;
 //definisce quali permessi hanno accesso alla visione di tutti gli esiti (default: moderator)
 const FULL_PERM = MODERATOR;
 
+/**
+ * Soglie di fingerprint per la validazione delle sessioni.
+ * Il fingerprint è un indice probabilistico che indica quanto è probabile
+ * che il client corrente sia lo stesso che ha creato la sessione.
+ */
+
+/** @var int Device identico */
+const GDRCD_FINGERPRINT_VERYCONFIDENT = 3;
+
+/** @var int Verosimilmente stesso device */
+const GDRCD_FINGERPRINT_CONFIDENT = 2;
+
+/** @var int Zona grigia, forse stesso device */
+const GDRCD_FINGERPRINT_UNSURE = 1;
+
+/** @var int Device differente */
+const GDRCD_FINGERPRINT_WRONG = 0;
+
+/**
+ * Nomi dei segnali utilizzati per il fingerprint del client.
+ */
+const GDRCD_FINGERPRINT_SIGNAL_USERAGENT = 'user_agent';
+const GDRCD_FINGERPRINT_SIGNAL_IP = 'ip';
+const GDRCD_FINGERPRINT_SIGNAL_ACCEPT = 'accept';
+const GDRCD_FINGERPRINT_SIGNAL_LANGUAGE = 'language';
+const GDRCD_FINGERPRINT_SIGNAL_ENCODING = 'encoding';
+
+/**
+ * Pesi per il calcolo del fingerprint.
+ * Ogni parametro contribuisce allo score totale in base al suo peso.
+ */
+const GDRCD_FINGERPRINT_WEIGHTS = [
+    GDRCD_FINGERPRINT_SIGNAL_USERAGENT  => 4.0,
+    GDRCD_FINGERPRINT_SIGNAL_IP         => 2.0,
+    GDRCD_FINGERPRINT_SIGNAL_ACCEPT     => 1.5,
+    GDRCD_FINGERPRINT_SIGNAL_LANGUAGE   => 1.5,
+    GDRCD_FINGERPRINT_SIGNAL_ENCODING   => 1.0,
+];
+
+/**
+ * Configurazione temporale delle sessioni
+ */
+
+/** @var int Durata massima assoluta di una sessione in secondi (24 ore) */
+const GDRCD_SESSION_MAX_TTL = 86400;
+
+/** @var int Intervallo di refresh della sessione in secondi (10 minuti) */
+const GDRCD_SESSION_REFRESH_INTERVAL = 600;
+
+/** @var int Durata della sessione dalla creazione alla scadenza in secondi (15 minuti) */
+const GDRCD_SESSION_EXPIRY = 900;
+
+/** @var int Periodo di grazia per sessioni refreshed in secondi */
+const GDRCD_SESSION_GRACE_PERIOD = 20;
+
+/** @var int Debounce per aggiornamento data_ultimavisita in secondi */
+const GDRCD_SESSION_ACTIVITY_DEBOUNCE = 60;
+
+/** @var int Durata del token di protezione takeover in secondi (5 minuti) */
+const GDRCD_SESSION_TAKEOVER_TOKEN_TTL = 300;
+
+/**
+ * Stati delle sessioni
+ */
+const GDRCD_SESSION_STATUS_ACTIVE = 'active';
+const GDRCD_SESSION_STATUS_REFRESHED = 'refreshed';
+const GDRCD_SESSION_STATUS_REVOKED = 'revoked';
+
+const GDRCD_LOGIN_SUCCESS = 'success';
+const GDRCD_LOGIN_TAKEOVER = 'takeover';
+const GDRCD_LOGIN_WRONG = 'wrong-credentials';
+const GDRCD_LOGIN_DISABLED = 'user-deleted';
+const GDRCD_LOGIN_BLACKLISTED = 'user-blacklisted';
+
+/** @var int Numero di tentativi di login concessi prima della blacklist automatica */
+const GDRCD_BLACKLIST_MAX_ATTEMPTS = 9;
+
+/**
+ * Costanti per definire le stringe ritornate dalla funzione gdrcd_random_string
+ */
+
+/** @var int Flag per includere caratteri speciali (es. !, #, @, ...) */
+const GDRCD_RANDOMSTRING_SPECIALS = 1;
+
+/** @var int Flag per includere cifre numeriche (0-9) */
+const GDRCD_RANDOMSTRING_NUMBERS = 2;
+
+/** @var int Flag per includere lettere minuscole (a-z) */
+const GDRCD_RANDOMSTRING_LOWERCASE_LETTERS = 4;
+
+/** @var int Flag per includere lettere maiuscole (A-Z) */
+const GDRCD_RANDOMSTRING_UPPERCASE_LETTERS = 8;
+
+/** @var int Flag per includere virgolette singole e doppie */
+const GDRCD_RANDOMSTRING_QUOTES = 16;
+
+/** @var int Combinazione: solo lettere maiuscole */
+const GDRCD_RANDOMSTRING_LETTERS = GDRCD_RANDOMSTRING_UPPERCASE_LETTERS;
+
+/** @var int Combinazione: lettere maiuscole e minuscole (case-insensitive) */
+const GDRCD_RANDOMSTRING_LETTERS_CI =
+    GDRCD_RANDOMSTRING_UPPERCASE_LETTERS
+    | GDRCD_RANDOMSTRING_LOWERCASE_LETTERS;
+
+/** @var int Combinazione: lettere maiuscole e cifre numeriche */
+const GDRCD_RANDOMSTRING_ALPHA =
+    GDRCD_RANDOMSTRING_UPPERCASE_LETTERS
+    | GDRCD_RANDOMSTRING_NUMBERS;
+
+/** @var int Combinazione: lettere maiuscole, minuscole e cifre numeriche */
+const GDRCD_RANDOMSTRING_ALPHA_CI =
+    GDRCD_RANDOMSTRING_UPPERCASE_LETTERS
+    | GDRCD_RANDOMSTRING_LOWERCASE_LETTERS
+    | GDRCD_RANDOMSTRING_NUMBERS;
+
+/** @var int Combinazione: tutti i caratteri disponibili (speciali, numerici, lettere e virgolette) */
+const GDRCD_RANDOMSTRING_ALL =
+    GDRCD_RANDOMSTRING_SPECIALS
+    | GDRCD_RANDOMSTRING_NUMBERS
+    | GDRCD_RANDOMSTRING_LOWERCASE_LETTERS
+    | GDRCD_RANDOMSTRING_UPPERCASE_LETTERS
+    | GDRCD_RANDOMSTRING_QUOTES;
+
+/** @var int Combinazione: tutti i caratteri sicuri da usare per la generazione di password casuali */
+const GDRCD_RANDOM_PASSWORD =
+    GDRCD_RANDOMSTRING_SPECIALS
+    | GDRCD_RANDOMSTRING_NUMBERS
+    | GDRCD_RANDOMSTRING_LOWERCASE_LETTERS
+    | GDRCD_RANDOMSTRING_UPPERCASE_LETTERS;
+
+/** @var int Definisce la lunghezza di default della password ritornata dalla funzione gdrcd_random_password */
+const GDRCD_RANDOM_PASSWORD_LENGTH = 12;
+
 /*Vettori globali dei parametri*/
 $PARAMETER = array();
 $MESSAGES = array();

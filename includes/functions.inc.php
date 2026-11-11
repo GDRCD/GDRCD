@@ -561,6 +561,9 @@ function gdrcd_safe_name($word)
 }
 
 /**
+ * @deprecated
+ * @see gdrcd_random_password()
+ *
  * Genera una password casuale, esclusivamente alfabetica con lettere maiuscole
  * @return string : una stringa casuale lunga 8 caratteri
  */
@@ -831,4 +834,38 @@ function gdrcd_mask_ip($ip)
     }
 
     return $ip;
+}
+
+/**
+ * Ritorna l'IP corrente del client
+ *
+ * @return string L'indirizzo IP
+ */
+function gdrcd_client_ip(): string
+{
+    return $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+}
+
+/**
+ * Ritorna l'hostname corrente del client
+ *
+ * @param null|string $ip L'indirizzo IP. Di default usa l'ip corrente
+ * @return string
+ */
+function gdrcd_client_host(?string $ip = null): string
+{
+    $remote_ip = $ip ?? gdrcd_client_ip();
+
+    return match ($remote_ip) {
+        '::1', '127.0.0.1' => 'localhost',
+        default => gethostbyaddr($remote_ip),
+    };
+}
+
+// TODO documenta questa funzione
+function gdrcd_basic_page(string $html): void
+{
+    require 'header.inc.php';
+    echo $html;
+    require 'footer.inc.php';
 }
