@@ -193,11 +193,10 @@
                         /*Confermo l'operazione*/
                         echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['interface']['adm_guilds']['ok_hire']) . '</div>';
                         /*Registro l'operazione*/
-                        $personaggio = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "'");
-                        gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES ( '" . gdrcd_filter('in', $_SESSION['id_personaggio']) . "', '" . gdrcd_filter('in', $personaggio['nome']) . "', '" . $_SESSION['login'] . "', NOW(), " . NUOVOLAVORO . ", '" . gdrcd_filter('out', $subject[1]) . "')");
+                        gdrcd_event_guild_role_assign($_POST['id_personaggio'], $subject[0], $subject[1]);
+
 
                         /*Avviso l'utente*/
-
                         if ($_SESSION['id_personaggio'] != $_POST['id_personaggio']) {
                             gdrcd_query("INSERT INTO messaggi (id_personaggio_mittente, id_personaggio_destinatario, spedito, testo) VALUES ('" . $_SESSION['id_personaggio'] . "','" . gdrcd_filter('in', $_POST['id_personaggio']) . "', NOW(), '" . gdrcd_filter('in', $MESSAGE['interface']['adm-guilds']['message_body']['hire'] . ' ' . $subject[1]) . "')");
                         }
@@ -239,8 +238,7 @@
                     /*Confermo l'operazione*/
                     echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['interface']['adm_guilds']['ok_fire']) . '</div>';
                     /*Registro l'operazione*/
-                    $personaggio = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $subject[0]) . "'");
-                    gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES ('" . $subject[0] . "','" . gdrcd_filter('in', $personaggio['nome']) . "', '" . $_SESSION['login'] . "', NOW(), " . DIMISSIONE . ", '" . gdrcd_filter('out', $subject[2]) . "')");
+                    gdrcd_event_guild_role_remove($subject[0], $subject[1], $subject[2]);
 
                     /*Avviso l'utente*/
                     if ($_SESSION['id_personaggio'] != $subject[0]) {

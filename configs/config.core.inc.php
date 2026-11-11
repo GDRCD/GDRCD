@@ -76,6 +76,7 @@ $PARAMETERS['info']['webmaster_email'] = 'webmaster@gdrhost.it'; //email ufficia
 $PARAMETERS['info']['homepage_name'] = 'Homepage'; //nome con il quale si indica la prima pagina visualizzata
 $PARAMETERS['info']['dbadmin_name'] = 'Admin DB'; //nome del responsabile del database
 
+$PARAMETERS['debug_mode'] = false; //modalità debug
 
 /* SCELTA DELLA LINGUA */
 /**
