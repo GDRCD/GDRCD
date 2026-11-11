@@ -35,6 +35,12 @@ require_once(GDRCD_PATH . '/vocabulary/' . $PARAMETERS['languages']['set'] . '.v
 // include le funzioni generiche
 require_once(GDRCD_PATH . '/includes/functions.inc.php');
 
+// blocca l'esecuzione se la versione di PHP non è più supportata
+if (version_compare(PHP_VERSION, GDRCD_PHP_MIN_VERSION, '<')) {
+    gdrcd_error_fatal(sprintf($MESSAGE['error']['php_version'], GDRCD_PHP_MIN_VERSION, PHP_VERSION));
+    exit;
+}
+
 // include le funzioni del database
 require_once(GDRCD_PATH . '/includes/functions.database.inc.php');
 
