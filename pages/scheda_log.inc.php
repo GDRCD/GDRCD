@@ -149,10 +149,10 @@
                             FROM messaggi 
                             LEFT JOIN personaggio ON messaggi.id_personaggio_destinatario = personaggio.id_personaggio
                             WHERE id_personaggio_mittente = ? 
-                            ORDER BY spedito DESC LIMIT " . $num_logs . "";
-                           
-                           
-                            $result = gdrcd_stmt_all($query, [$_GET['pg']]);
+                            ORDER BY spedito DESC LIMIT ?";
+
+
+                            $result = gdrcd_stmt_all($query, [$_GET['pg'], $num_logs]);
 
 
                             if ($result) {
