@@ -14,15 +14,18 @@ function gdrcd_connect()
         $db_host = $GLOBALS['PARAMETERS']['database']['url'];
         $db_error = $GLOBALS['MESSAGE']['error']['db_not_found'];
 
+        mysqli_report(MYSQLI_REPORT_ERROR);
         $db_link = mysqli_connect($db_host, $db_user, $db_pass, $db_name);
 
-        mysqli_report(MYSQLI_REPORT_ERROR);
-        mysqli_set_charset($db_link, 'utf8mb4');
-
         if (mysqli_connect_errno()) {
-            gdrcd_database_error_format($db_error);
+            gdrcd_database_error_handle(
+                $db_error .' '. sprintf('(%d: %s)', mysqli_connect_errno(), mysqli_connect_error())
+            );
         }
+
+        mysqli_set_charset($db_link, 'utf8mb4');
     }
+
     return $db_link;
 }
 
@@ -324,10 +327,8 @@ function gdrcd_stmt_execute($stmt, $binds = [])
 
     if (!mysqli_stmt_execute($mysqliStmt)) {
         $mysqliStmtError = mysqli_stmt_error($mysqliStmt);
-        $errorMsg = gdrcd_database_error_format($mysqliStmtError);
-        mysqli_stmt_close($mysqliStmt);
-
-        gdrcd_database_error_handle($errorMsg, $sql, $binds, $throwOnError);
+        gdrcd_stmt_close($stmt);
+        gdrcd_database_error_handle($mysqliStmtError, $sql, $binds, $throwOnError);
     }
 
     $resultArr = array(
@@ -345,10 +346,9 @@ function gdrcd_stmt_execute($stmt, $binds = [])
         $result = mysqli_stmt_get_result($mysqliStmt);
         if ($result === false) {
             $mysqliStmtError = mysqli_stmt_error($mysqliStmt);
-            $errorMsg = gdrcd_database_error_format($mysqliStmtError);
-            mysqli_stmt_close($mysqliStmt);
+            gdrcd_stmt_close($stmt);
 
-            gdrcd_database_error_handle($errorMsg, $sql, $binds, $throwOnError);
+            gdrcd_database_error_handle($mysqliStmtError, $sql, $binds, $throwOnError);
         }
 
         $rows = array();
@@ -580,11 +580,11 @@ function gdrcd_database_error_format($details = null, $sql = null)
     $error_msg .= '<strong>GDRCD Database Error</strong></br>';
 
     if ($details) {
-        $error_msg .= '<strong>ERROR</strong>: ' . $details . '</br>';
+        $error_msg .= '<strong>ERROR</strong>: ' . gdrcd_filter_out($details) . '</br>';
     }
 
     if ($sql) {
-        $error_msg .= '<strong>QUERY</strong>: ' . $sql . '</br>';
+        $error_msg .= '<strong>QUERY</strong>: ' . gdrcd_filter_out($sql) . '</br>';
     }
 
     if ($base) {

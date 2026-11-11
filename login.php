@@ -1,10 +1,7 @@
 <?php
 
-/* Includo i file principali */
-require_once(__DIR__ . '/includes/required.php');
-
-/* Connessione al database */
-$handleDBConnection = gdrcd_connect();
+/*Includo i file principali */
+require_once(__DIR__.'/includes/required.php');
 
 /* Leggo i dati del form di login */
 $login1 = gdrcd_filter('get', $_POST['login1']);
@@ -83,7 +80,7 @@ if ($accountExiled) {
     gdrcd_event_auth_login_exiled($record['id_personaggio'], $login1, $_SERVER['REMOTE_ADDR']);
     exit();
 }
-/* CASO 1: Login OK */ 
+/* CASO 1: Login OK */
 elseif ($credentialsOk && $sessionExpired) {
 
     $_SESSION['id_personaggio'] = $record['id_personaggio'];
@@ -274,7 +271,7 @@ if (!empty($_SESSION['id_personaggio'])) {
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/main.css" type="text/css">
         <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/homepage.css" type="text/css">
-        <link rel="shortcut icon" href="imgs/favicon.ico">
+        <link rel="shortcut icon" href="public/images/favicon.ico">
     </head>
 
     <body>
@@ -294,7 +291,5 @@ if (!empty($_SESSION['id_personaggio'])) {
 }
     ?>
     </body>
-
-    </html>
-    <?php
-   // gdrcd_close_connection($handleDBConnection);
+</html>
+<?php
