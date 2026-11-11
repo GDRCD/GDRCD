@@ -50,7 +50,7 @@ include('../ref_header.inc.php'); /*Header comune*/
                     break;
             }
             //Livello di accesso del PG (utente, master, admin, superuser)
-            echo '<img class="presenti_ico" src="../imgs/icons/permessi'.$record['permessi'].'.gif" alt="'.gdrcd_filter('out', $alt_permessi).'" title="'.gdrcd_filter('out', $alt_permessi).'" />';
+            echo '<img class="presenti_ico" src="../public/images/icons/permessi'.$record['permessi'].'.gif" alt="'.gdrcd_filter('out', $alt_permessi).'" title="'.gdrcd_filter('out', $alt_permessi).'" />';
             //Icona stato di disponibilità. E' sensibile se la riga che sto stampando corrisponde all'utente loggato.
             $change_disp = ($record['disponibile'] + 1) % 3;
             if($record['nome'] == $_SESSION['login']) {
@@ -60,7 +60,7 @@ include('../ref_header.inc.php'); /*Header comune*/
                 }
                 echo '<a href="presenti.inc.php?disponibile='.$change_disp.'" class="link_sheet">';
             }
-            echo '<img class="presenti_ico" src="../imgs/icons/disponibile'.$record['disponibile'].'.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['availability'][$record['disponibile']]).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['availability'][$record['disponibile']]).'" />';
+            echo '<img class="presenti_ico" src="../public/images/icons/disponibile'.$record['disponibile'].'.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['availability'][$record['disponibile']]).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['availability'][$record['disponibile']]).'" />';
             if($record['nome'] == $_SESSION['login']) {
                 echo '</a>';
             }
@@ -70,7 +70,7 @@ include('../ref_header.inc.php'); /*Header comune*/
             }
             echo '<img class="presenti_ico" src="../themes/'.$PARAMETERS['themes']['current_theme'].'/imgs/races/'.$record['icon'].'" alt="'.gdrcd_filter('out', $record['sing_'.$record['sesso']]).'" title="'.gdrcd_filter('out', $record['sing_'.$record['sesso']]).'" />';
             //Icona del genere del pg
-            echo '<img class="presenti_ico" src="../imgs/icons/testamini'.$record['sesso'].'.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]).'" />';
+            echo '<img class="presenti_ico" src="../public/images/icons/testamini'.$record['sesso'].'.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]).'" />';
             //Nome pg e link alla sua scheda
             echo ' <a href="../main.php?page=scheda&pg='.gdrcd_filter('url', $record['id_personaggio']).'" class="link_sheet" target="_top">'.gdrcd_filter('out', $record['nome']);
             echo '</a> ';
@@ -78,7 +78,7 @@ include('../ref_header.inc.php'); /*Header comune*/
             if(($_SESSION['permessi'] >= GAMEMASTER) && ($record['nome'] == $_SESSION['login'])) {
                 $next = ($record['is_invisible'] == 1) ? 0 : 1;
 
-                echo '<a href="presenti.inc.php?invisibile='.$next.'"><img class="presenti_ico" src="../imgs/icons/vis'.$record['is_invisible'].'.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['invisible'][$record['is_invisible']]).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['invisible'][$record['is_invisible']]).'" /></a>';
+                echo '<a href="presenti.inc.php?invisibile='.$next.'"><img class="presenti_ico" src="../public/images/icons/vis'.$record['is_invisible'].'.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['invisible'][$record['is_invisible']]).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['invisible'][$record['is_invisible']]).'" /></a>';
             }
             echo '</div>';
         }//while
@@ -114,7 +114,7 @@ include('../ref_header.inc.php'); /*Header comune*/
                     break;
             }
             //Livello di accesso del PG (utente, master, admin, superuser)
-            echo '<img class="presenti_ico" src="../imgs/icons/permessi'.$record['permessi'].'.gif" alt="'.gdrcd_filter('out', $alt_permessi).'" title="'.gdrcd_filter('out', $alt_permessi).'" />';
+            echo '<img class="presenti_ico" src="../public/images/icons/permessi'.$record['permessi'].'.gif" alt="'.gdrcd_filter('out', $alt_permessi).'" title="'.gdrcd_filter('out', $alt_permessi).'" />';
             //Icona stato di disponibilità. E' sensibile se la riga che sto stampando corrisponde all'utente loggato.
             $change_disp = ($record['disponibile'] + 1) % 3;
             if($record['nome'] == $_SESSION['login']) {
@@ -124,7 +124,7 @@ include('../ref_header.inc.php'); /*Header comune*/
                 }
                 echo '<a href="presenti.inc.php?disponibile='.$change_disp.'" class="link_sheet">';
             }
-            echo '<img class="presenti_ico" src="../imgs/icons/disponibile'.$record['disponibile'].'.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['availability'][$record['disponibile']]).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['availability'][$record['disponibile']]).'" />';
+            echo '<img class="presenti_ico" src="../public/images/icons/disponibile'.$record['disponibile'].'.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['availability'][$record['disponibile']]).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['availability'][$record['disponibile']]).'" />';
             if($record['nome'] == $_SESSION['login']) {
                 echo '</a>';
             }
@@ -134,7 +134,7 @@ include('../ref_header.inc.php'); /*Header comune*/
             }
             echo '<img class="presenti_ico" src="../themes/'.$PARAMETERS['themes']['current_theme'].'/imgs/races/'.$record['icon'].'" alt="'.gdrcd_filter('out', $record['sing_'.$record['sesso']]).'" title="'.gdrcd_filter('out', $record['sing_'.$record['sesso']]).'" />';
             //Icona del genere del pg
-            echo '<img class="presenti_ico" src="../imgs/icons/testamini'.$record['sesso'].'.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]).'" />';
+            echo '<img class="presenti_ico" src="../public/images/icons/testamini'.$record['sesso'].'.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]).'" />';
             //Nome pg e link alla sua scheda
             echo ' <a href="../main.php?page=scheda&pg='.gdrcd_filter('in', $record['nome']).'" class="link_sheet" target="_top">'.gdrcd_filter('out', $record['nome']);
             echo '</a> ';
@@ -142,7 +142,7 @@ include('../ref_header.inc.php'); /*Header comune*/
             if(($_SESSION['permessi'] >= GAMEMASTER) && ($record['nome'] == $_SESSION['login'])) {
                 $next = ($record['is_invisible'] == 1) ? 0 : 1;
 
-                echo '<a href="presenti.inc.php?invisibile='.$next.'"><img class="presenti_ico" src="../imgs/icons/vis'.$record['is_invisible'].'.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['invisible'][$record['is_invisible']]).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['invisible'][$record['is_invisible']]).'" /></a>';
+                echo '<a href="presenti.inc.php?invisibile='.$next.'"><img class="presenti_ico" src="../public/images/icons/vis'.$record['is_invisible'].'.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['invisible'][$record['is_invisible']]).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['invisible'][$record['is_invisible']]).'" /></a>';
             }
             echo '</div>';
         }//while
@@ -190,7 +190,7 @@ include('../ref_header.inc.php'); /*Header comune*/
                 }
 
                 //Livello di accesso del PG (utente, master, admin, superuser)
-                echo '<img class="presenti_ico" src="../imgs/icons/permessi'.$record['permessi'].'.gif" alt="'.gdrcd_filter('out', $alt_permessi).'" title="'.gdrcd_filter('out', $alt_permessi).'" />';
+                echo '<img class="presenti_ico" src="../public/images/icons/permessi'.$record['permessi'].'.gif" alt="'.gdrcd_filter('out', $alt_permessi).'" title="'.gdrcd_filter('out', $alt_permessi).'" />';
 
                 //Icona stato di disponibilità. E' sensibile se la riga che sto stampando corrisponde all'utente loggato.
                 $change_disp = ($record['disponibile'] + 1) % 3;
@@ -201,7 +201,7 @@ include('../ref_header.inc.php'); /*Header comune*/
                     }
                     echo '<a href="presenti.inc.php?disponibile='.$change_disp.'" class="link_sheet">';
                 }
-                echo '<img class="presenti_ico" src="../imgs/icons/disponibile'.$record['disponibile'].'.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['availability'][$record['disponibile']]).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['availability'][$record['disponibile']]).'" />';
+                echo '<img class="presenti_ico" src="../public/images/icons/disponibile'.$record['disponibile'].'.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['availability'][$record['disponibile']]).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['availability'][$record['disponibile']]).'" />';
                 if($record['nome'] == $_SESSION['login']) {
                     echo '</a>';
                 }
@@ -213,7 +213,7 @@ include('../ref_header.inc.php'); /*Header comune*/
                 echo '<img class="presenti_ico" src="../themes/'.$PARAMETERS['themes']['current_theme'].'/imgs/races/'.$record['icon'].'" alt="'.gdrcd_filter('out', $record['sing_'.$record['sesso']]).'" title="'.gdrcd_filter('out', $record['sing_'.$record['sesso']]).'" />';
 
                 //Icona del genere del pg
-                echo '<img class="presenti_ico" src="../imgs/icons/testamini'.$record['sesso'].'.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]).'" />';
+                echo '<img class="presenti_ico" src="../public/images/icons/testamini'.$record['sesso'].'.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['gender'][$record['sesso']]).'" />';
 
                 //Nome pg e link alla sua scheda
                 echo ' <a href="../main.php?page=scheda&pg='.$record['id_personaggio'].'" class="link_sheet" target="_top">'.gdrcd_filter('out', $record['nome']);
@@ -223,7 +223,7 @@ include('../ref_header.inc.php'); /*Header comune*/
                 if(($_SESSION['permessi'] >= GAMEMASTER) && ($record['nome'] == $_SESSION['login'])) {
                     $next = ($record['is_invisible'] == 1) ? 0 : 1;
 
-                    echo '<a href="presenti.inc.php?invisibile='.$next.'"><img class="presenti_ico" src="../imgs/icons/vis'.$record['is_invisible'].'.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['invisible'][$record['is_invisible']]).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['invisible'][$record['is_invisible']]).'" /></a>';
+                    echo '<a href="presenti.inc.php?invisibile='.$next.'"><img class="presenti_ico" src="../public/images/icons/vis'.$record['is_invisible'].'.png" alt="'.gdrcd_filter('out', $MESSAGE['status_pg']['invisible'][$record['is_invisible']]).'" title="'.gdrcd_filter('out', $MESSAGE['status_pg']['invisible'][$record['is_invisible']]).'" /></a>';
                 }
                 echo '</div>';
             }

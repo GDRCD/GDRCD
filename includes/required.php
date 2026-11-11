@@ -45,6 +45,12 @@ require_once(GDRCD_PATH . '/includes/functions.api.inc.php');
 require_once(GDRCD_PATH . '/includes/functions.session_core.inc.php');
 require_once(GDRCD_PATH . '/includes/functions.session_auth.inc.php');
 
+// include le funzioni helper per i personaggi
+require_once(GDRCD_PATH . '/includes/functions.character.inc.php');
+
+// include le funzioni helper per gli oggetti
+require_once(GDRCD_PATH . '/includes/functions.item.inc.php');
+
 // include le funzioni per le chat
 require_once(GDRCD_PATH . '/includes/functions.chat_core.inc.php');
 require_once(GDRCD_PATH . '/includes/functions.chat_read.inc.php');
@@ -52,6 +58,12 @@ require_once(GDRCD_PATH . '/includes/functions.chat_write.inc.php');
 
 // include le funzioni per la generazione di valori casuali
 require_once(GDRCD_PATH . '/includes/functions.random.inc.php');
+require_once(GDRCD_PATH . '/includes/functions.configuration.inc.php');
+
+// include le funzioni per il logging
+require_once(GDRCD_PATH . '/includes/functions.log_core.inc.php');
+require_once(GDRCD_PATH . '/includes/functions.log_read.inc.php');
+require_once(GDRCD_PATH . '/includes/functions.event.inc.php');
 
 // carica la gestione dei suoni
 require_once(GDRCD_PATH . '/includes/AudioController.class.php');
@@ -60,6 +72,7 @@ require_once(GDRCD_PATH . '/includes/AudioController.class.php');
 if(!empty($_SESSION['theme']) && array_key_exists($_SESSION['theme'], $PARAMETERS['themes']['available'])){
     $PARAMETERS['themes']['current_theme'] = $_SESSION['theme'];
 }
+gdrcd_logs_init();
 
 if(($PARAMETERS['mode']['user_bbcode'] == 'ON' && $PARAMETERS['settings']['user_bbcode']['type'] == 'bbd') || $PARAMETERS['settings']['forum_bbcode']['type'] == 'bbd') {
     require_once('plugins/bbdecoder/bbdecoder.php');

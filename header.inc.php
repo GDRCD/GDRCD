@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="it" lang="it">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link rel="shortcut icon" href="imgs/favicon.ico" type="image/png" />
+    <link rel="shortcut icon" href="public/images/favicon.ico" type="image/png" />
     <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/main.css" type="text/css" />
     <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/chat.css" type="text/css" />
     <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/presenti.css" type="text/css" />

@@ -5,7 +5,7 @@ IMPORTANTE! non cancellate alcuna delle righe, ne modificate quanto scritto tra 
 
 /********** Homepage **********/
 /*Testo centrale homepage*/
-$MESSAGE['homepage']['main_content']['site_title'] = '<img src="imgs/logo_gdrcd.png" alt="GDRCD"/>';
+$MESSAGE['homepage']['main_content']['site_title'] = '<img src="public/images/logo_gdrcd.png" alt="GDRCD"/>';
 $MESSAGE['homepage']['main_content']['site_subtitle'] = 'Il CMS Open Source per i Giochi di Ruolo play-by-chat';
 $MESSAGE['homepage']['main_content']['welcome'] = 'Benvenuto in GDRCD!';
 $MESSAGE['homepage']['main_content']['infos'] = 'Prima di iniziare a realizzare il tuo sito, hai letto la LICENZA D\'USO che accompagna il prodotto? Se non l\'hai ancora fatto premurati gentilmente di leggerla. Troverai le istruzioni su come utilizzare  GDRCD 5.4 nel manuale allegato. Buon divertimento!';
@@ -213,6 +213,7 @@ $MESSAGE['interface']['sheet']['trans']['page_name'] = 'Transazioni';
 $MESSAGE['interface']['sheet']['log']['author'] = 'Autore';
 $MESSAGE['interface']['sheet']['log']['name_change'] = 'Cambio nome';
 $MESSAGE['interface']['sheet']['log']['page_name'] = 'Registrazioni';
+$MESSAGE['interface']['sheet']['log']['all'] = 'Visualizza tutti i log di';
 $MESSAGE['interface']['sheet']['log']['date'] = 'Data';
 $MESSAGE['interface']['sheet']['log']['ip'] = 'IP';
 $MESSAGE['interface']['sheet']['log']['other_account'] = 'Doppio';
@@ -456,7 +457,7 @@ $MESSAGE['interface']['administration']['locations']['page'] = 'Pagina associata
 $MESSAGE['interface']['administration']['locations']['is_chat'] = 'Chat';
 $MESSAGE['interface']['administration']['locations']['is_chat_info'] = 'Spuntare se la stanza è adibita a chat, altrimenti specificare nel campo "pagina" il file da caricare nel riquadro principale';
 $MESSAGE['interface']['administration']['locations']['image'] = 'Nome del file immagine';
-$MESSAGE['interface']['administration']['locations']['image_info'] = 'Specificare il nome del file da utilizzare come immagine che deve essere posizionato nella cartella imgs/locations del tema scelto.';
+$MESSAGE['interface']['administration']['locations']['image_info'] = 'Specificare il nome del file da utilizzare come immagine che deve essere posizionato nella cartella public/images/locations del tema scelto.';
 $MESSAGE['interface']['administration']['locations']['screen_name'] = 'Nome vistualizzato nell\'elenco presenti';
 $MESSAGE['interface']['administration']['locations']['screen_name_info'] = 'Se specificato, il nome in questa casella viene visualizzato nell\'elenco presenti al posto del nome della stanza';
 $MESSAGE['interface']['administration']['locations']['map_id'] = 'Mappa di appartenenza';
@@ -631,9 +632,12 @@ $MESSAGE['interface']['administration']['maintenance']['months'] = 'mesi';
 $MESSAGE['interface']['administration']['log']['events']['page_name'] = 'Log eventi';
 $MESSAGE['interface']['administration']['log']['events']['link']['back'] = 'Torna alla scelta del log...';
 $MESSAGE['interface']['administration']['log']['events']['author'] = 'Autore';
-$MESSAGE['interface']['administration']['log']['events']['dest'] = 'Soggetto';
+$MESSAGE['interface']['administration']['log']['events']['sogg'] = 'Soggetto';
+$MESSAGE['interface']['administration']['log']['events']['dest'] = 'Destinatario';
 $MESSAGE['interface']['administration']['log']['events']['date'] = 'Data';
 $MESSAGE['interface']['administration']['log']['events']['descr'] = 'Informazioni';
+$MESSAGE['interface']['administration']['log']['events']['log_type']="Tutti i log";
+$MESSAGE['interface']['administration']['log']['events']['personaggio']="Tutti i personaggi";
 $MESSAGE['interface']['administration']['log']['messages']['page_name'] = 'Log messaggi';
 $MESSAGE['interface']['administration']['log']['messages']['link']['back'] = 'Torna alla selezione mittente...';
 $MESSAGE['interface']['administration']['log']['messages']['dest'] = 'Destinatario';
@@ -834,7 +838,9 @@ $MESSAGE['chat']['error']['invalid_dice_faces'] = 'Numero di facce invalido.';
 $MESSAGE['chat']['error']['invalid_dice_number'] = 'Numero di dadi invalido.';
 $MESSAGE['chat']['error']['invalid_dice_modifier'] = 'Modificatore invalido.';
 $MESSAGE['chat']['error']['invalid_dice_threshold'] = 'Numero soglia successi invalido.';
+$MESSAGE['chat']['error']['solo_autore'] = '<h2>ATTENZIONE</h2> Non puoi salvare la giocata se non inviato azioni in chat';
 
+//Chat private
 $MESSAGE['chat']['error']['invalid_stats'] = 'Caratteristica invalida';
 $MESSAGE['chat']['error']['invalid_skill'] = 'Abilità invalida';
 $MESSAGE['chat']['error']['invalid_item'] = 'Oggetto invalido';
@@ -852,7 +858,7 @@ $MESSAGE['event'][BLOCKED] = 'Postazioni bloccate';
 $MESSAGE['event'][LOGGEDIN] = 'Log in';
 $MESSAGE['event'][ACCOUNTMULTIPLO] = 'Doppi';
 $MESSAGE['event'][ERRORELOGIN] = 'Log in errati';
-$MESSAGE['event'][BONIFICO] = 'Transazioni tra PG';
+$MESSAGE['event'][BONIFICO] = 'Transazioni banca';
 $MESSAGE['event'][NUOVOLAVORO] = 'Assunzioni';
 $MESSAGE['event'][DIMISSIONE] = 'Dimissioni';
 $MESSAGE['event'][CHANGEDROLE] = 'Cambio permessi';
@@ -860,6 +866,7 @@ $MESSAGE['event'][CHANGEDPASS] = 'Cambio password';
 $MESSAGE['event'][PX] = 'Esperienza assegnata';
 $MESSAGE['event'][DELETEPG] = 'Personaggi cancellati';
 $MESSAGE['event'][CHANGEDNAME] = 'Cambi nome';
+$MESSAGE['event'][OGGETTI] = 'Spostamenti oggetti e inventario';
 
 
 /********** Ricorrenti **********/
