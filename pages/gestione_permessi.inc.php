@@ -13,7 +13,30 @@
             <?php /*Modifica di un record*/
             if((gdrcd_filter('', $_POST['op']) == $MESSAGE['interface']['administration']['roles']['submit']['edit']) || (gdrcd_filter('', $_POST['op']) == $MESSAGE['interface']['administration']['roles']['submit']['new'])) {
                 /*Eseguo l'aggiornamento*/
-                gdrcd_query("UPDATE personaggio SET permessi = ".gdrcd_filter('num', $_POST['permessi'])." WHERE id_personaggio = ".gdrcd_filter('num', $_POST['id_personaggio'])." LIMIT 1");
+                 $oldrole = gdrcd_stmt_one(
+                    'SELECT permessi FROM personaggio WHERE id_personaggio = ?',
+                        [gdrcd_filter('num', $_POST['id_personaggio'])]
+                    );
+
+                     switch(gdrcd_filter('num', $oldrole['permessi'])) {
+                    case USER:
+                        $vecchioRuolo = gdrcd_filter('out', $PARAMETERS['names']['users_name']['sing']);
+                        break;
+                    case GUILDMODERATOR:
+                        $vecchioRuolo  = gdrcd_filter('out', $PARAMETERS['names']['guild_name']['lead']);
+                        break;
+                    case GAMEMASTER:
+                        $vecchioRuolo = gdrcd_filter('out', $PARAMETERS['names']['master']['sing']);
+                        break;
+                    case MODERATOR:
+                        $vecchioRuolo = gdrcd_filter('out', $PARAMETERS['names']['moderators']['sing']);
+                        break;
+                    case SUPERUSER:
+                        $vecchioRuolo = gdrcd_filter('out', $PARAMETERS['names']['administrator']['sing']);
+                        break;
+                }
+
+                 gdrcd_query("UPDATE personaggio SET permessi = ".gdrcd_filter('num', $_POST['permessi'])." WHERE id_personaggio = ".gdrcd_filter('num', $_POST['id_personaggio'])." LIMIT 1");
 
                 switch(gdrcd_filter('num', $_POST['permessi'])) {
                     case USER:
@@ -32,18 +55,9 @@
                         $newrole = gdrcd_filter('out', $PARAMETERS['names']['administrator']['sing']);
                         break;
                 }
-                /*Recupero i nomi dei personaggi per il log*/
-                $char_data = gdrcd_query("SELECT 
-                    target.nome as nome_interessato, 
-                    autore.nome as nome_autore 
-                    FROM personaggio target 
-                    JOIN personaggio autore ON autore.id_personaggio = ".gdrcd_filter('num', $_SESSION['id_personaggio'])."
-                    WHERE target.id_personaggio = ".gdrcd_filter('num', $_POST['id_personaggio'])." 
-                    LIMIT 1");
 
                 /*Registro l'operazione*/
-                gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES (".gdrcd_filter('num', $_POST['id_personaggio']).", '".gdrcd_filter('in', $char_data['nome_interessato'])."', '".gdrcd_filter('in', $char_data['nome_autore'])."', NOW(), '".CHANGEDROLE."', '->".$newrole."')");
-
+                gdrcd_event_character_permission_change($_POST['id_personaggio'], $vecchioRuolo, $newrole);
                 /*Avviso l'utente*/
                 gdrcd_query("INSERT INTO messaggi (id_personaggio_mittente, id_personaggio_destinatario, spedito, testo) VALUES (".gdrcd_filter('num', $_SESSION['id_personaggio']).", ".gdrcd_filter('num', $_POST['id_personaggio']).", NOW(), '".gdrcd_filter('in', $MESSAGE['interface']['administration']['roles']['message_body'][0].$newrole.$MESSAGE['interface']['administration']['roles']['message_body'][1])."')");
 

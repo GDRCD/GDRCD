@@ -23,11 +23,12 @@
 
     gdrcd_query($result, 'free');
 
-    /* Spostamento di un oggetto dallo zaino nell'inventario*/
+    /* Spostamento di un oggetto dall'inventario allo zaino'*/
     if (($_POST['op'] == "togli") && ($_SESSION['id_personaggio'] == $_REQUEST['pg']))
     {
         gdrcd_query("UPDATE clgpersonaggiooggetto SET posizione = 0 WHERE id_oggetto = " . gdrcd_filter('num',
                 $_POST['id_oggetto']) . " AND id_personaggio = '" . gdrcd_filter('in', $_REQUEST['pg']) . "' LIMIT 1 ");
+        gdrcd_event_item_move_to_inventory($_SESSION['id_personaggio'], $_POST['id_oggetto']);
 
         echo '<div class="warning">' . gdrcd_filter('out', $MESSAGE['warning']['done']) . '</div>';
     }
@@ -56,6 +57,8 @@
                     $_POST['id_oggetto']) . " AND id_personaggio = '" . gdrcd_filter('get', $_REQUEST['pg']) . "' LIMIT 1 ";
         }
         gdrcd_query($query);
+        /*Registro l'evento*/
+        gdrcd_event_item_discard($_REQUEST['pg'], $_POST['id_oggetto']);
 
         echo gdrcd_filter('out', $MESSAGE['interface']['sheet']['items']['warning']['done']);
     }
@@ -88,13 +91,9 @@
             gdrcd_query($result_loc, 'free');
             // Eseguo la query
             gdrcd_query($query);
-            $nome = gdrcd_query("SELECT nome FROM personaggio WHERE id_personaggio = '" . gdrcd_filter('in', $_POST['give_item']) . "'");
-         
+            gdrcd_event_item_transfer($_REQUEST['pg'], $_POST['give_item'], $_POST['id_oggetto'], 1, $_POST['cariche']);
 
-            /*Registro l'evento*/
-            gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento ,descrizione_evento) VALUES ('".$_POST['give_item']."', '".gdrcd_filter('in', $nome['nome'])."' ,'".$_SESSION['login']."', NOW(), ".BONIFICO.", '".gdrcd_filter('in', $_POST['checosa'])."')");
-
-            echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['warning']['done']).'</div>';
+             echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['warning']['done']).'</div>';
         } else {
             echo '<div class="warning">'.gdrcd_filter('out', $MESSAGE['warning']['cant_do']).'</div>';
         }

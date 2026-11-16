@@ -15,7 +15,7 @@ $pass = $row['pass'];
 
             if((gdrcd_password_check(gdrcd_filter_email($_POST['email']),$email))  && (gdrcd_password_check($_POST['new_pass'], $pass))) {
                 gdrcd_query("UPDATE personaggio SET permessi = -1 WHERE id_personaggio = '".$_SESSION['id_personaggio']."' ");
-                gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".$_SESSION['id_personaggio']."','".$_SESSION['login']."', '".$_SESSION['login']."',NOW(), ".DELETEPG." ,'".gdrcd_filter('in', $MESSAGE['interface']['user']['delete']['undeleted'])."')");
+                gdrcd_event_character_account_delete($_SESSION['id_personaggio']);
                 ?>
                 <div class="warning">
                     <?php echo gdrcd_filter('out', $MESSAGE['warning']['modified']); ?>
@@ -42,7 +42,8 @@ $pass = $row['pass'];
         /*Cancella altri - MODERATORE (Disabilita account)*/
         if((gdrcd_filter('get', $_POST['op']) == 'force') && ($_SESSION['permessi'] == MODERATOR)) {
             gdrcd_query("UPDATE personaggio SET permessi = -1 WHERE id_personaggio = '".gdrcd_filter('in', $_POST['account'])."' AND permessi < ".SUPERUSER."");
-            gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".$_SESSION['id_personaggio']."','".gdrcd_filter('in', $_POST['account'])."','".$_SESSION['login']."', NOW(), ".DELETEPG." ,'".gdrcd_filter('in', $MESSAGE['interface']['user']['delete']['deleted'])."')");
+            // Registro l'evento sia per il personaggio interessato che per l'autore dell'azione
+            gdrcd_event_character_account_status($_POST['account'], false);
             ?>
             <div class="warning">
                 <?php echo gdrcd_filter('out', $MESSAGE['warning']['modified']); ?>
@@ -56,7 +57,9 @@ $pass = $row['pass'];
         /*Cancella altri - SUPERUSER (Disabilita account) */
         if((gdrcd_filter('get', $_POST['op']) == 'force') && ($_SESSION['permessi'] == SUPERUSER)) {
             gdrcd_query("UPDATE personaggio SET permessi = -1 WHERE id_personaggio = '".gdrcd_filter('in', $_POST['account'])."'");
-            gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".$_SESSION['id_personaggio']."','".gdrcd_filter('in', $_POST['account'])."','".$_SESSION['login']."', NOW(), ".DELETEPG." ,'->')");
+            // Registro l'evento sia per il personaggio interessato che per l'autore dell'azione
+            gdrcd_event_character_account_status($_POST['account'], false);
+            
             ?>
             <div class="warning">
                 <?php echo gdrcd_filter('out', $MESSAGE['warning']['modified']); ?>
@@ -70,7 +73,9 @@ $pass = $row['pass'];
         /*Ripristina account*/
         if((gdrcd_filter('get', $_POST['op']) == 'get_back') && ($_SESSION['permessi'] >= MODERATOR)) {
             gdrcd_query("UPDATE personaggio SET permessi = 0 WHERE id_personaggio = '".gdrcd_filter('in', $_POST['account'])."'");
-            gdrcd_query("INSERT INTO log (id_personaggio, nome_interessato, autore, data_evento, codice_evento, descrizione_evento) VALUES ('".$_SESSION['id_personaggio']."','".gdrcd_filter('in', $_POST['account'])."','".$_SESSION['login']."', NOW(), ".DELETEPG." ,'<-')");
+            // Registro l'evento sia per il personaggio interessato che per l'autore dell'azione
+            gdrcd_event_character_account_status($_POST['account'], true);
+            
             ?>
             <div class="warning">
                 <?php echo gdrcd_filter('out', $MESSAGE['warning']['modified']); ?>

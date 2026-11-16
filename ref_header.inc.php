@@ -10,8 +10,6 @@ if(!empty($_SESSION['theme']) && array_key_exists($_SESSION['theme'], $PARAMETER
     $PARAMETERS['themes']['current_theme'] = $_SESSION['theme'];
 }
 
-//Eseguo la connessione al database
-$handleDBConnection = gdrcd_connect();
 //Ricevo il tempo di reload
 $i_ref_time = gdrcd_filter_get($_GET['ref']);
 

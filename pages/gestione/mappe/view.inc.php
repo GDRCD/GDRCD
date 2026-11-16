@@ -80,7 +80,7 @@
                                         <!-- Modifica -->
                                         <form class="opzioni_elenco_record_gestione" action="main.php?page=gestione/mappe&op=edit" method="post">
                                             <input type="hidden" name="id_click" value="<?php echo gdrcd_filter('out', $row['id_click']) ?>" />
-                                            <input type="image" src="imgs/icons/edit.png"
+                                            <input type="image" src="public/images/icons/edit.png"
                                                    alt="<?=gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['edit']); ?>"
                                                    title="<?=gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['edit']); ?>" />
                                         </form>
@@ -90,7 +90,7 @@
                                         <form class="opzioni_elenco_record_gestione" action="main.php?page=gestione/mappe" method="post">
                                             <input type="hidden" name="id_click" value="<?=gdrcd_filter('out', $row['id_click']) ?>" />
                                             <input type="hidden" name="op" value="erase" />
-                                            <input type="image" src="imgs/icons/erase.png"
+                                            <input type="image" src="public/images/icons/erase.png"
                                                    alt="<?=gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['erase']); ?>"
                                                    title="<?=gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['erase']); ?>" />
                                         </form>

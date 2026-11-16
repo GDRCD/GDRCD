@@ -15,9 +15,6 @@ require_once dirname(__FILE__) . '/includes/required.php';
 // Controlla che l'utente sia connesso
 gdrcd_controllo_sessione();
 
-// Connette GDRCD al database
-gdrcd_connect();
-
 // Controlla che l'utente non sia esiliato
 if( ($ban_message = gdrcd_controllo_esilio($_SESSION['id_personaggio'], true)) ) {
     session_destroy();

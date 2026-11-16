@@ -17,6 +17,8 @@ HTML;
                 break;
             }
                 gdrcd_configuration_set($parametro, $valore);
+                gdrcd_configuration_cache_create();
+
                 $success_message = 'Configurazione aggiornata con successo';
                 echo <<<HTML
 <div class="success">{$success_message}</div>

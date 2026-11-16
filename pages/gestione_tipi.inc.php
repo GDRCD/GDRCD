@@ -201,7 +201,7 @@
                                                            value="<?php echo $row['cod_tipo'] ?>" />
                                                     <input type="hidden" name="op" value="edit" />
                                                     <input type="image"
-                                                           src="imgs/icons/edit.png"
+                                                           src="public/images/icons/edit.png"
                                                            alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['edit']); ?>"
                                                            title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['edit']); ?>" />
                                                 </form>
@@ -215,7 +215,7 @@
                                                            value="<?php echo $row['cod_tipo'] ?>" />
                                                     <input type="hidden" name="op" value="erase" />
                                                     <input type="image"
-                                                           src="imgs/icons/erase.png"
+                                                           src="public/images/icons/erase.png"
                                                            alt="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['erase']); ?>"
                                                            title="<?php echo gdrcd_filter('out', $MESSAGE['interface']['administration']['ops']['erase']); ?>" />
                                                 </form>

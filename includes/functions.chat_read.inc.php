@@ -937,7 +937,7 @@ function gdrcd_chat_icons_component($azione)
     $icone = explode(';', $azione['imgs']);
 
     $icona_genere_url = sprintf(
-        'imgs/icons/testamini%s.png',
+        'public/images/icons/testamini%s.png',
         urlencode($icone[0])
     );
 

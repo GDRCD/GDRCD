@@ -138,7 +138,7 @@
                                     $permessi_utente = $PARAMETERS['names']['administrator']['sing'];
                                     break;
                             }
-                            echo gdrcd_filter('out', $permessi_utente).' <img src="imgs/icons/permessi'.(int) $personaggio['permessi'].'.gif" class="profilo_img_gilda" />'; ?>
+                            echo gdrcd_filter('out', $permessi_utente).' <img src="public/images/icons/permessi'.(int) $personaggio['permessi'].'.gif" class="profilo_img_gilda" />'; ?>
                         </div>
                     </div>
                 <?php } ?>
