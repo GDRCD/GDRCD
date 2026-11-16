@@ -75,7 +75,8 @@ if($PARAMETERS['mode']['check_messages'] === 'ON') {
 
         // Forzo lo stop della notifica sul title se previsto
         if($PARAMETERS['mode']['alert_pm_via_pagetitle'] == 'ON') {
-            $cntMessagesFrame .= '<script type="text/javascript">parent.stop_blinking_title();</script>';
+            // il frame può caricarsi prima che il parent abbia incluso changetitle.js
+            $cntMessagesFrame .= '<script type="text/javascript">if (typeof parent.stop_blinking_title === "function") { parent.stop_blinking_title(); }</script>';
         }
     }
     // NUOVI MESSAGGI
@@ -95,7 +96,12 @@ if($PARAMETERS['mode']['check_messages'] === 'ON') {
 
         // Avvio notifica sul title
         if($PARAMETERS['mode']['alert_pm_via_pagetitle'] == 'ON') {
-            $cntMessagesFrame .= '<script type="text/javascript">parent.blink_title("('.$MESSAGE['interface']['forums']['topic']['new_posts']['sing'].') '.$PARAMETERS['info']['site_name'].'");</script>';
+            // se changetitle.js non è ancora caricato nel parent, attendo il suo load
+            $cntMessagesFrame .= '<script type="text/javascript">(function () {
+                var start = function () { parent.blink_title("('.$MESSAGE['interface']['forums']['topic']['new_posts']['sing'].') '.$PARAMETERS['info']['site_name'].'"); };
+                if (typeof parent.blink_title === "function") { start(); }
+                else { parent.addEventListener("load", function () { if (typeof parent.blink_title === "function") { start(); } }); }
+            })();</script>';
         }
 
         // Avvio notifica sonora
