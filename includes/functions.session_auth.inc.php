@@ -742,7 +742,7 @@ function gdrcd_session_log(int $id_personaggio, string $descrizione): void
 function gdrcd_session_expired_error(): void
 {
     $message = $GLOBALS['MESSAGE']['error']['session_expired'] ?? 'Sessione scaduta.';
-    gdrcd_error($message);
+    gdrcd_error_fatal($message);
 }
 
 function gdrcd_session_login_attempt(): int
