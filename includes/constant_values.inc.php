@@ -265,7 +265,7 @@ const GDRCD_SESSION_EXPIRY = 900;
 const GDRCD_SESSION_GRACE_PERIOD = 20;
 
 /** @var int Debounce per aggiornamento data_ultimavisita in secondi */
-const GDRCD_SESSION_ACTIVITY_DEBOUNCE = 60;
+const GDRCD_SESSION_ACTIVITY_DEBOUNCE = 30;
 
 /** @var int Durata del token di protezione takeover in secondi (5 minuti) */
 const GDRCD_SESSION_TAKEOVER_TOKEN_TTL = 300;
