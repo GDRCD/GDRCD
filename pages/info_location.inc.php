@@ -151,23 +151,23 @@
                     case 10:
                     case 11:
                     case 1:
-                        $meteo_cond = $MESSAGE['interface']['meteo']['status'][0];
+                        $meteo_cond = $MESSAGE['interface']['meteo']['status']['sereno'];
                         break;
                     case 7:
                     case 5:
                     case 2:
-                        $meteo_cond = $MESSAGE['interface']['meteo']['status'][1];
+                        $meteo_cond = $MESSAGE['interface']['meteo']['status']['variabile'];
                         break;
                     case 9:
                     case 3:
-                        $meteo_cond = $MESSAGE['interface']['meteo']['status'][2];
+                        $meteo_cond = $MESSAGE['interface']['meteo']['status']['nuvoloso'];
                         break;
                     case 8:
                     case 4:
                         if ($minima < 4) {
-                            $meteo_cond = $MESSAGE['interface']['meteo']['status'][4];
+                            $meteo_cond = $MESSAGE['interface']['meteo']['status']['neve'];
                         } else {
-                            $meteo_cond = $MESSAGE['interface']['meteo']['status'][3];
+                            $meteo_cond = $MESSAGE['interface']['meteo']['status']['pioggia'];
                         }
                         break;
                 }

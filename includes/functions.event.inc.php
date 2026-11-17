@@ -642,3 +642,42 @@ function gdrcd_event_character_account_status($idPersonaggio, $abilitato, $idAut
         gdrcd_log_notice($descrizione, ['evento' => $evento] + $contesto, $idAutore);
     }
 }
+
+/**
+ * Registra l'impostazione o la rimozione di un meteo manuale.
+ *
+ * Senza condizione l'evento descrive un ripristino: la chat torna a ereditare
+ * dalla zona e la zona torna al meteo automatico.
+ *
+ * @param string $target Bersaglio della modifica: 'zona' (mappa_click) oppure 'luogo' (mappa)
+ * @param int $id Identificativo della zona o della chat
+ * @param int|null $temperatura Nuova temperatura, null in caso di ripristino
+ * @param string|null $condizione Slug della nuova condizione, null in caso di ripristino
+ * @param string|null $scadenza Scadenza 'Y-m-d H:i:s' del valore, null se non scade
+ * @param int|null $idAutore Personaggio che esegue la modifica; usa la sessione se omesso
+ * @return void
+ */
+function gdrcd_event_meteo_change($target, $id, $temperatura = null, $condizione = null, $scadenza = null, $idAutore = null)
+{
+    $idAutore = gdrcd_event_default_actor_id($idAutore);
+    $azzerato = $condizione === null;
+
+    $dati = ['target' => (string)$target, 'id' => (int)$id];
+    $dati += $azzerato
+        ? ['azzerato' => true]
+        : ['temperatura' => (int)$temperatura, 'condizione' => (string)$condizione, 'scadenza' => $scadenza];
+
+    $contesto = gdrcd_log_context_make(
+        $dati,
+        null,
+        null,
+        $idAutore,
+        gdrcd_character_name($idAutore)
+    );
+
+    gdrcd_log_notice(
+        $azzerato ? 'Ripristino del meteo' : 'Cambio del meteo',
+        ['evento' => 'meteo.cambio'] + $contesto,
+        $idAutore
+    );
+}

@@ -117,11 +117,38 @@ $MESSAGE['interface']['logged_users']['logged_in'] = 'Sono entrati';
 $MESSAGE['interface']['logged_users']['logged_out'] = 'Sono usciti';
 /* Pannello informazioni */
 $MESSAGE['interface']['meteo']['title'] = 'Condizioni meteo';
-$MESSAGE['interface']['meteo']['status'][0] = 'Sereno';
-$MESSAGE['interface']['meteo']['status'][1] = 'Variabile';
-$MESSAGE['interface']['meteo']['status'][2] = 'Nuvoloso';
-$MESSAGE['interface']['meteo']['status'][3] = 'Pioggia';
-$MESSAGE['interface']['meteo']['status'][4] = 'Neve';
+/* Condizioni meteo: le chiavi sono gli slug salvati a DB (mappa.meteo_condizione, mappa_click.meteo_condizione), non modificarle */
+$MESSAGE['interface']['meteo']['status']['sereno'] = 'Sereno';
+$MESSAGE['interface']['meteo']['status']['variabile'] = 'Variabile';
+$MESSAGE['interface']['meteo']['status']['nuvoloso'] = 'Nuvoloso';
+$MESSAGE['interface']['meteo']['status']['pioggia'] = 'Pioggia';
+$MESSAGE['interface']['meteo']['status']['neve'] = 'Neve';
+$MESSAGE['interface']['meteo']['temperature'] = 'Temperatura';
+$MESSAGE['interface']['meteo']['condition'] = 'Condizione';
+$MESSAGE['interface']['meteo']['set'] = 'Imposta';
+$MESSAGE['interface']['meteo']['auto'] = 'Automatico';
+$MESSAGE['interface']['meteo']['manual'] = 'Manuale';
+$MESSAGE['interface']['meteo']['inherit_zone'] = 'Eredita dalla zona';
+$MESSAGE['interface']['meteo']['duration'] = 'Durata';
+$MESSAGE['interface']['meteo']['no_expiry'] = 'Nessuna scadenza';
+$MESSAGE['interface']['meteo']['expires_at'] = 'fino alle';
+$MESSAGE['interface']['meteo']['unit'] = '°C';
+$MESSAGE['interface']['meteo']['target_chat'] = 'Solo questa chat';
+$MESSAGE['interface']['meteo']['target_zone'] = 'Tutta la zona';
+$MESSAGE['interface']['meteo']['reset'] = 'Ripristina';
+$MESSAGE['interface']['meteo']['gm_link'] = 'Gestione meteo';
+/* Fasi lunari: l'indice corrisponde a quello restituito da gdrcd_lunar_phase() */
+$MESSAGE['interface']['meteo']['moon'][0] = 'Nuova';
+$MESSAGE['interface']['meteo']['moon'][1] = 'Crescente';
+$MESSAGE['interface']['meteo']['moon'][2] = 'Primo Quarto';
+$MESSAGE['interface']['meteo']['moon'][3] = 'Gibbosa crescente';
+$MESSAGE['interface']['meteo']['moon'][4] = 'Piena';
+$MESSAGE['interface']['meteo']['moon'][5] = 'Gibbosa calante';
+$MESSAGE['interface']['meteo']['moon'][6] = 'Ultimo quarto';
+$MESSAGE['interface']['meteo']['moon'][7] = 'Calante';
+$MESSAGE['interface']['meteo']['error']['invalid_condition'] = 'La condizione meteo selezionata non è valida.';
+$MESSAGE['interface']['meteo']['error']['invalid_temperature'] = 'La temperatura inserita non è valida.';
+$MESSAGE['interface']['meteo']['error']['no_map'] = 'Nessuna zona associata a questo luogo.';
 /* Finestra delle mappe */
 $MESSAGE['interface']['maps']['more'] = 'Altre zone';
 $MESSAGE['interface']['maps']['no_more'] = 'Nessuna';
@@ -508,6 +535,14 @@ $MESSAGE['interface']['administration']['maps']['height_info'] = 'Altezza in pix
 $MESSAGE['interface']['administration']['maps']['no_main'] = 'Per visualizzare correttamente il gioco è necessario definire almeno una mappa principale.';
 $MESSAGE['interface']['administration']['maps']['no_erase_main'] = 'Non è possibile eliminare la mappa principale.';
 $MESSAGE['interface']['administration']['maps']['no_erase_last'] = 'Non è possibile eliminare l\'ultima mappa.';
+/*Meteo*/
+$MESSAGE['interface']['administration']['meteo']['page_name'] = 'Gestione meteo';
+$MESSAGE['interface']['administration']['meteo']['map_col'] = 'Zona';
+$MESSAGE['interface']['administration']['meteo']['chat_col'] = 'Luogo';
+$MESSAGE['interface']['administration']['meteo']['current_col'] = 'Meteo attuale';
+$MESSAGE['interface']['administration']['meteo']['source_col'] = 'Origine';
+$MESSAGE['interface']['administration']['meteo']['expires_col'] = 'Scadenza';
+$MESSAGE['interface']['administration']['meteo']['link']['back'] = 'Torna all\'elenco';
 
 /*Bacheche*/
 $MESSAGE['interface']['administration']['forums']['page_name'] = 'Gestione ' . strtolower($PARAMETERS['names']['forum']['plur']);
