@@ -4,6 +4,9 @@
  * Definizioni generiche
  */
 
+/*Versione minima di PHP supportata (ultima versione con security updates)*/
+define('GDRCD_PHP_MIN_VERSION', '8.2');
+
 /*Livelli di accesso utente*/
 define('DELETED', -1);
 define('USER', 0);
