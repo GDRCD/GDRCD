@@ -10,17 +10,18 @@
  */
 class GDRCD57_Insert_Meteo_In_Configurazioni_Table extends DbMigration
 {
+    /** Parametri gestiti dalla migrazione: [ordinamento, opzioni, default, parametro, descrizione, input] */
+    const PARAMETRI = [
+        [1, 'si,no', 'si', 'fasi_lunari', 'Mostra la fase lunare nel riquadro delle condizioni meteo (sostituisce la costante MOON)', 'select'],
+        [2, '', '0', 'durata_default', 'Durata predefinita, in ore, del meteo impostato dai master. 0 = nessuna scadenza', 'input'],
+        [3, '', '-45', 'temperatura_min', 'Temperatura minima (in °C) accettata quando si imposta il meteo', 'input'],
+        [4, '', '45', 'temperatura_max', 'Temperatura massima (in °C) accettata quando si imposta il meteo', 'input'],
+    ];
+
     public function up()
     {
         // Inserimento parametri su tabella configurazioni
-        $parametri = [
-            [1, 'si,no', 'si', 'fasi_lunari', 'Mostra la fase lunare nel riquadro delle condizioni meteo (sostituisce la costante MOON)', 'select'],
-            [2, '', '0', 'durata_default', 'Durata predefinita, in ore, del meteo impostato dai master. 0 = nessuna scadenza', 'input'],
-            [3, '', '-45', 'temperatura_min', 'Temperatura minima (in °C) accettata quando si imposta il meteo', 'input'],
-            [4, '', '45', 'temperatura_max', 'Temperatura massima (in °C) accettata quando si imposta il meteo', 'input'],
-        ];
-
-        foreach ($parametri as [$ordinamento, $opzioni, $default, $parametro, $descrizione, $input]) {
+        foreach (self::PARAMETRI as [$ordinamento, $opzioni, $default, $parametro, $descrizione, $input]) {
             gdrcd_stmt(
                 "INSERT INTO `configurazioni` (`tipo`, `categoria`, `ordinamento`, `opzioni`, `default`, `parametro`, `valore`, `descrizione`, `input`)
                  VALUES ('string', 'meteo', ?, ?, ?, ?, ?, ?, ?)
@@ -35,7 +36,13 @@ class GDRCD57_Insert_Meteo_In_Configurazioni_Table extends DbMigration
     public function down()
     {
         // Rimozione parametri inseriti in up()
-        gdrcd_query("DELETE FROM `configurazioni` WHERE categoria = 'meteo' AND parametro IN ('fasi_lunari', 'durata_default', 'temperatura_min', 'temperatura_max')");
+        $parametri = array_column(self::PARAMETRI, 3);
+        $segnaposto = implode(', ', array_fill(0, count($parametri), '?'));
+
+        gdrcd_stmt(
+            "DELETE FROM `configurazioni` WHERE categoria = ? AND parametro IN ({$segnaposto})",
+            array_merge(['meteo'], $parametri)
+        );
 
         $this->rebuildConfigurationCache();
     }

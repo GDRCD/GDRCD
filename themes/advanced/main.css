@@ -195,6 +195,12 @@ div.meteo, div.meteo_date {
     font-size: 12px;
 }
 
+div.meteo span.meteo_scadenza {
+    display: block;
+    font-size: 10px;
+    opacity: 0.7;
+}
+
 div.meteo_luna img{
     margin:0 auto;
     width: 30px;

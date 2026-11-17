@@ -137,7 +137,7 @@ $MESSAGE['interface']['meteo']['target_chat'] = 'Solo questa chat';
 $MESSAGE['interface']['meteo']['target_zone'] = 'Tutta la zona';
 $MESSAGE['interface']['meteo']['reset'] = 'Ripristina';
 $MESSAGE['interface']['meteo']['gm_link'] = 'Gestione meteo';
-/* Fasi lunari: l'indice corrisponde a quello restituito da gdrcd_lunar_phase() */
+/* Fasi lunari: l'indice corrisponde a quello restituito da gdrcd_meteo_fase_lunare() */
 $MESSAGE['interface']['meteo']['moon'][0] = 'Nuova';
 $MESSAGE['interface']['meteo']['moon'][1] = 'Crescente';
 $MESSAGE['interface']['meteo']['moon'][2] = 'Primo Quarto';

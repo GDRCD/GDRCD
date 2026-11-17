@@ -6,15 +6,21 @@ if($_SESSION['permessi'] >= GAMEMASTER) {
     if((isset($_POST['op']) === true) && (($_POST['op'] == gdrcd_filter('out', $MESSAGE['interface']['maps']['leave'])) ||
             ($_POST['op'] == gdrcd_filter('out', $MESSAGE['interface']['maps']['arrive'])))) {
         /*Aggiorno la sua posizione*/
-        gdrcd_query("UPDATE mappa_click SET posizione = ".(int)$_POST['destination']." WHERE id_click = ".(int)$_REQUEST['map_id']." LIMIT 1");
+        gdrcd_stmt(
+            "UPDATE mappa_click SET posizione = ? WHERE id_click = ? LIMIT 1",
+            [(int)$_POST['destination'], (int)$_REQUEST['map_id']]
+        );
     }
     if((isset($_POST['op']) === true) && ($_POST['op'] == gdrcd_filter('out', $MESSAGE['interface']['maps']['set_meteo']))) {
         /*Accetto solo condizioni climatiche presenti nel vocabolario*/
         if(isset($_POST['climate']) && in_array($_POST['climate'], $MESSAGE['interface']['meteo']['status'], true)) {
             /*Limito la temperatura all'intervallo proposto dal form*/
             $temperature = max(-45, min(45, (int)$_POST['temperature']));
-            /*Aggiorno il meteo*/
-            gdrcd_query("UPDATE mappa_click SET meteo = '".$temperature."°C - ".gdrcd_filter('in', $_POST['climate'])."' WHERE id_click = ".(int)$_REQUEST['map_id']." LIMIT 1");
+            /*Aggiorno il meteo (stringa legacy, es. '12°C - Sereno')*/
+            gdrcd_stmt(
+                "UPDATE mappa_click SET meteo = ? WHERE id_click = ? LIMIT 1",
+                [$temperature.'°C - '.$_POST['climate'], (int)$_REQUEST['map_id']]
+            );
         }
     }
 }
@@ -172,18 +178,20 @@ else {
                     <?php
                     } else {
                         /*Genero la lista delle possibili destinazioni*/
-                        $result = gdrcd_query("SELECT posizione, nome FROM mappa_click WHERE posizione <> -1 AND id_click <> ".(int)$self." ORDER BY nome", 'result');
+                        $destinazioni = iterator_to_array(gdrcd_stmt_all(
+                            "SELECT posizione, nome FROM mappa_click WHERE posizione <> -1 AND id_click <> ? ORDER BY nome",
+                            [(int)$self]
+                        ), false);
                         /*Se esistono altre mappe*/
-                        if(gdrcd_query($result, 'num_rows') > 0) { ?>
+                        if(count($destinazioni) > 0) { ?>
                             <div class="form_submit">
                             <select name="destination" class="game_form_selectbox">
-                                <?php while($record = gdrcd_query($result, 'fetch')) { ?>
+                                <?php foreach($destinazioni as $record) { ?>
                                     <option value="<?php echo $record['posizione']; ?>">
                                         <?php echo gdrcd_filter('out', $record['nome']); ?>
                                     </option>
                                 <?php
                                 }
-                                gdrcd_query($result, 'free');
                                 ?>
                             </select>
                         <?php

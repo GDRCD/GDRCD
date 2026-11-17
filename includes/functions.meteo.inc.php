@@ -293,9 +293,8 @@ function gdrcd_meteo_parse_legacy(string $s): ?array
 /**
  * Calcola la fase lunare per la data indicata.
  *
- * Porting di gdrcd_lunar_phase() dichiarata in pages/info_location.inc.php,
- * che verrà rimossa dalla pagina nella Fase 2; fino ad allora le due funzioni
- * convivono con nomi diversi. Restituisce solo l'indice: il nome
+ * Porting della vecchia gdrcd_lunar_phase(), un tempo dichiarata dentro
+ * pages/info_location.inc.php e ora rimossa. Restituisce solo l'indice: il nome
  * dell'immagine è in gdrcd_meteo_fasi_lunari() e il titolo nel vocabolario
  * ($MESSAGE['interface']['meteo']['moon'][indice]).
  *

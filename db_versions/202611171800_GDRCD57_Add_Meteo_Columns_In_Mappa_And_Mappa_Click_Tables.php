@@ -145,7 +145,7 @@ class GDRCD57_Add_Meteo_Columns_In_Mappa_And_Mappa_Click_Tables extends DbMigrat
         gdrcd_stmt("SET SESSION sql_mode = ?", [$relaxedMode]);
 
         try {
-            gdrcd_query($sql);
+            gdrcd_stmt($sql);
         } finally {
             gdrcd_stmt("SET SESSION sql_mode = ?", [$sqlMode]);
         }
