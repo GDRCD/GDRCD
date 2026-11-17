@@ -1,14 +1,22 @@
 <?php
 
-/*Se ho richiesto di far partire o arrivare una mappa mobile*/
-if((isset($_POST['op']) === true) && (($_POST['op'] == gdrcd_filter('out', $MESSAGE['interface']['maps']['leave'])) ||
-        ($_POST['op'] == gdrcd_filter('out', $MESSAGE['interface']['maps']['arrive'])))) {
-    /*Aggiorno la sua posizione*/
-    gdrcd_query("UPDATE mappa_click SET posizione = ".gdrcd_filter('num', $_POST['destination'])." WHERE id_click = ".gdrcd_filter('num', $_REQUEST['map_id'])." LIMIT 1");
-}
-if((isset($_POST['op']) === true) && ($_POST['op'] == gdrcd_filter('out', $MESSAGE['interface']['maps']['set_meteo']))) {
-    /*Aggiorno la sua posizione*/
-    gdrcd_query("UPDATE mappa_click SET meteo = '".gdrcd_filter('num', $_POST['temperature'])."°C - ".gdrcd_filter('in', $_POST['climate'])."' WHERE id_click = ".gdrcd_filter('num', $_REQUEST['map_id'])." LIMIT 1");
+/*Le operazioni su mappe mobili e meteo sono riservate ai GM (come i relativi form)*/
+if($_SESSION['permessi'] >= GAMEMASTER) {
+    /*Se ho richiesto di far partire o arrivare una mappa mobile*/
+    if((isset($_POST['op']) === true) && (($_POST['op'] == gdrcd_filter('out', $MESSAGE['interface']['maps']['leave'])) ||
+            ($_POST['op'] == gdrcd_filter('out', $MESSAGE['interface']['maps']['arrive'])))) {
+        /*Aggiorno la sua posizione*/
+        gdrcd_query("UPDATE mappa_click SET posizione = ".(int)$_POST['destination']." WHERE id_click = ".(int)$_REQUEST['map_id']." LIMIT 1");
+    }
+    if((isset($_POST['op']) === true) && ($_POST['op'] == gdrcd_filter('out', $MESSAGE['interface']['maps']['set_meteo']))) {
+        /*Accetto solo condizioni climatiche presenti nel vocabolario*/
+        if(isset($_POST['climate']) && in_array($_POST['climate'], $MESSAGE['interface']['meteo']['status'], true)) {
+            /*Limito la temperatura all'intervallo proposto dal form*/
+            $temperature = max(-45, min(45, (int)$_POST['temperature']));
+            /*Aggiorno il meteo*/
+            gdrcd_query("UPDATE mappa_click SET meteo = '".$temperature."°C - ".gdrcd_filter('in', $_POST['climate'])."' WHERE id_click = ".(int)$_REQUEST['map_id']." LIMIT 1");
+        }
+    }
 }
 
 // Ottengo la mappa corrente (se non è impostata, uso quella salvata in sessione del giocatore)
@@ -155,7 +163,7 @@ else {
     if($_SESSION['permessi'] >= GAMEMASTER) { ?>
         <div class="form_box">
             <?php if($mobile == 1) { ?>
-                <form class="form_gioco" action="main.php?page=mappaclick&map_id=<?php echo $_SESSION['mappa']; ?>" method="post">
+                <form class="form_gioco" action="main.php?page=mappaclick&map_id=<?php echo (int)$self; ?>" method="post">
                     <?php if($vicinato != INVIAGGIO) { ?>
                         <div class="form_submit">
                             <input type="hidden" name="destination" value="<?php echo INVIAGGIO; ?>" class="game_form_input" />
@@ -164,7 +172,7 @@ else {
                     <?php
                     } else {
                         /*Genero la lista delle possibili destinazioni*/
-                        $result = gdrcd_query("SELECT posizione, nome FROM mappa_click WHERE posizione <> -1 AND id_click <> ".$_SESSION['mappa']." ORDER BY nome", 'result');
+                        $result = gdrcd_query("SELECT posizione, nome FROM mappa_click WHERE posizione <> -1 AND id_click <> ".(int)$self." ORDER BY nome", 'result');
                         /*Se esistono altre mappe*/
                         if(gdrcd_query($result, 'num_rows') > 0) { ?>
                             <div class="form_submit">
@@ -190,7 +198,7 @@ else {
             <?php
             }
             if($PARAMETERS['mode']['auto_meteo'] == 'OFF') { ?>
-                <form class="form_gioco" action="main.php?page=mappaclick&map_id=<?php echo $_SESSION['mappa']; ?>" method="post">
+                <form class="form_gioco" action="main.php?page=mappaclick&map_id=<?php echo (int)$self; ?>" method="post">
                     <div class="form_submit">
                         <select name="temperature" class="game_form_selectbox">
                             <?php for($i = 45; $i >= -45; $i--) { ?>
