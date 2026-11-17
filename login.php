@@ -33,7 +33,7 @@ $login_user = ucwords(strtolower(trim($login_user)));
 
 $login_result = null;
 $id_personaggio = null;
-$show_stp_form = false;
+$show_otp_form = false;
 $conteggio_login_falliti = 0;
 
 
@@ -79,7 +79,7 @@ switch ($login_result){
         break;
 
     case GDRCD_LOGIN_TAKEOVER:
-        $show_stp_form = true;
+        $show_otp_form = true;
         break;
 
     case GDRCD_LOGIN_DISABLED:
@@ -160,6 +160,7 @@ if ($login_result === GDRCD_LOGIN_SUCCESS && !empty($id_personaggio)) {
      * Cookie per ultimo account connesso da postazione
      */
 
+    // TODO integra in funzione gdrcd_session_login
     setcookie('lastlogin', (string) $id_personaggio, 0, '', '', false, true);
 
 
@@ -174,6 +175,7 @@ if ($login_result === GDRCD_LOGIN_SUCCESS && !empty($id_personaggio)) {
         gdrcd_session_write('theme', $login_theme);
     }
 
+    // TODO: funzione dedicata
     // Stipendio automatico
     if ($PARAMETERS['settings']['auto_salary'] === 'ON') {
         $salaryData = gdrcd_stmt_one(
@@ -240,7 +242,7 @@ if ($login_result === GDRCD_LOGIN_SUCCESS && !empty($id_personaggio)) {
  * Template form OTP
  */
 
-if ($show_stp_form) {
+if ($show_otp_form) {
     gdrcd_basic_page(
         <<<HTML
             <div class="info_box">
