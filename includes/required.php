@@ -16,9 +16,13 @@ require_once(GDRCD_PATH . '/includes/constant_values.inc.php');
 
 // carica le configurazioni di default e quelle personali se esistono
 require_once(GDRCD_PATH . '/configs/config.core.inc.php');
+
 if(file_exists(GDRCD_PATH . '/config.inc.php')){
-    include_once GDRCD_PATH . '/config.inc.php';
+    require_once GDRCD_PATH . '/config.inc.php';
 }
+
+// include le funzioni helper per la formattazione degli errori
+require_once(GDRCD_PATH . '/includes/functions.errors.inc.php');
 
 // carica le funzioni di gestione delle migrazioni
 require_once(GDRCD_PATH . '/includes/DbMigration/DbMigrationEngine.class.php');
@@ -37,6 +41,10 @@ require_once(GDRCD_PATH . '/includes/functions.database.inc.php');
 // include le funzioni per le api ajax/xhr
 require_once(GDRCD_PATH . '/includes/functions.api.inc.php');
 
+// include le funzioni per le sessioni
+require_once(GDRCD_PATH . '/includes/functions.session_core.inc.php');
+require_once(GDRCD_PATH . '/includes/functions.session_auth.inc.php');
+
 // include le funzioni helper per i personaggi
 require_once(GDRCD_PATH . '/includes/functions.character.inc.php');
 
@@ -47,6 +55,9 @@ require_once(GDRCD_PATH . '/includes/functions.item.inc.php');
 require_once(GDRCD_PATH . '/includes/functions.chat_core.inc.php');
 require_once(GDRCD_PATH . '/includes/functions.chat_read.inc.php');
 require_once(GDRCD_PATH . '/includes/functions.chat_write.inc.php');
+
+// include le funzioni per la generazione di valori casuali
+require_once(GDRCD_PATH . '/includes/functions.random.inc.php');
 require_once(GDRCD_PATH . '/includes/functions.configuration.inc.php');
 
 // include le funzioni per il logging
@@ -62,3 +73,7 @@ if(!empty($_SESSION['theme']) && array_key_exists($_SESSION['theme'], $PARAMETER
     $PARAMETERS['themes']['current_theme'] = $_SESSION['theme'];
 }
 gdrcd_logs_init();
+
+if(($PARAMETERS['mode']['user_bbcode'] == 'ON' && $PARAMETERS['settings']['user_bbcode']['type'] == 'bbd') || $PARAMETERS['settings']['forum_bbcode']['type'] == 'bbd') {
+    require_once('plugins/bbdecoder/bbdecoder.php');
+}
