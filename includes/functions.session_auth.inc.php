@@ -176,22 +176,15 @@ function gdrcd_session_refresh(): void
             [$old_id]
         );
 
-        // Se la sessione non è già più attiva non facciamo niente
+        // Se la sessione è già non più attiva non facciamo niente
         if ($old_metadata === null || $old_metadata['status'] !== GDRCD_SESSION_STATUS_ACTIVE) {
             return;
         }
 
         $id_personaggio = (int) $old_metadata['id_personaggio'];
 
-        // Genera un nuovo id di sessione
-        $new_id = gdrcd_session_regenerate();
-
-        // Crea il nuovo record preservando la data_login originale
-        gdrcd_session_metadata_create(
-            $new_id,
-            $id_personaggio,
-            $old_metadata['data_login']
-        );
+        // Genera una nuova sessione
+        $new_id = gdrcd_session_create($id_personaggio, strtotime($old_metadata['data_login']));
 
         // Aggiorna lo stato della vecchia sessione
         gdrcd_stmt(
@@ -200,10 +193,6 @@ function gdrcd_session_refresh(): void
             WHERE `id_sessione` = ?',
             [GDRCD_SESSION_STATUS_REFRESHED, $new_id, $old_id]
         );
-
-        // Aggiorna i dati nella sessione appena rigenerata
-        $session_data = gdrcd_session_data($id_personaggio);
-        gdrcd_session_write($session_data);
 
     });
 }
@@ -214,17 +203,20 @@ function gdrcd_session_refresh(): void
  * e popola la sessione PHP con i dati dell'utente.
  *
  * @param int $id_personaggio L'id del personaggio per cui creare la sessione.
- * @return void
+ * @param int|null $login_time il timestamp della data di login. Se non configurato usa quello attuale.
+ * @return string l'id di sessione
  */
-function gdrcd_session_create(int $id_personaggio): void
+function gdrcd_session_create(int $id_personaggio, ?int $login_time = null): string
 {
     $new_id = gdrcd_session_regenerate();
-    $now = date('Y-m-d H:i:s');
+    $now = date('Y-m-d H:i:s', $login_time ?? time());
 
     gdrcd_session_metadata_create($new_id, $id_personaggio, $now);
 
     $session_data = gdrcd_session_data($id_personaggio);
     gdrcd_session_write($session_data);
+
+    return $new_id;
 }
 
 /**
