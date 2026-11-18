@@ -60,12 +60,11 @@
             # Ai GM mostro fino a quando resta attivo un meteo manuale
             $meteo_scadenza = '';
 
-            if ((int)($_SESSION['permessi'] ?? 0) >= GAMEMASTER && $meteo['fonte'] !== 'auto' && $meteo['scadenza'] !== null) {
-                $scadenza = DateTimeImmutable::createFromFormat('!Y-m-d H:i:s', $meteo['scadenza'], $now->getTimezone());
+            if ((int)($_SESSION['permessi'] ?? 0) >= GAMEMASTER && $meteo['fonte'] !== 'auto') {
+                $orario_scadenza = gdrcd_meteo_orario_scadenza($meteo['scadenza'], $now);
 
-                if ($scadenza !== false) {
-                    $formato = $scadenza->format('Y-m-d') === $now->format('Y-m-d') ? 'H:i' : 'd/m H:i';
-                    $meteo_scadenza = gdrcd_filter('out', $MESSAGE['interface']['meteo']['expires_at']) . ' ' . $scadenza->format($formato);
+                if ($orario_scadenza !== null) {
+                    $meteo_scadenza = gdrcd_filter('out', $MESSAGE['interface']['meteo']['expires_at']) . ' ' . $orario_scadenza;
                 }
             }
 

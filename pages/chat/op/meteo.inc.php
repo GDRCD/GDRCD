@@ -65,29 +65,21 @@ if ($bersaglio == 'zona') {
 }
 
 if ($azione == 'imposta') {
-    $condizioni = gdrcd_meteo_condizioni();
-    $limiti = gdrcd_meteo_limiti();
-    $condizione = $_POST['condizione'] ?? null;
-    $durata = $_POST['durata'] ?? null;
+    // Stesse regole del pannello di gestione: temperatura, condizione e durata
+    $dati = gdrcd_meteo_valida_richiesta(
+        $_POST,
+        gdrcd_meteo_limiti(),
+        gdrcd_meteo_condizioni(),
+        gdrcd_meteo_durate(),
+        gdrcd_meteo_now()
+    );
 
-    $dati = gdrcd_meteo_valida($_POST['temperatura'] ?? null, $condizione, $limiti['min'], $limiti['max'], $condizioni);
-
-    // gdrcd_meteo_valida() limita la temperatura all'intervallo ammesso, quindi
-    // se la condizione è valida l'errore riguarda una temperatura non intera
-    if ($dati === null) {
-        $errore = in_array($condizione, $condizioni, true) ? 'invalid_temperature' : 'invalid_condition';
-        gdrcd_api_output(gdrcd_api_status_invalid($MESSAGE['interface']['meteo']['error'][$errore]));
+    if (is_string($dati)) {
+        gdrcd_api_output(gdrcd_api_status_invalid($MESSAGE['interface']['meteo']['error'][$dati]));
         die();
     }
 
-    // La durata deve coincidere esattamente con una di quelle proposte nel form
-    if (!in_array($durata, array_map('strval', gdrcd_meteo_durate()), true)) {
-        gdrcd_api_output(gdrcd_api_status_invalid($MESSAGE['interface']['meteo']['error']['invalid_duration']));
-        die();
-    }
-
-    $scadenza = gdrcd_meteo_scadenza(gdrcd_meteo_now(), (int)$durata);
-    $esito = gdrcd_meteo_imposta($bersaglio, $id_bersaglio, $dati['temperatura'], $dati['condizione'], $scadenza);
+    $esito = gdrcd_meteo_imposta($bersaglio, $id_bersaglio, $dati['temperatura'], $dati['condizione'], $dati['scadenza']);
 } else {
     $esito = gdrcd_meteo_azzera($bersaglio, $id_bersaglio);
 }

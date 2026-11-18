@@ -395,6 +395,174 @@ function gdrcd_meteo_formatta(string $etichetta, int $temperatura): string
     return $etichetta . ' - ' . $temperatura . '°C';
 }
 
+/**
+ * Formatta l'orario di scadenza di un meteo manuale.
+ *
+ * Restituisce solo l'ora ('H:i') se la scadenza cade nello stesso giorno di
+ * $now, altrimenti giorno, mese e ora ('d/m H:i'). Il risultato contiene solo
+ * cifre, '/', ':' e uno spazio, quindi è già sicuro per l'output HTML.
+ *
+ * @param string|null $scadenza Scadenza 'Y-m-d H:i:s', oppure null
+ * @param DateTimeInterface $now Istante di riferimento (con il suo fuso orario)
+ * @return string|null Orario formattato, oppure null se la scadenza manca o non è leggibile
+ */
+function gdrcd_meteo_orario_scadenza(?string $scadenza, DateTimeInterface $now): ?string
+{
+    if ($scadenza === null) {
+        return null;
+    }
+
+    $istante = DateTimeImmutable::createFromFormat('!Y-m-d H:i:s', $scadenza, $now->getTimezone());
+
+    if ($istante === false || $istante->format('Y-m-d H:i:s') !== $scadenza) {
+        return null;
+    }
+
+    return $istante->format($istante->format('Y-m-d') === $now->format('Y-m-d') ? 'H:i' : 'd/m H:i');
+}
+
+/**
+ * Valida una richiesta di meteo manuale (form in chat o pannello di gestione).
+ *
+ * Regole, nell'ordine:
+ *  - temperatura e condizione passano per gdrcd_meteo_valida(); se falliscono
+ *    l'errore è 'invalid_temperature' quando la condizione è valida (la
+ *    temperatura viene limitata, quindi il problema è un valore non intero),
+ *    altrimenti 'invalid_condition';
+ *  - la durata deve coincidere esattamente con la stringa di una delle durate
+ *    ammesse ("0", "1", ...), altrimenti 'invalid_duration'.
+ * Ogni valore che non è una stringa (array compresi) viene scartato.
+ *
+ * @param array $input Dati ricevuti (di norma $_POST) con temperatura, condizione, durata
+ * @param array{min:int, max:int} $limiti Limiti di temperatura (di norma gdrcd_meteo_limiti())
+ * @param string[] $condizioni Slug ammessi (di norma gdrcd_meteo_condizioni())
+ * @param int[] $durate Durate ammesse in ore (di norma gdrcd_meteo_durate())
+ * @param DateTimeInterface $now Istante da cui calcolare la scadenza
+ * @return array{temperatura:int, condizione:string, scadenza:?string}|string
+ *         Dati validati, oppure la chiave dell'errore in $MESSAGE['interface']['meteo']['error']
+ */
+function gdrcd_meteo_valida_richiesta(array $input, array $limiti, array $condizioni, array $durate, DateTimeInterface $now): array|string
+{
+    $condizione = $input['condizione'] ?? null;
+    $durata = $input['durata'] ?? null;
+
+    $dati = gdrcd_meteo_valida($input['temperatura'] ?? null, $condizione, (int)$limiti['min'], (int)$limiti['max'], $condizioni);
+
+    if ($dati === null) {
+        return in_array($condizione, $condizioni, true) ? 'invalid_temperature' : 'invalid_condition';
+    }
+
+    // La durata deve coincidere esattamente con una di quelle proposte nel form
+    if (!in_array($durata, array_map('strval', $durate), true)) {
+        return 'invalid_duration';
+    }
+
+    return $dati + ['scadenza' => gdrcd_meteo_scadenza($now, (int)$durata)];
+}
+
+/**
+ * Interpreta l'id di una zona o di una chat ricevuto da un form.
+ *
+ * Accetta solo stringhe di sole cifre (al massimo 10) con valore positivo.
+ *
+ * @param mixed $valore Valore ricevuto
+ * @return int|null Id, oppure null se non valido
+ */
+function gdrcd_meteo_id_richiesta(mixed $valore): ?int
+{
+    if (!is_string($valore) || preg_match('/^\d{1,10}$/D', $valore) !== 1) {
+        return null;
+    }
+
+    $id = (int)$valore;
+
+    return $id > 0 ? $id : null;
+}
+
+/**
+ * Costruisce il modello del pannello di gestione del meteo.
+ *
+ * Le righe arrivano dalla query di gdrcd_meteo_pannello(): una per ogni chat
+ * di ogni zona (mappa_click LEFT JOIN mappa), con luogo_id null per una zona
+ * senza chat. Le zone e le chat mantengono l'ordine in cui compaiono.
+ *
+ * Ogni meteo è risolto con gdrcd_meteo_risolvi() usando lo stesso $auto e lo
+ * stesso $now: la zona da sola (fonte 'zona' o 'auto'), la chat con la sua
+ * zona (fonte 'luogo', 'zona' o 'auto'). Con $autoMode tutto è automatico.
+ *
+ * Colonne attese per ogni riga: id_click, nome, principale, meteo_temperatura,
+ * meteo_condizione, meteo_scadenza (zona) e luogo_id, luogo_nome,
+ * luogo_privata, luogo_meteo_temperatura, luogo_meteo_condizione,
+ * luogo_meteo_scadenza (chat, null senza chat).
+ *
+ * @param array $righe Righe piatte del database
+ * @param bool $autoMode true con auto_meteo = ON
+ * @param array $auto Risultato di gdrcd_meteo_auto()
+ * @param DateTimeInterface $now Istante di riferimento
+ * @param string[] $etichette Etichette delle condizioni per slug, già filtrate per l'output
+ * @return array{auto_mode:bool, zone:array} Modello descritto in gdrcd_meteo_pannello()
+ */
+function gdrcd_meteo_pannello_modello(array $righe, bool $autoMode, array $auto, DateTimeInterface $now, array $etichette): array
+{
+    // Risolve il meteo e aggiunge i testi già pronti per l'output
+    $meteo = function (?array $luogo, ?array $zona) use ($autoMode, $auto, $now, $etichette) {
+        $risolto = $autoMode
+            ? gdrcd_meteo_risolvi(null, null, $auto, $now)
+            : gdrcd_meteo_risolvi($luogo, $zona, $auto, $now);
+
+        $risolto['testo'] = gdrcd_meteo_formatta(
+            $etichette[$risolto['condizione']] ?? ucfirst($risolto['condizione']),
+            $risolto['temperatura']
+        );
+        $risolto['scadenza_testo'] = gdrcd_meteo_orario_scadenza($risolto['scadenza'], $now);
+
+        return $risolto;
+    };
+
+    $zone = [];
+
+    foreach ($righe as $riga) {
+        $idClick = (int)$riga['id_click'];
+        $rigaZona = [
+            'meteo_temperatura' => $riga['meteo_temperatura'] ?? null,
+            'meteo_condizione' => $riga['meteo_condizione'] ?? null,
+            'meteo_scadenza' => $riga['meteo_scadenza'] ?? null,
+        ];
+
+        if (!isset($zone[$idClick])) {
+            $zone[$idClick] = [
+                'id_click' => $idClick,
+                'nome' => (string)($riga['nome'] ?? ''),
+                'principale' => (bool)($riga['principale'] ?? false),
+                'meteo' => $meteo(null, $rigaZona),
+                'luoghi' => [],
+            ];
+        }
+
+        if (!isset($riga['luogo_id'])) {
+            continue;
+        }
+
+        $rigaLuogo = [
+            'meteo_temperatura' => $riga['luogo_meteo_temperatura'] ?? null,
+            'meteo_condizione' => $riga['luogo_meteo_condizione'] ?? null,
+            'meteo_scadenza' => $riga['luogo_meteo_scadenza'] ?? null,
+        ];
+
+        $zone[$idClick]['luoghi'][] = [
+            'id' => (int)$riga['luogo_id'],
+            'nome' => (string)($riga['luogo_nome'] ?? ''),
+            'privata' => (bool)($riga['luogo_privata'] ?? false),
+            'meteo' => $meteo($rigaLuogo, $rigaZona),
+        ];
+    }
+
+    return [
+        'auto_mode' => $autoMode,
+        'zone' => array_values($zone),
+    ];
+}
+
 /* ---------------------------------------------------------------------------
  * Accesso al contesto (database, configurazione, vocabolario)
  * ------------------------------------------------------------------------- */
@@ -621,6 +789,62 @@ function gdrcd_meteo_azzera(string $target, int $id): bool
     gdrcd_event_meteo_change($target, $id);
 
     return true;
+}
+
+/**
+ * Legge zone e chat e restituisce il modello del pannello di gestione.
+ *
+ * Una sola query: ogni zona con le sue chat (mappa.chat = 1). Le zone sono
+ * ordinate per principale DESC, posizione, nome, id_click; le chat per nome
+ * e id. Le chat il cui id_mappa non punta a nessuna zona non compaiono.
+ *
+ * Struttura restituita (meteo è la forma di gdrcd_meteo_risolvi() più testo e
+ * scadenza_testo, entrambi già filtrati per l'output; i nomi sono grezzi):
+ *  [
+ *    'auto_mode' => bool,
+ *    'zone' => [[
+ *      'id_click' => int, 'nome' => string, 'principale' => bool, 'meteo' => array,
+ *      'luoghi' => [['id' => int, 'nome' => string, 'privata' => bool, 'meteo' => array], ...],
+ *    ], ...],
+ *  ]
+ *
+ * @return array
+ */
+function gdrcd_meteo_pannello(): array
+{
+    global $PARAMETERS, $MESSAGE;
+
+    $now = gdrcd_meteo_now();
+    $auto = gdrcd_meteo_auto($now, (int)($PARAMETERS['date']['base_temperature'] ?? 0));
+    $autoMode = ($PARAMETERS['mode']['auto_meteo'] ?? 'ON') == 'ON';
+
+    $etichette = [];
+
+    foreach (gdrcd_meteo_condizioni() as $slug) {
+        $etichette[$slug] = gdrcd_filter('out', $MESSAGE['interface']['meteo']['status'][$slug] ?? ucfirst($slug));
+    }
+
+    $righe = iterator_to_array(gdrcd_stmt_all(
+        'SELECT mappa_click.id_click,
+                mappa_click.nome,
+                mappa_click.principale,
+                mappa_click.meteo_temperatura,
+                mappa_click.meteo_condizione,
+                mappa_click.meteo_scadenza,
+                mappa.id AS luogo_id,
+                mappa.nome AS luogo_nome,
+                mappa.privata AS luogo_privata,
+                mappa.meteo_temperatura AS luogo_meteo_temperatura,
+                mappa.meteo_condizione AS luogo_meteo_condizione,
+                mappa.meteo_scadenza AS luogo_meteo_scadenza
+            FROM mappa_click
+            LEFT JOIN mappa ON mappa.id_mappa = mappa_click.id_click AND mappa.chat = ?
+        ORDER BY mappa_click.principale DESC, mappa_click.posizione, mappa_click.nome, mappa_click.id_click,
+                 mappa.nome, mappa.id',
+        [1]
+    ), false);
+
+    return gdrcd_meteo_pannello_modello($righe, $autoMode, $auto, $now, $etichette);
 }
 
 /* ---------------------------------------------------------------------------

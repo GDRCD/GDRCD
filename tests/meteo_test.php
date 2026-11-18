@@ -295,6 +295,182 @@ gruppo('gdrcd_meteo_etichetta_durata', function () {
     verifica('etichetta durata: negativa', 'Nessuna scadenza', gdrcd_meteo_etichetta_durata(-3, 'Nessuna scadenza', '1 ora', '%d ore'));
 });
 
+gruppo('gdrcd_meteo_orario_scadenza', function () {
+    $now = istante('2025-06-01 12:00:00');
+
+    verifica('orario scadenza: stesso giorno', '15:30', gdrcd_meteo_orario_scadenza('2025-06-01 15:30:00', $now));
+    verifica('orario scadenza: fine giornata', '23:59', gdrcd_meteo_orario_scadenza('2025-06-01 23:59:59', $now));
+    verifica('orario scadenza: giorno dopo', '02/06 00:00', gdrcd_meteo_orario_scadenza('2025-06-02 00:00:00', $now));
+    verifica('orario scadenza: anno dopo, stesso giorno e mese', '01/06 15:30', gdrcd_meteo_orario_scadenza('2026-06-01 15:30:00', $now));
+    verifica('orario scadenza: passata nello stesso giorno', '08:05', gdrcd_meteo_orario_scadenza('2025-06-01 08:05:00', $now));
+    verifica('orario scadenza: null', null, gdrcd_meteo_orario_scadenza(null, $now));
+    verifica('orario scadenza: data zero', null, gdrcd_meteo_orario_scadenza('0000-00-00 00:00:00', $now));
+    verifica('orario scadenza: formato errato', null, gdrcd_meteo_orario_scadenza('2025-06-01 15:30', $now));
+    verifica('orario scadenza: testo', null, gdrcd_meteo_orario_scadenza('domani', $now));
+    verifica('orario scadenza: vuota', null, gdrcd_meteo_orario_scadenza('', $now));
+    // 23:30 UTC del 31 maggio = 01:30 del 1 giugno a Roma: il giorno è quello di now
+    verifica(
+        'orario scadenza: giorno confrontato nel fuso di now',
+        '15:30',
+        gdrcd_meteo_orario_scadenza('2025-06-01 15:30:00',
+            (new DateTimeImmutable('2025-05-31 23:30:00', new DateTimeZone('UTC')))->setTimezone(new DateTimeZone('Europe/Rome')))
+    );
+});
+
+gruppo('gdrcd_meteo_valida_richiesta', function () {
+    $now = istante('2025-06-01 12:34:56');
+    $limiti = ['min' => -45, 'max' => 45];
+    $condizioni = ['sereno', 'variabile', 'nuvoloso', 'pioggia', 'neve'];
+    $durate = [0, 1, 3, 6, 12, 24];
+    $valida = function (array $input) use ($limiti, $condizioni, $durate, $now) {
+        return gdrcd_meteo_valida_richiesta($input, $limiti, $condizioni, $durate, $now);
+    };
+
+    verifica(
+        'richiesta: senza scadenza',
+        ['temperatura' => 12, 'condizione' => 'sereno', 'scadenza' => null],
+        $valida(['temperatura' => '12', 'condizione' => 'sereno', 'durata' => '0'])
+    );
+    verifica(
+        'richiesta: con scadenza',
+        ['temperatura' => -3, 'condizione' => 'neve', 'scadenza' => '2025-06-01 15:34:56'],
+        $valida(['temperatura' => '-3', 'condizione' => 'neve', 'durata' => '3'])
+    );
+    verifica(
+        'richiesta: 24 ore',
+        ['temperatura' => 20, 'condizione' => 'pioggia', 'scadenza' => '2025-06-02 12:34:56'],
+        $valida(['temperatura' => '20', 'condizione' => 'pioggia', 'durata' => '24'])
+    );
+    verifica(
+        'richiesta: temperatura limitata',
+        ['temperatura' => 45, 'condizione' => 'sereno', 'scadenza' => null],
+        $valida(['temperatura' => '999', 'condizione' => 'sereno', 'durata' => '0'])
+    );
+    verifica('richiesta: temperatura non intera', 'invalid_temperature', $valida(['temperatura' => '12.5', 'condizione' => 'sereno', 'durata' => '0']));
+    verifica('richiesta: temperatura mancante', 'invalid_temperature', $valida(['condizione' => 'sereno', 'durata' => '0']));
+    verifica('richiesta: temperatura array', 'invalid_temperature', $valida(['temperatura' => ['12'], 'condizione' => 'sereno', 'durata' => '0']));
+    verifica('richiesta: temperatura da 10KB', 'invalid_temperature', $valida(['temperatura' => str_repeat('9', 10240), 'condizione' => 'sereno', 'durata' => '0']));
+    verifica('richiesta: condizione sconosciuta', 'invalid_condition', $valida(['temperatura' => '12', 'condizione' => 'grandine', 'durata' => '0']));
+    verifica('richiesta: condizione mancante', 'invalid_condition', $valida(['temperatura' => '12', 'durata' => '0']));
+    verifica('richiesta: condizione array', 'invalid_condition', $valida(['temperatura' => '12', 'condizione' => ['sereno'], 'durata' => '0']));
+    verifica('richiesta: condizione e temperatura errate', 'invalid_condition', $valida(['temperatura' => 'x', 'condizione' => 'x', 'durata' => '0']));
+    verifica('richiesta: durata non in elenco', 'invalid_duration', $valida(['temperatura' => '12', 'condizione' => 'sereno', 'durata' => '5']));
+    verifica('richiesta: durata con zero iniziale', 'invalid_duration', $valida(['temperatura' => '12', 'condizione' => 'sereno', 'durata' => '03']));
+    verifica('richiesta: durata con spazi', 'invalid_duration', $valida(['temperatura' => '12', 'condizione' => 'sereno', 'durata' => ' 3']));
+    verifica('richiesta: durata intera', 'invalid_duration', $valida(['temperatura' => '12', 'condizione' => 'sereno', 'durata' => 3]));
+    verifica('richiesta: durata mancante', 'invalid_duration', $valida(['temperatura' => '12', 'condizione' => 'sereno']));
+    verifica('richiesta: durata array', 'invalid_duration', $valida(['temperatura' => '12', 'condizione' => 'sereno', 'durata' => ['3']]));
+    verifica('richiesta: durata da 10KB', 'invalid_duration', $valida(['temperatura' => '12', 'condizione' => 'sereno', 'durata' => str_repeat('1', 10240)]));
+});
+
+gruppo('gdrcd_meteo_id_richiesta', function () {
+    verifica('id richiesta: cifre', 42, gdrcd_meteo_id_richiesta('42'));
+    verifica('id richiesta: zero iniziale', 7, gdrcd_meteo_id_richiesta('007'));
+    verifica('id richiesta: zero', null, gdrcd_meteo_id_richiesta('0'));
+    verifica('id richiesta: negativo', null, gdrcd_meteo_id_richiesta('-1'));
+    verifica('id richiesta: con spazi', null, gdrcd_meteo_id_richiesta(' 1'));
+    verifica('id richiesta: newline finale', null, gdrcd_meteo_id_richiesta("1\n"));
+    verifica('id richiesta: vuoto', null, gdrcd_meteo_id_richiesta(''));
+    verifica('id richiesta: intero', null, gdrcd_meteo_id_richiesta(1));
+    verifica('id richiesta: array', null, gdrcd_meteo_id_richiesta(['1']));
+    verifica('id richiesta: null', null, gdrcd_meteo_id_richiesta(null));
+    verifica('id richiesta: troppo lungo', null, gdrcd_meteo_id_richiesta(str_repeat('1', 11)));
+});
+
+gruppo('gdrcd_meteo_pannello_modello', function () {
+    $now = istante('2025-06-01 12:00:00');
+    $auto = ['temperatura' => 21, 'condizione' => 'sereno'];
+    $etichette = ['sereno' => 'Sereno', 'pioggia' => 'Pioggia', 'neve' => 'Neve', 'nuvoloso' => 'Nuvoloso &amp; co'];
+    $zona = function ($id, $nome, $principale, $t, $c, $s) {
+        return ['id_click' => $id, 'nome' => $nome, 'principale' => $principale,
+            'meteo_temperatura' => $t, 'meteo_condizione' => $c, 'meteo_scadenza' => $s];
+    };
+    $luogo = function ($id, $nome, $privata, $t, $c, $s) {
+        return ['luogo_id' => $id, 'luogo_nome' => $nome, 'luogo_privata' => $privata,
+            'luogo_meteo_temperatura' => $t, 'luogo_meteo_condizione' => $c, 'luogo_meteo_scadenza' => $s];
+    };
+    $senzaLuogo = $luogo(null, null, null, null, null, null);
+    $meteo = function ($t, $c, $fonte, $s, $testo, $sTesto) {
+        return ['temperatura' => $t, 'condizione' => $c, 'fonte' => $fonte, 'scadenza' => $s, 'testo' => $testo, 'scadenza_testo' => $sTesto];
+    };
+
+    // Zona 7 (principale) con valore fino a domani e tre chat; zona 3 scaduta con una chat; zona 9 senza chat
+    $righe = [
+        $zona(7, 'Città <alta>', 1, '10', 'pioggia', '2025-06-02 08:00:00') + $luogo(20, 'Taverna', 0, '-5', 'neve', '2025-06-01 13:00:00'),
+        $zona(7, 'Città <alta>', 1, '10', 'pioggia', '2025-06-02 08:00:00') + $luogo(4, 'Alcova', 1, null, null, null),
+        $zona(7, 'Città <alta>', 1, '10', 'pioggia', '2025-06-02 08:00:00') + $luogo(5, 'Cripta', 0, 2, 'neve', '2025-06-01 11:00:00'),
+        $zona(3, 'Bosco', 0, 18, 'nuvoloso', '2025-05-31 12:00:00') + $luogo(8, 'Radura', 0, 30, 'sereno', null),
+        $zona(9, null, 0, null, null, null) + $senzaLuogo,
+    ];
+
+    $atteso = [
+        'auto_mode' => false,
+        'zone' => [
+            [
+                'id_click' => 7,
+                'nome' => 'Città <alta>',
+                'principale' => true,
+                'meteo' => $meteo(10, 'pioggia', 'zona', '2025-06-02 08:00:00', 'Pioggia - 10°C', '02/06 08:00'),
+                'luoghi' => [
+                    ['id' => 20, 'nome' => 'Taverna', 'privata' => false,
+                        'meteo' => $meteo(-5, 'neve', 'luogo', '2025-06-01 13:00:00', 'Neve - -5°C', '13:00')],
+                    ['id' => 4, 'nome' => 'Alcova', 'privata' => true,
+                        'meteo' => $meteo(10, 'pioggia', 'zona', '2025-06-02 08:00:00', 'Pioggia - 10°C', '02/06 08:00')],
+                    // Override scaduto: eredita dalla zona
+                    ['id' => 5, 'nome' => 'Cripta', 'privata' => false,
+                        'meteo' => $meteo(10, 'pioggia', 'zona', '2025-06-02 08:00:00', 'Pioggia - 10°C', '02/06 08:00')],
+                ],
+            ],
+            [
+                'id_click' => 3,
+                'nome' => 'Bosco',
+                'principale' => false,
+                // Zona scaduta: automatico
+                'meteo' => $meteo(21, 'sereno', 'auto', null, 'Sereno - 21°C', null),
+                'luoghi' => [
+                    ['id' => 8, 'nome' => 'Radura', 'privata' => false,
+                        'meteo' => $meteo(30, 'sereno', 'luogo', null, 'Sereno - 30°C', null)],
+                ],
+            ],
+            [
+                'id_click' => 9,
+                'nome' => '',
+                'principale' => false,
+                'meteo' => $meteo(21, 'sereno', 'auto', null, 'Sereno - 21°C', null),
+                'luoghi' => [],
+            ],
+        ],
+    ];
+
+    verifica('pannello: raggruppamento, ordine e risoluzione', $atteso, gdrcd_meteo_pannello_modello($righe, false, $auto, $now, $etichette));
+
+    // Modalità ON: tutto automatico, anche dove esiste un valore manuale attivo
+    $autoRiga = $meteo(21, 'sereno', 'auto', null, 'Sereno - 21°C', null);
+    $modello = gdrcd_meteo_pannello_modello($righe, true, $auto, $now, $etichette);
+
+    verifica('pannello ON: auto_mode', true, $modello['auto_mode']);
+    verifica('pannello ON: zone nello stesso ordine', [7, 3, 9], array_column($modello['zone'], 'id_click'));
+    verifica('pannello ON: chat nello stesso ordine', [20, 4, 5], array_column($modello['zone'][0]['luoghi'], 'id'));
+
+    foreach ($modello['zone'] as $z) {
+        verifica('pannello ON: zona ' . $z['id_click'] . ' automatica', $autoRiga, $z['meteo']);
+
+        foreach ($z['luoghi'] as $l) {
+            verifica('pannello ON: chat ' . $l['id'] . ' automatica', $autoRiga, $l['meteo']);
+        }
+    }
+
+    // Etichetta già filtrata passata così com'è, slug senza etichetta in ucfirst
+    $modello = gdrcd_meteo_pannello_modello([
+        $zona(1, 'A', 0, 4, 'nuvoloso', null) + $luogo(2, 'B', 0, 1, 'variabile', null),
+    ], false, $auto, $now, $etichette);
+
+    verifica('pannello: etichetta già filtrata', 'Nuvoloso &amp; co - 4°C', $modello['zone'][0]['meteo']['testo']);
+    verifica('pannello: etichetta mancante', 'Variabile - 1°C', $modello['zone'][0]['luoghi'][0]['meteo']['testo']);
+
+    verifica('pannello: nessuna zona', ['auto_mode' => false, 'zone' => []], gdrcd_meteo_pannello_modello([], false, $auto, $now, $etichette));
+});
+
 
 /* ------------------------------------------------------------------------- */
 

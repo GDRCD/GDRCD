@@ -550,6 +550,15 @@ $MESSAGE['interface']['administration']['meteo']['current_col'] = 'Meteo attuale
 $MESSAGE['interface']['administration']['meteo']['source_col'] = 'Origine';
 $MESSAGE['interface']['administration']['meteo']['expires_col'] = 'Scadenza';
 $MESSAGE['interface']['administration']['meteo']['link']['back'] = 'Torna all\'elenco';
+$MESSAGE['interface']['administration']['meteo']['actions_col'] = 'Modifica';
+$MESSAGE['interface']['administration']['meteo']['no_maps'] = 'Non è presente nessuna zona.';
+$MESSAGE['interface']['administration']['meteo']['no_chats'] = 'Nessuna chat in questa zona.';
+$MESSAGE['interface']['administration']['meteo']['private'] = 'Privata';
+$MESSAGE['interface']['administration']['meteo']['private_toggle'] = 'Stanze private (%d)';
+$MESSAGE['interface']['administration']['meteo']['auto_mode_notice'] = 'Il meteo è in modalità automatica: i valori manuali vengono ignorati e non possono essere modificati.';
+$MESSAGE['interface']['administration']['meteo']['saved'] = 'Meteo aggiornato.';
+$MESSAGE['interface']['administration']['meteo']['reset_done'] = 'Meteo ripristinato.';
+$MESSAGE['interface']['administration']['meteo']['error']['not_found'] = 'La zona o la chat indicata non esiste.';
 
 /*Bacheche*/
 $MESSAGE['interface']['administration']['forums']['page_name'] = 'Gestione ' . strtolower($PARAMETERS['names']['forum']['plur']);

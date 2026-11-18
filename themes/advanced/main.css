@@ -422,6 +422,107 @@ div.elenco_record_gestione table {
     margin: 10px auto;
 }
 
+/** * Pannello meteo (gestione/meteo) */
+.meteo_pannello table.meteo_tabella {
+    table-layout: fixed;
+    margin: 0 auto;
+}
+
+.meteo_pannello table.meteo_intestazione {
+    margin-top: 10px;
+}
+
+.meteo_pannello col.meteo_col_nome { width: 20%; }
+.meteo_pannello col.meteo_col_meteo { width: 14%; }
+.meteo_pannello col.meteo_col_fonte { width: 12%; }
+.meteo_pannello col.meteo_col_scadenza { width: 9%; }
+.meteo_pannello col.meteo_col_azioni { width: 45%; }
+
+.meteo_pannello div.meteo_zona_blocco {
+    margin-top: 6px;
+}
+
+.meteo_pannello td.casella_elemento {
+    vertical-align: middle;
+}
+
+.meteo_pannello td.meteo_nome div.elementi_elenco {
+    text-align: left;
+    padding-left: 20px;
+}
+
+.meteo_pannello tr.meteo_zona td.meteo_nome div.elementi_elenco {
+    padding-left: 5px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.meteo_pannello span.meteo_privata {
+    font-size: 10px;
+    font-style: italic;
+    padding: 0 4px;
+    border: 1px solid;
+    border-radius: 3px;
+}
+
+/* Stanze private: raccolte di default in un <details> */
+.meteo_pannello details.meteo_privati {
+    width: 95%;
+    margin: 0 auto;
+}
+
+.meteo_pannello details.meteo_privati table.meteo_tabella {
+    width: 100%;
+}
+
+.meteo_pannello details.meteo_privati summary {
+    cursor: pointer;
+    padding: 4px 20px;
+    font-weight: bold;
+    text-align: left;
+}
+
+/* Form in linea: i campi di gdrcd_meteo_form_campi() affiancati */
+.meteo_pannello form.meteo_pannello_form {
+    margin: 0;
+    text-align: left;
+}
+
+.meteo_pannello form.meteo_pannello_form .input_container {
+    display: inline-block;
+    vertical-align: top;
+    margin: 2px;
+    text-align: center;
+}
+
+.meteo_pannello form.meteo_pannello_form input,
+.meteo_pannello form.meteo_pannello_form select {
+    width: auto;
+    margin: 0;
+}
+
+.meteo_pannello form.meteo_pannello_form input[type="number"] {
+    width: 4.5em;
+}
+
+.meteo_pannello form.meteo_pannello_form label.casella_info {
+    font-size: 10px;
+}
+
+.meteo_pannello tr.meteo_zona td.casella_elemento,
+.meteo_pannello tr.meteo_zona div.elementi_elenco {
+    background-color: #c9c9c9;
+}
+
+.meteo_pannello details.meteo_privati summary {
+    background-color: #e5e5e5;
+}
+
+.meteo_pannello form.meteo_pannello_form button {
+    padding: 2px 6px;
+    font-size: 11px;
+}
+
 /** * Accorgimenti Layout */
 
 /** * Allineamento verticale delle colonne
