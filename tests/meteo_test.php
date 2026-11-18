@@ -275,6 +275,26 @@ gruppo('gdrcd_meteo_formatta', function () {
     verifica('formatta: temperatura negativa', 'Neve - -3°C', gdrcd_meteo_formatta('Neve', -3));
 });
 
+gruppo('gdrcd_meteo_durata_predefinita', function () {
+    $durate = [0, 1, 3, 6, 12, 24];
+
+    verifica('durata predefinita: stringa ammessa', 6, gdrcd_meteo_durata_predefinita('6', $durate));
+    verifica('durata predefinita: intero ammesso', 12, gdrcd_meteo_durata_predefinita(12, $durate));
+    verifica('durata predefinita: spazi ignorati', 3, gdrcd_meteo_durata_predefinita(' 3 ', $durate));
+    verifica('durata predefinita: non in elenco', 0, gdrcd_meteo_durata_predefinita('5', $durate));
+    verifica('durata predefinita: negativa', 0, gdrcd_meteo_durata_predefinita('-1', $durate));
+    verifica('durata predefinita: decimale', 0, gdrcd_meteo_durata_predefinita('1.5', $durate));
+    verifica('durata predefinita: vuota', 0, gdrcd_meteo_durata_predefinita('', $durate));
+    verifica('durata predefinita: null', 0, gdrcd_meteo_durata_predefinita(null, $durate));
+});
+
+gruppo('gdrcd_meteo_etichetta_durata', function () {
+    verifica('etichetta durata: nessuna scadenza', 'Nessuna scadenza', gdrcd_meteo_etichetta_durata(0, 'Nessuna scadenza', '1 ora', '%d ore'));
+    verifica('etichetta durata: un\'ora', '1 ora', gdrcd_meteo_etichetta_durata(1, 'Nessuna scadenza', '1 ora', '%d ore'));
+    verifica('etichetta durata: più ore', '24 ore', gdrcd_meteo_etichetta_durata(24, 'Nessuna scadenza', '1 ora', '%d ore'));
+    verifica('etichetta durata: negativa', 'Nessuna scadenza', gdrcd_meteo_etichetta_durata(-3, 'Nessuna scadenza', '1 ora', '%d ore'));
+});
+
 
 /* ------------------------------------------------------------------------- */
 

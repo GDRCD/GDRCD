@@ -168,6 +168,9 @@ const SEND_GM = true;
 //definisce quali permessi hanno accesso alla lista delle giocate dei pg e alle segnalazioni GM (default: gamemaster)
 const ROLE_PERM = GAMEMASTER;
 
+//definisce quali permessi possono impostare il meteo manuale (default: gamemaster)
+const METEO_PERM = GAMEMASTER;
+
 //definisce quali permessi hanno accesso ai log chat (default: gamemaster)
 const LOG_PERM = GAMEMASTER;
 

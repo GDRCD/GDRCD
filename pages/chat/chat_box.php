@@ -100,7 +100,18 @@
                 {
                     return new Promise((resolve, reject) => {
                         $.get('ajax.php?page=chat&op=read')
-                            .done(function(response) {
+                            .done(function(response, textStatus, jqXHR) {
+
+                                // Il meteo della chat arriva in ogni lettura come header (rawurlencode del testo)
+                                const meteo = jqXHR.getResponseHeader('X-Meteo');
+
+                                if (meteo) {
+                                    try {
+                                        chatMeteoUpdate(decodeURIComponent(meteo));
+                                    } catch (e) {
+                                        console.error('[GDRCD] Error decoding X-Meteo header:', meteo);
+                                    }
+                                }
 
                                 resolve(response);
 
@@ -270,6 +281,23 @@
                         $(`#${id}`).fadeOut();
 
                     }, 10000, messageId);
+                }
+
+                /**
+                 * Aggiorna il testo del riquadro meteo (#meteo_testo) se è cambiato.
+                 *
+                 * Il riquadro si trova nella colonna laterale dello stesso documento e potrebbe non
+                 * essere presente nel layout configurato: in quel caso non fa nulla.
+                 *
+                 * @param {string} testo - Testo del meteo già filtrato per l'output dal server
+                 */
+                function chatMeteoUpdate(testo)
+                {
+                    const $meteo = $('#meteo_testo');
+
+                    if ($meteo.length > 0 && $meteo.html() !== testo) {
+                        $meteo.html(testo);
+                    }
                 }
 
                 /**

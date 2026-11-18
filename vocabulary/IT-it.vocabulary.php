@@ -149,6 +149,13 @@ $MESSAGE['interface']['meteo']['moon'][7] = 'Calante';
 $MESSAGE['interface']['meteo']['error']['invalid_condition'] = 'La condizione meteo selezionata non è valida.';
 $MESSAGE['interface']['meteo']['error']['invalid_temperature'] = 'La temperatura inserita non è valida.';
 $MESSAGE['interface']['meteo']['error']['no_map'] = 'Nessuna zona associata a questo luogo.';
+$MESSAGE['interface']['meteo']['error']['invalid_duration'] = 'La durata selezionata non è valida.';
+$MESSAGE['interface']['meteo']['error']['invalid_target'] = 'Il bersaglio selezionato non è valido.';
+$MESSAGE['interface']['meteo']['error']['auto_mode'] = 'Il meteo è in modalità automatica e non può essere modificato.';
+$MESSAGE['interface']['meteo']['toggle'] = 'Meteo';
+$MESSAGE['interface']['meteo']['target'] = 'Applica a';
+$MESSAGE['interface']['meteo']['hour'] = '1 ora';
+$MESSAGE['interface']['meteo']['hours'] = '%d ore';
 /* Finestra delle mappe */
 $MESSAGE['interface']['maps']['more'] = 'Altre zone';
 $MESSAGE['interface']['maps']['no_more'] = 'Nessuna';

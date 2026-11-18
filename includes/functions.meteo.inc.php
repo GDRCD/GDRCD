@@ -232,6 +232,63 @@ function gdrcd_meteo_valida(mixed $temp, mixed $cond, int $min, int $max, array 
 }
 
 /**
+ * Elenco ordinato delle durate ammesse per un meteo manuale, in ore.
+ *
+ * 0 significa nessuna scadenza. È l'unica fonte di verità per le durate
+ * proposte nei form e accettate dagli endpoint.
+ *
+ * @return int[]
+ */
+function gdrcd_meteo_durate(): array
+{
+    return [0, 1, 3, 6, 12, 24];
+}
+
+/**
+ * Sceglie la durata da preselezionare nei form.
+ *
+ * Il valore configurato (meteo.durata_default) è accettato solo se è un intero
+ * non negativo presente fra le durate ammesse; in ogni altro caso si ricade
+ * su 0, cioè nessuna scadenza.
+ *
+ * @param mixed $valore Valore configurato (di norma una stringa, oppure null)
+ * @param int[] $durate Durate ammesse (di norma gdrcd_meteo_durate())
+ * @return int Durata in ore
+ */
+function gdrcd_meteo_durata_predefinita(mixed $valore, array $durate): int
+{
+    if (is_int($valore)) {
+        $ore = $valore;
+    } elseif (is_string($valore) && preg_match('/^\d{1,3}$/D', trim($valore)) === 1) {
+        $ore = (int)trim($valore);
+    } else {
+        return 0;
+    }
+
+    return in_array($ore, $durate, true) ? $ore : 0;
+}
+
+/**
+ * Compone l'etichetta di una durata per le tendine dei form.
+ *
+ * Non applica alcun escape: il risultato va filtrato per l'output.
+ *
+ * @param int $ore Durata in ore; 0 o negativa significa nessuna scadenza
+ * @param string $nessuna Testo per nessuna scadenza
+ * @param string $unOra Testo per una sola ora
+ * @param string $formatoOre Formato sprintf per più ore (es. '%d ore')
+ * @return string
+ */
+function gdrcd_meteo_etichetta_durata(int $ore, string $nessuna, string $unOra, string $formatoOre): string
+{
+    if ($ore <= 0) {
+        return $nessuna;
+    }
+
+    return $ore === 1 ? $unOra : sprintf($formatoOre, $ore);
+}
+
+/**
  * Calcola la scadenza di un valore meteo manuale.
  *
  * @param DateTimeInterface $now Istante di riferimento
@@ -337,7 +394,6 @@ function gdrcd_meteo_formatta(string $etichetta, int $temperatura): string
 {
     return $etichetta . ' - ' . $temperatura . '°C';
 }
-
 
 /* ---------------------------------------------------------------------------
  * Accesso al contesto (database, configurazione, vocabolario)
@@ -565,4 +621,101 @@ function gdrcd_meteo_azzera(string $target, int $id): bool
     gdrcd_event_meteo_change($target, $id);
 
     return true;
+}
+
+/* ---------------------------------------------------------------------------
+ * Campi dei form meteo (chat e pannello di gestione)
+ *
+ * gdrcd_meteo_form_campi() legge vocabolario e configurazione e produce il
+ * markup condiviso dal form in chat e dal pannello di gestione.
+ * ------------------------------------------------------------------------- */
+
+/**
+ * Restituisce il markup dei campi del form meteo, senza il tag <form>.
+ *
+ * Campi inviati: temperatura, condizione (slug), durata (ore) e, se richiesto,
+ * bersaglio ('luogo' oppure 'zona'). I nomi non coincidono mai con map_id o
+ * dir, che config.core.inc.php usa per spostare il personaggio.
+ * Ogni campo è racchiuso in un div.input_container, come nel resto della chat.
+ *
+ * Opzioni:
+ *  - prefisso: prefisso degli id degli elementi, da rendere unico quando la
+ *    pagina contiene più form (default 'meteo_form');
+ *  - bersaglio: se false omette la scelta del bersaglio, che il chiamante
+ *    invierà come campo nascosto (default true);
+ *  - bersaglio_predefinito: 'luogo' oppure 'zona' (default 'luogo').
+ *
+ * @param array $meteo Meteo corrente, come restituito da gdrcd_meteo_corrente()
+ * @param array $opzioni Opzioni di presentazione
+ * @return string Markup HTML con tutto l'output già filtrato
+ */
+function gdrcd_meteo_form_campi(array $meteo, array $opzioni = []): string
+{
+    global $MESSAGE;
+
+    $testi = $MESSAGE['interface']['meteo'];
+    $prefisso = gdrcd_filter('out', $opzioni['prefisso'] ?? 'meteo_form');
+    $limiti = gdrcd_meteo_limiti();
+    $durate = gdrcd_meteo_durate();
+    $durataScelta = gdrcd_meteo_durata_predefinita(gdrcd_configuration_get('meteo.durata_default') ?? 0, $durate);
+    $condizioneScelta = (string)($meteo['condizione'] ?? '');
+
+    // Il valore corrente può cadere fuori dai limiti (es. meteo automatico): lo riporto nell'intervallo
+    $temperatura = max($limiti['min'], min($limiti['max'], (int)($meteo['temperatura'] ?? 0)));
+
+    # Temperatura
+    $html = '<div class="input_container small">'
+        . '<input type="number" name="temperatura" id="' . $prefisso . '_temperatura" step="1"'
+        . ' min="' . (int)$limiti['min'] . '" max="' . (int)$limiti['max'] . '" value="' . $temperatura . '" required>'
+        . '<br /><label class="casella_info" for="' . $prefisso . '_temperatura">' . gdrcd_filter('out', $testi['temperature']) . '</label>'
+        . '</div>';
+
+    # Condizione
+    $html .= '<div class="input_container small">'
+        . '<select name="condizione" id="' . $prefisso . '_condizione">';
+
+    foreach (gdrcd_meteo_condizioni() as $slug) {
+        $html .= '<option value="' . gdrcd_filter('out', $slug) . '"' . ($slug === $condizioneScelta ? ' selected' : '') . '>'
+            . gdrcd_filter('out', $testi['status'][$slug] ?? ucfirst($slug))
+            . '</option>';
+    }
+
+    $html .= '</select>'
+        . '<br /><label class="casella_info" for="' . $prefisso . '_condizione">' . gdrcd_filter('out', $testi['condition']) . '</label>'
+        . '</div>';
+
+    # Durata
+    $html .= '<div class="input_container small">'
+        . '<select name="durata" id="' . $prefisso . '_durata">';
+
+    foreach ($durate as $ore) {
+        $etichetta = gdrcd_meteo_etichetta_durata($ore, $testi['no_expiry'], $testi['hour'], $testi['hours']);
+        $html .= '<option value="' . (int)$ore . '"' . ($ore === $durataScelta ? ' selected' : '') . '>'
+            . gdrcd_filter('out', $etichetta)
+            . '</option>';
+    }
+
+    $html .= '</select>'
+        . '<br /><label class="casella_info" for="' . $prefisso . '_durata">' . gdrcd_filter('out', $testi['duration']) . '</label>'
+        . '</div>';
+
+    # Bersaglio: solo questa chat oppure tutta la zona
+    if ($opzioni['bersaglio'] ?? true) {
+        $bersaglioScelto = ($opzioni['bersaglio_predefinito'] ?? 'luogo') === 'zona' ? 'zona' : 'luogo';
+
+        $html .= '<div class="input_container medium meteo_bersaglio">';
+
+        foreach (['luogo' => $testi['target_chat'], 'zona' => $testi['target_zone']] as $valore => $etichetta) {
+            $id = $prefisso . '_bersaglio_' . $valore;
+            $html .= '<label for="' . $id . '">'
+                . '<input type="radio" name="bersaglio" id="' . $id . '" value="' . $valore . '"' . ($valore === $bersaglioScelto ? ' checked' : '') . '> '
+                . gdrcd_filter('out', $etichetta)
+                . '</label> ';
+        }
+
+        $html .= '<br /><span class="casella_info">' . gdrcd_filter('out', $testi['target']) . '</span>'
+            . '</div>';
+    }
+
+    return $html;
 }
