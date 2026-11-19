@@ -1,6 +1,6 @@
 <?php
 
-/*Le operazioni su mappe mobili e meteo sono riservate ai GM (come i relativi form)*/
+/*Le operazioni sulle mappe mobili sono riservate ai GM (come il relativo form)*/
 if($_SESSION['permessi'] >= GAMEMASTER) {
     /*Se ho richiesto di far partire o arrivare una mappa mobile*/
     if((isset($_POST['op']) === true) && (($_POST['op'] == gdrcd_filter('out', $MESSAGE['interface']['maps']['leave'])) ||
@@ -10,18 +10,6 @@ if($_SESSION['permessi'] >= GAMEMASTER) {
             "UPDATE mappa_click SET posizione = ? WHERE id_click = ? LIMIT 1",
             [(int)$_POST['destination'], (int)$_REQUEST['map_id']]
         );
-    }
-    if((isset($_POST['op']) === true) && ($_POST['op'] == gdrcd_filter('out', $MESSAGE['interface']['maps']['set_meteo']))) {
-        /*Accetto solo condizioni climatiche presenti nel vocabolario*/
-        if(isset($_POST['climate']) && in_array($_POST['climate'], $MESSAGE['interface']['meteo']['status'], true)) {
-            /*Limito la temperatura all'intervallo proposto dal form*/
-            $temperature = max(-45, min(45, (int)$_POST['temperature']));
-            /*Aggiorno il meteo (stringa legacy, es. '12°C - Sereno')*/
-            gdrcd_stmt(
-                "UPDATE mappa_click SET meteo = ? WHERE id_click = ? LIMIT 1",
-                [$temperature.'°C - '.$_POST['climate'], (int)$_REQUEST['map_id']]
-            );
-        }
     }
 }
 
@@ -165,10 +153,12 @@ else {
         </div>
     <?php
     }
-    /*Controlli partenza mappe mobili/meteo*/
-    if($_SESSION['permessi'] >= GAMEMASTER) { ?>
+    /*Controlli partenza mappe mobili e riepilogo del meteo della zona, riservati ai GM*/
+    $mostra_mobile = ($_SESSION['permessi'] >= GAMEMASTER) && ($mobile == 1);
+    $mostra_meteo = ($_SESSION['permessi'] >= METEO_PERM) && ($PARAMETERS['mode']['auto_meteo'] == 'OFF');
+    if($mostra_mobile || $mostra_meteo) { ?>
         <div class="form_box">
-            <?php if($mobile == 1) { ?>
+            <?php if($mostra_mobile) { ?>
                 <form class="form_gioco" action="main.php?page=mappaclick&map_id=<?php echo (int)$self; ?>" method="post">
                     <?php if($vicinato != INVIAGGIO) { ?>
                         <div class="form_submit">
@@ -205,28 +195,16 @@ else {
                 </form>
             <?php
             }
-            if($PARAMETERS['mode']['auto_meteo'] == 'OFF') { ?>
-                <form class="form_gioco" action="main.php?page=mappaclick&map_id=<?php echo (int)$self; ?>" method="post">
-                    <div class="form_submit">
-                        <select name="temperature" class="game_form_selectbox">
-                            <?php for($i = 45; $i >= -45; $i--) { ?>
-                                <option value="<?php echo $i; ?>" <?php if($i == 0) { echo ' selected '; } ?>>
-                                    <?php echo $i; ?>&ordm; C
-                                </option>
-                            <?php
-                            } ?>
-                        </select>
-                        <select name="climate" class="game_form_selectbox">
-                            <?php foreach($MESSAGE['interface']['meteo']['status'] as $climate) { ?>
-                                <option value="<?php echo $climate; ?>">
-                                    <?php echo $climate; ?>
-                                </option>
-                            <?php } ?>
-                        </select>
-                        <input type="hidden" name="meteo" value="meteo_change" class="game_form_input" />
-                        <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['maps']['set_meteo']); ?>" name="op" />
-                    </div>
-                </form>
+            if($mostra_meteo) {
+                /*Meteo in vigore sulla zona (il testo è già filtrato per l'output); si modifica dal pannello di gestione*/
+                $meteo_zona = gdrcd_meteo_corrente(-1, (int)$self);
+                $meteo_zona_fonte = ($meteo_zona['fonte'] === 'auto') ? $MESSAGE['interface']['meteo']['auto'] : $MESSAGE['interface']['meteo']['manual'];
+                $meteo_zona_scadenza = gdrcd_meteo_orario_scadenza($meteo_zona['scadenza'], gdrcd_meteo_now()); ?>
+                <div class="form_info">
+                    <?php echo gdrcd_filter('out', $MESSAGE['interface']['meteo']['title']); ?>: <?php echo $meteo_zona['testo']; ?>
+                    (<?php echo gdrcd_filter('out', $meteo_zona_fonte); ?><?php if($meteo_zona_scadenza !== null) { echo ', '.gdrcd_filter('out', $MESSAGE['interface']['meteo']['expires_at']).' '.gdrcd_filter('out', $meteo_zona_scadenza); } ?>)
+                    - <a href="main.php?page=gestione/meteo#click-<?php echo (int)$self; ?>"><?php echo gdrcd_filter('out', $MESSAGE['interface']['meteo']['gm_link']); ?></a>
+                </div>
             <?php } ?>
         </div>
     <?php

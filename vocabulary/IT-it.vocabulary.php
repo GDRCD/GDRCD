@@ -163,7 +163,6 @@ $MESSAGE['interface']['maps']['traveling'] = 'In viaggio...';
 $MESSAGE['interface']['maps']['arrive'] = 'Arriva a...';
 $MESSAGE['interface']['maps']['leave'] = 'Partenza';
 $MESSAGE['interface']['maps']['Status'] = 'Stato del luogo';
-$MESSAGE['interface']['maps']['set_meteo'] = 'imposta';
 /* Scheda */
 $MESSAGE['interface']['sheet']['page_name'] = 'Scheda del personaggio';
 $MESSAGE['interface']['sheet']['link']['back'] = 'Torna alla scheda.';
