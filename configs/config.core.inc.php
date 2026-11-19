@@ -617,7 +617,10 @@ $PARAMETERS['mode']['mapwise_links'] = 'OFF';
 /**
  * HELP:
  * ON: Il meteo è generato automaticamente
- * OFF: Il meteo è inserito manualmente, mappa per mappa. Se le mappe sono significativamente distanti, geograficamente, questa opzione dovrebbe essere impostata ad OFF
+ * OFF: Il meteo è inserito manualmente dai GM, per zona (mappa) o per singola chat. Un valore manuale
+ *      puo' avere una scadenza: alla scadenza torna al valore della zona o al meteo automatico.
+ *      Si imposta dalla chat o da Gestione > Gestione meteo. Se le mappe sono significativamente
+ *      distanti, geograficamente, questa opzione dovrebbe essere impostata ad OFF
  */
 $PARAMETERS['mode']['auto_meteo'] = 'ON';
 

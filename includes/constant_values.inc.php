@@ -191,6 +191,7 @@ const PERMESSI_DIARIO = MODERATOR;
  * Fasi Lunari
  */
 //Attiva le fasi lunari
+//@deprecated Usa l'impostazione `meteo.fasi_lunari` (Gestione > Configurazioni). Letta solo come ripiego se l'impostazione manca.
 const MOON = true;
 
 /**
