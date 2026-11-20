@@ -619,10 +619,19 @@ $PARAMETERS['mode']['mapwise_links'] = 'OFF';
  * ON: Il meteo è generato automaticamente
  * OFF: Il meteo è inserito manualmente dai GM, per zona (mappa) o per singola chat. Un valore manuale
  *      puo' avere una scadenza: alla scadenza torna al valore della zona o al meteo automatico.
- *      Si imposta dalla chat o da Gestione > Gestione meteo. Se le mappe sono significativamente
+ *      Si imposta dal tooltip o da Gestione > Gestione meteo. Se le mappe sono significativamente
  *      distanti, geograficamente, questa opzione dovrebbe essere impostata ad OFF
  */
 $PARAMETERS['mode']['auto_meteo'] = 'ON';
+
+/**
+ * HELP:
+ * Permette di scegliere come si apre il pannello di gestione del meteo (icona a forma di ingranaggio nel box del luogo)
+ * MODAL: il pannello viene aperto in una modale sopra la pagina corrente
+ * POPUP: il pannello viene aperto in una finestra popup del browser
+ * PAGE: si apre la pagina Gestione > Gestione meteo, come ogni altra pagina del gioco
+ */
+$PARAMETERS['settings']['meteo']['gestione'] = '';
 
 /**
  * HELP:

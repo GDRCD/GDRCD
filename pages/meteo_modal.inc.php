@@ -69,6 +69,12 @@ $testi_pannello = $MESSAGE['interface']['administration']['meteo'];
         const $esito = $('#meteoModalEsito');
 
         $('#meteoLinkZona').click(function (event) {
+            // In un popup del browser non c'è una modale da riaprire: allargo la finestra e proseguo nella stessa
+            if (window.opener) {
+                window.resizeTo(Math.min(1200, screen.availWidth), Math.min(700, screen.availHeight));
+                return;
+            }
+
             const main = window.parent;
 
             if (main && typeof main.modalWindow === 'function') {
@@ -95,8 +101,8 @@ $testi_pannello = $MESSAGE['interface']['administration']['meteo'];
                     $esito.attr('class', 'success').text(esito[azione]);
 
                     // Aggiorna il box del luogo e la chat nella pagina sotto la modale
-                    const main = window.parent;
-                    if (main && main.$ && response.message) {
+                    const main = window.opener && !window.opener.closed ? window.opener : window.parent;
+                    if (main && main !== window && main.$ && response.message) {
                         main.$('#meteo_testo').html(response.message.testo);
                         $('#meteoModalCorrente').html(response.message.testo);
                         if (typeof main.meteoUpdateExpiry === 'function') {

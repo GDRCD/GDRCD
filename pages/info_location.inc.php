@@ -68,6 +68,22 @@
                 }
             }
 
+            # Apertura del pannello di gestione: modale (predefinito), finestra popup del browser o pagina del gioco
+            $meteo_titolo = addslashes(gdrcd_filter('out', $MESSAGE['interface']['meteo']['gm_link']));
+            $meteo_url = 'popup.php?page=meteo_modal';
+            $meteo_apertura = '';
+
+            switch ($PARAMETERS['settings']['meteo']['gestione'] ?? 'MODAL') {
+                case 'PAGE':
+                    // Nessun onclick: vale il link a main.php?page=gestione/meteo
+                    break;
+                case 'POPUP':
+                    $meteo_apertura = 'onclick="window.open(\'' . $meteo_url . '\', \'meteo\', \'width=\' + Math.min(900, screen.availWidth) + \',height=\' + Math.min(650, screen.availHeight) + \',scrollbars=yes,resizable=yes\'); return false;"';
+                    break;
+                default:
+                    $meteo_apertura = 'onclick="modalWindow(\'meteo\', \'' . $meteo_titolo . '\', \'' . $meteo_url . '\', Math.min(900, window.innerWidth - 20), Math.min(650, window.innerHeight - 20)); return false;"';
+            }
+
             # Fase lunare, se abilitata (la costante MOON resta solo come ripiego)
             $fasi_lunari = (gdrcd_configuration_get('meteo.fasi_lunari') ?? ((defined('MOON') && MOON) ? 'si' : 'no')) === 'si';
             ?>
@@ -89,7 +105,7 @@
             <div class="meteo">
                 <span id="meteo_testo"><?php echo $meteo['testo']; ?></span>
                 <?php if ($_SESSION['permessi'] >= METEO_PERM && $PARAMETERS['mode']['auto_meteo'] == 'OFF') { ?>
-                    <a class="meteo_gestione" href="main.php?page=gestione/meteo#click-<?php echo (int)$_SESSION['mappa']; ?>" aria-label="<?php echo gdrcd_filter('out', $MESSAGE['interface']['meteo']['gm_link']); ?>" onclick="modalWindow('meteo', '<?php echo addslashes(gdrcd_filter('out', $MESSAGE['interface']['meteo']['gm_link'])); ?>', 'popup.php?page=meteo_modal', Math.min(900, window.innerWidth - 20), Math.min(650, window.innerHeight - 20)); return false;">
+                    <a class="meteo_gestione" href="main.php?page=gestione/meteo#click-<?php echo (int)$_SESSION['mappa']; ?>" aria-label="<?php echo gdrcd_filter('out', $MESSAGE['interface']['meteo']['gm_link']); ?>" <?php echo $meteo_apertura; ?>>
                         <svg class="meteo_gestione_icona" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.48.48 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.49.49 0 0 0-.59.22L2.74 8.87a.47.47 0 0 0 .12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.47.47 0 0 0-.12-.61l-2.01-1.58zM12 15.6A3.6 3.6 0 1 1 12 8.4a3.6 3.6 0 0 1 0 7.2z"/></svg>
                         <span class="meteo_gestione_tooltip"><?php echo gdrcd_filter('out', $MESSAGE['interface']['meteo']['gm_link']); ?></span>
                     </a>
