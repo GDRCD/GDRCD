@@ -724,6 +724,126 @@ div.elenco_record_gestione table {
     }
 }
 
+/* Pannelli di gestione dentro una modale: niente margini laterali sprecati */
+.popup .gestione_pagina > .gestione_incipit,
+.popup .gestione_pagina > .gestione_body {
+    width: auto;
+    margin-left: 12px;
+    margin-right: 12px;
+}
+
+/** * Modale del meteo (meteo_modal): form rapido della chat, stesso aspetto delle righe del pannello */
+.popup .meteo_modale {
+    width: auto;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 16px;
+    text-align: left;
+    box-sizing: border-box;
+}
+
+.meteo_modale h2.meteo_modale_titolo {
+    margin: 0 0 6px;
+    font-size: 18px;
+}
+
+.meteo_modale p.meteo_modale_corrente {
+    margin: 0 0 12px;
+    font-size: 13px;
+}
+
+.meteo_modale #meteoModalEsito:empty {
+    display: none;
+}
+
+.meteo_modale #meteoModalEsito {
+    margin-bottom: 12px;
+}
+
+.meteo_modale form.meteo_pannello_form {
+    gap: 12px 16px;
+    padding: 14px;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 6px;
+    background-color: #1f2937;
+}
+
+.meteo_modale form.meteo_pannello_form input,
+.meteo_modale form.meteo_pannello_form select {
+    height: 32px;
+    font-size: 13px;
+}
+
+.meteo_modale form.meteo_pannello_form input[type="number"] {
+    width: 5.5em;
+}
+
+.meteo_modale form.meteo_pannello_form label.casella_info,
+.meteo_modale form.meteo_pannello_form span.casella_info {
+    display: inline-block;
+    margin-top: 3px;
+    font-size: 11px;
+}
+
+/* Bersaglio: i due radio affiancati, con l'etichetta sotto */
+.meteo_modale form.meteo_pannello_form div.meteo_bersaglio {
+    flex: 1 1 100%;
+}
+
+.meteo_modale form.meteo_pannello_form div.meteo_bersaglio label {
+    display: inline-block;
+    margin-right: 14px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.meteo_modale form.meteo_pannello_form div.meteo_bersaglio input[type="radio"] {
+    width: auto;
+    height: auto;
+    margin: 0 4px 0 0;
+    vertical-align: middle;
+}
+
+.meteo_modale form.meteo_pannello_form div.meteo_pulsanti {
+    flex: 1 1 100%;
+    justify-content: flex-end;
+    margin-top: 4px;
+}
+
+.meteo_modale form.meteo_pannello_form button {
+    min-height: 32px;
+    padding: 4px 16px;
+    font-size: 12px;
+}
+
+.meteo_modale div.link_back {
+    margin-top: 12px;
+}
+
+/* Schermi stretti: campi a tutta larghezza, tasti affiancati a metà */
+@media (max-width: 480px) {
+    .popup .meteo_modale {
+        padding: 10px;
+    }
+
+    .meteo_modale form.meteo_pannello_form {
+        padding: 10px;
+    }
+
+    .meteo_modale form.meteo_pannello_form div.input_container {
+        flex: 1 1 100%;
+    }
+
+    .meteo_modale form.meteo_pannello_form input[type="number"],
+    .meteo_modale form.meteo_pannello_form select {
+        width: 100%;
+    }
+
+    .meteo_modale form.meteo_pannello_form div.meteo_pulsanti button {
+        flex: 1 1 0;
+    }
+}
+
 /** * Accorgimenti Layout */
 
 /** * Allineamento verticale delle colonne 
