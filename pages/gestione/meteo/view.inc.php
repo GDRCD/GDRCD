@@ -14,6 +14,9 @@ if (!gdrcd_controllo_permessi($PARAMETERS['administration']['meteo']['access_lev
 $testiMeteo = $MESSAGE['interface']['meteo'];
 $testiPannello = $MESSAGE['interface']['administration']['meteo'];
 
+// Dentro la modale (popup.php) i form devono restare nella stessa pagina
+$urlPannello = basename($_SERVER['SCRIPT_NAME'] ?? '') === 'popup.php' ? 'popup.php' : 'main.php';
+
 $pannello = gdrcd_meteo_pannello();
 $modificabile = !$pannello['auto_mode'];
 
@@ -33,7 +36,7 @@ $idLuogoInviato = isset($_POST['id_luogo']) && is_scalar($_POST['id_luogo']) ? (
  * @param int $id Id della zona o della chat
  * @param int $idClick Id della zona, per tornare alla zona dopo l'invio
  */
-$stampaRiga = function (string $classe, string $ancora, string $nome, array $meteo, string $fonte, bool $conScadenza, string $bersaglio, int $id, int $idClick) use ($modificabile, $testiMeteo, $testiPannello) {
+$stampaRiga = function (string $classe, string $ancora, string $nome, array $meteo, string $fonte, bool $conScadenza, string $bersaglio, int $id, int $idClick) use ($modificabile, $testiMeteo, $testiPannello, $urlPannello) {
     $scadenza = '';
 
     if ($conScadenza) {
@@ -53,7 +56,7 @@ $stampaRiga = function (string $classe, string $ancora, string $nome, array $met
         </div>
         <?php if ($modificabile) { ?>
             <div class="meteo_cella meteo_azioni">
-                <form method="post" action="main.php?page=gestione/meteo#click-<?php echo $idClick; ?>" class="meteo_pannello_form">
+                <form method="post" action="<?php echo $urlPannello; ?>?page=gestione/meteo#click-<?php echo $idClick; ?>" class="meteo_pannello_form">
                     <input type="hidden" name="bersaglio" value="<?php echo $bersaglio; ?>" />
                     <input type="hidden" name="<?php echo $bersaglio === 'zona' ? 'id_click' : 'id_luogo'; ?>" value="<?php echo $id; ?>" />
 

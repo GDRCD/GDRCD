@@ -14,7 +14,7 @@ if (!gdrcd_controllo_permessi($PARAMETERS['administration']['meteo']['access_lev
 
         <!-- Titolo della pagina -->
         <div class="gestione_incipit">
-            <div class="title"><?php echo gdrcd_filter('out', $testi_pannello['page_name']); ?></div>
+            <div class="title"><?php echo gdrcd_filter('out', basename($_SERVER['SCRIPT_NAME'] ?? '') === 'popup.php' ? $testi_pannello['title_zone'] : $testi_pannello['page_name']); ?></div>
         </div>
 
         <!-- Corpo della pagina -->
@@ -34,10 +34,12 @@ if (!gdrcd_controllo_permessi($PARAMETERS['administration']['meteo']['access_lev
             ?>
         </div>
 
-        <!-- Link a piè di pagina -->
-        <div class="link_back">
-            <a href="main.php?page=gestione"><?php echo gdrcd_filter('out', $testi_pannello['link']['back']); ?></a>
-        </div>
+        <!-- Link a piè di pagina: nella modale (popup.php) non serve -->
+        <?php if (basename($_SERVER['SCRIPT_NAME'] ?? '') !== 'popup.php') { ?>
+            <div class="link_back">
+                <a href="main.php?page=gestione"><?php echo gdrcd_filter('out', $testi_pannello['link']['back']); ?></a>
+            </div>
+        <?php } ?>
     </div><!-- pagina -->
     <?php
 }
