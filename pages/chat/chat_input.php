@@ -460,6 +460,47 @@
     }
 
     /**
+     * Aggiorna l'indicazione "fino alle ..." accanto al meteo, visibile solo ai master.
+     * Stesso formato di pages/info_location.inc.php: "HH:MM", oppure "GG/MM HH:MM" se la scadenza non è oggi.
+     *
+     * @param {Object} meteo - Meteo risolto dal server
+     * @param {string} meteo.fonte - 'luogo', 'zona' oppure 'auto'
+     * @param {string|null} meteo.scadenza - Scadenza nel formato 'Y-m-d H:i:s', oppure null
+     */
+    function meteoUpdateExpiry(meteo)
+    {
+        const $testo = $('#meteo_testo');
+
+        // Il riquadro meteo potrebbe non essere presente nel layout
+        if ($testo.length === 0) {
+            return;
+        }
+
+        let $scadenza = $testo.siblings('.meteo_scadenza');
+
+        // Nessuna scadenza: rimuovo l'eventuale indicazione precedente
+        if (meteo.fonte === 'auto' || !meteo.scadenza) {
+            $scadenza.remove();
+            return;
+        }
+
+        const etichetta = <?php echo json_encode($MESSAGE['interface']['meteo']['expires_at'], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+        const [data, ora] = meteo.scadenza.split(' ');
+        const [anno, mese, giorno] = data.split('-');
+        const oggi = new Date();
+        const isOggi = Number(anno) === oggi.getFullYear()
+            && Number(mese) === oggi.getMonth() + 1
+            && Number(giorno) === oggi.getDate();
+
+        if ($scadenza.length === 0) {
+            $scadenza = $('<span class="meteo_scadenza"></span>');
+            $testo.after(' ', $scadenza);
+        }
+
+        $scadenza.text(etichetta + ' ' + (isOggi ? '' : `${giorno}/${mese} `) + ora.slice(0, 5));
+    }
+
+    /**
      * Esegue una richiesta POST HTTP e restituisce una Promise
      * Aggiorna automaticamente la chat in caso di successo e gestisce gli errori
      * @param {string} url - URL dell'endpoint per la richiesta POST

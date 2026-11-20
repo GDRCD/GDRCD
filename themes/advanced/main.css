@@ -195,6 +195,43 @@ div.meteo, div.meteo_date {
     font-size: 12px;
 }
 
+/* Icona di gestione meteo per i GM: il link compare in una tooltip al passaggio del mouse */
+div.meteo a.meteo_gestione {
+    position: relative;
+    display: inline-block;
+    margin-left: 4px;
+    line-height: 0;
+    cursor: pointer;
+    vertical-align: middle;
+    text-decoration: none;
+}
+
+div.meteo a.meteo_gestione span.meteo_gestione_tooltip {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    padding: 4px 8px;
+    line-height: normal;
+    font-size: 12px;
+    white-space: nowrap;
+    background-color: #cfcfcf;
+    border: solid 1px #666;
+    border-radius: 5px;
+    z-index: 9999;
+}
+
+div.meteo a.meteo_gestione:hover span.meteo_gestione_tooltip,
+div.meteo a.meteo_gestione:focus-within span.meteo_gestione_tooltip {
+    display: block;
+}
+
+div.meteo span.meteo_scadenza {
+    display: block;
+    font-size: 10px;
+    opacity: 0.7;
+}
+
 div.meteo_luna img{
     margin:0 auto;
     width: 30px;
@@ -414,6 +451,301 @@ div.elementi_elenco a:hover {
 div.elenco_record_gestione table {
     width: 95%;
     margin: 10px auto;
+}
+
+/** * Pannello meteo (gestione/meteo) */
+.meteo_pannello {
+    width: 95%;
+    margin: 10px auto;
+}
+
+.meteo_pannello div.meteo_zona_blocco {
+    margin-top: 14px;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid #bbbbbb;
+}
+
+.meteo_pannello div.meteo_riga {
+    display: grid;
+    grid-template-columns: minmax(110px, 1.3fr) minmax(110px, 1fr) minmax(100px, 0.9fr) minmax(80px, 0.7fr) minmax(0, 3fr);
+    align-items: center;
+    gap: 6px 12px;
+    padding: 8px 12px;
+    font-size: 12px;
+    background-color: #f2f2f2;
+    border-top: 1px solid #bbbbbb;
+}
+
+/* Senza form (meteo automatico) restano quattro colonne */
+.meteo_pannello.meteo_sola_lettura div.meteo_riga {
+    grid-template-columns: minmax(110px, 1.3fr) minmax(110px, 1fr) minmax(100px, 0.9fr) minmax(80px, 0.7fr);
+}
+
+.meteo_pannello div.meteo_zona_blocco div.meteo_riga:first-child {
+    border-top: 0;
+}
+
+.meteo_pannello div.meteo_intestazione {
+    background: none;
+    border: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    font-weight: bold;
+    font-style: italic;
+    opacity: 0.8;
+}
+
+.meteo_pannello div.meteo_riga.meteo_zona {
+    background-color: #c9c9c9;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.meteo_pannello div.meteo_riga.meteo_luogo div.meteo_nome {
+    padding-left: 16px;
+    font-weight: normal;
+}
+
+.meteo_pannello div.meteo_vuoto {
+    display: block;
+    font-style: italic;
+    text-align: center;
+}
+
+.meteo_pannello span.meteo_valore {
+    font-weight: bold;
+}
+
+.meteo_pannello span.meteo_badge {
+    display: inline-block;
+    padding: 1px 8px;
+    border: 1px solid #bbbbbb;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: normal;
+}
+
+.meteo_pannello span.meteo_privata {
+    font-size: 10px;
+    font-style: italic;
+    padding: 0 4px;
+    border: 1px solid;
+    border-radius: 3px;
+}
+
+/* Stanze private: raccolte di default in un <details> */
+.meteo_pannello details.meteo_privati {
+    border-top: 1px solid #bbbbbb;
+}
+
+.meteo_pannello details.meteo_privati summary {
+    cursor: pointer;
+    padding: 6px 12px;
+    font-weight: bold;
+    background-color: #e5e5e5;
+}
+
+/* Form in linea: i campi di gdrcd_meteo_form_campi() affiancati */
+.meteo_pannello form.meteo_pannello_form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 6px;
+    margin: 0;
+    text-align: left;
+}
+
+.meteo_pannello form.meteo_pannello_form .input_container {
+    margin: 0;
+    text-align: left;
+}
+
+.meteo_pannello form.meteo_pannello_form input,
+.meteo_pannello form.meteo_pannello_form select {
+    width: auto;
+    max-width: 100%;
+    margin: 0;
+    height: 28px;
+    padding: 2px 6px;
+    font-size: 12px;
+    box-sizing: border-box;
+}
+
+.meteo_pannello form.meteo_pannello_form input[type="number"] {
+    width: 4.5em;
+}
+
+.meteo_pannello form.meteo_pannello_form label.casella_info {
+    font-size: 10px;
+}
+
+.meteo_pannello form.meteo_pannello_form div.meteo_pulsanti {
+    display: flex;
+    gap: 6px;
+    align-self: flex-start;
+}
+
+.meteo_pannello form.meteo_pannello_form button {
+    min-height: 28px;
+    padding: 4px 10px;
+    font-size: 11px;
+}
+
+/* Schermi stretti: ogni riga diventa una scheda con le etichette in linea */
+@media (max-width: 900px) {
+    .meteo_pannello {
+        width: 100%;
+    }
+
+    .meteo_pannello div.meteo_intestazione {
+        display: none;
+    }
+
+    .meteo_pannello div.meteo_riga,
+    .meteo_pannello.meteo_sola_lettura div.meteo_riga {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .meteo_pannello div.meteo_riga div.meteo_nome,
+    .meteo_pannello div.meteo_riga div.meteo_azioni {
+        grid-column: 1 / -1;
+    }
+
+    .meteo_pannello div.meteo_riga div.meteo_cella[data-label]::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 10px;
+        font-style: italic;
+        opacity: 0.7;
+    }
+}
+
+@media (max-width: 480px) {
+    .meteo_pannello div.meteo_riga,
+    .meteo_pannello.meteo_sola_lettura div.meteo_riga {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Pannelli di gestione dentro una modale: niente margini laterali sprecati */
+.popup .gestione_pagina > .gestione_incipit,
+.popup .gestione_pagina > .gestione_body {
+    width: auto;
+    margin-left: 12px;
+    margin-right: 12px;
+}
+
+/** * Modale del meteo (meteo_modal): form rapido della chat, stesso aspetto delle righe del pannello */
+.popup .meteo_modale {
+    width: auto;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 16px;
+    text-align: left;
+    box-sizing: border-box;
+}
+
+.meteo_modale h2.meteo_modale_titolo {
+    margin: 0 0 6px;
+    font-size: 18px;
+}
+
+.meteo_modale p.meteo_modale_corrente {
+    margin: 0 0 12px;
+    font-size: 13px;
+}
+
+.meteo_modale #meteoModalEsito:empty {
+    display: none;
+}
+
+.meteo_modale #meteoModalEsito {
+    margin-bottom: 12px;
+}
+
+.meteo_modale form.meteo_pannello_form {
+    gap: 12px 16px;
+    padding: 14px;
+    border: 1px solid #bbbbbb;
+    border-radius: 6px;
+    background-color: #f2f2f2;
+}
+
+.meteo_modale form.meteo_pannello_form input,
+.meteo_modale form.meteo_pannello_form select {
+    height: 32px;
+    font-size: 13px;
+}
+
+.meteo_modale form.meteo_pannello_form input[type="number"] {
+    width: 5.5em;
+}
+
+.meteo_modale form.meteo_pannello_form label.casella_info,
+.meteo_modale form.meteo_pannello_form span.casella_info {
+    display: inline-block;
+    margin-top: 3px;
+    font-size: 11px;
+}
+
+/* Bersaglio: i due radio affiancati, con l'etichetta sotto */
+.meteo_modale form.meteo_pannello_form div.meteo_bersaglio {
+    flex: 1 1 100%;
+}
+
+.meteo_modale form.meteo_pannello_form div.meteo_bersaglio label {
+    display: inline-block;
+    margin-right: 14px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.meteo_modale form.meteo_pannello_form div.meteo_bersaglio input[type="radio"] {
+    width: auto;
+    height: auto;
+    margin: 0 4px 0 0;
+    vertical-align: middle;
+}
+
+.meteo_modale form.meteo_pannello_form div.meteo_pulsanti {
+    flex: 1 1 100%;
+    justify-content: flex-end;
+    margin-top: 4px;
+}
+
+.meteo_modale form.meteo_pannello_form button {
+    min-height: 32px;
+    padding: 4px 16px;
+    font-size: 12px;
+}
+
+.meteo_modale div.link_back {
+    margin-top: 12px;
+}
+
+/* Schermi stretti: campi a tutta larghezza, tasti affiancati a metà */
+@media (max-width: 480px) {
+    .popup .meteo_modale {
+        padding: 10px;
+    }
+
+    .meteo_modale form.meteo_pannello_form {
+        padding: 10px;
+    }
+
+    .meteo_modale form.meteo_pannello_form div.input_container {
+        flex: 1 1 100%;
+    }
+
+    .meteo_modale form.meteo_pannello_form input[type="number"],
+    .meteo_modale form.meteo_pannello_form select {
+        width: 100%;
+    }
+
+    .meteo_modale form.meteo_pannello_form div.meteo_pulsanti button {
+        flex: 1 1 0;
+    }
 }
 
 /** * Accorgimenti Layout */

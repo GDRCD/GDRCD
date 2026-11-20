@@ -1,14 +1,16 @@
 <?php
 
-/*Se ho richiesto di far partire o arrivare una mappa mobile*/
-if((isset($_POST['op']) === true) && (($_POST['op'] == gdrcd_filter('out', $MESSAGE['interface']['maps']['leave'])) ||
-        ($_POST['op'] == gdrcd_filter('out', $MESSAGE['interface']['maps']['arrive'])))) {
-    /*Aggiorno la sua posizione*/
-    gdrcd_query("UPDATE mappa_click SET posizione = ".gdrcd_filter('num', $_POST['destination'])." WHERE id_click = ".gdrcd_filter('num', $_REQUEST['map_id'])." LIMIT 1");
-}
-if((isset($_POST['op']) === true) && ($_POST['op'] == gdrcd_filter('out', $MESSAGE['interface']['maps']['set_meteo']))) {
-    /*Aggiorno la sua posizione*/
-    gdrcd_query("UPDATE mappa_click SET meteo = '".gdrcd_filter('num', $_POST['temperature'])."°C - ".gdrcd_filter('in', $_POST['climate'])."' WHERE id_click = ".gdrcd_filter('num', $_REQUEST['map_id'])." LIMIT 1");
+/*Le operazioni sulle mappe mobili sono riservate ai GM (come il relativo form)*/
+if($_SESSION['permessi'] >= GAMEMASTER) {
+    /*Se ho richiesto di far partire o arrivare una mappa mobile*/
+    if((isset($_POST['op']) === true) && (($_POST['op'] == gdrcd_filter('out', $MESSAGE['interface']['maps']['leave'])) ||
+            ($_POST['op'] == gdrcd_filter('out', $MESSAGE['interface']['maps']['arrive'])))) {
+        /*Aggiorno la sua posizione*/
+        gdrcd_stmt(
+            "UPDATE mappa_click SET posizione = ? WHERE id_click = ? LIMIT 1",
+            [(int)$_POST['destination'], (int)$_REQUEST['map_id']]
+        );
+    }
 }
 
 // Ottengo la mappa corrente (se non è impostata, uso quella salvata in sessione del giocatore)
@@ -151,67 +153,43 @@ else {
         </div>
     <?php
     }
-    /*Controlli partenza mappe mobili/meteo*/
-    if($_SESSION['permessi'] >= GAMEMASTER) { ?>
+    /*Controlli partenza mappe mobili, riservati ai GM*/
+    if(($_SESSION['permessi'] >= GAMEMASTER) && ($mobile == 1)) { ?>
         <div class="form_box">
-            <?php if($mobile == 1) { ?>
-                <form class="form_gioco" action="main.php?page=mappaclick&map_id=<?php echo $_SESSION['mappa']; ?>" method="post">
-                    <?php if($vicinato != INVIAGGIO) { ?>
-                        <div class="form_submit">
-                            <input type="hidden" name="destination" value="<?php echo INVIAGGIO; ?>" class="game_form_input" />
-                            <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['maps']['leave']); ?>" name="op" />
-                        </div>
-                    <?php
-                    } else {
-                        /*Genero la lista delle possibili destinazioni*/
-                        $result = gdrcd_query("SELECT posizione, nome FROM mappa_click WHERE posizione <> -1 AND id_click <> ".$_SESSION['mappa']." ORDER BY nome", 'result');
-                        /*Se esistono altre mappe*/
-                        if(gdrcd_query($result, 'num_rows') > 0) { ?>
-                            <div class="form_submit">
-                            <select name="destination" class="game_form_selectbox">
-                                <?php while($record = gdrcd_query($result, 'fetch')) { ?>
-                                    <option value="<?php echo $record['posizione']; ?>">
-                                        <?php echo gdrcd_filter('out', $record['nome']); ?>
-                                    </option>
-                                <?php
-                                }
-                                gdrcd_query($result, 'free');
-                                ?>
-                            </select>
-                        <?php
-                        } else { ?>
-                            <input type="hidden" name="destination" value="0" class="game_form_input" />
-                        <?php
-                        } ?>
-                        <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['maps']['arrive']); ?>" name="op" />
-                        </div>
-                    <?php } ?>
-                </form>
-            <?php
-            }
-            if($PARAMETERS['mode']['auto_meteo'] == 'OFF') { ?>
-                <form class="form_gioco" action="main.php?page=mappaclick&map_id=<?php echo $_SESSION['mappa']; ?>" method="post">
+            <form class="form_gioco" action="main.php?page=mappaclick&map_id=<?php echo (int)$self; ?>" method="post">
+                <?php if($vicinato != INVIAGGIO) { ?>
                     <div class="form_submit">
-                        <select name="temperature" class="game_form_selectbox">
-                            <?php for($i = 45; $i >= -45; $i--) { ?>
-                                <option value="<?php echo $i; ?>" <?php if($i == 0) { echo ' selected '; } ?>>
-                                    <?php echo $i; ?>&ordm; C
+                        <input type="hidden" name="destination" value="<?php echo INVIAGGIO; ?>" class="game_form_input" />
+                        <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['maps']['leave']); ?>" name="op" />
+                    </div>
+                <?php
+                } else {
+                    /*Genero la lista delle possibili destinazioni*/
+                    $destinazioni = iterator_to_array(gdrcd_stmt_all(
+                        "SELECT posizione, nome FROM mappa_click WHERE posizione <> -1 AND id_click <> ? ORDER BY nome",
+                        [(int)$self]
+                    ), false);
+                    /*Se esistono altre mappe*/
+                    if(count($destinazioni) > 0) { ?>
+                        <div class="form_submit">
+                        <select name="destination" class="game_form_selectbox">
+                            <?php foreach($destinazioni as $record) { ?>
+                                <option value="<?php echo $record['posizione']; ?>">
+                                    <?php echo gdrcd_filter('out', $record['nome']); ?>
                                 </option>
                             <?php
-                            } ?>
+                            }
+                            ?>
                         </select>
-                        <select name="climate" class="game_form_selectbox">
-                            <?php foreach($MESSAGE['interface']['meteo']['status'] as $climate) { ?>
-                                <option value="<?php echo $climate; ?>">
-                                    <?php echo $climate; ?>
-                                </option>
-                            <?php } ?>
-                        </select>
-                        <input type="hidden" name="meteo" value="meteo_change" class="game_form_input" />
-                        <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['maps']['set_meteo']); ?>" name="op" />
+                    <?php
+                    } else { ?>
+                        <input type="hidden" name="destination" value="0" class="game_form_input" />
+                    <?php
+                    } ?>
+                    <input type="submit" value="<?php echo gdrcd_filter('out', $MESSAGE['interface']['maps']['arrive']); ?>" name="op" />
                     </div>
-                </form>
-            <?php } ?>
+                <?php } ?>
+            </form>
         </div>
     <?php
     }//else

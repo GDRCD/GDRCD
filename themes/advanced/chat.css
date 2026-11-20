@@ -316,3 +316,16 @@ div.chat_row_F {
   width: 90%;
   margin: 0 auto;
 }
+
+/* Form meteo dei master: nascosto finché non si clicca il link "Meteo" */
+.chat_box .chat_input_box form.hidden {
+  display: none;
+}
+
+.chat_box .chat_input_box .chat_row .input_container input[type="radio"] {
+  width: auto;
+}
+
+.chat_box .chat_input_box .chat_row .input_container.meteo_bersaglio label {
+  white-space: nowrap;
+}

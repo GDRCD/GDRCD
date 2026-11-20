@@ -1,53 +1,21 @@
-<div class="pagina_info_location">
-    <?php /* HELP: Il box delle informazioni carica l'immagine del luogo corrente, lo stato e la descrizione. Genera, inoltre, il meteo */
+<div class="pagina_info_location" id="info_location_box">
+    <?php /* HELP: Il box delle informazioni carica l'immagine del luogo corrente, lo stato e la descrizione. Mostra, inoltre, il meteo */
 
-    # Funzione per il calcolo della fase lunare
-    function gdrcd_lunar_phase()
-    {
-        # Inizializzo dati necessari
-        $year = date('Y');
-        $month = date('n');
-        $days = date('j');
+    $record = gdrcd_stmt_one(
+        'SELECT nome, descrizione, stato, immagine, stanza_apparente, scadenza FROM mappa WHERE id = ? LIMIT 1',
+        [(int)$_SESSION['luogo']]
+    ) ?: [];
 
-        # Se e' prima di aprile sottraggo un anno
-        if ($month < 4) {
-            $year = $year - 1;
-            $month = $month + 12;
-        }
-
-        # Eseguo calcoli astronomici
-        $days_y = 365.25 * $year;
-        $days_m = 30.42 * $month;
-        $plenilunio = $days_y + $days_m + $days - 694039.09;
-        $plenilunio = $plenilunio / 29.53;
-        $phase = intval($plenilunio);
-        $plenilunio = $plenilunio - $phase;
-        $phase = round($plenilunio * 8 + 0.5);
-
-        # ...
-        if ($phase == 8) {
-            $phase = 0;
-        }
-
-        # Creo gli array delle fasi
-        $phase_array = array('nuova', 'crescente', 'primo-quarto', 'gibbosa-crescente', 'piena', 'gibbosa-calante', 'ultimo-quarto', 'calante');
-        $phase_title = array('Nuova', 'Crescente', 'Primo Quarto', 'Gibbosa crescente', 'Piena', 'Gibbosa calante', 'Ultimo quarto', 'Calante');
-
-        # Estraggo e ritorno la fase calcolata
-        return array('phase' => $phase_array[$phase], 'title' => $phase_title[$phase]);
-    }
-
-    $result = gdrcd_query("SELECT mappa.nome, mappa.descrizione, mappa.stato, mappa.immagine, mappa.stanza_apparente, mappa.scadenza, mappa_click.meteo FROM  mappa_click LEFT JOIN mappa ON mappa_click.id_click = mappa.id_mappa WHERE id = " . $_SESSION['luogo'], 'result');
-    $record_exists = gdrcd_query($result, 'num_rows');
-    $record = gdrcd_query($result, 'fetch');
-
-    /** * Fix: quando non si � in una mappa visualizza il nome della chat
-     * Quando si � in una mappa si visualizza il nome della mappa
+    /** * Fix: quando non si è in una mappa visualizza il nome della chat
+     * Quando si è in una mappa si visualizza il nome della mappa
      * @author Blancks
      */
     if (empty($record['nome'])) {
-        $nome_mappa = gdrcd_query("SELECT nome FROM mappa_click WHERE id_click = " . (int)$_SESSION['mappa']);
-        $nome_luogo = $nome_mappa['nome'];
+        $nome_mappa = gdrcd_stmt_one(
+            'SELECT nome FROM mappa_click WHERE id_click = ? LIMIT 1',
+            [(int)$_SESSION['mappa']]
+        );
+        $nome_luogo = $nome_mappa['nome'] ?? '';
     } else {
         $nome_luogo = $record['nome'];
     }
@@ -57,9 +25,7 @@
     </div>
     <div class="page_body">
         <?php
-        if ($record_exists > 0 || $_SESSION['luogo'] == -1) {
-            gdrcd_query($result, 'free');
-
+        if (!empty($record) || $_SESSION['luogo'] == -1) {
             if (empty($record['nome']) === false) {
                 $nome_luogo = $record['nome'];
             } elseif ($_SESSION['mappa'] >= 0) {
@@ -77,123 +43,77 @@
                     $immagine_luogo = 'standard_luogo.png';
                 }
                 ?>
-                <img src="themes/<?php echo gdrcd_filter('out', $PARAMETERS['themes']['current_theme']); ?>/imgs/locations/<?php echo $immagine_luogo ?>"
-                     class="immagine_luogo" alt="<?php echo gdrcd_filter('out', $record['descrizione']); ?>"
-                     title="<?php echo gdrcd_filter('out', $record['descrizione']); ?>">
+                <img src="themes/<?php echo gdrcd_filter('out', $PARAMETERS['themes']['current_theme']); ?>/imgs/locations/<?php echo gdrcd_filter('out', $immagine_luogo); ?>"
+                     class="immagine_luogo" alt="<?php echo gdrcd_filter('out', $record['descrizione'] ?? ''); ?>"
+                     title="<?php echo gdrcd_filter('out', $record['descrizione'] ?? ''); ?>">
             </div>
             <?php if ((isset($record['stato']) === true) || (isset($record['descrizione']) === true)) {
-                echo '<div class="box_stato_luogo"><marquee onmouseover="this.stop()" onmouseout="this.start()" direction="left" scrollamount="3" class="stato_luogo">&nbsp;' . $MESSAGE['interface']['maps']['Status'] . ': ' . gdrcd_filter('out', $record['stato']) . ' -  ' . gdrcd_filter('out', $record['descrizione']) . '</marquee></div>';
+                echo '<div class="box_stato_luogo"><marquee onmouseover="this.stop()" onmouseout="this.start()" direction="left" scrollamount="3" class="stato_luogo">&nbsp;' . $MESSAGE['interface']['maps']['Status'] . ': ' . gdrcd_filter('out', $record['stato'] ?? '') . ' -  ' . gdrcd_filter('out', $record['descrizione'] ?? '') . '</marquee></div>';
             } else {
                 echo '<div class="box_stato_luogo">&nbsp;</div>';
             }
-            if ($PARAMETERS['mode']['auto_meteo'] == 'ON') {
-                /* Meteo */
-                $ore = strftime("%H");
-                $minuti = strftime("%M");
-                $mese = strftime("%m");
-                $giorno = strftime("%j");
-                $caso = ((floor($giorno / 3)) % 2) + 1;
 
-                /**    * Bug FIX: corretta l'assegnazione della $minima
-                 * @author Blancks
-                 */
-                switch ($mese) {
-                    case 1:
-                        $minima = $PARAMETERS['date']['base_temperature'] + 0;
-                        break;
-                    case 2:
-                        $minima = $PARAMETERS['date']['base_temperature'] + 4;
-                        break;
-                    case 3:
-                        $minima = $PARAMETERS['date']['base_temperature'] + 8;
-                        break;
-                    case 4:
-                        $minima = $PARAMETERS['date']['base_temperature'] + 14;
-                        break;
-                    case 5:
-                        $minima = $PARAMETERS['date']['base_temperature'] + 20;
-                        break;
-                    case 6:
-                        $minima = $PARAMETERS['date']['base_temperature'] + 28;
-                        break;
-                    case 7:
-                        $minima = $PARAMETERS['date']['base_temperature'] + 30;
-                        break;
-                    case 8:
-                        $minima = $PARAMETERS['date']['base_temperature'] + 27;
-                        break;
-                    case 9:
-                        $minima = $PARAMETERS['date']['base_temperature'] + 21;
-                        break;
-                    case 10:
-                        $minima = $PARAMETERS['date']['base_temperature'] + 15;
-                        break;
-                    case 11:
-                        $minima = $PARAMETERS['date']['base_temperature'] + 5;
-                        break;
-                    case 12:
-                        $minima = $PARAMETERS['date']['base_temperature'] + 1;
-                        break;
-                }
-                /**
-                 * Fine fix
-                 */
-                if ($ore < 14) {
-                    $gradi = $minima + (floor($ore / 3) * $caso);
-                } else {
-                    $gradi = $minima + (4 * $caso) - ((floor($ore / 3) * $caso)) + (3 * $caso);
-                }
+            /* Meteo: risolto dal nucleo (automatico, zona o chat), testo già filtrato per l'output */
+            $now = gdrcd_meteo_now();
+            $meteo = gdrcd_meteo_corrente((int)$_SESSION['luogo'], (int)$_SESSION['mappa']);
 
-                $caso = ($giorno + ($ore / 4)) % 12;
-                switch ($caso) {
-                    case 0:
-                    case 6:
-                    case 10:
-                    case 11:
-                    case 1:
-                        $meteo_cond = $MESSAGE['interface']['meteo']['status'][0];
-                        break;
-                    case 7:
-                    case 5:
-                    case 2:
-                        $meteo_cond = $MESSAGE['interface']['meteo']['status'][1];
-                        break;
-                    case 9:
-                    case 3:
-                        $meteo_cond = $MESSAGE['interface']['meteo']['status'][2];
-                        break;
-                    case 8:
-                    case 4:
-                        if ($minima < 4) {
-                            $meteo_cond = $MESSAGE['interface']['meteo']['status'][4];
-                        } else {
-                            $meteo_cond = $MESSAGE['interface']['meteo']['status'][3];
-                        }
-                        break;
+            # Ai GM mostro fino a quando resta attivo un meteo manuale
+            $meteo_scadenza = '';
+
+            if ((int)($_SESSION['permessi'] ?? 0) >= GAMEMASTER && $meteo['fonte'] !== 'auto') {
+                $orario_scadenza = gdrcd_meteo_orario_scadenza($meteo['scadenza'], $now);
+
+                if ($orario_scadenza !== null) {
+                    $meteo_scadenza = gdrcd_filter('out', $MESSAGE['interface']['meteo']['expires_at']) . ' ' . $orario_scadenza;
                 }
-                $meteo = $meteo_cond . " - " . $gradi . "&deg;C "; //.Tempo();
-            } else {
-                $meteo = gdrcd_filter('out', $record['meteo']);
             }
-            if (empty($meteo) === false) { ?>
-                <div class="page_title">
-                    <h2><?php echo gdrcd_filter('out', $MESSAGE['interface']['meteo']['title']); ?></h2>
-                </div>
-                <div class="meteo_date">
-                    <?php echo strftime('%d') . '/' . strftime('%m') . '/' . (strftime('%Y') + $PARAMETERS['date']['offset']); ?>
-                </div>
-                <div class="meteo_luna">
-                    <?php if (defined('MOON') && MOON) {
-                        $moon = gdrcd_lunar_phase();
-                        echo '<img title="' . $moon['title'] . '"  src="themes/' . gdrcd_filter('out', $PARAMETERS['themes']['current_theme']) . '/imgs/luna/' . $moon['phase'] . '.png">';
-                    } ?>
-                </div>
 
-                <div class="meteo">
-                    <?php
-                    echo $meteo; ?>
-                </div>
-            <?php } ?>
+            # Apertura del pannello di gestione: modale (predefinito), finestra popup del browser o pagina del gioco
+            $meteo_titolo = addslashes(gdrcd_filter('out', $MESSAGE['interface']['meteo']['gm_link']));
+            $meteo_url = 'popup.php?page=meteo_modal';
+            $meteo_apertura = '';
+
+            switch ($PARAMETERS['settings']['meteo']['gestione'] ?? 'MODAL') {
+                case 'PAGE':
+                    // Nessun onclick: vale il link a main.php?page=gestione/meteo
+                    break;
+                case 'POPUP':
+                    $meteo_apertura = 'onclick="window.open(\'' . $meteo_url . '\', \'meteo\', \'width=\' + Math.min(900, screen.availWidth) + \',height=\' + Math.min(650, screen.availHeight) + \',scrollbars=yes,resizable=yes\'); return false;"';
+                    break;
+                default:
+                    $meteo_apertura = 'onclick="modalWindow(\'meteo\', \'' . $meteo_titolo . '\', \'' . $meteo_url . '\', Math.min(900, window.innerWidth - 20), Math.min(650, window.innerHeight - 20)); return false;"';
+            }
+
+            # Fase lunare, se abilitata (la costante MOON resta solo come ripiego)
+            $fasi_lunari = (gdrcd_configuration_get('meteo.fasi_lunari') ?? ((defined('MOON') && MOON) ? 'si' : 'no')) === 'si';
+            ?>
+            <div class="page_title">
+                <h2><?php echo gdrcd_filter('out', $MESSAGE['interface']['meteo']['title']); ?></h2>
+            </div>
+            <div class="meteo_date">
+                <?php echo $now->format('d') . '/' . $now->format('m') . '/' . ((int)$now->format('Y') + (int)$PARAMETERS['date']['offset']); ?>
+            </div>
+            <div class="meteo_luna">
+                <?php if ($fasi_lunari) {
+                    $fase = gdrcd_meteo_fase_lunare($now);
+                    $fase_immagine = gdrcd_meteo_fasi_lunari()[$fase];
+                    $fase_titolo = gdrcd_filter('out', $MESSAGE['interface']['meteo']['moon'][$fase] ?? $fase_immagine);
+                    echo '<img title="' . $fase_titolo . '" alt="' . $fase_titolo . '" src="themes/' . gdrcd_filter('out', $PARAMETERS['themes']['current_theme']) . '/imgs/luna/' . gdrcd_filter('out', $fase_immagine) . '.png">';
+                } ?>
+            </div>
+
+            <div class="meteo">
+                <span id="meteo_testo"><?php echo $meteo['testo']; ?></span>
+                <?php if ($_SESSION['permessi'] >= METEO_PERM && $PARAMETERS['mode']['auto_meteo'] == 'OFF') { ?>
+                    <a class="meteo_gestione" href="main.php?page=gestione/meteo#click-<?php echo (int)$_SESSION['mappa']; ?>" aria-label="<?php echo gdrcd_filter('out', $MESSAGE['interface']['meteo']['gm_link']); ?>" <?php echo $meteo_apertura; ?>>
+                        <svg class="meteo_gestione_icona" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.48.48 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.49.49 0 0 0-.59.22L2.74 8.87a.47.47 0 0 0 .12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.47.47 0 0 0-.12-.61l-2.01-1.58zM12 15.6A3.6 3.6 0 1 1 12 8.4a3.6 3.6 0 0 1 0 7.2z"/></svg>
+                        <span class="meteo_gestione_tooltip"><?php echo gdrcd_filter('out', $MESSAGE['interface']['meteo']['gm_link']); ?></span>
+                    </a>
+                <?php } ?>
+                <?php if ($meteo_scadenza !== '') { ?>
+                    <span class="meteo_scadenza"><?php echo $meteo_scadenza; ?></span>
+                <?php } ?>
+            </div>
             <?php
         } else {
             echo '<div class="error">' . gdrcd_filter('out', $MESSAGE['error']['location_doesnt_exist']) . '</div>';

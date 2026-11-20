@@ -617,9 +617,21 @@ $PARAMETERS['mode']['mapwise_links'] = 'OFF';
 /**
  * HELP:
  * ON: Il meteo è generato automaticamente
- * OFF: Il meteo è inserito manualmente, mappa per mappa. Se le mappe sono significativamente distanti, geograficamente, questa opzione dovrebbe essere impostata ad OFF
+ * OFF: Il meteo è inserito manualmente dai GM, per zona (mappa) o per singola chat. Un valore manuale
+ *      puo' avere una scadenza: alla scadenza torna al valore della zona o al meteo automatico.
+ *      Si imposta dal tooltip o da Gestione > Gestione meteo. Se le mappe sono significativamente
+ *      distanti, geograficamente, questa opzione dovrebbe essere impostata ad OFF
  */
 $PARAMETERS['mode']['auto_meteo'] = 'ON';
+
+/**
+ * HELP:
+ * Permette di scegliere come si apre il pannello di gestione del meteo (icona a forma di ingranaggio nel box del luogo)
+ * MODAL: il pannello viene aperto in una modale sopra la pagina corrente
+ * POPUP: il pannello viene aperto in una finestra popup del browser
+ * PAGE: si apre la pagina Gestione > Gestione meteo, come ogni altra pagina del gioco
+ */
+$PARAMETERS['settings']['meteo']['gestione'] = '';
 
 /**
  * HELP:
@@ -959,6 +971,9 @@ $PARAMETERS['administration']['locations']['access_level'] = SUPERUSER;
 $PARAMETERS['administration']['maps']['text'] = 'Gestione mappe';
 $PARAMETERS['administration']['maps']['url'] = 'main.php?page=gestione/mappe';
 $PARAMETERS['administration']['maps']['access_level'] = SUPERUSER;
+$PARAMETERS['administration']['meteo']['text'] = 'Gestione meteo';
+$PARAMETERS['administration']['meteo']['url'] = 'main.php?page=gestione/meteo';
+$PARAMETERS['administration']['meteo']['access_level'] = METEO_PERM;
 $PARAMETERS['administration']['items']['text'] = 'Gestione oggetti';
 $PARAMETERS['administration']['items']['url'] = 'main.php?page=gestione_mercato';
 $PARAMETERS['administration']['items']['access_level'] = SUPERUSER;

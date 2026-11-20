@@ -26,6 +26,7 @@ switch ($operation) {
     case 'read':           // Legge i messaggi nuovi in chat
     case 'write':          // Scrive un nuovo messaggio in chat
     case 'skillsystem':    // Esegue le operazioni relative allo skillsystem (dadi, abilità, caratteristiche e uso oggetti)
+    case 'meteo':          // Imposta o ripristina il meteo manuale della chat o della zona (solo master)
 
         $operation_file = dirname(__FILE__) . '/op/'. $operation .'.inc.php';
 

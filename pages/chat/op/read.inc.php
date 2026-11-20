@@ -15,6 +15,11 @@ $chat_last_id = gdrcd_chat_get_lastmessage_id();
 
 header('X-Last-Id: '. $chat_last_id);
 
+// Meteo corrente della chat, per aggiornare il box senza ricaricare la pagina.
+// Il testo è già filtrato per l'html e viene codificato per stare in un header.
+$meteo = gdrcd_meteo_corrente((int)$map_id, (int)($_SESSION['mappa'] ?? 0));
+header('X-Meteo: '. rawurlencode($meteo['testo']));
+
 // Legge le nuove azioni dal database
 $output = gdrcd_chat_read_messages($map_id, $chat_last_id);
 

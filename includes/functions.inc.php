@@ -221,7 +221,7 @@ function gdrcd_controllo_esilio($id_personaggio, $return = false)
  */
 function gdrcd_controllo_permessi($permesso)
 {
-    return (bool)$_SESSION['permessi'] >= $permesso;
+    return (int)$_SESSION['permessi'] >= (int)$permesso;
 }
 
 /**

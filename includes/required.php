@@ -49,6 +49,9 @@ require_once(GDRCD_PATH . '/includes/functions.chat_read.inc.php');
 require_once(GDRCD_PATH . '/includes/functions.chat_write.inc.php');
 require_once(GDRCD_PATH . '/includes/functions.configuration.inc.php');
 
+// include le funzioni per il meteo
+require_once(GDRCD_PATH . '/includes/functions.meteo.inc.php');
+
 // include le funzioni per il logging
 require_once(GDRCD_PATH . '/includes/functions.log_core.inc.php');
 require_once(GDRCD_PATH . '/includes/functions.log_read.inc.php');
