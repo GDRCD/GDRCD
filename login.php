@@ -269,8 +269,8 @@ if (!empty($_SESSION['id_personaggio'])) {
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/main.css" type="text/css">
-        <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/homepage.css" type="text/css">
+        <link rel="stylesheet" href="<?php echo gdrcd_theme_css('main.css'); ?>" type="text/css">
+        <link rel="stylesheet" href="<?php echo gdrcd_theme_css('homepage.css'); ?>" type="text/css">
         <link rel="shortcut icon" href="public/images/favicon.ico">
     </head>
 

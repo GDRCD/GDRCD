@@ -170,6 +170,22 @@ function gdrcd_html_filter($str)
 }
 
 /**
+ * Cache busting dei fogli di stile del tema in uso
+ * Aggiunge al percorso la data di modifica del file, così i browser scaricano la nuova versione dopo ogni modifica
+ * @param string $file : il nome del file nella cartella del tema in uso (es. main.css)
+ * @return string il percorso relativo alla root del sito, es. themes/night/main.css?v=1700000000
+ */
+function gdrcd_theme_css($file)
+{
+    global $PARAMETERS;
+
+    $path = 'themes/' . $PARAMETERS['themes']['current_theme'] . '/' . $file;
+    $mtime = @filemtime(GDRCD_PATH . $path);
+
+    return gdrcd_filter('out', $path . ($mtime ? '?v=' . $mtime : ''));
+}
+
+/**
  * Controlli di routine di gdrcd sui personaggi
  * Set di funzione per semplificare controlli frequenti sui personaggi nell'engine
  */

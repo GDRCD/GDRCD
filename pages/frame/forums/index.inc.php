@@ -106,9 +106,9 @@ if($PARAMETERS['mode']['check_forum'] === 'ON') {
     <!--meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"-->
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="refresh" content="<?php echo $i_ref_time; ?>">
-    <link rel="stylesheet" href="../../../themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/presenti.css" TYPE="text/css">
-    <link rel="stylesheet" href="../../../themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/main.css" TYPE="text/css">
-    <link rel="stylesheet" href="../../../themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/chat.css" TYPE="text/css">
+    <link rel="stylesheet" href="../../../<?php echo gdrcd_theme_css('presenti.css'); ?>" TYPE="text/css">
+    <link rel="stylesheet" href="../../../<?php echo gdrcd_theme_css('main.css'); ?>" TYPE="text/css">
+    <link rel="stylesheet" href="../../../<?php echo gdrcd_theme_css('chat.css'); ?>" TYPE="text/css">
     <title>Forum</title>
 </head>
 <body class="transparent_body">
