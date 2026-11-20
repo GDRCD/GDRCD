@@ -278,6 +278,38 @@ div.meteo span.meteo_scadenza {
     opacity: 0.7;
 }
 
+/* Icona di gestione meteo per i GM: il link compare in una tooltip al passaggio del mouse */
+div.meteo a.meteo_gestione {
+    position: relative;
+    display: inline-block;
+    margin-left: 4px;
+    line-height: 0;
+    cursor: pointer;
+    vertical-align: middle;
+    text-decoration: none;
+}
+
+div.meteo a.meteo_gestione span.meteo_gestione_tooltip {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    padding: 4px 8px;
+    line-height: normal;
+    font-size: 12px;
+    white-space: nowrap;
+    background-color: #3e5677;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 5px;
+    z-index: 9999;
+}
+
+div.meteo a.meteo_gestione:hover span.meteo_gestione_tooltip,
+div.meteo a.meteo_gestione:focus-within span.meteo_gestione_tooltip {
+    display: block;
+}
+
 div.meteo_luna img{
     margin:0 auto;
     width: 30px;
@@ -502,38 +534,76 @@ div.elenco_record_gestione table {
 }
 
 /** * Pannello meteo (gestione/meteo) */
-.meteo_pannello table.meteo_tabella {
-    table-layout: fixed;
-    margin: 0 auto;
+.meteo_pannello {
+    width: 95%;
+    margin: 10px auto;
 }
-
-.meteo_pannello table.meteo_intestazione {
-    margin-top: 10px;
-}
-
-.meteo_pannello col.meteo_col_nome { width: 20%; }
-.meteo_pannello col.meteo_col_meteo { width: 14%; }
-.meteo_pannello col.meteo_col_fonte { width: 12%; }
-.meteo_pannello col.meteo_col_scadenza { width: 9%; }
-.meteo_pannello col.meteo_col_azioni { width: 45%; }
 
 .meteo_pannello div.meteo_zona_blocco {
-    margin-top: 6px;
+    margin-top: 14px;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.08);
 }
 
-.meteo_pannello td.casella_elemento {
-    vertical-align: middle;
+.meteo_pannello div.meteo_riga {
+    display: grid;
+    grid-template-columns: minmax(110px, 1.3fr) minmax(110px, 1fr) minmax(100px, 0.9fr) minmax(80px, 0.7fr) minmax(0, 3fr);
+    align-items: center;
+    gap: 6px 12px;
+    padding: 8px 12px;
+    font-size: 12px;
+    background-color: #1f2937;
+    border-top: 1px solid rgba(255,255,255,0.08);
 }
 
-.meteo_pannello td.meteo_nome div.elementi_elenco {
-    text-align: left;
-    padding-left: 20px;
+/* Senza form (meteo automatico) restano quattro colonne */
+.meteo_pannello.meteo_sola_lettura div.meteo_riga {
+    grid-template-columns: minmax(110px, 1.3fr) minmax(110px, 1fr) minmax(100px, 0.9fr) minmax(80px, 0.7fr);
 }
 
-.meteo_pannello tr.meteo_zona td.meteo_nome div.elementi_elenco {
-    padding-left: 5px;
+.meteo_pannello div.meteo_zona_blocco div.meteo_riga:first-child {
+    border-top: 0;
+}
+
+.meteo_pannello div.meteo_intestazione {
+    background: none;
+    border: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    font-weight: bold;
+    font-style: italic;
+    opacity: 0.8;
+}
+
+.meteo_pannello div.meteo_riga.meteo_zona {
+    background-color: #2a3a52;
     font-size: 13px;
     font-weight: bold;
+}
+
+.meteo_pannello div.meteo_riga.meteo_luogo div.meteo_nome {
+    padding-left: 16px;
+    font-weight: normal;
+}
+
+.meteo_pannello div.meteo_vuoto {
+    display: block;
+    font-style: italic;
+    text-align: center;
+}
+
+.meteo_pannello span.meteo_valore {
+    font-weight: bold;
+}
+
+.meteo_pannello span.meteo_badge {
+    display: inline-block;
+    padding: 1px 8px;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: normal;
 }
 
 .meteo_pannello span.meteo_privata {
@@ -546,38 +616,40 @@ div.elenco_record_gestione table {
 
 /* Stanze private: raccolte di default in un <details> */
 .meteo_pannello details.meteo_privati {
-    width: 95%;
-    margin: 0 auto;
-}
-
-.meteo_pannello details.meteo_privati table.meteo_tabella {
-    width: 100%;
+    border-top: 1px solid rgba(255,255,255,0.08);
 }
 
 .meteo_pannello details.meteo_privati summary {
     cursor: pointer;
-    padding: 4px 20px;
+    padding: 6px 12px;
     font-weight: bold;
-    text-align: left;
+    background-color: #243041;
 }
 
 /* Form in linea: i campi di gdrcd_meteo_form_campi() affiancati */
 .meteo_pannello form.meteo_pannello_form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 6px;
     margin: 0;
     text-align: left;
 }
 
 .meteo_pannello form.meteo_pannello_form .input_container {
-    display: inline-block;
-    vertical-align: top;
-    margin: 2px;
-    text-align: center;
+    margin: 0;
+    text-align: left;
 }
 
 .meteo_pannello form.meteo_pannello_form input,
 .meteo_pannello form.meteo_pannello_form select {
     width: auto;
+    max-width: 100%;
     margin: 0;
+    height: 28px;
+    padding: 2px 6px;
+    font-size: 12px;
+    box-sizing: border-box;
 }
 
 .meteo_pannello form.meteo_pannello_form input[type="number"] {
@@ -588,27 +660,19 @@ div.elenco_record_gestione table {
     font-size: 10px;
 }
 
-.meteo_pannello tr.meteo_zona td.casella_elemento,
-.meteo_pannello tr.meteo_zona div.elementi_elenco {
-    background-color: #2a3a52;
-    color: #f3f4f6;
+.meteo_pannello form.meteo_pannello_form div.meteo_pulsanti {
+    display: flex;
+    gap: 6px;
+    align-self: flex-start;
 }
 
-.meteo_pannello details.meteo_privati summary {
-    background-color: #243041;
+.meteo_pannello form.meteo_pannello_form button {
+    min-height: 28px;
+    padding: 4px 10px;
+    font-size: 11px;
 }
 
-.meteo_pannello form.meteo_pannello_form select,
-.meteo_pannello form.meteo_pannello_form input[type="number"] {
-    height: 26px;
-    padding: 2px 6px;
-    font-size: 12px;
-}
-
-.meteo_pannello form.meteo_pannello_form select {
-    padding-right: 24px;
-    background-position: 0 0, right 6px center;
-}
+.meteo_pannello div.meteo_riga.meteo_zona { color: #f3f4f6; }
 
 /* input number non ha uno stile di base nel tema: lo allineo alle select */
 .meteo_pannello form.meteo_pannello_form input[type="number"] {
@@ -617,13 +681,47 @@ div.elenco_record_gestione table {
     background: #f4f6fa;
     color: #1d2735;
     font-family: Arial, Helvetica, sans-serif;
-    box-sizing: border-box;
 }
 
-.meteo_pannello form.meteo_pannello_form button {
-    min-height: 0;
-    padding: 4px 8px;
-    font-size: 11px;
+.meteo_pannello form.meteo_pannello_form select {
+    padding-right: 24px;
+    background-position: 0 0, right 6px center;
+}
+
+/* Schermi stretti: ogni riga diventa una scheda con le etichette in linea */
+@media (max-width: 900px) {
+    .meteo_pannello {
+        width: 100%;
+    }
+
+    .meteo_pannello div.meteo_intestazione {
+        display: none;
+    }
+
+    .meteo_pannello div.meteo_riga,
+    .meteo_pannello.meteo_sola_lettura div.meteo_riga {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .meteo_pannello div.meteo_riga div.meteo_nome,
+    .meteo_pannello div.meteo_riga div.meteo_azioni {
+        grid-column: 1 / -1;
+    }
+
+    .meteo_pannello div.meteo_riga div.meteo_cella[data-label]::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 10px;
+        font-style: italic;
+        opacity: 0.7;
+    }
+}
+
+@media (max-width: 480px) {
+    .meteo_pannello div.meteo_riga,
+    .meteo_pannello.meteo_sola_lettura div.meteo_riga {
+        grid-template-columns: 1fr;
+    }
 }
 
 /** * Accorgimenti Layout */
