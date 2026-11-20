@@ -12,7 +12,7 @@ gdrcd_query("UPDATE personaggio SET ora_uscita = NOW() WHERE id_personaggio = '"
 <html>
 <head>
     <meta http-equiv="Content-Type" content='text/html; charset=utf-8'>
-    <link rel="stylesheet" href="themes/<?php echo $PARAMETERS['themes']['current_theme']; ?>/main.css" type='text/css'>
+    <link rel="stylesheet" href="<?php echo gdrcd_theme_css('main.css'); ?>" type='text/css'>
     <link rel="shortcut icon" href="imgs/favicon.ico"/>
 </head>
 <body class="logout_body">
