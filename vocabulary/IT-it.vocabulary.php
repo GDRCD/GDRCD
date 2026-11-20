@@ -152,7 +152,6 @@ $MESSAGE['interface']['meteo']['error']['no_map'] = 'Nessuna zona associata a qu
 $MESSAGE['interface']['meteo']['error']['invalid_duration'] = 'La durata selezionata non è valida.';
 $MESSAGE['interface']['meteo']['error']['invalid_target'] = 'Il bersaglio selezionato non è valido.';
 $MESSAGE['interface']['meteo']['error']['auto_mode'] = 'Il meteo è in modalità automatica e non può essere modificato.';
-$MESSAGE['interface']['meteo']['toggle'] = 'Meteo';
 $MESSAGE['interface']['meteo']['target'] = 'Applica a';
 $MESSAGE['interface']['meteo']['hour'] = '1 ora';
 $MESSAGE['interface']['meteo']['hours'] = '%d ore';
@@ -543,6 +542,9 @@ $MESSAGE['interface']['administration']['maps']['no_erase_main'] = 'Non è possi
 $MESSAGE['interface']['administration']['maps']['no_erase_last'] = 'Non è possibile eliminare l\'ultima mappa.';
 /*Meteo*/
 $MESSAGE['interface']['administration']['meteo']['page_name'] = 'Gestione meteo';
+$MESSAGE['interface']['administration']['meteo']['title_chat'] = 'Gestione meteo - Chat';
+$MESSAGE['interface']['administration']['meteo']['title_zone'] = 'Gestione meteo - Zona';
+$MESSAGE['interface']['administration']['meteo']['link_zone'] = 'Gestione meteo Zona';
 $MESSAGE['interface']['administration']['meteo']['map_col'] = 'Zona';
 $MESSAGE['interface']['administration']['meteo']['chat_col'] = 'Luogo';
 $MESSAGE['interface']['administration']['meteo']['current_col'] = 'Meteo attuale';

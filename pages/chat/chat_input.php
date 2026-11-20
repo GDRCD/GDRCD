@@ -4,13 +4,6 @@
     $skillsystem_attivo = $PARAMETERS['mode']['skillsystem'] == 'ON';
     $dadi_attivi = $PARAMETERS['mode']['dices'] == 'ON';
     $login_gamemaster = $_SESSION['permessi'] >= GAMEMASTER;
-    $meteo_master = (int)($_SESSION['permessi'] ?? 0) >= METEO_PERM
-        && ($PARAMETERS['mode']['auto_meteo'] ?? 'ON') == 'OFF';
-
-    // Meteo corrente della chat, per precompilare il form dei master
-    $meteo_chat = $meteo_master
-        ? gdrcd_meteo_corrente((int)$_SESSION['luogo'], (int)$_SESSION['mappa'])
-        : null;
 
     // Elenco abilità del personaggio connesso
     $skills = $skillsystem_attivo
@@ -136,14 +129,6 @@
                         </a>
                     </span>
                 <?php  } ?>
-
-                <?php if ($meteo_master) { ?>
-                    | <span class="casella_info">
-                        <a href="#" id="meteoToggle">
-                            <?php echo gdrcd_filter('out', $MESSAGE['interface']['meteo']['toggle']); ?>
-                        </a>
-                    </span>
-                <?php } ?>
 
 	            | <span>
                     Caratteri: <span id="conta">0</span>
@@ -374,38 +359,6 @@
 
     <?php } ?>
 
-    <?php if ($meteo_master) { ?>
-
-        <!-- Form meteo per i master: imposta o ripristina il meteo della chat o della zona -->
-        <form action="ajax.php?page=chat&op=meteo" method="post" id="meteoForm" class="hidden">
-            <div class="chat_text chat_row">
-
-                <!-- Temperatura, condizione, durata e bersaglio -->
-                <?php echo gdrcd_meteo_form_campi($meteo_chat); ?>
-
-                <!-- Tasti imposta/ripristina: il valore del tasto premuto viene inviato come "azione" -->
-                <div class="input_container medium">
-                    <button type="submit" class="casella_chat" name="azione" value="imposta">
-                        <?php echo gdrcd_filter('out', $MESSAGE['interface']['meteo']['set']); ?>
-                    </button>
-                    <button type="submit" class="casella_chat" name="azione" value="ripristina" formnovalidate>
-                        <?php echo gdrcd_filter('out', $MESSAGE['interface']['meteo']['reset']); ?>
-                    </button>
-
-                    <br />
-
-                    <span class="casella_info">
-                        <a href="main.php?page=gestione/meteo<?php echo $meteo_chat['id_click'] !== null ? '#click-' . (int)$meteo_chat['id_click'] : ''; ?>">
-                            <?php echo gdrcd_filter('out', $MESSAGE['interface']['meteo']['gm_link']); ?>
-                        </a>
-                    </span>
-                </div>
-
-            </div>
-        </form>
-
-    <?php } ?>
-
 </div>
 
 <script type="text/javascript" src="/includes/jquery-3.7.1.min.js"></script>
@@ -468,28 +421,6 @@
 
         });
 
-        // Mostra/nasconde il form meteo dei master
-        $('#meteoToggle').click(function(event) {
-            event.preventDefault();
-            $('#meteoForm').toggleClass('hidden');
-        });
-
-        // Ricorda quale tasto del form meteo è stato premuto (imposta o ripristina):
-        // serialize() non include il valore dei tasti di invio
-        $('#meteoForm button[name="azione"]').click(function() {
-            $('#meteoForm').data('azione', $(this).val());
-        });
-
-        // Invio form meteo
-        $('#meteoForm').submit(function(event) {
-            event.preventDefault();
-
-            const data = $(this).serializeArray();
-            data.push({name: 'azione', value: $(this).data('azione') || 'imposta'});
-
-            postMeteo($(this).prop('action'), data);
-        });
-
     });
 
     /**
@@ -524,25 +455,6 @@
                 if (response.message.items) {
                     updateItemSelect(response.message.items);
                 }
-
-            });
-    }
-
-    /**
-     * Invia il meteo impostato (o ripristinato) da un master tramite POST
-     * Dopo l'invio riuscito, aggiorna il riquadro meteo con il valore risolto dal server
-     * @param {string} url - URL dell'endpoint del meteo
-     * @param {Array<{name: string, value: string}>} data - Campi del form, compresa l'azione
-     * @returns {Promise}
-     */
-    function postMeteo(url, data)
-    {
-        return httpPostRequest(url, data)
-            .then(response => {
-
-                // testo arriva già filtrato per l'output dal server
-                chatMeteoUpdate(response.message.testo);
-                meteoUpdateExpiry(response.message);
 
             });
     }
