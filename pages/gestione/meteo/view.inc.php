@@ -33,28 +33,26 @@ $idLuogoInviato = isset($_POST['id_luogo']) && is_scalar($_POST['id_luogo']) ? (
  * @param int $id Id della zona o della chat
  * @param int $idClick Id della zona, per tornare alla zona dopo l'invio
  */
-$stampaRiga = function (string $classe, string $ancora, string $nome, array $meteo, string $fonte, bool $conScadenza, string $bersaglio, int $id, int $idClick) use ($modificabile, $testiMeteo) {
+$stampaRiga = function (string $classe, string $ancora, string $nome, array $meteo, string $fonte, bool $conScadenza, string $bersaglio, int $id, int $idClick) use ($modificabile, $testiMeteo, $testiPannello) {
     $scadenza = '';
 
     if ($conScadenza) {
         $scadenza = $meteo['scadenza_testo'] ?? gdrcd_filter('out', $testiMeteo['no_expiry']);
     }
     ?>
-    <tr class="<?php echo $classe; ?>" id="<?php echo $ancora; ?>">
-        <td class="casella_elemento meteo_nome">
-            <div class="elementi_elenco"><?php echo $nome; ?></div>
-        </td>
-        <td class="casella_elemento">
-            <div class="elementi_elenco"><?php echo $meteo['testo']; ?></div>
-        </td>
-        <td class="casella_elemento">
-            <div class="elementi_elenco"><?php echo gdrcd_filter('out', $fonte); ?></div>
-        </td>
-        <td class="casella_elemento">
-            <div class="elementi_elenco"><?php echo $scadenza; ?></div>
-        </td>
+    <div class="meteo_riga <?php echo $classe; ?>" id="<?php echo $ancora; ?>">
+        <div class="meteo_cella meteo_nome"><?php echo $nome; ?></div>
+        <div class="meteo_cella" data-label="<?php echo gdrcd_filter('out', $testiPannello['current_col']); ?>">
+            <span class="meteo_valore"><?php echo $meteo['testo']; ?></span>
+        </div>
+        <div class="meteo_cella" data-label="<?php echo gdrcd_filter('out', $testiPannello['source_col']); ?>">
+            <span class="meteo_badge"><?php echo gdrcd_filter('out', $fonte); ?></span>
+        </div>
+        <div class="meteo_cella" data-label="<?php echo gdrcd_filter('out', $testiPannello['expires_col']); ?>">
+            <?php echo $scadenza; ?>
+        </div>
         <?php if ($modificabile) { ?>
-            <td class="casella_elemento meteo_azioni">
+            <div class="meteo_cella meteo_azioni">
                 <form method="post" action="main.php?page=gestione/meteo#click-<?php echo $idClick; ?>" class="meteo_pannello_form">
                     <input type="hidden" name="bersaglio" value="<?php echo $bersaglio; ?>" />
                     <input type="hidden" name="<?php echo $bersaglio === 'zona' ? 'id_click' : 'id_luogo'; ?>" value="<?php echo $id; ?>" />
@@ -70,27 +68,9 @@ $stampaRiga = function (string $classe, string $ancora, string $nome, array $met
                         <button type="submit" name="op" value="reset" formnovalidate><?php echo gdrcd_filter('out', $testiMeteo['reset']); ?></button>
                     </div>
                 </form>
-            </td>
+            </div>
         <?php } ?>
-    </tr>
-    <?php
-};
-
-/**
- * Stampa le colonne della tabella: le larghezze sono fisse,
- * così le tabelle di ogni zona restano allineate tra loro.
- */
-$stampaColonne = function () use ($modificabile) {
-    ?>
-    <colgroup>
-        <col class="meteo_col_nome" />
-        <col class="meteo_col_meteo" />
-        <col class="meteo_col_fonte" />
-        <col class="meteo_col_scadenza" />
-        <?php if ($modificabile) { ?>
-            <col class="meteo_col_azioni" />
-        <?php } ?>
-    </colgroup>
+    </div>
     <?php
 };
 
@@ -124,8 +104,6 @@ $stampaLuoghi = function (array $luoghi, int $idClick) use ($stampaRiga, $testiM
     }
 };
 
-$colonne = $modificabile ? 5 : 4;
-
 ?>
 <div id="GestioneMeteoView" class="elenco_record_gestione meteo_pannello<?php echo $modificabile ? '' : ' meteo_sola_lettura'; ?>">
     <?php
@@ -139,28 +117,15 @@ $colonne = $modificabile ? 5 : 4;
     } else {
         ?>
         <!-- Intestazione elenco -->
-        <table class="meteo_tabella meteo_intestazione">
-            <?php $stampaColonne(); ?>
-            <tr>
-                <td class="casella_titolo">
-                    <div class="titoli_elenco"><?php echo gdrcd_filter('out', $testiPannello['map_col'] . ' / ' . $testiPannello['chat_col']); ?></div>
-                </td>
-                <td class="casella_titolo">
-                    <div class="titoli_elenco"><?php echo gdrcd_filter('out', $testiPannello['current_col']); ?></div>
-                </td>
-                <td class="casella_titolo">
-                    <div class="titoli_elenco"><?php echo gdrcd_filter('out', $testiPannello['source_col']); ?></div>
-                </td>
-                <td class="casella_titolo">
-                    <div class="titoli_elenco"><?php echo gdrcd_filter('out', $testiPannello['expires_col']); ?></div>
-                </td>
-                <?php if ($modificabile) { ?>
-                    <td class="casella_titolo">
-                        <div class="titoli_elenco"><?php echo gdrcd_filter('out', $testiPannello['actions_col']); ?></div>
-                    </td>
-                <?php } ?>
-            </tr>
-        </table>
+        <div class="meteo_riga meteo_intestazione" aria-hidden="true">
+            <div class="meteo_cella"><?php echo gdrcd_filter('out', $testiPannello['map_col'] . ' / ' . $testiPannello['chat_col']); ?></div>
+            <div class="meteo_cella"><?php echo gdrcd_filter('out', $testiPannello['current_col']); ?></div>
+            <div class="meteo_cella"><?php echo gdrcd_filter('out', $testiPannello['source_col']); ?></div>
+            <div class="meteo_cella"><?php echo gdrcd_filter('out', $testiPannello['expires_col']); ?></div>
+            <?php if ($modificabile) { ?>
+                <div class="meteo_cella"><?php echo gdrcd_filter('out', $testiPannello['actions_col']); ?></div>
+            <?php } ?>
+        </div>
 
         <?php
         foreach ($pannello['zone'] as $zona) {
@@ -181,10 +146,8 @@ $colonne = $modificabile ? 5 : 4;
             $zonaManuale = $zona['meteo']['fonte'] === 'zona';
             ?>
             <div class="meteo_zona_blocco">
-                <table class="meteo_tabella">
+                <div class="meteo_tabella">
                     <?php
-                    $stampaColonne();
-
                     $stampaRiga(
                         'meteo_zona',
                         'click-' . $idClick,
@@ -201,15 +164,13 @@ $colonne = $modificabile ? 5 : 4;
 
                     if (empty($zona['luoghi'])) {
                         ?>
-                        <tr class="meteo_vuoto">
-                            <td class="casella_elemento" colspan="<?php echo $colonne; ?>">
-                                <div class="elementi_elenco"><?php echo gdrcd_filter('out', $testiPannello['no_chats']); ?></div>
-                            </td>
-                        </tr>
+                        <div class="meteo_riga meteo_vuoto">
+                            <div class="meteo_cella"><?php echo gdrcd_filter('out', $testiPannello['no_chats']); ?></div>
+                        </div>
                         <?php
                     }
                     ?>
-                </table>
+                </div>
 
                 <?php
                 // Stanze private: raccolte di default, aperte se ne è appena stata modificata una
@@ -218,12 +179,9 @@ $colonne = $modificabile ? 5 : 4;
                     ?>
                     <details class="meteo_privati"<?php echo $aperto ? ' open' : ''; ?>>
                         <summary><?php echo gdrcd_filter('out', sprintf($testiPannello['private_toggle'], count($private))); ?></summary>
-                        <table class="meteo_tabella">
-                            <?php
-                            $stampaColonne();
-                            $stampaLuoghi($private, $idClick);
-                            ?>
-                        </table>
+                        <div class="meteo_tabella">
+                            <?php $stampaLuoghi($private, $idClick); ?>
+                        </div>
                     </details>
                     <?php
                 }
