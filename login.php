@@ -85,7 +85,7 @@ elseif ($credentialsOk && $sessionExpired) {
 
     $_SESSION['id_personaggio'] = $record['id_personaggio'];
     $_SESSION['login']          = gdrcd_filter_in($record['nome']);
-    $_SESSION['cognome']        = $record['cognome'];
+    $_SESSION['cognome']        = gdrcd_filter_in($record['cognome']);
     $_SESSION['permessi']       = $record['permessi'];
     $_SESSION['sesso']          = $record['sesso'];
     $_SESSION['blocca_media']   = $record['blocca_media'];
